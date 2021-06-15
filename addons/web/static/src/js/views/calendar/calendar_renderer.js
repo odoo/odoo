@@ -1,3 +1,4 @@
+/* global FullCalendar */
 odoo.define('web.CalendarRenderer', function (require) {
 "use strict";
 
@@ -352,7 +353,7 @@ return AbstractRenderer.extend({
             event: event,
             record: event.extendedProps.record,
             color: this.getColor(event.extendedProps.color_index),
-            showTime: !self.hideTime && event.extendedProps.showTime,
+            showTime: !this.hideTime && event.extendedProps.showTime,
             showLocation: this.state.scale !== 'month'
         };
         this.qweb_context = qweb_context;
@@ -739,7 +740,7 @@ return AbstractRenderer.extend({
                                 delay: {show: 300, hide: 0},
                                 content: function () {
                                     return $('<img>', {
-                                        src: `/web/image/${options.avatar_model}/${filter.value}/${options.avatar_field}}`,
+                                        src: `/web/image/${options.avatar_model}/${filter.value}/${options.avatar_field}`,
                                         class: 'mx-auto',
                                     });
                                 },

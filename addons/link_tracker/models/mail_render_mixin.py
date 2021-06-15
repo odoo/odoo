@@ -3,6 +3,7 @@
 
 import re
 
+import markupsafe
 from werkzeug import urls, utils
 
 from odoo import api, models, tools
@@ -35,13 +36,13 @@ class MailRenderMixin(models.AbstractModel):
         base_url = base_url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         short_schema = base_url + '/r/'
         for match in re.findall(tools.HTML_TAG_URL_REGEX, html):
-            href = match[0]
+            href = markupsafe.Markup(match[0])
             long_url = match[1]
             label = (match[3] or '').strip()
 
             if not blacklist or not [s for s in blacklist if s in long_url] and not long_url.startswith(short_schema):
                 create_vals = dict(link_tracker_vals, url=utils.unescape(long_url), label=utils.unescape(label))
-                link = self.env['link.tracker'].create(create_vals)
+                link = self.env['link.tracker'].search_or_create(create_vals)
                 if link.short_url:
                     new_href = href.replace(long_url, link.short_url)
                     html = html.replace(href, new_href)
@@ -68,7 +69,7 @@ class MailRenderMixin(models.AbstractModel):
                 continue
 
             create_vals = dict(link_tracker_vals, url= utils.unescape(original_url))
-            link = self.env['link.tracker'].create(create_vals)
+            link = self.env['link.tracker'].search_or_create(create_vals)
             if link.short_url:
                 content = content.replace(original_url, link.short_url, 1)
 

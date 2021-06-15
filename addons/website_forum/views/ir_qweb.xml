@@ -12,7 +12,7 @@
                 </div>
                 <b class="mt-4"><i class="fa fa-diamond text-secondary"/> <t t-esc="object.karma"/></b>
                 <div t-if="options.get('badges')" style="display: inline-block">
-                    <t t-raw="separator"/>
+                    <t t-esc="separator"/>
                     <b>|</b>
                     <span class="fa fa-trophy badge-gold ml-2" role="img" aria-label="Gold badge" title="Gold badge"/>
                     <t t-esc="object.gold_badge"/>
@@ -21,7 +21,7 @@
                     <span class="fa fa-trophy badge-bronze ml-2" role="img" aria-label="Bronze badge" title="Bronze badge"/>
                     <t t-esc="object.bronze_badge"/>
                 </div>
-                <t t-raw="0"/>
+                <t t-out="0"/>
                 <div t-if="options.get('UserBio')" class="mt-2">
                     <div class="o_forum_tooltip_line" t-if="object.partner_id.country_id or object.partner_id.city">
                         <span t-field="object.partner_id.city"/><span t-if="object.partner_id.city and object.partner_id.country_id">, </span><span t-field="object.partner_id.country_id"/>

@@ -292,7 +292,7 @@ class RecurrenceRule(models.Model):
         :param dstart: if provided, only write events starting from this point in time
         """
         events = self._get_events_from(dtstart) if dtstart else self.calendar_event_ids
-        return events.with_context(no_mail_to_attendees=True).write(dict(values, recurrence_update='self_only'))
+        return events.with_context(no_mail_to_attendees=True, dont_notify=True).write(dict(values, recurrence_update='self_only'))
 
     def _rrule_serialize(self):
         """
@@ -312,7 +312,7 @@ class RecurrenceRule(models.Model):
         data = {}
         day_list = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
-        if 'Z' in rule_str and not date_start.tzinfo:
+        if 'Z' in rule_str and date_start and not date_start.tzinfo:
             date_start = pytz.utc.localize(date_start)
         rule = rrule.rrulestr(rule_str, dtstart=date_start)
 

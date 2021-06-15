@@ -7,7 +7,7 @@ import json
 
 from odoo import _, _lt, api, fields, models
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
-from odoo.tools import lazy
+from odoo.tools import date_utils, lazy
 from odoo.tools.misc import get_lang
 from odoo.exceptions import UserError
 from collections import defaultdict
@@ -161,7 +161,7 @@ class Base(models.AbstractModel):
             # Again, imitating what _read_group_format_result and _read_group_prepare_data do
             if group_by_value and field_type in ['date', 'datetime']:
                 locale = get_lang(self.env).code
-                group_by_value = fields.Datetime.to_datetime(group_by_value)
+                group_by_value = date_utils.start_of(fields.Datetime.to_datetime(group_by_value), group_by_modifier)
                 group_by_value = pytz.timezone('UTC').localize(group_by_value)
                 tz_info = None
                 if field_type == 'datetime' and self._context.get('tz') in pytz.all_timezones:

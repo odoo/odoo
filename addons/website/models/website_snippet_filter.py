@@ -241,7 +241,7 @@ class WebsiteSnippetFilter(models.Model):
                 elif field_widget == 'monetary':
                     model_currency = None
                     if field and field.type == 'monetary':
-                        model_currency = record[record[field_name].currency_field]
+                        model_currency = record[field.get_currency_field(record)]
                     elif 'currency_id' in model._fields:
                         model_currency = record['currency_id']
                     if model_currency:

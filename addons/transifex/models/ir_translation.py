@@ -75,7 +75,7 @@ class IrTranslation(models.Model):
                     continue
 
                 # e.g. https://www.transifex.com/odoo/odoo-10/translate/#fr/sale/42?q=text:'Sale+Order'
-                src = werkzeug.urls.url_quote_plus(translation.src[:50].replace("\n", "").replace("'", ""))
+                src = werkzeug.urls.url_quote_plus(translation.src[:50].replace("\n", "").replace("'", "\\'"))
                 src = f"'{src}'" if "+" in src else src
                 translation.transifex_url = "%(url)s/%(project)s/translate/#%(lang)s/%(module)s/42?q=%(src)s" % {
                     'url': base_url,

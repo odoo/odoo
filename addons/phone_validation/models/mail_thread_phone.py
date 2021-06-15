@@ -54,6 +54,7 @@ class PhoneMixin(models.AbstractModel):
         pattern = r'[\s\\./\(\)\-]'
         if value.startswith('+') or value.startswith('00'):
             # searching on +32485112233 should also finds 0032485112233 (and vice versa)
+            # we therefore remove it from input value and search for both of them in db
             query = f"""
                 SELECT model.id
                 FROM {self._table} model
@@ -92,7 +93,7 @@ class PhoneMixin(models.AbstractModel):
             return [(0, '=', 1)]
         return [('id', 'in', [r[0] for r in res])]
 
-    @api.depends(lambda self: self._phone_get_number_fields())
+    @api.depends(lambda self: self._phone_get_sanitize_triggers())
     def _compute_phone_sanitized(self):
         self._assert_phone_field()
         number_fields = self._phone_get_number_fields()
@@ -161,6 +162,11 @@ class PhoneMixin(models.AbstractModel):
             raise UserError(_('Invalid primary phone field on model %s', self._name))
         if not any(fname in self and self._fields[fname].type == 'char' for fname in self._phone_get_number_fields()):
             raise UserError(_('Invalid primary phone field on model %s', self._name))
+
+    def _phone_get_sanitize_triggers(self):
+        """ Tool method to get all triggers for sanitize """
+        res = [self._phone_get_country_field()] if self._phone_get_country_field() else []
+        return res + self._phone_get_number_fields()
 
     def _phone_get_number_fields(self):
         """ This method returns the fields to use to find the number to use to

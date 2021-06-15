@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import babel.messages.pofile
 import base64
 import copy
 import datetime
 import functools
-import glob
 import hashlib
 import io
 import itertools
-import jinja2
 import json
 import logging
 import operator
@@ -18,17 +15,19 @@ import os
 import re
 import sys
 import tempfile
+import unicodedata
+from collections import OrderedDict, defaultdict
 
+import babel.messages.pofile
+import jinja2
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
-from collections import OrderedDict, defaultdict, Counter
-from werkzeug.urls import url_encode, url_decode, iri_to_uri
 from lxml import etree
-import unicodedata
-
+from markupsafe import Markup
+from werkzeug.urls import url_encode, url_decode, iri_to_uri
 
 import odoo
 import odoo.modules.registry
@@ -37,7 +36,7 @@ from odoo.modules import get_module_path, get_resource_path, module
 from odoo.tools import image_process, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
-from odoo.tools.misc import str2bool, xlsxwriter, file_open
+from odoo.tools.misc import str2bool, xlsxwriter, file_open, file_path
 from odoo.tools.safe_eval import safe_eval, time
 from odoo import http, tools
 from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception
@@ -477,7 +476,9 @@ class HomeStaticTemplateHelpers(object):
                 parent_tree = copy.deepcopy(self.template_dict[parent_addon][parent_name])
 
                 xpaths = list(template_tree)
-                if self.debug and inherit_mode == self.EXTENSION_MODE:
+                # owl chokes on comments, disable debug comments for now
+                # pylint: disable=W0125
+                if False: # self.debug and inherit_mode == self.EXTENSION_MODE:
                     for xpath in xpaths:
                         xpath.insert(0, etree.Comment(" Modified by %s from %s " % (template_name, addon)))
                 elif inherit_mode == self.PRIMARY_MODE:
@@ -550,13 +551,13 @@ class HomeStaticTemplateHelpers(object):
 
         return etree.tostring(root, encoding='utf-8') if root is not None else b'', checksum.hexdigest()[:64]
 
-    def _get_asset_paths(self):
+    def _get_asset_paths(self, bundle):
         """Proxy for ir_asset._get_asset_paths
         Useful to make 'self' testable.
         """
-        return request.env['ir.asset']._get_asset_paths(addons=self.addons, bundle='web.assets_qweb', xml=True)
+        return request.env['ir.asset']._get_asset_paths(addons=self.addons, bundle=bundle, xml=True)
 
-    def _get_qweb_templates(self):
+    def _get_qweb_templates(self, bundle):
         """One and only entry point that gets and evaluates static qweb templates
 
         :rtype: (str, str)
@@ -564,7 +565,7 @@ class HomeStaticTemplateHelpers(object):
         xml_paths = defaultdict(list)
 
         # group paths by module, keeping them in order
-        for path, addon, _ in self._get_asset_paths():
+        for path, addon, _ in self._get_asset_paths(bundle):
             addon_paths = xml_paths[addon]
             if path not in addon_paths:
                 addon_paths.append(path)
@@ -573,12 +574,12 @@ class HomeStaticTemplateHelpers(object):
         return content, checksum
 
     @classmethod
-    def get_qweb_templates_checksum(cls, addons=None, db=None, debug=False):
-        return cls(addons, db, checksum_only=True, debug=debug)._get_qweb_templates()[1]
+    def get_qweb_templates_checksum(cls, addons=None, db=None, debug=False, bundle=None):
+        return cls(addons, db, checksum_only=True, debug=debug)._get_qweb_templates(bundle)[1]
 
     @classmethod
-    def get_qweb_templates(cls, addons=None, db=None, debug=False):
-        return cls(addons, db, debug=debug)._get_qweb_templates()[0]
+    def get_qweb_templates(cls, addons=None, db=None, debug=False, bundle=None):
+        return cls(addons, db, debug=debug)._get_qweb_templates(bundle)[0]
 
 
 class GroupsTreeNode:
@@ -935,12 +936,12 @@ class WebClient(http.Controller):
         ])
 
     @http.route('/web/webclient/qweb/<string:unique>', type='http', auth="none", cors="*")
-    def qweb(self, unique, mods=None, db=None):
+    def qweb(self, unique, mods=None, db=None, bundle=None):
 
         if not request.db and mods is None:
             mods = odoo.conf.server_wide_modules or []
 
-        content = HomeStaticTemplateHelpers.get_qweb_templates(mods, db, debug=request.session.debug)
+        content = HomeStaticTemplateHelpers.get_qweb_templates(mods, db, debug=request.session.debug, bundle=bundle)
 
         return request.make_response(content, [
                 ('Content-Type', 'text/xml'),
@@ -1063,7 +1064,7 @@ class Database(http.Controller):
             monodb = db_monodb()
             if monodb:
                 d['databases'] = [monodb]
-        return env.get_template("database_manager.html").render(d)
+        return Markup(env.get_template("database_manager.html").render(d))
 
     @http.route('/web/database/selector', type='http', auth="none")
     def selector(self, **kw):
@@ -1223,7 +1224,7 @@ class Session(http.Controller):
     @http.route('/web/session/modules', type='json', auth="user")
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
-        return request.env.registry._init_modules | set([module.current_test] if module.current_test else [])
+        return list(request.env.registry._init_modules | set([module.current_test] if module.current_test else []))
 
     @http.route('/web/session/save_session_action', type='json', auth="user")
     def save_session_action(self, the_action):
@@ -1375,7 +1376,7 @@ class Binary(http.Controller):
 
     @staticmethod
     def placeholder(image='placeholder.png'):
-        image_path = image.lstrip('/').split('/') if '/' in image else ['web', 'static', 'src', 'img', image]
+        image_path = image.lstrip('/').split('/') if '/' in image else ['web', 'static', 'img', image]
         with tools.file_open(get_resource_path(*image_path), 'rb') as fd:
             return fd.read()
 
@@ -1404,8 +1405,6 @@ class Binary(http.Controller):
             content_base64 = base64.b64decode(content)
             headers.append(('Content-Length', len(content_base64)))
             response = request.make_response(content_base64, headers)
-        if token:
-            response.set_cookie('fileToken', token)
         return response
 
     @http.route(['/web/assets/debug/<string:filename>',
@@ -1420,15 +1419,6 @@ class Binary(http.Controller):
 
         return self._get_content_common(xmlid=None, model='ir.attachment', id=id, field='datas', unique=unique, filename=filename,
             filename_field='name', download=None, mimetype=None, access_token=None, token=None)
-
-    @http.route(['/web/partner_image',
-        '/web/partner_image/<int:rec_id>',
-        '/web/partner_image/<int:rec_id>/<string:field>',
-        '/web/partner_image/<int:rec_id>/<string:field>/<string:model>/'], type='http', auth="public")
-    def content_image_partner(self, rec_id, field='image_128', model='res.partner', **kwargs):
-        # other kwargs are ignored on purpose
-        return self._content_image(id=rec_id, model='res.partner', field=field,
-            placeholder='user_placeholder.jpg')
 
     @http.route(['/web/image',
         '/web/image/<string:xmlid>',
@@ -1460,7 +1450,7 @@ class Binary(http.Controller):
     def _content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        filename_field='name', unique=None, filename=None, mimetype=None,
                        download=None, width=0, height=0, crop=False, quality=0, access_token=None,
-                       placeholder=None, **kwargs):
+                       **kwargs):
         status, headers, image_base64 = request.env['ir.http'].binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
@@ -1468,25 +1458,17 @@ class Binary(http.Controller):
 
         return Binary._content_image_get_response(
             status, headers, image_base64, model=model, id=id, field=field, download=download,
-            width=width, height=height, crop=crop, quality=quality,
-            placeholder=placeholder)
+            width=width, height=height, crop=crop, quality=quality)
 
     @staticmethod
     def _content_image_get_response(
             status, headers, image_base64, model='ir.attachment', id=None,
             field='datas', download=None, width=0, height=0, crop=False,
-            quality=0, placeholder='placeholder.png'):
+            quality=0):
         if status in [301, 304] or (status != 200 and download):
             return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if not image_base64:
-            if placeholder is None and model in request.env:
-                # Try to browse the record in case a specific placeholder
-                # is supposed to be used. (eg: Unassigned users on a task)
-                record = request.env[model].browse(int(id)) if id else request.env[model]
-                placeholder_filename = record._get_placeholder_filename(field=field)
-                placeholder_content = Binary.placeholder(image=placeholder_filename)
-            else:
-                placeholder_content = Binary.placeholder()
+            placeholder_content = Binary.placeholder()
             # Since we set a placeholder for any missing image, the status must be 200. In case one
             # wants to configure a specific 404 page (e.g. though nginx), a 404 status will cause
             # troubles.
@@ -1579,7 +1561,7 @@ class Binary(http.Controller):
     def company_logo(self, dbname=None, **kw):
         imgname = 'logo'
         imgext = '.png'
-        placeholder = functools.partial(get_resource_path, 'web', 'static', 'src', 'img')
+        placeholder = functools.partial(get_resource_path, 'web', 'static', 'img')
         uid = None
         if request.session.db:
             dbname = request.session.db
@@ -1636,27 +1618,18 @@ class Binary(http.Controller):
         :return: base64 encoded fonts
         :rtype: list
         """
-
-
+        supported_exts = ('.ttf', '.otf', '.woff', '.woff2')
         fonts = []
+        fonts_directory = file_path(os.path.join('web', 'static', 'fonts', 'sign'))
         if fontname:
-            module_path = get_module_path('web')
-            fonts_folder_path = os.path.join(module_path, 'static/src/fonts/sign/')
-            module_resource_path = get_resource_path('web', 'static/src/fonts/sign/' + fontname)
-            if fonts_folder_path and module_resource_path:
-                fonts_folder_path = os.path.join(os.path.normpath(fonts_folder_path), '')
-                module_resource_path = os.path.normpath(module_resource_path)
-                if module_resource_path.startswith(fonts_folder_path):
-                    with file_open(module_resource_path, 'rb') as font_file:
-                        font = base64.b64encode(font_file.read())
-                        fonts.append(font)
+            font_path = os.path.join(fonts_directory, fontname)
+            with file_open(font_path, 'rb', filter_ext=supported_exts) as font_file:
+                font = base64.b64encode(font_file.read())
+                fonts.append(font)
         else:
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-            fonts_directory = os.path.join(current_dir, '..', 'static', 'src', 'fonts', 'sign')
-            font_filenames = sorted([fn for fn in os.listdir(fonts_directory) if fn.endswith(('.ttf', '.otf', '.woff', '.woff2'))])
-
+            font_filenames = sorted([fn for fn in os.listdir(fonts_directory) if fn.endswith(supported_exts)])
             for filename in font_filenames:
-                font_file = open(os.path.join(fonts_directory, filename), 'rb')
+                font_file = file_open(os.path.join(fonts_directory, filename), 'rb', filter_ext=supported_exts)
                 font = base64.b64encode(font_file.read())
                 fonts.append(font)
         return fonts
@@ -1917,7 +1890,7 @@ class ExportFormat(object):
                             content_disposition(
                                 osutil.clean_filename(self.filename(model) + self.extension))),
                      ('Content-Type', self.content_type)],
-            cookies={'fileToken': token})
+        )
 
 class CSVExport(ExportFormat, http.Controller):
 
@@ -2058,13 +2031,14 @@ class ReportController(http.Controller):
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
 
     @http.route(['/report/download'], type='http', auth="user")
-    def report_download(self, data, token, context=None):
+    def report_download(self, data, context=None):
         """This function is used by 'action_manager_report.js' in order to trigger the download of
         a pdf/controller report.
 
         :param data: a javascript array JSON.stringified containg report internal url ([0]) and
         type [1]
-        :returns: Response with a filetoken cookie and an attachment header
+        :returns: Response with an attachment header
+
         """
         requestcontent = json.loads(data)
         url, type = requestcontent[0], requestcontent[1]
@@ -2102,7 +2076,6 @@ class ReportController(http.Controller):
                         report_name = safe_eval(report.print_report_name, {'object': obj, 'time': time})
                         filename = "%s.%s" % (report_name, extension)
                 response.headers.add('Content-Disposition', content_disposition(filename))
-                response.set_cookie('fileToken', token)
                 return response
             else:
                 return

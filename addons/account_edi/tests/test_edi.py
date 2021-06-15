@@ -45,7 +45,7 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
             to_process = edi_docs._prepare_jobs()
             self.assertEqual(len(to_process), 2)
 
-    @patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._post_invoice_edi')
+    @patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._post_invoice_edi', return_value={})
     def test_warning_is_retried(self, patched):
         with patch('odoo.addons.account_edi.models.account_edi_format.AccountEdiFormat._needs_web_services',
                    new=lambda edi_format: True):
@@ -132,7 +132,7 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
             self.assertIsNotNone(doc.error)
 
     def test_edi_flow_two_step_cancel_with_call_off_request(self):
-        def _mock_cancel(edi_format, invoices, test_mode):
+        def _mock_cancel(edi_format, invoices):
             invoices_no_ref = invoices.filtered(lambda i: not i.ref)
             if len(invoices_no_ref) == len(invoices):  # first step
                 invoices_no_ref.ref = 'test_ref_cancel'

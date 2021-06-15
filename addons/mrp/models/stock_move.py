@@ -96,7 +96,7 @@ class StockMove(models.Model):
         'mrp.routing.workcenter', 'Operation To Consume', check_company=True,
         domain="[('id', 'in', allowed_operation_ids)]")
     workorder_id = fields.Many2one(
-        'mrp.workorder', 'Work Order To Consume', check_company=True)
+        'mrp.workorder', 'Work Order To Consume', copy=False, check_company=True)
     # Quantities to process, in normalized UoMs
     bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line', check_company=True)
     byproduct_id = fields.Many2one(
@@ -165,14 +165,14 @@ class StockMove(models.Model):
                 moves_with_reference |= move
         super(StockMove, self - moves_with_reference)._compute_reference()
 
-    @api.depends('raw_material_production_id.qty_producing', 'product_uom_qty')
+    @api.depends('raw_material_production_id.qty_producing', 'product_uom_qty', 'product_uom')
     def _compute_should_consume_qty(self):
         for move in self:
             mo = move.raw_material_production_id
-            if not mo:
+            if not mo or not move.product_uom:
                 move.should_consume_qty = 0
                 continue
-            move.should_consume_qty = mo.product_uom_id._compute_quantity((mo.qty_producing - mo.qty_produced) * move.unit_factor, mo.product_uom_id, rounding_method='HALF-UP')
+            move.should_consume_qty = float_round((mo.qty_producing - mo.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
@@ -190,9 +190,17 @@ class StockMove(models.Model):
                     defaults['state'] = 'draft'
                 else:
                     defaults['state'] = 'done'
+                    defaults['additional'] = True
                 defaults['product_uom_qty'] = 0.0
-                defaults['additional'] = True
         return defaults
+
+    def write(self, vals):
+        if 'product_uom_qty' in vals and 'move_line_ids' in vals:
+            # first update lines then product_uom_qty as the later will unreserve
+            # so possibly unlink lines
+            move_line_vals = vals.pop('move_line_ids')
+            super().write({'move_line_ids': move_line_vals})
+        return super().write(vals)
 
     def _action_assign(self):
         res = super(StockMove, self)._action_assign()

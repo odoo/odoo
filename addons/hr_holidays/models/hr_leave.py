@@ -140,6 +140,7 @@ class HolidaysRequest(models.Model):
         'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employee', index=True, readonly=False, ondelete="restrict",
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]},
         tracking=True)
+    active_employee = fields.Boolean(related='employee_id.active', readonly=True)
     tz_mismatch = fields.Boolean(compute='_compute_tz_mismatch')
     tz = fields.Selection(_tz_get, compute='_compute_tz')
     department_id = fields.Many2one(
@@ -192,8 +193,14 @@ class HolidaysRequest(models.Model):
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
 
+    attachment_ids = fields.One2many('ir.attachment', 'res_id', string="Attachments")
+    # To display in form view
+    supported_attachment_ids = fields.Many2many(
+        'ir.attachment', string="Attach File", compute='_compute_supported_attachment_ids',
+        inverse='_inverse_supported_attachment_ids')
     # UX fields
     leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
+    leave_type_support_document = fields.Boolean(related="holiday_status_id.support_document")
     # Interface fields used when not using hour-based computation
     request_date_from = fields.Date('Request Start Date')
     request_date_to = fields.Date('Request End Date')
@@ -556,6 +563,15 @@ class HolidaysRequest(models.Model):
         for holiday in self:
             holiday.is_hatched = holiday.state not in ['refuse', 'validate']
 
+    @api.depends('leave_type_support_document', 'attachment_ids')
+    def _compute_supported_attachment_ids(self):
+        for holiday in self:
+            holiday.supported_attachment_ids = holiday.attachment_ids
+
+    def _inverse_supported_attachment_ids(self):
+        for holiday in self:
+            holiday.attachment_ids = holiday.supported_attachment_ids
+
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
         if self.env.context.get('leave_skip_date_check', False):
@@ -595,7 +611,10 @@ class HolidaysRequest(models.Model):
         """ Returns a float equals to the timedelta between two dates given as string."""
         if employee_id:
             employee = self.env['hr.employee'].browse(employee_id)
-            return employee._get_work_days_data_batch(date_from, date_to)[employee.id]
+            result = employee._get_work_days_data_batch(date_from, date_to)[employee.id]
+            if self.request_unit_half:
+                result['days'] = 0.5
+            return result
 
         today_hours = self.env.company.resource_calendar_id.get_work_hours_count(
             datetime.combine(date_from.date(), time.min),
@@ -603,8 +622,8 @@ class HolidaysRequest(models.Model):
             False)
 
         hours = self.env.company.resource_calendar_id.get_work_hours_count(date_from, date_to)
-
-        return {'days': hours / (today_hours or HOURS_PER_DAY), 'hours': hours}
+        days = hours / (today_hours or HOURS_PER_DAY) if not self.request_unit_half else 0.5
+        return {'days': days, 'hours': hours}
 
     def _adjust_date_based_on_tz(self, leave_date, hour):
         """ request_date_{from,to} are local to the user's tz but hour_{from,to} are in UTC.
@@ -673,7 +692,7 @@ class HolidaysRequest(models.Model):
                 else:
                     display_date = fields.Date.to_string(leave.date_from)
                     if leave.number_of_days > 1:
-                        display_date += ' ⇨ %s' % fields.Date.to_string(leave.date_to)
+                        display_date += ' / %s' % fields.Date.to_string(leave.date_to)
                     if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
                         res.append((
                             leave.id,
@@ -989,9 +1008,12 @@ class HolidaysRequest(models.Model):
             self.activity_update()
         return True
 
+    def _get_leaves_on_public_holiday(self):
+        return self.filtered(lambda l: l.employee_id and not l.number_of_days)
+
     def action_validate(self):
         current_employee = self.env.user.employee_id
-        leaves = self.filtered(lambda l: l.employee_id and not l.number_of_days)
+        leaves = self._get_leaves_on_public_holiday()
         if leaves:
             raise ValidationError(_('The following employees are not supposed to work during that period:\n %s') % ','.join(leaves.mapped('employee_id.name')))
 

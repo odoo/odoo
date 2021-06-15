@@ -10,6 +10,7 @@ class HrDepartureWizard(models.TransientModel):
     _inherit = 'hr.departure.wizard'
 
     cancel_leaves = fields.Boolean("Cancel Future Leaves", default=True)
+    archive_allocation = fields.Boolean("Archive Employee Allocations", default=True)
 
     def action_register_departure(self):
         super(HrDepartureWizard, self).action_register_departure()
@@ -18,3 +19,7 @@ class HrDepartureWizard(models.TransientModel):
                                                          ('date_to', '>', self.departure_date),
                                                          ('state', 'not in', ['cancel', 'refuse'])])
             future_leaves.write({'state': 'cancel'})
+
+        if self.archive_allocation:
+            employee_allocations = self.env['hr.leave.allocation'].search([('employee_id', '=', self.employee_id.id)])
+            employee_allocations.action_archive()

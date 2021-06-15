@@ -122,3 +122,17 @@ class MailTestContainer(models.Model):
             values['alias_force_thread_id'] = self.id
             values['alias_parent_thread_id'] = self.id
         return values
+
+class MailTestComposerMixin(models.Model):
+    """ A simple invite-like wizard using the composer mixin, rendering on
+    itself. """
+    _description = 'Invite-like Wizard'
+    _name = 'mail.test.composer.mixin'
+    _inherit = ['mail.composer.mixin']
+
+    name = fields.Char('Name')
+    author_id = fields.Many2one('res.partner')
+    description = fields.Html('Description', render_engine="qweb", render_options={"post_process": True})
+
+    def _compute_render_model(self):
+        self.render_model = self._name

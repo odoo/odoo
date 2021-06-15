@@ -79,6 +79,7 @@ const Wysiwyg = Widget.extend({
             isRootEditable: this.options.isRootEditable,
             controlHistoryFromDocument: this.options.controlHistoryFromDocument,
             getContentEditableAreas: this.options.getContentEditableAreas,
+            defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc' } : {},
             getContextFromParentRect: options.getContextFromParentRect,
             noScrollSelector: 'body, .note-editable, .o_content, #wrapwrap',
             commands: commands,
@@ -410,9 +411,6 @@ const Wysiwyg = Widget.extend({
     redo: function () {
         this.odooEditor.historyRedo();
     },
-    focus() {
-        this.odooEditor.resetCursorOnLastHistoryCursor();
-    },
     /**
      * Focus inside the editor.
      *
@@ -523,28 +521,6 @@ const Wysiwyg = Widget.extend({
         }
     },
     /**
-     * Toggle the Alt tools in the toolbar to edit <img> alt and title attributes.
-     *
-     * @param {object} params
-     * @param {Node} [params.node]
-     */
-    toggleAltTools(params) {
-        const image = (params && params.node) || this.lastMediaClicked;
-        if (this.snippetsMenu) {
-            if (this.altTools) {
-                this.altTools.destroy();
-                this.altTools = undefined;
-            } else {
-                const $btn = this.toolbar.$el.find('#media-description');
-                this.altTools = new weWidgets.AltTools(this, params, image, $btn);
-                this.altTools.appendTo(this.toolbar.$el);
-            }
-        } else {
-            const altDialog = new weWidgets.AltDialog(this, params, image);
-            altDialog.open();
-        }
-    },
-    /**
      * Toggle the Link tools/dialog to edit links. If a snippet menu is present,
      * use the link tools, otherwise use the dialog.
      *
@@ -559,9 +535,9 @@ const Wysiwyg = Widget.extend({
             }
             if (options.forceOpen || !this.linkTools) {
                 const $btn = this.toolbar.$el.find('#create-link');
-                this.linkTools = new weWidgets.LinkTools(this, {wysiwyg: this}, this.odooEditor.editable, {}, $btn, options.link);
+                this.linkTools = new weWidgets.LinkTools(this, {wysiwyg: this}, this.odooEditor.editable, {}, $btn, options.link || this.lastMediaClicked);
                 const _onMousedown = ev => {
-                    if (!ev.target.closest('.oe-toolbar')) {
+                    if (!ev.target.closest('.oe-toolbar') && !ev.target.closest('.ui-autocomplete')) {
                         // Destroy the link tools on click anywhere outside the
                         // toolbar.
                         this.linkTools && this.linkTools.destroy();
@@ -586,6 +562,9 @@ const Wysiwyg = Widget.extend({
                 if (!linkWidget.$link.length) {
                     linkWidget.$link = $(linkWidget.getOrCreateLink(this.$editable[0]));
                 }
+                if (this.options.userGeneratedContent) {
+                    data.rel = 'ugc';
+                }
                 linkWidget.applyLinkToDom(data);
 
                 getDeepRange(this.odooEditor.editable, {range: data.range, select: true});
@@ -609,6 +588,14 @@ const Wysiwyg = Widget.extend({
      */
     openMediaDialog(params = {}) {
         const sel = this.odooEditor.document.getSelection();
+        const fontawesomeIcon = getInSelection(this.odooEditor.document, '.fa');
+        if (fontawesomeIcon && sel.toString().trim() === "") {
+            params.node = $(fontawesomeIcon);
+            // save layouting classes from icons to not break the page if you edit an icon
+            params.htmlClass = [...fontawesomeIcon.classList].filter((className) => {
+                return !className.startsWith('fa') || faZoomClassRegex.test(className);
+            }).join(' ');
+        }
         if (!sel.rangeCount) {
             return;
         }
@@ -659,7 +646,7 @@ const Wysiwyg = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    _configureToolbar: function () {
+    _configureToolbar: function (options) {
         const $toolbar = this.toolbar.$el;
         const openTools = e => {
             e.preventDefault();
@@ -674,7 +661,7 @@ const Wysiwyg = Widget.extend({
                     this.openMediaDialog();
                     break;
                 case 'media-description':
-                    this.toggleAltTools();
+                    new weWidgets.AltDialog(this, {}, this.lastMediaClicked).open();
                     break;
             }
         };
@@ -782,6 +769,18 @@ const Wysiwyg = Widget.extend({
         if ($colorpickerGroup.length) {
             this._createPalette();
         }
+        // we need the Timeout to be sure the editable content is loaded
+        // before calculating the scrollParent() element.
+        setTimeout(() => {
+            const scrollableContainer = this.$el.scrollParent();
+            if (!options.snippets && scrollableContainer.length) {
+                this.odooEditor.addDomListener(
+                  scrollableContainer[0],
+                  'scroll',
+                  this.odooEditor.updateToolbarPosition.bind(this.odooEditor),
+                );
+            }
+        }, 0);
     },
     _createPalette() {
         const $dropdownContent = this.toolbar.$el.find('#colorInputButtonGroup .colorPalette');
@@ -928,9 +927,6 @@ const Wysiwyg = Widget.extend({
         const $target = e ? editorWindow.$(e.target) : editorWindow.$();
         // Restore paragraph dropdown button's default ID.
         this.toolbar.$el.find('#mediaParagraphDropdownButton').attr('id', 'paragraphDropdownButton');
-        // Remove the alt tools.
-        this.altTools && this.altTools.destroy();
-        this.altTools = undefined;
         // Hide the create-link button if the selection spans several blocks.
         const selection = this.odooEditor.document.getSelection();
         const range = selection.rangeCount && selection.getRangeAt(0);

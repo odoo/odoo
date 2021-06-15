@@ -6,6 +6,8 @@ from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import ValidationError, UserError
+from odoo.tools import format_amount, float_round, float_is_zero
+from odoo.tools.misc import formatLang
 
 
 # YTI PLEASE SPLIT ME
@@ -86,7 +88,7 @@ class Project(models.Model):
         if operator not in ('=', '!='):
             raise UserError(_('Operation not supported'))
         if not ((isinstance(value, bool) and value is False) or (isinstance(value, str) and value in ('task_rate', 'fixed_rate', 'employee_rate'))):
-            return UserError(_('Value does not exist in the pricing type'))
+            raise UserError(_('Value does not exist in the pricing type'))
         if value is False:
             return [('allow_billable', operator, value)]
 
@@ -126,7 +128,7 @@ class Project(models.Model):
         employees = self.env['account.analytic.line'].read_group([('task_id', 'in', projects.task_ids.ids)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
         dict_project_employee = defaultdict(list)
         for line in employees:
-            dict_project_employee[line['project_id'][0]] += [line['employee_id'][0]]
+            dict_project_employee[line['project_id'][0]] += [line['employee_id'][0]] if line['employee_id'] else []
         for project in projects:
             project.warning_employee_rate = any(x not in project.sale_line_employee_ids.employee_id.ids for x in dict_project_employee[project.id])
 
@@ -165,9 +167,9 @@ class Project(models.Model):
     def _check_sale_line_type(self):
         for project in self.filtered(lambda project: project.sale_line_id):
             if not project.sale_line_id.is_service:
-                raise ValidationError(_("A billable project should be linked to a Sales Order Item having a Service product."))
+                raise ValidationError(_("You cannot link a billable project to a sales order item that is not a service."))
             if project.sale_line_id.is_expense:
-                raise ValidationError(_("A billable project should be linked to a Sales Order Item that does not come from an expense or a vendor bill."))
+                raise ValidationError(_("You cannot link a billable project to a sales order item that comes from an expense or a vendor bill."))
 
     def write(self, values):
         res = super(Project, self).write(values)
@@ -251,9 +253,94 @@ class Project(models.Model):
         }
         return action_window
 
+    # ----------------------------
+    #  Project Updates
+    # ----------------------------
+
+    def get_panel_data(self):
+        panel_data = super(Project, self).get_panel_data()
+        return {
+            **panel_data,
+            'profitability_items': self._get_profitability_items()
+        }
+
+    def _get_profitability_items(self):
+        if not self.user_has_groups('project.group_project_manager'):
+            return {'data': []}
+        profitability = self.get_profitability_common()
+        data = []
+        if self.allow_timesheets and self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
+            data += [{
+                'name': _("Timesheets"),
+                'value': self.env.ref('sale_timesheet.project_profitability_timesheet_panel')._render({
+                    'timesheet_unit_amount': float_round(profitability['timesheet_unit_amount'], precision_digits=2),
+                    'timesheet_uom': self.env.company._timesheet_uom_text(),
+                    'is_timesheet_uom_hour': self.env.company._is_timesheet_hour_uom(),
+                    'percentage_billable': formatLang(self.env, profitability['timesheet_percentage_billable'], digits=0),
+                }, engine='ir.qweb'),
+            }]
+        if self.allow_billable:
+            margin_color = False
+            if not float_is_zero(profitability['margin'], precision_digits=0):
+                margin_color = profitability['margin'] > 0 and 'green' or 'red'
+            data += [{
+                'name': _("Revenues"),
+                'value': format_amount(self.env, profitability['revenues'], self.env.company.currency_id)
+            }, {
+                'name': _("Costs"),
+                'value': format_amount(self.env, profitability['costs'], self.env.company.currency_id)
+            }, {
+                'name': _("Margin"),
+                'color': margin_color,
+                'value': format_amount(self.env, profitability['margin'], self.env.company.currency_id)
+            }]
+        return {
+            'action': self.allow_billable and self.allow_timesheets and "action_view_timesheet",
+            'allow_billable': self.allow_billable,
+            'data': data,
+        }
+
+    def get_profitability_common(self):
+        self.ensure_one()
+        profitability = self.env['project.profitability.report'].read_group(
+            [('project_id', '=', self.id)],
+            ['project_id',
+             'timesheet_unit_amount',
+             'amount_untaxed_to_invoice',
+             'amount_untaxed_invoiced',
+             'expense_amount_untaxed_to_invoice',
+             'expense_amount_untaxed_invoiced',
+             'other_revenues',
+             'expense_cost',
+             'timesheet_cost',
+             'margin'],
+            ['project_id'])
+        timesheets = self.env['account.analytic.line'].read_group([('project_id', '=', self.id)], ['so_line', 'unit_amount'], ['so_line'])
+        timesheet_billable = timesheet_non_billable = 0.0
+        for timesheet in timesheets:
+            if timesheet['so_line']:
+                timesheet_billable += timesheet['unit_amount']
+            else:
+                timesheet_non_billable += timesheet['unit_amount']
+        return {
+            'costs': profitability and profitability[0]['timesheet_cost'] + profitability[0]['expense_cost'] or 0.0,
+            'margin': profitability and profitability[0]['margin'] or 0.0,
+            'revenues': profitability and (profitability[0]['amount_untaxed_invoiced'] + profitability[0]['amount_untaxed_to_invoice'] +
+                                           profitability[0]['expense_amount_untaxed_invoiced'] + profitability[0]['expense_amount_untaxed_to_invoice'] +
+                                           profitability[0]['other_revenues']) or 0.0,
+            'timesheet_unit_amount': profitability and self._convert_project_uom_to_timesheet_encode_uom(profitability[0]['timesheet_unit_amount']) or 0.0,
+            'timesheet_percentage_billable': timesheet_billable and timesheet_billable / (timesheet_billable + timesheet_non_billable) * 100 or 0.0,
+        }
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
+
+    def _get_default_partner_id(self, project, parent):
+        res = super()._get_default_partner_id(project, parent)
+        if not res and project:
+            if project.pricing_type == 'employee_rate':
+                return project.sale_line_employee_ids.sale_line_id.order_partner_id[:1]
+        return res
 
     # override sale_order_id and make it computed stored field instead of regular field.
     sale_order_id = fields.Many2one(compute='_compute_sale_order_id', store=True, readonly=False,
@@ -264,7 +351,7 @@ class ProjectTask(models.Model):
     has_multi_sol = fields.Boolean(compute='_compute_has_multi_sol', compute_sudo=True)
     allow_billable = fields.Boolean(related="project_id.allow_billable")
     timesheet_product_id = fields.Many2one(related="project_id.timesheet_product_id")
-    remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so')
+    remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so', compute_sudo=True)
     remaining_hours_available = fields.Boolean(related="sale_line_id.remaining_hours_available")
 
     @api.depends('sale_line_id', 'timesheet_ids', 'timesheet_ids.unit_amount')
@@ -326,20 +413,12 @@ class ProjectTask(models.Model):
         for task in self:
             task.has_multi_sol = task.timesheet_ids and task.timesheet_ids.so_line != task.sale_line_id
 
-    @api.onchange('project_id')
-    def _onchange_project(self):
-        if self.project_id and self.project_id.pricing_type != 'task_rate':
-            if not self.partner_id:
-                self.partner_id = self.project_id.partner_id
-            if not self.sale_line_id:
-                self.sale_line_id = self.project_id.sale_line_id
-
     def _get_last_sol_of_customer(self):
         # Get the last SOL made for the customer in the current task where we need to compute
         self.ensure_one()
         if not self.commercial_partner_id or not self.allow_billable:
             return False
-        domain = [('is_service', '=', True), ('order_partner_id', 'child_of', self.commercial_partner_id.id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('remaining_hours', '>', 0)]
+        domain = [('company_id', '=', self.company_id.id), ('is_service', '=', True), ('order_partner_id', 'child_of', self.commercial_partner_id.id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('remaining_hours', '>', 0)]
         if self.project_id.pricing_type != 'task_rate' and self.project_sale_order_id and self.commercial_partner_id == self.project_id.partner_id.commercial_partner_id:
             domain.append(('order_id', '=?', self.project_sale_order_id.id))
         return self.env['sale.order.line'].search(domain, limit=1)

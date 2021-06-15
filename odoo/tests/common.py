@@ -47,7 +47,7 @@ from odoo.models import BaseModel
 from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
 from odoo.service import security
 from odoo.sql_db import Cursor
-from odoo.tools import float_compare, single_email_re
+from odoo.tools import float_compare, single_email_re, profiler
 from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval
 
@@ -540,7 +540,7 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
                 field_type = field.type
                 if field_type == 'monetary':
                     # Compare monetary field.
-                    currency_field_name = record._fields[field_name].currency_field
+                    currency_field_name = record._fields[field_name].get_currency_field(record)
                     record_currency = record[currency_field_name]
                     if field_name not in candidate:
                         diff[field_name] = (record_value, None)
@@ -657,6 +657,15 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
     def assertHTMLEqual(self, original, expected):
         return self._assertXMLEqual(original, expected, 'html')
 
+    def profile(self, **kwargs):
+        test_method = getattr(self, '_testMethodName', 'Unknown test method')
+        if not hasattr(self, 'profile_session'):
+            self.profile_session = profiler.make_session(test_method)
+        return profiler.Profiler(
+            description='%s %s %s' % (test_method, self.env.user.name, 'warm' if self.warm else 'cold'),
+            db=self.env.cr.dbname,
+            profile_session=self.profile_session,
+            **kwargs)
 
 savepoint_seq = itertools.count()
 
@@ -1377,10 +1386,12 @@ class HttpCase(TransactionCase):
             cls.browser.stop()
             cls.browser = None
 
-    def url_open(self, url, data=None, files=None, timeout=10, headers=None, allow_redirects=True):
+    def url_open(self, url, data=None, files=None, timeout=10, headers=None, allow_redirects=True, head=False):
         self.env['base'].flush()
         if url.startswith('/'):
             url = "http://%s:%s%s" % (HOST, odoo.tools.config['http_port'], url)
+        if head:
+            return self.opener.head(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=False)
         if data or files:
             return self.opener.post(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
         return self.opener.get(url, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
@@ -2553,11 +2564,11 @@ def _get_node(view, f, *arg):
 
 def tagged(*tags):
     """
-    A decorator to tag BaseCase objects
-    Tags are stored in a set that can be accessed from a 'test_tags' attribute
-    A tag prefixed by '-' will remove the tag e.g. to remove the 'standard' tag
+    A decorator to tag BaseCase objects.
+    Tags are stored in a set that can be accessed from a 'test_tags' attribute.
+    A tag prefixed by '-' will remove the tag e.g. to remove the 'standard' tag.
     By default, all Test classes from odoo.tests.common have a test_tags
-    attribute that defaults to 'standard' and also the module technical name
+    attribute that defaults to 'standard' and 'at_install'.
     When using class inheritance, the tags are NOT inherited.
     """
     def tags_decorator(obj):

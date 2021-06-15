@@ -120,7 +120,7 @@
                 <t t-if="record.message_partner_ids.raw_value.length &gt; 1">
                     <div class="clearfix"></div>
                       <t t-foreach="record.message_partner_ids.raw_value" t-as="follower">
-                        <img t-att-src="kanban_image('res.partner', 'image_128', follower)" class="oe_kanban_avatar o_image_24_cover float-right mt-2" t-att-data-member_id="follower" alt="Follower"/>
+                        <img t-att-src="kanban_image('res.partner', 'avatar_128', follower)" class="oe_kanban_avatar o_image_24_cover float-right mt-2" t-att-data-member_id="follower" alt="Follower"/>
                       </t>
                     <div class="clearfix"></div>
                 </t>
@@ -157,7 +157,7 @@
                     <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
-                  <field name="memo" type="html" class="oe_memo" options="{'resizable': false}"/>
+                  <field name="memo" type="html" class="oe_memo" default_focus="1" options="{'resizable': false}"/>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
@@ -213,7 +213,7 @@
     <menuitem
       id="menu_note_notes"
       name="Notes"
-      sequence="3"
+      sequence="15"
       action="note.action_note_note"
       web_icon="note,static/description/icon.png">
         <menuitem

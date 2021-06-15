@@ -29,7 +29,7 @@ class Location(models.Model):
         return res
 
     name = fields.Char('Location Name', required=True)
-    complete_name = fields.Char("Full Location Name", compute='_compute_complete_name', store=True)
+    complete_name = fields.Char("Full Location Name", compute='_compute_complete_name', recursive=True, store=True)
     active = fields.Boolean('Active', default=True, help="By unchecking the active field, you may hide a location without deleting it.")
     usage = fields.Selection([
         ('supplier', 'Vendor Location'),
@@ -51,7 +51,7 @@ class Location(models.Model):
         'stock.location', 'Parent Location', index=True, ondelete='cascade', check_company=True,
         help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.")
     child_ids = fields.One2many('stock.location', 'location_id', 'Contains')
-    comment = fields.Text('Additional Information')
+    comment = fields.Html('Additional Information')
     posx = fields.Integer('Corridor (X)', default=0, help="Optional localization details, for information purpose only")
     posy = fields.Integer('Shelves (Y)', default=0, help="Optional localization details, for information purpose only")
     posz = fields.Integer('Height (Z)', default=0, help="Optional localization details, for information purpose only")
@@ -70,7 +70,7 @@ class Location(models.Model):
     last_inventory_date = fields.Date("Last Effective Inventory", readonly=True, help="Date of the last inventory at this location.")
     next_inventory_date = fields.Date("Next Expected Inventory", compute="_compute_next_inventory_date", store=True, help="Date for next planned inventory based on cyclic schedule.")
     warehouse_view_ids = fields.One2many('stock.warehouse', 'view_location_id', readonly=True)
-    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id')
+    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id', recursive=True)
     storage_category_id = fields.Many2one('stock.storage.category', string='Storage Category')
     outgoing_move_line_ids = fields.One2many('stock.move.line', 'location_id', help='Technical: used to compute weight.')
     incoming_move_line_ids = fields.One2many('stock.move.line', 'location_dest_id', help='Technical: used to compute weight.')
@@ -197,13 +197,18 @@ class Location(models.Model):
             domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
-    def _get_putaway_strategy(self, product, quantity=0, package=None):
+    def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None):
         """Returns the location where the product has to be put, if any compliant
         putaway strategy is found. Otherwise returns self.
         The quantity should be in the default UOM of the product, it is used when
         no package is specified.
         """
-        package_type = package and package.package_type_id or self.env['stock.package.type']
+        # find package type on package or packaging
+        package_type = self.env['stock.package.type']
+        if package:
+            package_type = package.package_type_id
+        elif packaging:
+            package_type = packaging.package_type_id
 
         putaway_rules = self.env['stock.putaway.rule']
         putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.product_id == product and (package_type in x.package_type_ids or package_type == x.package_type_ids))
@@ -332,6 +337,7 @@ class Route(models.Model):
     product_selectable = fields.Boolean('Applicable on Product', default=True, help="When checked, the route will be selectable in the Inventory tab of the Product form.")
     product_categ_selectable = fields.Boolean('Applicable on Product Category', help="When checked, the route will be selectable on the Product Category.")
     warehouse_selectable = fields.Boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.")
+    packaging_selectable = fields.Boolean('Applicable on Packaging', help="When checked, the route will be selectable on the Product Packaging.")
     supplied_wh_id = fields.Many2one('stock.warehouse', 'Supplied Warehouse')
     supplier_wh_id = fields.Many2one('stock.warehouse', 'Supplying Warehouse')
     company_id = fields.Many2one(
@@ -342,6 +348,7 @@ class Route(models.Model):
         'product.template', 'stock_route_product', 'route_id', 'product_id',
         'Products', copy=False, check_company=True)
     categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories', copy=False)
+    packaging_ids = fields.Many2many('product.packaging', 'stock_location_route_packaging', 'route_id', 'packaging_id', 'Packagings', copy=False, check_company=True)
     warehouse_domain_ids = fields.One2many('stock.warehouse', compute='_compute_warehouses')
     warehouse_ids = fields.Many2many(
         'stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id',

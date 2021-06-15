@@ -333,7 +333,7 @@
          </style>
     </head>
     <body>
-        <t t-raw="body"/>
+        <t t-out="body"/>
     </body>
 </html>
     </template>
@@ -355,11 +355,12 @@
 </div>
 
 <div style="background-color: #eeeeee;">
-<div t-foreach="tips" t-as="tip" t-raw="tip" class="global_layout" />
+<div t-foreach="tips" t-as="tip" t-out="tip" class="global_layout" />
 
 <div t-if="kpi_data" class="global_layout" style="padding-bottom: 0;">
+    <t t-set="kpi_color" t-value="'kpi_border_col'"/>
     <div t-foreach="kpi_data" t-as="kpi_info" class="kpi_row_footer">
-        <div t-if="kpi_info.get('kpi_col1') or kpi_info.get('kpi_col2') or kpi_info.get('kpi_col3')">
+        <div t-if="kpi_info.get('kpi_col1') or kpi_info.get('kpi_col2') or kpi_info.get('kpi_col3')" t-att-data-field="kpi_info['kpi_name']">
             <div class="kpi_header">
                 <span t-esc="kpi_info['kpi_fullname']" style="vertical-align: middle;" />
                 <a t-if="kpi_info['kpi_action']" t-att-href="'/web#action=%s' % kpi_info['kpi_action']"><span class="button" id="button_open_report">Open Report</span></a>
@@ -369,23 +370,20 @@
                     <t t-set="kpi_value" t-value="kpi_info['kpi_col1']['value']"/>
                     <t t-set="kpi_margin" t-value="kpi_info['kpi_col1'].get('margin')"/>
                     <t t-set="kpi_subtitle" t-value="kpi_info['kpi_col1']['col_subtitle']"/>
-                    <t t-set="kpi_color" t-value="'kpi_border_col'"/>
                 </div>
             </div>
             <div t-if="kpi_info.get('kpi_col2')" class="kpi_cell kpi_cell_center">
                 <div t-call="digest.digest_tool_kpi">
-                    <div t-set="kpi_value" t-value="kpi_info['kpi_col2']['value']"/>
-                    <div t-set="kpi_margin" t-value="kpi_info['kpi_col2'].get('margin')"/>
-                    <div t-set="kpi_subtitle" t-value="kpi_info['kpi_col2']['col_subtitle']"/>
-                    <t t-set="kpi_color" t-value="'kpi_center_col'"/>
+                    <t t-set="kpi_value" t-value="kpi_info['kpi_col2']['value']"/>
+                    <t t-set="kpi_margin" t-value="kpi_info['kpi_col2'].get('margin')"/>
+                    <t t-set="kpi_subtitle" t-value="kpi_info['kpi_col2']['col_subtitle']"/>
                 </div>
             </div>
             <div t-if="kpi_info.get('kpi_col3')" class="kpi_cell kpi_cell_border">
                 <div t-call="digest.digest_tool_kpi">
-                    <div t-set="kpi_value" t-value="kpi_info['kpi_col3']['value']"/>
-                    <div t-set="kpi_margin" t-value="kpi_info['kpi_col3'].get('margin')"/>
-                    <div t-set="kpi_subtitle" t-value="kpi_info['kpi_col3']['col_subtitle']"/>
-                    <t t-set="kpi_color" t-value="'kpi_border_col'"/>
+                    <t t-set="kpi_value" t-value="kpi_info['kpi_col3']['value']"/>
+                    <t t-set="kpi_margin" t-value="kpi_info['kpi_col3'].get('margin')"/>
+                    <t t-set="kpi_subtitle" t-value="kpi_info['kpi_col3']['col_subtitle']"/>
                 </div>
             </div>
             <div class="kpi_trick" />
@@ -397,7 +395,7 @@
     <div class="global_layout">
         <div class="preference_div">
             <div t-foreach="preferences" t-as="preference" class="preference">
-                <t t-raw="preference"/>
+                <t t-out="preference"/>
             </div>
             <div class="by_odoo">
                 Sent by <a href="https://www.odoo.com" target="_blank" class="odoo_link"><span class="odoo_link_text">Odoo</span></a> –
@@ -407,7 +405,7 @@
     </div>
 </div>
 
-<t t-if="body" t-raw="body"/>
+<t t-if="body" t-out="body"/>
 <div t-if="display_mobile_banner" t-call="digest.digest_section_mobile" />
 
 <div class="global_layout" id="footer">

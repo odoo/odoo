@@ -14,7 +14,6 @@
             <field name="name">Administrator</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="email">admin@example.com</field>
-            <field name="image_1920" type="base64" file="base/static/img/avatar_grey.png"/>
             <field name="type">private</field>
         </record>
 
@@ -54,6 +53,8 @@
 
         <record id="onboarding_plan" model='hr.plan'>
             <field name="name">Onboarding</field>
+            <field name="plan_type">onboarding</field>
+            <field name="trigger">manual</field>
             <field name="plan_activity_type_ids" eval="[(6, 0, [
                 ref('hr.onboarding_setup_it_materials'),
                 ref('hr.onboarding_plan_training'),
@@ -63,6 +64,8 @@
 
         <record id="offboarding_plan" model='hr.plan'>
             <field name="name">Offboarding</field>
+            <field name="plan_type">offboarding</field>
+            <field name="trigger">manual</field>
             <field name="plan_activity_type_ids" eval="[(6, 0, [
                 ref('hr.offboarding_setup_compute_out_delais'),
                 ref('hr.offboarding_take_back_hr_materials'),
@@ -89,5 +92,18 @@
             <field name="sequence">2</field>
             <field name="name">Retired</field>
         </record>
+
+        <!-- Work permit expires Soon -->
+        <record id="ir_cron_data_check_work_permit_validity" model="ir.cron">
+            <field name="name">HR Employee: check work permit validity</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_work_permit_validity()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+
     </data>
 </odoo>

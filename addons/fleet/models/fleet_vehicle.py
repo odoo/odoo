@@ -18,13 +18,14 @@ class FleetVehicle(models.Model):
         return state if state and state.id else False
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
-    description = fields.Text("Vehicle Description")
+    description = fields.Html("Vehicle Description")
     active = fields.Boolean('Active', default=True, tracking=True)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     license_plate = fields.Char(tracking=True,
         help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
+    trailer_hook = fields.Boolean(default=False)
     driver_id = fields.Many2one('res.partner', 'Driver', tracking=True, help='Driver of the vehicle', copy=False)
     future_driver_id = fields.Many2one('res.partner', 'Future Driver', tracking=True, help='Next Driver of the vehicle', copy=False, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
@@ -59,7 +60,9 @@ class FleetVehicle(models.Model):
         ('kilometers', 'km'),
         ('miles', 'mi')
         ], 'Odometer Unit', default='kilometers', help='Unit of the odometer ', required=True)
-    transmission = fields.Selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', help='Transmission Used by the vehicle')
+    transmission = fields.Selection(
+        [('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', help='Transmission Used by the vehicle',
+        compute='_compute_transmission', store=True, readonly=False)
     fuel_type = fields.Selection([
         ('gasoline', 'Gasoline'),
         ('diesel', 'Diesel'),
@@ -164,6 +167,12 @@ class FleetVehicle(models.Model):
             record.contract_renewal_due_soon = due_soon
             record.contract_renewal_total = total - 1  # we remove 1 from the real total for display purposes
             record.contract_renewal_name = name
+
+    @api.depends('model_id')
+    def _compute_transmission(self):
+        for vehicle in self:
+            if vehicle.model_id:
+                vehicle.transmission = vehicle.model_id.transmission
 
     def _get_analytic_name(self):
         # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet
@@ -326,7 +335,7 @@ class FleetVehicle(models.Model):
 
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'driver_id' in init_values or 'future_driver_id' in init_values:
+        if 'driver_id' in init_values:
             return self.env.ref('fleet.mt_fleet_driver_updated')
         return super(FleetVehicle, self)._track_subtype(init_values)
 
@@ -340,73 +349,3 @@ class FleetVehicle(models.Model):
             'domain': [('vehicle_id', '=', self.id)],
             'context': {'default_driver_id': self.driver_id.id, 'default_vehicle_id': self.id}
         }
-
-class FleetVehicleOdometer(models.Model):
-    _name = 'fleet.vehicle.odometer'
-    _description = 'Odometer log for a vehicle'
-    _order = 'date desc'
-
-    name = fields.Char(compute='_compute_vehicle_log_name', store=True)
-    date = fields.Date(default=fields.Date.context_today)
-    value = fields.Float('Odometer Value', group_operator="max")
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True)
-    unit = fields.Selection(related='vehicle_id.odometer_unit', string="Unit", readonly=True)
-    driver_id = fields.Many2one(related="vehicle_id.driver_id", string="Driver", readonly=False)
-
-    @api.depends('vehicle_id', 'date')
-    def _compute_vehicle_log_name(self):
-        for record in self:
-            name = record.vehicle_id.name
-            if not name:
-                name = str(record.date)
-            elif record.date:
-                name += ' / ' + str(record.date)
-            record.name = name
-
-    @api.onchange('vehicle_id')
-    def _onchange_vehicle(self):
-        if self.vehicle_id:
-            self.unit = self.vehicle_id.odometer_unit
-
-
-class FleetVehicleState(models.Model):
-    _name = 'fleet.vehicle.state'
-    _order = 'sequence asc'
-    _description = 'Vehicle Status'
-
-    name = fields.Char(required=True, translate=True)
-    sequence = fields.Integer(help="Used to order the note stages")
-
-    _sql_constraints = [('fleet_state_name_unique', 'unique(name)', 'State name already exists')]
-
-
-class FleetVehicleTag(models.Model):
-    _name = 'fleet.vehicle.tag'
-    _description = 'Vehicle Tag'
-
-    name = fields.Char('Tag Name', required=True, translate=True)
-    color = fields.Integer('Color Index')
-
-    _sql_constraints = [('name_uniq', 'unique (name)', "Tag name already exists !")]
-
-
-class FleetServiceType(models.Model):
-    _name = 'fleet.service.type'
-    _description = 'Fleet Service Type'
-
-    name = fields.Char(required=True, translate=True)
-    category = fields.Selection([
-        ('contract', 'Contract'),
-        ('service', 'Service')
-        ], 'Category', required=True, help='Choose whether the service refer to contracts, vehicle services or both')
-
-
-class FleetVehicleAssignationLog(models.Model):
-    _name = "fleet.vehicle.assignation.log"
-    _description = "Drivers history on a vehicle"
-    _order = "create_date desc, date_start desc"
-
-    vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle", required=True)
-    driver_id = fields.Many2one('res.partner', string="Driver", required=True)
-    date_start = fields.Date(string="Start Date")
-    date_end = fields.Date(string="End Date")

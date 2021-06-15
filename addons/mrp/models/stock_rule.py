@@ -43,9 +43,6 @@ class StockRule(models.Model):
         errors = []
         for procurement, rule in procurements:
             bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
-            if not bom:
-                msg = _('There is no Bill of Material of type manufacture or kit found for the product %s. Please define a Bill of Material for this product.') % (procurement.product_id.display_name,)
-                errors.append((procurement, msg))
 
             productions_values_by_company[procurement.company_id.id].append(rule._prepare_mo_vals(*procurement, bom))
 
@@ -58,7 +55,7 @@ class StockRule(models.Model):
             self.env['stock.move'].sudo().create(productions._get_moves_raw_values())
             self.env['stock.move'].sudo().create(productions._get_moves_finished_values())
             productions._create_workorder()
-            productions.filtered(lambda p: p.move_raw_ids).action_confirm()
+            productions.action_confirm()
 
             for production in productions:
                 origin_production = production.move_dest_ids and production.move_dest_ids[0].raw_material_production_id or False
@@ -119,16 +116,19 @@ class StockRule(models.Model):
         and cumulative description.
         """
         delay, delay_description = super()._get_lead_days(product)
+        bypass_delay_description = self.env.context.get('bypass_delay_description')
         manufacture_rule = self.filtered(lambda r: r.action == 'manufacture')
         if not manufacture_rule:
             return delay, delay_description
         manufacture_rule.ensure_one()
         manufacture_delay = product.produce_delay
         delay += manufacture_delay
-        delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacturing Lead Time'), manufacture_delay, _('day(s)'))
+        if not bypass_delay_description:
+            delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacturing Lead Time'), manufacture_delay, _('day(s)'))
         security_delay = manufacture_rule.picking_type_id.company_id.manufacturing_lead
         delay += security_delay
-        delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacture Security Lead Time'), security_delay, _('day(s)'))
+        if not bypass_delay_description:
+            delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacture Security Lead Time'), security_delay, _('day(s)'))
         return delay, delay_description
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):

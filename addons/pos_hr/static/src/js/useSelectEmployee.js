@@ -1,3 +1,4 @@
+/* global Sha1 */
 odoo.define('pos_hr.useSelectEmployee', function (require) {
     'use strict';
 

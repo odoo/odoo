@@ -258,10 +258,10 @@
         <img t-if="slide.slide_type == 'infographic'"
             t-att-src="website.image_url(slide, 'image_1024')" class="img-fluid" style="width:100%" t-att-alt="slide.name"/>
         <div t-if="slide.slide_type in ('presentation', 'document')" class="embed-responsive embed-responsive-4by3 embed-responsive-item mb8" style="height: 600px;">
-            <t t-raw="slide.embed_code"/>
+            <t t-esc="slide.embed_code"/>
         </div>
         <div t-if="slide.slide_type == 'video' and slide.document_id" class="embed-responsive embed-responsive-16by9 embed-responsive-item mb8">
-            <t t-raw="slide.embed_code"/>
+            <t t-esc="slide.embed_code"/>
         </div>
         <div t-if="slide.slide_type == 'webpage'" class="bg-white p-3">
             <div t-field="slide.html_content"/>

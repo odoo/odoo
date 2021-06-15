@@ -41,7 +41,7 @@ class Website(models.Model):
                 ('livechat_visitor_id', '=', visitor.id),
                 ('livechat_channel_id', '=', self.channel_id.id),
                 ('livechat_active', '=', True),
-                ('message_ids', '!=', False)
+                ('has_message', '=', True)
             ], order='create_date desc', limit=1)
             if chat_request_channel:
                 return {

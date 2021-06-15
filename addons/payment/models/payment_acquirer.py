@@ -1,19 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import psycopg2
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
-
-
-def create_missing_journals(cr, registry):
-    """ Post-init hook responsible for the creation of a journal for all acquirers missing one. """
-    env = api.Environment(cr, SUPERUSER_ID, {})
-    env['payment.acquirer']._create_missing_journals()
 
 
 class PaymentAcquirer(models.Model):
@@ -52,13 +45,13 @@ class PaymentAcquirer(models.Model):
              "Use this if you want to charge your customers cards only when\n"
              "you are sure you can ship the goods to them.")
     redirect_form_view_id = fields.Many2one(
-        name="Redirect Form Template", comodel_name='ir.ui.view',
+        string="Redirect Form Template", comodel_name='ir.ui.view',
         help="The template rendering a form submitted to redirect the user when making a payment",
-        domain=[('type', '=', 'qweb')], ondelete='restrict')
+        domain=[('type', '=', 'qweb')])
     inline_form_view_id = fields.Many2one(
         string="Inline Form Template", comodel_name='ir.ui.view',
         help="The template rendering the inline payment form when making a direct payment",
-        domain=[('type', '=', 'qweb')], ondelete='restrict')
+        domain=[('type', '=', 'qweb')])
     country_ids = fields.Many2many(
         string="Countries", comodel_name='res.country', relation='payment_country_rel',
         column1='payment_id', column2='country_id',
@@ -66,8 +59,9 @@ class PaymentAcquirer(models.Model):
              "If none is set, it is available for all countries.")
     journal_id = fields.Many2one(
         string="Payment Journal", comodel_name='account.journal',
+        compute='_compute_journal_id', inverse='_inverse_journal_id',
         help="The journal in which the successful transactions are posted",
-        domain="[('type', 'in', ['bank', 'cash']), ('company_id', '=', company_id)]")
+        domain="[('type', '=', 'bank'), ('company_id', '=', company_id)]")
 
     # Fees fields
     fees_active = fields.Boolean(string="Add Extra Fees")
@@ -170,30 +164,33 @@ class PaymentAcquirer(models.Model):
             'show_cancel_msg': True,
         })
 
-    #=== ONCHANGE METHODS ===#
-
-    @api.onchange('state')
-    def _onchange_state(self):
-        """ Only enable dashboard display for journals of enabled acquirers.
-
-        :return: None
-        """
+    def _compute_journal_id(self):
         for acquirer in self:
-            acquirer.journal_id.show_on_dashboard = acquirer.state == 'enabled'
+            payment_method = self.env['account.payment.method.line'].search([
+                ('journal_id.company_id', '=', acquirer.company_id.id),
+                ('code', '=', acquirer.provider)
+            ], limit=1)
+            if payment_method:
+                acquirer.journal_id = payment_method.journal_id
+            else:
+                acquirer.journal_id = False
 
-    @api.onchange('allow_tokenization')
-    def _onchange_allow_tokenization(self):
-        """ Add (remove) the electronic payment method for acquirers (not) allowing tokenization.
-
-        :return: None
-        """
-        electronic = self.env.ref('payment.account_payment_method_electronic_in')
+    def _inverse_journal_id(self):
         for acquirer in self:
-            if acquirer.allow_tokenization:
-                if electronic not in acquirer.journal_id.inbound_payment_method_ids:
-                    acquirer.journal_id.inbound_payment_method_ids = [(4, electronic.id)]
-            elif electronic in acquirer.journal_id.inbound_payment_method_ids:
-                acquirer.journal_id.inbound_payment_method_ids = [(3, electronic.id)]
+            payment_method = self.env['account.payment.method.line'].search([
+                ('journal_id.company_id', '=', acquirer.company_id.id),
+                ('code', '=', acquirer.provider)
+            ], limit=1)
+            if acquirer.journal_id:
+                if not payment_method:
+                    self.env['account.payment.method.line'].create({
+                        'payment_method_id': self._get_default_payment_method(),
+                        'journal_id': self.journal_id.id,
+                    })
+                else:
+                    payment_method.journal_id = acquirer.journal_id
+            elif payment_method:
+                payment_method.unlink()
 
     #=== CONSTRAINT METHODS ===#
 
@@ -249,95 +246,6 @@ class PaymentAcquirer(models.Model):
                 _("The following fields must be filled: %s", ", ".join(field_names))
             )
 
-    @api.model
-    def _create_missing_journals(self, company=None):
-        """ Create a journal for installed acquirers missing one.
-
-        Each acquirer must have its own journal. It can't however be created along the
-        `payment.acquirer` record because there is no guarantee that the chart template is already
-        installed.
-
-        :param recordset company: The company for which the journals are created, as a `res.company`
-                                  recordset
-        :return: The created journals
-        :rtype: recordset of `account.journal`
-        """
-        # Search for installed acquirer modules having no journal for the current company
-        company = company or self.env.company
-        acquirers = self.env['payment.acquirer'].search([
-            ('journal_id', '=', False),
-            ('company_id', '=', company.id),
-            ('module_state', 'in', ('to install', 'installed')),
-        ])
-
-        # Create or find the missing journals.
-        # This is done in this order and not the other way around because the most common cause for
-        # a missing journal is the first install of an acquirer's module. The other (less common)
-        # cause is a re-install. In this last case, the creation will fail because of a unique
-        # constraint violation, we catch the error, and fallback on searching the previous journal.
-        Journal = journals = self.env['account.journal']
-        for acquirer in acquirers.filtered('company_id.chart_template_id'):
-            try:
-                with self.env.cr.savepoint():
-                    journal = Journal.create(acquirer._get_journal_create_values())
-            except psycopg2.IntegrityError as error:  # Journal already exists
-                if error.pgcode == psycopg2.errorcodes.UNIQUE_VIOLATION:
-                    journal = Journal.search(acquirer._get_journal_search_domain(), limit=1)
-                else:
-                    raise error
-            acquirer.journal_id = journal
-            journals += journal
-        return journals
-
-    def _get_journal_create_values(self):
-        """ Return a dict of values to create the acquirer's journal.
-
-        Note: self.ensure_one()
-
-        :return: The dict of create values for `account.journal`
-        :rtype: dict
-        """
-        self.ensure_one()
-
-        account_vals = self.company_id.chart_template_id. \
-            _prepare_transfer_account_for_direct_creation(self.name, self.company_id)
-        account = self.env['account.account'].create(account_vals)
-        inbound_payment_method_ids = []
-        if self.allow_tokenization:
-            inbound_payment_method_ids.append(
-                (4, self.env.ref('payment.account_payment_method_electronic_in').id)
-            )
-        return {
-            'name': self.name,
-            'code': self.name.upper(),
-            'sequence': 999,
-            'type': 'bank',
-            'company_id': self.company_id.id,
-            'default_account_id': account.id,
-            # Show the journal on dashboard if the acquirer is published on the website.
-            'show_on_dashboard': self.state == 'enabled',
-            # Don't show payment methods in the backend
-            'inbound_payment_method_ids': inbound_payment_method_ids,
-            'outbound_payment_method_ids': [],
-        }
-
-    def _get_journal_search_domain(self):
-        """ Return a domain for searching a journal corresponding to the acquirer.
-
-        Note: self.ensure_one()
-
-        :return: The search domain
-        :rtype: list
-        """
-        self.ensure_one()
-
-        code_cutoff = self.env['account.journal']._fields['code'].size
-        return [
-            ('name', '=', self.name),
-            ('code', '=', self.name.upper()[:code_cutoff]),
-            ('company_id', '=', self.company_id.id),
-        ]
-
     #=== ACTION METHODS ===#
 
     def button_immediate_install(self):
@@ -359,23 +267,17 @@ class PaymentAcquirer(models.Model):
 
     @api.model
     def _get_compatible_acquirers(
-        self, company_id, partner_id, currency_id=None, force_tokenization=False,
-        preferred_acquirer_id=None, **kwargs
+        self, company_id, partner_id, currency_id=None, force_tokenization=False, **kwargs
     ):
         """ Select and return the acquirers matching the criteria.
 
         The base criteria are that acquirers must not be disabled, be in the company that is
         provided, and support the country of the partner if it exists.
 
-        If a `preferred_acquirer_id` is specified, only the corresponding acquirer is returned *if*
-        it exists and matches the criteria. Otherwise, we fallback on the default behavior that is
-        returning only the acquirers that do match the criteria.
-
         :param int company_id: The company to which acquirers must belong, as a `res.company` id
         :param int partner_id: The partner making the payment, as a `res.partner` id
         :param int currency_id: The payment currency if known beforehand, as a `res.currency` id
         :param bool force_tokenization: Whether only acquirers allowing tokenization can be matched
-        :param int preferred_acquirer_id: The preferred acquirer, as a `payment.acquirer` id
         :param dict kwargs: Optional data. This parameter is not used here
         :return: The compatible acquirers
         :rtype: recordset of `payment.acquirer`
@@ -395,15 +297,7 @@ class PaymentAcquirer(models.Model):
         if force_tokenization or self._is_tokenization_required(**kwargs):
             domain = expression.AND([domain, [('allow_tokenization', '=', True)]])
 
-        # Handle preferred acquirer
-        compatible_acquirers = self.env['payment.acquirer']
-        if preferred_acquirer_id:  # If an acquirer is preferred, check that it matches the criteria
-            compatible_acquirers = self.env['payment.acquirer'].search(expression.AND([
-                domain, [('id', '=', preferred_acquirer_id)]
-            ]))
-        if not compatible_acquirers:  # If not found or incompatible, fallback on the others
-            compatible_acquirers = self.env['payment.acquirer'].search(domain)
-
+        compatible_acquirers = self.env['payment.acquirer'].search(domain)
         return compatible_acquirers
 
     @api.model
@@ -432,17 +326,6 @@ class PaymentAcquirer(models.Model):
         :rtype: bool
         """
         return True
-
-    def _get_base_url(self):
-        """ Get the base url of the website on which the payment is made.
-
-        Note: self.ensure_one()
-
-        :return: The website base url
-        :rtype: str
-        """
-        self.ensure_one()
-        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
     def _compute_fees(self, amount, currency, country):
         """ Compute the transaction fees.
@@ -505,3 +388,7 @@ class PaymentAcquirer(models.Model):
         """
         self.ensure_one()
         return self.journal_id.currency_id or self.company_id.currency_id
+
+    def _get_default_payment_method(self):
+        self.ensure_one()
+        return self.env.ref('account.account_payment_method_manual_in').id

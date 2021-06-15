@@ -64,18 +64,32 @@
                 <form string="Manufacturing Orders">
                 <header>
                     <field name="confirm_cancel" invisible="1"/>
+                    <field name="confirm_no_consumption" invisible="1"/>
                     <field name="show_lock" invisible="1"/>
-                    <button name="button_mark_done" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'cancel', 'done', 'to_close')), ('qty_producing', '=', 0)]}" string="Validate" type="object" class="oe_highlight"/>
+                    <button name="button_mark_done" attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'cancel', 'done', 'to_close')), ('qty_producing', '=', 0), ('confirm_no_consumption', '=', False)]}" string="Validate" type="object" class="oe_highlight"
+                            confirm="There are no components to consume. Are you still sure you want to continue?"/>
+                    <button name="button_mark_done" attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'cancel', 'done', 'to_close')), ('qty_producing', '=', 0), ('confirm_no_consumption', '=', True)]}" string="Validate" type="object" class="oe_highlight"/>
                     <button name="button_mark_done" attrs="{'invisible': [
+                        '|',
+                        ('confirm_no_consumption', '=', True),
                         '&amp;',
                         '|',
                         ('state', 'not in', ('confirmed', 'progress')),
                         ('qty_producing', '!=', 0),
                         ('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"/>
+                    <button name="button_mark_done" attrs="{'invisible': [
+                        '|',
+                        ('confirm_no_consumption', '=', False),
+                        '&amp;',
+                        '|',
+                        ('state', 'not in', ('confirmed', 'progress')),
+                        ('qty_producing', '!=', 0),
+                        ('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"
+                            confirm="There are no components to consume. Are you still sure you want to continue?"/>
                     <button name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Confirm" type="object" class="oe_highlight"/>
-                    <button name="action_assign" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object"/>
                     <button name="button_plan" attrs="{'invisible': ['|', '|', ('state', 'not in', ('confirmed', 'progress', 'to_close')), ('workorder_ids', '=', []), ('is_planned', '=', True)]}" type="object" string="Plan" class="oe_highlight"/>
-                    <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': ['|', '|', ('is_planned', '!=', 'True'), ('date_planned_start', '=', False), ('date_planned_finished', '=', False)]}"/>
+                    <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': [('is_planned', '=', False)]}"/>
+                    <button name="action_assign" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object"/>
                     <button name="do_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}"/>
                     <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('cancel', 'draft'))]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,progress,done"/>
@@ -175,7 +189,7 @@
                             <label for="date_planned_start"/>
                             <div class="o_row">
                                 <field name="date_planned_start"
-                                    attrs="{'readonly': ['|', ('is_planned', '=', True), ('state', 'in', ['done', 'cancel'])]}"
+                                    attrs="{'readonly': [('state', 'in', ['close', 'cancel'])]}"
                                     decoration-warning="state not in ('done', 'cancel') and date_planned_start &lt; now"
                                     decoration-danger="state not in ('done', 'cancel') and date_planned_start &lt; current_date"
                                     decoration-bf="state not in ('done', 'cancel') and (date_planned_start &lt; current_date or date_planned_start &lt; now)"/>
@@ -215,7 +229,7 @@
                     <notebook>
                         <page string="Components" name="components">
                             <field name="move_raw_ids"
-                                context="{'default_product_uom_qty': 1.0, 'default_date': date_planned_start, 'default_date_deadline': date_deadline, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}"
+                                context="{'default_date': date_planned_start, 'default_date_deadline': date_deadline, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}"
                                 attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
                                 <tree default_order="is_done,sequence" editable="bottom">
                                     <field name="product_id" force_save="1" required="1" context="{'default_type': 'product'}" attrs="{'readonly': ['|', '|', ('has_move_lines', '=', True), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}"/>
@@ -423,7 +437,7 @@
             <field name="arch" type="xml">
                 <calendar date_start="date_planned_start" date_stop="date_planned_finished"
                           string="Manufacturing Orders" event_limit="5" quick_add="False">
-                    <field name="user_id" avatar_field="image_128"/>
+                    <field name="user_id" avatar_field="avatar_128"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                 </calendar>

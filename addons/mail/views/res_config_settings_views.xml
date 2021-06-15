@@ -31,14 +31,15 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="external_email_server_default"/>
-                                <a href="https://www.odoo.com/documentation/user/14.0/discuss/advanced/email_servers.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/14.0/applications/productivity/discuss/advanced/email_servers.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted" id="external_email_server_default">
                                     Configure your own email servers
                                 </div>
                                 <div class="content-group"  attrs="{'invisible': [('external_email_server_default', '=', False)]}">
-                                    <div class="row mt16" id="mail_alias_domain">
-                                        <label for="alias_domain" class="col-lg-3 o_light_label"/>
-                                        <field name="alias_domain" placeholder="mycompany.odoo.com"/>
+                                    <div class="mt16" id="mail_alias_domain">
+                                        <label for="alias_domain" class="o_light_label"/>
+                                        <span>@</span>
+                                        <field name="alias_domain" placeholder='e.g. "mycompany.com"'/>
                                     </div>
                                 </div>
                             </div>

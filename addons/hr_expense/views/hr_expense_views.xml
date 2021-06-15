@@ -44,7 +44,7 @@
             <field name="name">hr.expense.tree</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <tree string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree_dashboard_upload">
+                <tree string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree_dashboard_upload" decoration-info="state == 'draft'">
                     <header>
                         <button name="action_submit_expenses" type="object" string="Create Report"/>
                     </header>
@@ -147,7 +147,7 @@
                             <label for="quantity" attrs="{'invisible': [('product_has_cost', '=', False)]}"/>
                             <div class="o_row" attrs="{'invisible': [('product_has_cost', '=', False)]}">
                                 <field name="quantity" class="oe_inline"/>
-                                <field name="product_uom_id" required="1" widget="selection" class="oe_inline" groups="uom.group_uom"/>
+                                <field name="product_uom_id" required="1" options="{'no_open': True, 'no_create': True}" class="oe_inline" groups="uom.group_uom"/>
                             </div>
 
                             <label for="total_amount" attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
@@ -355,7 +355,7 @@
                     <field name="currency_id"/>
                     <templates>
                         <div t-name="activity-box">
-                            <img t-att-src="activity_image('hr.employee', 'image_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value"/>
+                            <img t-att-src="activity_image('hr.employee', 'avatar_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value"/>
                             <div>
                                 <field name="name" display="full"/>
                                 <field name="total_amount" widget="monetary" muted="1" display="full"/>
@@ -527,7 +527,7 @@
                                 <field name="active" invisible="1"/>
                                 <field name="type" invisible="1"/>
                                 <field name="list_price"/>
-                                <field name="standard_price"/>
+                                <field name="standard_price" help="When the cost of an expense product is different than 0, then the user using this product won't be able to change the amount of the expense, only the quantity. Use a cost different than 0 for expense categories funded by the company at fixed cost like allowances for mileage, per diem, accomodation or meal."/>
                                 <field name="uom_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                 <field name="uom_po_id" invisible="1"/>
                                 <label for="default_code"/>
@@ -603,7 +603,7 @@
             <field name="name">hr.expense.sheet.tree</field>
             <field name="model">hr.expense.sheet</field>
             <field name="arch" type="xml">
-                <tree string="Expense Reports" multi_edit="1" js_class="hr_expense_tree_dashboard_upload" sample="1">
+                <tree string="Expense Reports" multi_edit="1" js_class="hr_expense_tree_dashboard_upload" sample="1" decoration-info="state == 'draft'">
                     <header>
                         <button name="approve_expense_sheets" string="Approve Report" type="object"
                                 groups="hr_expense.group_hr_expense_team_approver"
@@ -920,7 +920,7 @@
                     <field name="currency_id"/>
                     <templates>
                         <div t-name="activity-box">
-                            <img t-att-src="activity_image('hr.employee', 'image_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value"/>
+                            <img t-att-src="activity_image('hr.employee', 'avatar_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value"/>
                             <div>
                                 <field name="name" display="full"/>
                                 <field name="total_amount" widget="monetary" muted="1" display="full"/>
@@ -1091,7 +1091,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_hr_expense_root" name="Expenses" sequence="100" web_icon="hr_expense,static/description/icon.png"/>
+        <menuitem id="menu_hr_expense_root" name="Expenses" sequence="230" web_icon="hr_expense,static/description/icon.png"/>
 
         <menuitem id="menu_hr_expense_my_expenses" name="My Expenses" sequence="1" parent="menu_hr_expense_root" groups="base.group_user"/>
         <menuitem id="menu_hr_expense_my_expenses_to_submit" sequence="1" parent="menu_hr_expense_my_expenses" action="hr_expense_actions_my_unsubmitted" name="My Expenses to Report"/>

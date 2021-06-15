@@ -44,7 +44,7 @@
                                 <i class="fa fa-angle-down text-black-50 ml-auto pl-2" title="dropdown_angle_down" role="img"/>
                             </a>
                         </div>
-                        <div t-attf-class="dropdown-menu w-100 border-0 shadow-lg {{state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}" role="menu">
+                        <div t-attf-class="dropdown-menu border-0 shadow-lg {{state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}" role="menu">
                             <t t-foreach="getters.getWebsiteTypes()" t-as="type" t-key="type.name">
                                 <a t-att-title="type.name" t-att-data-id="type.id" t-on-click="selectWebsiteType" class="dropdown-item o_change_website_type">
                                     <t t-esc="type.label"/>
@@ -52,12 +52,12 @@
                             </t>
                         </div>
                     </div>
-                    <span t-att-class="!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'"> for my</span>
+                    <span t-attf-class="mr-2 {{!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'}}"> for my</span>
                 </div>
-                <div t-attf-class="o_configurator_typing_text d-inline d-md-block o_configurator_industry mb-md-2 mb-lg-4 {{!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'}}">
-                    <div class="o_configurator_industry_wrapper position-relative d-inline">
-                        <i t-attf-class="industry_selection d-inline d-md-inline-block rounded bg-100 px-2 px-md-3 mx-2 mx-md-0 {{state.selectedIndustry ? 'o_step_completed' : 'o_step_todo show'}}" contenteditable="True" t-on-blur="blurIndustrySelection" t-on-input="inputIndustrySelection" t-ref="industrySelection"/>
-                    </div>
+                <div t-attf-class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 {{!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'}}">
+                    <label class="o_configurator_industry_wrapper mr-2">
+                        <input t-on-blur="blurIndustrySelection" t-on-input="inputIndustrySelection" t-ref="industrySelection"/>
+                    </label>
                     <span> business</span>
                     <span t-att-class="!state.selectedIndustry ? 'o_configurator_hide' : 'o_configurator_show'">,</span>
                 </div>
@@ -72,7 +72,7 @@
                                 <i class="fa fa-angle-down text-black-50 ml-auto pl-2" title="dropdown_angle_down" role="img"/>
                             </a>
                         </div>
-                        <div class="dropdown-menu w-100 border-0 shadow-lg" role="menu">
+                        <div class="dropdown-menu border-0 shadow-lg" role="menu">
                             <t t-foreach="getters.getWebsitePurpose()" t-as="type" t-key="type.name">
                                 <a t-att-title="type.name" t-att-data-id="type.id" t-on-click="selectWebsitePurpose" class="dropdown-item o_change_website_purpose">
                                     <t t-esc="type.label"/>
@@ -97,7 +97,7 @@
                 <div class="w-100 w-lg-25 order-lg-3 my-4 my-md-0 d-flex flex-column">
                     <div class="h4 text-center">
                         <b>Detect</b> from Logo</div>
-                    <div class="d-flex flex-column flex-grow-1">
+                    <div class="d-flex flex-column flex-grow-1 py-4">
                         <a href="#" t-on-click="uploadLogo" t-attf-class="o_configurator_logo_upload position-relative btn-link rounded bg-100 overflow-hidden d-flex flex-grow-1 justify-content-center align-items-center text-decoration-none {{state.logo? 'h-50' : ''}}">
                             <input type="file" class="logo_selection_input" t-on-change="changeLogo" style="display:none" name="logo_selection" t-ref="logoSelectionInput" accept="image/*"/>
                             <div class="o_configurator_logo_button text-center">
@@ -111,10 +111,11 @@
                         </a>
                         <div t-if="state.recommendedPalette" class="w-75 mx-auto px-2 pt-3" style="max-width: 184px;">
                             <h6 class="text-center text-success d-block badge mb-0 mt-n2">Detected Colors</h6>
-                            <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex" t-on-click="selectPalette(state.recommendedPalette.id)" t-attf-style="background-color: {{state.recommendedPalette.color3}}">
-                                <div class="color_sample w-100 first" t-attf-style="background-color: {{state.recommendedPalette.color1}}"/>
-                                <div class="color_sample w-100 second" t-attf-style="background-color: {{state.recommendedPalette.color2}}"/>
-                                <div class="color_sample w-100 third" t-attf-style="background-color: {{state.recommendedPalette.color3}}"/>
+                            <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{getters.getSelectedPaletteName() == 'recommendedPalette' ? 'selected' : ''}}"
+                                 t-on-click="selectPalette('recommendedPalette')" t-attf-style="background-color: {{state.recommendedPalette.color3}}">
+                                <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color1}}"/>
+                                <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color3}}"/>
+                                <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color2}}"/>
                             </div>
                         </div>
                     </div>
@@ -130,10 +131,11 @@
                     <div class="d-flex flex-wrap align-items-end">
                         <t t-foreach="getters.getPalettes()" t-as="palette" t-key="palette_index">
                             <div class="w-50 w-md-25 px-2 pt-3">
-                                <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex" t-on-click="selectPalette(palette.id)" t-attf-style="background-color: {{palette.color3}}">
-                                    <div class="color_sample w-100 first" t-attf-style="background-color: {{palette.color1}}"/>
-                                    <div class="color_sample w-100 second" t-attf-style="background-color: {{palette.color2}}"/>
-                                    <div class="color_sample w-100 third" t-attf-style="background-color: {{palette.color3}}"/>
+                                <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{getters.getSelectedPaletteName() == palette.name ? 'selected' : ''}}"
+                                     t-on-click="selectPalette(palette.name)" t-attf-style="background-color: {{palette.color3}}">
+                                    <div class="color_sample w-100" t-attf-style="background-color: {{palette.color1}}"/>
+                                    <div class="color_sample w-100" t-attf-style="background-color: {{palette.color3}}"/>
+                                    <div class="color_sample w-100" t-attf-style="background-color: {{palette.color2}}"/>
                                 </div>
                             </div>
                         </t>
@@ -152,7 +154,8 @@
         </div>
         <div class="o_configurator_screen_content container d-flex flex-grow-1 align-items-center">
             <div class="m-auto">
-                <div class="o_configurator_typing_text o_configurator_show_fast p-2">Add <b class="text-info">Pages</b> or <b class="text-warning">Features</b></div>
+                <div class="o_configurator_typing_text o_configurator_show_fast pl-2">Add <b class="text-info">Pages</b> and <b class="text-warning">Features</b></div>
+                <h5 class="o_configurator_show_fast text-muted pl-2">You'll be able to create your pages later on.</h5>
                 <div class="page_feature_selection o_configurator_show">
                     <div class="w-100 page_feature_selection container d-flex flex-wrap py2 py-lg-3">
                         <t t-foreach="getters.getFeatures()" t-as="feature" t-key="feature_index">

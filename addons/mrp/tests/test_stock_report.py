@@ -159,15 +159,21 @@ class TestSaleStockReports(TestReportsCommon):
             'name': 'Banana',
             'type': 'product',
         })
+        product_chocolate = self.env['product.product'].create({
+            'name': 'Chocolate',
+            'type': 'consu',
+        })
 
         # We create 2 identical MO
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = product_banana
         mo_form.product_qty = 10
+        with mo_form.move_raw_ids.new() as move:
+            move.product_id = product_chocolate
+
         mo_1 = mo_form.save()
-        mo_1.button_plan()
         mo_2 = mo_1.copy()
-        mo_2.button_plan()
+        (mo_1 | mo_2).action_confirm()
 
         # Check for both MO if the highlight (is_matched) corresponds to the correct MO
         for mo in [mo_1, mo_2]:

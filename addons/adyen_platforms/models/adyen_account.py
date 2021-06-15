@@ -1,90 +1,52 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import os
-import requests
+import logging
 import uuid
+from datetime import timedelta
+
+import requests
+from ast import literal_eval
+from dateutil.parser import parse
+from pytz import UTC
 from werkzeug.urls import url_join
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools import date_utils
+from odoo.osv import expression
+from odoo.tools import format_amount, format_datetime
 
-from odoo.addons.adyen_platforms.util import AdyenProxyAuth
+from odoo.addons.adyen_platforms.util import AdyenProxyAuth, to_major_currency
 
-ADYEN_AVAILABLE_COUNTRIES = ['US', 'AT', 'AU', 'BE', 'CA', 'CH', 'CZ', 'DE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HR', 'IE', 'IT', 'LT', 'LU', 'NL', 'PL', 'PT']
+_logger = logging.getLogger(__name__)
+
 TIMEOUT = 60
-
-
-class AdyenAddressMixin(models.AbstractModel):
-    _name = 'adyen.address.mixin'
-    _description = 'Adyen for Platforms Address Mixin'
-
-    country_id = fields.Many2one('res.country', string='Country', domain=[('code', 'in', ADYEN_AVAILABLE_COUNTRIES)], required=True)
-    country_code = fields.Char(related='country_id.code')
-    state_id = fields.Many2one('res.country.state', string='State', domain="[('country_id', '=?', country_id)]")
-    state_code = fields.Char(related='state_id.code')
-    city = fields.Char('City', required=True)
-    zip = fields.Char('ZIP', required=True)
-    street = fields.Char('Street', required=True)
-    house_number_or_name = fields.Char('House Number Or Name', required=True)
-
-
-class AdyenIDMixin(models.AbstractModel):
-    _name = 'adyen.id.mixin'
-    _description = 'Adyen for Platforms ID Mixin'
-
-    id_type = fields.Selection(string='Photo ID type', selection=[
-        ('PASSPORT', 'Passport'),
-        ('ID_CARD', 'ID Card'),
-        ('DRIVING_LICENSE', 'Driving License'),
-    ])
-    id_front = fields.Binary('Photo ID Front', help="Allowed formats: jpg, pdf, png. Maximum allowed size: 4MB.")
-    id_front_filename = fields.Char()
-    id_back = fields.Binary('Photo ID Back', help="Allowed formats: jpg, pdf, png. Maximum allowed size: 4MB.")
-    id_back_filename = fields.Char()
-
-    def write(self, vals):
-        res = super(AdyenIDMixin, self).write(vals)
-
-        # Check file formats
-        if vals.get('id_front'):
-            self._check_file_requirements(vals.get('id_front'), vals.get('id_front_filename'))
-        if vals.get('id_back'):
-            self._check_file_requirements(vals.get('id_back'), vals.get('id_back_filename'))
-
-        for adyen_account in self:
-            if vals.get('id_front'):
-                document_type = adyen_account.id_type
-                if adyen_account.id_type in ['ID_CARD', 'DRIVING_LICENSE']:
-                    document_type += '_FRONT'
-                adyen_account._upload_photo_id(document_type, adyen_account.id_front, adyen_account.id_front_filename)
-            if vals.get('id_back') and adyen_account.id_type in ['ID_CARD', 'DRIVING_LICENSE']:
-                document_type = adyen_account.id_type + '_BACK'
-                adyen_account._upload_photo_id(document_type, adyen_account.id_back, adyen_account.id_back_filename)
-            return res
-
-    @api.model
-    def _check_file_requirements(self, content, filename):
-        file_extension = os.path.splitext(filename)[1]
-        file_size = int(len(content) * 3/4) # Compute file_size in bytes
-        if file_extension not in ['.jpeg', '.jpg', '.pdf', '.png']:
-            raise ValidationError(_('Allowed file formats for photo IDs are jpeg, jpg, pdf or png'))
-        if file_size >> 20 > 4 or (file_size >> 10 < 1 and file_extension == '.pdf') or (file_size >> 10 < 100 and file_extension != '.pdf') :
-            raise ValidationError(_('Photo ID file size must be between 100kB (1kB for PDFs) and 4MB'))
-
-    def _upload_photo_id(self, document_type, content, filename):
-        # The request to be sent to Adyen will be different for Individuals,
-        # Shareholders, etc. This method should be implemented by the models
-        # inheriting this mixin
-        raise NotImplementedError()
+ADYEN_STATUS_MAP = {
+    'Active': 'active',
+    'Inactive': 'inactive',
+    'Suspended': 'suspended',
+    'Closed': 'closed',
+}
+ADYEN_VALIDATION_MAP = {
+    'FAILED': 'failed',
+    'INVALID_DATA': 'awaiting_data',
+    'RETRY_LIMIT_REACHED': 'awaiting_data',
+    'AWAITING_DATA': 'awaiting_data',
+    'DATA_PROVIDED': 'data_provided',
+    'PENDING': 'pending',
+    'PASSED': 'passed',
+}
+ADYEN_PAYOUT_FREQUENCIES = {
+    'daily': 'DAILY',
+    'weekly': 'WEEKLY',
+    'biweekly': 'BIWEEKLY_ON_1ST_AND_15TH_AT_MIDNIGHT',
+    'monthly': 'MONTHLY',
+}
 
 
 class AdyenAccount(models.Model):
     _name = 'adyen.account'
     _inherit = ['mail.thread', 'adyen.id.mixin', 'adyen.address.mixin']
-
     _description = 'Adyen for Platforms Account'
     _rec_name = 'full_name'
 
@@ -94,13 +56,24 @@ class AdyenAccount(models.Model):
     account_holder_code = fields.Char('Account Holder Code', default=lambda self: uuid.uuid4().hex)
 
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
-    payout_ids = fields.One2many('adyen.payout', 'adyen_account_id', string='Payouts')
     shareholder_ids = fields.One2many('adyen.shareholder', 'adyen_account_id', string='Shareholders')
     bank_account_ids = fields.One2many('adyen.bank.account', 'adyen_account_id', string='Bank Accounts')
     transaction_ids = fields.One2many('adyen.transaction', 'adyen_account_id', string='Transactions')
     transactions_count = fields.Integer(compute='_compute_transactions_count')
+    transaction_payout_ids = fields.One2many('adyen.transaction.payout', 'adyen_account_id')
 
     is_business = fields.Boolean('Is a business', required=True)
+
+    # Payout
+    account_code = fields.Char('Account Code')
+    payout_schedule = fields.Selection([
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+        ('biweekly', 'Bi-weekly'),
+        ('monthly', 'Monthly'),
+    ], default='biweekly', required=True, string='Payout Schedule')
+    next_scheduled_payout = fields.Datetime('Next Scheduled Payout', readonly=True)
+    last_sync_date = fields.Datetime(default=fields.Datetime.now)
 
     # Contact Info
     full_name = fields.Char(compute='_compute_full_name')
@@ -113,9 +86,9 @@ class AdyenAccount(models.Model):
     date_of_birth = fields.Date('Date of birth')
     document_number = fields.Char('ID Number',
         help="The type of ID Number required depends on the country:\n"
-             "US: Social Security Number (9 digits or last 4 digits)\n"
-             "Canada: Social Insurance Number\nItaly: Codice fiscale\n"
-             "Australia: Document Number")
+            "US: Social Security Number (9 digits or last 4 digits)\n"
+            "Canada: Social Insurance Number\nItaly: Codice fiscale\n"
+            "Australia: Document Number")
     document_type = fields.Selection(string='Document Type', selection=[
         ('ID', 'ID'),
         ('PASSPORT', 'Passport'),
@@ -128,18 +101,63 @@ class AdyenAccount(models.Model):
     doing_business_as = fields.Char('Doing Business As')
     registration_number = fields.Char('Registration Number')
 
+    # Adyen Account Status - internal use
+    account_status = fields.Selection(string='Internal Account Status', selection=[
+        ('active', 'Active'),
+        ('inactive', 'Inactive'),
+        ('suspended', 'Suspended'),
+        ('closed', 'Closed'),
+    ], default='inactive', readonly=True)
+    payout_allowed = fields.Boolean(readonly=True)
+
+    # Status for UX
+    state = fields.Selection([
+        ('pending', 'Pending Validation'),  # Odoo Validation
+        ('awaiting_data', 'Data To Provide'),
+        ('validation', 'Data Validation'),  # KYC Validation from Adyen
+        ('validated', 'Validated'),
+    ], compute='_compute_state', string='Account State')
+
     # KYC
-    kyc_status = fields.Selection(string='KYC Status', selection=[
-        ('awaiting_data', 'Data to provide'),
-        ('pending', 'Waiting for validation'),
-        ('passed', 'Confirmed'),
-        ('failed', 'Failed'),
-    ], required=True, default='pending')
-    kyc_status_message = fields.Char('KYC Status Message', readonly=True)
+    adyen_kyc_ids = fields.One2many('adyen.kyc', 'adyen_account_id', string='KYC Checks', readonly=True)
+    kyc_tier = fields.Integer(string='KYC Tier', default=0, readonly=True)
+    kyc_status_message = fields.Html(compute='_compute_kyc_status')
 
     _sql_constraints = [
         ('adyen_uuid_uniq', 'UNIQUE(adyen_uuid)', 'Adyen UUID should be unique'),
     ]
+
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        company_fields = {
+            'country_id': 'country_id',
+            'state_id': 'state_id',
+            'city': 'city',
+            'zip': 'zip',
+            'street': 'street',
+            'email': 'email',
+            'phone_number': 'phone',
+        }
+
+        if self.env.company.partner_id.is_company:
+            company_fields.update({
+                'registration_number': 'vat',
+                'legal_business_name': 'name',
+                'doing_business_as': 'name',
+            })
+            if 'is_business' in fields:
+                res['is_business'] = True
+
+        field_keys = company_fields.keys() & set(fields)
+        for field_name in field_keys:
+            res[field_name] = self.env.company[company_fields[field_name]]
+
+        if not self.env.company.partner_id.is_company and {'last_name', 'first_name'} & set(fields):
+            name = self.env.company.partner_id.name.split()
+            res['last_name'] = name[-1]
+            res['first_name'] = ' '.join(name[:-1])
+
+        return res
 
     @api.depends('transaction_ids')
     def _compute_transactions_count(self):
@@ -154,39 +172,92 @@ class AdyenAccount(models.Model):
             else:
                 adyen_account_id.full_name = "%s %s" % (adyen_account_id.first_name, adyen_account_id.last_name)
 
+    @api.depends('kyc_tier', 'adyen_kyc_ids', 'account_status')
+    def _compute_state(self):
+        for account in self:
+            if account.account_status in ['inactive', 'suspended'] and account.kyc_tier == 0:
+                account.state = 'pending'
+            else:
+                if any(k.status == 'awaiting_data' for k in account.adyen_kyc_ids):
+                    account.state = 'awaiting_data'
+                elif any(k.status == 'pending' for k in account.adyen_kyc_ids):
+                    account.state = 'validation'
+                else:
+                    account.state = 'validated'
+
+    @api.depends_context('lang')
+    @api.depends('adyen_kyc_ids')
+    def _compute_kyc_status(self):
+        self.kyc_status_message = False
+        doc_types = dict(self.env['adyen.kyc']._fields['verification_type']._description_selection(self.env))
+        for account in self.filtered('adyen_kyc_ids.status_message'):
+            checks = {}
+            for kyc in account.adyen_kyc_ids.filtered('status_message'):
+                doc_type = doc_types.get(kyc.verification_type, _('Other'))
+                checks.setdefault(doc_type, []).append({
+                    'document': kyc.document,
+                    'message': kyc.status_message,
+                })
+
+            account.kyc_status_message = self.env['ir.qweb']._render('adyen_platforms.kyc_status_message', {
+                'checks': checks
+            })
+
     @api.model
     def create(self, values):
-        adyen_account_id = super(AdyenAccount, self).create(values)
-        self.env.company.adyen_account_id = adyen_account_id.id
+        adyen_account_id = super().create(values)
 
         # Create account on odoo.com, proxy and Adyen
-        response = adyen_account_id._adyen_rpc('create_account_holder', adyen_account_id._format_data())
+        create_data = self._format_data(values)
+        create_data['payoutSchedule'] = ADYEN_PAYOUT_FREQUENCIES.get(values.get('payout_schedule', 'biweekly'), 'BIWEEKLY_ON_1ST_AND_15TH_AT_MIDNIGHT'),
+        response = self._adyen_rpc('v1/create_account_holder', create_data)
 
-        # Save adyen_uuid and proxy_token, that have been generated by odoo.com and the proxy
         adyen_account_id.with_context(update_from_adyen=True).write({
+            'account_code': response['adyen_response']['accountCode'],
             'adyen_uuid': response['adyen_uuid'],
             'proxy_token': response['proxy_token'],
         })
+        self.env.company.adyen_account_id = adyen_account_id.id
 
-        # A default payout is created for all adyen accounts
-        adyen_account_id.env['adyen.payout'].with_context(update_from_adyen=True).create({
-            'code': response['adyen_response']['accountCode'],
-            'adyen_account_id': adyen_account_id.id,
-        })
         return adyen_account_id
 
     def write(self, vals):
-        res = super(AdyenAccount, self).write(vals)
-        if not self.env.context.get('update_from_adyen'):
-            self._adyen_rpc('update_account_holder', self._format_data())
+        adyen_fields = {
+            'country_id', 'state_id', 'city', 'zip', 'street', 'house_number_or_name', 'email', 'phone_number',
+            'is_business', 'legal_business_name', 'doing_business_as', 'registration_number', 'first_name',
+            'last_name', 'date_of_birth', 'document_number', 'document_type',
+        }
+        res = super().write(vals)
+        if vals.keys() & adyen_fields and not self.env.context.get('update_from_adyen'):
+            self._adyen_rpc('v1/update_account_holder', self._format_data(vals))
+
+        if 'payout_schedule' in vals:
+            self._update_payout_schedule(vals['payout_schedule'])
+
         return res
 
     def unlink(self):
+        self.check_access_rights('unlink')
+
         for adyen_account_id in self:
-            adyen_account_id._adyen_rpc('close_account_holder', {
+            adyen_account_id._adyen_rpc('v1/close_account_holder', {
                 'accountHolderCode': adyen_account_id.account_holder_code,
             })
-        return super(AdyenAccount, self).unlink()
+        return super().unlink()
+
+    def _update_payout_schedule(self, payout_schedule):
+        self.ensure_one()
+
+        self._adyen_rpc('v1/update_payout_schedule', {
+            'accountCode': self.account_code,
+            'metadata': {
+                'adyen_uuid': self.adyen_uuid,
+            },
+            'payoutSchedule': {
+                'action': 'UPDATE',
+                'schedule': ADYEN_PAYOUT_FREQUENCIES.get(payout_schedule),
+            }
+        })
 
     @api.model
     def action_create_redirect(self):
@@ -205,7 +276,7 @@ class AdyenAccount(models.Model):
                 'res_id': self.env.company.adyen_account_id.id,
                 'type': 'ir.actions.act_window',
             }
-        return_url = url_join(self.env['ir.config_parameter'].sudo().get_param('web.base.url'), 'adyen_platforms/create_account')
+        return_url = url_join(self.env.company.get_base_url(), 'adyen_platforms/create_account')
         onboarding_url = self.env['ir.config_parameter'].sudo().get_param('adyen_platforms.onboarding_url')
         return {
             'type': 'ir.actions.act_url',
@@ -213,75 +284,93 @@ class AdyenAccount(models.Model):
         }
 
     def action_show_transactions(self):
-        return {
-            'name': _('Transactions'),
-            'view_mode': 'tree,form',
-            'domain': [('adyen_account_id', '=', self.id)],
-            'res_model': 'adyen.transaction',
-            'type': 'ir.actions.act_window',
-            'context': {'group_by': ['adyen_payout_id']}
-        }
+        action = self.env['ir.actions.actions']._for_xml_id('adyen_platforms.adyen_transaction_action')
+        action['domain'] = expression.AND([[('adyen_account_id', '=', self.id)], literal_eval(action.get('domain', '[]'))])
+        return action
 
     def _upload_photo_id(self, document_type, content, filename):
-        self._adyen_rpc('upload_document', {
+        test_mode = self.env['ir.config_parameter'].sudo().get_param('adyen_platforms.test_mode')
+        self._adyen_rpc('v1/upload_document', {
             'documentDetail': {
                 'accountHolderCode': self.account_holder_code,
                 'documentType': document_type,
                 'filename': filename,
+                'description': 'PASSED' if test_mode else '',
             },
             'documentContent': content.decode(),
         })
 
-    def _format_data(self):
+    def _format_data(self, values):
+        fields = values.keys()
         data = {
-            'accountHolderCode': self.account_holder_code,
-            'accountHolderDetails': {
-                'address': {
-                    'country': self.country_id.code,
-                    'stateOrProvince': self.state_id.code or None,
-                    'city': self.city,
-                    'postalCode': self.zip,
-                    'street': self.street,
-                    'houseNumberOrName': self.house_number_or_name,
-                },
-                'email': self.email,
-                'fullPhoneNumber': self.phone_number,
-            },
-            'legalEntity': 'Business' if self.is_business else 'Individual',
+            'accountHolderCode': values.get('account_holder_code') or self.account_holder_code,
         }
+        holder_details = {}
 
-        if self.is_business:
-            data['accountHolderDetails']['businessDetails'] = {
-                'legalBusinessName': self.legal_business_name,
-                'doingBusinessAs': self.doing_business_as,
-                'registrationNumber': self.registration_number,
+        # *ALL* the address fields are required if one of them changes
+        address_fields = {'country_id', 'state_id', 'city', 'zip', 'street', 'house_number_or_name'}
+        if address_fields & fields:
+            country_id = self.env['res.country'].browse(values.get('country_id')) if values.get('country_id') else self.country_id
+            state_id = self.env['res.country.state'].browse(values.get('state_id')) if values.get('state_id') else self.state_id
+            holder_details['address'] = {
+                'country': country_id.code,
+                'stateOrProvince': state_id.code or None,
+                'city': values.get('city') or self.city,
+                'postalCode': values.get('zip') or self.zip,
+                'street': values.get('street') or self.street,
+                'houseNumberOrName': values.get('house_number_or_name') or self.house_number_or_name,
             }
-        else:
-            data['accountHolderDetails']['individualDetails'] = {
-                'name': {
-                    'firstName': self.first_name,
-                    'lastName': self.last_name,
-                    'gender': 'UNKNOWN',
-                },
-                'personalData': {
-                    'dateOfBirth': str(self.date_of_birth),
+
+        if 'email' in values:
+            holder_details['email'] = values['email']
+
+        if 'phone_number' in values:
+            holder_details['fullPhoneNumber'] = values['phone_number']
+
+        if 'is_business' in values:
+            data['legalEntity'] = 'Business' if values['is_business'] else 'Individual'
+
+        if (values.get('is_business') or self.is_business) and {'legal_business_name', 'doing_business_as', 'registration_number'} & fields:
+            business_details = holder_details['business_details'] = {}
+            for source, dest in [
+                ('legal_business_name', 'legalBusinessName'),
+                ('doing_business_as', 'doingBusinessAs'),
+                ('registration_number', 'registrationNumber'),
+            ]:
+                if source in values:
+                    business_details[dest] = values[source]
+
+        elif {'first_name', 'last_name', 'date_of_birth', 'document_number', 'document_type'} & fields:
+            holder_details['individualDetails'] = {}
+
+            if {'first_name', 'last_name'} & fields:
+                holder_details['individualDetails']['name'] = {
+                    'firstName': values.get('first_name') or self.first_name,
+                    'lastName': values.get('last_name') or self.last_name
                 }
-            }
 
-            # documentData cannot be present in the data if not set
-            if self.document_number:
-                data['accountHolderDetails']['individualDetails']['personalData']['documentData'] = [{
-                    'number': self.document_number,
-                    'type': self.document_type,
+            if 'date_of_birth' in fields:
+                holder_details['individualDetails'].setdefault('personalData', {})['dateOfBirth'] = str(values['date_of_birth'])
+
+            document_number = values.get('document_number') or self.document_number
+            if self.document_number and 'document_number' in fields:
+                holder_details['individualDetails'].setdefault('personalData', {})['documentData'] = [{
+                    'number': document_number,
+                    'type': values.get('document_type') or self.document_type,
                 }]
+
+        if holder_details:
+            data['accountHolderDetails'] = holder_details
 
         return data
 
-    def _adyen_rpc(self, operation, adyen_data={}):
-        if operation == 'create_account_holder':
+    def _adyen_rpc(self, operation, adyen_data=None):
+        adyen_data = adyen_data or {}
+        if operation == 'v1/create_account_holder':
             url = self.env['ir.config_parameter'].sudo().get_param('adyen_platforms.onboarding_url')
             params = {
                 'creation_token': request.session.get('adyen_creation_token'),
+                'base_url': self.get_base_url(),
                 'adyen_data': adyen_data,
             }
             auth = None
@@ -301,8 +390,8 @@ class AdyenAccount(models.Model):
             req = requests.post(url_join(url, operation), json=payload, auth=auth, timeout=TIMEOUT)
             req.raise_for_status()
         except requests.exceptions.Timeout:
-            raise UserError(_('A timeout occured while trying to reach the Adyen proxy.'))
-        except Exception as e:
+            raise UserError(_('A timeout occurred while trying to reach the Adyen proxy.'))
+        except Exception:
             raise UserError(_('The Adyen proxy is not reachable, please try again later.'))
         response = req.json()
 
@@ -311,412 +400,248 @@ class AdyenAccount(models.Model):
             if name == 'ValidationError':
                 raise ValidationError(response['error']['data'].get('arguments')[0])
             else:
-                raise UserError(_("We had troubles reaching Adyen, please retry later or contact the support if the problem persists"))
-
-        result = response.get('result')
-        if 'verification' in result:
-            self._update_kyc_status(result['verification'])
-
-        return result
+                _logger.warning('Proxy error: %s', response['error'])
+                raise UserError(
+                    _("We had troubles reaching Adyen, please retry later or contact the support if the problem persists"))
+        return response.get('result')
 
     @api.model
     def _sync_adyen_cron(self):
-        self._sync_adyen_kyc_status()
-        self.env['adyen.transaction'].sync_adyen_transactions()
-        self.env['adyen.payout']._process_payouts()
+        self.env['adyen.account'].search([]).sync_transactions()
 
-    @api.model
-    def _sync_adyen_kyc_status(self):
-        for adyen_account_id in self.search([]):
-            data = adyen_account_id._adyen_rpc('get_account_holder', {
-                'accountHolderCode': adyen_account_id.account_holder_code,
+    def _handle_notification(self, notification_data):
+        self.ensure_one()
+
+        content = notification_data.get('content', {})
+        event_type = notification_data.get('eventType')
+
+        if event_type == 'ODOO_ACCOUNT_STATUS_CHANGE':
+            self._handle_odoo_account_status_change(content)
+        elif event_type == 'ACCOUNT_HOLDER_STATUS_CHANGE':
+            self._handle_account_holder_status_change_notification(content)
+        elif event_type == 'ACCOUNT_HOLDER_VERIFICATION':
+            self._handle_account_holder_verification_notification(content)
+        elif event_type == 'ACCOUNT_UPDATED':
+            self._handle_account_updated_notification(content)
+        elif event_type == 'ACCOUNT_HOLDER_PAYOUT':
+            self._handle_account_holder_payout(content)
+        else:
+            _logger.warning(_("Unknown eventType received: %s", event_type))
+
+    def _handle_odoo_account_status_change(self, content):
+        self.ensure_one()
+
+        new_status = content.get('newStatus')
+        if new_status == 'active' and self.account_status in ['suspended', 'inactive']:
+            self._adyen_rpc('v1/unsuspend_account_holder', {
+                'accountHolderCode': self.account_holder_code,
             })
-            adyen_account_id._update_kyc_status(data['verification'])
-
-    def _update_kyc_status(self, checks):
-        all_checks_status = []
-
-        # Account Holder Checks
-        account_holder_checks = checks.get('accountHolder', {})
-        account_holder_messages = []
-        for check in account_holder_checks.get('checks'):
-            all_checks_status.append(check['status'])
-            kyc_status_message = self._get_kyc_message(check)
-            if kyc_status_message:
-                account_holder_messages.append(kyc_status_message)
-
-        # Shareholders Checks
-        shareholder_checks = checks.get('shareholders', {})
-        shareholder_messages = []
-        kyc_status_message = False
-        for sc in shareholder_checks:
-            shareholder_status = []
-            shareholder_id = self.shareholder_ids.filtered(lambda shareholder: shareholder.shareholder_uuid == sc['shareholderCode'])
-            for check in sc.get('checks'):
-                all_checks_status.append(check['status'])
-                shareholder_status.append(check['status'])
-                kyc_status_message = self._get_kyc_message(check)
-                if kyc_status_message:
-                    shareholder_messages.append('[%s] %s' % (shareholder_id.display_name, kyc_status_message))
-            shareholder_id.with_context(update_from_adyen=True).write({
-                'kyc_status': self.get_status(shareholder_status),
-                'kyc_status_message': kyc_status_message,
+        elif new_status == 'rejected':
+            self._adyen_rpc('v1/close_account_holder', {
+                'accountHolderCode': self.account_holder_code,
             })
 
-        # Bank Account Checks
-        bank_account_checks = checks.get('bankAccounts', {})
-        bank_account_messages = []
-        kyc_status_message = False
-        for bac in bank_account_checks:
-            bank_account_status = []
-            bank_account_id = self.bank_account_ids.filtered(lambda bank_account: bank_account.bank_account_uuid == bac['bankAccountUUID'])
-            for check in bac.get('checks'):
-                all_checks_status.append(check['status'])
-                bank_account_status.append(check['status'])
-                kyc_status_message = self._get_kyc_message(check)
-                if kyc_status_message:
-                    bank_account_messages.append('[%s] %s' % (bank_account_id.display_name, kyc_status_message))
-            bank_account_id.with_context(update_from_adyen=True).write({
-                'kyc_status': self.get_status(bank_account_status),
-                'kyc_status_message': kyc_status_message,
+    def _handle_account_holder_status_change_notification(self, content):
+        self.ensure_one()
+
+        # Account Status
+        new_status = ADYEN_STATUS_MAP.get(content.get('newStatus', {}).get('status'))
+        if new_status and new_status != self.account_status:
+            self.account_status = new_status
+
+        # Tier
+        tier = content.get('newStatus', {}).get('processingState', {}).get('tierNumber', None)
+        if isinstance(tier, int) and tier != self.kyc_tier:
+            self.kyc_tier = tier
+
+        # Payout
+        payout_allowed = content.get('newStatus', {}).get('payoutState', {}).get('allowPayout', None)
+        if payout_allowed is not None:
+            self.payout_allowed = payout_allowed == 'true'
+
+        # Events
+        events = content.get('newStatus', {}).get('events')
+        if events:
+            reasons = []
+            for event in events:
+                account_event = event.get('AccountEvent', {}).get('reason')
+                if account_event:
+                    reasons.append(account_event)
+
+            status_message = self.env['ir.qweb']._render('adyen_platforms.status_message', {
+                'message': content.get('reason'),
+                'reasons': reasons,
             })
+            self.sudo().message_post(body=status_message, subtype_xmlid="mail.mt_comment")
 
-        kyc_status = self.get_status(all_checks_status)
-        kyc_status_message = self.env['ir.qweb']._render('adyen_platforms.kyc_status_message', {
-            'kyc_status': dict(self._fields['kyc_status'].selection)[kyc_status],
-            'account_holder_messages': account_holder_messages,
-            'shareholder_messages': shareholder_messages,
-            'bank_account_messages': bank_account_messages,
-        })
+    def _handle_account_holder_verification_notification(self, content):
+        self.ensure_one()
 
-        if kyc_status_message.decode() != self.kyc_status_message:
-            self.sudo().message_post(body = kyc_status_message, subtype_xmlid="mail.mt_comment") # Message from Odoo Bot
+        status = ADYEN_VALIDATION_MAP.get(content.get('verificationStatus'))
+        document = '_'.join(content.get('verificationType', '').lower().split('_')[:-1])  # bank_account, identity, passport, etc.
+        status_message = content.get('statusSummary', {}).get('kycCheckDescription')
 
-        self.with_context(update_from_adyen=True).write({
-            'kyc_status': kyc_status,
-            'kyc_status_message': kyc_status_message,
-        })
+        bank_uuid = content.get('bankAccountUUID')
+        shareholder_uuid = content.get('shareholderCode')
 
-    @api.model
-    def get_status(self, statuses):
-        if any(status in ['FAILED'] for status in statuses):
-            return 'failed'
-        if any(status in ['INVALID_DATA', 'RETRY_LIMIT_REACHED', 'AWAITING_DATA'] for status in statuses):
-            return 'awaiting_data'
-        if any(status in ['DATA_PROVIDED', 'PENDING'] for status in statuses):
-            return 'pending'
-        return 'passed'
+        kyc = self.adyen_kyc_ids.filtered(lambda k: k.verification_type == document)
+        if bank_uuid:
+            kyc = kyc.filtered(lambda k: k.bank_account_id.bank_account_uuid == bank_uuid or not k.bank_account_id)
+        elif shareholder_uuid:
+            kyc = kyc.filtered(lambda k: k.shareholder_id.shareholder_uuid == shareholder_uuid or not k.shareholder_id)
+        else:
+            kyc = kyc.filtered(lambda k: not k.shareholder_id and not k.bank_account_id)
 
-    @api.model
-    def _get_kyc_message(self, check):
-        if check.get('summary', {}).get('kycCheckDescription'):
-            return check['summary']['kycCheckDescription']
-        if check.get('requiredFields', {}):
-            return _('Missing required fields: ') + ', '.join(check.get('requiredFields'))
-        return ''
+        if not kyc:
+            additional_data = {}
+            if document == 'bank_account' and bank_uuid:
+                bank_account_id = self.env['adyen.bank.account'].sudo().search([('bank_account_uuid', '=', bank_uuid)])
+                additional_data['bank_account_id'] = bank_account_id.id
+            if shareholder_uuid:
+                shareholder_id = self.env['adyen.shareholder'].sudo().search([('shareholder_uuid', '=', shareholder_uuid)])
+                additional_data['shareholder_id'] = shareholder_id.id
 
-
-class AdyenShareholder(models.Model):
-    _name = 'adyen.shareholder'
-    _inherit = ['adyen.id.mixin', 'adyen.address.mixin']
-    _description = 'Adyen for Platforms Shareholder'
-    _rec_name = 'full_name'
-
-    adyen_account_id = fields.Many2one('adyen.account', ondelete='cascade')
-    shareholder_reference = fields.Char('Reference', default=lambda self: uuid.uuid4().hex)
-    shareholder_uuid = fields.Char('UUID') # Given by Adyen
-    first_name = fields.Char('First Name', required=True)
-    last_name = fields.Char('Last Name', required=True)
-    full_name = fields.Char(compute='_compute_full_name')
-    date_of_birth = fields.Date('Date of birth', required=True)
-    document_number = fields.Char('ID Number', 
-            help="The type of ID Number required depends on the country:\n"
-             "US: Social Security Number (9 digits or last 4 digits)\n"
-             "Canada: Social Insurance Number\nItaly: Codice fiscale\n"
-             "Australia: Document Number")
-
-    # KYC
-    kyc_status = fields.Selection(string='KYC Status', selection=[
-        ('awaiting_data', 'Data to provide'),
-        ('pending', 'Waiting for validation'),
-        ('passed', 'Confirmed'),
-        ('failed', 'Failed'),
-    ], required=True, default='pending')
-    kyc_status_message = fields.Char('KYC Status Message', readonly=True)
-
-    @api.depends('first_name', 'last_name')
-    def _compute_full_name(self):
-        for adyen_shareholder_id in self:
-            adyen_shareholder_id.full_name = '%s %s' % (adyen_shareholder_id.first_name, adyen_shareholder_id.last_name)
-
-    @api.model
-    def create(self, values):
-        adyen_shareholder_id = super(AdyenShareholder, self).create(values)
-        response = adyen_shareholder_id.adyen_account_id._adyen_rpc('update_account_holder', adyen_shareholder_id._format_data())
-        shareholders = response['accountHolderDetails']['businessDetails']['shareholders']
-        created_shareholder = next(shareholder for shareholder in shareholders if shareholder['shareholderReference'] == adyen_shareholder_id.shareholder_reference)
-        adyen_shareholder_id.with_context(update_from_adyen=True).write({
-            'shareholder_uuid': created_shareholder['shareholderCode'],
-        })
-        return adyen_shareholder_id
-
-    def write(self, vals):
-        res = super(AdyenShareholder, self).write(vals)
-        if not self.env.context.get('update_from_adyen'):
-            self.adyen_account_id._adyen_rpc('update_account_holder', self._format_data())
-        return res
-
-    def unlink(self):
-        for shareholder_id in self:
-            shareholder_id.adyen_account_id._adyen_rpc('delete_shareholders', {
-                'accountHolderCode': shareholder_id.adyen_account_id.account_holder_code,
-                'shareholderCodes': [shareholder_id.shareholder_uuid],
+            self.env['adyen.kyc'].sudo().create({
+                'verification_type': document,
+                'adyen_account_id': self.id,
+                'status': status,
+                'status_message': status_message,
+                'last_update': fields.Datetime.now(),
+                **additional_data
             })
-        return super(AdyenShareholder, self).unlink()
+        else:
+            if bank_uuid and not kyc.bank_account_id:
+                bank_account_id = self.env['adyen.bank.account'].sudo().search([('bank_account_uuid', '=', bank_uuid)])
+                kyc.bank_account_id = bank_account_id.id
+            if shareholder_uuid and not kyc.shareholder_id:
+                shareholder_id = self.env['adyen.shareholder'].sudo().search([('shareholder_uuid', '=', shareholder_uuid)])
+                kyc.shareholder_id = shareholder_id.id
 
-    def _upload_photo_id(self, document_type, content, filename):
-        self.adyen_account_id._adyen_rpc('upload_document', {
-            'documentDetail': {
-                'accountHolderCode': self.adyen_account_id.account_holder_code,
-                'shareholderCode': self.shareholder_uuid,
-                'documentType': document_type,
-                'filename': filename,
-            },
-            'documentContent': content.decode(),
-        })
+            if status != kyc.status:
+                kyc.write({
+                    'status': status,
+                    'status_message': status_message,
+                    'last_update': fields.Datetime.now(),
+                })
 
-    def _format_data(self):
-        data = {
-            'accountHolderCode': self.adyen_account_id.account_holder_code,
-            'accountHolderDetails': {
-                'businessDetails': {
-                    'shareholders': [{
-                        'shareholderCode': self.shareholder_uuid or None,
-                        'shareholderReference': self.shareholder_reference,
-                        'address': {
-                            'city': self.city,
-                            'country': self.country_code,
-                            'houseNumberOrName': self.house_number_or_name,
-                            'postalCode': self.zip,
-                            'stateOrProvince': self.state_id.code or None,
-                            'street': self.street,
-                        },
-                        'name': {
-                            'firstName': self.first_name,
-                            'lastName': self.last_name,
-                            'gender': 'UNKNOWN'
-                        },
-                        'personalData': {
-                            'dateOfBirth': str(self.date_of_birth),
-                        }
-                    }]
-                }
-            }
-        }
+    def _handle_account_updated_notification(self, content):
+        self.ensure_one()
+        scheduled_date = content.get('payoutSchedule', {}).get('nextScheduledPayout')
+        if scheduled_date:
+            self.next_scheduled_payout = parse(scheduled_date).astimezone(UTC).replace(tzinfo=None)
 
-        # documentData cannot be present in the data if not set
-        if self.document_number:
-            data['accountHolderDetails']['businessDetails']['shareholders'][0]['personalData']['documentData'] = [{
-                'number': self.document_number,
-                'type': 'ID',
-            }]
+    def _handle_account_holder_payout(self, content):
+        self.ensure_one()
+        status = content.get('status', {}).get('statusCode')
 
-        return data
+        if status == 'Failed':
+            status_message = _('Failed payout: %s', content['status']['message']['text'])
+            self.sudo().message_post(body=status_message, subtype_xmlid="mail.mt_comment")
 
-class AdyenBankAccount(models.Model):
-    _name = 'adyen.bank.account'
-    _description = 'Adyen for Platforms Bank Account'
+    def sync_transactions(self):
+        updated_transactions = self.env['adyen.transaction']
+        for account in self:
+            page = 1
+            next_page = True
+            max_create_date = False
 
-    adyen_account_id = fields.Many2one('adyen.account', ondelete='cascade')
-    bank_account_reference = fields.Char('Reference', default=lambda self: uuid.uuid4().hex)
-    bank_account_uuid = fields.Char('UUID') # Given by Adyen
-    owner_name = fields.Char('Owner Name', required=True)
-    country_id = fields.Many2one('res.country', string='Country', domain=[('code', 'in', ADYEN_AVAILABLE_COUNTRIES)], required=True)
-    country_code = fields.Char(related='country_id.code')
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True)
-    iban = fields.Char('IBAN')
-    account_number = fields.Char('Account Number')
-    branch_code = fields.Char('Branch Code')
-    bank_code = fields.Char('Bank Code')
-    account_type = fields.Selection(string='Account Type', selection=[
-        ('checking', 'Checking'),
-        ('savings', 'Savings'),
-    ])
-    owner_country_id = fields.Many2one('res.country', string='Owner Country')
-    owner_state_id = fields.Many2one('res.country.state', 'Owner State', domain="[('country_id', '=?', owner_country_id)]")
-    owner_street = fields.Char('Owner Street')
-    owner_city = fields.Char('Owner City')
-    owner_zip = fields.Char('Owner ZIP')
-    owner_house_number_or_name = fields.Char('Owner House Number or Name')
+            while next_page:
+                transactions, next_page = account._fetch_transactions(page)
+                page += 1
 
-    bank_statement = fields.Binary('Bank Statement', help="You need to provide a bank statement to allow payouts. \
-        The file must be a bank statement, a screenshot of your online banking environment, a letter from the bank or a cheque and must contain \
-        the logo of the bank or it's name in a unique font, the bank account details, the name of the account holder.\
-        Allowed formats: jpg, pdf, png. Maximum allowed size: 10MB.")
-    bank_statement_filename = fields.Char()
+                for transaction in transactions:
+                    create_date = parse(transaction.get('creationDate')).astimezone(UTC).replace(tzinfo=None)
+                    if not max_create_date:
+                        max_create_date = create_date
+                    if create_date <= account.last_sync_date:
+                        next_page = False
+                        break
 
-    # KYC
-    kyc_status = fields.Selection(string='KYC Status', selection=[
-        ('awaiting_data', 'Data to provide'),
-        ('pending', 'Waiting for validation'),
-        ('passed', 'Confirmed'),
-        ('failed', 'Failed'),
-    ], required=True, default='pending')
-    kyc_status_message = fields.Char('KYC Status Message', readonly=True)
-
-    @api.model
-    def create(self, values):
-        adyen_bank_account_id = super(AdyenBankAccount, self).create(values)
-        response = adyen_bank_account_id.adyen_account_id._adyen_rpc('update_account_holder', adyen_bank_account_id._format_data())
-        bank_accounts = response['accountHolderDetails']['bankAccountDetails']
-        created_bank_account = next(bank_account for bank_account in bank_accounts if bank_account['bankAccountReference'] == adyen_bank_account_id.bank_account_reference)
-        adyen_bank_account_id.with_context(update_from_adyen=True).write({
-            'bank_account_uuid': created_bank_account['bankAccountUUID'],
-        })
-        return adyen_bank_account_id
-
-    def write(self, vals):
-        res = super(AdyenBankAccount, self).write(vals)
-        if not self.env.context.get('update_from_adyen'):
-            self.adyen_account_id._adyen_rpc('update_account_holder', self._format_data())
-        if 'bank_statement' in vals:
-            self._upload_bank_statement(vals['bank_statement'], vals['bank_statement_filename'])
-        return res
-
-    def unlink(self):
-        for bank_account_id in self:
-            bank_account_id.adyen_account_id._adyen_rpc('delete_bank_accounts', {
-                'accountHolderCode': bank_account_id.adyen_account_id.account_holder_code,
-                'bankAccountUUIDs': [bank_account_id.bank_account_uuid],
-            })
-        return super(AdyenBankAccount, self).unlink()
-
-    def _format_data(self):
-        return {
-            'accountHolderCode': self.adyen_account_id.account_holder_code,
-            'accountHolderDetails': {
-                'bankAccountDetails': [{
-                    'accountNumber': self.account_number or None,
-                    'accountType': self.account_type or None,
-                    'bankAccountReference': self.bank_account_reference,
-                    'bankAccountUUID': self.bank_account_uuid or None,
-                    'bankCode': self.bank_code or None,
-                    'branchCode': self.branch_code or None,
-                    'countryCode': self.country_code,
-                    'currencyCode': self.currency_id.name,
-                    'iban': self.iban or None,
-                    'ownerCity': self.owner_city or None,
-                    'ownerCountryCode': self.owner_country_id.code or None,
-                    'ownerHouseNumberOrName': self.owner_house_number_or_name or None,
-                    'ownerName': self.owner_name,
-                    'ownerPostalCode': self.owner_zip or None,
-                    'ownerState': self.owner_state_id.code or None,
-                    'ownerStreet': self.owner_street or None,
-                }],
-            }
-        }
-
-    def _upload_bank_statement(self, content, filename):
-        file_extension = os.path.splitext(filename)[1]
-        file_size = len(content.encode('utf-8'))
-        if file_extension not in ['.jpeg', '.jpg', '.pdf', '.png']:
-            raise ValidationError(_('Allowed file formats for bank statements are jpeg, jpg, pdf or png'))
-        if file_size >> 20 > 10 or (file_size >> 10 < 10 and file_extension != '.pdf') :
-            raise ValidationError(_('Bank statements must be greater than 10kB (except for PDFs) and smaller than 10MB'))
-
-        self.adyen_account_id._adyen_rpc('upload_document', {
-            'documentDetail': {
-                'accountHolderCode': self.adyen_account_id.account_holder_code,
-                'bankAccountUUID': self.bank_account_uuid,
-                'documentType': 'BANK_STATEMENT',
-                'filename': filename,
-            },
-            'documentContent': content,
-        })
-
-
-class AdyenPayout(models.Model):
-    _name = 'adyen.payout'
-    _description = 'Adyen for Platforms Payout'
-
-    @api.depends('payout_schedule')
-    def _compute_next_scheduled_payout(self):
-        today = fields.date.today()
-        for adyen_payout_id in self:
-            adyen_payout_id.next_scheduled_payout = date_utils.end_of(today, adyen_payout_id.payout_schedule)
-
-    adyen_account_id = fields.Many2one('adyen.account', ondelete='cascade')
-    adyen_bank_account_id = fields.Many2one('adyen.bank.account', string='Bank Account',
-        help='The bank account to which the payout is to be made. If left blank, a bank account is automatically selected')
-    name = fields.Char('Name', default='Default', required=True)
-    code = fields.Char('Account Code')
-    payout_schedule = fields.Selection(string='Schedule', selection=[
-        ('day', 'Daily'),
-        ('week', 'Weekly'),
-        ('month', 'Monthly'),
-    ], default='week', required=True)
-    next_scheduled_payout = fields.Date('Next scheduled payout', compute=_compute_next_scheduled_payout, store=True)
-    transaction_ids = fields.One2many('adyen.transaction', 'adyen_payout_id', string='Transactions')
-
-    @api.model
-    def create(self, values):
-        adyen_payout_id = super(AdyenPayout, self).create(values)
-        if not adyen_payout_id.env.context.get('update_from_adyen'):
-            response = adyen_payout_id.adyen_account_id._adyen_rpc('create_payout', {
-                'accountHolderCode': adyen_payout_id.adyen_account_id.account_holder_code,
-            })
-            adyen_payout_id.with_context(update_from_adyen=True).write({
-                'code': response['accountCode'],
-            })
-        return adyen_payout_id
-
-    def unlink(self):
-        for adyen_payout_id in self:
-            adyen_payout_id.adyen_account_id._adyen_rpc('close_payout', {
-                'accountCode': adyen_payout_id.code,
-            })
-        return super(AdyenPayout, self).unlink()
-
-    @api.model
-    def _process_payouts(self):
-        for adyen_payout_id in self.search([('next_scheduled_payout', '<', fields.Date.today())]):
-            adyen_payout_id.send_payout_request(notify=False)
-            adyen_payout_id._compute_next_scheduled_payout()
-
-    def send_payout_request(self, notify=True):
-        response = self.adyen_account_id._adyen_rpc('account_holder_balance', {
-            'accountHolderCode': self.adyen_account_id.account_holder_code,
-        })
-        balances = next(account_balance['detailBalance']['balance'] for account_balance in response['balancePerAccount'] if account_balance['accountCode'] == self.code)
-        if notify and not balances:
-            self.env['bus.bus'].sendone(
-                (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
-                {'type': 'simple_notification', 'title': _('No pending balance'), 'message': _('No balance is currently awaitng payout.')}
-            )
-        for balance in balances:
-            response = self.adyen_account_id._adyen_rpc('payout_request', {
-                'accountCode': self.code,
-                'accountHolderCode': self.adyen_account_id.account_holder_code,
-                'bankAccountUUID': self.adyen_bank_account_id.bank_account_uuid or None,
-                'amount': balance,
-            })
-            if notify and response['resultCode'] == 'Received':
-                currency_id = self.env['res.currency'].search([('name', '=', balance['currency'])])
-                value = round(balance['value'] / (10 ** currency_id.decimal_places), 2) # Convert from minor units
-                amount = str(value) + currency_id.symbol if currency_id.position == 'after' else currency_id.symbol + str(value)
-                message = _('Successfully sent payout request for %s', amount)
-                self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
-                    {'type': 'simple_notification', 'title': _('Payout Request sent'), 'message': message}
-                )
+                    status = transaction.get('transactionStatus')
+                    if status in ['Payout', 'PayoutReversed']:
+                        reference = transaction.get('pspReference') or transaction.get('disputePspReference')
+                        tx_sudo = account.transaction_payout_ids.sudo().filtered(lambda t: t.reference == reference)
+                        if not tx_sudo:
+                            self.env['adyen.transaction.payout'].sudo()._create_missing_payout(account.id, transaction)
+                        else:
+                            tx_sudo.status = status
+                    else:
+                        if status in ['Chargeback', 'ChargebackReceived']:
+                            transaction['pspReference'] = transaction.get('disputePspReference')
+                        tx_sudo, _reference, _capture_reference = account.transaction_ids.sudo()._get_tx_from_notification(transaction)
+                        if not tx_sudo:
+                            tx_sudo = self.env['adyen.transaction'].sudo()._create_missing_tx(account.id, transaction)
+                        tx_sudo._update_status(status, create_date)
+                        updated_transactions |= tx_sudo
+                account.last_sync_date = max_create_date
+        updated_transactions.sudo()._post_transaction_sync()
 
     def _fetch_transactions(self, page=1):
-        response = self.adyen_account_id._adyen_rpc('get_transactions', {
-            'accountHolderCode': self.adyen_account_id.account_holder_code,
+        self.ensure_one()
+        response = self._adyen_rpc('v1/get_transactions', {
+            'accountHolderCode': self.account_holder_code,
             'transactionListsPerAccount': [{
-                'accountCode': self.code,
+                'accountCode': self.account_code,
                 'page': page,
             }]
         })
         transaction_list = response['accountTransactionLists'][0]
         return transaction_list['transactions'], transaction_list['hasNextPage']
+
+
+class AdyenAccountBalance(models.Model):
+    _name = 'adyen.account.balance'
+    _description = 'Adyen Account Balance'
+
+    adyen_account_id = fields.Many2one('adyen.account', required=True, ondelete='cascade')
+    currency_id = fields.Many2one('res.currency')
+    balance = fields.Float(default=0.0)
+    on_hold = fields.Float(default=0.0)
+    pending = fields.Float(default=0.0)
+
+    @api.model
+    def get_account_balance(self):
+        if not self.user_has_groups('base.group_erp_manager'):
+            raise AccessError(_("You can't access account balance."))
+
+        if not self.env.company.adyen_account_id:
+            return {}
+
+        balance_fields = {'balance': 'balance', 'onHoldBalance': 'on_hold', 'pendingBalance': 'pending'}
+        balances = self.env['adyen.account.balance'].sudo().search([
+            ('adyen_account_id', '=', self.env.company.adyen_account_id.id)
+        ])
+
+        delta = fields.Datetime.now() - timedelta(hours=1)
+        if not balances or any(b.write_date <= delta for b in balances):
+            response = {}
+            try:
+                response = self.env.company.adyen_account_id._adyen_rpc('v1/account_holder_balance', {
+                    'accountHolderCode': self.env.company.adyen_account_id.account_holder_code,
+                })
+            except UserError as e:
+                _logger.warning(_('Cannot update account balance, showing previous values: %s', e))
+
+            balances.write({
+                f: 0 for f in balance_fields.values()
+            })
+            for total_balance, adyen_balances in response.get('totalBalance', {}).items():
+                for balance in adyen_balances:
+                    currency_id = self.env['res.currency'].search([('name', '=', balance.get('currency'))])
+                    bal = balances.filtered(lambda b: b.currency_id == currency_id)
+                    if not bal:
+                        bal = self.env['adyen.account.balance'].sudo().create({
+                            'adyen_account_id': self.env.company.adyen_account_id.id,
+                            'currency_id': currency_id.id,
+                        })
+                        balances |= bal
+                    bal[balance_fields.get(total_balance)] = to_major_currency(balance.get('value', 0), currency_id.decimal_places)
+
+        warning_delta = fields.Datetime.now() - timedelta(hours=2)
+        return [{
+            'currency': b.currency_id.name,
+            'balance': format_amount(self.env, b.balance, b.currency_id),
+            'payout_date': format_datetime(self.env, self.env.company.adyen_account_id.next_scheduled_payout, dt_format='short'),
+            'last_update_warning': b.write_date <= warning_delta,
+            'last_update': format_datetime(self.env, b.write_date),
+        } for b in balances]

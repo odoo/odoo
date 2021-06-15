@@ -67,6 +67,9 @@
             <field name="model">mail.mail</field>
             <field name="arch" type="xml">
                 <tree string="Emails" decoration-muted="state in ('sent', 'cancel')" decoration-info="state=='outgoing'" decoration-danger="state=='exception'">
+                    <header>
+                        <button name="action_retry" string="Retry" type="object"/>
+                    </header>
                     <field name="date"/>
                     <field name="subject"/>
                     <field name="author_id" string="User"/>

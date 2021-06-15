@@ -5,7 +5,7 @@
         <field name="res_model">mail.channel</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="im_livechat.mail_channel_view_tree"/>
-        <field name="domain">[('livechat_visitor_id', '=', active_id), ('message_ids', '!=', False)]</field>
+        <field name="domain">[('livechat_visitor_id', '=', active_id), ('has_message', '=', True)]</field>
         <field name="context">{
                 'search_default_livechat_visitor_id': [active_id],
                 'default_livechat_visitor_id': active_id,
@@ -41,7 +41,7 @@
                     Speaking With
                     <div name="livechat_operator_id"
                          class="o_field_many2one_avatar o_field_widget font-weight-bold float-right d-inline-block">
-                        <img t-attf-src="/web/image/res.partner/#{record.livechat_operator_id.raw_value}/image_128"
+                        <img t-attf-src="/web/image/res.partner/#{record.livechat_operator_id.raw_value}/avatar_128"
                              alt="Operator Avatar" class="o_m2o_avatar"/>
                         <field name="livechat_operator_name"/>
                     </div>
@@ -60,7 +60,7 @@
                 <div class="col mx-2">
                     <div t-if="record.livechat_operator_id.raw_value"
                          class="o_field_many2one_avatar o_field_widget font-weight-bold" name="livechat_operator_id">
-                        <img t-attf-src="/web/image/res.partner/#{record.livechat_operator_id.raw_value}/image_128"
+                        <img t-attf-src="/web/image/res.partner/#{record.livechat_operator_id.raw_value}/avatar_128"
                              alt="Operator Avatar" class="o_m2o_avatar"/>
                         <field name="livechat_operator_name"/>
                     </div>

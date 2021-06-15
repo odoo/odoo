@@ -112,10 +112,10 @@ const MrpDocumentsControllerMixin = Object.assign({}, fileUploadMixin, {
         const result = xhr.status === 200
             ? JSON.parse(xhr.response)
             : {
-                error: _.str.sprintf(_t("status code: %s </br> message: %s"), xhr.status, xhr.response)
+                error: _.str.sprintf(_t("status code: %s, message: %s"), xhr.status, xhr.response)
             };
         if (result.error) {
-            this.do_notify(_t("Error"), result.error, true);
+            this.displayNotification({ title: _t("Error"), message: result.error, sticky: true });
         }
         fileUploadMixin._onUploadLoad.apply(this, arguments);
     },

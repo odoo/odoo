@@ -1,5 +1,49 @@
+/** @odoo-module **/
+
+import config from 'web.config';
+
+/**
+ * Until we have our own implementation of the /web/static/lib/pdfjs/web/viewer.{html,js,css}
+ * (currently based on Firefox), this method allows us to hide the buttons that we do not want:
+ * * "Open File"
+ * * "Print" (Hidden on mobile)
+ * * "Download"
+ *
+ * @link https://mozilla.github.io/pdf.js/getting_started/
+ *
+ * @param {Element} rootElement
+ */
+export function hidePDFJSButtons(rootElement) {
+    const cssStyle = document.createElement("style");
+    cssStyle.rel = "stylesheet";
+    cssStyle.innerHTML = `button#secondaryDownload.secondaryToolbarButton, button#download.toolbarButton,
+button#secondaryOpenFile.secondaryToolbarButton, button#openFile.toolbarButton {
+display: none !important;
+}`;
+    if (config.device.isMobileDevice) {
+        cssStyle.innerHTML = `${cssStyle.innerHTML}
+button#secondaryPrint.secondaryToolbarButton, button#print.toolbarButton{
+display: none !important;
+}`;
+    }
+    const iframe = rootElement.tagName === 'IFRAME' ? rootElement : rootElement.querySelector('iframe');
+    if (iframe) {
+        if (!iframe.dataset.hideButtons) {
+            iframe.dataset.hideButtons = 'true';
+            iframe.addEventListener('load', event => {
+                if (iframe.contentDocument && iframe.contentDocument.head) {
+                    iframe.contentDocument.head.appendChild(cssStyle);
+                }
+            });
+        }
+    } else {
+        console.warn('No IFRAME found');
+    }
+}
+
 /*
-* There is no changes to pdf.js in this file, but only a note about a change that has been done in it.
+* List of changes made in the library
+* There is no changes to pdf.js in this section, but only a note about changes that has been done in /web/static/lib/pdfjs/.
 *
 * In the module account_invoice_extract, the the code need to react to the 'pagerendered' event triggered by
 * pdf.js. However in recent version of pdf.js, event are not visible outside of the library, except if the 

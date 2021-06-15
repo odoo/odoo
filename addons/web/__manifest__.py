@@ -18,6 +18,7 @@ This module provides the core of the Odoo Web Client.
         'views/webclient_templates.xml',
         'views/report_templates.xml',
         'views/base_document_layout_views.xml',
+        'views/speedscope_template.xml',
         'data/report_layout.xml',
     ],
     'assets': {
@@ -61,6 +62,7 @@ This module provides the core of the Odoo Web Client.
         'web.assets_common': [
             ('include', 'web._assets_helpers'),
 
+            'web/static/src/scss/debug_profiling.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web._assets_common_styles'),
@@ -265,7 +267,7 @@ This module provides the core of the Odoo Web Client.
 
             'base/static/src/css/description.css',
             'web/static/lib/fontawesome/css/font-awesome.css',
-            'web/static/src/scss/fonts.scss',
+            'web/static/fonts/fonts.scss',
             'web/static/src/scss/report.scss',
             'web/static/src/scss/layout_standard.scss',
             'web/static/src/scss/layout_background.scss',
@@ -327,7 +329,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/select2/select2.css',
             'web/static/lib/select2-bootstrap-css/select2-bootstrap.css',
             'web/static/lib/tempusdominus/tempusdominus.scss',
-            'web/static/src/scss/fonts.scss',
+            'web/static/fonts/fonts.scss',
             'web/static/src/scss/ui.scss',
             'web/static/src/scss/ui_extra.scss',
             'web/static/src/scss/navbar.scss',
@@ -388,6 +390,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/js/libs/fullcalendar.js',
             'web/static/src/js/libs/jquery.js',
             'web/static/src/js/libs/underscore.js',
+            'web/static/src/js/libs/pdfjs.js',
             'web/static/src/js/libs/popper.js',
             'web/static/src/js/libs/zoomodoo.js',
             'web/static/src/js/libs/jSignatureCustom.js',

@@ -12,6 +12,7 @@ class LeaveReport(models.Model):
     _order = "date_from DESC, employee_id"
 
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
+    active_employee = fields.Boolean(related='employee_id.active', readonly=True)
     name = fields.Char('Description', readonly=True)
     number_of_days = fields.Float('Number of Days', readonly=True)
     leave_type = fields.Selection([
@@ -101,5 +102,6 @@ class LeaveReport(models.Model):
                 'search_default_group_type': True,
                 'search_default_year': True,
                 'search_default_validated': True,
+                'search_default_active_employee': True,
             }
         }

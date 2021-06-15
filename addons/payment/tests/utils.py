@@ -5,17 +5,17 @@ import logging
 from lxml import objectify
 from werkzeug import urls
 
-from odoo.tests.common import TransactionCase
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools.misc import hmac as hmac_tool
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentTestUtils(TransactionCase):
+class PaymentTestUtils(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.base_url = cls.env['ir.config_parameter'].get_param('web.base.url')
 

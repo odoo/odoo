@@ -123,12 +123,12 @@ class HrExpense(models.Model):
     @api.depends("company_currency_id")
     def _compute_label_total_amount_company(self):
         for expense in self:
-            expense.label_total_amount_company = _("Total %s", expense.company_currency_id.name)
+            expense.label_total_amount_company = _("Total %s", expense.company_currency_id.name) if expense.company_currency_id else _("Total")
 
     @api.depends('currency_id', 'company_currency_id')
     def _compute_same_currency(self):
         for expense in self:
-            expense.same_currency = bool(expense.currency_id and expense.currency_id == expense.company_currency_id)
+            expense.same_currency = bool(not expense.company_id or (expense.currency_id and expense.currency_id == expense.company_currency_id))
 
     @api.depends('product_id')
     def _compute_product_has_cost(self):
@@ -493,16 +493,10 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
 
     def _get_expense_account_destination(self):
         self.ensure_one()
-        account_dest = self.env['account.account']
-        if self.payment_mode == 'company_account':
-            if not self.sheet_id.bank_journal_id.payment_credit_account_id:
-                raise UserError(_("No Outstanding Payments Account found for the %s journal, please configure one.") % (self.sheet_id.bank_journal_id.name))
-            account_dest = self.sheet_id.bank_journal_id.payment_credit_account_id.id
-        else:
-            if not self.employee_id.sudo().address_home_id:
-                raise UserError(_("No Home Address found for the employee %s, please configure one.") % (self.employee_id.name))
-            partner = self.employee_id.sudo().address_home_id.with_company(self.company_id)
-            account_dest = partner.property_account_payable_id.id or partner.parent_id.property_account_payable_id.id
+        if not self.employee_id.sudo().address_home_id:
+            raise UserError(_("No Home Address found for the employee %s, please configure one.") % (self.employee_id.name))
+        partner = self.employee_id.sudo().address_home_id.with_company(self.company_id)
+        account_dest = partner.property_account_payable_id.id or partner.parent_id.property_account_payable_id.id
         return account_dest
 
     def _get_account_move_line_values(self):
@@ -605,37 +599,11 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         move_line_values_by_expense = self._get_account_move_line_values()
 
         for expense in self:
-            company_currency = expense.company_id.currency_id
-            different_currency = expense.currency_id != company_currency
-
             # get the account move of the related sheet
             move = move_group_by_sheet[expense.sheet_id.id]
 
             # get move line values
             move_line_values = move_line_values_by_expense.get(expense.id)
-            move_line_dst = move_line_values[-1]
-            total_amount = move_line_dst['debit'] or -move_line_dst['credit']
-            total_amount_currency = move_line_dst['amount_currency']
-
-            # create one more move line, a counterline for the total on payable account
-            if expense.payment_mode == 'company_account':
-                if not expense.sheet_id.bank_journal_id.default_account_id:
-                    raise UserError(_("No account found for the %s journal, please configure one.") % (expense.sheet_id.bank_journal_id.name))
-                journal = expense.sheet_id.bank_journal_id
-                # create payment
-                payment_methods = journal.outbound_payment_method_ids if total_amount < 0 else journal.inbound_payment_method_ids
-                journal_currency = journal.currency_id or journal.company_id.currency_id
-                payment = self.env['account.payment'].create({
-                    'payment_method_id': payment_methods and payment_methods[0].id or False,
-                    'payment_type': 'outbound' if total_amount < 0 else 'inbound',
-                    'partner_id': expense.employee_id.sudo().address_home_id.commercial_partner_id.id,
-                    'partner_type': 'supplier',
-                    'journal_id': journal.id,
-                    'date': expense.date,
-                    'currency_id': expense.currency_id.id if different_currency else journal_currency.id,
-                    'amount': abs(total_amount_currency) if different_currency else abs(total_amount),
-                    'ref': expense.name,
-                })
 
             # link move lines to move, and move to expense sheet
             move.write({'line_ids': [(0, 0, line) for line in move_line_values]})
@@ -645,8 +613,11 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                 expense.sheet_id.paid_expense_sheets()
 
         # post the moves
-        for move in move_group_by_sheet.values():
-            move._post()
+        for expense in self:
+            if not expense.payment_mode == 'company_account':
+                for move in move_group_by_sheet[expense.sheet_id.id]:
+                    if move.state != 'posted':
+                        move._post()
 
         return move_group_by_sheet
 

@@ -6,7 +6,7 @@ import pprint
 
 from werkzeug import urls
 
-from odoo import _, api, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
@@ -18,6 +18,8 @@ _logger = logging.getLogger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
+
+    adyen_transaction_ids = fields.One2many('adyen.transaction', 'payment_transaction_id')
 
     def _get_specific_rendering_values(self, processing_values):
         """ Override of payment to return Odoo-specific rendering values.
@@ -41,13 +43,11 @@ class PaymentTransaction(models.Model):
         # match in https://docs.adyen.com/checkout/components-web/localization-components, we simply
         # provide the lang string as is (after adapting the format) and let Adyen find the best fit.
         lang_code = (self._context.get('lang') or 'en-US').replace('_', '-')
-        base_url = self.acquirer_id._get_base_url()
+        base_url = self.acquirer_id.get_base_url()
         signature = payment_utils.generate_access_token(
             converted_amount, self.currency_id.name, self.reference
         )
         data = {
-            'adyen_uuid': self.acquirer_id.odoo_adyen_account_id.adyen_uuid,
-            'payout': self.acquirer_id.odoo_adyen_payout_id.code,
             'amount': {
                 'value': converted_amount,
                 'currency': self.currency_id.name,
@@ -56,8 +56,8 @@ class PaymentTransaction(models.Model):
             'shopperLocale': lang_code,
             'shopperReference': self.acquirer_id._odoo_compute_shopper_reference(
                 self.partner_id.id
-            ),
-            'recurringProcessingModel': 'CardOnFile',
+            ) if self.tokenize else '',
+            'recurringProcessingModel': 'Subscription' if self.tokenize else '',
             'storePaymentMethod': self.tokenize,  # True by default on Adyen side
             # Since the Pay by Link API redirects the customer without any payload, we use the
             # /payment/status route directly as return url.
@@ -65,6 +65,8 @@ class PaymentTransaction(models.Model):
             'metadata': {
                 'merchant_signature': signature,
                 'notification_url': urls.url_join(base_url, OdooController._notification_url),
+                'adyen_uuid': self.acquirer_id.odoo_adyen_account_id.adyen_uuid,
+                'payout': self.acquirer_id.odoo_adyen_account_id.account_code,
             },  # Proxy-specific data
         }
         return {
@@ -91,12 +93,11 @@ class PaymentTransaction(models.Model):
         converted_amount = payment_utils.to_minor_currency_units(
             self.amount, self.currency_id, CURRENCY_DECIMALS.get(self.currency_id.name)
         )
-        base_url = self.acquirer_id._get_base_url()
+        base_url = self.acquirer_id.get_base_url()
         signature = payment_utils.generate_access_token(
             converted_amount, self.currency_id.name, self.reference
         )
         data = {
-            'payout': self.acquirer_id.odoo_adyen_payout_id.code,
             'amount': {
                 'value': converted_amount,
                 'currency': self.currency_id.name,
@@ -114,9 +115,11 @@ class PaymentTransaction(models.Model):
             'metadata': {
                 'merchant_signature': signature,
                 'notification_url': urls.url_join(base_url, OdooController._notification_url),
+                'adyen_uuid': self.acquirer_id.odoo_adyen_account_id.adyen_uuid,
+                'payout': self.acquirer_id.odoo_adyen_account_id.account_code,
             },  # Proxy-specific data
         }
-        response_content = self.acquirer_id.odoo_adyen_account_id._adyen_rpc('payments', data)
+        response_content = self.acquirer_id.odoo_adyen_account_id._adyen_rpc('v1/payments', data)
 
         # Handle the payment request response
         _logger.info("payment request response:\n%s", pprint.pformat(response_content))
@@ -137,7 +140,7 @@ class PaymentTransaction(models.Model):
         if provider != 'odoo':
             return tx
 
-        reference = data.get('merchantReference')
+        reference = data.get('merchantReference') or data.get('additionalData', {}).get('merchantReference')
         if not reference:
             raise ValidationError(
                 "Odoo Payments: " + _("Received data with missing merchant reference")
@@ -168,8 +171,10 @@ class PaymentTransaction(models.Model):
             return
 
         # Handle the acquirer reference
-        if 'pspReference' in data:
-            self.acquirer_reference = data.get('pspReference')
+        if 'originalReference' in data:
+            self.acquirer_reference = data['originalReference']
+        elif 'pspReference' in data:
+            self.acquirer_reference = data['pspReference']
 
         # Handle the payment state
         payment_state = data.get('resultCode')
@@ -206,7 +211,7 @@ class PaymentTransaction(models.Model):
         # Retrieve all stored payment methods for the customer from the API and match them with the
         # acquirer reference of the transaction to find its payment method
         response_content = self.acquirer_id.odoo_adyen_account_id._adyen_rpc(
-            'payment_methods',
+            'v1/payment_methods',
             dict(shopperReference=data['additionalData']['recurring.shopperReference']),
         )
         payment_methods = response_content['storedPaymentMethods']

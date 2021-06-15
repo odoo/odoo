@@ -56,6 +56,7 @@ QUnit.test('basic rendering', async function (assert) {
     const message = this.env.models['mail.message'].create({
         author: insert({ id: 7, display_name: "Demo User" }),
         body: "<p>Test</p>",
+        date: moment(),
         id: 100,
     });
     await this.createMessageComponent(message);
@@ -87,7 +88,7 @@ QUnit.test('basic rendering', async function (assert) {
     );
     assert.strictEqual(
         messageEl.querySelector(`:scope .o_Message_authorAvatar`).dataset.src,
-        '/web/image/res.partner/7/image_128',
+        '/web/image/res.partner/7/avatar_128',
         "message author avatar should GET image of the related partner"
     );
     assert.strictEqual(
@@ -1587,6 +1588,77 @@ QUnit.test('basic rendering of tracking value (monetary type)', async function (
         document.querySelector('.o_Message_trackingValueNewValue').innerHTML,
         "$ 500.00",
         "should display the correct new value with the currency symbol ($ 500.00)",
+    );
+});
+
+QUnit.test('message should not be considered as "clicked" after clicking on its author name', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        author: [['insert', { id: 7, display_name: "Demo User" }]],
+        body: "<p>Test</p>",
+        id: 100,
+    });
+    await this.createMessageComponent(message);
+    document.querySelector(`.o_Message_authorName`).click();
+    await nextAnimationFrame();
+    assert.doesNotHaveClass(
+        document.querySelector(`.o_Message`),
+        'o-clicked',
+        "message should not be considered as 'clicked' after clicking on its author name"
+    );
+});
+
+QUnit.test('message should not be considered as "clicked" after clicking on its author avatar', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        author: [['insert', { id: 7, display_name: "Demo User" }]],
+        body: "<p>Test</p>",
+        id: 100,
+    });
+    await this.createMessageComponent(message);
+    document.querySelector(`.o_Message_authorAvatar`).click();
+    await nextAnimationFrame();
+    assert.doesNotHaveClass(
+        document.querySelector(`.o_Message`),
+        'o-clicked',
+        "message should not be considered as 'clicked' after clicking on its author avatar"
+    );
+});
+
+QUnit.test('message should not be considered as "clicked" after clicking on notification failure icon', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['create', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
+    const message = this.env.models['mail.message'].create({
+        id: 10,
+        message_type: 'email',
+        notifications: [['insert', {
+            id: 11,
+            notification_status: 'exception',
+            notification_type: 'email',
+        }]],
+        originThread: [['link', threadViewer.thread]],
+    });
+    await this.createMessageComponent(message, {
+        threadViewLocalId: threadViewer.threadView.localId
+    });
+    document.querySelector('.o_Message_notificationIconClickable.o-error').click();
+    await nextAnimationFrame();
+    assert.doesNotHaveClass(
+        document.querySelector(`.o_Message`),
+        'o-clicked',
+        "message should not be considered as 'clicked' after clicking on notification failure icon"
     );
 });
 

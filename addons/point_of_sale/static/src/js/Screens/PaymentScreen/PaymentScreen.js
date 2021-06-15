@@ -31,6 +31,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             onChangeOrder(this._onPrevOrder, this._onNewOrder);
             useErrorHandlers();
             this.payment_interface = null;
+            this.payment_methods_from_config = this.env.pos.payment_methods.filter(method => this.env.pos.config.payment_method_ids.includes(method.id));
         }
         get currentOrder() {
             return this.env.pos.get_order();
@@ -74,7 +75,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
         }
         _updateSelectedPaymentline() {
             if (this.paymentLines.every((line) => line.paid)) {
-                this.currentOrder.add_paymentline(this.env.pos.payment_methods[0]);
+                this.currentOrder.add_paymentline(this.payment_methods_from_config[0]);
             }
             if (!this.selectedPaymentLine) return; // do nothing if no selected payment line
             // disable changing amount on paymentlines with running or done payments on a payment terminal
@@ -195,6 +196,8 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 if (!result) {
                     await this.showPopup('ErrorPopup', {
                         title: 'Error: no internet connection.',
+                        // FIXME: the variable 'error' is not declared
+                        // eslint-disable-next-line no-undef
                         body: error,
                     });
                 }

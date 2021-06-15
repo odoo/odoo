@@ -38,7 +38,7 @@ class ResConfigSettings(models.TransientModel):
     module_partner_autocomplete = fields.Boolean("Partner Autocomplete")
     module_base_geolocalize = fields.Boolean("GeoLocalize")
     module_google_recaptcha = fields.Boolean("reCAPTCHA")
-    report_footer = fields.Text(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.", readonly=False)
+    report_footer = fields.Html(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.", readonly=False)
     group_multi_currency = fields.Boolean(string='Multi-Currencies',
             implied_group='base.group_multi_currency',
             help="Allows to work in a multi currency environment")
@@ -49,6 +49,7 @@ class ResConfigSettings(models.TransientModel):
     language_count = fields.Integer('Number of Languages', compute="_compute_language_count")
     company_name = fields.Char(related="company_id.display_name", string="Company Name")
     company_informations = fields.Text(compute="_compute_company_informations")
+    profiling_enabled_until = fields.Datetime("Profiling enabled until", config_parameter='base.profiling_enabled_until')
 
     def open_company(self):
         return {

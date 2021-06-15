@@ -91,9 +91,6 @@
                 <field name="sale_order_id" invisible="1"/>
                 <field name="pricing_type" invisible="1"/>
             </xpath>
-            <xpath expr="//div[a[@name='action_view_account_analytic_line']]" position="attributes">
-                <attribute name="t-if">record.analytic_account_id.raw_value and !record.allow_timesheets.raw_value and record.allow_billable.raw_value</attribute>
-            </xpath>
             <xpath expr="//div[hasclass('o_kanban_manage_reporting')]" position="inside">
                 <div t-if="record.allow_timesheets.raw_value and record.allow_billable.raw_value" role="menuitem" groups="project.group_project_manager">
                     <a name="action_view_timesheet" type="object">Costs / Revenues</a>

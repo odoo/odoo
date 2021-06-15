@@ -30,10 +30,10 @@ class Contract(models.Model):
         help="End date of the trial period (if there is one).")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule', compute='_compute_employee_contract', store=True, readonly=False,
-        default=lambda self: self.env.company.resource_calendar_id.id, copy=False,
+        default=lambda self: self.env.company.resource_calendar_id.id, copy=False, index=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.")
-    notes = fields.Text('Notes')
+    notes = fields.Html('Notes')
     state = fields.Selection([
         ('draft', 'New'),
         ('open', 'Running'),
@@ -44,6 +44,7 @@ class Contract(models.Model):
     company_id = fields.Many2one('res.company', compute='_compute_employee_contract', store=True, readonly=False,
         default=lambda self: self.env.company, required=True)
     company_country_id = fields.Many2one('res.country', string="Company country", related='company_id.country_id', readonly=True)
+    country_code = fields.Char(related='company_country_id.code', readonly=True)
     contract_type_id = fields.Many2one('hr.contract.type', "Contract Type")
 
     """

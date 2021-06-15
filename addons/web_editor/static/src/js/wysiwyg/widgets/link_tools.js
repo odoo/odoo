@@ -3,8 +3,8 @@ odoo.define('wysiwyg.widgets.LinkTools', function (require) {
 
 const Link = require('wysiwyg.widgets.Link');
 const OdooEditorLib = require('web_editor.odoo-editor');
+const dom = require('web.dom');
 
-const nodeSize = OdooEditorLib.nodeSize;
 const setCursor = OdooEditorLib.setCursor;
 
 /**
@@ -20,8 +20,12 @@ const LinkTools = Link.extend({
     /**
      * @override
      */
-    init: function (parent, options, editable, data, $button, link) {
-        link = link || this.getOrCreateLink(editable);
+    init: function (parent, options, editable, data, $button, node) {
+        if (node && !$(node).is('a')) {
+            $(node).wrap('<a href="#"/>');
+            node = node.parentElement;
+        }
+        const link = node || this.getOrCreateLink(editable);
         this._super(parent, options, editable, data, $button, link);
     },
     /**
@@ -31,7 +35,9 @@ const LinkTools = Link.extend({
         this.options.wysiwyg.odooEditor.observerUnactive();
         this.$link.addClass('oe_edited_link');
         this.$button.addClass('active');
-        return this._super(...arguments);
+        return this._super(...arguments).then(() => {
+            dom.scrollTo(this.$(':visible:last')[0], {duration: 0});
+        });
     },
     destroy: function () {
         $('.oe_edited_link').removeClass('oe_edited_link');

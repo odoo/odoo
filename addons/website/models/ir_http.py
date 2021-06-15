@@ -204,11 +204,12 @@ class Http(models.AbstractModel):
     @classmethod
     def _add_dispatch_parameters(cls, func):
 
-        # Force website with query string paramater, typically set from website selector in frontend navbar
+        # DEPRECATED for /website/force/<website_id> - remove me in master~saas-14.4
+        # Force website with query string paramater, typically set from website selector in frontend navbar and inside tests
         force_website_id = request.httprequest.args.get('fw')
-        if (force_website_id and request.session.get('force_website_id') != force_website_id and
-                request.env.user.has_group('website.group_multi_website') and
-                request.env.user.has_group('website.group_website_publisher')):
+        if (force_website_id and request.session.get('force_website_id') != force_website_id
+                and request.env.user.has_group('website.group_multi_website')
+                and request.env.user.has_group('website.group_website_publisher')):
             request.env['website']._force_website(request.httprequest.args.get('fw'))
 
         context = {}
@@ -269,7 +270,13 @@ class Http(models.AbstractModel):
 
         # redirect withtout trailing /
         if not page and req_page != "/" and req_page.endswith("/"):
-            return request.redirect(req_page[:-1])
+            # mimick `_postprocess_args()` redirect
+            path = request.httprequest.path[:-1]
+            if request.lang != cls._get_default_lang():
+                path = '/' + request.lang.url_code + path
+            if request.httprequest.query_string:
+                path += '?' + request.httprequest.query_string.decode('utf-8')
+            return werkzeug.utils.redirect(path, code=301)
 
         if page:
             # prefetch all menus (it will prefetch website.page too)
@@ -371,7 +378,7 @@ class Http(models.AbstractModel):
                 # There might be 2 cases where the exception code can't be found
                 # in the view, either the error is in a child view or the code
                 # contains branding (<div t-att-data="request.browse('ok')"/>).
-                et = etree.fromstring(view.with_context(inherit_branding=False).read_combined(['arch'])['arch'])
+                et = view.with_context(inherit_branding=False)._get_combined_arch()
                 node = et.xpath(exception.path)
                 line = node is not None and etree.tostring(node[0], encoding='unicode')
                 if line:

@@ -88,8 +88,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
      * @param {Event} event
      */
     _onKeyDown: function (event) {
-        // If user is answering a text input, do not handle keydown
-        if (this.$("textarea").is(":focus") || this.$('input').is(':focus')) {
+        // If user is answering a text input, do not handle keydown (can be forced by pressing CTRL)
+        if ((this.$("textarea").is(":focus") || this.$('input').is(':focus')) && !event.ctrlKey) {
             return;
         }
         // If in session mode and question already answered, do not handle keydown
@@ -572,6 +572,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                         }
                     }
                     break;
+                case 'text_box':
+                    if (questionRequired && !$input.val()) {
+                        errors[questionId] = constrErrorMsg;
+                    }
+                    break;
                 case 'numerical_box':
                     if (questionRequired && !data[questionId]) {
                         errors[questionId] = constrErrorMsg;
@@ -589,7 +594,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                     if (questionRequired && !data[questionId]) {
                         errors[questionId] = constrErrorMsg;
                     } else if (data[questionId]) {
-                        var momentDate = moment($input.val());
+                        var datetimepickerFormat = $input.data('questionType') === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat();
+                        var momentDate = moment($input.val(), datetimepickerFormat);
                         if (!momentDate.isValid()) {
                             errors[questionId] = validationDateMsg;
                         } else {

@@ -197,33 +197,34 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeHasToLoadMessages() {
+            const res = { hasToLoadMessages: false };
             if (!this.thread) {
                 // happens during destroy or compute executed in wrong order
-                return false;
+                return res;
             }
             if (this.hasLoadingFailed) {
-                return false;
+                return res;
             }
             const wasCacheRefreshRequested = this.isCacheRefreshRequested;
             // mark hint as processed
             if (this.isCacheRefreshRequested) {
-                this.update({ isCacheRefreshRequested: false });
+                res.isCacheRefreshRequested = false;
             }
             if (this.thread.isTemporary) {
                 // temporary threads don't exist on the server
-                return false;
+                return res;
             }
             if (!wasCacheRefreshRequested && this.threadViews.length === 0) {
                 // don't load message that won't be used
-                return false;
+                return res;
             }
             if (this.isLoading) {
                 // avoid duplicate RPC
-                return false;
+                return res;
             }
             if (!wasCacheRefreshRequested && this.isLoaded) {
                 // avoid duplicate RPC
-                return false;
+                return res;
             }
             const isMainCache = this.thread.mainCache === this;
             if (isMainCache && this.isLoaded) {
@@ -231,9 +232,10 @@ function factory(dependencies) {
                 // loading. Indeed the main cache is automatically sync with
                 // server updates already, so there is never a need to refresh
                 // it past the first time.
-                return false;
+                return res;
             }
-            return true;
+            res.hasToLoadMessages = true;
+            return res;
         }
 
         /**
@@ -328,6 +330,16 @@ function factory(dependencies) {
         }
 
         /**
+         * Split method for `_computeHasToLoadMessages` because it has to write
+         * on 2 fields at once which is not supported by standard compute.
+         *
+         * @private
+         */
+        _onChangeForHasToLoadMessages() {
+            this.update(this._computeHasToLoadMessages());
+        }
+
+        /**
          * Calls "mark all as read" when this thread becomes displayed in a
          * view (which is notified by `isMarkAllAsReadRequested` being `true`),
          * but delays the call until some other conditions are met, such as the
@@ -371,10 +383,20 @@ function factory(dependencies) {
          *
          * @private
          */
-        async _onHasToLoadMessagesChanged() {
+        _onHasToLoadMessagesChanged() {
             if (!this.hasToLoadMessages) {
                 return;
             }
+            this._onHasToLoadMessagesChangedAsync();
+        }
+
+        /**
+         * Async version of `_onHasToLoadMessagesChanged` split here because
+         * an "on change" compute should not return a Promise.
+         *
+         * @private
+         */
+        async _onHasToLoadMessagesChangedAsync() {
             const fetchedMessages = await this.async(() => this._loadMessages());
             for (const threadView of this.threadViews) {
                 threadView.addComponentHint('messages-loaded', { fetchedMessages });
@@ -440,23 +462,12 @@ function factory(dependencies) {
             default: false,
         }),
         /**
-         * Determines whether `this` should load initial messages. This field is
-         * computed and should be considered read-only.
+         * Determines whether `this` should load initial messages.
+         * @see `onChangeForHasToLoadMessages` value of this field is mainly set
+         *  from this "on change".
          * @see `isCacheRefreshRequested` to request manual refresh of messages.
          */
-        hasToLoadMessages: attr({
-            compute: '_computeHasToLoadMessages',
-            dependencies: [
-                'hasLoadingFailed',
-                'isCacheRefreshRequested',
-                'isLoaded',
-                'isLoading',
-                'thread',
-                'threadIsTemporary',
-                'threadMainCache',
-                'threadViews',
-            ],
-        }),
+        hasToLoadMessages: attr(),
         isAllHistoryLoaded: attr({
             default: false,
         }),
@@ -533,6 +544,23 @@ function factory(dependencies) {
             ],
         }),
         /**
+         * @see hasToLoadMessages
+         */
+        onChangeForHasToLoadMessages: attr({
+            compute: '_onChangeForHasToLoadMessages',
+            dependencies: [
+                'hasLoadingFailed',
+                'isCacheRefreshRequested',
+                'isLoaded',
+                'isLoading',
+                'thread',
+                'threadIsTemporary',
+                'threadMainCache',
+                'threadViews',
+            ],
+            isOnChange: true,
+        }),
+        /**
          * Not a real field, used to trigger its compute method when one of the
          * dependencies changes.
          */
@@ -548,6 +576,7 @@ function factory(dependencies) {
                 'threadModel',
                 'threadViews',
             ],
+            isOnChange: true,
         }),
         /**
          * Loads initial messages from `this`.
@@ -559,6 +588,7 @@ function factory(dependencies) {
             dependencies: [
                 'hasToLoadMessages',
             ],
+            isOnChange: true,
         }),
         /**
          * Not a real field, used to trigger `_onMessagesChanged` when one of
@@ -571,6 +601,7 @@ function factory(dependencies) {
                 'thread',
                 'threadMainCache',
             ],
+            isOnChange: true,
         }),
         /**
          * Ordered list of messages that have been fetched by this cache.

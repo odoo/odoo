@@ -612,6 +612,7 @@ class AccountReconcileModel(models.Model):
         LEFT JOIN account_move move             ON move.id = aml.move_id AND move.state = 'posted'
         LEFT JOIN account_account account       ON account.id = aml.account_id
         LEFT JOIN res_partner aml_partner       ON aml.partner_id = aml_partner.id
+        LEFT JOIN account_payment payment       ON payment.move_id = move.id
         WHERE
             aml.company_id = st_line_move.company_id
             AND move.state = 'posted'
@@ -725,9 +726,11 @@ class AccountReconcileModel(models.Model):
             st_ref_list += ['st_line_move.ref']
         if not st_ref_list:
             return "FALSE"
-        return r'''(move.payment_reference IS NOT NULL AND ({}))'''.format(
+
+        # payment_reference is not used on account.move for payments; ref is used instead
+        return r'''((move.payment_reference IS NOT NULL OR (payment.id IS NOT NULL AND move.ref IS NOT NULL)) AND ({}))'''.format(
             ' OR '.join(
-                rf"regexp_replace(move.payment_reference, '\s+', '', 'g') = regexp_replace({st_ref}, '\s+', '', 'g')"
+                rf"regexp_replace(CASE WHEN payment.id IS NULL THEN move.payment_reference ELSE move.ref END, '\s+', '', 'g') = regexp_replace({st_ref}, '\s+', '', 'g')"
                 for st_ref in st_ref_list
             )
         )
@@ -881,8 +884,8 @@ class AccountReconcileModel(models.Model):
         # Statement line amount is equal to the total residual.
         if line_currency.is_zero(line_residual_after_reconciliation):
             return True
-
-        reconciled_percentage = (abs(line_residual) - abs(line_residual_after_reconciliation)) / abs(line_residual) * 100
+        residual_difference = line_residual - line_residual_after_reconciliation
+        reconciled_percentage = 100 - abs(line_residual_after_reconciliation) / abs(residual_difference) * 100 if (residual_difference != 0) else 0
         return reconciled_percentage >= self.match_total_amount_param
 
     def _filter_candidates(self, candidates, aml_ids_to_exclude, reconciled_amls_ids):

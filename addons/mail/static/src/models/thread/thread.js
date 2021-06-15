@@ -411,8 +411,6 @@ function factory(dependencies) {
             const channels = this.env.models['mail.thread'].insert(
                 channelInfos.map(channelInfo => this.env.models['mail.thread'].convertData(channelInfo))
             );
-            // manually force recompute of counter
-            this.env.messaging.messagingMenu.update();
             return channels;
         }
 
@@ -1349,7 +1347,10 @@ function factory(dependencies) {
          * @returns {mail.thread_cache}
          */
         _computeMainCache() {
-            return link(this.cache());
+            return insert({
+                stringifiedDomain: '[]',
+                thread: link(this),
+            });
         }
 
         /**
@@ -2015,8 +2016,14 @@ function factory(dependencies) {
             inverse: 'thread',
             isCausal: true,
         }),
+        /**
+         * States the current messaging instance. Not useful by itself because
+         * messaging is already in the env. But this allows the inverse relation
+         * to contain all known threads. It also serves as compute dependency.
+         */
         messaging: many2one('mail.messaging', {
             compute: '_computeMessaging',
+            inverse: 'allThreads',
         }),
         messagingCurrentPartner: many2one('mail.partner', {
             related: 'messaging.currentPartner',
@@ -2055,6 +2062,7 @@ function factory(dependencies) {
             dependencies: [
                 'followersPartner',
             ],
+            isOnChange: true,
         }),
         /**
          * Not a real field, used to trigger `_onChangeLastSeenByCurrentPartnerMessageId` when one of
@@ -2065,6 +2073,7 @@ function factory(dependencies) {
             dependencies: [
                 'lastSeenByCurrentPartnerMessageId',
             ],
+            isOnChange: true,
         }),
         /**
          * Not a real field, used to trigger `_onChangeThreadViews` when one of
@@ -2075,6 +2084,7 @@ function factory(dependencies) {
             dependencies: [
                 'threadViews',
             ],
+            isOnChange: true,
         }),
         /**
          * Not a real field, used to trigger `_onIsServerPinnedChanged` when one of
@@ -2085,6 +2095,7 @@ function factory(dependencies) {
             dependencies: [
                 'isServerPinned',
             ],
+            isOnChange: true,
         }),
         /**
          * Not a real field, used to trigger `_onServerFoldStateChanged` when one of
@@ -2095,6 +2106,7 @@ function factory(dependencies) {
             dependencies: [
                 'serverFoldState',
             ],
+            isOnChange: true,
         }),
         /**
          * All messages ordered like they are displayed.

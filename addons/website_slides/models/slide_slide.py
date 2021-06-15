@@ -18,7 +18,7 @@ from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import Warning, UserError, AccessError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
-from odoo.tools import sql
+from odoo.tools import html2plaintext, sql
 
 
 class SlidePartnerRelation(models.Model):
@@ -132,7 +132,7 @@ class Slide(models.Model):
     active = fields.Boolean(default=True, tracking=100)
     sequence = fields.Integer('Sequence', default=0)
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
-    description = fields.Text('Description', translate=True)
+    description = fields.Html('Description', translate=True)
     channel_id = fields.Many2one('slide.channel', string="Course", required=True)
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
@@ -181,7 +181,7 @@ class Slide(models.Model):
     likes = fields.Integer('Likes', compute='_compute_user_info', store=True, compute_sudo=False)
     dislikes = fields.Integer('Dislikes', compute='_compute_user_info', store=True, compute_sudo=False)
     user_vote = fields.Integer('User vote', compute='_compute_user_info', compute_sudo=False)
-    embed_code = fields.Text('Embed Code', readonly=True, compute='_compute_embed_code')
+    embed_code = fields.Html('Embed Code', readonly=True, compute='_compute_embed_code', sanitize=False)
     # views
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
@@ -334,10 +334,12 @@ class Slide(models.Model):
 
     @api.depends('document_id', 'slide_type', 'mime_type')
     def _compute_embed_code(self):
-        base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        if base_url[-1] == '/':
-            base_url = base_url[:-1]
+        base_url = request and request.httprequest.url_root
         for record in self:
+            if not base_url:
+                base_url = record.get_base_url()
+            if base_url[-1] == '/':
+                base_url = base_url[:-1]
             if record.datas and (not record.document_id or record.slide_type in ['document', 'presentation']):
                 slide_url = base_url + url_for('/slides/embed/%s?page=1' % record.id)
                 record.embed_code = '<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (slide_url, 315, 420)
@@ -376,7 +378,7 @@ class Slide(models.Model):
         if self.datas:
             data = base64.b64decode(self.datas)
             if data.startswith(b'%PDF-'):
-                pdf = PyPDF2.PdfFileReader(io.BytesIO(data), overwriteWarnings=False)
+                pdf = PyPDF2.PdfFileReader(io.BytesIO(data), overwriteWarnings=False, strict=False)
                 self.completion_time = (5 * len(pdf.pages)) / 60
             else:
                 self.slide_type = 'infographic'
@@ -385,20 +387,11 @@ class Slide(models.Model):
 
     @api.depends('name', 'channel_id.website_id.domain')
     def _compute_website_url(self):
-        # TDE FIXME: clena this link.tracker strange stuff
         super(Slide, self)._compute_website_url()
         for slide in self:
             if slide.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 base_url = slide.channel_id.get_base_url()
-                # link_tracker is not in dependencies, so use it to shorten url only if installed.
-                if self.env.registry.get('link.tracker'):
-                    url = self.env['link.tracker'].sudo().create({
-                        'url': '%s/slides/slide/%s' % (base_url, slug(slide)),
-                        'title': slide.name,
-                    }).short_url
-                else:
-                    url = '%s/slides/slide/%s' % (base_url, slug(slide))
-                slide.website_url = url
+                slide.website_url = '%s/slides/slide/%s' % (base_url, slug(slide))
 
     @api.depends('channel_id.can_publish')
     def _compute_can_publish(self):
@@ -524,10 +517,9 @@ class Slide(models.Model):
     # ---------------------------------------------------------
 
     def _post_publication(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
             publish_template = slide.channel_id.publish_template_id
-            html_body = publish_template.with_context(base_url=base_url)._render_field('body_html', slide.ids)[slide.id]
+            html_body = publish_template.with_context(base_url=slide.get_base_url())._render_field('body_html', slide.ids)[slide.id]
             subject = publish_template._render_field('subject', slide.ids)[slide.id]
             # We want to use the 'reply_to' of the template if set. However, `mail.message` will check
             # if the key 'reply_to' is in the kwargs before calling _get_reply_to. If the value is
@@ -557,12 +549,11 @@ class Slide(models.Model):
     def _send_share_email(self, email, fullscreen):
         # TDE FIXME: template to check
         mail_ids = []
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
             template = record.channel_id.share_template_id.with_context(
                 user=self.env.user,
                 email=email,
-                base_url=base_url,
+                base_url=record.get_base_url(),
                 fullscreen=fullscreen
             )
             email_values = {'email_to': email}
@@ -711,10 +702,9 @@ class Slide(models.Model):
                 'quiz_attempts_count': 0,  # number of attempts
             }
             slide_partner = slide_partners_map.get(slide.id)
-            if slide.question_ids and slide_partner:
-                if slide_partner.quiz_attempts_count:
-                    result[slide.id]['quiz_karma_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
-                    result[slide.id]['quiz_attempts_count'] = slide_partner.quiz_attempts_count
+            if slide.question_ids and slide_partner and slide_partner.quiz_attempts_count:
+                result[slide.id]['quiz_karma_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
+                result[slide.id]['quiz_attempts_count'] = slide_partner.quiz_attempts_count
                 if quiz_done or slide_partner.completed:
                     result[slide.id]['quiz_karma_won'] = gains[slide_partner.quiz_attempts_count-1] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
         return result
@@ -785,9 +775,10 @@ class Slide(models.Model):
         youtube_duration = youtube_values.get('contentDetails', {}).get('duration')
         if youtube_duration:
             parsed_duration = re.search(r'^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$', youtube_duration)
-            values['completion_time'] = (int(parsed_duration.group(1) or 0)) + \
-                                        (int(parsed_duration.group(2) or 0) / 60) + \
-                                        (int(parsed_duration.group(3) or 0) / 3600)
+            if parsed_duration:
+                values['completion_time'] = (int(parsed_duration.group(1) or 0)) + \
+                                            (int(parsed_duration.group(2) or 0) / 60) + \
+                                            (int(parsed_duration.group(3) or 0) / 3600)
 
         if youtube_values.get('snippet'):
             snippet = youtube_values['snippet']
@@ -885,9 +876,9 @@ class Slide(models.Model):
     def _default_website_meta(self):
         res = super(Slide, self)._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
-        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = html2plaintext(self.description)
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = self.env['website'].image_url(self, 'image_1024')
-        res['default_meta_description'] = self.description
+        res['default_meta_description'] = html2plaintext(self.description)
         return res
 
     # ---------------------------------------------------------

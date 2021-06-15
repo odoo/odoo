@@ -2,7 +2,6 @@
 from __future__ import print_function
 import ast
 import copy
-import json
 import logging
 from collections import OrderedDict
 from time import time
@@ -16,7 +15,7 @@ from odoo.tools.misc import get_lang
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 
-from odoo.addons.base.models.qweb import QWeb, Contextifier
+from odoo.addons.base.models.qweb import QWeb, Contextifier, MarkupSafeBytes
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.base.models.ir_asset import can_aggregate, STYLE_EXTENSIONS, SCRIPT_EXTENSIONS
 
@@ -83,7 +82,7 @@ class IrQWeb(models.AbstractModel, QWeb):
                     'style': 'page-break-after: always'
                 }))
 
-        return b''.join(html.tostring(f) for f in fragments)
+        return MarkupSafeBytes(b''.join(html.tostring(f) for f in fragments))
 
     def default_values(self):
         """ attributes add to the values for each computed template

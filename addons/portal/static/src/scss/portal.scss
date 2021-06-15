@@ -147,7 +147,7 @@ li > p {
     @extend %o-double-container-no-padding;
 }
 #wrap {
-    > .container, > .container-fluid {
+    .container, .container-fluid {
         // BS3 used to do this on all containers so that margins and floats are
         // cleared inside containers. As lots of current odoo layouts may rely
         // on this for some alignments, this is restored (at least for a while)
@@ -289,7 +289,7 @@ img, .media_iframe_video, .o_image {
 // To be applied to all portal pages if bg-color is white (default).
 @if ($o-portal-use-default-colors) {
     #wrapwrap.o_portal {
-        @include o-bg-color($o-portal-bg-color);
+        @include o-bg-color($o-portal-bg-color, $with-extras: false);
     }
 }
 

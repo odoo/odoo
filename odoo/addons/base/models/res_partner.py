@@ -15,7 +15,6 @@ from random import randint
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
-from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
@@ -131,7 +130,7 @@ class PartnerTitle(models.Model):
 
 class Partner(models.Model):
     _description = 'Contact'
-    _inherit = ['format.address.mixin', 'image.mixin']
+    _inherit = ['format.address.mixin', 'avatar.mixin']
     _name = "res.partner"
     _order = "display_name"
 
@@ -152,7 +151,7 @@ class Partner(models.Model):
         return values
 
     name = fields.Char(index=True)
-    display_name = fields.Char(compute='_compute_display_name', store=True, index=True)
+    display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True, index=True)
     date = fields.Date(index=True)
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
@@ -174,7 +173,7 @@ class Partner(models.Model):
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     website = fields.Char('Website Link')
-    comment = fields.Text(string='Notes')
+    comment = fields.Html(string='Notes')
 
     category_id = fields.Many2many('res.partner.category', column1='partner_id',
                                     column2='category_id', string='Tags', default=_default_category)
@@ -224,8 +223,9 @@ class Partner(models.Model):
     contact_address = fields.Char(compute='_compute_contact_address', string='Complete Address')
 
     # technical field used for managing commercial fields
-    commercial_partner_id = fields.Many2one('res.partner', compute='_compute_commercial_partner',
-                                             string='Commercial Entity', store=True, index=True)
+    commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity',
+                                            compute='_compute_commercial_partner', recursive=True,
+                                            store=True, index=True)
     commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
                                           store=True)
     company_name = fields.Char('Company Name')
@@ -237,6 +237,38 @@ class Partner(models.Model):
     _sql_constraints = [
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name'),
     ]
+
+    @api.depends('name', 'user_ids.share', 'image_1920', 'is_company')
+    def _compute_avatar_1920(self):
+        super()._compute_avatar_1920()
+
+    @api.depends('name', 'user_ids.share', 'image_1024', 'is_company')
+    def _compute_avatar_1024(self):
+        super()._compute_avatar_1024()
+
+    @api.depends('name', 'user_ids.share', 'image_512', 'is_company')
+    def _compute_avatar_512(self):
+        super()._compute_avatar_512()
+
+    @api.depends('name', 'user_ids.share', 'image_256', 'is_company')
+    def _compute_avatar_256(self):
+        super()._compute_avatar_256()
+
+    @api.depends('name', 'user_ids.share', 'image_128', 'is_company')
+    def _compute_avatar_128(self):
+        super()._compute_avatar_128()
+
+    def _compute_avatar(self, avatar_field, image_field):
+        partners_with_internal_user = self.filtered(lambda partner: partner.user_ids - partner.user_ids.filtered('share'))
+        super(Partner, partners_with_internal_user)._compute_avatar(avatar_field, image_field)
+        for partner in self - partners_with_internal_user:
+            partner[avatar_field] = partner[image_field] or partner._avatar_get_placeholder()
+
+    def _avatar_get_placeholder(self):
+        path = "base/static/img/avatar_grey.png"
+        if self.is_company:
+            path = "base/static/img/company_image.png"
+        return base64.b64encode(tools.file_open(path, 'rb').read())
 
     @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name')
     def _compute_display_name(self):
@@ -1002,6 +1034,7 @@ class Partner(models.Model):
 
     def _get_country_name(self):
         return self.country_id.name or ''
+
 
 
 class ResPartnerIndustry(models.Model):

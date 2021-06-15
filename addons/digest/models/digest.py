@@ -6,6 +6,7 @@ import pytz
 
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 from werkzeug.urls import url_join
 
 from odoo import api, fields, models, tools, _
@@ -114,25 +115,23 @@ class Digest(models.Model):
             digest.next_run_date = digest._get_next_run_date()
 
     def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
-        web_base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-
         rendered_body = self.env['mail.render.mixin']._render_template(
             'digest.digest_mail_main',
             'digest.digest',
             self.ids,
-            engine='qweb',
+            engine='qweb_view',
             add_context={
                 'title': self.name,
                 'top_button_label': _('Connect'),
-                'top_button_url': web_base_url,
+                'top_button_url': self.get_base_url(),
                 'company': user.company_id,
                 'user': user,
                 'tips_count': tips_count,
                 'formatted_date': datetime.today().strftime('%B %d, %Y'),
                 'display_mobile_banner': True,
-                'kpi_data': self.compute_kpis(user.company_id, user),
-                'tips': self.compute_tips(user.company_id, user, tips_count=tips_count, consumed=consum_tips),
-                'preferences': self.compute_preferences(user.company_id, user),
+                'kpi_data': self._compute_kpis(user.company_id, user),
+                'tips': self._compute_tips(user.company_id, user, tips_count=tips_count, consumed=consum_tips),
+                'preferences': self._compute_preferences(user.company_id, user),
             },
             post_process=True
         )[self.id]
@@ -169,7 +168,7 @@ class Digest(models.Model):
     # KPIS
     # ------------------------------------------------------------
 
-    def compute_kpis(self, company, user):
+    def _compute_kpis(self, company, user):
         """ Compute KPIs to display in the digest template. It is expected to be
         a list of KPIs, each containing values for 3 columns display.
 
@@ -229,7 +228,7 @@ class Digest(models.Model):
         # filter failed KPIs
         return [kpi for kpi in kpis if kpi['kpi_name'] not in invalid_fields]
 
-    def compute_tips(self, company, user, tips_count=1, consumed=True):
+    def _compute_tips(self, company, user, tips_count=1, consumed=True):
         tips = self.env['digest.tip'].search([
             ('user_ids', '!=', user.id),
             '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)
@@ -250,7 +249,7 @@ class Digest(models.Model):
         """
         return {}
 
-    def compute_preferences(self, company, user):
+    def _compute_preferences(self, company, user):
         """ Give an optional text for preferences, like a shortcut for configuration.
 
         :return string: html to put in template
@@ -259,16 +258,15 @@ class Digest(models.Model):
         if self._context.get('digest_slowdown'):
             preferences.append(_("We have noticed you did not connect these last few days so we've automatically switched your preference to weekly Digests."))
         elif self.periodicity == 'daily' and user.has_group('base.group_erp_manager'):
-            preferences.append('<p>%s<br /><a href="/digest/%s/set_periodicity?periodicity=weekly" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a></p>' % (
+            preferences.append(Markup('<p>%s<br /><a href="%s" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a></p>') % (
                 _('Prefer a broader overview ?'),
-                self.id,
+                f'/digest/{self.id:d}/set_periodicity?periodicity=weekly',
                 _('Switch to weekly Digests')
             ))
         if user.has_group('base.group_erp_manager'):
-            preferences.append('<p>%s<br /><a href="/web#view_type=form&amp;model=%s&amp;id=%s" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a></p>' % (
+            preferences.append(Markup('<p>%s<br /><a href="%s" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a></p>') % (
                 _('Want to customize this email?'),
-                self._name,
-                self.id,
+                f'/web#view_type=form&amp;model={self._name}&amp;id={self.id:d}',
                 _('Choose the metrics you care about')
             ))
 

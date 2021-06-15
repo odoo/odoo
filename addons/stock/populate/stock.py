@@ -16,23 +16,6 @@ _logger = logging.getLogger(__name__)
 COMPANY_NB_WITH_STOCK = 3  # Need to be smaller than 5 (_populate_sizes['small'] of company)
 
 
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
-
-    def _populate_factories(self):
-
-        def get_tracking(values, counter, random):
-            if values['type'] == 'product':
-                return random.choices(['none', 'lot', 'serial'], [0.7, 0.2, 0.1])[0]
-            else:
-                return 'none'
-
-        res = super()._populate_factories()
-        res.append(('type', populate.iterate(['consu', 'service', 'product'], [0.3, 0.2, 0.5])))
-        res.append(('tracking', populate.compute(get_tracking)))
-        return res
-
-
 class Warehouse(models.Model):
     _inherit = 'stock.warehouse'
 

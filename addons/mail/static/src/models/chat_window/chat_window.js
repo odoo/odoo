@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
-import { clear, create } from '@mail/model/model_field_command';
+import { clear, create, link, unlink, update } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -246,6 +246,21 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.thread_viewer}
+         */
+        _computeThreadViewer() {
+            const threadViewerData = {
+                hasThreadView: this.hasThreadView,
+                thread: this.thread ? link(this.thread) : unlink(),
+            };
+            if (!this.threadViewer) {
+                return create(threadViewerData);
+            }
+            return update(threadViewerData);
+        }
+
+        /**
+         * @private
          * @returns {integer|undefined}
          */
         _computeVisibleIndex() {
@@ -446,10 +461,14 @@ function factory(dependencies) {
          * Determines the `mail.thread_viewer` managing the display of `this.thread`.
          */
         threadViewer: one2one('mail.thread_viewer', {
-            default: create(),
-            inverse: 'chatWindow',
+            compute: '_computeThreadViewer',
+            dependencies: [
+                'hasThreadView',
+                'thread',
+            ],
             isCausal: true,
             readonly: true,
+            required: true,
         }),
         /**
          * This field handle the "order" (index) of the visible chatWindow inside the UI.

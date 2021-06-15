@@ -215,7 +215,7 @@ class AccountBankStatement(models.Model):
     date = fields.Date(required=True, states={'confirm': [('readonly', True)]}, index=True, copy=False, default=fields.Date.context_today)
     date_done = fields.Datetime(string="Closed On")
     balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, compute='_compute_starting_balance', readonly=False, store=True)
-    balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]}, compute='_compute_ending_balance', readonly=False, store=True)
+    balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]}, compute='_compute_ending_balance', recursive=True, readonly=False, store=True)
     state = fields.Selection(string='Status', required=True, readonly=True, copy=False, selection=[
             ('open', 'New'),
             ('posted', 'Processing'),
@@ -462,13 +462,16 @@ class AccountBankStatement(models.Model):
     def button_journal_entries(self):
         return {
             'name': _('Journal Entries'),
-            'view_mode': 'tree,form',
-            'res_model': 'account.move',
-            'view_id': False,
+            'view_mode': 'tree',
+            'res_model': 'account.move.line',
+            'view_id': self.env.ref('account.view_move_line_tree_grouped_bank_cash').id,
             'type': 'ir.actions.act_window',
-            'domain': [('id', 'in', self.line_ids.move_id.ids)],
+            'domain': [('move_id', 'in', self.line_ids.move_id.ids)],
             'context': {
+                'search_default_account_id': self.journal_id.default_account_id.id,
                 'journal_id': self.journal_id.id,
+                'group_by': 'move_id',
+                'expand': True
             }
         }
 
@@ -1186,10 +1189,7 @@ class AccountBankStatementLine(models.Model):
         new_lines = self.env['account.move.line'].create(line_vals_list)
         new_lines = new_lines.with_context(skip_account_move_synchronization=True)
         for reconciliation_vals, line in zip(reconciliation_overview, new_lines):
-            if reconciliation_vals.get('payment'):
-                accounts = (self.journal_id.payment_debit_account_id, self.journal_id.payment_credit_account_id)
-                counterpart_line = reconciliation_vals['payment'].line_ids.filtered(lambda line: line.account_id in accounts)
-            elif reconciliation_vals.get('counterpart_line'):
+            if reconciliation_vals.get('counterpart_line'):
                 counterpart_line = reconciliation_vals['counterpart_line']
             else:
                 continue

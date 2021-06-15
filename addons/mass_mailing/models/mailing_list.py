@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 
@@ -10,6 +10,9 @@ class MassMailingList(models.Model):
     _name = 'mailing.list'
     _order = 'name'
     _description = 'Mailing List'
+    _mailing_enabled = True
+    # As this model has his own data merge, avoid to enable the generic data_merge on that model.
+    _disable_data_merge = True
 
     name = fields.Char(string='Mailing List', required=True)
     active = fields.Boolean(default=True)
@@ -25,8 +28,9 @@ class MassMailingList(models.Model):
         string='Mailing Lists', copy=False)
     mailing_count = fields.Integer(compute="_compute_mailing_list_count", string="Number of Mailing")
     mailing_ids = fields.Many2many('mailing.mailing', 'mail_mass_mailing_list_rel', string='Mass Mailings', copy=False)
-    subscription_ids = fields.One2many('mailing.contact.subscription', 'list_id',
-        string='Subscription Information', copy=True)
+    subscription_ids = fields.One2many(
+        'mailing.contact.subscription', 'list_id', string='Subscription Information',
+        copy=True, depends=['contact_ids'])
     is_public = fields.Boolean(default=True, help="The mailing list can be accessible by recipient in the unsubscription"
                                                   " page to allows him to update his subscription preferences.")
 
@@ -222,6 +226,24 @@ class MassMailingList(models.Model):
 
     def close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
+
+    # ------------------------------------------------------
+    # MAILING
+    # ------------------------------------------------------
+
+    def _mailing_get_default_domain(self, mailing):
+        return [('list_ids', 'in', mailing.contact_list_ids.ids)]
+
+    def _mailing_get_opt_out_list(self, mailing):
+        """ Check subscription on all involved mailing lists. If user is opt_out
+        on one list but not on another if two users with same email address, one
+        opted in and the other one opted out, send the mail anyway. """
+        # TODO DBE Fixme : Optimize the following to get real opt_out and opt_in
+        subscriptions = self.subscription_ids if self else mailing.contact_list_ids.subscription_ids
+        opt_out_contacts = subscriptions.filtered(lambda rel: rel.opt_out).mapped('contact_id.email_normalized')
+        opt_in_contacts = subscriptions.filtered(lambda rel: not rel.opt_out).mapped('contact_id.email_normalized')
+        opt_out = set(c for c in opt_out_contacts if c not in opt_in_contacts)
+        return opt_out
 
     # ------------------------------------------------------
     # UTILITY

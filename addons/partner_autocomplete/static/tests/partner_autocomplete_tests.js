@@ -80,8 +80,8 @@ odoo.define('partner_autocomplete.tests', function (require) {
                     _getClearbitSuggestions: function (value) {
                         return this._getOdooSuggestions(value);
                     },
-                    do_notify: function (title, message, sticky, className) {
-                        return this.displayNotification({
+                    displayNotification: function ({ title, message, sticky }) {
+                        return this._super({
                             type: 'warning',
                             title: title,
                             message: message,
@@ -207,7 +207,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
                 '<field name="vat"/>' +
                 '</form>',
             mockRPC: function (route) {
-                if (route === "/web/static/src/img/placeholder.png"
+                if (route === "/web/static/img/placeholder.png"
                     || route === "odoo.com/logo.png"
                     || route === "data:image/png;base64,odoobase64") { // land here as it is not valid base64 content
                     return Promise.resolve();
@@ -280,7 +280,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
                 '<field name="vat"/>' +
                 '</form>',
             mockRPC: function (route) {
-                if (route === "/web/static/src/img/placeholder.png"
+                if (route === "/web/static/img/placeholder.png"
                     || route === "odoo.com/logo.png"
                     || route === "data:image/png;base64,odoobase64") { // land here as it is not valid base64 content
                     return Promise.resolve();

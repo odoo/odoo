@@ -177,6 +177,23 @@ class TestMailAlias(TestMailCommon):
         with self.assertRaises(exceptions.UserError), self.cr.savepoint():
             self.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', new_mail_alias.alias_name)
 
+    def test_alias_mixin_copy(self):
+        user_demo = self.env.ref('base.user_demo')
+        self.assertFalse(user_demo.has_group('base.group_system'), 'Demo user is not supposed to have Administrator access')
+        self._test_alias_mixin_copy(user_demo, 'alias.test1', False)
+        self._test_alias_mixin_copy(user_demo, 'alias.test2', '<p>What Is Dead May Never Die</p>')
+
+    def _test_alias_mixin_copy(self, user, alias_name, alias_bounced_content):
+        record = self.env['mail.test.container'].with_user(user).with_context(lang='en_US').create({
+            'name': 'Test Record',
+            'alias_name': alias_name,
+            'alias_contact': 'followers',
+            'alias_bounced_content': alias_bounced_content,
+        })
+        self.assertEqual(record.alias_bounced_content, alias_bounced_content)
+        record_copy = record.copy()
+        self.assertEqual(record_copy.alias_bounced_content, alias_bounced_content)
+
 
 @tagged('mail_gateway')
 class TestMailgateway(TestMailCommon):
@@ -402,13 +419,16 @@ class TestMailgateway(TestMailCommon):
             record = self.format_and_process(MAIL_TEMPLATE, self.email_from, 'groups@test.com', subject='Should Bounce')
         self.assertFalse(record, 'message_process: should have bounced')
         # Check if default (hardcoded) value is in the mail content
-        self.assertSentEmail('"MAILER-DAEMON" <bounce.test@test.com>', ['whatever-2a840@postmaster.twitter.com'], body_content='The following email sent to')
+        self.assertSentEmail(
+            '"MAILER-DAEMON" <bounce.test@test.com>', ['whatever-2a840@postmaster.twitter.com'],
+            body_content="<p>Hi,<br/>\nThe following email sent to groups@test.com"
+        )
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_message_process_alias_config_bounced_to(self):
         """ Check bounce message contains the bouncing alias, not a generic "to" """
         self.alias.write({'alias_contact': 'partners'})
-        bounce_message_with_alias = "The following email sent to %s cannot be accepted because this is a private email address." % self.alias.display_name.lower()
+        bounce_message_with_alias = "<p>Hi,<br/>\nThe following email sent to %s cannot be accepted because this is a private email address." % self.alias.display_name.lower()
 
         # Bounce is To
         with self.mock_mail_gateway():

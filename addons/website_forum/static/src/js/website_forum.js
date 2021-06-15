@@ -131,6 +131,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     res_id: +window.location.pathname.split('-').pop(),
                 },
                 resizable: true,
+                userGeneratedContent: true,
             };
             if (!hasFullEdit) {
                 options.plugins = {

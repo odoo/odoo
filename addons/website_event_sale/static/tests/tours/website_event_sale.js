@@ -13,10 +13,6 @@ tour.register('event_buy_tickets', {
             trigger: 'a[href*="/event"]:contains("Conference for Architects TEST"):first',
         },
         {
-            content: "Show available Tickets",
-            trigger: '.o_wevent_registration_btn',
-        },
-        {
             content: "Select 1 unit of `Standard` ticket type",
             extra_trigger: '#wrap:not(:has(a[href*="/event"]:contains("Conference for Architects")))',
             trigger: 'select:eq(0)',
@@ -80,10 +76,6 @@ tour.register('event_buy_tickets', {
         {
             content: "Select `Wire Transfer` payment method",
             trigger: '#payment_method label:contains("Wire Transfer")',
-        },
-        {
-            content: "Accept the Terms & conditions",
-            trigger: '#checkbox_tc',
         },
         {
             content: "Pay",

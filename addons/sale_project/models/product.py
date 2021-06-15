@@ -9,7 +9,7 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     service_tracking = fields.Selection([
-        ('no', 'Don\'t create task'),
+        ('no', 'Don\'t create a task'),
         ('task_global_project', 'Create a task in an existing project'),
         ('task_in_project', 'Create a task in sales order\'s project'),
         ('project_only', 'Create a new project but no task')],
@@ -20,9 +20,11 @@ class ProductTemplate(models.Model):
         creating a new project based on the selected template.")
     project_id = fields.Many2one(
         'project.project', 'Project', company_dependent=True,
+        domain="[('company_id', '=', current_company_id)]",
         help='Select a billable project on which tasks can be created. This setting must be set for each company.')
     project_template_id = fields.Many2one(
         'project.project', 'Project Template', company_dependent=True, copy=True,
+        domain="[('company_id', '=', current_company_id)]",
         help='Select a billable project to be the skeleton of the new created project when selling the current product. Its stages and tasks will be duplicated.')
 
     @api.constrains('project_id', 'project_template_id')

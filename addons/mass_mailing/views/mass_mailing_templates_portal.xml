@@ -99,7 +99,7 @@
 
     <template id="view" name="Browser View">
         <!-- Raw body inserted here because it is a rendered mailing, therefore internal content -->
-        <t t-raw="body"/>
+        <t t-out="body"/>
     </template>
 
     <template id="page_unsubscribe" name="Unsubscribe">
@@ -130,7 +130,7 @@
                 </header>
                 <div id="wrap" class="oe_structure oe_empty"/>
                 <main>
-                    <t t-raw="0"/>
+                    <t t-out="0"/>
                 </main>
             </body>
             <xpath expr="//footer" position="replace">

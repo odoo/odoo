@@ -34,7 +34,7 @@
                             </span>
                         </t>
                         <span class="o-autogrow"/>
-                        <t t-if="thread.lastMessage">
+                        <t t-if="thread.lastMessage and thread.lastMessage.date">
                             <span class="o_ThreadPreview_date" t-att-class="{ 'o-muted': thread.localMessageUnreadCounter === 0 }">
                                 <t t-esc="thread.lastMessage.date.fromNow()"/>
                             </span>

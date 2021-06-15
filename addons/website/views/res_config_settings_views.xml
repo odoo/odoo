@@ -17,7 +17,7 @@
                                         Settings on this page will apply to this website
                                     </div>
                                     <div class="mt16">
-                                        <field name="website_id" widget="selection"/>
+                                        <field name="website_id" options="{'no_open': True, 'no_create': True}"/>
                                     </div>
                                     <div>
                                         <button name="action_website_create_new" type="object" string="Create a New Website" class="btn-secondary" icon="fa-arrow-right"/>
@@ -87,7 +87,7 @@
                                         <field name="website_language_count" invisible="1"/>
                                         <div class="mt8" attrs="{'invisible':[('website_language_count', '&lt;', 2)]}">
                                             <label class="o_light_label mr8" string="Default" for="website_default_lang_id"/>
-                                            <field name="website_default_lang_id" widget="selection" attrs="{'required': [('website_id', '!=', False)]}"/>
+                                            <field name="website_default_lang_id" options="{'no_open': True, 'no_create': True}" attrs="{'required': [('website_id', '!=', False)]}"/>
                                         </div>
                                     </div>
                                     <div class="mt8">
@@ -290,7 +290,7 @@
                                         </div>
                                     </div>
                                     <div attrs="{'invisible': [('has_google_analytics', '=', False)]}">
-                                        <a href="https://www.odoo.com/documentation/user/14.0/website/optimize/google_analytics.html"
+                                        <a href="https://www.odoo.com/documentation/14.0/applications/websites/website/optimize/google_analytics.html"
                                                 class="oe_link" target="_blank">
                                             <i class="fa fa-arrow-right"/>
                                             How to get my Tracking ID
@@ -343,7 +343,7 @@
                                         </div>
                                     </div>
                                     <div attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
-                                        <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics_dashboard.html"
+                                        <a href="https://www.odoo.com/documentation/14.0/applications/websites/website/optimize/google_analytics_dashboard.html"
                                             class="oe_link" target="_blank">
                                             <i class="fa fa-arrow-right"/>
                                             How to get my Client ID

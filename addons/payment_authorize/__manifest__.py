@@ -14,7 +14,6 @@
         'data/payment_acquirer_data.xml',
     ],
     'application': True,
-    'post_init_hook': 'create_missing_journals',
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [

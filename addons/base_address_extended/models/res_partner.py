@@ -93,10 +93,18 @@ class Partner(models.Model):
             if separator and field_name:
                 #maxsplit set to 1 to unpack only the first element and let the rest untouched
                 tmp = street_raw.split(separator, 1)
+                if previous_greedy in vals:
+                    # attach part before space to preceding greedy field
+                    append_previous, sep, tmp[0] = tmp[0].rpartition(' ')
+                    street_raw = separator.join(tmp)
+                    vals[previous_greedy] += sep + append_previous
                 if len(tmp) == 2:
                     field_value, street_raw = tmp
                     vals[field_name] = field_value
             if field_value or not field_name:
+                previous_greedy = None
+                if field_name == 'street_name' and separator == ' ':
+                    previous_greedy = field_name
                 # select next field to find (first pass OR field found)
                 # [2:-2] is used to remove the extra chars '%(' and ')s'
                 field_name = re_match.group()[2:-2]

@@ -4,18 +4,19 @@
 import base64
 import collections
 import logging
-from lxml.html import clean
 import random
 import re
 import socket
 import threading
 import time
-
 from email.utils import getaddresses
-from lxml import etree
 from urllib.parse import urlparse
-from werkzeug import urls
+
 import idna
+import markupsafe
+from lxml import etree
+from lxml.html import clean
+from werkzeug import urls
 
 import odoo
 from odoo.loglevels import ustr
@@ -39,7 +40,7 @@ safe_attrs = clean.defs.safe_attrs | frozenset(
      'data-o-mail-quote',  # quote detection
      'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translation-id', 'data-oe-nodeid',
      'data-publish', 'data-id', 'data-res_id', 'data-interval', 'data-member_id', 'data-scroll-background-ratio', 'data-view-id',
-     'data-class',
+     'data-class', 'data-mimetype',
      ])
 
 
@@ -249,7 +250,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
     if cleaned.startswith(u'<div>') and cleaned.endswith(u'</div>'):
         cleaned = cleaned[5:-6]
 
-    return cleaned
+    return markupsafe.Markup(cleaned)
 
 # ----------------------------------------------------------
 # HTML/Text management
@@ -269,16 +270,16 @@ def validate_url(url):
 
 
 def is_html_empty(html_content):
-    """Check if a html content is empty. If there are only formatting tags or
-    a void content return True. Famous use case if a '<p><br></p>' added by
-    some web editor.
+    """Check if a html content is empty. If there are only formatting tags with style
+    attributes or a void content  return True. Famous use case if a
+    '<p style="..."><br></p>' added by some web editor.
 
     :param str html_content: html content, coming from example from an HTML field
     :returns: bool, True if no content found or if containing only void formatting tags
     """
     if not html_content:
         return True
-    tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i)\s*/?\s*\>')
+    tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i)(?:(?=\s+\w*)[^/>]*|\s*)/?\s*\>')
     return not bool(re.sub(tag_re, '', html_content).strip())
 
 
@@ -372,8 +373,7 @@ def plaintext2html(text, container_tag=False):
     text = misc.html_escape(ustr(text))
 
     # 1. replace \n and \r
-    text = text.replace('\n', '<br/>')
-    text = text.replace('\r', '<br/>')
+    text = re.sub(r'(\r\n|\r|\n)', '<br/>', text)
 
     # 2. clickable links
     text = html_keep_url(text)
@@ -381,16 +381,16 @@ def plaintext2html(text, container_tag=False):
     # 3-4: form paragraphs
     idx = 0
     final = '<p>'
-    br_tags = re.compile(r'(([<]\s*[bB][rR]\s*\/?[>]\s*){2,})')
+    br_tags = re.compile(r'(([<]\s*[bB][rR]\s*/?[>]\s*){2,})')
     for item in re.finditer(br_tags, text):
         final += text[idx:item.start()] + '</p><p>'
         idx = item.end()
     final += text[idx:] + '</p>'
 
     # 5. container
-    if container_tag:
+    if container_tag: # FIXME: validate that container_tag is just a simple tag?
         final = '<%s>%s</%s>' % (container_tag, final, container_tag)
-    return ustr(final)
+    return markupsafe.Markup(final)
 
 def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=False):
     """ Append extra content at the end of an HTML snippet, trying
@@ -427,20 +427,17 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
     if insert_location == -1:
         insert_location = html.find('</html>')
     if insert_location == -1:
-        return '%s%s' % (html, content)
-    return '%s%s%s' % (html[:insert_location], content, html[insert_location:])
+        return markupsafe.Markup('%s%s' % (html, content))
+    return markupsafe.Markup('%s%s%s' % (html[:insert_location], content, html[insert_location:]))
 
 
 def prepend_html_content(html_body, html_content):
     """Prepend some HTML content at the beginning of an other HTML content."""
-    html_content = re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', html_content)
+    html_content = type(html_content)(re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', html_content))
     html_content = html_content.strip()
 
-    insert_index = next(re.finditer(r'<body[^>]*>', html_body), None)
-    if insert_index is None:
-        insert_index = next(re.finditer(r'<html[^>]*>', html_body), None)
-
-    insert_index = insert_index.end() if insert_index else 0
+    body_match = re.search(r'<body[^>]*>', html_body) or re.search(r'<html[^>]*>', html_body)
+    insert_index = body_match.end() if body_match else 0
 
     return html_body[:insert_index] + html_content + html_body[insert_index:]
 
@@ -623,3 +620,30 @@ def formataddr(pair, charset='utf-8'):
             name = email_addr_escapes_re.sub(r'\\\g<0>', name)
             return f'"{name}" <{local}@{domain}>'
     return f"{local}@{domain}"
+
+
+def encapsulate_email(old_email, new_email):
+    """Change the FROM of the message and use the old one as name.
+
+    e.g.
+    * Old From: "Admin" <admin@gmail.com>
+    * New From: notifications@odoo.com
+    * Output:   "Admin (admin@gmail.com)" <notifications@odoo.com>
+    """
+    old_email_split = getaddresses([old_email])
+    if not old_email_split or not old_email_split[0]:
+        return old_email
+
+    new_email_split = getaddresses([new_email])
+    if not new_email_split or not new_email_split[0]:
+        return
+
+    if old_email_split[0][0]:
+        name_part = '%s (%s)' % old_email_split[0]
+    else:
+        name_part = old_email_split[0][1]
+
+    return formataddr((
+        name_part,
+        new_email_split[0][1],
+    ))

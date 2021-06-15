@@ -22,7 +22,7 @@
                 </xpath>
                 <xpath expr="//label[@for='commitment_date']" position="before">
                     <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" force_save="1"/>
-                    <field name="incoterm" widget="selection" groups="sale_stock.group_display_incoterm"/>
+                    <field name="incoterm" options="{'no_open': True, 'no_create': True}" groups="sale_stock.group_display_incoterm"/>
                     <field name="picking_policy" required="True"/>
                 </xpath>
                 <xpath expr="//span[@name='expected_date_span']" position="attributes">
@@ -40,12 +40,6 @@
                 <xpath expr="//page[@name='other_information']//field[@name='expected_date']" position="after">
                     <field name="show_json_popover" invisible="1"/>
                     <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
-                </xpath>
-                <xpath expr="//page/field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
-                    <field name="product_packaging" attrs="{'invisible': [('product_id', '=', False)]}" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging" />
-                </xpath>
-                <xpath expr="//page/field[@name='order_line']/tree/field[@name='price_unit']" position="before">
-                    <field name="product_packaging" attrs="{'invisible': [('product_id', '=', False)]}" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging" optional="show"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_tag_ids']" position="before">
                     <field name="route_id" groups="stock.group_adv_location" options="{'no_create': True}"/>

@@ -6,10 +6,10 @@
         <field name="arch" type="xml">
             <form string="Contract logs">
                 <header>
-                    <button name="contract_open" states="futur" type="object" string="Start Contract" class="oe_highlight" groups="fleet.fleet_group_manager"/>
-                    <button name="contract_close" states="futur" type="object" string="Cancel" groups="fleet.fleet_group_manager"/>
-                    <button name="contract_close" states="open,expired,futur" type="object" class="oe_highlight" string="Close Contract" groups="fleet.fleet_group_manager"/>
-                    <button name="contract_draft" states="closed" type="object" string="Reset To Draft" groups="fleet.fleet_group_manager"/>
+                    <button name="action_open" states="futur" type="object" string="Start Contract" class="oe_highlight" groups="fleet.fleet_group_manager"/>
+                    <button name="action_close" states="futur" type="object" string="Cancel" groups="fleet.fleet_group_manager"/>
+                    <button name="action_close" states="open,expired,futur" type="object" class="oe_highlight" string="Close Contract" groups="fleet.fleet_group_manager"/>
+                    <button name="action_draft" states="closed" type="object" string="Reset To Draft" groups="fleet.fleet_group_manager"/>
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet>
@@ -25,6 +25,7 @@
                             <field name="cost_subtype_id"/>
                             <field name="insurer_id"/>
                             <field name="ins_ref"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group string="Vehicle Information">
                             <field name="vehicle_id"/>
@@ -167,7 +168,7 @@
                 <field name="purchaser_id"/>
                 <templates>
                     <div t-name="activity-box">
-                        <img t-att-src="activity_image('res.partner', 'image_128', record.purchaser_id.raw_value)" t-att-title="record.purchaser_id.value" t-att-alt="record.purchaser_id.value"/>
+                        <img t-att-src="activity_image('res.partner', 'avatar_128', record.purchaser_id.raw_value)" t-att-title="record.purchaser_id.value" t-att-alt="record.purchaser_id.value"/>
                         <div>
                             <field name="vehicle_id" display="full"/>
                         </div>
@@ -177,10 +178,21 @@
         </field>
     </record>
 
+    <record id="fleet_vehicle_log_contract_view_pivot" model="ir.ui.view">
+       <field name="model">fleet.vehicle.log.contract</field>
+       <field name="arch" type="xml">
+            <pivot>
+                <field name="expiration_date" type="col" />
+                <field name="cost_subtype_id" type="row" />
+                <field name="vehicle_id" type="row" />
+            </pivot>
+        </field>
+    </record>
+
     <record id='fleet_vehicle_log_contract_action' model='ir.actions.act_window'>
         <field name="name">Contracts</field>
         <field name="res_model">fleet.vehicle.log.contract</field>
-        <field name="view_mode">tree,kanban,form,graph,activity</field>
+        <field name="view_mode">tree,kanban,form,graph,pivot,activity</field>
         <field name="context">{'search_default_open': 1}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -328,6 +340,19 @@
         </field>
     </record>
 
+    <record id="fleet_vehicle_log_services_view_pivot" model="ir.ui.view">
+       <field name="model">fleet.vehicle.log.services</field>
+       <field name="arch" type="xml">
+            <pivot>
+                <field name="currency_id" invisible="1" />
+                <field name="service_type_id" type="col" />
+                <field name="vendor_id" type="row" />
+                <field name="vehicle_id" type="row" />
+                <field name="amount" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
     <record id='fleet_vehicle_log_services_view_search' model='ir.ui.view'>
         <field name="name">fleet.vehicle.log.services.search</field>
         <field name="model">fleet.vehicle.log.services</field>
@@ -344,7 +369,7 @@
     <record id='fleet_vehicle_log_services_action' model='ir.actions.act_window'>
         <field name="name">Services</field>
         <field name="res_model">fleet.vehicle.log.services</field>
-        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="view_mode">tree,kanban,form,graph,pivot</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Create a new service entry

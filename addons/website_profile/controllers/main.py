@@ -36,7 +36,7 @@ class WebsiteProfile(http.Controller):
         return False
 
     def _get_default_avatar(self):
-        img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
+        img_path = modules.get_module_resource('web', 'static/img', 'placeholder.png')
         with open(img_path, 'rb') as f:
             return base64.b64encode(f.read())
 
@@ -76,8 +76,8 @@ class WebsiteProfile(http.Controller):
     @http.route([
         '/profile/avatar/<int:user_id>',
     ], type='http', auth="public", website=True, sitemap=False)
-    def get_user_profile_avatar(self, user_id, field='image_256', width=0, height=0, crop=False, **post):
-        if field not in ('image_128', 'image_256'):
+    def get_user_profile_avatar(self, user_id, field='avatar_256', width=0, height=0, crop=False, **post):
+        if field not in ('image_128', 'image_256', 'avatar_128', 'avatar_256'):
             return werkzeug.exceptions.Forbidden()
 
         can_sudo = self._check_avatar_access(user_id, **post)
@@ -163,7 +163,7 @@ class WebsiteProfile(http.Controller):
         else:
             user = request.env.user
         values = self._profile_edition_preprocess_values(user, **kwargs)
-        whitelisted_values = {key: values[key] for key in type(user).SELF_WRITEABLE_FIELDS if key in values}
+        whitelisted_values = {key: values[key] for key in user.SELF_WRITEABLE_FIELDS if key in values}
         user.write(whitelisted_values)
         if kwargs.get('url_param'):
             return werkzeug.utils.redirect("/profile/user/%d?%s" % (user.id, kwargs['url_param']))

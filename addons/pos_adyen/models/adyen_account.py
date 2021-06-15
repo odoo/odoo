@@ -46,40 +46,42 @@ class AdyenStore(models.Model):
 
     @api.model
     def create(self, values):
-        adyen_store_id = super(AdyenStore, self).create(values)
-        response = adyen_store_id.adyen_account_id._adyen_rpc('create_store', adyen_store_id._format_data())
+        adyen_account_id = self.env['adyen.account'].browse(values.get('adyen_account_id'))
+        response = adyen_account_id._adyen_rpc('v1/create_store', self._format_data(values))
         stores = response['accountHolderDetails']['storeDetails']
-        created_store = next(store for store in stores if store['storeReference'] == adyen_store_id.store_reference)
-        adyen_store_id.with_context(update_from_adyen=True).sudo().write({
-            'store_uuid': created_store['store'],
-        })
+        created_store = next(store for store in stores if store['storeReference'] == values.get('store_reference'))
+        values['store_uuid'] = created_store['store']
+        adyen_store_id = super(AdyenStore, self).create(values)
         return adyen_store_id
 
     def unlink(self):
         for store_id in self:
-            store_id.adyen_account_id._adyen_rpc('close_stores', {
+            store_id.adyen_account_id._adyen_rpc('v1/close_stores', {
                 'accountHolderCode': store_id.adyen_account_id.account_holder_code,
                 'stores': [store_id.store_uuid],
             })
         return super(AdyenStore, self).unlink()
 
-    def _format_data(self):
+    def _format_data(self, values):
+        adyen_account_id = self.env['adyen.account'].browse(values.get('adyen_account_id')) if values.get('adyen_account_id') else self.adyen_account_id
+        country_id = self.env['res.country'].browse(values.get('country_id')) if values.get('country_id') else self.country_id
+        state_id = self.env['res.country.state'].browse(values.get('state_id')) if values.get('state_id') else self.state_id
         return {
-            'accountHolderCode': self.adyen_account_id.account_holder_code,
+            'accountHolderCode': adyen_account_id.account_holder_code,
             'accountHolderDetails': {
                 'storeDetails': [{
-                    'storeReference': self.store_reference,
-                    'storeName': self.name,
+                    'storeReference': values.get('store_reference') or self.store_reference,
+                    'storeName': values.get('name') or self.name,
                     'merchantCategoryCode': '7999',
                     'address': {
-                        'city': self.city,
-                        'country': self.country_id.code,
-                        'houseNumberOrName': self.house_number_or_name,
-                        'postalCode': self.zip,
-                        'stateOrProvince': self.state_id.code or None,
-                        'street': self.street,
+                        'city': values.get('city') or self.city,
+                        'country': country_id.code,
+                        'houseNumberOrName': values.get('house_number_or_name') or self.house_number_or_name,
+                        'postalCode': values.get('zip') or self.zip,
+                        'stateOrProvince': state_id.code or None,
+                        'street': values.get('street') or self.street,
                     },
-                    'fullPhoneNumber': self.phone_number,
+                    'fullPhoneNumber': values.get('phone_number') or self.phone_number,
                 }],
             }
         }
@@ -97,7 +99,7 @@ class AdyenTerminal(models.Model):
     @api.model
     def _sync_adyen_terminals(self):
         for adyen_store_id in self.env['adyen.store'].search([]):
-            response = adyen_store_id.adyen_account_id._adyen_rpc('connected_terminals', {
+            response = adyen_store_id.adyen_account_id._adyen_rpc('v1/connected_terminals', {
                 'store': adyen_store_id.store_uuid,
             })
             terminals_in_db = set(self.search([('store_id', '=', adyen_store_id.id)]).mapped('terminal_uuid'))

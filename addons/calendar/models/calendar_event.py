@@ -9,13 +9,12 @@ import pytz
 from werkzeug.urls import url_join
 
 from odoo import api, fields, models
-from odoo import tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.calendar.models.calendar_attendee import Attendee
 from odoo.addons.calendar.models.calendar_recurrence import weekday_to_field, RRULE_TYPE_SELECTION, END_TYPE_SELECTION, MONTH_BY_SELECTION, WEEKDAY_SELECTION, BYDAY_SELECTION
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
-from odoo.tools import pycompat, html_escape
+from odoo.tools import pycompat, html2plaintext, is_html_empty
 from odoo.exceptions import UserError, ValidationError, AccessError
 
 _logger = logging.getLogger(__name__)
@@ -69,6 +68,7 @@ class Meeting(models.Model):
         if 'res_model_id' not in defaults and 'res_model_id' in fields and \
                 self.env.context.get('active_model') and self.env.context['active_model'] != 'calendar.event':
             defaults['res_model_id'] = self.env['ir.model'].sudo().search([('model', '=', self.env.context['active_model'])], limit=1).id
+            defaults['res_model'] = self.env.context.get('active_model')
         if 'res_id' not in defaults and 'res_id' in fields and \
                 defaults.get('res_model_id') and self.env.context.get('active_id'):
             defaults['res_id'] = self.env.context['active_id']
@@ -96,7 +96,7 @@ class Meeting(models.Model):
 
     # description
     name = fields.Char('Meeting Subject', required=True)
-    description = fields.Text('Description')
+    description = fields.Html('Description')
     user_id = fields.Many2one('res.users', 'Organizer', default=lambda self: self.env.user)
     partner_id = fields.Many2one(
         'res.partner', string='Scheduled by', related='user_id.partner_id', readonly=True)
@@ -154,8 +154,6 @@ class Meeting(models.Model):
         'Document Model Name', related='res_model_id.model', readonly=True, store=True)
     # messaging
     activity_ids = fields.One2many('mail.activity', 'calendar_event_id', string='Activities')
-    #redifine message_ids to remove autojoin to avoid search to crash in get_recurrent_ids
-    message_ids = fields.One2many(auto_join=False)
     # attendees
     attendee_ids = fields.One2many(
         'calendar.attendee', 'event_id', 'Participant')
@@ -357,25 +355,32 @@ class Meeting(models.Model):
             for vals in vals_list
         ]
 
-        for values in vals_list:
-            # created from calendar: try to create an activity on the related record
-            if not values.get('activity_ids'):
-                defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id'])
+        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'res_model'])
+        meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
+        # get list of models ids and filter out None values directly
+        model_ids = list(filter(bool, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
+        model_name = defaults.get('res_model')
+        valid_activity_model_ids = model_name and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
+        if meeting_activity_type and not defaults.get('activity_ids'):
+            for values in vals_list:
+                # created from calendar: try to create an activity on the related record
+                if values.get('activity_ids'):
+                    continue
                 res_model_id = values.get('res_model_id', defaults.get('res_model_id'))
                 res_id = values.get('res_id', defaults.get('res_id'))
                 user_id = values.get('user_id', defaults.get('user_id'))
-                if not defaults.get('activity_ids') and res_model_id and res_id:
-                    if hasattr(self.env[self.env['ir.model'].sudo().browse(res_model_id).model], 'activity_ids'):
-                        meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
-                        if meeting_activity_type:
-                            activity_vals = {
-                                'res_model_id': res_model_id,
-                                'res_id': res_id,
-                                'activity_type_id': meeting_activity_type.id,
-                            }
-                            if user_id:
-                                activity_vals['user_id'] = user_id
-                            values['activity_ids'] = [(0, 0, activity_vals)]
+                if not res_model_id or not res_id:
+                    continue
+                if res_model_id not in valid_activity_model_ids:
+                    continue
+                activity_vals = {
+                    'res_model_id': res_model_id,
+                    'res_id': res_id,
+                    'activity_type_id': meeting_activity_type.id,
+                }
+                if user_id:
+                    activity_vals['user_id'] = user_id
+                values['activity_ids'] = [(0, 0, activity_vals)]
 
         # Automatically add the current partner when creating an event if there is none (happens when we quickcreate an event)
         self_partner_id = [(4, self.env.user.partner_id.id)]
@@ -389,11 +394,12 @@ class Meeting(models.Model):
         events = super().create(other_vals)
 
         for vals in recurring_vals:
-
-            recurrence_values = {field: vals.pop(field) for field in recurrence_fields if field in vals}
             vals['follow_recurrence'] = True
-            event = super().create(vals)
-            events |= event
+        recurring_events = super().create(recurring_vals)
+        events += recurring_events
+
+        for event, vals in zip(recurring_events, recurring_vals):
+            recurrence_values = {field: vals.pop(field) for field in recurrence_fields if field in vals}
             if vals.get('recurrency'):
                 detached_events = event._apply_recurrence_values(recurrence_values)
                 detached_events.active = False
@@ -402,8 +408,8 @@ class Meeting(models.Model):
             self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False)
         )
         events._sync_activities(fields={f for vals in vals_list for f in vals.keys()})
-
-        events._setup_alarms()
+        if not self.env.context.get('dont_notify'):
+            events._setup_alarms()
 
         return events
 
@@ -459,8 +465,14 @@ class Meeting(models.Model):
         update_recurrence = recurrence_update_setting in ('all_events', 'future_events') and len(self) == 1
         break_recurrence = values.get('recurrency') is False
 
+        update_alarms = False
         if 'partner_ids' in values:
             values['attendee_ids'] = self._attendees_values(values['partner_ids'])
+            update_alarms = True
+
+        # master arj todo: factorize use of _get_time_fields()
+        if any([values.get(key) for key in self.env['calendar.event']._get_time_fields()]) or 'alarm_ids' in values:
+            update_alarms = True
 
         if (not recurrence_update_setting or recurrence_update_setting == 'self_only' and len(self) == 1) and 'follow_recurrence' not in values:
             if any({field: values.get(field) for field in self.env['calendar.event']._get_time_fields() if field in values}):
@@ -488,8 +500,8 @@ class Meeting(models.Model):
 
         (detached_events & self).active = False
         (detached_events - self).with_context(archive_on_error=True).unlink()
-
-        self._setup_alarms()
+        if not self.env.context.get('dont_notify') and update_alarms:
+            self._setup_alarms()
 
         current_attendees = self.filtered('active').attendee_ids
         if 'partner_ids' in values:
@@ -552,10 +564,13 @@ class Meeting(models.Model):
                 added_partner_ids += [command[1]] if command[1] not in self.partner_ids.ids else []
             # commands 0 and 1 not supported
 
-        attendees_to_unlink = self.env['calendar.attendee'].search([
-            ('event_id', 'in', self.ids),
-            ('partner_id', 'in', removed_partner_ids),
-        ])
+        if not self:
+            attendees_to_unlink = self.env['calendar.attendee']
+        else:
+            attendees_to_unlink = self.env['calendar.attendee'].search([
+                ('event_id', 'in', self.ids),
+                ('partner_id', 'in', removed_partner_ids),
+            ])
         attendee_commands += [[2, attendee.id] for attendee in attendees_to_unlink]  # Removes and delete
 
         attendee_commands += [
@@ -620,7 +635,7 @@ class Meeting(models.Model):
                 if 'name' in fields:
                     activity_values['summary'] = event.name
                 if 'description' in fields:
-                    activity_values['note'] = tools.plaintext2html(event.description)
+                    activity_values['note'] = event.description
                 if 'start' in fields:
                     # self.start is a datetime UTC *only when the event is not allday*
                     # activty.date_deadline is a date (No TZ, but should represent the day in which the user's TZ is)
@@ -646,8 +661,8 @@ class Meeting(models.Model):
     def _setup_alarms(self):
         """ Schedule cron triggers for future events """
         cron = self.env.ref('calendar.ir_cron_scheduler_alarm').sudo()
-        alarm_manager = self.env['calendar.alarm_manager']
         alarm_types = self._get_trigger_alarm_types()
+        events_to_notify = self.env['calendar.event']
 
         for event in self:
             for alarm in (alarm for alarm in event.alarm_ids if alarm.alarm_type in alarm_types):
@@ -656,7 +671,10 @@ class Meeting(models.Model):
                     # Don't trigger for past alarms, they would be skipped by design
                     cron._trigger(at=at)
             if any(alarm.alarm_type == 'notification' for alarm in event.alarm_ids):
-                alarm_manager._notify_next_alarm(event.partner_ids.ids)
+                # filter events before notifying attendees through calendar_alarm_manager
+                events_to_notify |= event.filtered(lambda ev: ev.alarm_ids and ev.stop >= fields.Datetime.now())
+        if events_to_notify:
+            self.env['calendar.alarm_manager']._notify_next_alarm(events_to_notify.partner_ids.ids)
 
     # ------------------------------------------------------------
     # RECURRENCY
@@ -828,8 +846,12 @@ class Meeting(models.Model):
             event.add('dtstart').value = ics_datetime(meeting.start, meeting.allday)
             event.add('dtend').value = ics_datetime(meeting.stop, meeting.allday)
             event.add('summary').value = meeting.name
-            if meeting.description:
-                event.add('description').value = meeting.description
+            if not is_html_empty(meeting.description):
+                if 'appointment_type_id' in meeting._fields and self.appointment_type_id:
+                    # convert_online_event_desc_to_text method for correct data formatting in external calendars
+                    event.add('description').value = self.convert_online_event_desc_to_text(meeting.description)
+                else:
+                    event.add('description').value = html2plaintext(meeting.description)
             if meeting.location:
                 event.add('location').value = meeting.location
             if meeting.rrule:
@@ -856,6 +878,23 @@ class Meeting(models.Model):
             result[meeting.id] = cal.serialize().encode('utf-8')
 
         return result
+
+    def convert_online_event_desc_to_text(self, description):
+        """
+        We can sync the calendar events with google calendar, iCal and Outlook, and we
+        also pass the event description along with other data. This description needs
+        to be in plaintext to be displayed properly in above platforms. Because online
+        events have fixed format for the description, this method removes some specific
+        html tags, and converts it into readable plaintext (to be used in external
+        calendars). Note that for regular (offline) events, we simply use the standard
+        `html2plaintext` method instead.
+        """
+        desc_str = str(description)
+        tags_to_replace = ["<ul>", "</ul>", "<li>"]
+        for tag in tags_to_replace:
+            desc_str = desc_str.replace(tag, "")
+        desc_str = desc_str.replace("</li>", "<br/>")
+        return html2plaintext(desc_str)
 
     @api.model
     def _get_display_time(self, start, stop, zduration, zallday):
@@ -939,56 +978,3 @@ class Meeting(models.Model):
             'id', 'active', 'allday',
             'duration', 'user_id', 'interval',
             'count', 'rrule', 'recurrence_id', 'show_as', 'privacy'}
-
-    def description_to_html_lines(self):
-        """ Description could contain some structure content, depending on
-        its use. Notably appointment could add some structured data in it
-        in addition to free text. Purpose of this method is to generate a
-        simple html.
-
-        Input (self.description) example:
-Some free text salespeople added
-as multi line
- * Mobile: +320475000000
- * Email: my.email@test.example.com
- * SingleLine: answer
- * MultiLine:
-Answer1
-Answer2
-Answer3
- * Dropdown: answer
- * Radio: answer
- * Checkboxes: answer1, answer2
-Some free text salespeople added
-as multi line
-
-        Output: a list of items[
-'Some free text salespeople added<br />as multi line',
-'Mobile: +320475000000',
-'Email: my.email@test.example.com',
-'SingleLine: answer',
-'MultiLine:<br />Answer1<br />Answer2<br />Answer3',
-'Dropdown: answer',
-'Radio: answer',
-'Checkboxes: answer1, answer2',
-'Some free text salespeople added<br .>as multi line']
-
-        Each item of returned list is escaped so that only our intended <br />
-        are html tags. It should therefore be safe.
-        """
-
-        final_lines = []
-        parsed_lines = []
-        for line in self.description.split('\n'):
-            if not line.strip():
-                continue
-            # new line
-            if line.startswith(' *'):
-                if parsed_lines:
-                    final_lines.append('<br />'.join(html_escape(line) for line in parsed_lines))
-                parsed_lines = [line.lstrip(' *')]
-            else:
-                parsed_lines.append(line)
-        if parsed_lines:
-            final_lines.append('<br />'.join(html_escape(line) for line in parsed_lines))
-        return final_lines

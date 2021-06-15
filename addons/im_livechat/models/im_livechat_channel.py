@@ -4,7 +4,7 @@ import base64
 import random
 import re
 
-from odoo import api, fields, models, modules
+from odoo import api, Command, fields, models, modules, _
 
 
 class ImLivechatChannel(models.Model):
@@ -43,7 +43,7 @@ class ImLivechatChannel(models.Model):
         help="URL to a static page where you client can discuss with the operator of the channel.")
     are_you_inside = fields.Boolean(string='Are you inside the matrix?',
         compute='_are_you_inside', store=False, readonly=True)
-    script_external = fields.Text('Script (external)', compute='_compute_script_external', store=False, readonly=True)
+    script_external = fields.Html('Script (external)', compute='_compute_script_external', store=False, readonly=True, sanitize=False)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
 
     image_128 = fields.Image("Image", max_width=128, max_height=128, default=_default_image)
@@ -58,25 +58,24 @@ class ImLivechatChannel(models.Model):
             channel.are_you_inside = bool(self.env.uid in [u.id for u in channel.user_ids])
 
     def _compute_script_external(self):
-        view = self.env['ir.model.data'].get_object('im_livechat', 'external_loader')
+        view = self.env.ref('im_livechat.external_loader')
         values = {
-            "url": self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
             "dbname": self._cr.dbname,
         }
         for record in self:
             values["channel_id"] = record.id
+            values["url"] = record.get_base_url()
             record.script_external = view._render(values) if record.id else False
 
     def _compute_web_page_link(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
-            record.web_page = "%s/im_livechat/support/%i" % (base_url, record.id) if record.id else False
+            record.web_page = "%s/im_livechat/support/%i" % (record.get_base_url(), record.id) if record.id else False
 
     @api.depends('channel_ids')
     def _compute_nbr_channel(self):
         data = self.env['mail.channel'].read_group([
             ('livechat_channel_id', 'in', self._ids),
-            ('message_ids', '!=', False)], ['__count'], ['livechat_channel_id'], lazy=False)
+            ('has_message', '=', True)], ['__count'], ['livechat_channel_id'], lazy=False)
         channel_count = {x['livechat_channel_id'][0]: x['__count'] for x in data}
         for record in self:
             record.nbr_channel = channel_count.get(record.id, 0)
@@ -115,14 +114,14 @@ class ImLivechatChannel(models.Model):
     def _get_livechat_mail_channel_vals(self, anonymous_name, operator, user_id=None, country_id=None):
         # partner to add to the mail.channel
         operator_partner_id = operator.partner_id.id
-        channel_partner_to_add = [(4, operator_partner_id)]
+        channel_partner_to_add = [Command.create({'partner_id': operator_partner_id, 'is_pinned': False})]
         visitor_user = False
         if user_id:
             visitor_user = self.env['res.users'].browse(user_id)
             if visitor_user and visitor_user.active:  # valid session user (not public)
-                channel_partner_to_add.append((4, visitor_user.partner_id.id))
+                channel_partner_to_add.append(Command.create({'partner_id': visitor_user.partner_id.id}))
         return {
-            'channel_partner_ids': channel_partner_to_add,
+            'channel_last_seen_partner_ids': channel_partner_to_add,
             'livechat_active': True,
             'livechat_operator_id': operator_partner_id,
             'livechat_channel_id': self.id,
@@ -221,12 +220,14 @@ class ImLivechatChannel(models.Model):
             "channel_id": self.id,
         }
 
-    def get_livechat_info(self, username='Visitor'):
+    def get_livechat_info(self, username=None):
         self.ensure_one()
 
+        if username is None:
+            username = _('Visitor')
         info = {}
         info['available'] = len(self._get_available_users()) > 0
-        info['server_url'] = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        info['server_url'] = self.get_base_url()
         if info['available']:
             info['options'] = self._get_channel_infos()
             info['options']['current_partner_id'] = self.env.user.partner_id.id

@@ -31,7 +31,15 @@ weWidgets.LinkTools.include({
      */
     start: async function () {
         var def = await this._super.apply(this, arguments);
-        wUtils.autocompleteWithPages(this, this.$('input[name="url"]'));
+        const options = {
+            position: {
+                collision: 'flip fit',
+            },
+            classes: {
+                "ui-autocomplete": 'o_website_ui_autocomplete'
+            },
+        }
+        wUtils.autocompleteWithPages(this, this.$('input[name="url"]'), options);
         this._adaptPageAnchor();
         return def;
     },

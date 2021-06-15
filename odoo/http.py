@@ -52,6 +52,7 @@ from .service.server import memory_info
 from .service import security, model as service_model
 from .sql_db import flush_env
 from .tools.func import lazy_property
+from .tools import profiler
 from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
 from .tools.mimetypes import guess_mimetype
 from .tools._vendor import sessions
@@ -307,7 +308,7 @@ class WebRequest(object):
         # WARNING: do not inline or it breaks: raise...from evaluates strictly
         # LTR so would first remove traceback then copy lack of traceback
         new_cause = Exception().with_traceback(exception.__traceback__)
-        new_cause.__cause__ = exception.__cause__
+        new_cause.__cause__ = exception.__cause__ or exception.__context__
         # tries to provide good chained tracebacks, just re-raising exception
         # generates a weird message as stacks just get concatenated, exceptions
         # not guaranteed to copy.copy cleanly & we want `exception` as leaf (for
@@ -513,6 +514,10 @@ def route(route=None, **kw):
             else:
                 routes = [route]
             routing['routes'] = routes
+            wrong = routing.pop('method', None)
+            if wrong:
+                kw.setdefault('methods', wrong)
+                _logger.warning("<function %s.%s> defined with invalid routing parameter 'method', assuming 'methods'", f.__module__, f.__name__)
 
         @functools.wraps(f)
         def response_wrap(*args, **kw):
@@ -781,7 +786,7 @@ class HttpRequest(WebRequest):
 
 Odoo URLs are CSRF-protected by default (when accessed with unsafe
 HTTP methods). See
-https://www.odoo.com/documentation/14.0/reference/http.html#csrf for
+https://www.odoo.com/documentation/14.0/developer/reference/http.html#csrf for
 more details.
 
 * if this endpoint is accessed through Odoo via py-QWeb form, embed a CSRF
@@ -1447,7 +1452,11 @@ class Root(object):
                     return request._handle_exception(e)
                 return result
 
-            with request:
+            request_manager = request
+            if request.session.profile_session:
+                request_manager = self.get_profiler_context_manager(request)
+
+            with request_manager:
                 db = request.session.db
                 if db:
                     try:
@@ -1478,6 +1487,35 @@ class Root(object):
 
         except werkzeug.exceptions.HTTPException as e:
             return e(environ, start_response)
+
+    def get_profiler_context_manager(self, request):
+        """ Return a context manager that combines a profiler and ``request``. """
+        if request.session.profile_session and request.session.db:
+            if request.session.profile_expiration < str(datetime.now()):
+                # avoid having session profiling for too long if user forgets to disable profiling
+                request.session.profile_session = None
+                _logger.warning("Profiling expiration reached, disabling profiling")
+            elif 'set_profiling' in request.httprequest.path:
+                _logger.debug("Profiling disabled on set_profiling route")
+            elif request.httprequest.path.startswith('/longpolling'):
+                _logger.debug("Profiling disabled for longpolling")
+            elif odoo.evented:
+                # only longpolling should be in a evented server, but this is an additional safety
+                _logger.debug("Profiling disabled for evented server")
+            else:
+                try:
+                    prof = profiler.Profiler(
+                        db=request.session.db,
+                        description=request.httprequest.full_path,
+                        profile_session=request.session.profile_session,
+                        collectors=request.session.profile_collectors,
+                        params=request.session.profile_params,
+                    )
+                    return profiler.Nested(prof, request)
+                except Exception:
+                    _logger.exception("Failure during Profiler creation")
+                    request.session.profile_session = None
+        return request
 
     def get_db_router(self, db):
         if not db:

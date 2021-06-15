@@ -37,19 +37,31 @@ class OdooController(http.Controller):
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
             'odoo', notification_data
         )
-        if not self._verify_notification_signature(received_signature, tx_sudo):
+
+        # Ignore signature for REFUND, the signature will be the one of the original transaction
+        event_code = notification_data['eventCode']
+        if event_code != 'REFUND' and not self._verify_notification_signature(
+            received_signature, tx_sudo
+        ):
             return
 
         _logger.info("notification received:\n%s", pprint.pformat(notification_data))
-        if notification_data['success'] != 'true':
+        if notification_data['success'] != 'true' and event_code != 'REFUND':
             return  # Don't handle failed events
 
+        request.env['adyen.transaction'].sudo()._handle_payment_notification(
+            notification_data, tx_sudo
+        )
+
         # Reshape the notification data for parsing
-        event_code = notification_data['eventCode']
         if event_code == 'AUTHORISATION':
             notification_data['resultCode'] = 'Authorised'
         elif event_code == 'CANCELLATION':
             notification_data['resultCode'] = 'Cancelled'
+        elif event_code in ['NOTIFICATION_OF_CHARGEBACK', 'CHARGEBACK']:
+            notification_data['resultCode'] = 'Chargeback'
+        elif event_code == 'REFUND':
+            notification_data['resultCode'] = 'Refund'
         else:
             return  # Don't handle unsupported event codes
 

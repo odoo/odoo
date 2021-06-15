@@ -797,13 +797,17 @@ class PaymentTransaction(models.Model):
     def _reconcile_after_done(self):
         """ Post relevant fiscal documents and create missing payments.
 
+        As there is nothing to reconcile for validation transactions, no payment is created for
+        them. This is also true for validations with a validity check (transfer of a small amount
+        with immediate refund) because validation amounts are not included in payouts.
+
         :return: None
         """
         # Validate invoices automatically once the transaction is confirmed
         self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
 
-        # Create and post missing payments
-        for tx in self.filtered(lambda t: not t.payment_id):
+        # Create and post missing payments for transactions requiring reconciliation
+        for tx in self.filtered(lambda t: t.operation != 'validation' and not t.payment_id):
             tx._create_payment()
 
     def _create_payment(self, **extra_create_values):
@@ -819,6 +823,7 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
+        payment_method = self.env['account.payment.method'].search([('code', '=', self.acquirer_id.provider)], limit=1)
         payment_values = {
             'amount': self.amount,
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
@@ -827,7 +832,7 @@ class PaymentTransaction(models.Model):
             'partner_type': 'customer',
             'journal_id': self.acquirer_id.journal_id.id,
             'company_id': self.acquirer_id.company_id.id,
-            'payment_method_id': self.env.ref('payment.account_payment_method_electronic_in').id,
+            'payment_method_id': payment_method.id,
             'payment_token_id': self.token_id.id,
             'payment_transaction_id': self.id,
             'ref': self.reference,

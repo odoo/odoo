@@ -134,11 +134,8 @@ class TestProjectFlow(TestProjectCommon):
         })
 
         # the child task 1 is linked to a project without partner_id (goats project)
-        child_task_1 = Task.create({
+        child_task_1 = Task.with_context(default_project_id=self.project_goats.id, default_parent_id=parent_task.id).create({
             'name': 'Task Child with project',
-            'parent_id': parent_task.id,
-            'project_id': self.project_goats.id,
-            'display_project_id': self.project_goats.id,
             'planned_hours': 3,
         })
 
@@ -156,8 +153,8 @@ class TestProjectFlow(TestProjectCommon):
             "When no project partner_id has been set, a subtask should have the same partner as its parent")
 
         self.assertEqual(
-            child_task_2.partner_id, child_task_2.project_id.partner_id,
-            "When a project partner_id has been set, a subtask should have the same partner as its project")
+            child_task_2.partner_id, child_task_2.parent_id.partner_id,
+            "When a project partner_id has been set, a subtask should have the same partner as its parent")
 
         self.assertEqual(
             parent_task.subtask_count, 2,
@@ -182,17 +179,17 @@ class TestProjectFlow(TestProjectCommon):
         })
 
         self.assertEqual(
-            child_task_2.partner_id, child_task_2.project_id.partner_id,
+            child_task_2.partner_id, parent_task.partner_id,
             "When changing the parent task of a subtask with a project, the partner_id should remain the same.")
 
         # set a project with partner_id to a subtask without project partner_id
         child_task_1.write({
-            'project_id': self.project_pigs.id
+            'display_project_id': self.project_pigs.id
         })
 
-        self.assertEqual(
+        self.assertNotEqual(
             child_task_1.partner_id, self.project_pigs.partner_id,
-            "When the project changes, the subtask should have the same partner id as the new project.")
+            "When the project changes, the subtask should keep its partner id as its partner id is set.")
 
         # restore the partner_id of the 'goats' project
         self.project_goats.write({
@@ -201,12 +198,12 @@ class TestProjectFlow(TestProjectCommon):
 
         # set a project with partner_id to a subtask with a project partner_id
         child_task_2.write({
-            'project_id': self.project_goats.id
+            'display_project_id': self.project_goats.id
         })
 
         self.assertEqual(
-            child_task_2.partner_id, self.project_goats.partner_id,
-            "When the project changes, the subtask should have the same partner id as the new project.")
+            child_task_2.partner_id, parent_task.partner_id,
+            "When the project changes, the subtask should keep the same partner id even it has a new project.")
 
     def test_rating(self):
         """Check if rating works correctly even when task is changed from project A to project B"""
@@ -276,3 +273,27 @@ class TestProjectFlow(TestProjectCommon):
         self.assertEqual(rating_good.parent_res_id, self.project_goats.id)
         self.assertEqual(self.project_goats.rating_percentage_satisfaction, 50)
         self.assertEqual(self.project_pigs.rating_percentage_satisfaction, -1)
+
+    def test_task_with_no_project(self):
+        """
+            With this test, we want to make sure the fact that a task has no project doesn't affect the entire
+            behaviours of projects.
+
+            1) Try to compute every field of a task which has no project.
+            2) Try to compute every field of a project and assert it isn't affected by this use case.
+        """
+        task_without_project = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Test task without project'
+        })
+
+        for field in task_without_project._fields.keys():
+            try:
+                task_without_project[field]
+            except Exception as e:
+                raise AssertionError("Error raised unexpectedly while computing a field of the task ! Exception : " + e.args[0])
+
+        for field in self.project_pigs._fields.keys():
+            try:
+                self.project_pigs[field]
+            except Exception as e:
+                raise AssertionError("Error raised unexpectedly while computing a field of the project ! Exception : " + e.args[0])

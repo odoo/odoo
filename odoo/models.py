@@ -55,7 +55,7 @@ from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, IterableGenerator, \
-                   groupby
+                   groupby, discardattr
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
@@ -150,31 +150,68 @@ class MetaModel(api.Meta):
     """ The metaclass of all model classes.
         Its main purpose is to register the models per module.
     """
-
     module_to_models = defaultdict(list)
 
     def __new__(meta, name, bases, attrs):
+        # this prevents assignment of non-fields on recordsets
         attrs.setdefault('__slots__', ())
+        # this collects the fields defined on the class (via Field.__set_name__())
+        attrs.setdefault('_field_definitions', [])
+
+        if attrs.get('_register', True):
+            # determine '_module'
+            if '_module' not in attrs:
+                module = attrs['__module__']
+                assert module.startswith('odoo.addons.'), \
+                    f"Invalid import of {module}.{name}, it should start with 'odoo.addons'."
+                attrs['_module'] = module.split('.')[2]
+
+            # determine model '_name' and normalize '_inherits'
+            inherit = attrs.get('_inherit', ())
+            if isinstance(inherit, str):
+                inherit = attrs['_inherit'] = [inherit]
+            if '_name' not in attrs:
+                attrs['_name'] = inherit[0] if len(inherit) == 1 else name
+
         return super().__new__(meta, name, bases, attrs)
 
     def __init__(self, name, bases, attrs):
-        if not self._register:
-            self._register = True
-            super(MetaModel, self).__init__(name, bases, attrs)
-            return
+        super().__init__(name, bases, attrs)
 
-        if not hasattr(self, '_module'):
-            assert self.__module__.startswith('odoo.addons.'), \
-                "Invalid import of %s.%s, it should start with 'odoo.addons'." % (self.__module__, name)
-            self._module = self.__module__.split('.')[2]
+        if not attrs.get('_register', True):
+            return
 
         # Remember which models to instantiate for this module.
         if self._module:
             self.module_to_models[self._module].append(self)
 
-        for key, val in attrs.items():
-            if isinstance(val, Field):
-                val.args['_module'] = self._module
+        if not self._abstract and self._name not in self._inherit:
+            # this class defines a model: add magic fields
+            def add(name, field):
+                setattr(self, name, field)
+                field.__set_name__(self, name)
+
+            def add_default(name, field):
+                if name not in attrs:
+                    setattr(self, name, field)
+                    field.__set_name__(self, name)
+
+            add('id', fields.Id(automatic=True))
+            add(self.CONCURRENCY_CHECK_FIELD, fields.Datetime(
+                string='Last Modified on', automatic=True,
+                compute='_compute_concurrency_field', compute_sudo=False))
+            add_default('display_name', fields.Char(
+                string='Display Name', automatic=True, compute='_compute_display_name'))
+
+            if attrs.get('_log_access', self._auto):
+                add_default('create_uid', fields.Many2one(
+                    'res.users', string='Created by', automatic=True, readonly=True))
+                add_default('create_date', fields.Datetime(
+                    string='Created on', automatic=True, readonly=True))
+                add_default('write_uid', fields.Many2one(
+                    'res.users', string='Last Updated by', automatic=True, readonly=True))
+                add_default('write_date', fields.Datetime(
+                    string='Last Updated on', automatic=True, readonly=True))
 
 
 class NewId(object):
@@ -251,7 +288,123 @@ VALID_AGGREGATE_FUNCTIONS = {
 }
 
 
-class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
+# THE DEFINITION AND REGISTRY CLASSES
+#
+# The framework deals with two kinds of classes for models: the "definition"
+# classes and the "registry" classes.
+#
+# The "definition" classes are the ones defined in modules source code: they
+# define models and extend them.  Those classes are essentially "static", for
+# whatever that means in Python.  The only exception is custom models: their
+# definition class is created dynamically.
+#
+# The "registry" classes are the ones you find in the registry.  They are the
+# actual classes of the recordsets of their model.  The "registry" class of a
+# model is created dynamically when the registry is built.  It inherits (in the
+# Python sense) from all the definition classes of the model, and possibly other
+# registry classes (when the model inherits from another model).  It also
+# carries model metadata inferred from its parent classes.
+#
+#
+# THE REGISTRY CLASS OF A MODEL
+#
+# In the simplest case, a model's registry class inherits from all the classes
+# that define the model in a flat hierarchy.  Consider the model definition
+# below.  The registry class of model 'a' inherits from the definition classes
+# A1, A2, A3, in reverse order, to match the expected overriding order.  The
+# registry class carries inferred metadata that is shared between all the
+# model's instances for a given registry.
+#
+#       class A1(Model):                      Model
+#           _name = 'a'                       / | \
+#                                            A3 A2 A1   <- definition classes
+#       class A2(Model):                      \ | /
+#           _inherit = 'a'                      a       <- registry class: registry['a']
+#                                               |
+#       class A3(Model):                     records    <- model instances, like env['a']
+#           _inherit = 'a'
+#
+# Note that when the model inherits from another model, we actually make the
+# registry classes inherit from each other, so that extensions to an inherited
+# model are visible in the registry class of the child model, like in the
+# following example.
+#
+#       class A1(Model):
+#           _name = 'a'                       Model
+#                                            / / \ \
+#       class B1(Model):                    / /   \ \
+#           _name = 'b'                    / A2   A1 \
+#                                         B2  \   /  B1
+#       class B2(Model):                   \   \ /   /
+#           _name = 'b'                     \   a   /
+#           _inherit = ['a', 'b']            \  |  /
+#                                             \ | /
+#       class A2(Model):                        b
+#           _inherit = 'a'
+#
+#
+# THE FIELDS OF A MODEL
+#
+# The fields of a model are given by the model's definition classes, inherited
+# models ('_inherit' and '_inherits') and other parties, like custom fields.
+# Note that a field can be partially overridden when it appears on several
+# definition classes of its model.  In that case, the field's final definition
+# depends on the presence or absence of each definition class, which itself
+# depends on the modules loaded in the registry.
+#
+# By design, the registry class has access to all the fields on the model's
+# definition classes.  When possible, the field is used directly from the
+# model's registry class.  There are a number of cases where the field cannot be
+# used directly:
+#  - the field is related (and bits may not be shared);
+#  - the field is overridden on definition classes;
+#  - the field is defined for another model (and accessible by mixin).
+#
+# The last case prevents sharing the field, because the field object is specific
+# to a model, and is used as a key in several key dictionaries, like the record
+# cache and pending computations.
+#
+# Setting up a field on its definition class helps saving memory and time.
+# Indeed, when sharing is possible, the field's setup is almost entirely done
+# where the field was defined.  It is thus done when the definition class was
+# created, and it may be reused across registries.
+#
+# In the example below, the field 'foo' appears once on its model's definition
+# classes.  Assuming that it is not related, that field can be set up directly
+# on its definition class.  If the model appears in several registries, the
+# field 'foo' is effectively shared across registries.
+#
+#       class A1(Model):                      Model
+#           _name = 'a'                        / \
+#           foo = ...                         /   \
+#           bar = ...                       A2     A1
+#                                            bar    foo, bar
+#       class A2(Model):                      \   /
+#           _inherit = 'a'                     \ /
+#           bar = ...                           a
+#                                                bar
+#
+# On the other hand, the field 'bar' is overridden in its model's definition
+# classes.  In that case, the framework recreates the field on the model's
+# registry class.  The field's setup will be based on its definitions, and will
+# not be shared across registries.
+#
+# The so-called magic fields ('id', 'display_name', ...) used to be added on
+# registry classes.  But doing so prevents them from being shared.  So instead,
+# we add them on definition classes that define a model without extending it.
+# This increases the number of fields that are shared across registries.
+
+def is_definition_class(cls):
+    """ Return whether ``cls`` is a model definition class. """
+    return isinstance(cls, MetaModel) and getattr(cls, 'pool', None) is None
+
+
+def is_registry_class(cls):
+    """ Return whether ``cls`` is a model registry class. """
+    return getattr(cls, 'pool', None) is not None
+
+
+class BaseModel(metaclass=MetaModel):
     """Base class for Odoo models.
 
     Odoo models are created by inheriting one of the following:
@@ -306,9 +459,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     _name = None                #: the model name (in dot-notation, module namespace)
     _description = None         #: the model's informal name
+    _module = None              #: the model's module (in the Odoo sense)
     _custom = False             #: should be True for custom models only
 
-    _inherit = None
+    _inherit = ()
     """Python-inherited models:
 
     :type: str or list(str)
@@ -318,7 +472,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         * If :attr:`._name` is set, name(s) of parent models to inherit from
         * If :attr:`._name` is unset, name of a single model to extend in-place
     """
-    _inherits = {}
+    _inherits = frozendict()
     """dictionary {'parent_model': 'm2o_field'} mapping the _name of the parent business
     objects to the names of the corresponding foreign key fields to use::
 
@@ -365,7 +519,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     as attribute.
     """
 
-    _depends = {}
+    _depends = frozendict()
     """dependencies of models backed up by SQL views
     ``{model_name: field_names}``, where ``field_names`` is an iterable.
     This is only used to determine the changes to flush to database before
@@ -398,10 +552,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if not isinstance(getattr(cls, name, field), Field):
             _logger.warning("In model %r, field %r overriding existing value", cls._name, name)
         setattr(cls, name, field)
+        field._toplevel = True
+        field.__set_name__(cls, name)
         cls._fields[name] = field
-
-        # basic setup of field
-        field.setup_base(self, name)
 
     @api.model
     def _pop_field(self, name):
@@ -410,65 +563,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         cls = type(self)
         field = cls._fields.pop(name, None)
-        if hasattr(cls, name):
-            delattr(cls, name)
+        discardattr(cls, name)
         if cls._rec_name == name:
             # fixup _rec_name and display_name's dependencies
             cls._rec_name = None
-            cls.display_name.depends = tuple(dep for dep in cls.display_name.depends if dep != name)
+            if cls.display_name in cls.pool.field_depends:
+                cls.pool.field_depends[cls.display_name] = tuple(
+                    dep for dep in cls.pool.field_depends[cls.display_name] if dep != name
+                )
         return field
-
-    @api.model
-    def _add_magic_fields(self):
-        """ Introduce magic fields on the current class
-
-        * id is a "normal" field (with a specific getter)
-        * create_uid, create_date, write_uid and write_date have become
-          "normal" fields
-        * $CONCURRENCY_CHECK_FIELD is a computed field with its computing
-          method defined dynamically. Uses ``str(datetime.datetime.utcnow())``
-          to get the same structure as the previous
-          ``(now() at time zone 'UTC')::timestamp``::
-
-              # select (now() at time zone 'UTC')::timestamp;
-                        timezone
-              ----------------------------
-               2013-06-18 08:30:37.292809
-
-              >>> str(datetime.datetime.utcnow())
-              '2013-06-18 08:31:32.821177'
-        """
-        if self._abstract:
-            return
-
-        def add(name, field):
-            """ add ``field`` with the given ``name`` if it does not exist yet """
-            if name not in self._fields:
-                self._add_field(name, field)
-
-        # cyclic import
-        from . import fields
-
-        # this field 'id' must override any other column or field
-        self._add_field('id', fields.Id(automatic=True))
-
-        # this field must override any other column or field
-        self._add_field(self.CONCURRENCY_CHECK_FIELD, fields.Datetime(
-            string='Last Modified on', compute='_compute_concurrency_field',
-            compute_sudo=False, automatic=True))
-
-        add('display_name', fields.Char(string='Display Name', automatic=True,
-            compute='_compute_display_name'))
-
-        if self._log_access:
-            add('create_uid', fields.Many2one(
-                'res.users', string='Created by', automatic=True, readonly=True))
-            add('create_date', fields.Datetime(
-                string='Created on', automatic=True, readonly=True))
-            add('write_uid', fields.Many2one(
-                'res.users', string='Last Updated by', automatic=True, readonly=True))
-            add('write_date', fields.Datetime(
-                string='Last Updated on', automatic=True, readonly=True))
 
     @api.depends(lambda model: ('create_date', 'write_date') if model._log_access else ())
     def _compute_concurrency_field(self):
@@ -493,41 +596,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         other registry classes.
 
         """
-
-        # In the simplest case, the model's registry class inherits from cls and
-        # the other classes that define the model in a flat hierarchy. The
-        # registry contains the instance ``model`` (on the left). Its class,
-        # ``ModelClass``, carries inferred metadata that is shared between all
-        # the model's instances for this registry only.
-        #
-        #   class A1(Model):                          Model
-        #       _name = 'a'                           / | \
-        #                                            A3 A2 A1
-        #   class A2(Model):                          \ | /
-        #       _inherit = 'a'                      ModelClass
-        #                                             /   \
-        #   class A3(Model):                      model   recordset
-        #       _inherit = 'a'
-        #
-        # When a model is extended by '_inherit', its base classes are modified
-        # to include the current class and the other inherited model classes.
-        # Note that we actually inherit from other ``ModelClass``, so that
-        # extensions to an inherited model are immediately visible in the
-        # current model class, like in the following example:
-        #
-        #   class A1(Model):
-        #       _name = 'a'                           Model
-        #                                            / / \ \
-        #   class B1(Model):                        / A2 A1 \
-        #       _name = 'b'                        /   \ /   \
-        #                                         B2  ModelA  B1
-        #   class B2(Model):                       \    |    /
-        #       _name = 'b'                         \   |   /
-        #       _inherit = ['a', 'b']                \  |  /
-        #                                             ModelB
-        #   class A2(Model):
-        #       _inherit = 'a'
-
         if getattr(cls, '_constraints', None):
             _logger.warning("Model attribute '_constraints' is no longer supported, "
                             "please use @api.constrains on methods instead.")
@@ -536,16 +604,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # instance when exporting translations
         cls._local_sql_constraints = cls.__dict__.get('_sql_constraints', [])
 
-        # determine inherited models
-        parents = cls._inherit
-        parents = [parents] if isinstance(parents, str) else (parents or [])
-
-        # determine the model's name
-        name = cls._name or (len(parents) == 1 and parents[0]) or cls.__name__
-
         # all models except 'base' implicitly inherit from 'base'
+        name = cls._name
+        parents = list(cls._inherit)
         if name != 'base':
-            parents = list(parents) + ['base']
+            parents.append('base')
 
         # create or retrieve the model's class
         if name in parents:
@@ -555,14 +618,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             ModelClass._build_model_check_base(cls)
             check_parent = ModelClass._build_model_check_parent
         else:
-            ModelClass = type(name, (BaseModel,), {
+            ModelClass = type(name, (cls,), {
                 '_name': name,
                 '_register': False,
                 '_original_module': cls._module,
-                '_inherit_module': dict(),              # map parent to introducing module
+                '_inherit_module': {},                  # map parent to introducing module
                 '_inherit_children': OrderedSet(),      # names of children models
                 '_inherits_children': set(),            # names of children models
-                '_fields': OrderedDict(),               # populated in _setup_base()
+                '_fields': {},                          # populated in _setup_base()
             })
             check_parent = cls._build_model_check_parent
 
@@ -573,7 +636,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 raise TypeError("Model %r inherits from non-existing model %r." % (name, parent))
             parent_class = pool[parent]
             if parent == name:
-                for base in parent_class.__bases__:
+                for base in parent_class.__base_classes:
                     bases.add(base)
             else:
                 check_parent(cls, parent_class)
@@ -581,7 +644,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 ModelClass._inherit_module[parent] = cls._module
                 parent_class._inherit_children.add(name)
 
-        ModelClass.__bases__ = tuple(bases)
+        # ModelClass.__bases__ must be assigned those classes; however, this
+        # operation is quite slow, so we do it once in method _prepare_setup()
+        ModelClass.__base_classes = tuple(bases)
 
         # determine the attributes of the model's class
         ModelClass._build_model_attributes(pool)
@@ -634,31 +699,36 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls._table = cls._name.replace('.', '_')
         cls._sequence = None
         cls._log_access = cls._auto
-        cls._inherits = {}
-        cls._depends = {}
+        inherits = {}
+        depends = {}
         cls._sql_constraints = {}
 
-        for base in reversed(cls.__bases__):
-            if not getattr(base, 'pool', None):
-                # the following attributes are not taken from model classes
-                parents = [base._inherit] if base._inherit and isinstance(base._inherit, str) else (base._inherit or [])
-                if cls._name not in parents and not base._description:
+        for base in reversed(cls.__base_classes):
+            if is_definition_class(base):
+                # the following attributes are not taken from registry classes
+                if cls._name not in base._inherit and not base._description:
                     _logger.warning("The model %s has no _description", cls._name)
                 cls._description = base._description or cls._description
                 cls._table = base._table or cls._table
                 cls._sequence = base._sequence or cls._sequence
                 cls._log_access = getattr(base, '_log_access', cls._log_access)
 
-            cls._inherits.update(base._inherits)
+            inherits.update(base._inherits)
 
             for mname, fnames in base._depends.items():
-                cls._depends.setdefault(mname, []).extend(fnames)
+                depends.setdefault(mname, []).extend(fnames)
 
             for cons in base._sql_constraints:
                 cls._sql_constraints[cons[0]] = cons
 
         cls._sequence = cls._sequence or (cls._table + '_id_seq')
         cls._sql_constraints = list(cls._sql_constraints.values())
+
+        # avoid assigning an empty dict to save memory
+        if inherits:
+            cls._inherits = inherits
+        if depends:
+            cls._depends = depends
 
         # update _inherits_children of parent models
         for parent_name in cls._inherits:
@@ -686,9 +756,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         def is_constraint(func):
             return callable(func) and hasattr(func, '_constrains')
 
+        def wrap(func, names):
+            # wrap func into a proxy function with explicit '_constrains'
+            @api.constrains(*names)
+            def wrapper(self):
+                return func(self)
+            return wrapper
+
         cls = type(self)
         methods = []
         for attr, func in getmembers(cls, is_constraint):
+            if callable(func._constrains):
+                func = wrap(func, func._constrains(self))
             for name in func._constrains:
                 field = cls._fields.get(name)
                 if not field:
@@ -923,7 +1002,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         if lines2:
                             # merge first line with record's main line
                             for j, val in enumerate(lines2[0]):
-                                if val or isinstance(val, bool):
+                                if val or isinstance(val, (int, float)):
                                     current[j] = val
                             # append the other lines at the end
                             lines += lines2[1:]
@@ -1588,13 +1667,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         if view_id:
             # read the view with inherited views applied
-            root_view = View.browse(view_id).read_combined(['id', 'name', 'field_parent', 'type', 'model', 'arch'])
-            result['arch'] = root_view['arch']
-            result['name'] = root_view['name']
-            result['type'] = root_view['type']
-            result['view_id'] = root_view['id']
-            result['field_parent'] = root_view['field_parent']
-            result['base_model'] = root_view['model']
+            view = View.browse(view_id)
+            result['arch'] = view.get_combined_arch()
+            result['name'] = view.name
+            result['type'] = view.type
+            result['view_id'] = view.id
+            result['field_parent'] = view.field_parent
+            result['base_model'] = view.model
         else:
             # fallback on default views methods if no ir.ui.view could be found
             try:
@@ -2463,7 +2542,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         while field.inherited:
             # retrieve the parent model where field is inherited from
             parent_model = self.env[field.related_field.model_name]
-            parent_fname = field.related[0]
+            parent_fname = field.related.split('.')[0]
             # JOIN parent_model._table AS parent_alias ON alias.parent_fname = parent_alias.id
             parent_alias = query.left_join(
                 alias, parent_fname, parent_model._table, 'id', parent_fname,
@@ -2739,7 +2818,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 self._add_field(name, field.new(
                     inherited=True,
                     inherited_field=field,
-                    related=(parent_fname, name),
+                    related=f"{parent_fname}.{name}",
                     related_sudo=False,
                     copy=field.copy,
                     readonly=field.readonly,
@@ -2754,7 +2833,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 from .fields import Many2one
                 field = Many2one(table, string="Automatically created field to link to parent %s" % table, required=True, ondelete="cascade")
                 self._add_field(field_name, field)
-            elif not field.required or field.ondelete.lower() not in ("cascade", "restrict"):
+            elif not (field.required and (field.ondelete or "").lower() in ("cascade", "restrict")):
                 _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade" or "restrict", forcing it to required + cascade.', field_name, self._name)
                 field.required = True
                 field.ondelete = "cascade"
@@ -2768,7 +2847,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     field.required = True
                 if field.ondelete.lower() not in ('cascade', 'restrict'):
                     field.ondelete = 'cascade'
-                self._inherits[field.comodel_name] = field.name
+                type(self)._inherits = {**self._inherits, field.comodel_name: field.name}
                 self.pool[field.comodel_name]._inherits_children.add(self._name)
 
     @api.model
@@ -2777,15 +2856,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls = type(self)
         cls._setup_done = False
 
-        # the classes that define this model's base fields and methods
-        cls._model_classes = tuple(c for c in cls.mro() if getattr(c, 'pool', None) is None)
+        # changing base classes is costly, do it only when necessary
+        if cls.__bases__ != cls.__base_classes:
+            cls.__bases__ = cls.__base_classes
 
         # reset those attributes on the model's class for _setup_fields() below
         for attr in ('_rec_name', '_active_name'):
-            try:
-                delattr(cls, attr)
-            except AttributeError:
-                pass
+            discardattr(cls, attr)
 
     @api.model
     def _setup_base(self):
@@ -2796,49 +2873,24 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # 1. determine the proper fields of the model: the fields defined on the
         # class and magic fields, not the inherited or custom ones
-        cls0 = cls.pool.model_cache.get(cls._model_classes)
 
-        if cls0 and cls0._model_classes == cls._model_classes:
-            # cls0 is either a model class from another registry, or cls itself.
-            # The point is that it has the same base classes. We retrieve stuff
-            # from cls0 to optimize the setup of cls. cls0 is guaranteed to be
-            # properly set up: registries are loaded under a global lock,
-            # therefore two registries are never set up at the same time.
+        # retrieve fields from parent classes, and duplicate them on cls to
+        # avoid clashes with inheritance between different models
+        for name in cls._fields:
+            discardattr(cls, name)
+        cls._fields.clear()
 
-            # remove fields that are not proper to cls
-            for name in set(cls._fields).difference(cls0._model_fields):
-                delattr(cls, name)
-                del cls._fields[name]
-
-            if cls0 is cls:
-                # simply reset up fields
-                for name, field in cls._fields.items():
-                    field.setup_base(self, name)
+        # collect the definitions of each field (base definition + overrides)
+        definitions = defaultdict(list)
+        for klass in reversed(cls.mro()):
+            if is_definition_class(klass):
+                for field in klass._field_definitions:
+                    definitions[field.name].append(field)
+        for name, fields_ in definitions.items():
+            if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == cls._name:
+                cls._fields[name] = fields_[0]
             else:
-                # collect proper fields on cls0, and add them on cls
-                for name in cls0._model_fields:
-                    field = cls0._fields[name]
-                    # regular fields are shared, while related fields are setup from scratch
-                    if not field.related:
-                        self._add_field(name, field)
-                    else:
-                        self._add_field(name, field.new(**field.args))
-                cls._model_fields = list(cls._fields)
-
-        else:
-            # retrieve fields from parent classes, and duplicate them on cls to
-            # avoid clashes with inheritance between different models
-            for name in cls._fields:
-                delattr(cls, name)
-            cls._fields = OrderedDict()
-            for name, field in sorted(getmembers(cls, Field.__instancecheck__), key=lambda f: f[1]._sequence):
-                # do not retrieve magic, custom and inherited fields
-                if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
-                    self._add_field(name, field.new())
-            self._add_magic_fields()
-            cls._model_fields = list(cls._fields)
-
-        cls.pool.model_cache[cls._model_classes] = cls
+                self._add_field(name, fields_[-1].new(_base_fields=fields_))
 
         # 2. add manual fields
         if self.pool._init_modules:
@@ -2852,9 +2904,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self._add_inherited_fields()
 
         # 4. initialize more field metadata
-        cls._field_inverses = Collector()   # inverse fields for related fields
-
         cls._setup_done = True
+
+        for field in cls._fields.values():
+            field.prepare_setup()
 
         # 5. determine and validate rec_name
         if cls._rec_name:
@@ -2886,7 +2939,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         bad_fields = []
         for name, field in cls._fields.items():
             try:
-                field.setup_full(self)
+                field.setup(self)
             except Exception:
                 if field.base_field.manual:
                     # Something goes wrong when setup a manual field.
@@ -3057,7 +3110,7 @@ Fields:
                 stored_fields.add(name)
             elif field.compute:
                 # optimization: prefetch direct field dependencies
-                for dotname in field.depends:
+                for dotname in self.pool.field_depends[field]:
                     f = self._fields[dotname.split('.')[0]]
                     if f.prefetch and (not f.groups or self.user_has_groups(f.groups)):
                         stored_fields.add(f.name)
@@ -3267,7 +3320,8 @@ Fields:
         :rtype: string
 
         """
-        self.ensure_one()
+        if len(self) > 1:
+            raise ValueError("Expected singleton or no record: %s" % self)
         return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
     def _check_concurrency(self):
@@ -3641,7 +3695,7 @@ Fields:
                 # DLE P150: `test_cancel_propagation`, `test_manufacturing_3_steps`, `test_manufacturing_flow`
                 # TODO: check whether still necessary
                 records_to_inverse[field] = self.filtered('id')
-            if field.relational or self._field_inverses[field]:
+            if field.relational or self.pool.field_inverses[field]:
                 relational_names.append(fname)
             if field.inverse or (field.compute and not field.readonly):
                 if field.store or field.type not in ('one2many', 'many2many'):
@@ -4030,7 +4084,7 @@ Fields:
                 else:
                     cache_value = field.convert_to_cache(value, record)
                     self.env.cache.set(record, field, cache_value)
-                    if field.type in ('many2one', 'many2one_reference') and record._field_inverses[field]:
+                    if field.type in ('many2one', 'many2one_reference') and self.pool.field_inverses[field]:
                         inverses_update[(field, cache_value)].append(record.id)
 
         for (field, value), record_ids in inverses_update.items():
@@ -4454,7 +4508,7 @@ Fields:
                     # `self.env['stock.picking'].search([('product_id', '=', product.id)])`
                     # Should flush `stock.move.picking_ids` as `product_id` on `stock.picking` is defined as:
                     # `product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=False)`
-                    for f in field.related:
+                    for f in field.related.split('.'):
                         rfield = model._fields.get(f)
                         if rfield:
                             to_flush[model._name].add(f)
@@ -4616,7 +4670,7 @@ Fields:
                 with the record ids corresponding to ``old`` and ``new``.
             """
             if field.inherited:
-                pname = field.related[0]
+                pname = field.related.split('.')[0]
                 return get_trans(field.related_field, old[pname], new[pname])
             return "%s,%s" % (field.model_name, field.name), old.id, new.id
 
@@ -4628,7 +4682,7 @@ Fields:
             if not field.copy:
                 continue
 
-            if field.inherited and field.related[0] in excluded:
+            if field.inherited and field.related.split('.')[0] in excluded:
                 # inherited fields that come from a user-provided parent record
                 # must not copy translations, as the parent record is not a copy
                 # of the old parent record
@@ -5181,7 +5235,7 @@ Fields:
                 inv_recs = self[field.name].filtered(lambda r: not r.id)
                 if not inv_recs:
                     continue
-                for invf in self._field_inverses[field]:
+                for invf in self.pool.field_inverses[field]:
                     # DLE P98: `test_40_new_fields`
                     # /home/dle/src/odoo/master-nochange-fp/odoo/addons/test_new_api/tests/test_new_fields.py
                     # Be careful to not break `test_onchange_taxes_1`, `test_onchange_taxes_2`, `test_onchange_taxes_3`
@@ -5321,6 +5375,9 @@ Fields:
                 result.append(self.browse())
             else:
                 (key, comparator, value) = d
+                if comparator in ('child_of', 'parent_of'):
+                    result.append(self.search([('id', 'in', self.ids), d]))
+                    continue
                 if key.endswith('.id'):
                     key = key[:-3]
                 if key == 'id':
@@ -5337,9 +5394,6 @@ Fields:
                 records_ids = OrderedSet()
                 for rec in self:
                     data = rec.mapped(key)
-                    if comparator in ('child_of', 'parent_of'):
-                        value = data.search([(data._parent_name, comparator, value)]).ids
-                        comparator = 'in'
                     if isinstance(data, BaseModel):
                         v = value
                         if (isinstance(value, list) or isinstance(value, tuple)) and len(value):
@@ -5764,7 +5818,7 @@ Fields:
 
         # invalidate fields and inverse fields, too
         spec = [(f, ids) for f in fields] + \
-               [(invf, None) for f in fields for invf in self._field_inverses[f]]
+               [(invf, None) for f in fields for invf in self.pool.field_inverses[f]]
         self.env.cache.invalidate(spec)
 
     def modified(self, fnames, create=False, before=False):
@@ -5865,7 +5919,7 @@ Fields:
             else:
                 # val is another tree of dependencies
                 model = self.env[key.model_name]
-                for invf in model._field_inverses[key]:
+                for invf in model.pool.field_inverses[key]:
                     # use an inverse of field without domain
                     if not (invf.type in ('one2many', 'many2many') and invf.domain):
                         if invf.type == 'many2one_reference':
@@ -6301,13 +6355,6 @@ Fields:
 
         return result
 
-    def _get_placeholder_filename(self, field=None):
-        """ Returns the filename of the placeholder to use,
-            set on web/static/src/img by default, or the
-            complete path to access it (eg: module/path/to/image.png).
-        """
-        return 'placeholder.png'
-
     def _populate_factories(self):
         """ Generates a factory for the different fields of the model.
 
@@ -6594,5 +6641,7 @@ def lazy_name_get(self):
 
 
 # keep those imports here to avoid dependency cycle errors
+# pylint: disable=wrong-import-position
+from . import fields
 from .osv import expression
 from .fields import Field, Datetime, Command

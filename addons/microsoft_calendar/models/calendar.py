@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import html2plaintext, is_html_empty, plaintext2html
 
 ATTENDEE_CONVERTER_O2M = {
     'needsAction': 'notresponded',
@@ -87,7 +88,7 @@ class Meeting(models.Model):
         values = {
             **default_values,
             'name': microsoft_event.subject or _("(No title)"),
-            'description': microsoft_event.bodyPreview,
+            'description': plaintext2html(microsoft_event.bodyPreview),
             'location': microsoft_event.location and microsoft_event.location.get('displayName') or False,
             'user_id': microsoft_event.owner(self.env).id,
             'privacy': sensitivity_o2m.get(microsoft_event.sensitivity, self.default_get(['privacy'])['privacy']),
@@ -247,7 +248,7 @@ class Meeting(models.Model):
 
         if 'description' in fields_to_sync:
             values['body'] = {
-                'content': self.description or '',
+                'content': html2plaintext(self.description) if not is_html_empty(self.description) else '',
                 'contentType': "text",
             }
 

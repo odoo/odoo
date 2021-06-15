@@ -143,6 +143,7 @@ body.editor_enable.editor_has_snippets {
             'info': $o-we-color-info,
             'warning': $o-we-color-warning,
             'danger': $o-we-color-danger,
+            'brand_primary': $o-brand-primary,
         );
 
         @each $name, $color in $-hover-colors {
@@ -1413,7 +1414,7 @@ body.editor_enable.editor_has_snippets {
             padding-left: 2em;
             line-height: $o-we-sidebar-content-field-height - 2 * $o-we-sidebar-content-field-border-width;
         }
-        
+
         // Many2one create
         .o_we_m2o_create {
             margin-top: 1px;
@@ -1549,10 +1550,6 @@ body.editor_enable.editor_has_snippets {
 
         .o_we_image_weight {
             margin-left: $o-we-sidebar-content-field-label-spacing * 2;
-        }
-
-        .o_we_external_warning {
-            margin-top: $o-we-sidebar-content-field-spacing;
         }
 
         .o_we_tag {
@@ -1949,10 +1946,10 @@ body.editor_enable.editor_has_snippets {
             > .o_overlay_options_wrap {
                 @include o-position-absolute($o-we-handles-offset-to-hide, $left: 50%);
                 transform: translate(-50%, -110%);
-                &.o_inside_parent {
-                    transform: translate(-50%, 110%);
-                }
 
+                &.o_we_hidden_overlay_options {
+                    display: none;
+                }
                 &, > .o_overlay_move_options, .o_overlay_edit_options {
                     display: flex;
                 }
@@ -2000,9 +1997,6 @@ body.editor_enable.editor_has_snippets {
             top: auto;
             bottom: -$o-we-handles-offset-to-hide;
             transform: translate(-50%, 110%);
-            &.o_inside_parent {
-                transform: translate(-50%, -110%);
-            }
         }
 
         &.o_we_overlay_preview {

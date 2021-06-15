@@ -7492,6 +7492,147 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('multi edit field with daterange widget', async function (assert) {
+        assert.expect(5);
+
+        this.data.daterange = {
+            fields: {
+                date_start: {string: "Date Start", type: "date"},
+                date_end: { string: "Date End", type: 'date' },
+            },
+            records: [{
+                id: 1,
+                date_start: "2017-01-25",
+                date_end: "2017-01-26",
+            }, {
+                id: 2,
+                date_start: '2017-01-02',
+                date_end: '2017-01-03',
+            }],
+        };
+
+        const list = await createView({
+            View: ListView,
+            model: 'daterange',
+            data: this.data,
+            arch: `
+                <tree multi_edit="1">
+                    <field name="date_start" widget="daterange" options="{'related_end_date': 'date_end'}" />
+                    <field name="date_end" widget="daterange" options="{'related_start_date': 'date_start'}"/>
+                </tree>`,
+            mockRPC(route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args, [
+                        [1, 2],
+                        { date_start: "2017-01-16", date_end: "2017-02-12" },
+                    ]);
+                }
+                return this._super(...arguments);
+            },
+            session: {
+                // see #tzoffset_daterange
+                getTZOffset: function () {
+                    return 360;
+                },
+            },
+        });
+
+        await testUtils.dom.click(list.$('thead .o_list_record_selector:first input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:eq(0)')); // edit first row
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:eq(0) input.o_field_date_range'));
+
+        // change dates via the daterangepicker
+        await testUtils.dom.triggerMouseEvent($('.daterangepicker:first .drp-calendar.left .available:contains("16")'), 'mousedown');
+        await testUtils.dom.triggerMouseEvent($('.daterangepicker:first .drp-calendar.right .available:contains("12")'), 'mousedown');
+
+        const $applyBtn = $('.daterangepicker:first .applyBtn');
+        assert.ok($applyBtn.length === 1 && !$applyBtn.attr('disabled'),
+            'Should only have 1 apply button in the daterangepicker and this button should be enabled.');
+
+        // Apply the changes
+        await testUtils.dom.click($applyBtn);
+
+        assert.containsOnce(document.body, '.modal', 'The confirm dialog should appear to confirm the multi edition.');
+
+        const changesTable = document.querySelector('.modal-body .o_modal_changes');
+        assert.strictEqual(changesTable.innerText.replaceAll('\n', '').replaceAll('\t', ''),
+            "Field:Date StartUpdate to:01/16/2017Field:Date EndUpdate to:02/12/2017");
+
+        // Valid the confirm dialog
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.containsNone(document.body, '.modal');
+
+        list.destroy();
+    });
+
+    QUnit.test('multi edit field with daterange widget (edition without using the picker)', async function (assert) {
+        assert.expect(4);
+
+        this.data.daterange = {
+            fields: {
+                date_start: {string: "Date Start", type: "date"},
+                date_end: { string: "Date End", type: 'date' },
+            },
+            records: [{
+                id: 1,
+                date_start: "2017-01-25",
+                date_end: "2017-01-26",
+            }, {
+                id: 2,
+                date_start: '2017-01-02',
+                date_end: '2017-01-03',
+            }],
+        };
+
+        const list = await createView({
+            View: ListView,
+            model: 'daterange',
+            data: this.data,
+            arch: `
+                <tree multi_edit="1">
+                    <field name="date_start" widget="daterange" options="{'related_end_date': 'date_end'}" />
+                    <field name="date_end" widget="daterange" options="{'related_start_date': 'date_start'}"/>
+                </tree>`,
+            mockRPC(route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args, [
+                        [1, 2],
+                        { date_start: "2021-04-01" },
+                    ]);
+                }
+                return this._super(...arguments);
+            },
+            session: {
+                getTZOffset: function () {
+                    // see #tzoffset_daterange
+                    return 360;
+                },
+            },
+        });
+
+        // Test manually edit the date without using the daterange picker
+        await testUtils.dom.click(list.$('thead .o_list_record_selector:first input'));
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:eq(0)'));
+
+        // Change the date in the first datetime
+        await testUtils.fields.editInput(list.$('.o_data_row:first .o_data_cell:eq(0) .o_field_date_range'), "2021-04-01 11:00:00");
+
+        assert.containsOnce(document.body, '.modal', 'The confirm dialog should appear to confirm the multi edition.');
+
+        const changesTable = document.querySelector('.modal-body .o_modal_changes');
+        assert.strictEqual(changesTable.innerText.replaceAll('\n', '').replaceAll('\t', ''),
+            "Field:Date StartUpdate to:04/01/2021");
+
+        // Valid the confirm dialog
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.containsNone(document.body, '.modal');
+
+        list.destroy();
+    });
+
     QUnit.test('editable list view: contexts are correctly sent', async function (assert) {
         assert.expect(6);
 
@@ -7761,6 +7902,37 @@ QUnit.module('Views', {
         assert.containsNone(list, '.o_data_cell input.o_field_widget', "no field should be editable anymore");
         assert.strictEqual(document.activeElement, list.$('.o_data_row:eq(0) .o_data_cell:eq(1)')[0],
             "focus should be given to the most recently edited cell after confirm");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: multi edit a field with string attr', async function (assert) {
+        assert.expect(2);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree multi_edit="1">
+                    <field name="foo" string="Custom Label"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        // select two records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        // edit foo
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:first'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), "new value");
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+
+        assert.containsOnce(document.body, '.modal');
+        const changesTable = document.querySelector('.modal-body .o_modal_changes');
+        assert.strictEqual(changesTable.innerText.replaceAll('\n', '').replaceAll('\t', ''),
+            "Field:Custom LabelUpdate to:new value");
 
         list.destroy();
     });
@@ -11770,6 +11942,79 @@ QUnit.module('Views', {
         await testUtils.nextTick();
 
         list.destroy();
+    });
+
+    QUnit.test('edition, then navigation with tab (with a readonly re-evaluated field and onchange)', async function (assert) {
+        // This test makes sure that if we have a cell in a row that will become
+        // read-only after editing another cell, in case the keyboard navigation
+        // move over it before it becomes read-only and there are unsaved changes
+        // (which will trigger an onchange), the focus of the next activable
+        // field will not crash
+        assert.expect(4);
+
+        this.data.bar.onchanges = {
+            o2m: function () {},
+        };
+        this.data.bar.fields.o2m = {string: "O2M field", type: "one2many", relation: "foo"};
+        this.data.bar.records[0].o2m = [1, 4];
+
+        var form = await createView({
+            View: FormView,
+            model: 'bar',
+            res_id: 1,
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<field name="display_name"/>' +
+                        '<field name="o2m">' +
+                            '<tree editable="bottom">' +
+                                '<field name="foo"/>' +
+                                '<field name="date" attrs="{\'readonly\': [(\'foo\', \'!=\', \'yop\')]}"/>' +
+                                '<field name="int_field"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    assert.step(args.method + ':' + args.model);
+                }
+                return this._super.apply(this, arguments);
+            },
+            fieldDebounce: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        var jq_evspecial_focus_trigger = $.event.special.focus.trigger;
+        // As KeyboardEvent will be triggered by JS and not from the
+        // User-Agent itself, the focus event will not trigger default
+        // action (event not being trusted), we need to manually trigger
+        // 'change' event on the currently focused element
+        $.event.special.focus.trigger = function () {
+            if (this !== document.activeElement && this.focus) {
+                var activeElement = document.activeElement;
+                this.focus();
+                $(activeElement).trigger('change');
+            }
+        };
+
+        // editable list, click on first td and press TAB
+        await testUtils.dom.click(form.$('.o_data_cell:contains(yop)'));
+        assert.strictEqual(document.activeElement, form.$('tr.o_selected_row input[name="foo"]')[0],
+            "focus should be on an input with name = foo");
+        testUtils.fields.editInput(form.$('tr.o_selected_row input[name="foo"]'), 'new value');
+        var tabEvent = $.Event("keydown", { which: $.ui.keyCode.TAB });
+        await testUtils.dom.triggerEvents(form.$('tr.o_selected_row input[name="foo"]'), [tabEvent]);
+        assert.strictEqual(document.activeElement, form.$('tr.o_selected_row input[name="int_field"]')[0],
+            "focus should be on an input with name = int_field");
+
+        // Restore origin jQuery special trigger for 'focus'
+        $.event.special.focus.trigger = jq_evspecial_focus_trigger;
+
+        assert.verifySteps(["onchange:bar"], "onchange method should have been called");
+        form.destroy();
     });
 });
 

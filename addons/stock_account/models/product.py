@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_is_zero, float_repr
 from odoo.exceptions import ValidationError
+from collections import defaultdict
 
 
 class ProductTemplate(models.Model):
@@ -244,7 +245,7 @@ class ProductProduct(models.Model):
             product = stock_valuation_layer.product_id
             value = stock_valuation_layer.value
 
-            if product.valuation != 'real_time':
+            if product.type != 'product' or product.valuation != 'real_time':
                 continue
 
             # Sanity check.
@@ -568,13 +569,13 @@ class ProductProduct(models.Model):
         product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in stock_valuation_layers.mapped('product_id')}
         for out_stock_valuation_layer in stock_valuation_layers:
             product = out_stock_valuation_layer.product_id
-            expense_account = product._get_product_accounts()['expense']
-            if not expense_account:
-                raise UserError(_('Please define an expense account for this product: "%s" (id:%d) - or for its category: "%s".') % (product.name, product.id, self.name))
+            stock_input_account = product_accounts[product.id].get('stock_input')
+            if not stock_input_account:
+                raise UserError(_('You don\'t have any stock input account defined on your product category. You must define one before processing this operation.'))
             if not product_accounts[product.id].get('stock_valuation'):
                 raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
 
-            debit_account_id = expense_account.id
+            debit_account_id = stock_input_account.id
             credit_account_id = product_accounts[product.id]['stock_valuation'].id
             value = out_stock_valuation_layer.value
             move_vals = {
@@ -660,14 +661,21 @@ class ProductProduct(models.Model):
         if not qty_to_invoice:
             return 0
 
+        returned_quantities = defaultdict(float)
+        for move in stock_moves:
+            if move.origin_returned_move_id:
+                returned_quantities[move.origin_returned_move_id.id] += abs(sum(move.stock_valuation_layer_ids.mapped('quantity')))
         candidates = stock_moves\
             .sudo()\
+            .filtered(lambda m: not (m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
             .mapped('stock_valuation_layer_ids')\
             .sorted()
         qty_to_take_on_candidates = qty_to_invoice
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
             candidate_quantity = abs(candidate.quantity)
+            if candidate.stock_move_id.id in returned_quantities:
+                candidate_quantity -= returned_quantities[candidate.stock_move_id.id]
             if float_is_zero(candidate_quantity, precision_rounding=candidate.uom_id.rounding):
                 continue  # correction entries
             if not float_is_zero(qty_invoiced, precision_rounding=candidate.uom_id.rounding):

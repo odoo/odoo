@@ -157,13 +157,11 @@ class SurveyCase(common.TransactionCase):
         return self.url_open('/survey/%s/%s' % (survey.access_token, token))
 
     def _access_begin(self, survey, token):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        url = base_url + '/survey/begin/%s/%s' % (survey.access_token, token)
+        url = survey.get_base_url() + '/survey/begin/%s/%s' % (survey.access_token, token)
         return self.opener.post(url=url, json={})
 
     def _access_submit(self, survey, token, post_data):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        url = base_url + '/survey/submit/%s/%s' % (survey.access_token, token)
+        url = survey.get_base_url() + '/survey/submit/%s/%s' % (survey.access_token, token)
         return self.opener.post(url=url, json={'params': post_data})
 
     def _find_csrf_token(self, text):
@@ -195,6 +193,18 @@ class SurveyCase(common.TransactionCase):
 
         # Employee is redirected on next question
         response = self._access_page(question.survey_id, answer_token)
+        self.assertResponse(response, 200)
+
+    def _answer_page(self, page, answers, answer_token, csrf_token):
+        post_data = {}
+        for question, answer in answers.items():
+            post_data[question.id] = answer.id
+        post_data['page_id'] = page.id
+        post_data['csrf_token'] = csrf_token
+        post_data['token'] = answer_token
+        response = self._access_submit(page.survey_id, answer_token, post_data)
+        self.assertResponse(response, 200)
+        response = self._access_page(page.survey_id, answer_token)
         self.assertResponse(response, 200)
 
     def _format_submission_data(self, question, answer, additional_post_data):

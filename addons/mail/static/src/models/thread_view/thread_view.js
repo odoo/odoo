@@ -311,6 +311,7 @@ function factory(dependencies) {
             dependencies: [
                 'threadCache'
             ],
+            isOnChange: true,
         }),
         /**
          * Not a real field, used to trigger `_onThreadCacheIsLoadingChanged`
@@ -324,6 +325,7 @@ function factory(dependencies) {
                 'threadCache',
                 'threadCacheIsLoading',
             ],
+            isOnChange: true,
         }),
         /**
          * Determines the domain to apply when fetching messages for `this.thread`.
@@ -420,6 +422,7 @@ function factory(dependencies) {
                 'lastVisibleMessage',
                 'threadCache',
             ],
+            isOnChange: true,
         }),
         /**
          * Determines the `mail.thread_viewer` currently managing `this`.

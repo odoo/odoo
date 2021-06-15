@@ -30,4 +30,6 @@ RESULT_CODES_MAPPING = {
     ),
     'done': ('Authorised',),
     'cancel': ('Cancelled',),
+    'error': ('Error',),
+    'refused': ('Refused',),
 }

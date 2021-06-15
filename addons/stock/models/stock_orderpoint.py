@@ -318,6 +318,8 @@ class StockWarehouseOrderpoint(models.Model):
         to_remove.unlink()
         orderpoints = orderpoints - to_remove
         to_refill = defaultdict(float)
+        all_product_ids = []
+        all_warehouse_ids = []
         qty_by_product_warehouse = self.env['report.stock.quantity'].read_group(
             [('date', '=', fields.date.today()), ('state', '=', 'forecast')],
             ['product_id', 'product_qty', 'warehouse_id'],
@@ -326,6 +328,8 @@ class StockWarehouseOrderpoint(models.Model):
             warehouse_id = group.get('warehouse_id') and group['warehouse_id'][0]
             if group['product_qty'] >= 0.0 or not warehouse_id:
                 continue
+            all_product_ids.append(group['product_id'][0])
+            all_warehouse_ids.append(warehouse_id)
             to_refill[(group['product_id'][0], warehouse_id)] = group['product_qty']
         if not to_refill:
             return action
@@ -333,19 +337,27 @@ class StockWarehouseOrderpoint(models.Model):
         # Recompute the forecasted quantity for missing product today but at this time
         # with their real lead days.
         key_to_remove = []
+        pwh_per_day = defaultdict(list)
         for (product, warehouse) in to_refill.keys():
-            product = self.env['product.product'].browse(product)
-            warehouse = self.env['stock.warehouse'].browse(warehouse)
+            product = self.env['product.product'].browse(product).with_prefetch(all_product_ids)
+            warehouse = self.env['stock.warehouse'].browse(warehouse).with_prefetch(all_warehouse_ids)
             rules = product._get_rules_from_location(warehouse.lot_stock_id)
-            lead_days = rules._get_lead_days(product)[0]
-            virtual_available = product.with_context(
+            lead_days = rules.with_context(bypass_delay_description=True)._get_lead_days(product)[0]
+            pwh_per_day[(lead_days, warehouse)].append(product.id)
+        # group product by lead_days and warehouse in order to read virtual_available
+        # in batch
+        for (days, warehouse), p_ids in pwh_per_day.items():
+            products = self.env['product.product'].browse(p_ids)
+            qties = products.with_context(
                 warehouse=warehouse.id,
-                to_date=fields.datetime.now() + relativedelta.relativedelta(days=lead_days)
-            ).virtual_available
-            if float_compare(virtual_available, 0, precision_rounding=product.uom_id.rounding) >= 0:
-                key_to_remove.append((product.id, warehouse.id))
-            else:
-                to_refill[(product.id, warehouse.id)] = virtual_available
+                to_date=fields.datetime.now() + relativedelta.relativedelta(days=days)
+            ).read(['virtual_available'])
+            for qty in qties:
+                if float_compare(qty['virtual_available'], 0, precision_rounding=product.uom_id.rounding) >= 0:
+                    key_to_remove.append((qty['id'], warehouse.id))
+                else:
+                    to_refill[(qty['id'], warehouse.id)] = qty['virtual_available']
+
         for key in key_to_remove:
             del to_refill[key]
         if not to_refill:
@@ -458,7 +470,7 @@ class StockWarehouseOrderpoint(models.Model):
                 cr = registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))
             orderpoints_batch = self.env['stock.warehouse.orderpoint'].browse(orderpoints_batch)
-            orderpoints_exceptions = []
+            all_orderpoints_exceptions = []
             while orderpoints_batch:
                 procurements = []
                 for orderpoint in orderpoints_batch:
@@ -474,8 +486,10 @@ class StockWarehouseOrderpoint(models.Model):
                     with self.env.cr.savepoint():
                         self.env['procurement.group'].with_context(from_orderpoint=True).run(procurements, raise_user_error=raise_user_error)
                 except ProcurementException as errors:
+                    orderpoints_exceptions = []
                     for procurement, error_msg in errors.procurement_exceptions:
                         orderpoints_exceptions += [(procurement.values.get('orderpoint_id'), error_msg)]
+                    all_orderpoints_exceptions += orderpoints_exceptions
                     failed_orderpoints = self.env['stock.warehouse.orderpoint'].concat(*[o[0] for o in orderpoints_exceptions])
                     if not failed_orderpoints:
                         _logger.error('Unable to process orderpoints')
@@ -493,7 +507,7 @@ class StockWarehouseOrderpoint(models.Model):
                     break
 
             # Log an activity on product template for failed orderpoints.
-            for orderpoint, error_msg in orderpoints_exceptions:
+            for orderpoint, error_msg in all_orderpoints_exceptions:
                 existing_activity = self.env['mail.activity'].search([
                     ('res_id', '=', orderpoint.product_id.product_tmpl_id.id),
                     ('res_model_id', '=', self.env.ref('product.model_product_template').id),

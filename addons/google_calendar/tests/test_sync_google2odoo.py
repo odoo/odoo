@@ -8,6 +8,7 @@ from dateutil.relativedelta import relativedelta
 from odoo.tests.common import new_test_user
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
 from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent
+from odoo.tools import html2plaintext
 
 class TestSyncGoogle2Odoo(TestSyncGoogle):
 
@@ -50,7 +51,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertTrue(event, "It should have created an event")
         self.assertEqual(event.name, values.get('summary'))
         self.assertFalse(event.allday)
-        self.assertEqual(event.description, values.get('description'))
+        self.assertEqual(html2plaintext(event.description), values.get('description'))
         self.assertEqual(event.start, datetime(2020, 1, 13, 15, 55))
         self.assertEqual(event.stop, datetime(2020, 1, 13, 18, 55))
         admin_attendee = event.attendee_ids.filtered(lambda e: e.email == 'admin@yourcompany.example.com')
@@ -157,10 +158,30 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         user_attendee = event.attendee_ids
         self.assertTrue(user_attendee)
         self.assertEqual(user_attendee.state, 'declined')
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_private_extended_properties(self):
+        google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
+        event = self.env['calendar.event'].create({
+            'name': 'coucou',
+            'start': date(2020, 1, 6),
+            'stop': date(2020, 1, 6),
+            'allday': True,
+            'google_id': google_id,
+            'need_sync': False,
+            'user_id': False,  # Not the current user
+            'partner_ids': [(6, 0, self.env.user.partner_id.ids)]  # current user is attendee
+        })
+        user_attendee = event.attendee_ids
+        self.assertTrue(user_attendee)
+        self.assertEqual(user_attendee.state, 'accepted')
+        user_attendee.do_decline()
         # To avoid 403 errors, we send a limited dictionnary when we don't have write access.
         # guestsCanModify property is not properly handled yet
         self.assertGoogleEventPatched(event.google_id, {
             'id': event.google_id,
+            'summary': 'coucou',
             'start': {'date': str(event.start_date)},
             'end': {'date': str(event.stop_date + relativedelta(days=1))},
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'declined'}],
@@ -681,3 +702,143 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
         self.assertFalse(event.exists(), "The old event should not exits anymore")
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_new_google_notifications(self):
+        """ Event from Google should not create notifications and trigger. It ruins the perfs on large databases """
+        cron_id = self.env.ref('calendar.ir_cron_scheduler_alarm').id
+        triggers_before = self.env['ir.cron.trigger'].search([('cron_id', '=', cron_id)])
+        google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
+        start = datetime.today() + relativedelta(months=1, day=1, hours=1)
+        end = datetime.today() + relativedelta(months=1, day=1, hours=2)
+        updated = datetime.today() + relativedelta(minutes=1)
+        values = {
+            'id': google_id,
+            'description': 'Small mini desc',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'Mitchell Admin',
+                'email': 'admin@yourcompany.example.com',
+                'responseStatus': 'needsAction'
+            }, ],
+            'reminders': {'overrides': [{"method": "email", "minutes": 10}], 'useDefault': False},
+            'start': {
+                'dateTime': pytz.utc.localize(start).isoformat(),
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': pytz.utc.localize(end).isoformat(),
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+        self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        triggers_after = self.env['ir.cron.trigger'].search([('cron_id', '=', cron_id)])
+        new_triggers = triggers_after - triggers_before
+        self.assertFalse(new_triggers, "The event should not be created with triggers.")
+
+        # Event was created from Google and now it will be Updated from Google.
+        # No further notifications should be created.
+        values = {
+            'id': google_id,
+            'updated': pytz.utc.localize(updated).isoformat(),
+            'description': 'New Super description',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing was not good, now it is correct',
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'Mitchell Admin',
+                'email': 'admin@yourcompany.example.com',
+                'responseStatus': 'needsAction'
+            }, ],
+            'reminders': {'overrides': [{"method": "email", "minutes": 10}], 'useDefault': False},
+            'start': {
+                'dateTime': pytz.utc.localize(start).isoformat(),
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': pytz.utc.localize(end).isoformat(),
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+        self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        triggers_after = self.env['ir.cron.trigger'].search([('cron_id', '=', cron_id)])
+        new_triggers = triggers_after - triggers_before
+        self.assertFalse(new_triggers, "The event should not be created with triggers.")
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_attendee_state(self):
+        user = new_test_user(self.env, login='calendar-user')
+        google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
+        event = self.env['calendar.event'].with_user(user).create({
+            'name': 'Event with me',
+            'start': date(2020, 1, 6),
+            'stop': date(2020, 1, 6),
+            'google_id': google_id,
+            'user_id': False,  # user is not owner
+            'need_sync': False,
+            'partner_ids': [(6, 0, user.partner_id.ids)],  # but user is attendee
+        })
+        self.assertEqual(event.attendee_ids.state, 'accepted')
+        # The event is declined from Google
+        values = {
+            'id': google_id,
+            'description': 'Changed my mind',
+            "updated": self.now,
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': """I don't want to be with me anymore""",
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'calendar-user (base.group_user)',
+                'email': 'c.c@example.com',
+                'responseStatus': 'declined'
+            }, ],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': '2020-01-13T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+        self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        self.assertEqual(event.attendee_ids.state, 'declined')
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_attendees_same_event_both_share(self):
+        google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
+        other_user = new_test_user(self.env, login='calendar-user')
+        event = self.env['calendar.event'].create({
+            'name': 'coucou',
+            'start': date(2020, 1, 6),
+            'stop': date(2020, 1, 6),
+            'allday': True,
+            'google_id': google_id,
+            'need_sync': False,
+            'user_id': other_user.id,  # Not the current user
+            'partner_ids': [(6, 0, [self.env.user.partner_id.id, other_user.partner_id.id], )]  # current user is attendee
+        })
+        event.write({'start': date(2020, 1, 7), 'stop': date(2020, 1, 8)})
+        # To avoid 403 errors, we send a limited dictionnary when we don't have write access.
+        # guestsCanModify property is not properly handled yet
+        self.assertGoogleEventPatched(event.google_id, {
+            'id': event.google_id,
+            'start': {'date': str(event.start_date)},
+            'end': {'date': str(event.stop_date + relativedelta(days=1))},
+            'summary': 'coucou',
+            'description': '',
+            'location': '',
+            'guestsCanModify': True,
+            'organizer': {'email': 'c.c@example.com', 'self': False},
+            'attendees': [{'email': 'c.c@example.com', 'responseStatus': 'needsAction'},
+                          {'email': 'odoobot@example.com', 'responseStatus': 'accepted'},],
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id,
+                                              '%s_owner_id' % self.env.cr.dbname: other_user.id}},
+            'reminders': {'overrides': [], 'useDefault': False},
+            'visibility': 'public',
+        }, timeout=3)

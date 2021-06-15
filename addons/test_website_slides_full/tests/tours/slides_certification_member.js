@@ -54,9 +54,6 @@ var buyCertificationSteps = [{
     trigger: 'input[name="customer_input"]',
     run: 'text 4242424242424242'
 }, {
-    content: "Accept the Terms & conditions",
-    trigger: '#checkbox_tc',
-}, {
     content: 'eCommerce: pay',
     trigger: 'button[name="o_payment_submit_button"]'
 }, {

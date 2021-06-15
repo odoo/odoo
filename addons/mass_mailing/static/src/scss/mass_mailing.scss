@@ -1,3 +1,19 @@
+.o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
+    // cancel the padding of the form_sheet
+    margin-top: -$o-sheet-cancel-hpadding;
+    margin-left: -$o-sheet-cancel-hpadding;
+    margin-right: -$o-sheet-cancel-hpadding;
+    margin-bottom: -40px;
+}
+
+@include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
+    .o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
+        // cancel the padding of the form_sheet when breakpoints are reached
+        margin-left: -$o-sheet-cancel-hpadding*2;
+        margin-right: -$o-sheet-cancel-hpadding*2;
+    }
+}
+
 .o_kanban_view {
     .oe_kanban_mass_mailing {
         .o_title {
@@ -22,6 +38,24 @@
         }
     }
 }
+
+.o_form_view .o_group.o_inner_group.o_mass_mailing_mailing_group {
+    //used to gain extra space in form
+    display: block;
+}
+
+.o_mass_mailing_mailing_form {
+    .alert:not(.o_invisible_modifier) + .clearfix.position-relative.o_form_sheet {
+        //hides extra space between form and alert messages
+        margin-top: -12px;
+    }
+}
+
+.o_form_view.o_xxl_form_view.o_mass_mailing_mailing_form {
+    // This will hide the chatter scroll bar
+    height: initial;
+}
+
 .o_form_view {
     // This will display the emoji widget in the right position after a text field with sms option.
     .o_sms_container ~ .o_mail_add_emoji{

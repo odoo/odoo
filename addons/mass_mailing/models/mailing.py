@@ -10,7 +10,6 @@ import re
 import threading
 import werkzeug.urls
 from ast import literal_eval
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_join
 
@@ -19,17 +18,6 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
-
-MASS_MAILING_BUSINESS_MODELS = [
-    'crm.lead',
-    'event.registration',
-    'hr.applicant',
-    'res.partner',
-    'event.track',
-    'sale.order',
-    'mailing.list',
-    'mailing.contact'
-]
 
 # Syntax of the data URL Scheme: https://tools.ietf.org/html/rfc2397#section-3
 # Used to find inline images
@@ -77,9 +65,9 @@ class MassMailing(models.Model):
             return False
 
     active = fields.Boolean(default=True, tracking=True)
-    subject = fields.Char('Subject', help='Subject of your Mailing', required=True, translate=True)
+    subject = fields.Char('Subject', help='Subject of your Mailing', required=True, translate=False)
     preview = fields.Char(
-        'Preview', translate=True,
+        'Preview', translate=False,
         help='Catchy preview sentence that encourages recipients to open this email.\n'
              'In most inboxes, this is displayed next to the subject.\n'
              'Keep it empty if you prefer the first characters of your email content to appear instead.')
@@ -88,14 +76,18 @@ class MassMailing(models.Model):
     sent_date = fields.Datetime(string='Sent Date', copy=False)
 
     schedule_type = fields.Selection([('now', 'Send now'), ('scheduled', 'Send on')], string='Schedule',
-        default='now', required=True, readonly=True, states={'draft': [('readonly', False)]})
-    schedule_date = fields.Datetime(string='Scheduled for', tracking=True, readonly=True, states={'draft': [('readonly', False)]},
-        compute='_compute_schedule_date', store=True, copy=True)
+                                     default='now', required=True, readonly=True,
+                                     states={'draft': [('readonly', False)], 'in_queue': [('readonly', False)]})
+    schedule_date = fields.Datetime(string='Scheduled for', tracking=True, readonly=True,
+                                    states={'draft': [('readonly', False)], 'in_queue': [('readonly', False)]},
+                                    compute='_compute_schedule_date', store=True, copy=True)
     calendar_date = fields.Datetime('Calendar Date', compute='_compute_calendar_date', store=True, copy=False,
         help="Technical field for the calendar view.")
     # don't translate 'body_arch', the translations are only on 'body_html'
     body_arch = fields.Html(string='Body', translate=False)
     body_html = fields.Html(string='Body converted to be sent by mail', sanitize_attributes=False)
+    is_body_empty = fields.Boolean(compute="_compute_is_body_empty",
+                                   help='Technical field used to determine if the mail body is empty')
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
@@ -121,10 +113,10 @@ class MassMailing(models.Model):
         string='Reply To', compute='_compute_reply_to', readonly=False, store=True,
         help='Preferred Reply-To Address')
     # recipients
-    mailing_model_real = fields.Char(string='Recipients Real Model', compute='_compute_model')
+    mailing_model_real = fields.Char(string='Recipients Real Model', compute='_compute_mailing_model_real')
     mailing_model_id = fields.Many2one(
         'ir.model', string='Recipients Model', ondelete='cascade', required=True,
-        domain=[('model', 'in', MASS_MAILING_BUSINESS_MODELS)],
+        domain=[('is_mailing_enabled', '=', True)],
         default=lambda self: self.env.ref('mass_mailing.model_mailing_list').id)
     mailing_model_name = fields.Char(
         string='Recipients Model Name', related='mailing_model_id.model',
@@ -132,6 +124,9 @@ class MassMailing(models.Model):
     mailing_domain = fields.Char(
         string='Domain', compute='_compute_mailing_domain',
         readonly=False, store=True)
+    mail_server_available = fields.Boolean(
+        compute='_compute_mail_server_available',
+        help="Technical field used to know if the user has activated the outgoing mail server option in the settings")
     mail_server_id = fields.Many2one('ir.mail_server', string='Mail Server',
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
@@ -244,9 +239,9 @@ class MassMailing(models.Model):
                 mailing.medium_id = self.env.ref('utm.utm_medium_email').id
 
     @api.depends('mailing_model_id')
-    def _compute_model(self):
-        for record in self:
-            record.mailing_model_real = (record.mailing_model_name != 'mailing.list') and record.mailing_model_name or 'mailing.contact'
+    def _compute_mailing_model_real(self):
+        for mailing in self:
+            mailing.mailing_model_real = (mailing.mailing_model_name != 'mailing.list') and mailing.mailing_model_name or 'mailing.contact'
 
     @api.depends('mailing_model_real')
     def _compute_reply_to_mode(self):
@@ -289,6 +284,20 @@ class MassMailing(models.Model):
                 mailing.calendar_date = fields.Datetime.now()
             else:
                 mailing.calendar_date = False
+
+    @api.depends('body_html')
+    def _compute_is_body_empty(self):
+        for mailing in self:
+            mailing.is_body_empty = tools.is_html_empty(mailing.body_html)
+
+    def _compute_mail_server_available(self):
+        self.mail_server_available = self.env['ir.config_parameter'].sudo().get_param('mass_mailing.outgoing_mail_server')
+
+    # Overrides of mail.render.mixin
+    @api.depends('mailing_model_real')
+    def _compute_render_model(self):
+        for mailing in self:
+            mailing.render_model = mailing.mailing_model_real
 
     # ------------------------------------------------------
     # ORM
@@ -353,10 +362,17 @@ class MassMailing(models.Model):
         }
 
     def action_launch(self):
+        self.write({'schedule_type': 'now'})
         return self.action_put_in_queue()
 
     def action_schedule(self):
-        return self.action_put_in_queue()
+        self.ensure_one()
+        if self.schedule_date:
+            return self.action_put_in_queue()
+        else:
+            action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_mailing_schedule_date_action")
+            action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
+            return action
 
     def action_put_in_queue(self):
         self.write({'state': 'in_queue'})
@@ -463,20 +479,16 @@ class MassMailing(models.Model):
     # ------------------------------------------------------
 
     def _get_opt_out_list(self):
-        """Returns a set of emails opted-out in target model"""
+        """ Give list of opt-outed emails, depending on specific model-based
+        computation if available.
+
+        :return list: opt-outed emails, preferably normalized (aka not records)
+        """
         self.ensure_one()
         opt_out = {}
         target = self.env[self.mailing_model_real]
-        if self.mailing_model_real == "mailing.contact":
-            # if user is opt_out on One list but not on another
-            # or if two user with same email address, one opted in and the other one opted out, send the mail anyway
-            # TODO DBE Fixme : Optimise the following to get real opt_out and opt_in
-            target_list_contacts = self.env['mailing.contact.subscription'].search(
-                [('list_id', 'in', self.contact_list_ids.ids)])
-            opt_out_contacts = target_list_contacts.filtered(lambda rel: rel.opt_out).mapped('contact_id.email_normalized')
-            opt_in_contacts = target_list_contacts.filtered(lambda rel: not rel.opt_out).mapped('contact_id.email_normalized')
-            opt_out = set(c for c in opt_out_contacts if c not in opt_in_contacts)
-
+        if hasattr(self.env[self.mailing_model_name], '_mailing_get_opt_out_list'):
+            opt_out = self.env[self.mailing_model_name]._mailing_get_opt_out_list(self)
             _logger.info(
                 "Mass-mailing %s targets %s, blacklist: %s emails",
                 self, target._name, len(opt_out))
@@ -584,9 +596,8 @@ class MassMailing(models.Model):
         return [rid for rid in res_ids if rid not in done_res_ids]
 
     def _get_unsubscribe_url(self, email_to, res_id):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         url = werkzeug.urls.url_join(
-            base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
+            self.get_base_url(), 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
                     'res_id': res_id,
@@ -598,9 +609,8 @@ class MassMailing(models.Model):
         return url
 
     def _get_view_url(self, email_to, res_id):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         url = werkzeug.urls.url_join(
-            base_url, 'mailing/%(mailing_id)s/view?%(params)s' % {
+            self.get_base_url(), 'mailing/%(mailing_id)s/view?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
                     'res_id': res_id,
@@ -787,10 +797,10 @@ class MassMailing(models.Model):
             random_tip = random.choice(random_tip).tip_description
 
         formatted_date = tools.format_datetime(
-            self.env, self.sent_date, self.user_id.tz, 'MMM dd, YYYY',  self.user_id.lang
+            self.env, self.sent_date, self.user_id.tz, 'MMM dd, YYYY', self.user_id.lang
         ) if self.sent_date else False
 
-        web_base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        web_base_url = self.get_base_url()
 
         return {
             'title': _('24H Stats of %(mailing_type)s "%(mailing_name)s"',
@@ -826,8 +836,8 @@ class MassMailing(models.Model):
 
     def _get_default_mailing_domain(self):
         mailing_domain = []
-        if self.mailing_model_name == 'mailing.list' and self.contact_list_ids:
-            mailing_domain = [('list_ids', 'in', self.contact_list_ids.ids)]
+        if hasattr(self.env[self.mailing_model_name], '_mailing_get_default_domain'):
+            mailing_domain = self.env[self.mailing_model_name]._mailing_get_default_domain(self)
 
         if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
             mailing_domain = expression.AND([[('is_blacklisted', '=', False)], mailing_domain])

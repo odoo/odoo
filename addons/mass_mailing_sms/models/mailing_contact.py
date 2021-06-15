@@ -10,5 +10,5 @@ class MailingContact(models.Model):
 
     mobile = fields.Char(string='Mobile')
 
-    def _sms_get_number_fields(self):
+    def _phone_get_number_fields(self):
         return ['mobile']

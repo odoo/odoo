@@ -104,12 +104,16 @@
 
     // Many2OneAvatar
     &.o_field_many2one_avatar {
-        > img.o_m2o_avatar {
+        .o_m2o_avatar > img, .o_m2o_avatar > .o_m2o_avatar_empty {
             border-radius: 50%;
             width: 19px;
             height: 19px;
             object-fit: cover;
             margin-right: 4px;
+        }
+        .o_m2o_avatar_empty {
+            display: block;
+            background-color: #e9ecef;
         }
     }
 
@@ -129,10 +133,13 @@
             flex: 0 0 auto;
             border: 0;
             font-size: 12px;
-            cursor: pointer;
             user-select: none;
             display: flex;
             max-width: 100%;
+
+            &.dropdown {
+                cursor: pointer;
+            }
 
             a {
                 color: inherit;
@@ -225,27 +232,28 @@
         }
         // Many2many tags avatar
         &.avatar {
+            align-items: center;
             .badge {
-                padding-left: 4px;
+                padding: 0 0.6em 0 0;
                 img {
-                    height: 18px;
-                    width: 18px;
+                    height: 17px;
+                    width: 17px;
                     object-fit: cover;
-                }
-                &.o_tag_color_0 {
-                    background-color: #F1F1F1;
-                    box-shadow: none;
-                    border: 1px solid gray('300');
+                    margin-top: 1px;
+                    margin-left: 1px;
                 }
                 .o_badge_text {
                     display: flex;
                     align-items:center;
+                    padding-top: 0.25em;
+                    padding-bottom: 0.25em;
                 }
                 .o_tag_badge_text {
                     padding-left:2px;
                 }
                 .o_delete {
-                    margin-top: 3px;
+                    padding-top: 0.25em;
+                    padding-bottom: 0.25em;
                 }
             }
         }

@@ -35,7 +35,8 @@
                         <thead>
                             <tr>
                                 <th name="th_sm_product"><strong>Product</strong></th>
-                                <th name="th_sm_quantity"><strong>Quantity</strong></th>
+                                <th name="th_sm_ordered"><strong>Ordered</strong></th>
+                                <th name="th_sm_quantity"><strong>Delivered</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,12 +44,16 @@
                             <tr t-foreach="lines" t-as="move">
                                 <td>
                                     <span t-field="move.product_id"/>
-                                    <p t-if="move.description_picking != move.product_id.name">
+                                    <p t-if="move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name">
                                         <span t-field="move.description_picking"/>
                                     </p>
                                 </td>
                                 <td>
                                     <span t-field="move.product_uom_qty"/>
+                                    <span t-field="move.product_uom"/>
+                                </td>
+                                <td>
+                                    <span t-field="move.quantity_done"/>
                                     <span t-field="move.product_uom"/>
                                 </td>
                             </tr>
@@ -65,7 +70,10 @@
                                         Lot/Serial Number
                                     </th>
                                 </t>
-                                <th name="th_sml_quantity" class="text-center"><strong>Quantity</strong></th>
+                                <th name="th_sml_qty_ordered" class="text-center" t-if="not has_serial_number">
+                                    <strong>Ordered</strong>
+                                </th>
+                                <th name="th_sml_quantity" class="text-center"><strong>Delivered</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -119,20 +127,21 @@
                                 <!-- If not printing lots/serial numbers => merge lines with same product -->
                                 <t t-else="" name="aggregated_move_lines">
                                     <t t-set="aggregated_lines" t-value="o.move_line_ids._get_aggregated_product_quantities()"/>
-                                        <t t-call="stock.stock_report_delivery_aggregated_move_lines"/>
+                                    <t t-call="stock.stock_report_delivery_aggregated_move_lines"/>
                                 </t>
                             </t>
                         </tbody>
                     </table>
                     <t t-set="backorders" t-value="o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))"/>
                     <t t-if="o.backorder_ids and backorders">
-                        <p>
-                            <span>All items couldn't be shipped, the following items will be shipped as soon as they become available.</span>
+                        <p class="mt-5">
+                            <span>Remaining quantities not yet delivered:</span>
                         </p>
-                        <table class="table table-sm" name="stock_backorder_table">
+                        <table class="table table-sm" name="stock_backorder_table" style="table-layout: fixed;">
                             <thead>
                                 <tr>
                                     <th name="th_sb_product"><strong>Product</strong></th>
+                                    <th/>
                                     <th name="th_sb_quantity" class="text-center"><strong>Quantity</strong></th>
                                 </tr>
                             </thead>
@@ -140,13 +149,14 @@
                                 <t t-foreach="backorders" t-as="backorder">
                                     <t t-set="bo_lines" t-value="backorder.move_lines.filtered(lambda x: x.product_uom_qty)"/>
                                     <tr t-foreach="bo_lines" t-as="bo_line">
-                                        <td>
+                                        <td class="w-auto">
                                             <span t-field="bo_line.product_id"/>
-                                            <p t-if="bo_line.description_picking != bo_line.product_id.name">
+                                            <p t-if="bo_line.description_picking != bo_line.product_id.name and bo_line.description_picking != bo_line.product_id.display_name">
                                                 <span t-field="bo_line.description_picking"/>
                                             </p>
                                         </td>
-                                        <td class="text-center">
+                                        <td/>
+                                        <td class="text-center w-auto">
                                             <span t-field="bo_line.product_uom_qty"/>
                                             <span t-field="bo_line.product_uom"/>
                                         </td>
@@ -203,9 +213,17 @@
                     <span t-esc="aggregated_lines[line]['description']"/>
                 </p>
             </td>
-            <td class="text-center" name="move_line_aggregated_qty_done">
-                <span t-esc="aggregated_lines[line]['qty_done']"/>
+            <td class="text-center" name="move_line_aggregated_qty_ordered">
+                <span t-esc="aggregated_lines[line]['qty_ordered']"
+                    t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
                 <span t-esc="aggregated_lines[line]['product_uom']"/>
+            </td>
+            <td class="text-center" name="move_line_aggregated_qty_done">
+                <t t-if="aggregated_lines[line]['qty_done']">
+                    <span t-esc="aggregated_lines[line]['qty_done']"
+                        t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                    <span t-esc="aggregated_lines[line]['product_uom']"/>
+                </t>
             </td>
         </tr>
     </template>

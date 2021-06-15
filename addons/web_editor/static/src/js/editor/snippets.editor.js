@@ -157,7 +157,7 @@ var SnippetEditor = Widget.extend({
         this.isTargetParentEditable = false;
         this.isTargetMovable = false;
         this.$scrollingElement = $().getScrollingElement(this.ownerDocument);
-        this.displayHandles = false;
+        this.displayOverlayOptions = false;
 
         this.__isStarted = new Promise(resolve => {
             this.__isStartedResolveFunc = resolve;
@@ -176,6 +176,7 @@ var SnippetEditor = Widget.extend({
         this.isTargetParentEditable = this.$target.parent().is(':o_editable');
         this.isTargetMovable = this.isTargetParentEditable && this.isTargetMovable;
         this.isTargetRemovable = this.isTargetParentEditable && !this.$target.parent().is('[data-oe-type="image"]');
+        this.displayOverlayOptions = this.displayOverlayOptions || this.isTargetMovable || !this.isTargetParentEditable;
 
         // Initialize move/clone/remove buttons
         if (this.isTargetMovable) {
@@ -418,9 +419,10 @@ var SnippetEditor = Widget.extend({
      * Removes the associated snippet from the DOM and destroys the associated
      * editor (itself).
      *
+     * @param {boolean} [shouldRecordUndo=true]
      * @returns {Promise}
      */
-    removeSnippet: async function () {
+    removeSnippet: async function (shouldRecordUndo = true) {
         this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
         this.toggleOverlay(false);
         this.toggleOptions(false);
@@ -497,7 +499,9 @@ var SnippetEditor = Widget.extend({
         // according to it. While waiting for a better way to handle that this
         // window trigger will handle most cases.
         $(window).trigger('resize');
-        this.options.wysiwyg.odooEditor.historyStep();
+        if (shouldRecordUndo) {
+            this.options.wysiwyg.odooEditor.historyStep();
+        }
     },
     /**
      * Displays/Hides the editor overlay.
@@ -520,9 +524,8 @@ var SnippetEditor = Widget.extend({
             // sticky class is added/removed when toggling/untoggling
             this.$el.removeClass('o_we_overlay_preview');
             this.$el.toggleClass('o_we_overlay_sticky', show);
-            if (!this.displayHandles) {
-                this.$el.find('.o_handle').addClass('d-none');
-                this.$el.find('.o_overlay_options_wrap').addClass('o_inside_parent');
+            if (!this.displayOverlayOptions) {
+                this.$el.find('.o_overlay_options_wrap').addClass('o_we_hidden_overlay_options');
             }
         }
 
@@ -594,11 +597,11 @@ var SnippetEditor = Widget.extend({
 
         var $clone = this.$target.clone(false);
 
-        if (recordUndo) {
-            this.trigger_up('request_history_undo_record', {$target: this.$target});
-        }
-
         this.$target.after($clone);
+
+        if (recordUndo) {
+            this.options.wysiwyg.odooEditor.historyStep();
+        }
         await new Promise(resolve => {
             this.trigger_up('call_for_each_child_snippet', {
                 $snippet: $clone,
@@ -615,7 +618,6 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('snippet_cloned', {$target: $clone, $origin: this.$target});
 
         $clone.trigger('content_changed');
-        this.options.wysiwyg.odooEditor.historyStep();
     },
 
     //--------------------------------------------------------------------------
@@ -703,8 +705,8 @@ var SnippetEditor = Widget.extend({
                 this.$el.add($optionsSection).find('.oe_snippet_remove').addClass('d-none');
             }
 
-            if (option.displayHandles) {
-                this.displayHandles = true;
+            if (option.displayOverlayOptions) {
+                this.displayOverlayOptions = true;
             }
 
             return option.appendTo(document.createDocumentFragment());
@@ -883,8 +885,6 @@ var SnippetEditor = Widget.extend({
         $clone.remove();
 
         if (this.dropped) {
-            this.trigger_up('request_history_undo_record', {$target: this.$target});
-
             if (prev) {
                 this.$target.insertAfter(prev);
             } else if (next) {
@@ -987,7 +987,6 @@ var SnippetEditor = Widget.extend({
     _onRemoveClick: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this.trigger_up('request_history_undo_record', {$target: this.$target});
         this.removeSnippet();
     },
     /**
@@ -1388,12 +1387,6 @@ var SnippetsMenu = Widget.extend({
             // animation). (TODO wait for real animation end)
             setTimeout(() => {
                 this.$window.trigger('resize');
-
-                // Hacky way to prevent to switch to text tools on editor
-                // start. Only allow switching after some delay. Switching to
-                // tools is only useful for out-of-snippet texts anyway, so
-                // snippet texts can still be enabled immediately.
-                this._mutex.exec(() => this._textToolsSwitchingEnabled = true);
             }, 1000);
         });
     },
@@ -1758,8 +1751,8 @@ var SnippetsMenu = Widget.extend({
                 // enabled previously by a click
                 if (editorToEnable) {
                     editorToEnable.toggleOverlay(true, previewMode);
-                    if (!previewMode && !editorToEnable.displayHandles) {
-                        const parentEditor = editorToEnableHierarchy.find(ed => ed.displayHandles);
+                    if (!previewMode && !editorToEnable.displayOverlayOptions) {
+                        const parentEditor = editorToEnableHierarchy.find(ed => ed.displayOverlayOptions);
                         if (parentEditor) {
                             parentEditor.toggleOverlay(true, previewMode);
                         }
@@ -2101,7 +2094,9 @@ var SnippetsMenu = Widget.extend({
             let editableArea = self.getEditableArea();
             snippetEditor = new SnippetEditor(parentEditor || self, $snippet, self.templateOptions, $snippet.closest('[data-oe-type="html"], .oe_structure').add(editableArea), self.options);
             self.snippetEditors.push(snippetEditor);
-            return snippetEditor.appendTo(self.$snippetEditorArea);
+            // Keep parent below its child inside the DOM as its `o_handle`
+            // needs to be (visually) on top of the child ones.
+            return snippetEditor.prependTo(self.$snippetEditorArea);
         }).then(function () {
             return snippetEditor;
         });
@@ -2426,7 +2421,6 @@ var SnippetsMenu = Widget.extend({
      * @param {this.tabs.VALUE} [tab='blocks'] - the tab to select
      */
     _updateRightPanelContent: function ({content, tab, ...options}) {
-        clearTimeout(this._textToolsSwitchingTimeout);
         this._closeWidgets();
 
         this._currentTab = tab || this.tabs.BLOCKS;
@@ -2677,15 +2671,16 @@ var SnippetsMenu = Widget.extend({
                         reason.event.preventDefault();
                         this.close();
                         self.displayNotification({
-                            message: _.str.sprintf(_t("Could not install module <strong>%s</strong>"), name),
+                            message: _.str.sprintf(_t("Could not install module <strong>%s</strong>"), owl.utils.escape(name)),
                             type: 'danger',
                             sticky: true,
+                            messageIsHtml: true, // dynamic parts of the message are escaped above
                         });
                     });
                 },
             }, {
                 text: _t("Install in progress"),
-                icon: 'fa-spin fa-spinner fa-pulse mr8',
+                icon: 'fa-spin fa-circle-o-notch fa-spin mr8',
                 classes: 'btn-primary disabled o_hidden',
             }, {
                 text: _t("Cancel"),
@@ -2870,7 +2865,7 @@ var SnippetsMenu = Widget.extend({
     _onRemoveSnippet: async function (ev) {
         ev.stopPropagation();
         const editor = await this._createSnippetEditor(ev.data.$snippet);
-        await editor.removeSnippet();
+        await editor.removeSnippet(ev.data.shouldRecordUndo);
         if (ev.data.onSuccess) {
             ev.data.onSuccess();
         }
@@ -3057,7 +3052,9 @@ var SnippetsMenu = Widget.extend({
         const range = selection && selection.rangeCount && selection.getRangeAt(0);
         if (!range ||
             !$(range.commonAncestorContainer).parents('#wrapwrap, .iframe-editor-wrapper .o_editable').length ||
-            $(range.commonAncestorContainer).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"])').length
+            $(range.commonAncestorContainer).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"])').length ||
+            (e && $(e.target).closest('.fa, img').length ||
+            this.options.wysiwyg.lastMediaClicked && $(this.options.wysiwyg.lastMediaClicked).is('.fa, img'))
         ) {
             $toolbarContainer.hide();
         } else {

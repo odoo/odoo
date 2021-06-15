@@ -26,7 +26,7 @@ class MailTemplate(models.Model):
         return res
 
     # description
-    name = fields.Char('Name')
+    name = fields.Char('Name', translate=True)
     model_id = fields.Many2one('ir.model', 'Applies to', help="The type of document this template can be used with")
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     subject = fields.Char('Subject', translate=True, help="Subject (placeholders may be used here)")
@@ -66,6 +66,16 @@ class MailTemplate(models.Model):
     ref_ir_act_window = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                         help="Sidebar action to make this template available on records "
                                              "of the related document model")
+
+    # Overrides of mail.render.mixin
+    @api.depends('model')
+    def _compute_render_model(self):
+        for template in self:
+            template.render_model = template.model
+
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
 
     def unlink(self):
         self.unlink_action()
@@ -163,9 +173,9 @@ class MailTemplate(models.Model):
         results = dict()
         for lang, (template, template_res_ids) in self._classify_per_lang(res_ids).items():
             for field in fields:
-                template = template.with_context(safe=(field == 'subject'))
                 generated_field_values = template._render_field(
                     field, template_res_ids,
+                    options={'render_safe': field == 'subject'},
                     post_process=(field == 'body_html')
                 )
                 for res_id, field_value in generated_field_values.items():
@@ -261,9 +271,16 @@ class MailTemplate(models.Model):
                 _logger.warning('QWeb template %s not found when sending template %s. Sending without layouting.' % (notif_layout, self.name))
             else:
                 record = self.env[self.model].browse(res_id)
+                model = self.env['ir.model']._get(record._name)
+
+                if self.lang:
+                    lang = self._render_lang([res_id])[res_id]
+                    template = template.with_context(lang=lang)
+                    model = model.with_context(lang=lang)
+
                 template_ctx = {
                     'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
-                    'model_description': self.env['ir.model']._get(record._name).display_name,
+                    'model_description': model.display_name,
                     'company': 'company_id' in record and record['company_id'] or self.env.company,
                     'record': record,
                 }

@@ -181,7 +181,7 @@ class MrpProduction(models.Model):
         ('assigned', 'Ready'),
         ('waiting', 'Waiting Another Operation')],
         string='Material Availability',
-        compute='_compute_state', copy=False, index=True, readonly=True,
+        compute='_compute_reservation_state', copy=False, index=True, readonly=True,
         store=True, tracking=True,
         help=" * Ready: The material is available to start the production.\n\
             * Waiting: The material is not available to start the production.\n\
@@ -211,6 +211,9 @@ class MrpProduction(models.Model):
     reserve_visible = fields.Boolean(
         'Allowed to Reserve Production', compute='_compute_unreserve_visible',
         help='Technical field to check when we can reserve quantities')
+    confirm_no_consumption = fields.Boolean(
+        compute='_compute_components_availability',
+        help='Technical field used to see if we have to display a warning or not when confirming an order without any components.')
     user_id = fields.Many2one(
         'res.users', 'Responsible', default=lambda self: self.env.user,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
@@ -281,9 +284,13 @@ class MrpProduction(models.Model):
     def _compute_components_availability(self):
         self.components_availability = False
         self.components_availability_state = 'available'
+        self.confirm_no_consumption = False
         productions = self.filtered(lambda mo: mo.state not in ['cancel', 'draft', 'done'])
         productions.components_availability = _('Available')
         for production in productions:
+            if not production.move_raw_ids:
+                production.confirm_no_consumption = True
+                continue
             forecast_date = max(production.move_raw_ids.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
             if any(float_compare(move.forecast_availability, move.product_qty, move.product_id.uom_id.rounding) == -1 for move in production.move_raw_ids):
                 production.components_availability = _('Not Available')
@@ -418,21 +425,21 @@ class MrpProduction(models.Model):
         'move_raw_ids.state', 'move_raw_ids.quantity_done', 'move_finished_ids.state',
         'workorder_ids', 'workorder_ids.state', 'product_qty', 'qty_producing')
     def _compute_state(self):
-        """ Compute the production state. It use the same process than stock
-        picking. It exists 3 extra steps for production:
+        """ Compute the production state. This uses a similar process to stock
+        picking, but has been adapted to support having no moves. This adaption
+        includes some state changes outside of this compute.
+
+        There exist 3 extra steps for production:
         - progress: At least one item is produced or consumed.
         - to_close: The quantity produced is greater than the quantity to
         produce and all work orders has been finished.
         """
-        # TODO: duplicated code with stock_picking.py
         for production in self:
-            if not production.move_raw_ids:
+            if not production.state:
                 production.state = 'draft'
-            elif all(move.state == 'draft' for move in production.move_raw_ids):
-                production.state = 'draft'
-            elif all(move.state == 'cancel' for move in production.move_raw_ids):
+            elif production.move_raw_ids and all(move.state == 'cancel' for move in production.move_raw_ids):
                 production.state = 'cancel'
-            elif all(move.state in ('cancel', 'done') for move in production.move_raw_ids):
+            elif production.state == 'done' or (production.move_raw_ids and all(move.state in ('cancel', 'done') for move in production.move_raw_ids)):
                 production.state = 'done'
             elif production.qty_producing >= production.product_qty:
                 production.state = 'to_close'
@@ -442,9 +449,10 @@ class MrpProduction(models.Model):
                 production.state = 'progress'
             elif any(not float_is_zero(move.quantity_done, precision_rounding=move.product_uom.rounding or move.product_id.uom_id.rounding) for move in production.move_raw_ids):
                 production.state = 'progress'
-            else:
-                production.state = 'confirmed'
 
+    @api.depends('state', 'move_raw_ids.state')
+    def _compute_reservation_state(self):
+        for production in self:
             # Compute reservation state
             # State where the reservation does not matter.
             production.reservation_state = False
@@ -683,8 +691,8 @@ class MrpProduction(models.Model):
             if 'date_planned_start' in vals and not self.env.context.get('force_date', False):
                 if production.state in ['done', 'cancel']:
                     raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
-                if any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids):
-                    raise UserError(_('You cannot move a manufacturing order once it has a planned workorder, move related workorder(s) instead.'))
+                if production.is_planned:
+                    production.button_unplan()
             if vals.get('date_planned_start'):
                 production.move_raw_ids.write({'date': production.date_planned_start, 'date_deadline': production.date_planned_start})
             if vals.get('date_planned_finished'):
@@ -860,6 +868,8 @@ class MrpProduction(models.Model):
     def _get_moves_raw_values(self):
         moves = []
         for production in self:
+            if not production.bom_id:
+                continue
             factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id) / production.bom_id.product_qty
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             for bom_line, line_data in lines:
@@ -910,9 +920,9 @@ class MrpProduction(models.Model):
                 self.qty_producing = self.product_id.uom_id._compute_quantity(1, self.product_uom_id, rounding_method='HALF-UP')
 
         for move in (self.move_raw_ids | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id)):
-            if move._should_bypass_set_qty_producing():
+            if move._should_bypass_set_qty_producing() or not move.product_uom:
                 continue
-            new_qty = self.product_uom_id._compute_quantity((self.qty_producing - self.qty_produced) * move.unit_factor, self.product_uom_id, rounding_method='HALF-UP')
+            new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
             move.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
             move.move_line_ids = move._set_quantity_done_prepare_vals(new_qty)
 
@@ -965,7 +975,7 @@ class MrpProduction(models.Model):
             if production.state in ('done', 'cancel'):
                 continue
             additional_moves = production.move_raw_ids.filtered(
-                lambda move: move.state == 'draft' and move.additional
+                lambda move: move.state == 'draft'
             )
             additional_moves.write({
                 'group_id': production.procurement_group_id.id,
@@ -973,7 +983,7 @@ class MrpProduction(models.Model):
             additional_moves._adjust_procure_method()
             moves_to_confirm |= additional_moves
             additional_byproducts = production.move_finished_ids.filtered(
-                lambda move: move.state == 'draft' and move.additional
+                lambda move: move.state == 'draft'
             )
             moves_to_confirm |= additional_byproducts
 
@@ -1063,8 +1073,6 @@ class MrpProduction(models.Model):
         for production in self:
             if production.bom_id:
                 production.consumption = production.bom_id.consumption
-            if not production.move_raw_ids:
-                raise UserError(_("Add some materials to consume before marking this MO as to do."))
             # In case of Serial number tracking, force the UoM to the UoM of product
             if production.product_tracking == 'serial' and production.product_uom_id != production.product_id.uom_id:
                 production.write({
@@ -1079,8 +1087,9 @@ class MrpProduction(models.Model):
             production.move_raw_ids._adjust_procure_method()
             (production.move_raw_ids | production.move_finished_ids)._action_confirm()
             production.workorder_ids._action_confirm()
-            # run scheduler for moves forecasted to not have enough in stock
-            production.move_raw_ids._trigger_scheduler()
+        # run scheduler for moves forecasted to not have enough in stock
+        self.move_raw_ids._trigger_scheduler()
+        self.state = 'confirmed'
         return True
 
     def action_assign(self):
@@ -1091,8 +1100,9 @@ class MrpProduction(models.Model):
     def button_plan(self):
         """ Create work orders. And probably do stuff, like things. """
         orders_to_plan = self.filtered(lambda order: not order.is_planned)
+        orders_to_confirm = orders_to_plan.filtered(lambda mo: mo.state == 'draft')
+        orders_to_confirm.action_confirm()
         for order in orders_to_plan:
-            (order.move_raw_ids | order.move_finished_ids).filtered(lambda m: m.state == 'draft')._action_confirm()
             order._plan_workorders()
         return True
 
@@ -1419,9 +1429,8 @@ class MrpProduction(models.Model):
         if not close_mo:
             self.move_raw_ids.filtered(lambda m: not m.additional)._do_unreserve()
             self.move_raw_ids.filtered(lambda m: not m.additional)._action_assign()
-        # Confirm only productions with remaining components
-        backorders.filtered(lambda mo: mo.move_raw_ids).action_confirm()
-        backorders.filtered(lambda mo: mo.move_raw_ids).action_assign()
+        backorders.action_confirm()
+        backorders.action_assign()
 
         # Remove the serial move line without reserved quantity. Post inventory will assigned all the non done moves
         # So those move lines are duplicated.
@@ -1442,15 +1451,17 @@ class MrpProduction(models.Model):
         if self.env.context.get('mo_ids_to_backorder'):
             productions_to_backorder = self.browse(self.env.context['mo_ids_to_backorder'])
             productions_not_to_backorder = self - productions_to_backorder
+            close_mo = False
         else:
             productions_not_to_backorder = self
             productions_to_backorder = self.env['mrp.production']
+            close_mo = True
 
         self.workorder_ids.button_finish()
 
+        backorders = productions_to_backorder._generate_backorder_productions(close_mo=close_mo)
         productions_not_to_backorder._post_inventory(cancel_backorder=True)
         productions_to_backorder._post_inventory(cancel_backorder=False)
-        backorders = productions_to_backorder._generate_backorder_productions()
 
         # if completed products make other confirmed/partially_available moves available, assign them
         done_move_finished_ids = (productions_to_backorder.move_finished_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda m: m.state == 'done')
@@ -1470,6 +1481,7 @@ class MrpProduction(models.Model):
                 'product_qty': production.qty_produced,
                 'priority': '0',
                 'is_locked': True,
+                'state': 'done',
             })
 
         for workorder in self.workorder_ids.filtered(lambda w: w.state not in ('done', 'cancel')):
@@ -1516,6 +1528,8 @@ class MrpProduction(models.Model):
         for production in self:
             if float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
                 raise UserError(_('The quantity to produce must be positive!'))
+            if not any(production.move_raw_ids.mapped('quantity_done')):
+                raise UserError(_("You must indicate a non-zero amount consumed for at least one of your components"))
 
         consumption_issues = self._get_consumption_issues()
         if consumption_issues:
@@ -1622,7 +1636,8 @@ class MrpProduction(models.Model):
             'res_model': 'mrp.unbuild',
             'view_id': self.env.ref('mrp.mrp_unbuild_form_view_simplified').id,
             'type': 'ir.actions.act_window',
-            'context': {'default_mo_id': self.id,
+            'context': {'default_product_id': self.product_id.id,
+                        'default_mo_id': self.id,
                         'default_company_id': self.company_id.id,
                         'default_location_id': self.location_dest_id.id,
                         'default_location_dest_id': self.location_src_id.id,

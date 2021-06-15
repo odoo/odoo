@@ -36,7 +36,7 @@ class ProductTemplate(models.Model):
 
     name = fields.Char('Name', index=True, required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help='Gives the sequence order when displaying a product list')
-    description = fields.Text(
+    description = fields.Html(
         'Description', translate=True)
     description_purchase = fields.Text(
         'Purchase Description', translate=True)
@@ -110,7 +110,7 @@ class ProductTemplate(models.Model):
     packaging_ids = fields.One2many(
         'product.packaging', string="Product Packages", compute="_compute_packaging_ids", inverse="_set_packaging_ids",
         help="Gives the different ways to package the same product.")
-    seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors', help="Define vendor pricelists.")
+    seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors', depends_context=('company',), help="Define vendor pricelists.")
     variant_seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id')
 
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the product without removing it.")
@@ -143,7 +143,7 @@ class ProductTemplate(models.Model):
     priority = fields.Selection([
         ('0', 'Normal'),
         ('1', 'Favorite'),
-    ], default='0', string="Priority")
+    ], default='0', string="Favorite")
 
     def _compute_item_count(self):
         for template in self:
@@ -441,6 +441,12 @@ class ProductTemplate(models.Model):
                 'image_128',
                 'can_image_1024_be_zoomed',
             ])
+            # Touch all products that will fall back on the template field
+            # This is done because __last_update is used to compute the 'unique' SHA in image URLs
+            # for making sure that images are not retrieved from the browser cache after a change
+            # Performance discussion outcome:
+            # Actually touch all variants to avoid using filtered on the image_variant_1920 field
+            self.product_variant_ids.write({})
         return res
 
     @api.returns('self', lambda value: value.id)

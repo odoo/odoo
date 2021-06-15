@@ -9,13 +9,13 @@ FieldChar.include({
     //-------------------------------------------------------------------------
 
     /**
-     * Support a key-based onchange in text field. In order to avoid too much
-     * rpc to the server _triggerOnchange is throttled (once every second max)
+     * Support a key-based onchange in text field.
+     * The _triggerOnchange method is debounced to run 2 seconds after typing ends.
      *
      */
     init: function () {
         this._super.apply(this, arguments);
-        this._triggerOnchange = _.throttle(this._triggerOnchange, 1000, {leading: false});
+        this._triggerOnchange = _.debounce(this._triggerOnchange, 2000);
     },
 
 
@@ -43,8 +43,9 @@ FieldChar.include({
     //--------------------------------------------------------------------------
 
     /**
-     * Triggers the 'change' event to refresh the value. Throttled at init to
-     * avoid spaming server.
+     * Triggers the 'change' event to refresh the value.
+     * This method is debounced to run 2 seconds after typing ends.
+     * (to avoid spamming the server while the user is typing his message)
      *
      * @private
      */

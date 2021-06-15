@@ -27,6 +27,11 @@ class Http(models.AbstractModel):
 
         user_context = request.session.get_context() if request.session.uid else {}
         IrConfigSudo = self.env['ir.config_parameter'].sudo()
+        max_file_upload_size = int(IrConfigSudo.get_param(
+            'web.max_file_upload_size',
+            default=128 * 1024 * 1024,  # 128MiB
+        ))
+
         session_info = {
             "uid": request.session.uid,
             "is_system": user._is_system() if request.session.uid else False,
@@ -42,6 +47,10 @@ class Http(models.AbstractModel):
             "partner_id": user.partner_id.id if request.session.uid and user.partner_id else None,
             "web.base.url": IrConfigSudo.get_param('web.base.url', default=''),
             "active_ids_limit": int(IrConfigSudo.get_param('web.active_ids_limit', default='20000')),
+            'profile_session': request.session.profile_session,
+            'profile_collectors': request.session.profile_collectors,
+            'profile_params': request.session.profile_params,
+            "max_file_upload_size": max_file_upload_size,
         }
         if self.env.user.has_group('base.group_user'):
             # the following is only useful in the context of a webclient bootstrapping
@@ -51,7 +60,7 @@ class Http(models.AbstractModel):
             mods = odoo.conf.server_wide_modules or []
             if request.db:
                 mods = list(request.registry._init_modules) + mods
-            qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug)
+            qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="web.assets_qweb")
             lang = user_context.get("lang")
             translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
             menu_json_utf8 = json.dumps(request.env['ir.ui.menu'].load_menus(request.session.debug), default=ustr, sort_keys=True).encode()
@@ -86,6 +95,9 @@ class Http(models.AbstractModel):
             'is_website_user': request.session.uid and self.env.user._is_public() or False,
             'user_id': request.session.uid and self.env.user.id or False,
             'is_frontend': True,
+            'profile_session': request.session.profile_session,
+            'profile_collectors': request.session.profile_collectors,
+            'profile_params': request.session.profile_params,
         }
         if request.session.uid:
             version_info = odoo.service.common.exp_version()

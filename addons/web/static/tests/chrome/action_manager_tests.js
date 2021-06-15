@@ -1342,6 +1342,26 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('state with integer active_ids should not crash', async function (assert) {
+        assert.expect(0);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            mockRPC: function (route, args) {
+                if (route === '/web/action/run') {
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await actionManager.loadState({
+            action: 2,
+            active_ids: 3,
+        });
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Concurrency management');
 
     QUnit.test('drop previous actions if possible', async function (assert) {
@@ -2258,7 +2278,7 @@ QUnit.module('ActionManager', {
                 report: ReportService,
                 notification: NotificationService.extend({
                     notify: function (params) {
-                        assert.step(params.type || 'notification');
+                        assert.step(params.type || 'warning');
                     }
                 }),
             },
@@ -2315,7 +2335,7 @@ QUnit.module('ActionManager', {
                 report: ReportService,
                 notification: NotificationService.extend({
                     notify: function (params) {
-                        assert.step(params.type || 'notification');
+                        assert.step(params.type || 'warning');
                     }
                 })
             },
@@ -2379,7 +2399,7 @@ QUnit.module('ActionManager', {
                 report: ReportService,
                 notification: NotificationService.extend({
                     notify: function (params) {
-                        assert.step(params.type || 'notification');
+                        assert.step(params.type || 'warning');
                     }
                 })
             },

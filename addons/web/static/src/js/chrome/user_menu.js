@@ -46,7 +46,7 @@ var UserMenu = Widget.extend({
             self.$('.oe_topbar_name').text(topbar_name);
             var avatar_src = session.url('/web/image', {
                 model:'res.users',
-                field: 'image_128',
+                field: 'avatar_128',
                 id: session.uid,
             });
             $avatar.attr('src', avatar_src);
@@ -79,7 +79,7 @@ var UserMenu = Widget.extend({
      * @private
      */
     _onMenuDocumentation: function () {
-        window.open('https://www.odoo.com/documentation/user', '_blank');
+        window.open('https://www.odoo.com/documentation/14.0', '_blank');
     },
     /**
      * @private

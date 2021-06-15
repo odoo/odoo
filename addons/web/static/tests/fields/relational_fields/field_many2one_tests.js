@@ -2503,7 +2503,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('no_create option on a many2one', async function (assert) {
-            assert.expect(1);
+            assert.expect(2);
 
             var form = await createView({
                 View: FormView,
@@ -2516,10 +2516,11 @@ QUnit.module('fields', {}, function () {
                     '</form>',
             });
 
-            await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
-                'new partner', ['keyup', 'focusout']);
-            await testUtils.nextTick();
+            await testUtils.fields.editInput(form.$('.o_field_many2one input'), 'new partner');
+            form.$('.o_field_many2one input').trigger('keyup').trigger('focusout');
             assert.strictEqual($('.modal').length, 0, "should not display the create modal");
+            assert.strictEqual(form.$('.o_field_many2one input').val(), "",
+                "many2one value should cleared on focusout if many2one is no_create");
             form.destroy();
         });
 
@@ -2574,7 +2575,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('pressing enter in a m2o in an editable list', async function (assert) {
-            assert.expect(9);
+            assert.expect(8);
             var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
             relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
 
@@ -2615,11 +2616,6 @@ QUnit.module('fields', {}, function () {
             var $input = list.$('td.o_data_cell input:first');
             var $dropdown = $input.autocomplete('widget');
             assert.ok($dropdown.is(':visible'), "autocomplete dropdown should be visible");
-            await testUtils.fields.triggerKeydown($input, 'tab');
-            assert.strictEqual($input[0], document.activeElement,
-                "input should still be focused");
-
-            // we now trigger again ENTER to make sure we can move to next line
             await testUtils.fields.triggerKeydown($input, 'tab');
 
             assert.notOk(document.contains($input[0]),
@@ -2698,7 +2694,7 @@ QUnit.module('fields', {}, function () {
             });
 
             var $input = form.$('.o_field_many2one input');
-            await testUtils.fields.editInput($input, "first");
+            await testUtils.fields.editAndTrigger($input, "first", ["keydown", "keyup"]);
             await testUtils.fields.triggerKey('down', $input, 'tab');
             await testUtils.fields.triggerKey('press', $input, 'tab');
             await testUtils.fields.triggerKey('up', $input, 'tab');
@@ -2719,6 +2715,80 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual($('.modal').length, 0,
                 "there shouldn't be any modal in body");
             relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            form.destroy();
+        });
+
+        QUnit.test('leaving a many2one by pressing tab', async function (assert) {
+            assert.expect(3);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form>
+                        <field name="trululu"/>
+                        <field name="display_name"/>
+                    </form>`,
+            });
+
+            const $input = form.$('.o_field_many2one input');
+            await testUtils.dom.click($input);
+            await testUtils.fields.triggerKeydown($input, 'tab');
+            assert.strictEqual($input.val(), '', "no record should have been selected");
+
+            // open autocomplete dropdown and manually select item by UP/DOWN key and press TAB
+            await testUtils.dom.click($input);
+            await testUtils.fields.triggerKeydown($input, 'down');
+            await testUtils.fields.triggerKeydown($input, 'tab');
+            assert.strictEqual($input.val(), 'second record', "second record should have been selected");
+
+            // clear many2one and then open autocomplete, write something and press TAB
+            await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'), '', ['keyup', 'blur']);
+            await testUtils.dom.triggerEvent($input, 'focus');
+            await testUtils.fields.editInput($input, 'se');
+            await testUtils.fields.triggerKeydown($input, 'tab');
+            assert.strictEqual($input.val(), 'second record', "first record should have been selected");
+
+            form.destroy();
+        });
+
+        QUnit.test('leaving an empty many2one by pressing tab (after backspace or delete)', async function (assert) {
+            assert.expect(4);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form>
+                        <field name="trululu"/>
+                        <field name="display_name"/>
+                    </form>`,
+                res_id: 1,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            const $input = form.$('.o_field_many2one input');
+            assert.ok($input.val(), "many2one should have value");
+
+            // simulate backspace to remove values and press TAB
+            await testUtils.fields.editInput($input, "");
+            await testUtils.fields.triggerKeyup($input, 'backspace');
+            await testUtils.fields.triggerKeydown($input, 'tab');
+            assert.strictEqual($input.val(), '', "no record should have been selected");
+
+            // reset a value
+            await testUtils.fields.many2one.clickOpenDropdown('trululu');
+            await testUtils.fields.many2one.clickItem('trululu', 'first record');
+            assert.ok($input.val(), "many2one should have value");
+
+            // simulate delete to remove values and press TAB
+            await testUtils.fields.editInput($input, "");
+            await testUtils.fields.triggerKeyup($input, 'delete');
+            await testUtils.fields.triggerKeydown($input, 'tab');
+            assert.strictEqual($input.val(), '', "no record should have been selected");
+
             form.destroy();
         });
 
@@ -3555,7 +3625,7 @@ QUnit.module('fields', {}, function () {
         QUnit.module('Many2OneAvatar');
 
         QUnit.test('many2one_avatar widget in form view', async function (assert) {
-            assert.expect(10);
+            assert.expect(17);
 
             const form = await createView({
                 View: FormView,
@@ -3567,7 +3637,7 @@ QUnit.module('fields', {}, function () {
 
             assert.hasClass(form.$('.o_form_view'), 'o_form_readonly');
             assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), 'Aline');
-            assert.containsOnce(form, 'img.o_m2o_avatar[data-src="/web/image/user/17/image_128"]');
+            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]');
 
             await testUtils.form.clickEdit(form);
 
@@ -3575,14 +3645,27 @@ QUnit.module('fields', {}, function () {
             assert.containsOnce(form, '.o_input_dropdown');
             assert.strictEqual(form.$('.o_input_dropdown input').val(), 'Aline');
             assert.containsOnce(form, '.o_external_button');
+            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]');
 
             await testUtils.fields.many2one.clickOpenDropdown("user_id");
             await testUtils.fields.many2one.clickItem("user_id", "Christine");
+            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/19/avatar_128"]');
             await testUtils.form.clickSave(form);
 
             assert.hasClass(form.$('.o_form_view'), 'o_form_readonly');
             assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), 'Christine');
-            assert.containsOnce(form, 'img.o_m2o_avatar[data-src="/web/image/user/19/image_128"]');
+            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/19/avatar_128"]');
+
+            await testUtils.form.clickEdit(form);
+            await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="user_id"] input'),
+                '', ['keyup', 'blur']);
+            assert.containsNone(form, '.o_m2o_avatar > img');
+            assert.containsOnce(form, '.o_m2o_avatar > .o_m2o_avatar_empty');
+            await testUtils.form.clickSave(form);
+
+            assert.hasClass(form.$('.o_form_view'), 'o_form_readonly');
+            assert.containsNone(form, '.o_m2o_avatar > img');
+            assert.containsNone(form, '.o_m2o_avatar > .o_m2o_avatar_empty');
 
             form.destroy();
         });
@@ -3614,17 +3697,17 @@ QUnit.module('fields', {}, function () {
 
             assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
             assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), 'Aline');
-            assert.containsOnce(form, 'img.o_m2o_avatar[data-src="/web/image/user/17/image_128"]');
+            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]');
 
             await testUtils.fields.editInput(form.$('.o_field_widget[name=int_field]'), 1);
 
             assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), 'Christine');
-            assert.containsOnce(form, 'img.o_m2o_avatar[data-src="/web/image/user/19/image_128"]');
+            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/19/avatar_128"]');
 
             await testUtils.fields.editInput(form.$('.o_field_widget[name=int_field]'), 2);
 
             assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), '');
-            assert.containsNone(form, 'img.o_m2o_avatar');
+            assert.containsNone(form, '.o_m2o_avatar > img');
 
             form.destroy();
         });
@@ -3646,10 +3729,35 @@ QUnit.module('fields', {}, function () {
             });
 
             assert.strictEqual(list.$('.o_data_cell span').text(), 'AlineChristineAline');
-            assert.containsOnce(list.$('.o_data_cell:nth(0)'), 'img.o_m2o_avatar[data-src="/web/image/user/17/image_128"]');
-            assert.containsOnce(list.$('.o_data_cell:nth(1)'), 'img.o_m2o_avatar[data-src="/web/image/user/19/image_128"]');
-            assert.containsOnce(list.$('.o_data_cell:nth(2)'), 'img.o_m2o_avatar[data-src="/web/image/user/17/image_128"]');
-            assert.containsNone(list.$('.o_data_cell:nth(3)'), 'img.o_m2o_avatar');
+            assert.containsOnce(list.$('.o_data_cell:nth(0)'), '.o_m2o_avatar >img[data-src="/web/image/user/17/avatar_128"]');
+            assert.containsOnce(list.$('.o_data_cell:nth(1)'), '.o_m2o_avatar > img[data-src="/web/image/user/19/avatar_128"]');
+            assert.containsOnce(list.$('.o_data_cell:nth(2)'), '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]');
+            assert.containsNone(list.$('.o_data_cell:nth(3)'), '.o_m2o_avatar > img');
+
+            list.destroy();
+        });
+
+        QUnit.test('many2one_avatar widget in editable list view', async function (assert) {
+            assert.expect(3);
+
+            this.data.partner.records = [
+                { id: 1, user_id: 17, },
+                { id: 2, user_id: 19, },
+                { id: 3, user_id: 17, },
+                { id: 4, user_id: false, },
+            ];
+            const list = await createView({
+                View: ListView,
+                model: 'partner',
+                data: this.data,
+                arch: '<tree editable="top"><field name="user_id" widget="many2one_avatar"/></tree>',
+            });
+
+            assert.strictEqual(list.$('.o_data_cell span').text(), 'AlineChristineAline');
+            assert.containsOnce(list.$('.o_data_cell:nth(0)'), '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]');
+
+            await testUtils.dom.click(list.$('.o_data_row:first() .o_data_cell:first()'));
+            assert.containsOnce(list.$('.o_data_cell:nth(0)'), '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]');
 
             list.destroy();
         });

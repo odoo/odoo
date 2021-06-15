@@ -29,6 +29,8 @@
         'views/analytic_views.xml',
         'views/digest_views.xml',
         'views/rating_views.xml',
+        'views/project_update_views.xml',
+        'views/project_update_templates.xml',
         'views/project_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_settings_views.xml',
@@ -49,17 +51,25 @@
     'assets': {
         'web.assets_backend': [
             'project/static/src/css/project.css',
+            'project/static/src/js/project_activity.js',
+            'project/static/src/js/project_control_panel.js',
             'project/static/src/js/project_form.js',
+            'project/static/src/js/project_graph.js',
             'project/static/src/js/project_kanban.js',
             'project/static/src/js/project_list.js',
+            'project/static/src/js/project_pivot.js',
             'project/static/src/js/project_rating_reporting.js',
-            'project/static/src/js/project_name_with_subtask_count_widget.js',
             'project/static/src/js/project_task_kanban_examples.js',
             'project/static/src/js/tours/project.js',
             'project/static/src/js/project_calendar.js',
             'project/static/src/js/burndown_chart/*',
+            'project/static/src/js/right_panel/*',
+            'project/static/src/js/update/*',
+            'project/static/src/js/widgets/*',
             'project/static/src/scss/project_dashboard.scss',
             'project/static/src/scss/project_form.scss',
+            'project/static/src/scss/project_rightpanel.scss',
+            'project/static/src/scss/project_widgets.scss',
         ],
         'web.assets_frontend': [
             'project/static/src/scss/portal_rating.scss',
@@ -70,6 +80,9 @@
         ],
         'web.qunit_suite_tests': [
             'project/static/tests/burndown_chart_tests.js',
-        ]
+        ],
+        'web.assets_tests': [
+            'project/static/tests/tours/**/*',
+        ],
     }
 }

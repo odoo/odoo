@@ -4,6 +4,13 @@ odoo.define("website.tour.edit_link_popover", function (require) {
 const tour = require('web_tour.tour');
 const wTourUtils = require('website.tour_utils');
 
+const FIRST_PARAGRAPH = '#wrap .s_text_image p:nth-child(2)';
+
+const clickFooter = {
+    content: "Save the link by clicking outside the URL input (not on a link element)",
+    trigger: 'footer h5',
+};
+
 tour.register('edit_link_popover', {
     test: true,
     url: '/?enable_editor=1',
@@ -15,11 +22,10 @@ tour.register('edit_link_popover', {
     }),
     {
         content: "Click on a paragraph",
-        trigger: '#wrap .s_text_image p:nth-child(2)',
+        trigger: FIRST_PARAGRAPH,
     },
     {
         content: "Click on 'Link' to open Link Dialog",
-        extra_trigger: '#wrap .s_text_image p:nth-child(2)',
         trigger: "#toolbar #create-link",
     },
     {
@@ -27,17 +33,14 @@ tour.register('edit_link_popover', {
         trigger: '#o_link_dialog_url_input',
         run: 'text /contactus'
     },
-    {
-        content: "Save the link by clickng on itself",
-        trigger: '#wrap .s_text_image p:nth-child(2)',
-    },
+    clickFooter,
     {
         content: "Click on newly created link",
-        trigger: '#wrap .s_text_image p:nth-child(2) a',
+        trigger: `${FIRST_PARAGRAPH} a`,
     },
     {
         content: "Popover should be shown",
-        trigger: '.o_edit_menu_popover .o_we_url_link:contains("Contact Us")',
+        trigger: '.o_edit_menu_popover .o_we_url_link:contains("Contact Us")', // At this point preview is loaded
         run: function () {}, // it's a check
     },
     {
@@ -49,13 +52,10 @@ tour.register('edit_link_popover', {
         trigger: '#o_link_dialog_url_input',
         run: "text /"
     },
-    {
-        content: "Save the link by clickng on itself",
-        trigger: '#wrap .s_text_image p:nth-child(2)',
-    },
+    clickFooter,
     {
         content: "Click on link",
-        trigger: '#wrap .s_text_image p:nth-child(2) a',
+        trigger: `${FIRST_PARAGRAPH} a`,
     },
     {
         content: "Popover should be shown with updated preview data",
@@ -68,7 +68,7 @@ tour.register('edit_link_popover', {
     },
     {
         content: "Link should be removed",
-        trigger: '#wrap .s_text_image p:nth-child(2):not(:has(a))',
+        trigger: `${FIRST_PARAGRAPH}:not(:has(a))`,
         run: function () {}, // it's a check
     },
     // 2. Test links in navbar (website)

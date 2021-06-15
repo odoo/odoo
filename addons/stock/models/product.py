@@ -626,8 +626,8 @@ class ProductTemplate(models.Model):
         ('lot', 'By Lots'),
         ('none', 'No Tracking')], string="Tracking", help="Ensure the traceability of a storable product in your warehouse.", default='none', required=True)
     description_picking = fields.Text('Description on Picking', translate=True)
-    description_pickingout = fields.Text('Description on Delivery Orders', translate=True)
-    description_pickingin = fields.Text('Description on Receptions', translate=True)
+    description_pickingout = fields.Html('Description on Delivery Orders', translate=True)
+    description_pickingin = fields.Html('Description on Receptions', translate=True)
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
         compute_sudo=False, digits='Product Unit of Measure')
@@ -934,6 +934,11 @@ class ProductCategory(models.Model):
         'stock.location.route', string='Total routes', compute='_compute_total_route_ids',
         readonly=True)
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'category_id', 'Putaway Rules')
+    packaging_reserve_method = fields.Selection([
+        ('full', 'Reserve Only Full Packagings'),
+        ('partial', 'Reserve Partial Packagings'),], string="Reserve Packagings", default='partial',
+        help="Reserve Only Full Packagings: will not reserve partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then only 1000 will be reserved\n"
+             "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved")
 
     def _compute_total_route_ids(self):
         for category in self:
@@ -943,6 +948,15 @@ class ProductCategory(models.Model):
                 base_cat = base_cat.parent_id
                 routes |= base_cat.route_ids
             category.total_route_ids = routes
+
+class ProductPackaging(models.Model):
+    _inherit = "product.packaging"
+
+    package_type_id = fields.Many2one('stock.package.type', 'Package Type')
+    route_ids = fields.Many2many(
+        'stock.location.route', 'stock_location_route_packaging', 'packaging_id', 'route_id', 'Routes',
+        domain=[('packaging_selectable', '=', True)],
+        help="Depending on the modules installed, this will allow you to define the route of the product in this packaging: whether it will be bought, manufactured, replenished on order, etc.")
 
 
 class UoM(models.Model):

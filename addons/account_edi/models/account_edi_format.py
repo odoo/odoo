@@ -5,6 +5,7 @@ from odoo import models, fields, api
 from odoo.exceptions import UserError
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 from odoo.osv import expression
+from odoo.tools import html_escape
 
 from lxml import etree
 import base64
@@ -104,6 +105,20 @@ class AccountEdiFormat(models.Model):
         # TO OVERRIDE
         return False
 
+    def _get_embedding_to_invoice_pdf_values(self, invoice):
+        """ Get the values to embed to pdf.
+
+        :returns:   A dictionary {'name': name, 'datas': datas} or False if there are no values to embed.
+        * name:     The name of the file.
+        * datas:    The bytes ot the file.
+        """
+        self.ensure_one()
+        attachment = invoice._get_edi_attachment(self)
+        if not attachment or not self._is_embedding_to_invoice_pdf_needed():
+            return False
+        datas = base64.b64decode(attachment.with_context(bin_size=False).datas)
+        return {'name': attachment.name, 'datas': datas}
+
     def _support_batching(self, move, state, company):
         """ Indicate if we can send multiple documents in the same time to the web services.
         If True, the _post_%s_edi methods will get multiple documents in the same time.
@@ -140,11 +155,10 @@ class AccountEdiFormat(models.Model):
         # TO OVERRIDE
         return []
 
-    def _post_invoice_edi(self, invoices, test_mode=False):
+    def _post_invoice_edi(self, invoices):
         """ Create the file content representing the invoice (and calls web services if necessary).
 
         :param invoices:    A list of invoices to post.
-        :param test_mode:   A flag indicating the EDI should only simulate the EDI without sending data.
         :returns:           A dictionary with the invoice as key and as value, another dictionary:
         * attachment:       The attachment representing the invoice in this edi_format if the edi was successfully posted.
         * error:            An error if the edi was not successfully posted.
@@ -154,11 +168,10 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return {}
 
-    def _cancel_invoice_edi(self, invoices, test_mode=False):
+    def _cancel_invoice_edi(self, invoices):
         """Calls the web services to cancel the invoice of this document.
 
         :param invoices:    A list of invoices to cancel.
-        :param test_mode:   A flag indicating the EDI should only simulate the EDI without sending data.
         :returns:           A dictionary with the invoice as key and as value, another dictionary:
         * success:          True if the invoice was successfully cancelled.
         * error:            An error if the edi was not successfully cancelled.
@@ -168,11 +181,10 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return {invoice: {'success': True} for invoice in invoices}  # By default, cancel succeeds doing nothing.
 
-    def _post_payment_edi(self, payments, test_mode=False):
+    def _post_payment_edi(self, payments):
         """ Create the file content representing the payment (and calls web services if necessary).
 
         :param payments:   The payments to post.
-        :param test_mode:   A flag indicating the EDI should only simulate the EDI without sending data.
         :returns:           A dictionary with the payment as key and as value, another dictionary:
         * attachment:       The attachment representing the payment in this edi_format if the edi was successfully posted.
         * error:            An error if the edi was not successfully posted.
@@ -182,11 +194,10 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return {}
 
-    def _cancel_payment_edi(self, payments, test_mode=False):
+    def _cancel_payment_edi(self, payments):
         """Calls the web services to cancel the payment of this document.
 
         :param payments:  A list of payments to cancel.
-        :param test_mode: A flag indicating the EDI should only simulate the EDI without sending data.
         :returns:         A dictionary with the payment as key and as value, another dictionary:
         * success:        True if the payment was successfully cancelled.
         * error:          An error if the edi was not successfully cancelled.
@@ -259,11 +270,10 @@ class AccountEdiFormat(models.Model):
         :returns: the same pdf_content with the EDI of the invoice embed in it.
         """
         attachments = []
-        for edi_format in self:
-            attachment = invoice._get_edi_attachment(edi_format)
-            if attachment and edi_format._is_embedding_to_invoice_pdf_needed():
-                datas = base64.b64decode(attachment.with_context(bin_size=False).datas)
-                attachments.append({'name': attachment.name, 'datas': datas})
+        for edi_format in self.filtered(lambda edi_format: edi_format._is_embedding_to_invoice_pdf_needed()):
+            attach = edi_format._get_embedding_to_invoice_pdf_values(invoice)
+            if attach:
+                attachments.append(attach)
 
         if attachments:
             # Add the attachments to the pdf file
@@ -493,5 +503,5 @@ class AccountEdiFormat(models.Model):
 
     @api.model
     def _format_error_message(self, error_title, errors):
-        bullet_list_msg = ''.join('<li>%s</li>' % msg for msg in errors)
+        bullet_list_msg = ''.join('<li>%s</li>' % html_escape(msg) for msg in errors)
         return '%s<ul>%s</ul>' % (error_title, bullet_list_msg)

@@ -429,8 +429,18 @@ class IrModel(models.Model):
             if tools.table_kind(cr, Model._table) not in ('r', None):
                 # not a regular table, so disable schema upgrades
                 Model._auto = False
-                cr.execute('SELECT * FROM %s LIMIT 0' % Model._table)
-                columns = {desc[0] for desc in cr.description}
+                cr.execute(
+                    '''
+                    SELECT a.attname
+                      FROM pg_attribute a
+                      JOIN pg_class t
+                        ON a.attrelid = t.oid
+                       AND t.relname = %s
+                     WHERE a.attnum > 0 -- skip system columns
+                    ''',
+                    [Model._table]
+                )
+                columns = {colinfo[0] for colinfo in cr.fetchall()}
                 Model._log_access = set(models.LOG_ACCESS_COLUMNS) <= columns
 
 
@@ -756,7 +766,7 @@ class IrModelFields(models.Model):
                 for dep in model._dependent_fields(field):
                     if dep.manual:
                         failed_dependencies.append((field, dep))
-                for inverse in model._field_inverses.get(field, ()):
+                for inverse in model.pool.field_inverses[field]:
                     if inverse.manual and inverse.type == 'one2many':
                         failed_dependencies.append((field, inverse))
 
@@ -815,6 +825,7 @@ class IrModelFields(models.Model):
         self._prepare_update()
 
         # determine registry fields corresponding to self
+        triggers = self.pool.field_triggers
         fields = []
         for record in self:
             try:
@@ -838,7 +849,7 @@ class IrModelFields(models.Model):
                 if field is not None:
                     discard_fields(subtree)
 
-        discard_fields(self.pool.field_triggers)
+        discard_fields(triggers)
         self.pool.registry_invalidated = True
 
         # The field we just deleted might be inherited, and the registry is
@@ -991,7 +1002,7 @@ class IrModelFields(models.Model):
             'store': bool(field.store),
             'copied': bool(field.copy),
             'on_delete': field.ondelete if field.type == 'many2one' else None,
-            'related': ".".join(field.related) if field.related else None,
+            'related': field.related or None,
             'readonly': bool(field.readonly),
             'required': bool(field.required),
             'selectable': bool(field.search or field.store),
@@ -1573,7 +1584,7 @@ class IrModelConstraint(models.Model):
         constraint_module = {
             constraint[0]: cls._module
             for cls in reversed(type(model).mro())
-            if not getattr(cls, 'pool', None)
+            if models.is_definition_class(cls)
             for constraint in getattr(cls, '_local_sql_constraints', ())
         }
 

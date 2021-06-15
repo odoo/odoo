@@ -18,6 +18,7 @@
                         <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
                         <field name="total_route_ids" widget="many2many_tags" groups="stock.group_adv_location" attrs="{'invisible': [('parent_id', '=', False)]}"/>
                         <field name="removal_strategy_id" options="{'no_create': True}"/>
+                        <field name="packaging_reserve_method" widget="radio" groups="product.group_stock_packaging"/>
                     </group>
                 </group>
             </field>
@@ -108,9 +109,9 @@
                 <xpath expr="//group[@name='group_lots_and_weight']" position="before">
                     <field name="has_available_route_ids" invisible="1"/>
                     <group string="Operations" name="operations">
-                        <label for="route_ids" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
+                        <label for="route_ids" attrs="{'invisible': [('type', '=', 'service')]}"/>
                         <div>
-                            <field name="route_ids" class="mb-0" widget="many2many_checkboxes" attrs="{'invisible': ['|', ('has_available_route_ids', '=', False), ('type', 'in', ['service', 'digital'])]}"/>
+                            <field name="route_ids" class="mb-0" widget="many2many_checkboxes" attrs="{'invisible': ['|', ('has_available_route_ids', '=', False), ('type', '=', 'service')]}"/>
                             <button id="stock.view_diagram_button" string="View Diagram" type="action" name="%(action_open_routes)d" icon="fa-arrow-right"
                                  attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                                  class="btn btn-link pt-0" context="{'default_product_tmpl_id': id}"/>
@@ -121,7 +122,7 @@
                 <xpath expr="//group[@name='group_lots_and_weight']" position="after">
                     <group string="Traceability" name="traceability" groups="stock.group_production_lot"
                            attrs="{'invisible': [('type', '=', 'consu')]}">
-                        <field name="tracking" widget="radio" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
+                        <field name="tracking" widget="radio" attrs="{'invisible': [('type', '=', 'service')]}"/>
                     </group>
                      <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">
                         <field name="property_stock_production"/>
@@ -155,6 +156,34 @@
                 </xpath>
                 <xpath expr="//div[@name='product_lst_price']" position="after">
                     <div t-if="record.type.raw_value == 'product'">On hand: <field name="qty_available"/> <field name="uom_id"/></div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_packaging_tree_view" model="ir.ui.view">
+            <field name="name">product.packaging.tree.view.stock</field>
+            <field name="model">product.packaging</field>
+            <field name="inherit_id" ref="product.product_packaging_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="package_type_id" groups="stock.group_tracking_lot"/>
+                    <field name="route_ids" groups="stock.group_adv_location" optional="hide" widget="many2many_tags"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_packaging_form_view" model="ir.ui.view">
+            <field name="name">product.packaging.form.view.stock</field>
+            <field name="model">product.packaging</field>
+            <field name="inherit_id" ref="product.product_packaging_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='qty']" position="before">
+                    <field name="package_type_id" groups="stock.group_tracking_lot"/>
+                </xpath>
+                <xpath expr="//group[@name='qty']" position="after">
+                    <group name="logistic">
+                        <field name="route_ids" groups="stock.group_adv_location" widget="many2many_tags"/>
+                    </group>
                 </xpath>
             </field>
         </record>

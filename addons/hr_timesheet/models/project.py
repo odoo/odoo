@@ -40,7 +40,7 @@ class Project(models.Model):
     def _check_allow_timesheet(self):
         for project in self:
             if project.allow_timesheets and not project.analytic_account_id:
-                raise ValidationError(_('To allow timesheet, your project %s should have an analytic account set.', project.name))
+                raise ValidationError(_('You cannot use timesheets without an analytic account.'))
 
     @api.depends('timesheet_ids')
     def _compute_total_timesheet_time(self):
@@ -98,6 +98,10 @@ class Project(models.Model):
                 warning_msg, self.env.ref('hr_timesheet.timesheet_action_project').id,
                 _('See timesheet entries'), {'active_ids': projects_with_timesheets.ids})
 
+    def _convert_project_uom_to_timesheet_encode_uom(self, time):
+        uom_from = self.company_id.project_time_mode_id
+        uom_to = self.env.company.timesheet_encode_uom_id
+        return round(uom_from._compute_quantity(time, uom_to, raise_if_failure=False), 2)
 
 class Task(models.Model):
     _name = "project.task"
@@ -110,7 +114,7 @@ class Task(models.Model):
     total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Time spent on this task, including its sub-tasks.")
     progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, group_operator="avg", help="Display progress of current task.")
     overtime = fields.Float(compute='_compute_progress_hours', store=True)
-    subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
+    subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', recursive=True, store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=lambda self: self._uom_in_days())
 
@@ -157,12 +161,12 @@ class Task(models.Model):
 
     @api.depends('child_ids.effective_hours', 'child_ids.subtask_effective_hours')
     def _compute_subtask_effective_hours(self):
-        for task in self:
+        for task in self.with_context(active_test=False):
             task.subtask_effective_hours = sum(child_task.effective_hours + child_task.subtask_effective_hours for child_task in task.child_ids)
 
     def action_view_subtask_timesheet(self):
         self.ensure_one()
-        tasks = self._get_all_subtasks()
+        tasks = self.with_context(active_test=False)._get_all_subtasks()
         return {
             'type': 'ir.actions.act_window',
             'name': _('Timesheets'),

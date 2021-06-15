@@ -236,6 +236,10 @@ function factory(dependencies) {
                 channel.mass_mailing &&
                 this.env.session.notification_type === 'email'
             ) {
+                this._handleNotificationChannelSeen(channelId, {
+                    last_message_id: messageData.id,
+                    partner_id: this.env.messaging.currentPartner.id,
+                });
                 return;
             }
             // In all other cases: update counter and notify if necessary
@@ -260,8 +264,8 @@ function factory(dependencies) {
                     // on `channel` channels for performance reasons
                     channel.markAsFetched();
                 }
-                // (re)open chat on receiving new message
-                if (channel.channel_type !== 'channel' && !this.env.messaging.device.isMobile) {
+                // open chat on receiving new message if it was not already opened or folded
+                if (channel.channel_type !== 'channel' && !this.env.messaging.device.isMobile && !channel.chatWindow) {
                     this.env.messaging.chatWindowManager.openThread(channel);
                 }
             }
@@ -271,8 +275,6 @@ function factory(dependencies) {
             if (!wasChannelExisting) {
                 return;
             }
-            // manually force recompute of counter
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -325,8 +327,6 @@ function factory(dependencies) {
                 // FIXME force the computing of message values (cf task-2261221)
                 this.env.models['mail.message_seen_indicator'].recomputeSeenValues(channel);
             }
-            // manually force recompute of counter
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -382,8 +382,6 @@ function factory(dependencies) {
             if (originThread && message.isNeedaction) {
                 originThread.update({ message_needaction_counter: increment() });
             }
-            // manually force recompute of counter
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -412,9 +410,8 @@ function factory(dependencies) {
             } else if (type === 'moderator') {
                 return this._handleNotificationPartnerModerator(data);
             } else if (type === 'simple_notification') {
-                const escapedMessage = owl.utils.escape(data.message);
                 this.env.services['notification'].notify({
-                    message: escapedMessage,
+                    message: data.message,
                     sticky: data.sticky,
                     type: data.warning ? 'warning' : 'danger',
                 });
@@ -481,14 +478,12 @@ function factory(dependencies) {
                 this.env.services['notification'].notify({
                     message: _.str.sprintf(
                         this.env._t("You have been invited to: %s"),
-                        owl.utils.escape(channel.name)
+                        channel.name
                     ),
                     type: 'info',
                 });
             }
             // a new thread with unread messages could have been added
-            // manually force recompute of counter
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -512,8 +507,6 @@ function factory(dependencies) {
             }
             // deleting message might have deleted notifications, force recompute
             this.messaging.notificationGroupManager.computeGroups();
-            // manually force recompute of counter (after computing the groups)
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -532,8 +525,6 @@ function factory(dependencies) {
                 }
             }
             this.messaging.notificationGroupManager.computeGroups();
-            // manually force recompute of counter (after computing the groups)
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -577,8 +568,6 @@ function factory(dependencies) {
                 // messages on the server.
                 inbox.mainCache.update({ hasToLoadMessages: true });
             }
-            // manually force recompute of counter
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -594,8 +583,6 @@ function factory(dependencies) {
             if (moderationMailbox) {
                 moderationMailbox.update({ counter: increment() });
             }
-            // manually force recompute of counter
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -641,8 +628,6 @@ function factory(dependencies) {
                 isTransient: true,
             }));
             this._notifyThreadViewsMessageReceived(message);
-            // manually force recompute of counter
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -662,12 +647,12 @@ function factory(dependencies) {
                 const correspondent = channel.correspondent;
                 message = _.str.sprintf(
                     this.env._t("You unpinned your conversation with <b>%s</b>."),
-                    owl.utils.escape(correspondent.name)
+                    correspondent.name
                 );
             } else {
                 message = _.str.sprintf(
                     this.env._t("You unsubscribed from <b>%s</b>."),
-                    owl.utils.escape(channel.name)
+                    channel.name
                 );
             }
             // We assume that arriving here the server has effectively
@@ -713,7 +698,6 @@ function factory(dependencies) {
             if (!author) {
                 notificationTitle = this.env._t("New message");
             } else {
-                const escapedAuthorName = owl.utils.escape(author.nameOrDisplayName);
                 if (channel.channel_type === 'channel') {
                     // hack: notification template does not support OWL components,
                     // so we simply use their template to make HTML as if it comes
@@ -722,15 +706,15 @@ function factory(dependencies) {
                         env: this.env,
                         thread: channel,
                     });
-                    const channelName = owl.utils.escape(channel.displayName);
+                    const channelName = channel.displayName;
                     const channelNameWithIcon = channelIcon + channelName;
                     notificationTitle = _.str.sprintf(
                         this.env._t("%s from %s"),
-                        escapedAuthorName,
+                        author.nameOrDisplayName,
                         channelNameWithIcon
                     );
                 } else {
-                    notificationTitle = escapedAuthorName;
+                    notificationTitle = author.nameOrDisplayName;
                 }
             }
             const notificationContent = htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE);

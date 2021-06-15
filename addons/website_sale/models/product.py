@@ -16,7 +16,7 @@ class ProductRibbon(models.Model):
     def name_get(self):
         return [(ribbon.id, '%s (#%d)' % (tools.html2plaintext(ribbon.html), ribbon.id)) for ribbon in self]
 
-    html = fields.Char(string='Ribbon html', required=True, translate=True)
+    html = fields.Html(string='Ribbon html', required=True, translate=True, sanitize=False)
     bg_color = fields.Char(string='Ribbon background color', required=False)
     text_color = fields.Char(string='Ribbon text color', required=False)
     html_class = fields.Char(string='Ribbon class', required=True, default='')
@@ -206,6 +206,14 @@ class ProductTemplate(models.Model):
              "Customize and enable 'eCommerce categories' to view all eCommerce categories.")
 
     product_template_image_ids = fields.One2many('product.image', 'product_tmpl_id', string="Extra Product Media", copy=True)
+
+    def _get_website_accessory_product(self):
+        domain = self.env['website'].sale_product_domain()
+        return self.accessory_product_ids.filtered_domain(domain)
+
+    def _get_website_alternative_product(self):
+        domain = self.env['website'].sale_product_domain()
+        return self.alternative_product_ids.filtered_domain(domain)
 
     def _has_no_variant_attributes(self):
         """Return whether this `product.template` has at least one no_variant

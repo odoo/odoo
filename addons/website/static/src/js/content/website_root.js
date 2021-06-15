@@ -160,6 +160,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
                                         text: _t("Check your configuration."),
                                     }),
                                 )[0].outerHTML,
+                            messageIsHtml: true, // HTML is built with only safe static parts
                         });
                     }
                     resolve(false);
@@ -327,12 +328,12 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
     _onWebsiteSwitch: function (ev) {
         var websiteId = ev.currentTarget.getAttribute('website-id');
         var websiteDomain = ev.currentTarget.getAttribute('domain');
-        var url = window.location.href;
+        let url = `/website/force/${websiteId}`;
         if (websiteDomain && window.location.hostname !== websiteDomain) {
-            var path = window.location.pathname + window.location.search + window.location.hash;
-            url = websiteDomain + path;
+            url = websiteDomain + url;
         }
-        window.location.href = $.param.querystring(url, {'fw': websiteId});
+        const path = window.location.pathname + window.location.search + window.location.hash;
+        window.location.href = $.param.querystring(url, {'path': path});
     },
     /**
      * @private

@@ -174,6 +174,17 @@ function unlinkAll() {
     return new FieldCommand('unlink-all');
 }
 
+/**
+ * Returns an update command to give to the model manager at create/update.
+ * `update` command can be used for x2one relation fields.
+ * - updates the values of the current related record with the given values
+ *
+ * @returns {FieldCommand}
+ */
+function update(newValue) {
+    return new FieldCommand('update', newValue);
+}
+
 export {
     FieldCommand,
     clear,
@@ -187,5 +198,6 @@ export {
     set,
     unlink,
     unlinkAll,
+    update,
 };
 

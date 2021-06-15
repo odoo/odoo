@@ -159,7 +159,7 @@ var GreetingMessage = AbstractAction.extend({
                     if (result.action) {
                         self.do_action(result.action);
                     } else if (result.warning) {
-                        self.do_warn(result.warning);
+                        self.displayNotification({ title: result.warning, type: 'danger' });
                         setTimeout( function() { self.do_action(self.next_action, {clear_breadcrumbs: true}); }, 5000);
                     }
                 }, function () {

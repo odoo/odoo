@@ -159,7 +159,7 @@ class TestFields(TransactionCaseWithUserDemo):
             'ttype': 'boolean'
         })
         field = self.env['test_new_api.message']._fields['x_bool_false_computed']
-        self.assertFalse(field.depends)
+        self.assertFalse(self.registry.field_depends[field])
 
     def test_10_computed_custom_invalid_transitive_depends(self):
         self.patch(type(self.env["ir.model.fields"]), "_check_depends", lambda self: True)
@@ -264,7 +264,7 @@ class TestFields(TransactionCaseWithUserDemo):
         field = type(self.env['test_new_api.discussion']).display_name
         self.assertTrue(field.automatic)
         self.assertTrue(field.compute)
-        self.assertEqual(field.depends, ('name',))
+        self.assertEqual(self.registry.field_depends[field], ('name',))
 
     def test_10_non_stored(self):
         """ test non-stored fields """
@@ -517,7 +517,7 @@ class TestFields(TransactionCaseWithUserDemo):
 
     def test_12_dynamic_depends(self):
         Model = self.registry['test_new_api.compute.dynamic.depends']
-        self.assertEqual(Model.full_name.depends, ())
+        self.assertEqual(self.registry.field_depends[Model.full_name], ())
 
         # the dependencies of full_name are stored in a config parameter
         self.env['ir.config_parameter'].set_param('test_new_api.full_name', 'name1,name2')
@@ -525,7 +525,7 @@ class TestFields(TransactionCaseWithUserDemo):
         # this must re-evaluate the field's dependencies
         self.env['base'].flush()
         self.registry.setup_models(self.cr)
-        self.assertEqual(Model.full_name.depends, ('name1', 'name2'))
+        self.assertEqual(self.registry.field_depends[Model.full_name], ('name1', 'name2'))
 
     def test_13_inverse(self):
         """ test inverse computation of fields """
@@ -1681,6 +1681,22 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertNotEqual(new_disc.participants, disc.participants)
         self.assertEqual(new_disc.participants._origin, disc.participants)
 
+        # provide many2one field as a dict of values; the value is a new record
+        # with the given 'id' as origin (if given, of course)
+        new_msg = disc.messages.new({
+            'discussion': {'name': disc.name},
+        })
+        self.assertTrue(new_msg.discussion)
+        self.assertFalse(new_msg.discussion.id)
+        self.assertFalse(new_msg.discussion._origin)
+
+        new_msg = disc.messages.new({
+            'discussion': {'name': disc.name, 'id': disc.id},
+        })
+        self.assertTrue(new_msg.discussion)
+        self.assertFalse(new_msg.discussion.id)
+        self.assertEqual(new_msg.discussion._origin, disc)
+
         # check convert_to_write
         tag = self.env['test_new_api.multi.tag'].create({'name': 'Foo'})
         rec = self.env['test_new_api.multi'].create({
@@ -1824,28 +1840,23 @@ class TestFields(TransactionCaseWithUserDemo):
 
     def test_60_many2many_domain(self):
         """ test the cache consistency of a many2many field with a domain """
-        discussion = self.env.ref('test_new_api.discussion_0')
-        category = self.env['test_new_api.category'].create({'name': "Foo"})
-        discussion.categories = category
-        discussion.flush()
-        discussion.invalidate_cache()
+        tag = self.env['test_new_api.multi.tag'].create({'name': 'bar'})
+        record = self.env['test_new_api.multi'].create({'tags': tag.ids})
+        record.flush()
+        record.invalidate_cache()
 
-        # patch the many2many field to give it a domain (this simply avoids
-        # adding yet another test model)
-        field = discussion._fields['categories']
-        self.patch(field, 'domain', [('color', '!=', 42)])
-        self.registry.setup_models(self.cr)
+        self.assertEqual(type(record).tags.domain, [('name', 'ilike', 'a')])
 
-        # the category is in the many2many
-        self.assertIn(category, discussion.categories)
+        # the tag is in the many2many
+        self.assertIn(tag, record.tags)
 
-        # modify the category; it should not longer be in the many2many
-        category.color = 42
-        self.assertNotIn(category, discussion.categories)
+        # modify the tag; it should not longer be in the many2many
+        tag.name = 'foo'
+        self.assertNotIn(tag, record.tags)
 
-        # modify again the category; it should be back in the many2many
-        category.color = 69
-        self.assertIn(category, discussion.categories)
+        # modify again the tag; it should be back in the many2many
+        tag.name = 'baz'
+        self.assertIn(tag, record.tags)
 
     def test_70_x2many_write(self):
         discussion = self.env.ref('test_new_api.discussion_0')
@@ -2042,22 +2053,26 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_93_monetary_related(self):
         """ Check the currency field on related monetary fields. """
         # check base field
-        field = self.env['test_new_api.monetary_base']._fields['amount']
-        self.assertEqual(field.currency_field, 'base_currency_id')
+        model = self.env['test_new_api.monetary_base']
+        field = model._fields['amount']
+        self.assertEqual(field.get_currency_field(model), 'base_currency_id')
 
         # related fields must use the field 'currency_id' or 'x_currency_id'
-        field = self.env['test_new_api.monetary_related']._fields['amount']
-        self.assertEqual(field.related, ('monetary_id', 'amount'))
-        self.assertEqual(field.currency_field, 'currency_id')
+        model = self.env['test_new_api.monetary_related']
+        field = model._fields['amount']
+        self.assertEqual(field.related, 'monetary_id.amount')
+        self.assertEqual(field.get_currency_field(model), 'currency_id')
 
-        field = self.env['test_new_api.monetary_custom']._fields['x_amount']
-        self.assertEqual(field.related, ('monetary_id', 'amount'))
-        self.assertEqual(field.currency_field, 'x_currency_id')
+        model = self.env['test_new_api.monetary_custom']
+        field = model._fields['x_amount']
+        self.assertEqual(field.related, 'monetary_id.amount')
+        self.assertEqual(field.get_currency_field(model), 'x_currency_id')
 
         # inherited field must use the same field as its parent field
-        field = self.env['test_new_api.monetary_inherits']._fields['amount']
-        self.assertEqual(field.related, ('monetary_id', 'amount'))
-        self.assertEqual(field.currency_field, 'base_currency_id')
+        model = self.env['test_new_api.monetary_inherits']
+        field = model._fields['amount']
+        self.assertEqual(field.related, 'monetary_id.amount')
+        self.assertEqual(field.get_currency_field(model), 'base_currency_id')
 
     def test_94_image(self):
         f = io.BytesIO()
@@ -2672,7 +2687,6 @@ class TestMagicFields(common.TransactionCase):
 
         # check setup of models in alphanumeric order
         self.patch(registry, 'models', OrderedDict(sorted(models.items())))
-        registry.model_cache.clear()
         registry.setup_models(self.cr)
         field = registry['test_new_api.display'].display_name
         self.assertFalse(field.automatic)
@@ -2680,7 +2694,6 @@ class TestMagicFields(common.TransactionCase):
 
         # check setup of models in reverse alphanumeric order
         self.patch(registry, 'models', OrderedDict(sorted(models.items(), reverse=True)))
-        registry.model_cache.clear()
         registry.setup_models(self.cr)
         field = registry['test_new_api.display'].display_name
         self.assertFalse(field.automatic)
@@ -2862,12 +2875,12 @@ class TestRequiredMany2one(common.TransactionCase):
         Model = self.env['test_new_api.req_m2o']
         field = Model._fields['foo']
 
-        # invalidate registry to redo the setup afterwards
-        self.registry.registry_invalidated = True
+        # clean up registry after this test
+        self.addCleanup(self.registry.reset_changes)
         self.patch(field, 'ondelete', 'set null')
 
         with self.assertRaises(ValueError):
-            field._setup_regular_base(Model)
+            field.setup_nonrelated(Model)
 
 
 class TestRequiredMany2oneTransient(common.TransactionCase):
@@ -2884,12 +2897,12 @@ class TestRequiredMany2oneTransient(common.TransactionCase):
         Model = self.env['test_new_api.req_m2o_transient']
         field = Model._fields['foo']
 
-        # invalidate registry to redo the setup afterwards
-        self.registry.registry_invalidated = True
+        # clean up registry after this test
+        self.addCleanup(self.registry.reset_changes)
         self.patch(field, 'ondelete', 'set null')
 
         with self.assertRaises(ValueError):
-            field._setup_regular_base(Model)
+            field.setup_nonrelated(Model)
 
 
 @common.tagged('m2oref')
@@ -3089,8 +3102,7 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
         # necessary cleanup for resetting changes in the registry
         for model_name in (self.MODEL_BASE, self.MODEL_REQUIRED):
             Model = self.registry[model_name]
-            self.addCleanup(setattr, Model, '__bases__', Model.__bases__)
-        self.addCleanup(self.registry.model_cache.clear)
+            self.addCleanup(setattr, Model, '_BaseModel__base_classes', Model._BaseModel__base_classes)
 
     def test_ondelete_unexisting_policy(self):
         class Foo(models.Model):
@@ -3151,7 +3163,6 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
 
 class TestFieldParametersValidation(common.TransactionCase):
     def test_invalid_parameter(self):
-        self.addCleanup(self.registry.model_cache.clear)
 
         class Foo(models.Model):
             _module = None

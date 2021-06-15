@@ -98,6 +98,8 @@ class ResConfigSettings(models.TransientModel):
              '-This installs the account_batch_payment module.')
     module_account_sepa = fields.Boolean(string='SEPA Credit Transfer (SCT)')
     module_account_sepa_direct_debit = fields.Boolean(string='Use SEPA Direct Debit')
+    module_l10n_fr_fec_import = fields.Boolean("Import FEC files",
+        help='Allows you to import FEC files.\n' '-This installs the l10n_fr_fec_import module.')
     module_account_bank_statement_import_qif = fields.Boolean("Import .qif files")
     module_account_bank_statement_import_ofx = fields.Boolean("Import in .ofx format")
     module_account_bank_statement_import_csv = fields.Boolean("Import in .csv format")
@@ -122,7 +124,7 @@ class ResConfigSettings(models.TransientModel):
     invoice_is_print = fields.Boolean(string='Print', related='company_id.invoice_is_print', readonly=False)
     invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email', readonly=False)
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm', related='company_id.incoterm_id', help='International Commercial Terms are a series of predefined commercial terms used in international transactions.', readonly=False)
-    invoice_terms = fields.Text(related='company_id.invoice_terms', string="Terms & Conditions", readonly=False)
+    invoice_terms = fields.Html(related='company_id.invoice_terms', string="Terms & Conditions", readonly=False)
     invoice_terms_html = fields.Html(related='company_id.invoice_terms_html', string="Terms & Conditions as a Web page",
                                      readonly=False)
     terms_type = fields.Selection(

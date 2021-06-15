@@ -19,7 +19,8 @@ class Category(models.Model):
     parent = fields.Many2one('test_new_api.category', ondelete='cascade')
     parent_path = fields.Char(index=True)
     root_categ = fields.Many2one(_name, compute='_compute_root_categ')
-    display_name = fields.Char(compute='_compute_display_name', inverse='_inverse_display_name')
+    display_name = fields.Char(compute='_compute_display_name', recursive=True,
+                               inverse='_inverse_display_name')
     dummy = fields.Char(store=False)
     discussions = fields.Many2many('test_new_api.discussion', 'test_new_api_discussion_category',
                                    'category', 'discussion')
@@ -227,6 +228,7 @@ class Multi(models.Model):
     partner = fields.Many2one('res.partner')
     lines = fields.One2many('test_new_api.multi.line', 'multi')
     partners = fields.One2many(related='partner.child_ids')
+    tags = fields.Many2many('test_new_api.multi.tag', domain=[('name', 'ilike', 'a')])
 
     @api.onchange('name')
     def _onchange_name(self):
@@ -499,8 +501,8 @@ class ComputeRecursive(models.Model):
 
     name = fields.Char(required=True)
     parent = fields.Many2one('test_new_api.recursive', ondelete='cascade')
-    full_name = fields.Char(compute='_compute_full_name')
-    display_name = fields.Char(compute='_compute_display_name', store=True)
+    full_name = fields.Char(compute='_compute_full_name', recursive=True)
+    display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True)
 
     @api.depends('name', 'parent.full_name')
     def _compute_full_name(self):
@@ -526,7 +528,7 @@ class ComputeRecursiveTree(models.Model):
     name = fields.Char(required=True)
     parent_id = fields.Many2one('test_new_api.recursive.tree', ondelete='cascade')
     children_ids = fields.One2many('test_new_api.recursive.tree', 'parent_id')
-    display_name = fields.Char(compute='_compute_display_name', store=True)
+    display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True)
 
     @api.depends('name', 'children_ids.display_name')
     def _compute_display_name(self):
@@ -690,6 +692,40 @@ class ComputeUnassigned(models.Model):
         for record in self:
             if record.foo == "assign":
                 record.bares = record.foo
+
+
+class ComputeOne2many(models.Model):
+    _name = 'test_new_api.one2many'
+    _description = "A computed editable one2many field with a domain"
+
+    name = fields.Char()
+    line_ids = fields.One2many(
+        'test_new_api.one2many.line', 'container_id',
+        compute='_compute_line_ids', store=True, readonly=False,
+        domain=[('count', '>', 0)],
+    )
+
+    @api.depends('name')
+    def _compute_line_ids(self):
+        # increment counter of line with the same name, or create a new line
+        for record in self:
+            if not record.name:
+                continue
+            for line in record.line_ids:
+                if line.name == record.name:
+                    line.count += 1
+                    break
+            else:
+                record.line_ids = [(0, 0, {'name': record.name})]
+
+
+class ComputeOne2manyLine(models.Model):
+    _name = 'test_new_api.one2many.line'
+    _description = "Line of a computed one2many"
+
+    name = fields.Char()
+    count = fields.Integer(default=1)
+    container_id = fields.Many2one('test_new_api.one2many', required=True)
 
 
 class ModelBinary(models.Model):

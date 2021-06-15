@@ -1,3 +1,4 @@
+/* global google, gapi */
 odoo.define('website.backend.dashboard', function (require) {
 'use strict';
 
@@ -137,7 +138,7 @@ var Dashboard = AbstractAction.extend({
     on_go_to_website: function (ev) {
         ev.preventDefault();
         var website = _.findWhere(this.websites, {selected: true});
-        window.location.href = $.param.querystring(website.domain + '/', {'fw': website.id});
+        window.location.href = `/website/force/${website.id}`;
     },
 
     on_save_ga_client_id: function(ga_client_id, ga_analytics_key) {
@@ -151,7 +152,7 @@ var Dashboard = AbstractAction.extend({
             },
         }).then(function (result) {
             if (result.error) {
-                self.do_warn(result.error.title, result.error.message);
+                self.displayNotification({ title: result.error.title, message: result.error.message, type: 'danger' });
                 return;
             }
             self.on_date_range_button('week');
@@ -684,7 +685,7 @@ var Dashboard = AbstractAction.extend({
 
     // Utility functions
     addLoader: function(selector) {
-        var loader = '<span class="fa fa-3x fa-spin fa-spinner fa-pulse"/>';
+        var loader = '<span class="fa fa-3x fa-spin fa-circle-o-notch fa-spin"/>';
         selector.html("<div class='o_loader'>" + loader + "</div>");
     },
     getValue: function(d) { return d[1]; },

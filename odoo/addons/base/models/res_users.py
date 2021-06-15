@@ -261,25 +261,28 @@ class Users(models.Model):
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
 
-    # User can write on a few of his own fields (but not his groups for example)
-    SELF_WRITEABLE_FIELDS = ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz']
-    # User can read a few of his own fields
-    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image_1920', 'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
+    @property
+    def SELF_READABLE_FIELDS(self):
+        """ The list of fields a user can read on their own user record.
+        In order to add fields, please override this property on model extensions.
+        """
+        return [
+            'signature', 'company_id', 'login', 'email', 'name', 'image_1920',
+            'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz',
+            'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id',
+            'avatar_1920', 'avatar_1024', 'avatar_512', 'avatar_256', 'avatar_128',
+        ]
+
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        """ The list of fields a user can write on their own user record.
+        In order to add fields, please override this property on model extensions.
+        """
+        return ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz']
 
     def _default_groups(self):
         default_user_id = self.env['ir.model.data'].xmlid_to_res_id('base.default_user', raise_if_not_found=False)
         return self.env['res.users'].browse(default_user_id).sudo().groups_id if default_user_id else []
-
-    @api.model
-    def _get_default_image(self):
-        """ Get a default image when the user is created without image
-
-            Inspired to _get_default_image method in
-            https://github.com/odoo/odoo/blob/11.0/odoo/addons/base/res/res_partner.py
-        """
-        image_path = get_module_resource('base', 'static/img', 'avatar.png')
-        image = base64.b64encode(open(image_path, 'rb').read())
-        return image_process(image, colorize=True)
 
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True,
         string='Related Partner', help='Partner-related data of the user')
@@ -325,7 +328,6 @@ class Users(models.Model):
                                  compute='_compute_accesses_count', compute_sudo=True)
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
                                   compute='_compute_accesses_count', compute_sudo=True)
-    image_1920 = fields.Image(related='partner_id.image_1920', inherited=True, readonly=False, default=_get_default_image)
 
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
@@ -519,8 +521,9 @@ class Users(models.Model):
 
     def read(self, fields=None, load='_classic_read'):
         if fields and self == self.env.user:
+            readable = self.SELF_READABLE_FIELDS
             for key in fields:
-                if not (key in self.SELF_READABLE_FIELDS or key.startswith('context_')):
+                if not (key in readable or key.startswith('context_')):
                     break
             else:
                 # safe fields only, so we read as super-user to bypass access rights
@@ -565,8 +568,9 @@ class Users(models.Model):
                 if not user.active and not user.partner_id.active:
                     user.partner_id.toggle_active()
         if self == self.env.user:
+            writeable = self.SELF_WRITEABLE_FIELDS
             for key in list(values):
-                if not (key in self.SELF_WRITEABLE_FIELDS or key.startswith('context_')):
+                if not (key in writeable or key.startswith('context_')):
                     break
             else:
                 if 'company_id' in values:
@@ -977,7 +981,7 @@ class Users(models.Model):
                     "and *might* be a proxy. If your Odoo is behind a proxy, "
                     "it may be mis-configured. Check that you are running "
                     "Odoo in Proxy Mode and that the proxy is properly configured, see "
-                    "https://www.odoo.com/documentation/14.0/setup/deploy.html#https for details.",
+                    "https://www.odoo.com/documentation/14.0/administration/deployment/deploy.html#https for details.",
                     source
                 )
             raise AccessDenied(_("Too many login failures, please wait a bit before trying again."))
@@ -1021,11 +1025,6 @@ class Users(models.Model):
         if hasattr(self, 'check_credentials'):
             _logger.warning("The check_credentials method of res.users has been renamed _check_credentials. One of your installed modules defines one, but it will not be called anymore.")
 
-    def _get_placeholder_filename(self, field=None):
-        image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
-        if field in image_fields and not self:
-            return 'base/static/img/user-slash.png'
-        return super()._get_placeholder_filename(field=field)
 
     def _mfa_url(self):
         """ If an MFA method is enabled, returns the URL for its second step. """
@@ -1044,7 +1043,7 @@ class GroupsImplied(models.Model):
     implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
         string='Inherits', help='Users of this group automatically inherit those groups')
     trans_implied_ids = fields.Many2many('res.groups', string='Transitively inherits',
-        compute='_compute_trans_implied')
+        compute='_compute_trans_implied', recursive=True)
 
     @api.depends('implied_ids.trans_implied_ids')
     def _compute_trans_implied(self):
@@ -1585,12 +1584,13 @@ class APIKeysUser(models.Model):
 
     api_key_ids = fields.One2many('res.users.apikeys', 'user_id', string="API Keys")
 
-    def __init__(self, pool, cr):
-        init_res = super().__init__(pool, cr)
-        # duplicate list to avoid modifying the original reference
-        type(self).SELF_WRITEABLE_FIELDS = self.SELF_WRITEABLE_FIELDS + ['api_key_ids']
-        type(self).SELF_READABLE_FIELDS = self.SELF_READABLE_FIELDS + ['api_key_ids']
-        return init_res
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + ['api_key_ids']
+
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        return super().SELF_WRITEABLE_FIELDS + ['api_key_ids']
 
     def _rpc_api_keys_only(self):
         """ To be overridden if RPC access needs to be restricted to API keys, e.g. for 2FA """

@@ -53,7 +53,7 @@ class PaymentTransaction(models.Model):
         if self.acquirer_id.provider != 'ogone':
             return res
 
-        base_url = self.acquirer_id._get_base_url()
+        base_url = self.acquirer_id.get_base_url()
         return_url = urls.url_join(base_url, OgoneController._flexcheckout_return_url)
         rendering_values = {
             'ACCOUNT_PSPID': self.acquirer_id.ogone_pspid,
@@ -202,9 +202,11 @@ class PaymentTransaction(models.Model):
         :param dict data: The feedback data from Flexcheckout
         :return: None
         """
+        token_name = data.get('CARDNUMBER') \
+                     or payment_utils.build_token_name()  # CARD.CARNUMBER not requested in backend
         token = self.env['payment.token'].create({
             'acquirer_id': self.acquirer_id.id,
-            'name': data.get('CARDNUMBER'),  # Already padded with 'X's
+            'name': token_name,  # Already padded with 'X's
             'partner_id': self.partner_id.id,
             'acquirer_ref': data['ALIASID'],
             'verified': False,  # No payment has been processed through this token yet

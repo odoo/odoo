@@ -591,7 +591,7 @@
             <li t-foreach="state.sources" t-as="src" t-key="src.id"
                 t-att-id="src.id"
                 class="o_menu_item"
-                t-att-class="{ o_indent: src.parent, o_selection_focus: src_index === state.focusedItem }"
+                t-att-class="{ o_indent: src.parent and !src.parent.selection, o_selection_focus: src_index === state.focusedItem }"
                 t-on-click="_selectSource(src)"
                 t-on-mousemove="_onSourceMousemove(src_index)"
                 >
@@ -603,7 +603,9 @@
                     <i t-attf-class="fa fa-caret-{{ src.expanded ? 'down' : 'right' }}"/>
                 </a>
                 <a href="#" t-on-click.prevent="">
-                    <t t-if="src.label" t-esc="src.label"/>
+                    <t t-if="src.parent.selection">
+                        Search <em t-esc="src.parent.description"/>: <strong t-esc="src.label"/></t>
+                    <t t-elif="src.label" t-esc="src.label"/>
                     <t t-elif="['date', 'datetime'].includes(src.type)">
                         <t>Search <em t-esc="src.description"/> at: <strong t-esc="state.inputValue"/></t>
                     </t>
@@ -824,7 +826,7 @@
             </button>
         </t>
         <t t-if="widget.is_action_enabled('export_xlsx') and widget.isExportEnable">
-            <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" title="Export All"/>
+            <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" title="Export All" aria-label="Export All"/>
         </t>
     </div>
 </t>
@@ -844,26 +846,28 @@
 <t t-name="ListView.confirmModal">
     <main role="alert">
         <p>
-            <t t-if="changes.isDomainSelected">This update will only consider the records of the current page.<br/><br/></t>
-            <t t-if="changes.nbRecords != changes.nbValidRecords">
-                Among the <t t-esc="changes.nbRecords"/> selected records,
-                <t t-esc="changes.nbValidRecords"/> are valid for this update.<br/>
+            <t t-if="isDomainSelected">This update will only consider the records of the current page.<br/><br/></t>
+            <t t-if="nbRecords != nbValidRecords">
+                Among the <t t-esc="nbRecords"/> selected records,
+                <t t-esc="nbValidRecords"/> are valid for this update.<br/>
             </t>
-            Are you sure you want to perform the following update on those <t t-esc="changes.nbValidRecords"/> records ?
+            Are you sure you want to perform the following update on those <t t-esc="nbValidRecords"/> records ?
         </p>
         <div class="table-responsive">
             <table class="o_modal_changes">
                 <tbody>
-                    <tr>
-                        <td>Field:</td>
-                        <td><t t-esc="changes.fieldLabel"/></td>
-                    </tr>
-                    <tr>
-                        <td>Update to:</td>
-                        <td>
-                            <div class="o_changes_widget"/>
-                        </td>
-                    </tr>
+                    <t t-foreach="fields" t-as="field">
+                        <tr>
+                            <td>Field:</td>
+                            <td><t t-esc="field.label"/></td>
+                        </tr>
+                        <tr>
+                            <td>Update to:</td>
+                            <td>
+                                <div class="o_changes_widget" t-att-data-name="field.name"/>
+                            </td>
+                        </tr>
+                    </t>
                 </tbody>
             </table>
         </div>
@@ -1271,8 +1275,11 @@
 </t>
 
 <t t-name="web.Many2OneAvatar">
-    <img t-att-src="url" t-att-alt="value" class="o_m2o_avatar"/>
-    <span t-esc="value"/>
+    <div class="o_m2o_avatar">
+        <img t-if="widget.value" t-att-src="url" t-att-alt="value"/>
+        <span t-elif="widget.mode === 'edit'" class="o_m2o_avatar_empty"></span>
+        <span t-if="widget.mode === 'readonly'" t-esc="value"/>
+    </div>
 </t>
 
 <t t-name="FieldReference" t-extend="FieldMany2One">
@@ -1306,8 +1313,8 @@
     </t>
 </t>
 <t t-name="FieldMany2ManyTagAvatar" t-extend="FieldMany2ManyTag">
-    <t t-jquery="span:first" t-operation="prepend">
-        <img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" class="rounded-circle"/>
+    <t t-jquery="t[t-set='_badge_text']" t-operation="before">
+        <span><img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" t-att-data-id="el.id" class="rounded-circle o_m2m_avatar"/></span>
     </t>
 </t>
 <t t-name="FieldMany2ManyTag.colorpicker">
@@ -1647,14 +1654,14 @@
 <t t-name="Throbber">
     <div>
         <div class="oe_blockui_spin" style="height: 50px">
-            <img src="/web/static/src/img/spin.png" style="animation: fa-spin 1s infinite steps(12);" alt="Loading..."/>
+            <img src="/web/static/img/spin.png" style="animation: fa-spin 1s infinite steps(12);" alt="Loading..."/>
         </div>
         <br />
         <div class="oe_throbber_message" style="color:white"></div>
     </div>
 </t>
 <t t-name="Spinner">
-    <div class="o_spinner"><i class="fa fa-spinner fa-spin" role="img" aria-label="Loading, please wait..." title="Loading, please wait..."/></div>
+    <div class="o_spinner"><i class="fa fa-circle-o-notch fa-spin" role="img" aria-label="Loading, please wait..." title="Loading, please wait..."/></div>
 </t>
 <t t-name="M2ODialog">
     <div>
@@ -1708,7 +1715,7 @@
 <t t-name="UserMenu">
     <li class="o_user_menu">
         <a role="button" class="dropdown-toggle o-no-caret" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#">
-            <img class="rounded-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'" alt="User"/>
+            <img class="rounded-circle oe_topbar_avatar" t-att-src="_s + '/web/static/img/user_menu_avatar.png'" alt="User"/>
             <span class="oe_topbar_name"/>
         </a>
         <div class="dropdown-menu dropdown-menu-right" role="menu">
@@ -1780,7 +1787,7 @@
             </ul>
         </div>
         <div class="col-6">
-            <img class="img-fluid" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"' draggable="false" alt="Upgrade to enterprise"/>
+            <img class="img-fluid" t-att-src='_s + "/web/static/img/enterprise_upgrade.jpg"' draggable="false" alt="Upgrade to enterprise"/>
         </div>
     </div>
 </t>
@@ -1842,7 +1849,7 @@
 
 <t t-name="web.IframeWrapper">
     <div class="o_preview_iframe_wrapper">
-        <i class="o_iframe_wrapper_spinner fa fa-spinner fa-spin fa-4x" style="color: #875a7b; z-index: 2"/>
+        <i class="o_iframe_wrapper_spinner fa fa-circle-o-notch fa-spin fa-4x" style="color: #875a7b; z-index: 2"/>
         <!--suppress CheckTagEmptyBody -->
         <iframe src="about:blank" class="o_preview_iframe" style="display:none"></iframe>
     </div>

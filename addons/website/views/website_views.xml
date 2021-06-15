@@ -39,8 +39,8 @@
                         </div>
                         <div name="other">
                             <group name="other">
-                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                                <field name="default_lang_id" widget="selection" groups="base.group_no_one"/>
+                                <field name="company_id" options="{'no_open': True, 'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="default_lang_id" options="{'no_open': True, 'no_create': True}" groups="base.group_no_one"/>
                             </group>
                         </div>
                         <notebook>
@@ -79,6 +79,7 @@
             <field name="model">website</field>
             <field name="arch" type="xml">
                 <tree string="Websites">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="domain"/>
                     <field name="country_group_ids" widget="many2many_tags"/>
@@ -523,7 +524,7 @@
         ==================================================================== -->
         <menuitem name="Website"
             id="menu_website_configuration"
-            sequence="9"
+            sequence="95"
             groups="base.group_user"
             web_icon="website,static/description/icon.png"/>
 

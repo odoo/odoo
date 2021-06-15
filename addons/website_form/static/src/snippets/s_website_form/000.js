@@ -148,9 +148,10 @@ odoo.define('website_form.s_website_form', function (require) {
         send: async function (e) {
             e.preventDefault(); // Prevent the default submit behavior
              // Prevent users from crazy clicking
-            this.$target.find('.s_website_form_send, .o_website_form_send')
-                .addClass('disabled')    // !compatibility
-                .attr('disabled', 'disabled');
+            const $button = this.$target.find('.s_website_form_send, .o_website_form_send');
+            $button.addClass('disabled') // !compatibility
+                   .attr('disabled', 'disabled');
+            this.restoreBtnLoading = dom.addButtonLoadingEffect($button[0]);
 
             var self = this;
 
@@ -262,8 +263,11 @@ odoo.define('website_form.s_website_form', function (require) {
                     self.$target[0].reset();
                 }
             })
-            .guardedCatch(function () {
-                self.update_status('error');
+            .guardedCatch(error => {
+                this.update_status(
+                    'error',
+                    error.status && error.status === 413 ? _t("Uploaded file is too large.") : "",
+                );
             });
         },
 
@@ -362,6 +366,7 @@ odoo.define('website_form.s_website_form', function (require) {
                 this.$target.find('.s_website_form_send, .o_website_form_send')
                     .removeAttr('disabled')
                     .removeClass('disabled'); // !compatibility
+                this.restoreBtnLoading();
             }
             var $result = this.$('#s_website_form_result, #o_website_form_result'); // !compatibility
 

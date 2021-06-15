@@ -1,3 +1,4 @@
+/* global YT */
 var onYouTubeIframeAPIReady;
 
 odoo.define('website_event_track_live.website_event_youtube_embed', function (require) {

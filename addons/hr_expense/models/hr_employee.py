@@ -34,6 +34,9 @@ class Employee(models.Model):
             elif not employee.expense_manager_id:
                 employee.expense_manager_id = False
 
+    def _get_user_m2o_to_empty_on_archived_employees(self):
+        return super()._get_user_m2o_to_empty_on_archived_employees() + ['expense_manager_id']
+
 
 class EmployeePublic(models.Model):
     _inherit = 'hr.employee.public'
@@ -46,12 +49,6 @@ class User(models.Model):
 
     expense_manager_id = fields.Many2one(related='employee_id.expense_manager_id', readonly=False)
 
-    def __init__(self, pool, cr):
-        """ Override of __init__ to add access rights.
-            Access rights are disabled by default, but allowed
-            on some specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
-        """
-        init_res = super(User, self).__init__(pool, cr)
-        # duplicate list to avoid modifying the original reference
-        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + ['expense_manager_id']
-        return init_res
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + ['expense_manager_id']

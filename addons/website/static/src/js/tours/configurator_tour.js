@@ -40,7 +40,6 @@ const steps = [
     ...backgroundColorStep,
     ...shapeStep,
     wTourUtils.changePaddingSize('top'),
-    wTourUtils.clickOnSave(),
 ];
 
 wTourUtils.registerThemeHomepageTour('configurator_tour', steps);

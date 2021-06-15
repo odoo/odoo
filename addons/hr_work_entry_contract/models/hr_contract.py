@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, date
 from odoo import fields, models
 from odoo.addons.resource.models.resource import datetime_to_string, string_to_datetime, Intervals
 from odoo.osv import expression
@@ -21,7 +21,7 @@ class HrContract(models.Model):
     def _get_default_work_entry_type(self):
         return self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
 
-    def _get_leave_work_entry_type_dates(self, leave, date_from, date_to):
+    def _get_leave_work_entry_type_dates(self, leave, date_from, date_to, employee):
         return self._get_leave_work_entry_type(leave)
 
     def _get_leave_work_entry_type(self, leave):
@@ -31,24 +31,25 @@ class HrContract(models.Model):
     def _get_more_vals_leave_interval(self, interval, leaves):
         return []
 
-    def _get_bypassing_work_entry_type(self):
-        return self.env['hr.work.entry.type']
+    def _get_bypassing_work_entry_type_codes(self):
+        return []
 
-    def _get_interval_leave_work_entry_type(self, interval, leaves, bypassing):
+    def _get_interval_leave_work_entry_type(self, interval, leaves, bypassing_codes):
         # returns the work entry time related to the leave that
         # includes the whole interval.
         # Overriden in hr_work_entry_contract_holiday to select the
         # global time off first (eg: Public Holiday > Home Working)
+        self.ensure_one()
         for leave in leaves:
             if interval[0] >= leave[0] and interval[1] <= leave[1] and leave[2]:
                 interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
                 interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
-                return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop)
+                return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
         return self.env.ref('hr_work_entry_contract.work_entry_type_leave')
 
     def _get_contract_work_entries_values(self, date_start, date_stop):
         contract_vals = []
-        bypassing_work_entry_type = self._get_bypassing_work_entry_type()
+        bypassing_work_entry_type_codes = self._get_bypassing_work_entry_type_codes()
         for contract in self:
             employee = contract.employee_id
             calendar = contract.resource_calendar_id
@@ -133,7 +134,7 @@ class HrContract(models.Model):
                 # sql constraint error
                 if interval[0] == interval[1]:  # if start == stop
                     continue
-                leave_entry_type = contract._get_interval_leave_work_entry_type(interval, leaves, bypassing_work_entry_type)
+                leave_entry_type = contract._get_interval_leave_work_entry_type(interval, leaves, bypassing_work_entry_type_codes)
                 interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
                 interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
                 contract_vals += [dict([
@@ -256,4 +257,23 @@ class HrContract(models.Model):
             self.sudo()._remove_work_entries()
         if vals.get('state') in ['draft', 'cancel']:
             self._cancel_work_entries()
-        return result
+        dependendant_fields = self._get_fields_that_recompute_we()
+        if any(key in dependendant_fields for key in vals.keys()):
+            for contract in self:
+                date_from = max(self.date_start, self.date_generated_from.date())
+                date_to = min(self.date_end or date.max, self.date_generated_to.date())
+                if date_from != date_to:
+                    contract._recompute_work_entries(date_from, date_to)
+
+    def _recompute_work_entries(self, date_from, date_to):
+        self.ensure_one()
+        wizard = self.env['hr.work.entry.regeneration.wizard'].create({
+            'employee_id': self.employee_id.id,
+            'date_from': date_from,
+            'date_to': date_to,
+        })
+        wizard.with_context(work_entry_skip_validation=True).regenerate_work_entries()
+
+    def _get_fields_that_recompute_we(self):
+        # Returns the fields that should recompute the work entries
+        return ['resource_calendar_id']

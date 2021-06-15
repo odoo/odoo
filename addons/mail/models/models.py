@@ -9,6 +9,13 @@ from odoo import api, models, tools, _
 class BaseModel(models.AbstractModel):
     _inherit = 'base'
 
+    def _valid_field_parameter(self, field, name):
+        # allow tracking on abstract models; see also 'mail.thread'
+        return (
+            name == 'tracking' and self._abstract
+            or super()._valid_field_parameter(field, name)
+        )
+
     # ------------------------------------------------------------
     # GENERIC MAIL FEATURES
     # ------------------------------------------------------------

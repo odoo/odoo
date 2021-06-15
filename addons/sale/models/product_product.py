@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import timedelta, time
-from odoo import api, fields, models
+from odoo import fields, models
 from odoo.tools.float_utils import float_round
 
 
@@ -71,3 +71,8 @@ class ProductAttributeCustomValue(models.Model):
     _sql_constraints = [
         ('sol_custom_value_unique', 'unique(custom_product_template_attribute_value_id, sale_order_line_id)', "Only one Custom Value is allowed per Attribute Value per Sales Order Line.")
     ]
+
+class ProductPackaging(models.Model):
+    _inherit = 'product.packaging'
+
+    sales = fields.Boolean("Sales", default=True, help="If true, the packaging can be used for sales orders")

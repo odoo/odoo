@@ -37,6 +37,7 @@ class MailComposer(models.TransientModel):
             before being sent to each recipient.
     """
     _name = 'mail.compose.message'
+    _inherit = 'mail.composer.mixin'
     _description = 'Email composition wizard'
     _log_access = True
     _batch_size = 500
@@ -81,8 +82,8 @@ class MailComposer(models.TransientModel):
         return filtered_result
 
     # content
-    subject = fields.Char('Subject')
-    body = fields.Html('Contents', default='', sanitize_style=True)
+    subject = fields.Char('Subject', compute=False)
+    body = fields.Html('Contents', compute=False, default='', sanitize_style=True)
     parent_id = fields.Many2one(
         'mail.message', 'Parent Message', index=True, ondelete='set null',
         help="Initial thread message.")
@@ -153,6 +154,12 @@ class MailComposer(models.TransientModel):
     def _inverse_reply_to_mode(self):
         for composer in self:
             composer.reply_to_force_new = composer.reply_to_mode == 'new'
+
+    # Overrides of mail.render.mixin
+    @api.depends('model')
+    def _compute_render_model(self):
+        for composer in self:
+            composer.render_model = composer.model
 
     @api.model
     def get_record_data(self, values):
@@ -296,7 +303,7 @@ class MailComposer(models.TransientModel):
         blacklisted_rec_ids = set()
         if mass_mail_mode and issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
             self.env['mail.blacklist'].flush(['email'])
-            self._cr.execute("SELECT email FROM mail_blacklist")
+            self._cr.execute("SELECT email FROM mail_blacklist WHERE active=true")
             blacklist = {x[0] for x in self._cr.fetchall()}
             if blacklist:
                 targets = self.env[self.model].browse(res_ids).read(['email_normalized'])
@@ -350,7 +357,7 @@ class MailComposer(models.TransientModel):
                     new_attach_id = self.env['ir.attachment'].browse(attach_id).copy({'res_model': self._name, 'res_id': self.id})
                     attachment_ids.append(new_attach_id.id)
                 attachment_ids.reverse()
-                mail_values['attachment_ids'] = self.env['mail.thread']._message_post_process_attachments(
+                mail_values['attachment_ids'] = self.env['mail.thread'].with_context(attached_to=record)._message_post_process_attachments(
                     mail_values.pop('attachments', []),
                     attachment_ids,
                     {'model': 'mail.message', 'res_id': 0}
@@ -469,10 +476,10 @@ class MailComposer(models.TransientModel):
             multi_mode = False
             res_ids = [res_ids]
 
-        subjects = self.env['mail.render.mixin']._render_template(self.subject, self.model, res_ids)
-        bodies = self.env['mail.render.mixin']._render_template(self.body, self.model, res_ids, post_process=True)
-        emails_from = self.env['mail.render.mixin']._render_template(self.email_from, self.model, res_ids)
-        replies_to = self.env['mail.render.mixin']._render_template(self.reply_to, self.model, res_ids)
+        subjects = self._render_field('subject', res_ids, options={"render_safe": True})
+        bodies = self._render_field('body', res_ids, post_process=True)
+        emails_from = self._render_field('email_from', res_ids)
+        replies_to = self._render_field('reply_to', res_ids)
         default_recipients = {}
         if not self.partner_ids:
             records = self.env[self.model].browse(res_ids).sudo()

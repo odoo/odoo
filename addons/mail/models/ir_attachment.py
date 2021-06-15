@@ -3,6 +3,7 @@
 
 from odoo import api, models
 from odoo.exceptions import AccessError
+from odoo.http import request
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
@@ -34,3 +35,15 @@ class IrAttachment(models.Model):
                     related_record.message_main_attachment_id = self
                 except AccessError:
                     pass
+
+    def _attachment_format(self):
+        safari = request and request.httprequest.user_agent.browser == 'safari'
+        return [{
+            'checksum': attachment.checksum,
+            'id': attachment.id,
+            'filename': attachment.name,
+            'name': attachment.name,
+            'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
+            'res_id': attachment.res_id,
+            'res_model': attachment.res_model,
+        } for attachment in self]

@@ -5,11 +5,14 @@ import base64
 from random import choice
 from string import digits
 from werkzeug.urls import url_encode
+from dateutil.relativedelta import relativedelta
+from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.osv.query import Query
-from odoo.exceptions import ValidationError, AccessError
-from odoo.modules.module import get_module_resource
+from odoo.exceptions import ValidationError, AccessError, UserError
+from odoo.osv import expression
+from odoo.tools.misc import format_date
 
 
 class HrEmployeePrivate(models.Model):
@@ -23,7 +26,7 @@ class HrEmployeePrivate(models.Model):
     _name = "hr.employee"
     _description = "Employee"
     _order = 'name'
-    _inherit = ['hr.employee.base', 'mail.thread', 'mail.activity.mixin', 'resource.mixin', 'image.mixin']
+    _inherit = ['hr.employee.base', 'mail.thread', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
     _mail_post_access = 'read'
 
     # resource and user
@@ -33,6 +36,8 @@ class HrEmployeePrivate(models.Model):
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
     company_id = fields.Many2one('res.company',required=True)
+    company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True)
+    company_country_code = fields.Char(related='company_country_id.code', readonly=True)
     # private partner
     address_home_id = fields.Many2one(
         'res.partner', 'Address', help='Enter here the private address of the employee, not the one linked to your company.',
@@ -77,6 +82,9 @@ class HrEmployeePrivate(models.Model):
     permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user", tracking=True)
     visa_no = fields.Char('Visa No', groups="hr.group_hr_user", tracking=True)
     visa_expire = fields.Date('Visa Expire Date', groups="hr.group_hr_user", tracking=True)
+    work_permit_expiration_date = fields.Date('Work Permit Expiration Date', groups="hr.group_hr_user", tracking=True)
+    has_work_permit = fields.Binary(string="Work Permit", groups="hr.group_hr_user", tracking=True)
+    work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_user")
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
     certificate = fields.Selection([
         ('graduate', 'Graduate'),
@@ -92,7 +100,6 @@ class HrEmployeePrivate(models.Model):
     km_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=True)
 
     job_id = fields.Many2one(tracking=True)
-    image_1920 = fields.Image()
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, readonly=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
@@ -117,11 +124,35 @@ class HrEmployeePrivate(models.Model):
         ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company.")
     ]
 
-    def _get_placeholder_filename(self, field=None):
-        image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
-        if field in image_fields:
-            return 'hr/static/src/img/default_image.png'
-        return super()._get_placeholder_filename(field=field)
+    @api.depends('name', 'user_id.avatar_1920', 'image_1920')
+    def _compute_avatar_1920(self):
+        super()._compute_avatar_1920()
+
+    @api.depends('name', 'user_id.avatar_1024', 'image_1024')
+    def _compute_avatar_1024(self):
+        super()._compute_avatar_1024()
+
+    @api.depends('name', 'user_id.avatar_512', 'image_512')
+    def _compute_avatar_512(self):
+        super()._compute_avatar_512()
+
+    @api.depends('name', 'user_id.avatar_256', 'image_256')
+    def _compute_avatar_256(self):
+        super()._compute_avatar_256()
+
+    @api.depends('name', 'user_id.avatar_128', 'image_128')
+    def _compute_avatar_128(self):
+        super()._compute_avatar_128()
+
+    def _compute_avatar(self, avatar_field, image_field):
+        for employee in self:
+            avatar = employee[image_field]
+            if not avatar:
+                if employee.user_id:
+                    avatar = employee.user_id[avatar_field]
+                else:
+                    avatar = employee._avatar_get_placeholder()
+            employee[avatar_field] = avatar
 
     def name_get(self):
         if self.check_access_rights('read', raise_exception=False):
@@ -136,6 +167,27 @@ class HrEmployeePrivate(models.Model):
         for r in res:
             record = self.browse(r['id'])
             record._update_cache({k:v for k,v in r.items() if k in fields}, validate=False)
+
+    @api.model
+    def _cron_check_work_permit_validity(self):
+        # Called by a cron
+        # Schedule an activity 1 month before the work permit expires
+        outdated_days = fields.Date.today() + relativedelta(months=+1)
+        nearly_expired_work_permits = self.search([('work_permit_scheduled_activity', '=', False), ('work_permit_expiration_date', '<', outdated_days)])
+        employees_scheduled = self.env['hr.employee']
+        for employee in nearly_expired_work_permits.filtered(lambda employee: employee.parent_id):
+            responsible_user_id = employee.parent_id.user_id.id
+            if responsible_user_id:
+                employees_scheduled |= employee
+                lang = self.env['res.partner'].browse(responsible_user_id).lang
+                formated_date = format_date(employee.env, employee.work_permit_expiration_date, date_format="dd MMMM y", lang_code=lang)
+                employee.activity_schedule(
+                    'mail.mail_activity_data_todo',
+                    note=_('The work permit of %(employee)s expires at %(date)s.',
+                        employee=employee.name,
+                        date=formated_date),
+                    user_id=responsible_user_id)
+        employees_scheduled.write({'work_permit_scheduled_activity': True})
 
     def read(self, fields, load='_classic_read'):
         if self.check_access_rights('read', raise_exception=False):
@@ -230,17 +282,20 @@ class HrEmployeePrivate(models.Model):
             vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
             vals['name'] = vals.get('name', user.name)
         employee = super(HrEmployeePrivate, self).create(vals)
-        url = '/web#%s' % url_encode({
-            'action': 'hr.plan_wizard_action',
-            'active_id': employee.id,
-            'active_model': 'hr.employee',
-            'menu_id': self.env.ref('hr.menu_hr_root').id,
-        })
-        employee._message_log(body=_('<b>Congratulations!</b> May I recommend you to setup an <a href="%s">onboarding plan?</a>') % (url))
         if employee.department_id:
             self.env['mail.channel'].sudo().search([
                 ('subscription_department_ids', 'in', employee.department_id.id)
             ])._subscribe_users_automatically()
+        # Launch onboarding plans
+        if not employee._launch_plans_from_trigger(trigger='employee_creation'):
+            # Keep the recommend message if no plans are launched
+            url = '/web#%s' % url_encode({
+                'action': 'hr.plan_wizard_action',
+                'active_id': employee.id,
+                'active_model': 'hr.employee',
+                'menu_id': self.env.ref('hr.menu_hr_root').id,
+            })
+            employee._message_log(body=_('<b>Congratulations!</b> May I recommend you to setup an <a href="%s">onboarding plan?</a>') % (url))
         return employee
 
     def write(self, vals):
@@ -252,6 +307,8 @@ class HrEmployeePrivate(models.Model):
             # Update the profile pictures with user, except if provided 
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),
                                         (bool(self.image_1920))))
+        if 'work_permit_expiration_date' in vals:
+            vals['work_permit_scheduled_activity'] = False
         res = super(HrEmployeePrivate, self).write(vals)
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
@@ -266,6 +323,12 @@ class HrEmployeePrivate(models.Model):
         super(HrEmployeePrivate, self).unlink()
         return resources.unlink()
 
+    def _get_employee_m2o_to_empty_on_archived_employees(self):
+        return ['parent_id', 'coach_id']
+
+    def _get_user_m2o_to_empty_on_archived_employees(self):
+        return []
+
     def toggle_active(self):
         res = super(HrEmployeePrivate, self).toggle_active()
         unarchived_employees = self.filtered(lambda employee: employee.active)
@@ -276,6 +339,26 @@ class HrEmployeePrivate(models.Model):
         })
         archived_addresses = unarchived_employees.mapped('address_home_id').filtered(lambda addr: not addr.active)
         archived_addresses.toggle_active()
+
+        archived_employees = self.filtered(lambda e: not e.active)
+        if archived_employees:
+            # Empty links to this employees (example: manager, coach, time off responsible, ...)
+            employee_fields_to_empty = self._get_employee_m2o_to_empty_on_archived_employees()
+            user_fields_to_empty = self._get_user_m2o_to_empty_on_archived_employees()
+            employee_domain = [[(field, 'in', archived_employees.ids)] for field in employee_fields_to_empty]
+            user_domain = [[(field, 'in', archived_employees.user_id.ids) for field in user_fields_to_empty]]
+            employees = self.env['hr.employee'].search(expression.OR(employee_domain + user_domain))
+            for employee in employees:
+                for field in employee_fields_to_empty:
+                    if employee[field] in archived_employees:
+                        employee[field] = False
+                for field in user_fields_to_empty:
+                    if employee[field] in archived_employees.user_id:
+                        employee[field] = False
+
+            # Launch automatic offboarding plans
+            archived_employees._launch_plans_from_trigger(trigger='employee_archive')
+
         if len(self) == 1 and not self.active:
             return {
                 'type': 'ir.actions.act_window',
@@ -333,6 +416,71 @@ class HrEmployeePrivate(models.Model):
         if self.env.is_superuser() and real_user:
             self = self.with_user(real_user)
         return self
+
+    def _launch_plans_from_trigger(self, trigger):
+        '''
+        Launches all plans for given trigger
+
+        Returns False if no plans are launched, True otherwise
+        '''
+        plan_ids = self.env['hr.plan'].search([('trigger', '=', trigger)])
+        if not plan_ids or not self:
+            return False
+        #Group plans and employees by company id
+        plans_per_company = defaultdict(lambda: self.env['hr.plan'])
+        for plan_id in plan_ids:
+            plans_per_company[plan_id.company_id.id] |= plan_id
+        employees_per_company = defaultdict(lambda: self.env['hr.employee'])
+        for employee_id in self:
+            employees_per_company[employee_id.company_id.id] |= employee_id
+        #Launch the plans
+        for company_id in employees_per_company:
+            employees_per_company[company_id]._launch_plan(plans_per_company[company_id])
+        return True
+
+    def _launch_plan(self, plan_ids):
+        '''
+        Launch all given plans
+        '''
+        for employee_id in self:
+            for plan_id in plan_ids:
+                employee_id._message_log(
+                    body=_('Plan %s has been launched.', plan_id.name),
+                )
+                errors = []
+                for activity_type in plan_id.plan_activity_type_ids:
+                    responsible = False
+                    try:
+                        responsible = activity_type.get_responsible_id(employee_id)
+                    except UserError as error:
+                        errors.append(_(
+                            'Warning ! The step "%(name)s: %(summary)s" assigned to %(responsible)s '
+                            'could not be started because: "%(error)s"',
+                            name=activity_type.activity_type_id.name,
+                            summary=activity_type.summary,
+                            responsible=activity_type.responsible,
+                            error=str(error)
+                        ))
+                        continue
+
+                    if self.env['hr.employee'].with_user(responsible).check_access_rights('read', raise_exception=False):
+                        if activity_type.deadline_type == 'default':
+                            date_deadline = self.env['mail.activity']._calculate_date_deadline(activity_type.activity_type_id)
+                        elif activity_type.deadline_type == 'plan_active':
+                            date_deadline = fields.Date.context_today(self)
+                        elif activity_type.deadline_type == 'trigger_offset':
+                            date_deadline = fields.Date.add(fields.Date.context_today(self), days=activity_type.deadline_days)
+
+                        employee_id.activity_schedule(
+                            activity_type_id=activity_type.activity_type_id.id,
+                            summary=activity_type.summary,
+                            note=activity_type.note,
+                            user_id=responsible.id,
+                            date_deadline=date_deadline,
+                        )
+                employee_id._message_log(
+                    body='<br/>'.join(errors),
+                )
 
     # ---------------------------------------------------------
     # Messaging

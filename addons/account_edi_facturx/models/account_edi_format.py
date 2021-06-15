@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, models, fields, tools, _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr, is_html_empty
 from odoo.tests.common import Form
 from odoo.exceptions import UserError
 
@@ -23,10 +23,10 @@ DEFAULT_FACTURX_DATE_FORMAT = '%Y%m%d'
 class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
-    def _post_invoice_edi(self, invoices, test_mode=False):
+    def _post_invoice_edi(self, invoices):
         self.ensure_one()
         if self.code != 'facturx_1_0_05':
-            return super()._post_invoice_edi(invoices, test_mode=test_mode)
+            return super()._post_invoice_edi(invoices)
         res = {}
         for invoice in invoices:
             attachment = self._export_facturx(invoice)
@@ -37,6 +37,12 @@ class AccountEdiFormat(models.Model):
         # OVERRIDE
         self.ensure_one()
         return True if self.code == 'facturx_1_0_05' else super()._is_embedding_to_invoice_pdf_needed()
+
+    def _get_embedding_to_invoice_pdf_values(self, invoice):
+        values = super()._get_embedding_to_invoice_pdf_values(invoice)
+        if values and self.code == 'facturx_1_0_05':
+            values['name'] = 'factur-x.xml'
+        return values
 
     def _export_facturx(self, invoice):
 
@@ -55,6 +61,7 @@ class AccountEdiFormat(models.Model):
             **invoice._prepare_edi_vals_to_export(),
             'format_date': format_date,
             'format_monetary': format_monetary,
+            'is_html_empty': is_html_empty,
         }
 
         xml_content = b"<?xml version='1.0' encoding='UTF-8'?>"

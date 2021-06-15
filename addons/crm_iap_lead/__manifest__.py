@@ -4,9 +4,8 @@
 {
     'name': 'Lead Generation',
     'summary': 'Generate Leads/Opportunities based on country, industries, size, etc.',
-    'version': '1.1',
     'category': 'Sales/CRM',
-    'version': '1.1',
+    'version': '1.2',
     'depends': [
         'iap_crm',
         'iap_mail',

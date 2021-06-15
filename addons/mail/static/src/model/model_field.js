@@ -24,6 +24,7 @@ class ModelField {
         hashes: extraHashes = [],
         inverse,
         isCausal = false,
+        isOnChange,
         readonly = false,
         related,
         relationType,
@@ -130,6 +131,16 @@ class ModelField {
          * relation is removed, the related record is automatically deleted.
          */
         this.isCausal = isCausal;
+        /**
+         * Determines whether this field is an "on change" field. Only applies
+         * to computed fields. An "on change" is a fake compute designed to be
+         * called when one of its dependencies change. It is called after all
+         * other computes are done, and it does not actually assign any value to
+         * its respective field.
+         * This is deprecated but when it is necessary due to other limitations
+         * in code it is better using "on change" than polluting real computes.
+         */
+        this.isOnChange = isOnChange;
         /**
          * Determines whether the field is read only. Read only field
          * can't be updated once the record is created.
@@ -456,7 +467,7 @@ class ModelField {
                     case 'link':
                         if (this._setRelationLink(record, newVal, options)) {
                             hasChanged = true;
-                        };
+                        }
                         break;
                     case 'replace':
                         if (this._setRelationReplace(record, newVal, options)) {
@@ -464,12 +475,20 @@ class ModelField {
                         }
                         break;
                     case 'unlink':
-                        if (this._setRelationUnlink(record, newVal, options)){
+                        if (this._setRelationUnlink(record, newVal, options)) {
                             hasChanged = true;
-                        };
+                        }
                         break;
                     case 'unlink-all':
                         if (this._setRelationUnlink(record, this.read(record), options)) {
+                            hasChanged = true;
+                        }
+                        break;
+                    case 'update':
+                        if (!['one2one', 'many2one'].includes(this.relationType)) {
+                            throw new Error(`Field "${record.constructor.modelName}/${this.fieldName}"(${this.fieldType} type) does not support command "update". Only x2one relations are supported.`);
+                        }
+                        if (this._setRelationUpdateX2One(record, newVal, options)) {
                             hasChanged = true;
                         }
                         break;
@@ -778,6 +797,25 @@ class ModelField {
             case 'one2one':
                 return this._setRelationUnlinkX2One(record, options);
         }
+    }
+
+    /**
+     * Set on this relational field in 'update' mode. Basically data provided
+     * during set on this relational field contain data to update target record.
+     *
+     * @private
+     * @param {mail.model} record
+     * @param {Object} data
+     * @param {Object} [options]
+     * @returns {boolean} whether the value changed for the current field
+     */
+    _setRelationUpdateX2One(record, data, options) {
+        const otherRecord = this.read(record);
+        if (!otherRecord) {
+            throw Error(`Record ${record.localId} cannot update undefined relational field ${this.fieldName}.`);
+        }
+        this.env.modelManager._update(otherRecord, data);
+        return false;
     }
 
     /**

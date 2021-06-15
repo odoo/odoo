@@ -26,7 +26,7 @@ class PortalAccount(portal.PortalAccount):
         )  # Tokens are cleared at the end if the user is not logged in
         fees_by_acquirer = {
             acq_sudo: acq_sudo._compute_fees(
-                invoice.amount_total, invoice.currency_id, invoice.company_id.country_id
+                invoice.amount_total, invoice.currency_id, invoice.partner_id.country_id
             ) for acq_sudo in acquirers_sudo.filtered('fees_active')
         }
         values.update({

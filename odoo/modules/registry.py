@@ -9,10 +9,10 @@ from collections.abc import Mapping
 from contextlib import closing, contextmanager
 from functools import partial
 from operator import attrgetter
-from weakref import WeakValueDictionary
 import logging
 import os
 import threading
+import time
 
 import psycopg2
 
@@ -20,7 +20,8 @@ import odoo
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
 from odoo.tools import (config, existing_tables, ignore,
-                        lazy_classproperty, lazy_property, sql, OrderedSet)
+                        lazy_classproperty, lazy_property, sql,
+                        Collector, OrderedSet)
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -36,9 +37,6 @@ class Registry(Mapping):
     """
     _lock = threading.RLock()
     _saved_lock = None
-
-    # a cache for model classes, indexed by their base classes
-    model_cache = WeakValueDictionary()
 
     @lazy_classproperty
     def registries(cls):
@@ -71,6 +69,7 @@ class Registry(Mapping):
     @classmethod
     def new(cls, db_name, force_demo=False, status=None, update_module=False):
         """ Create and return a new registry for the given database name. """
+        t0 = time.time()
         with cls._lock:
             with odoo.api.Environment.manage():
                 registry = object.__new__(cls)
@@ -104,6 +103,7 @@ class Registry(Mapping):
             registry.ready = True
             registry.registry_invalidated = bool(update_module)
 
+        _logger.info("Registry loaded in %.3fs", time.time() - t0)
         return registry
 
     def init(self, db_name):
@@ -131,6 +131,11 @@ class Registry(Mapping):
         # Indicates that the registry is
         self.loaded = False             # whether all modules are loaded
         self.ready = False              # whether everything is set up
+
+        # field dependencies
+        self.field_depends = Collector()
+        self.field_depends_context = Collector()
+        self.field_inverses = Collector()
 
         # Inter-process signaling:
         # The `base_registry_signaling` sequence indicates the whole registry
@@ -267,16 +272,28 @@ class Registry(Mapping):
         for model in models:
             model._prepare_setup()
 
-        # do the actual setup from a clean state
-        self._m2m = defaultdict(list)
+        self.field_depends.clear()
+        self.field_depends_context.clear()
+        self.field_inverses.clear()
+
+        # do the actual setup
         for model in models:
             model._setup_base()
 
+        self._m2m = defaultdict(list)
         for model in models:
             model._setup_fields()
+        del self._m2m
 
         for model in models:
             model._setup_complete()
+
+        # determine field_depends and field_depends_context
+        for model in models:
+            for field in model._fields.values():
+                depends, depends_context = field.get_depends(model)
+                self.field_depends[field] = tuple(depends)
+                self.field_depends_context[field] = tuple(depends_context)
 
         # Reinstall registry hooks. Because of the condition, this only happens
         # on a fully loaded registry, and not on a registry being loaded.

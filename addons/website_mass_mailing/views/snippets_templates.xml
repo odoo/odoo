@@ -64,7 +64,7 @@
     </section>
     <section class="s_text_block" data-snippet="s_text_block">
         <div class="container">
-            <div class="row s_nb_column_fixed">
+            <div class="row s_nb_column_fixed no-gutters">
                 <div class="col-lg-8 offset-lg-2 pt32 pb32">
                     <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form"/>
                 </div>
@@ -99,26 +99,6 @@
 </template>
 
 <!-- Extend default mass_mailing snippets with website feature -->
-
-<template id="s_mail_block_header_social" inherit_id="mass_mailing.s_mail_block_header_social">
-    <xpath expr="//td[hasclass('o_mail_logo_container')]" position="after">
-        <td width="30%" class="text-right o_mail_no_resize">
-            <div class="o_mail_header_social">
-                <t t-call="mass_mailing.social_links"/>
-            </div>
-        </td>
-    </xpath>
-</template>
-
-<template id="s_mail_block_header_text_social" inherit_id="mass_mailing.s_mail_block_header_text_social">
-    <xpath expr="//table//td" position="after">
-        <td width="30%" class="text-right o_mail_no_resize">
-            <div class="o_mail_header_social">
-                <t t-call="mass_mailing.social_links"/>
-            </div>
-        </td>
-    </xpath>
-</template>
 
 <template id="s_mail_block_footer_social" inherit_id="mass_mailing.s_mail_block_footer_social">
     <xpath expr="//td[hasclass('o_mail_footer_links')]" position="inside">

@@ -16,6 +16,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 date_field: { name: 'date_field', string: "A date", type: 'date', searchable: true },
                 date_time_field: { name: 'date_time_field', string: "DateTime", type: 'datetime', searchable: true },
                 boolean_field: { name: 'boolean_field', string: "Boolean Field", type: 'boolean', default: true, searchable: true },
+                binary_field: { name: 'binary_field', string: "Binary Field", type: 'binary', searchable: true },
                 char_field: { name: 'char_field', string: "Char Field", type: 'char', default: "foo", trim: true, searchable: true },
                 float_field: { name: 'float_field', string: "Floaty McFloatface", type: 'float', searchable: true },
                 color: { name: 'color', string: "Color", type: 'selection', selection: [['black', "Black"], ['white', "White"]], searchable: true },
@@ -112,6 +113,49 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             cfi.destroy();
         });
 
+        QUnit.test('binary field: basic search', async function (assert) {
+            assert.expect(4);
+
+            let expectedFilters;
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
+                    assert.deepEqual(preFilters, expectedFilters);
+                }
+            }
+            const searchModel = new MockedSearchModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: { searchModel },
+            });
+
+            // Default value
+            expectedFilters = [{
+                description: 'Binary Field is set',
+                domain: '[["binary_field","!=",False]]',
+                type: 'filter',
+            }];
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'binary_field');
+            await cpHelpers.applyFilter(cfi);
+
+            // Updated value
+            expectedFilters = [{
+                description: 'Binary Field is not set',
+                domain: '[["binary_field","=",False]]',
+                type: 'filter',
+            }];
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'binary_field');
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_operator'), '=');
+            await cpHelpers.applyFilter(cfi);
+
+            cfi.destroy();
+        });
+
         QUnit.test('selection field: default and updated value', async function (assert) {
             assert.expect(4);
 
@@ -179,6 +223,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             });
 
             await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'boolean_field');
             await cpHelpers.applyFilter(cfi);
 
             // The only thing visible should be the button 'Add Custome Filter';
@@ -187,6 +232,54 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
             cfi.destroy();
         });
+
+        QUnit.test('filtering by ID interval works', async function (assert) {
+            assert.expect(2);
+            this.fields.id_field = { name: 'id_field', string: "ID", type: "id", searchable: true };
+
+            const expectedDomains = [
+                [['id_field','>', 10]],
+                [['id_field','<=', 20]],
+            ];
+
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
+                    const preFilter = preFilters[0];
+                    // this step combine a tokenization/parsing followed by a string formatting
+                    let domain = pyUtils.assembleDomains([preFilter.domain]);
+                    domain = Domain.prototype.stringToArray(domain);
+                    assert.deepEqual(domain, expectedDomains.shift());
+                }
+            }
+            const searchModel = new MockedSearchModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: { searchModel },
+            });
+
+            async function testValue(operator, value) {
+                // open filter menu generator, select ID field, switch operator, type value, then click apply
+                await cpHelpers.toggleAddCustomFilter(cfi);
+                await testUtils.fields.editSelect(cfi.el.querySelector('select.o_generator_menu_field'), 'id_field');
+                await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_operator'), operator);
+                await testUtils.fields.editInput(cfi.el.querySelector(
+                    'div.o_filter_condition > span.o_generator_menu_value input'),
+                    value
+                );
+                await cpHelpers.applyFilter(cfi);
+            }
+
+            for (const domain of expectedDomains) {
+                await testValue(domain[0][1], domain[0][2]);
+            }
+
+            cfi.destroy();
+        });
+
 
         QUnit.test('commit search with an extended proposition with field char does not cause a crash', async function (assert) {
             assert.expect(12);

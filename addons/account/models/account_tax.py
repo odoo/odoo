@@ -25,13 +25,32 @@ class AccountTaxGroup(models.Model):
     property_tax_payable_account_id = fields.Many2one('account.account', company_dependent=True, string='Tax current account (payable)')
     property_tax_receivable_account_id = fields.Many2one('account.account', company_dependent=True, string='Tax current account (receivable)')
     property_advance_tax_payment_account_id = fields.Many2one('account.account', company_dependent=True, string='Advance Tax payment account')
+    country_id = fields.Many2one(string="Country", comodel_name='res.country', help="The country for which this tax group is applicable.")
 
-    def _any_is_configured(self, company_id):
-        domain = expression.OR([[('property_tax_payable_account_id', '!=', False)],
-                                [('property_tax_receivable_account_id', '!=', False)],
-                                [('property_advance_tax_payment_account_id', '!=', False)]])
-        group_with_config = self.with_company(company_id).search_count(domain)
-        return group_with_config > 0
+    @api.model
+    def _check_misconfigured_tax_groups(self, company, countries):
+        """ Searches the tax groups used on the taxes from company in countries that don't have
+        at least a tax payable account, a tax receivable account or an advance tax payment account.
+
+        :return: A boolean telling whether or not there are misconfigured groups for any
+                 of these countries, in this company
+        """
+
+        # This cannot be refactored to check for misconfigured groups instead
+        # because of an ORM limitation with search on property fields:
+        # searching on property = False also returns the properties using the default value,
+        # even if it's non-empty.
+        # (introduced here https://github.com/odoo/odoo/pull/6044)
+        all_configured_groups_ids = self.with_company(company)._search([
+            ('property_tax_payable_account_id', '!=', False),
+            ('property_tax_receivable_account_id', '!=', False),
+        ])
+
+        return bool(self.env['account.tax'].search([
+            ('company_id', '=', company.id),
+            ('tax_group_id', 'not in', all_configured_groups_ids),
+            ('country_id', 'in', countries.ids),
+        ], limit=1))
 
 
 class AccountTax(models.Model):
@@ -42,7 +61,7 @@ class AccountTax(models.Model):
 
     @api.model
     def _default_tax_group(self):
-        return self.env['account.tax.group'].search([], limit=1)
+        return self.env.ref('account.tax_group_taxes')
 
     name = fields.Char(string='Tax Name', required=True)
     type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Type', required=True, default="sale",
@@ -79,7 +98,8 @@ class AccountTax(models.Model):
         default=True,
         help="If set, taxes with a lower sequence might affect this one, provided they try to do it.")
     analytic = fields.Boolean(string="Include in Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
-    tax_group_id = fields.Many2one('account.tax.group', string="Tax Group", default=_default_tax_group, required=True)
+    tax_group_id = fields.Many2one('account.tax.group', string="Tax Group", default=_default_tax_group, required=True,
+                                   domain="[('country_id', 'in', (country_id, False))]")
     # Technical field to make the 'tax_exigibility' field invisible if the same named field is set to false in 'res.company' model
     hide_tax_exigibility = fields.Boolean(string='Hide Use Cash Basis Option', related='company_id.tax_exigibility', readonly=True)
     tax_exigibility = fields.Selection(
@@ -101,6 +121,12 @@ class AccountTax(models.Model):
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use, tax_scope)', 'Tax names must be unique !'),
     ]
+
+    @api.constrains('tax_group_id')
+    def validate_tax_group_id(self):
+        for record in self:
+            if record.tax_group_id.country_id and record.tax_group_id.country_id != record.country_id:
+                raise ValidationError(_("The tax group must have the same country_id as the tax using it."))
 
     @api.model
     def default_get(self, fields_list):

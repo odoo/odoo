@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from markupsafe import Markup
+
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.misc import find_in_path
-from odoo.tools import config
+from odoo.tools import config, is_html_empty
 from odoo.sql_db import TestCursor
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
@@ -347,13 +349,13 @@ class IrActionsReport(models.Model):
         :return: bodies, header, footer, specific_paperformat_args
         '''
         IrConfig = self.env['ir.config_parameter'].sudo()
-        base_url = IrConfig.get_param('report.url') or IrConfig.get_param('web.base.url')
 
         # Return empty dictionary if 'web.minimal_layout' not found.
         layout = self.env.ref('web.minimal_layout', False)
         if not layout:
             return {}
         layout = self.env['ir.ui.view'].browse(self.env['ir.ui.view'].get_view_id('web.minimal_layout'))
+        base_url = IrConfig.get_param('report.url') or layout.get_base_url()
 
         root = lxml.html.fromstring(html)
         match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
@@ -382,7 +384,11 @@ class IrActionsReport(models.Model):
             # set context language to body language
             if node.get('data-oe-lang'):
                 layout_with_lang = layout_with_lang.with_context(lang=node.get('data-oe-lang'))
-            body = layout_with_lang._render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
+            body = layout_with_lang._render({
+                'subst': False,
+                'body': Markup(lxml.html.tostring(node, encoding='unicode')),
+                'base_url': base_url
+            })
             bodies.append(body)
             if node.get('data-oe-model') == self.model:
                 res_ids.append(int(node.get('data-oe-id', 0)))
@@ -390,7 +396,7 @@ class IrActionsReport(models.Model):
                 res_ids.append(None)
 
         if not bodies:
-            body = bytearray().join([lxml.html.tostring(c) for c in body_parent.getchildren()])
+            body = b''.join(lxml.html.tostring(c, encoding='utf-8') for c in body_parent.getchildren())
             bodies.append(body)
 
         # Get paperformat arguments set in the root html tag. They are prioritized over
@@ -400,8 +406,16 @@ class IrActionsReport(models.Model):
             if attribute[0].startswith('data-report-'):
                 specific_paperformat_args[attribute[0]] = attribute[1]
 
-        header = layout._render(dict(subst=True, body=lxml.html.tostring(header_node), base_url=base_url))
-        footer = layout._render(dict(subst=True, body=lxml.html.tostring(footer_node), base_url=base_url))
+        header = layout._render({
+            'subst': True,
+            'body': Markup(lxml.html.tostring(header_node, encoding='unicode')),
+            'base_url': base_url
+        })
+        footer = layout._render({
+            'subst': True,
+            'body': Markup(lxml.html.tostring(footer_node, encoding='unicode')),
+            'base_url': base_url
+        })
 
         return bodies, res_ids, header, footer, specific_paperformat_args
 
@@ -872,6 +886,7 @@ class IrActionsReport(models.Model):
                 'doc_model': self_sudo.model,
                 'docs': docs,
             })
+        data['is_html_empty'] = is_html_empty
         return data
 
     def _render(self, res_ids, data=None):

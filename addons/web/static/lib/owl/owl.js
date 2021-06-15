@@ -1667,6 +1667,7 @@
                 ctx.variables = Object.create(null);
                 ctx.parentNode = ctx.generateID();
                 ctx.allowMultipleRoots = true;
+                ctx.shouldDefineParent = true;
                 ctx.hasParentWidget = true;
                 ctx.shouldDefineResult = false;
                 ctx.addLine(`let c${ctx.parentNode} = extra.parentNode;`);
@@ -1830,7 +1831,7 @@
                     }
                 }
             }
-            if (node.nodeName !== "t") {
+            if (node.nodeName !== "t" || node.hasAttribute("t-tag")) {
                 let nodeID = this._compileGenericNode(node, ctx, withHandlers);
                 ctx = ctx.withParent(nodeID);
                 let nodeHooks = {};
@@ -2043,7 +2044,14 @@
                 ctx.addLine(`}`);
                 ctx.closeIf();
             }
-            ctx.addLine(`let vn${nodeID} = h('${node.nodeName}', p${nodeID}, c${nodeID});`);
+            let nodeName = `'${node.nodeName}'`;
+            if (node.hasAttribute("t-tag")) {
+                const tagExpr = node.getAttribute("t-tag");
+                node.removeAttribute("t-tag");
+                nodeName = `tag${ctx.generateID()}`;
+                ctx.addLine(`let ${nodeName} = ${ctx.formatExpression(tagExpr)};`);
+            }
+            ctx.addLine(`let vn${nodeID} = h(${nodeName}, p${nodeID}, c${nodeID});`);
             if (ctx.parentNode) {
                 ctx.addLine(`c${ctx.parentNode}.push(vn${nodeID});`);
             }
@@ -2068,6 +2076,7 @@
         att: 1,
         attf: 1,
         translation: 1,
+        tag: 1,
     };
     QWeb.DIRECTIVES = [];
     QWeb.TEMPLATES = {};
@@ -2368,7 +2377,9 @@
             }
             // Step 4: add the appropriate function call to current component
             // ------------------------------------------------
-            const parentComponent = `utils.getComponent(context)`;
+            const parentComponent = ctx.rootContext.shouldDefineParent
+                ? `parent`
+                : `utils.getComponent(context)`;
             const key = ctx.generateTemplateKey();
             const parentNode = ctx.parentNode ? `c${ctx.parentNode}` : "result";
             const extra = `Object.assign({}, extra, {parentNode: ${parentNode}, parent: ${parentComponent}, key: ${key}})`;
@@ -3188,13 +3199,10 @@
             }
             ctx.addElse();
             // new component
-            let dynamicFallback = "";
-            if (!value.match(INTERP_REGEXP)) {
-                dynamicFallback = `|| ${ctx.formatExpression(value)}`;
-            }
+            const contextualValue = value.match(INTERP_REGEXP) ? "false" : ctx.formatExpression(value);
             const interpValue = ctx.interpolate(value);
             ctx.addLine(`let componentKey${componentID} = ${interpValue};`);
-            ctx.addLine(`let W${componentID} = context.constructor.components[componentKey${componentID}] || QWeb.components[componentKey${componentID}]${dynamicFallback};`);
+            ctx.addLine(`let W${componentID} = ${contextualValue} || context.constructor.components[componentKey${componentID}] || QWeb.components[componentKey${componentID}];`);
             // maybe only do this in dev mode...
             ctx.addLine(`if (!W${componentID}) {throw new Error('Cannot find the definition of component "' + componentKey${componentID} + '"')}`);
             ctx.addLine(`w${componentID} = new W${componentID}(parent, props${componentID});`);
@@ -5150,6 +5158,7 @@
   `;
 
     const paramRegexp = /\{\{(.*?)\}\}/;
+    const globalParamRegexp = new RegExp(paramRegexp.source, "g");
     class Router {
         constructor(env, routes, options = { mode: "history" }) {
             this.currentRoute = null;
@@ -5171,6 +5180,7 @@
                     this.validateDestination(partialRoute.redirect);
                 }
                 partialRoute.params = partialRoute.path ? findParams(partialRoute.path) : [];
+                partialRoute.extractionRegExp = makeExtractionRegExp(partialRoute.path);
                 this.routes[partialRoute.name] = partialRoute;
                 this.routeIds.push(partialRoute.name);
             }
@@ -5245,19 +5255,12 @@
             }
         }
         routeToPath(route, params) {
-            const path = route.path;
-            const parts = path.split("/");
-            const l = parts.length;
-            for (let i = 0; i < l; i++) {
-                const part = parts[i];
-                const match = part.match(paramRegexp);
-                if (match) {
-                    const key = match[1].split(".")[0];
-                    parts[i] = params[key];
-                }
-            }
             const prefix = this.mode === "hash" ? "#" : "";
-            return prefix + parts.join("/");
+            return (prefix +
+                route.path.replace(globalParamRegexp, (match, param) => {
+                    const [key] = param.split(".");
+                    return params[key];
+                }));
         }
         currentPath() {
             let result = this.mode === "history" ? window.location.pathname : window.location.hash.slice(1);
@@ -5314,42 +5317,46 @@
             if (path.startsWith("#")) {
                 path = path.slice(1);
             }
-            const descrParts = route.path.split("/");
-            const targetParts = path.split("/");
-            const l = descrParts.length;
-            if (l !== targetParts.length) {
+            const paramsMatch = path.match(route.extractionRegExp);
+            if (!paramsMatch) {
                 return false;
             }
             const result = {};
-            for (let i = 0; i < l; i++) {
-                const descr = descrParts[i];
-                let target = targetParts[i];
-                const match = descr.match(paramRegexp);
-                if (match) {
-                    const [key, suffix] = match[1].split(".");
-                    if (suffix === "number") {
-                        target = parseInt(target, 10);
-                    }
-                    result[key] = target;
+            route.params.forEach((param, index) => {
+                const [key, suffix] = param.split(".");
+                const paramValue = paramsMatch[index + 1];
+                if (suffix === "number") {
+                    return (result[key] = parseInt(paramValue, 10));
                 }
-                else if (descr !== target) {
-                    return false;
-                }
-            }
+                return (result[key] = paramValue);
+            });
             return result;
         }
     }
     function findParams(str) {
-        const globalParamRegexp = /\{\{(.*?)\}\}/g;
         const result = [];
         let m;
         do {
             m = globalParamRegexp.exec(str);
             if (m) {
-                result.push(m[1].split(".")[0]);
+                result.push(m[1]);
             }
         } while (m);
         return result;
+    }
+    function escapeRegExp(str) {
+        return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+    }
+    function makeExtractionRegExp(path) {
+        // replace param strings with capture groups so that we can build a regex to match over the path
+        const extractionString = path
+            .split(paramRegexp)
+            .map((part, index) => {
+            return index % 2 ? "(.*)" : escapeRegExp(part);
+        })
+            .join("");
+        // Example: /home/{{param1}}/{{param2}} => ^\/home\/(.*)\/(.*)$
+        return new RegExp(`^${extractionString}$`);
     }
 
     /**
@@ -5391,9 +5398,9 @@
     exports.utils = utils;
 
 
-    __info__.version = '1.2.4';
-    __info__.date = '2021-02-10T13:24:25.187Z';
-    __info__.hash = '985e985';
+    __info__.version = '1.3.1';
+    __info__.date = '2021-06-10T08:37:12.080Z';
+    __info__.hash = 'd121155';
     __info__.url = 'https://github.com/odoo/owl';
 
 

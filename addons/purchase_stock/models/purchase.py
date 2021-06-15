@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.tools.float_utils import float_compare
-from datetime import datetime
+from markupsafe import Markup
 from dateutil.relativedelta import relativedelta
+
+from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.tools.float_utils import float_compare, float_round
 from odoo.exceptions import UserError
 
 from odoo.addons.purchase.models.purchase import PurchaseOrder as Purchase
@@ -241,11 +242,12 @@ class PurchaseOrder(models.Model):
         """
         validated_picking = self.picking_ids.filtered(lambda p: p.state == 'done')
         if validated_picking:
-            activity.note += _("<p>Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.</p>") % validated_picking[0].name
+            message = _("Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.", validated_picking[0].name)
         elif not self.picking_ids:
-            activity.note += _("<p>Corresponding receipt not found.</p>")
+            message = _("Corresponding receipt not found.")
         else:
-            activity.note += _("<p>Those dates have been updated accordingly on the receipt %s.</p>") % self.picking_ids[0].name
+            message = _("Those dates have been updated accordingly on the receipt %s.", self.picking_ids[0].name)
+        activity.note += Markup('<p>{}</p>').format(message)
 
     def _create_update_date_activity(self, updated_dates):
         activity = super()._create_update_date_activity(updated_dates)
@@ -255,7 +257,7 @@ class PurchaseOrder(models.Model):
         # remove old picking info to update it
         note_lines = activity.note.split('<p>')
         note_lines.pop()
-        activity.note = '<p>'.join(note_lines)
+        activity.note = Markup('<p>').join(note_lines)
         super()._update_update_date_activity(updated_dates, activity)
         self._add_picking_info(activity)
 
@@ -360,6 +362,18 @@ class PurchaseOrderLine(models.Model):
             action['context']['warehouse'] = warehouse.id
         return action
 
+    def unlink(self):
+        self.move_ids._action_cancel()
+
+        ppg_cancel_lines = self.filtered(lambda line: line.propagate_cancel)
+        ppg_cancel_lines.move_dest_ids._action_cancel()
+
+        not_ppg_cancel_lines = self.filtered(lambda line: not line.propagate_cancel)
+        not_ppg_cancel_lines.move_dest_ids.write({'procure_method': 'make_to_stock'})
+        not_ppg_cancel_lines.move_dest_ids._recompute_state()
+
+        return super().unlink()
+
     # --------------------------------------------------
     # Business methods
     # --------------------------------------------------
@@ -402,10 +416,13 @@ class PurchaseOrderLine(models.Model):
         line = self[0]
         order = line.order_id
         price_unit = line.price_unit
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         if line.taxes_id:
+            qty = line.product_qty or 1
             price_unit = line.taxes_id.with_context(round=False).compute_all(
-                price_unit, currency=line.order_id.currency_id, quantity=1.0, product=line.product_id, partner=line.order_id.partner_id
+                price_unit, currency=line.order_id.currency_id, quantity=qty, product=line.product_id, partner=line.order_id.partner_id
             )['total_void']
+            price_unit = float_round(price_unit / qty, precision_digits=price_unit_prec)
         if line.product_uom.id != line.product_id.uom_id.id:
             price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
         if order.currency_id != order.company_id.currency_id:
@@ -482,6 +499,7 @@ class PurchaseOrderLine(models.Model):
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,
+            'product_packaging_id': self.product_packaging_id.id,
         }
 
     @api.model

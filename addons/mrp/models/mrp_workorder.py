@@ -112,7 +112,7 @@ class MrpWorkorder(models.Model):
         string='Worksheet Type', related='operation_id.worksheet_type', readonly=True)
     worksheet_google_slide = fields.Char(
         'Worksheet URL', related='operation_id.worksheet_google_slide', readonly=True)
-    operation_note = fields.Text("Description", related='operation_id.note', readonly=True)
+    operation_note = fields.Html("Description", related='operation_id.note', readonly=True)
     move_raw_ids = fields.One2many(
         'stock.move', 'workorder_id', 'Raw Moves',
         domain=[('raw_material_production_id', '!=', False), ('production_id', '=', False)])
@@ -511,6 +511,8 @@ class MrpWorkorder(models.Model):
 
         if self.product_tracking == 'serial':
             self.qty_producing = 1.0
+        else:
+            self.qty_producing = self.qty_remaining
 
         self.env['mrp.workcenter.productivity'].create(
             self._prepare_timeline_vals(self.duration, datetime.now())

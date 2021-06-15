@@ -88,6 +88,7 @@ class MailThread(models.AbstractModel):
     message_ids = fields.One2many(
         'mail.message', 'res_id', string='Messages',
         domain=lambda self: [('message_type', '!=', 'user_notification')], auto_join=True)
+    has_message = fields.Boolean(compute="_compute_has_message", search="_search_has_message", store=False)
     message_unread = fields.Boolean(
         'Unread Messages', compute='_get_message_unread',
         help="If checked, new messages require your attention.")
@@ -153,6 +154,25 @@ class MailThread(models.AbstractModel):
         else:
             # using read() below is much faster than followers.mapped('res_id')
             return [('id', 'not in', [res['res_id'] for res in followers.read(['res_id'])])]
+
+    def _compute_has_message(self):
+        self.flush()
+        self.env.cr.execute("""
+            SELECT distinct res_id
+              FROM mail_message mm
+             WHERE res_id = any(%s)
+               AND mm.model=%s
+        """, [self.ids, self._name])
+        channel_ids = [r[0] for r in self.env.cr.fetchall()]
+        for record in self:
+            record.has_message = record.id in channel_ids
+
+    def _search_has_message(self, operator, value):
+        if (operator == '=' and value is True) or (operator == '!=' and value is False):
+            operator_new = 'inselect'
+        else:
+            operator_new = 'not inselect'
+        return [('id', operator_new, ("SELECT distinct res_id FROM mail_message WHERE model=%s", [self._name]))]
 
     def _get_message_unread(self):
         partner_id = self.env.user.partner_id.id
@@ -888,7 +908,7 @@ class MailThread(models.AbstractModel):
 
         # 0. Handle bounce: verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
         #    Bounce regex: typical form of bounce is bounce_alias+128-crm.lead-34@domain
-        #       group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID 
+        #       group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
         #    Bounce message (not alias)
         #       See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
         #        As all MTA does not respect this RFC (googlemail is one of them),
@@ -1655,7 +1675,7 @@ class MailThread(models.AbstractModel):
             m2m_attachment_ids += [Command.link(id) for id in attachment_ids]
         # Handle attachments parameter, that is a dictionary of attachments
 
-        if attachments: # generate 
+        if attachments: # generate
             cids_in_body = set()
             names_in_body = set()
             cid_list = []
@@ -1867,12 +1887,12 @@ class MailThread(models.AbstractModel):
     # MESSAGE POST TOOLS
     # ------------------------------------------------------
 
-    def message_post_with_view(self, views_or_xmlid, **kwargs):
-        """ Helper method to send a mail / post a message using a view_id to
-        render using the ir.qweb engine. This method is stand alone, because
-        there is nothing in template and composer that allows to handle
-        views in batch. This method should probably disappear when templates
-        handle ir ui views. """
+    def _message_compose_with_view(self, views_or_xmlid, message_log=False, **kwargs):
+        """ Helper method to send a mail / post a message / log a note using
+        a view_id to render using the ir.qweb engine. This method is stand
+        alone, because there is nothing in template and composer that allows
+        to handle views in batch. This method should probably disappear when
+        templates handle ir ui views. """
         values = kwargs.pop('values', None) or dict()
         try:
             from odoo.addons.http_routing.models.ir_http import slug
@@ -1888,8 +1908,15 @@ class MailThread(models.AbstractModel):
         for record in self:
             values['object'] = record
             rendered_template = views._render(values, engine='ir.qweb', minimal_qcontext=True)
-            kwargs['body'] = rendered_template
-            record.message_post_with_template(False, **kwargs)
+            if message_log:
+                return record._message_log(body=rendered_template, **kwargs)
+            else:
+                kwargs['body'] = rendered_template
+                return record.message_post_with_template(False, **kwargs)
+
+    def message_post_with_view(self, views_or_xmlid, **kwargs):
+        """ Helper method to send a mail / post a message using a view_id """
+        self._message_compose_with_view(views_or_xmlid, **kwargs)
 
     def message_post_with_template(self, template_id, email_layout_xmlid=None, auto_commit=False, **kwargs):
         """ Helper method to send a mail with a template
@@ -1925,7 +1952,7 @@ class MailThread(models.AbstractModel):
     def message_notify(self, *,
                        partner_ids=False, parent_id=False, model=False, res_id=False,
                        author_id=None, email_from=None, body='', subject=False, **kwargs):
-        """ Shortcut allowing to notify partners of messages that shouldn't be 
+        """ Shortcut allowing to notify partners of messages that shouldn't be
         displayed on a document. It pushes notifications on inbox or by email depending
         on the user configuration, like other notifications. """
         if self:
@@ -1965,6 +1992,10 @@ class MailThread(models.AbstractModel):
         new_message = MailThread._message_create(values)
         MailThread._notify_thread(new_message, values, **notif_kwargs)
         return new_message
+
+    def _message_log_with_view(self, views_or_xmlid, **kwargs):
+        """ Helper method to log a note using a view_id without notifying followers. """
+        return self._message_compose_with_view(views_or_xmlid, message_log=True, **kwargs)
 
     def _message_log(self, *, body='', author_id=None, email_from=None, subject=False, message_type='notification', **kwargs):
         """ Shortcut allowing to post note on a document. It does not perform
@@ -2480,7 +2511,7 @@ class MailThread(models.AbstractModel):
             'button_access': {'title': 'View Simple Chatter Model',
                             'url': '/mail/view?model=mail.test.simple&res_id=1497'},
             'has_button_access': False,
-            'recipients': [4, 5, 6] 
+            'recipients': [4, 5, 6]
         },
         {
             'actions': [],
@@ -2706,7 +2737,7 @@ class MailThread(models.AbstractModel):
 
         new_partner_subtypes = dict()
 
-        # return data related to auto subscription based on subtype matching (aka: 
+        # return data related to auto subscription based on subtype matching (aka:
         # default task subtypes or subtypes from project triggering task subtypes)
         updated_relation = dict()
         child_ids, def_ids, all_int_ids, parent, relation = self.env['mail.message.subtype']._get_auto_subscription_subtypes(self._name)

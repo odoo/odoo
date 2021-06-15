@@ -61,10 +61,6 @@ class StockPickingBatch(models.Model):
     @api.depends('company_id', 'picking_type_id', 'state')
     def _compute_allowed_picking_ids(self):
         allowed_picking_states = ['waiting', 'confirmed', 'assigned']
-        cancelled_batchs = self.env['stock.picking.batch'].search_read(
-            [('state', '=', 'cancel')], ['id']
-        )
-        cancelled_batch_ids = [batch['id'] for batch in cancelled_batchs]
 
         for batch in self:
             domain_states = list(allowed_picking_states)
@@ -75,11 +71,6 @@ class StockPickingBatch(models.Model):
                 ('company_id', '=', batch.company_id.id),
                 ('immediate_transfer', '=', False),
                 ('state', 'in', domain_states),
-                '|',
-                '|',
-                ('batch_id', '=', False),
-                ('batch_id', '=', batch.id),
-                ('batch_id', 'in', cancelled_batch_ids),
             ]
             if batch.picking_type_id:
                 domain += [('picking_type_id', '=', batch.picking_type_id.id)]
@@ -244,7 +235,7 @@ class StockPickingBatch(models.Model):
                 raise UserError(_(
                     "The following transfers cannot be added to batch transfer %s. "
                     "Please check their states and operation types, if they aren't immediate "
-                    "transfers or if they're not already part of another batch transfer.\n\n"
+                    "transfers.\n\n"
                     "Incompatibilities: %s", batch.name, ', '.join(erroneous_pickings.mapped('name'))))
 
     def _track_subtype(self, init_values):

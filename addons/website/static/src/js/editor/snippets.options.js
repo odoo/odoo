@@ -1,3 +1,4 @@
+/* globals google*/
 odoo.define('website.editor.snippets.options', function (require) {
 'use strict';
 
@@ -1169,6 +1170,14 @@ options.registry.OptionsTab = options.Class.extend({
         });
         return aceEditor;
     },
+    /**
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        uiFragment.querySelectorAll('we-colorpicker').forEach(el => {
+            el.dataset.lazyPalette = 'true';
+        });
+    },
 });
 
 options.registry.ThemeColors = options.registry.OptionsTab.extend({
@@ -1244,6 +1253,8 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             }
             uiFragment.appendChild(collapseEl);
         }
+
+        await this._super(...arguments);
     },
 });
 
@@ -1653,7 +1664,7 @@ options.registry.layout_column = options.Class.extend({
             var self = this;
             for (const el of $row.children().slice(count)) {
                 await new Promise(resolve => {
-                    self.trigger_up('remove_snippet', {$snippet: $(el), onSuccess: resolve});
+                    self.trigger_up('remove_snippet', {$snippet: $(el), onSuccess: resolve, shouldRecordUndo: false});
                 });
             }
         }
@@ -1849,8 +1860,6 @@ options.registry.collapse = options.Class.extend({
      * @override
      */
     onClone: function () {
-        this.$target.find('[data-toggle="collapse"]').removeAttr('data-target').removeData('target');
-        this.$target.find('.collapse').removeAttr('id');
         this._createIDs();
     },
     /**
@@ -1879,30 +1888,30 @@ options.registry.collapse = options.Class.extend({
      * @private
      */
     _createIDs: function () {
-        var time = new Date().getTime();
-        var $tab = this.$target.find('[data-toggle="collapse"]');
+        let time = new Date().getTime();
+        const $tablist = this.$target.closest('[role="tablist"]');
+        const $tab = this.$target.find('[role="tab"]');
+        const $panel = this.$target.find('[role="tabpanel"]');
 
-        // link to the parent group
-        var $tablist = this.$target.closest('.accordion');
-        var tablist_id = $tablist.attr('id');
-        if (!tablist_id) {
-            tablist_id = 'myCollapse' + time;
-            $tablist.attr('id', tablist_id);
-        }
-        $tab.attr('data-parent', '#' + tablist_id);
-        $tab.data('parent', '#' + tablist_id);
-
-        // link to the collapse
-        var $panel = this.$target.find('.collapse');
-        var panel_id = $panel.attr('id');
-        if (!panel_id) {
-            while ($('#' + (panel_id = 'myCollapseTab' + time)).length) {
-                time++;
+        const setUniqueId = ($elem, label) => {
+            let elemId = $elem.attr('id');
+            if (!elemId || $('[id="' + elemId + '"]').length > 1) {
+                do {
+                    time++;
+                    elemId = label + time;
+                } while ($('#' + elemId).length);
+                $elem.attr('id', elemId);
             }
-            $panel.attr('id', panel_id);
-        }
-        $tab.attr('data-target', '#' + panel_id);
-        $tab.data('target', '#' + panel_id);
+            return elemId;
+        };
+
+        const tablistId = setUniqueId($tablist, 'myCollapse');
+        $panel.attr('data-parent', '#' + tablistId);
+        $panel.data('parent', '#' + tablistId);
+
+        const panelId = setUniqueId($panel, 'myCollapseTab');
+        $tab.attr('data-target', '#' + panelId);
+        $tab.data('target', '#' + panelId);
     },
 });
 
@@ -2210,8 +2219,9 @@ options.registry.anchor = options.Class.extend({
             const anchor = decodeURIComponent(this._getAnchorLink());
             this.displayNotification({
               type: 'success',
-              message: _.str.sprintf(_t("Anchor copied to clipboard<br>Link: %s"), anchor),
+              message: _.str.sprintf(_t("Anchor copied to clipboard<br>Link: %s"), owl.utils.escape(anchor)),
               buttons: [{text: _t("Edit"), click: () => this.openAnchorDialog(), primary: true}],
+              messageIsHtml: true, // dynamic parts of the message are escaped above
             });
         });
 
@@ -2660,7 +2670,7 @@ options.registry.ContainerWidth = options.Class.extend({
  * Allows snippets to be moved before the preceding element or after the following.
  */
 options.registry.SnippetMove = options.Class.extend({
-    displayHandles: true,
+    displayOverlayOptions: true,
 
     /**
      * @override
@@ -2789,37 +2799,6 @@ options.registry.ScrollButton = options.Class.extend({
                 return !!this.$button.parent().length;
         }
         return this._super(...arguments);
-    },
-});
-
-/**
- * Allows for images to be replaced.
- */
-options.registry.ReplaceImage = options.Class.extend({
-    /**
-     * @override
-     */
-    start: function () {
-        const $button = this.$el.find('we-button');
-        const $overlayArea = this.$overlay.find('.oe_snippet_remove');
-        $button.insertBefore($overlayArea);
-
-        return this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Replaces the image.
-     *
-     * @see this.selectClass for parameters
-     */
-    replaceImage: async function () {
-        // TODO: simulates a double click on an image from summernote,
-        // to be refactored when the new editor is merged
-        this.$target.dblclick();
     },
 });
 

@@ -1,3 +1,4 @@
+/* global ace */
 odoo.define('web.basic_fields', function (require) {
 "use strict";
 
@@ -24,6 +25,7 @@ var view_dialogs = require('web.view_dialogs');
 var field_utils = require('web.field_utils');
 var time = require('web.time');
 const {ColorpickerDialog} = require('web.Colorpicker');
+const { hidePDFJSButtons } = require('@web/js/libs/pdfjs');
 
 let FieldBoolean = deprecatedFields.FieldBoolean;
 
@@ -283,7 +285,7 @@ var InputField = DebouncedField.extend({
             inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: this.attrs.autocomplete || 'new-password' });
             inputVal = this.value || '';
         } else {
-            inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete || 'none'});
+            inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete || 'off'});
             inputVal = this._formatValue(this.value);
         }
 
@@ -1253,7 +1255,26 @@ var FieldFloatTime = FieldFloat.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.formatType = 'float_time';
-    }
+    },
+    /**
+     * Ensure the widget is re-rendered after being edited s.t. the value is
+     * directly formatted (without waiting for the record to be saved, as we do
+     * by default).
+     *
+     * See InputField@reset: we skip the call to _render if this widget initiated
+     * the change.
+     *
+     * Note: the default behavior could be changed s.t. all fields are formatted
+     * directly on blur.
+     *
+     * @override
+     */
+    async reset() {
+        await this._super(...arguments);
+        if (!this.isDirty) {
+            await this._render();
+        }
+    },
 });
 
 var FieldFloatFactor = FieldFloat.extend({
@@ -1711,7 +1732,7 @@ var UrlWidget = InputField.extend({
         }
         let href = this.value;
         if (this.value && !this.websitePath) {
-            const regex = /^(?:[fF]|[hH][tT])[tT][pP][sS]?:\/\//;
+            const regex = /^((ftp|http)s?:\/)?\//i; // http(s)://... ftp(s)://... /...
             href = !regex.test(this.value) ? `http://${href}` : href;
         }
         this.el.classList.add("o_form_uri", "o_text_overflow");
@@ -1835,7 +1856,7 @@ var AbstractFieldBinary = AbstractField.extend({
         this._super.apply(this, arguments);
         this.fields = record.fields;
         this.useFileAPI = !!window.FileReader;
-        this.max_upload_size = 64 * 1024 * 1024; // 64Mo
+        this.max_upload_size = session.max_file_upload_size || 128 * 1024 * 1024;
         this.accepted_file_extensions = (this.nodeOptions && this.nodeOptions.accepted_file_extensions) || this.accepted_file_extensions || '*';
         if (!this.useFileAPI) {
             var self = this;
@@ -1860,7 +1881,7 @@ var AbstractFieldBinary = AbstractField.extend({
                 var file = file_node.files[0];
                 if (file.size > this.max_upload_size) {
                     var msg = _t("The selected file exceed the maximum file size of %s.");
-                    this.do_warn(_t("File upload"), _.str.sprintf(msg, utils.human_size(this.max_upload_size)));
+                    this.displayNotification({ title: _t("File upload"), message: _.str.sprintf(msg, utils.human_size(this.max_upload_size)), type: 'danger' });
                     return false;
                 }
                 utils.getDataURLFromFile(file).then(function (data) {
@@ -1876,7 +1897,7 @@ var AbstractFieldBinary = AbstractField.extend({
     },
     on_file_uploaded: function (size, name) {
         if (size === false) {
-            this.do_warn(false, _t("There was a problem while uploading your file"));
+            this.displayNotification({ message: _t("There was a problem while uploading your file"), type: 'danger' });
             // TODO: use crashmanager
             console.warn("Error while uploading file : ", name);
         } else {
@@ -1953,7 +1974,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     }),
 
     template: 'FieldBinaryImage',
-    placeholder: "/web/static/src/img/placeholder.png",
+    placeholder: "/web/static/img/placeholder.png",
     events: _.extend({}, AbstractFieldBinary.prototype.events, {
         'click img': function () {
             if (this.mode === "readonly") {
@@ -2019,7 +2040,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
 
         $img.one('error', function () {
             $img.attr('src', self.placeholder);
-            self.do_warn(false, _t("Could not display the selected image"));
+            self.displayNotification({ message: _t("Could not display the selected image"), type: 'danger' });
         });
 
         return this._super.apply(this, arguments);
@@ -2050,8 +2071,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                 this.$el.addClass(this.attrs.class);
             }
 
-            const image_field = this.field.manual ? this.name:'image_128';
-            var urlThumb = this._getImageUrl(this.model, this.res_id, image_field, unique);
+            var urlThumb = this._getImageUrl(this.model, this.res_id, this.name, unique);
 
             this.$el.empty();
             $img = this.$el;
@@ -2096,7 +2116,7 @@ var CharImageUrl = AbstractField.extend({
     className: 'o_field_image',
     description: _lt("Image"),
     supportedFieldTypes: ['char'],
-    placeholder: "/web/static/src/img/placeholder.png",
+    placeholder: "/web/static/img/placeholder.png",
 
     _renderReadonly: function () {
         var self = this;
@@ -2211,7 +2231,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
     },
     on_save_as: function (ev) {
         if (!this.value) {
-            this.do_warn(false, _t("The field is empty, there's nothing to save."));
+            this.displayNotification({ message: _t("The field is empty, there's nothing to save."), type: 'danger' });
             ev.stopPropagation();
         } else if (this.res_id) {
             framework.blockUI();
@@ -2254,13 +2274,6 @@ var FieldPdfViewer = FieldBinaryFile.extend({
 
     /**
      * @private
-     * @param {DOMElement} iframe
-     */
-    _disableButtons: function (iframe) {
-        $(iframe).contents().find('button#openFile').hide();
-    },
-    /**
-     * @private
      * @param {string} [fileURI] file URI if specified
      * @returns {string} the pdf viewer URI
      */
@@ -2291,7 +2304,6 @@ var FieldPdfViewer = FieldBinaryFile.extend({
 
         $iFrame.on('load', function () {
             self.PDFViewerApplication = this.contentWindow.window.PDFViewerApplication;
-            self._disableButtons(this);
         });
         if (this.mode === "readonly" && this.value) {
             $iFrame.attr('src', this._getURI());
@@ -2308,6 +2320,7 @@ var FieldPdfViewer = FieldBinaryFile.extend({
                 $selectUpload.removeClass('o_hidden');
             }
         }
+        hidePDFJSButtons($iFrame[0]);
     },
 
     //--------------------------------------------------------------------------
@@ -2757,6 +2770,27 @@ var BooleanToggle = FieldBoolean.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds the icon fa-check-circle if value is true else adds icon
+     * fa-times-circle
+     *
+     * @override
+     */
+    async _render() {
+        await this._super(...arguments);
+        const classToApply = this.value ? 'fa-check-circle' : 'fa-times-circle';
+        if (this.el.querySelector('i')) {
+            this.el.querySelector('i').remove();
+        }
+        const i = document.createElement("i");
+        i.setAttribute('class', `fa ${classToApply}`);
+        this.el.querySelector('label').appendChild(i);
+    },
+
+    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -2766,9 +2800,10 @@ var BooleanToggle = FieldBoolean.extend({
      * @private
      * @param {MouseEvent} event
      */
-    _onClick: function (event) {
+    _onClick: async function (event) {
         event.stopPropagation();
-        this._setValue(!this.value);
+        await this._setValue(!this.value);
+        this._render();
     },
 });
 
@@ -2986,7 +3021,7 @@ var FieldProgressBar = AbstractField.extend({
             // Cover all numbers with parseFloat
             parsedValue = field_utils.parse.float($input.val());
         } catch (error) {
-            this.do_warn(false, _t("Please enter a numerical value"));
+            this.displayNotification({ message: _t("Please enter a numerical value"), type: 'danger' });
         }
 
         if (parsedValue !== undefined) {

@@ -11,6 +11,10 @@ odoo.define('web.searchUtils', function (require) {
 
     // Filter menu parameters
     const FIELD_OPERATORS = {
+        binary: [
+            { symbol: "!=", description: _lt("is set"), value: false },
+            { symbol: "=", description: _lt("is not set"), value: false },
+        ],
         boolean: [
             { symbol: "=", description: _lt("is true"), value: true },
             { symbol: "!=", description: _lt("is false"), value: true },
@@ -47,6 +51,8 @@ odoo.define('web.searchUtils', function (require) {
         ],
         id: [
             { symbol: "=", description: _lt("is") },
+            { symbol: "<=", description: _lt("less than or equal to")},
+            { symbol: ">", description: _lt("greater than")},
         ],
         number: [
             { symbol: "=", description: _lt("is equal to") },
@@ -66,6 +72,7 @@ odoo.define('web.searchUtils', function (require) {
         ],
     };
     const FIELD_TYPES = {
+        binary: 'binary',
         boolean: 'boolean',
         char: 'char',
         date: 'date',

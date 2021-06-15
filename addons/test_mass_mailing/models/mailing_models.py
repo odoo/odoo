@@ -51,6 +51,14 @@ class MailingOptOut(models.Model):
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True)
 
+    def _mailing_get_opt_out_list(self, mailing):
+        res_ids = mailing._get_recipients()
+        opt_out_contacts = set(self.search([
+            ('id', 'in', res_ids),
+            ('opt_out', '=', True)
+        ]).mapped('email_normalized'))
+        return opt_out_contacts
+
 
 class MailingPerformance(models.Model):
     """ A very simple model only inheriting from mail.thread to test pure mass

@@ -14,6 +14,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
     xmlDependencies: (FieldHtml.prototype.xmlDependencies || []).concat(["/mass_mailing/static/src/xml/mass_mailing.xml"]),
     jsLibs: [
         '/mass_mailing/static/src/js/mass_mailing_link_dialog_fix.js',
+        '/mass_mailing/static/src/js/mass_mailing_snippets.js',
     ],
 
     custom_events: _.extend({}, FieldHtml.prototype.custom_events, {
@@ -33,9 +34,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         // All the code related to this __extraAssetsForIframe variable is an
         // ugly hack to restore mass mailing options in stable versions. The
         // whole logic has to be refactored as soon as possible...
-        this.__extraAssetsForIframe = [{
-            jsLibs: ['/mass_mailing/static/src/js/mass_mailing_snippets.js'],
-        }];
+        this.__extraAssetsForIframe = [{jsLibs: []}];
     },
 
     //--------------------------------------------------------------------------
@@ -301,24 +300,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
     },
 
     /**
-     * Toggle the code view.
-     */
-    _toggleCodeView: function () {
-        this.wysiwyg.odooEditor.observerUnactive();
-        const $codeview = this.$content.parent().find('textarea.o_codeview');
-        $codeview.toggleClass('d-none');
-        this.$content.toggleClass('d-none');
-        if ($codeview.hasClass('d-none')) {
-            this.wysiwyg.odooEditor.observerActive();
-            this.wysiwyg.setValue($codeview.val());
-            this.wysiwyg.odooEditor.historyStep();
-        } else {
-            $codeview.val(this.$content.html());
-            this.wysiwyg.odooEditor.observerActive();
-        }
-    },
-
-    /**
      * @override
      */
     _getWysiwygOptions: function () {
@@ -347,6 +328,11 @@ var MassMailingFieldHtml = FieldHtml.extend({
         this._super();
         this.wysiwyg.odooEditor.observerFlush();
         this.wysiwyg.odooEditor.resetHistory();
+        //this will make the editor take all the bottom space
+        this.wysiwyg.$iframe.css({
+            'min-height': '100vh',
+            width: '100%'
+        });
     },
     /**
      * @private
@@ -384,8 +370,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (!odoo.debug) {
             $snippetsSideBar.find('.o_codeview_btn').hide();
         }
-
-        $snippetsSideBar.on('click', '.o_codeview_btn', this._toggleCodeView.bind(this));
+        const $codeview = this.$content.parent().find('textarea.o_codeview');
+        $snippetsSideBar.on('click', '.o_codeview_btn', () => this._toggleCodeView($codeview));
 
         if ($themes.length === 0) {
             return;
@@ -441,6 +427,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (firstChoice) {
             $themeSelectorNew.appendTo(this.wysiwyg.$iframeBody);
         }
+
+        this.wysiwyg.$iframeBody.addClass("o_mass_mailing_iframe")
 
         /**
          * Add proposition to install enterprise themes if not installed.

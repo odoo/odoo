@@ -56,7 +56,7 @@ class StockMove(models.Model):
     product_uom_qty = fields.Float(
         'Demand',
         digits='Product Unit of Measure',
-        default=0.0, required=True, states={'done': [('readonly', True)]},
+        default=1.0, required=True, states={'done': [('readonly', True)]},
         help="This is the quantity of products from an inventory "
              "point of view. For moves in the state 'done', this is the "
              "quantity of products that were actually moved. For other "
@@ -170,11 +170,12 @@ class StockMove(models.Model):
     next_serial = fields.Char('First SN')
     next_serial_count = fields.Integer('Number of SN')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', check_company=True)
-    forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit of Measure')
-    forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information')
+    forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit of Measure', compute_sudo=True)
+    forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information', compute_sudo=True)
     lot_ids = fields.Many2many('stock.production.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
     reservation_date = fields.Date('Date to Reserve', compute='_compute_reservation_date', store=True,
         help="This is a technical field for calculating when a move should be reserved")
+    product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
 
     @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state')
     def _compute_display_assign_serial(self):
@@ -553,7 +554,9 @@ class StockMove(models.Model):
         # Handle the write on the initial demand by updating the reserved quantity and logging
         # messages according to the state of the stock.move records.
         receipt_moves_to_reassign = self.env['stock.move']
+        move_to_recompute_state = self.env['stock.move']
         if 'product_uom_qty' in vals:
+            move_to_unreserve = self.env['stock.move']
             for move in self.filtered(lambda m: m.state not in ('done', 'draft') and m.picking_id):
                 if float_compare(vals['product_uom_qty'], move.product_uom_qty, precision_rounding=move.product_uom.rounding):
                     self.env['stock.move.line']._log_message(move.picking_id, move, 'stock.track_move_template', vals)
@@ -566,9 +569,12 @@ class StockMove(models.Model):
                 # When editing the initial demand, directly run again action assign on receipt moves.
                 receipt_moves_to_reassign |= move_to_unreserve.filtered(lambda m: m.location_id.usage == 'supplier')
                 receipt_moves_to_reassign |= (self - move_to_unreserve).filtered(lambda m: m.location_id.usage == 'supplier' and m.state in ('partially_available', 'assigned'))
+                move_to_recompute_state |= self - move_to_unreserve - receipt_moves_to_reassign
         if 'date_deadline' in vals:
             self._set_date_deadline(vals.get('date_deadline'))
         res = super(StockMove, self).write(vals)
+        if move_to_recompute_state:
+            move_to_recompute_state._recompute_state()
         if receipt_moves_to_reassign:
             receipt_moves_to_reassign._action_assign()
         return res
@@ -648,6 +654,19 @@ class StockMove(models.Model):
         if not self.next_serial:
             raise UserError(_("You need to set a Serial Number before generating more."))
         self._generate_serial_numbers()
+        return self.action_show_details()
+
+    def action_clear_lines_show_details(self):
+        """ Unlink `self.move_line_ids` before returning `self.action_show_details`.
+        Useful for if a user creates too many SNs by accident via action_assign_serial_show_details
+        since there's no way to undo the action.
+        """
+        self.ensure_one()
+        if self.picking_type_id.show_reserved:
+            move_lines = self.move_line_ids
+        else:
+            move_lines = self.move_line_nosuggest_ids
+        move_lines.unlink()
         return self.action_show_details()
 
     def action_assign_serial(self):
@@ -753,9 +772,9 @@ class StockMove(models.Model):
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
             if move.location_dest_id.company_id == self.env.company:
-                rule = self.env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
+                rule = self.env['procurement.group']._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
             else:
-                rule = self.sudo().env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
+                rule = self.sudo().env['procurement.group']._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
             # Make sure it is not returning the return
             if rule and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_id.id):
                 new_move = rule._run_push(move)
@@ -781,7 +800,8 @@ class StockMove(models.Model):
         return [
             'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id',
             'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id',
-            'package_level_id', 'propagate_cancel', 'description_picking', 'date_deadline'
+            'package_level_id', 'propagate_cancel', 'description_picking', 'date_deadline',
+            'product_packaging_id',
         ]
 
     @api.model
@@ -895,6 +915,15 @@ class StockMove(models.Model):
         self.product_uom = product.uom_id.id
         if product:
             self.description_picking = product._get_description(self.picking_type_id)
+
+    @api.onchange('product_id', 'product_qty', 'product_uom')
+    def _onchange_suggest_packaging(self):
+        # remove packaging if not match the product
+        if self.product_packaging_id.product_id != self.product_id:
+            self.product_packaging_id = False
+        # suggest biggest suitable packaging
+        if self.product_id and self.product_qty and self.product_uom:
+            self.product_packaging_id = self.product_id.packaging_ids._find_suitable_product_packaging(self.product_qty, self.product_uom)
 
     @api.onchange('lot_ids')
     def _onchange_lot_ids(self):
@@ -1045,7 +1074,7 @@ class StockMove(models.Model):
         if origin_move_line:
             location_dest = origin_move_line.location_dest_id
         else:
-            location_dest = self.location_dest_id._get_putaway_strategy(self.product_id, quantity=1)
+            location_dest = self.location_dest_id._get_putaway_strategy(self.product_id, quantity=1, packaging=self.product_packaging_id)
         move_line_vals = {
             'picking_id': self.picking_id.id,
             'location_dest_id': location_dest.id,
@@ -1155,7 +1184,7 @@ class StockMove(models.Model):
         # assign picking in batch for all confirmed move that share the same details
         for moves_ids in to_assign.values():
             self.browse(moves_ids)._assign_picking()
-        new_push_moves = self._push_apply()
+        new_push_moves = self.filtered(lambda m: not m.picking_id.immediate_transfer)._push_apply()
         self._check_company()
         moves = self
         if merge:
@@ -1196,12 +1225,13 @@ class StockMove(models.Model):
             'warehouse_id': self.warehouse_id or self.picking_type_id.warehouse_id,
             'priority': self.priority,
             'orderpoint_id': self.orderpoint_id,
+            'product_packaging_id': self.product_packaging_id,
         }
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
         self.ensure_one()
         # apply putaway
-        location_dest_id = self.location_dest_id._get_putaway_strategy(self.product_id, quantity=quantity or 0).id
+        location_dest_id = self.location_dest_id._get_putaway_strategy(self.product_id, quantity=quantity or 0, packaging=self.product_packaging_id).id
         vals = {
             'move_id': self.id,
             'product_id': self.product_id.id,
@@ -1241,6 +1271,10 @@ class StockMove(models.Model):
             package_id = self.env['stock.quant.package']
         if not owner_id:
             owner_id = self.env['res.partner']
+
+        # do full packaging reservation when it's needed
+        if self.product_packaging_id and self.product_id.product_tmpl_id.categ_id.packaging_reserve_method == "full":
+            available_quantity = self.product_packaging_id._check_qty(available_quantity, self.product_id.uom_id, "DOWN")
 
         taken_quantity = min(available_quantity, need)
 
@@ -1548,6 +1582,9 @@ class StockMove(models.Model):
         picking = moves_todo.mapped('picking_id')
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
 
+        new_push_moves = moves_todo.filtered(lambda m: m.picking_id.immediate_transfer)._push_apply()
+        if new_push_moves:
+            new_push_moves._action_confirm()
         move_dests_per_company = defaultdict(lambda: self.env['stock.move'])
         for move_dest in moves_todo.move_dest_ids:
             move_dests_per_company[move_dest.company_id.id] |= move_dest
@@ -1751,7 +1788,7 @@ class StockMove(models.Model):
                 ('location_id', '=', move.location_dest_id.id),
                 ('action', '!=', 'push')
             ]
-            rules = self.env['procurement.group']._search_rule(False, product_id, move.warehouse_id, domain)
+            rules = self.env['procurement.group']._search_rule(False, move.product_packaging_id, product_id, move.warehouse_id, domain)
             if rules:
                 if rules.procure_method in ['make_to_order', 'make_to_stock']:
                     move.procure_method = rules.procure_method

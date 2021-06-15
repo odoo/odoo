@@ -23,7 +23,7 @@
                     </div>
                 </t>
                 <t t-else="">
-                    <div class="py-1 px-2 bg-100 small" t-raw="task._get_pad_content()"/>
+                    <div class="py-1 px-2 bg-100 small" t-esc="task._get_pad_content()"/>
                 </t>
             </t>
             <t t-else="">

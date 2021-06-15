@@ -88,7 +88,7 @@ class PaymentTransaction(models.Model):
             # enter his email on the checkout page.
             'customer': customer['id'],
         }
-        base_url = self.acquirer_id._get_base_url()
+        base_url = self.acquirer_id.get_base_url()
         if self.operation == 'online_redirect':
             return_url = f'{urls.url_join(base_url, StripeController._checkout_return_url)}' \
                          f'?reference={urls.url_quote_plus(self.reference)}'
@@ -165,15 +165,15 @@ class PaymentTransaction(models.Model):
             raise UserError("Stripe: " + _("The transaction is not linked to a token."))
 
         payment_intent = self._stripe_create_payment_intent()
-        feedback_data = {
-            'reference': self.reference,
-            'payment_intent': payment_intent,
-        }
+        feedback_data = {'reference': self.reference}
+        StripeController._include_payment_intent_in_feedback_data(payment_intent, feedback_data)
         _logger.info("entering _handle_feedback_data with data:\n%s", pprint.pformat(feedback_data))
         self._handle_feedback_data('stripe', feedback_data)
 
     def _stripe_create_payment_intent(self):
         """ Create and return a PaymentIntent.
+
+        Note: self.ensure_one()
 
         :return: The Payment Intent
         :rtype: dict
@@ -181,15 +181,29 @@ class PaymentTransaction(models.Model):
         if not self.token_id.stripe_payment_method:  # Pre-SCA token -> migrate it
             self.token_id._stripe_sca_migrate_customer()
 
-        payment_intent = self.acquirer_id._stripe_make_request('payment_intents', payload={
-            'amount': payment_utils.to_minor_currency_units(self.amount, self.currency_id),
-            'currency': self.currency_id.name.lower(),
-            'confirm': True,
-            'customer': self.token_id.acquirer_ref,
-            'off_session': True,
-            'payment_method': self.token_id.stripe_payment_method,
-            'description': self.reference,
-        })
+        response = self.acquirer_id._stripe_make_request(
+            'payment_intents',
+            payload={
+                'amount': payment_utils.to_minor_currency_units(self.amount, self.currency_id),
+                'currency': self.currency_id.name.lower(),
+                'confirm': True,
+                'customer': self.token_id.acquirer_ref,
+                'off_session': True,
+                'payment_method': self.token_id.stripe_payment_method,
+                'description': self.reference,
+            },
+            offline=self.operation == 'offline',
+        )
+        if 'error' not in response:
+            payment_intent = response
+        else:  # A processing error was returned in place of the payment intent
+            error_msg = response['error'].get('message')
+            self._set_error("Stripe: " + _(
+                "The communication with the API failed.\n"
+                "Stripe gave us the following info about the problem:\n'%s'", error_msg
+            ))  # Flag transaction as in error now as the intent status might have a valid value
+            payment_intent = response['error'].get('payment_intent')  # Get the PI from the error
+
         return payment_intent
 
     @api.model
@@ -234,11 +248,14 @@ class PaymentTransaction(models.Model):
         if self.provider != 'stripe':
             return
 
+        if 'charge' in data:
+            self.acquirer_reference = data['charge']['id']
+
         # Handle the intent status
-        if self.operation == 'online_redirect' or self.operation == 'online_token':
-            intent_status = data.get('payment_intent', {}).get('status')
-        else:  # 'validation'
+        if self.operation == 'validation':
             intent_status = data.get('setup_intent', {}).get('status')
+        else:  # 'online_redirect', 'online_token', 'offline'
+            intent_status = data.get('payment_intent', {}).get('status')
         if not intent_status:
             raise ValidationError(
                 "Stripe: " + _("Received data with missing intent status.")

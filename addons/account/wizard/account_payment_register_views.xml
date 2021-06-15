@@ -28,9 +28,9 @@
 
                     <group>
                         <group name="group1">
-                            <field name="journal_id" widget="selection" required="1"/>
-                            <field name="payment_method_id" widget="radio"
-                                   required="1"
+                            <field name="journal_id" options="{'no_open': True, 'no_create': True}" required="1"/>
+                            <field name="payment_method_id"
+                                   required="1"  options="{'no_create': True, 'no_open': True}"
                                    attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
                             <field name="partner_bank_id"
                                    attrs="{'invisible': ['|', ('show_partner_bank_account', '=', False), '|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)],

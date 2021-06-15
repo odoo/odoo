@@ -33,7 +33,7 @@
                         <i class="fa fa-times" title="Close the onboarding panel" />
                     </a>
                     <div class="o_onboarding_steps">
-                        <t t-raw="0" />
+                        <t t-out="0" />
                     </div>
                     <div t-att-class="'o_onboarding_completed_message text-center' + (' o_onboarding_steps_done' if state.get('onboarding_state') in ('done', 'just_done') else '') + (' o_onboarding_steps_just_done' if state.get('onboarding_state') == 'just_done' else '')">
                         <i class="fa fa-check text-success mr8" />

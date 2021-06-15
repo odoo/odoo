@@ -6,6 +6,7 @@ from odoo import fields, models
 class PaymentIcon(models.Model):
     _name = 'payment.icon'
     _description = 'Payment Icon'
+    _order = 'sequence, name'
 
     name = fields.Char(string="Name")
     acquirer_ids = fields.Many2many(
@@ -17,3 +18,4 @@ class PaymentIcon(models.Model):
     image_payment_form = fields.Image(
         string="Image displayed on the payment form", related='image', store=True, max_width=45,
         max_height=30)
+    sequence = fields.Integer('Sequence', default=1)

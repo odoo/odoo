@@ -49,7 +49,7 @@ class TestMassMailValues(MassMailCommon):
         })
 
         mail_values = composer.get_mail_values([recipient.id])
-        body_html = str(mail_values[recipient.id]['body_html'])
+        body_html = mail_values[recipient.id]['body_html']
 
         self.assertIn('<!DOCTYPE html>', body_html)
         self.assertIn('<head>', body_html)
@@ -92,7 +92,7 @@ class TestMassMailValues(MassMailCommon):
         self.assertEqual(mailing.reply_to_mode, 'new')
         self.assertEqual(mailing.reply_to, self.email_reply_to)
         # default for mailing list: depends upon contact_list_ids
-        self.assertEqual(literal_eval(mailing.mailing_domain), [])
+        self.assertEqual(literal_eval(mailing.mailing_domain), [('list_ids', 'in', [])])
         mailing.write({
             'contact_list_ids': [(4, self.mailing_list_1.id), (4, self.mailing_list_2.id)]
         })
@@ -370,3 +370,26 @@ Email: <a id="url5" href="mailto:test@odoo.com">test@odoo.com</a></div>""",
                     link_info,
                     link_params=link_params,
                 )
+
+class TestMailingScheduleDateWizard(MassMailCommon):
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    @users('user_marketing')
+    def test_mailing_schedule_date(self):
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'mailing',
+            'subject': 'some subject'
+        })
+        # create a schedule date wizard
+        wizard_form = Form(
+            self.env['mailing.mailing.schedule.date'].with_context(default_mass_mailing_id=mailing.id))
+
+        # set a schedule date
+        wizard_form.schedule_date = datetime(2021, 4, 30, 9, 0)
+        wizard = wizard_form.save()
+        wizard.action_schedule_date()
+
+        # assert that the schedule_date and schedule_type fields are correct and that the mailing is put in queue
+        self.assertEqual(mailing.schedule_date, datetime(2021, 4, 30, 9, 0))
+        self.assertEqual(mailing.schedule_type, 'scheduled')
+        self.assertEqual(mailing.state, 'in_queue')

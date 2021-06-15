@@ -165,6 +165,10 @@ class MailPluginController(http.Controller):
             raise Forbidden()
         request.env[model].browse(res_id).message_post(body=message)
 
+    @http.route('/mail_plugin/get_translations', type="json", auth="outlook", cors="*")
+    def get_translations(self):
+        return self._prepare_translations()
+
     def _iap_enrich(self, domain):
         enriched_data = {}
         try:
@@ -311,3 +315,22 @@ class MailPluginController(http.Controller):
         """
         domain = tools.email_domain_extract(email)
         return ("@" + domain) if domain not in iap_tools._MAIL_DOMAIN_BLACKLIST else email
+
+    def _translation_modules_whitelist(self):
+        """
+        Returns the list of modules to be translated
+        Other mail plugin modules have to override this method to include their module names
+        """
+        return ['mail_plugin']
+
+    def _prepare_translations(self):
+        lang = request.env['res.users'].browse(request.uid).lang
+        translations_per_module = request.env["ir.translation"].get_translations_for_webclient(
+            self._translation_modules_whitelist(), lang)[0]
+        translations_dict = {}
+        for module in self._translation_modules_whitelist():
+            translations = translations_per_module.get(module, {})
+            messages = translations.get('messages', {})
+            for message in messages:
+                translations_dict.update({message['id']: message['string']})
+        return translations_dict

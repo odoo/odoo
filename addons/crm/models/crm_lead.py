@@ -58,8 +58,6 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'city',
     'state_id',
     'country_id',
-    # probability
-    'probability',
 ]
 
 # Subset of partner fields: sync any of those
@@ -121,7 +119,7 @@ class Lead(models.Model):
         'res.company', string='Company', index=True,
         compute='_compute_company_id', readonly=False, store=True)
     referred = fields.Char('Referred By')
-    description = fields.Text('Notes')
+    description = fields.Html('Notes')
     active = fields.Boolean('Active', default=True, tracking=True)
     type = fields.Selection([
         ('lead', 'Lead'), ('opportunity', 'Opportunity')],
@@ -225,7 +223,8 @@ class Lead(models.Model):
         'crm.lost.reason', string='Lost Reason',
         index=True, ondelete='restrict', tracking=True)
     # Statistics
-    meeting_count = fields.Integer('# Meetings', compute='_compute_meeting_count')
+    calendar_event_ids = fields.One2many('calendar.event', 'opportunity_id', string='Meetings')
+    calendar_event_count = fields.Integer('# Meetings', compute='_compute_calendar_event_count')
     duplicate_lead_ids = fields.Many2many("crm.lead", compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead", context={"active_test": False})
     duplicate_lead_count = fields.Integer(compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead Count")
     # UX
@@ -504,7 +503,7 @@ class Lead(models.Model):
         for lead in self:
             lead.recurring_revenue_monthly_prorated = (lead.recurring_revenue_monthly or 0.0) * (lead.probability or 0) / 100.0
 
-    def _compute_meeting_count(self):
+    def _compute_calendar_event_count(self):
         if self.ids:
             meeting_data = self.env['calendar.event'].sudo().read_group([
                 ('opportunity_id', 'in', self.ids)
@@ -513,7 +512,7 @@ class Lead(models.Model):
         else:
             mapped_data = dict()
         for lead in self:
-            lead.meeting_count = mapped_data.get(lead.id, 0)
+            lead.calendar_event_count = mapped_data.get(lead.id, 0)
 
     @api.depends('email_from', 'partner_id', 'contact_name', 'partner_name')
     def _compute_potential_lead_duplicates(self):
@@ -956,7 +955,7 @@ class Lead(models.Model):
                 'effect': {
                     'fadeout': 'slow',
                     'message': message,
-                    'img_url': '/web/image/%s/%s/image_1024' % (self.team_id.user_id._name, self.team_id.user_id.id) if self.team_id.user_id.image_1024 else '/web/static/src/img/smile.svg',
+                    'img_url': '/web/image/%s/%s/image_1024' % (self.team_id.user_id._name, self.team_id.user_id.id) if self.team_id.user_id.image_1024 else '/web/static/img/smile.svg',
                     'type': 'rainbow_man',
                 }
             }
@@ -1310,62 +1309,6 @@ class Lead(models.Model):
         message_body = "\n\n".join(message_bodies)
         return self.message_post(body=message_body, subject=subject)
 
-    def _merge_opportunity_history(self, opportunities):
-        """ Move mail.message from the given opportunities to the current one. `self` is the
-            crm.lead record destination for message of `opportunities`.
-
-        :param opportunities: see ``_merge_dependences``
-        """
-        self.ensure_one()
-        for opportunity in opportunities:
-            for message in opportunity.message_ids:
-                if message.subject:
-                    subject = _("From %(source_name)s : %(source_subject)s", source_name=opportunity.name, source_subject=message.subject)
-                else:
-                    subject = _("From %(source_name)s", source_name=opportunity.name)
-                message.write({
-                    'res_id': self.id,
-                    'subject': subject,
-                })
-        return True
-
-    def _merge_opportunity_attachments(self, opportunities):
-        """ Move attachments of given opportunities to the current one `self`, and rename
-            the attachments having same name than native ones.
-
-        :param opportunities: see ``_merge_dependences``
-        """
-        self.ensure_one()
-
-        # return attachments of opportunity
-        def _get_attachments(opportunity_id):
-            return self.env['ir.attachment'].search([('res_model', '=', self._name), ('res_id', '=', opportunity_id)])
-
-        first_attachments = _get_attachments(self.id)
-        # counter of all attachments to move. Used to make sure the name is different for all attachments
-        count = 1
-        for opportunity in opportunities:
-            attachments = _get_attachments(opportunity.id)
-            for attachment in attachments:
-                values = {'res_id': self.id}
-                for attachment_in_first in first_attachments:
-                    if attachment.name == attachment_in_first.name:
-                        values['name'] = "%s (%s)" % (attachment.name, count)
-                count += 1
-                attachment.write(values)
-        return True
-
-    def _merge_dependences(self, opportunities):
-        """ Merge dependences (messages, attachments, ...). These dependences will be
-            transfered to `self`, the most important lead.
-
-        :param opportunities : recordset of opportunities to transfer. Does not
-          include `self` which is the target crm.lead being the result of the merge.
-        """
-        self.ensure_one()
-        self._merge_opportunity_history(opportunities)
-        self._merge_opportunity_attachments(opportunities)
-
     def merge_opportunity(self, user_id=False, team_id=False, auto_unlink=True):
         """ Merge opportunities in one. Different cases of merge:
                 - merge leads together = 1 new lead
@@ -1390,7 +1333,7 @@ class Lead(models.Model):
             raise UserError(_('Please select more than one element (lead or opportunity) from the list view.'))
 
         if max_length and len(self.ids) > max_length and not self.env.is_superuser():
-            raise UserError(_("To prevent data loss, Leads and Opportunities can only be merged by groups of %(max_length)s."))
+            raise UserError(_("To prevent data loss, Leads and Opportunities can only be merged by groups of %(max_length)s.", max_length=max_length))
 
         opportunities = self._sort_by_confidence_level(reverse=True)
 
@@ -1431,13 +1374,95 @@ class Lead(models.Model):
 
     def _merge_get_fields_specific(self):
         return {
-            'description': lambda fname, leads: '\n\n'.join(desc for desc in leads.mapped('description') if desc),
+            'description': lambda fname, leads: '<br/><br/>'.join(desc for desc in leads.mapped('description') if not is_html_empty(desc)),
             'type': lambda fname, leads: 'opportunity' if any(lead.type == 'opportunity' for lead in leads) else 'lead',
             'priority': lambda fname, leads: max(leads.mapped('priority')) if leads else False,
         }
 
     def _merge_get_fields(self):
         return list(CRM_LEAD_FIELDS_TO_MERGE) + list(self._merge_get_fields_specific().keys())
+
+    def _merge_dependences(self, opportunities):
+        """ Merge dependences (messages, attachments,activities, calendar events,
+        ...). These dependences will be transfered to `self` considered as the
+        master lead.
+
+        :param opportunities : recordset of opportunities to transfer. Does not
+          include `self` which is the target crm.lead being the result of the
+          merge;
+        """
+        self.ensure_one()
+        self._merge_dependences_history(opportunities)
+        self._merge_dependences_attachments(opportunities)
+        self._merge_dependences_calendar_events(opportunities)
+
+    def _merge_dependences_history(self, opportunities):
+        """ Move history from the given opportunities to the current one. `self`
+        is the crm.lead record destination for message of `opportunities`.
+
+        This method moves
+          * messages
+          * activities
+
+        :param opportunities: see ``_merge_dependences``
+        """
+        self.ensure_one()
+        for opportunity in opportunities:
+            for message in opportunity.message_ids:
+                if message.subject:
+                    subject = _("From %(source_name)s : %(source_subject)s", source_name=opportunity.name, source_subject=message.subject)
+                else:
+                    subject = _("From %(source_name)s", source_name=opportunity.name)
+                message.write({
+                    'res_id': self.id,
+                    'subject': subject,
+                })
+
+        opportunities.activity_ids.write({
+            'res_id': self.id,
+        })
+
+        return True
+
+    def _merge_dependences_attachments(self, opportunities):
+        """ Move attachments of given opportunities to the current one `self`, and rename
+            the attachments having same name than native ones.
+
+        :param opportunities: see ``_merge_dependences``
+        """
+        self.ensure_one()
+
+        all_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', self._name),
+            ('res_id', 'in', opportunities.ids)
+        ])
+
+        for opportunity in opportunities:
+            attachments = all_attachments.filtered(lambda attach: attach.res_id == opportunity.id)
+            for attachment in attachments:
+                attachment.write({
+                    'res_id': self.id,
+                    'name': _("%(attach_name)s (from %(lead_name)s)",
+                              attach_name=attachment.name,
+                              lead_name=opportunity.name[:20]
+                             )
+                })
+        return True
+
+    def _merge_dependences_calendar_events(self, opportunities):
+        """ Move calender.event from the given opportunities to the current one. `self` is the
+            crm.lead record destination for event of `opportunities`.
+        :param opportunities: see ``merge_dependences``
+        """
+        self.ensure_one()
+        meetings = self.env['calendar.event'].search([('opportunity_id', 'in', opportunities.ids)])
+        return meetings.write({
+            'res_id': self.id,
+            'opportunity_id': self.id,
+        })
+
+    # CONVERT
+    # ----------------------------------------------------------------------
 
     def _convert_opportunity_data(self, customer, team_id=False):
         """ Extract the data from a lead to create the opportunity
@@ -1544,17 +1569,29 @@ class Lead(models.Model):
         if include_lost:
             domain += ['|', ('type', '=', 'opportunity'), ('active', '=', True)]
         else:
-            domain += ['&', ('active', '=', True), '|', ('probability', '=', False), ('probability', '<', 100)]
+            domain += ['&', ('active', '=', True), '|', ('stage_id', '=', False), ('stage_id.is_won', '=', False)]
 
         return self.with_context(active_test=False).search(domain)
 
     def _sort_by_confidence_level(self, reverse=False):
-        """ Sorting the leads/opps according to the confidence level of its stage, which relates to the probability of winning it
-        The confidence level increases with the stage sequence
-        An Opportunity always has higher confidence level than a lead
+        """ Sorting the leads/opps according to the confidence level to it
+        being won. It is sorted following this incremental heuristics :
+
+          * "not lost" first (inactive leads are lost); normally all leads
+            should be active but in case lost one, they are always last.
+            Inactive opportunities are considered as valid;
+          * opportunity is more reliable than a lead which is a pre-stage
+            used mainly for first classification;
+          * stage sequence: the higher the better as it indicates we are moving
+            towards won stage;
+          * ID: the higher the better when all other parameters are equal. We
+            consider newer leads to be more reliable;
         """
         def opps_key(opportunity):
-            return opportunity.type == 'opportunity', opportunity.stage_id.sequence, -opportunity._origin.id
+            return opportunity.type == 'opportunity' or opportunity.active,  \
+                opportunity.type == 'opportunity', \
+                opportunity.stage_id.sequence, \
+                -opportunity._origin.id
 
         return self.sorted(key=opps_key, reverse=reverse)
 
@@ -1778,6 +1815,10 @@ class Lead(models.Model):
                     break
         return result
 
+    def _phone_get_number_fields(self):
+        """ Use mobile or phone fields to compute sanitized phone number """
+        return ['mobile', 'phone']
+
     @api.model
     def get_import_templates(self):
         return [{
@@ -1866,19 +1907,17 @@ class Lead(models.Model):
 
         # get all team_ids from frequencies
         frequency_teams = frequencies.mapped('team_id')
-        frequency_team_ids = [0] + [team.id for team in frequency_teams]
+        frequency_team_ids = [team.id for team in frequency_teams]
 
         # 1. Compute each variable value count individually
         # regroup each variable to be able to compute their own probabilities
         # As all the variable does not enter into account (as we reject unset values in the process)
         # each value probability must be computed only with their own variable related total count
-        # special case: for lead for which team_id is not in frequency table,
+        # special case: for lead for which team_id is not in frequency table or lead with no team_id,
         # we consider all the records, independently from team_id (this is why we add a result[-1])
         result = dict((team_id, dict((field, dict(won_total=0, lost_total=0)) for field in leads_fields)) for team_id in frequency_team_ids)
         result[-1] = dict((field, dict(won_total=0, lost_total=0)) for field in leads_fields)
         for frequency in frequencies:
-            team_result = result[frequency.team_id.id if frequency.team_id else 0]
-
             field = frequency['variable']
             value = frequency['value']
 
@@ -1887,9 +1926,11 @@ class Lead(models.Model):
             if field == 'tag_id' and (frequency['won_count'] + frequency['lost_count']) < 50:
                 continue
 
-            team_result[field][value] = {'won': frequency['won_count'], 'lost': frequency['lost_count']}
-            team_result[field]['won_total'] += frequency['won_count']
-            team_result[field]['lost_total'] += frequency['lost_count']
+            if frequency.team_id:
+                team_result = result[frequency.team_id.id]
+                team_result[field][value] = {'won': frequency['won_count'], 'lost': frequency['lost_count']}
+                team_result[field]['won_total'] += frequency['won_count']
+                team_result[field]['lost_total'] += frequency['lost_count']
 
             if value not in result[-1][field]:
                 result[-1][field][value] = {'won': 0, 'lost': 0}
@@ -1917,8 +1958,8 @@ class Lead(models.Model):
                 lead_probabilities[lead_id] = 100
                 continue
 
-            lead_team_id = lead_values['team_id'] if lead_values['team_id'] else 0  # team_id = None -> Convert to 0
-            lead_team_id = lead_team_id if lead_team_id in result else -1  # team_id not in frequency Table -> convert to -1
+            # team_id not in frequency Table -> convert to -1
+            lead_team_id = lead_values['team_id'] if lead_values['team_id'] in result else -1
             if lead_team_id != save_team_id:
                 save_team_id = lead_team_id
                 team_won = result[save_team_id]['team_won']

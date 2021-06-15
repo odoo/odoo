@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.2\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 14:29+0000\n"
-"PO-Revision-Date: 2021-02-18 14:29+0000\n"
+"POT-Creation-Date: 2021-05-11 09:26+0000\n"
+"PO-Revision-Date: 2021-05-11 09:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,6 +19,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
 #: model:ir.model.fields,field_description:event.field_res_users__event_count
 msgid "# Events"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail__mail_count_done
+msgid "# Sent"
 msgstr ""
 
 #. module: event
@@ -353,7 +358,7 @@ msgid ""
 "        Sent by <a target=\"_blank\" href=\"${object.company_id.website}\" style=\"color: #875A7B;\">${object.company_id.name}</a>\n"
 "        % if is_online:\n"
 "        <br/>\n"
-"        Discover <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">all our events</a>.\n"
+"        Discover <a href=\"/event\" style=\"color:#875A7B;\">all our events</a>.\n"
 "        % endif\n"
 "      </td></tr>\n"
 "    </table>\n"
@@ -571,7 +576,7 @@ msgid ""
 "        Sent by <a target=\"_blank\" href=\"${object.company_id.website}\" style=\"color: #875A7B;\">${object.company_id.name}</a>\n"
 "        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "        <br/>\n"
-"        Discover <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">all our events</a>.\n"
+"        Discover <a href=\"/event\" style=\"color:#875A7B;\">all our events</a>.\n"
 "        % endif\n"
 "      </td></tr>\n"
 "    </table>\n"
@@ -596,6 +601,7 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__active
+#: model:ir.model.fields,field_description:event.field_event_registration__active
 msgid "Active"
 msgstr ""
 
@@ -840,13 +846,6 @@ msgid "Category"
 msgstr ""
 
 #. module: event
-#. openerp-web
-#: code:addons/event/static/src/js/tours/event_tour.js:0
-#, python-format
-msgid "Click <b>add</b> to create a new stage."
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__color
 msgid "Color Index"
 msgstr ""
@@ -855,6 +854,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Communication"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
+msgid "Communication related to event registrations"
 msgstr ""
 
 #. module: event
@@ -1342,12 +1346,6 @@ msgid "Followers"
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__message_channel_ids
-#: model:ir.model.fields,field_description:event.field_event_registration__message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_partner_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_partner_ids
 msgid "Followers (Partners)"
@@ -1389,6 +1387,11 @@ msgid "Future Activities"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail__mail_state
+msgid "Global communication Status"
+msgstr ""
+
+#. module: event
 #. openerp-web
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
@@ -1409,6 +1412,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Group By"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__has_message
+#: model:ir.model.fields,field_description:event.field_event_registration__has_message
+msgid "Has Message"
 msgstr ""
 
 #. module: event
@@ -1463,7 +1472,7 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event__start_sale_date
+#: model:ir.model.fields,help:event.field_event_event__start_sale_datetime
 msgid ""
 "If ticketing is used, contains the earliest starting sale date of tickets."
 msgstr ""
@@ -1688,11 +1697,6 @@ msgid "Mail Sent"
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_mail__mail_sent
-msgid "Mail Sent on Event"
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_main_attachment_id
 #: model:ir.model.fields,field_description:event.field_event_registration__message_main_attachment_id
 msgid "Main Attachment"
@@ -1784,6 +1788,12 @@ msgstr ""
 #. module: event
 #: model:event.stage,name:event.event_stage_new
 msgid "New"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
+#: model:ir.model.fields,field_description:event.field_event_registration__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: event
@@ -2011,7 +2021,12 @@ msgid "Registration Date"
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_date
+#: model:res.groups,name:event.group_event_registration_desk
+msgid "Registration Desk"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_datetime
 msgid "Registration End"
 msgstr ""
 
@@ -2031,7 +2046,7 @@ msgid "Registration Mails"
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_date
+#: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
 msgid "Registration Start"
 msgstr ""
 
@@ -2071,6 +2086,11 @@ msgid ""
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
+msgid "Registrations started"
+msgstr ""
+
+#. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
 msgid "Reporting"
 msgstr ""
@@ -2094,6 +2114,11 @@ msgid "Responsible User"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__running
+msgid "Running"
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_sms_error
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_sms_error
 msgid "SMS Delivery error"
@@ -2110,6 +2135,11 @@ msgid "Schedule & Tracks"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
+msgid "Schedule Date"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid ""
 "Schedule and organize your events efficiently:\n"
@@ -2117,8 +2147,8 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
-msgid "Scheduled Sent Mail"
+#: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__scheduled
+msgid "Scheduled"
 msgstr ""
 
 #. module: event
@@ -2159,9 +2189,9 @@ msgid "Send by Email"
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_mail__done
+#: model:ir.model.fields,field_description:event.field_event_mail__mail_done
+#: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__sent
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
-#: model_terms:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Sent"
 msgstr ""
 
@@ -2233,7 +2263,7 @@ msgid "Start Date Located"
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__start_sale_date
+#: model:ir.model.fields,field_description:event.field_event_event__start_sale_datetime
 msgid "Start sale date"
 msgstr ""
 
@@ -2346,15 +2376,6 @@ msgstr ""
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "This operator is not supported"
-msgstr ""
-
-#. module: event
-#. openerp-web
-#: code:addons/event/static/src/js/tours/event_tour.js:0
-#, python-format
-msgid ""
-"This pipeline can be customized on the fly to fit your organizational needs."
-" For example, let's create a new stage."
 msgstr ""
 
 #. module: event
@@ -2629,6 +2650,13 @@ msgstr ""
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "on %(date)s"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__event_registrations_started
+msgid ""
+"registrations have started if the current datetime is after the earliest "
+"starting date of tickets."
 msgstr ""
 
 #. module: event

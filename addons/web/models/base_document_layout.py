@@ -29,8 +29,8 @@ class BaseDocumentLayout(models.TransientModel):
 
     logo = fields.Binary(related='company_id.logo', readonly=False)
     preview_logo = fields.Binary(related='logo', string="Preview logo")
-    report_header = fields.Text(related='company_id.report_header', readonly=False)
-    report_footer = fields.Text(related='company_id.report_footer', readonly=False)
+    report_header = fields.Html(related='company_id.report_header', readonly=False)
+    report_footer = fields.Html(related='company_id.report_footer', readonly=False)
 
     # The paper format changes won't be reflected in the preview.
     paperformat_id = fields.Many2one(related='company_id.paperformat_id', readonly=False)
@@ -48,14 +48,7 @@ class BaseDocumentLayout(models.TransientModel):
     report_layout_id = fields.Many2one('report.layout')
 
     # All the sanitization get disabled as we want true raw html to be passed to an iframe.
-    preview = fields.Html(compute='_compute_preview',
-                          sanitize=False,
-                          sanitize_tags=False,
-                          sanitize_attributes=False,
-                          sanitize_style=False,
-                          sanitize_form=False,
-                          strip_style=False,
-                          strip_classes=False)
+    preview = fields.Html(compute='_compute_preview', sanitize=False)
 
     # Those following fields are required as a company to create invoice report
     partner_id = fields.Many2one(related='company_id.partner_id', readonly=True)

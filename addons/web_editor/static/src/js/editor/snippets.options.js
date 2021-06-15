@@ -1286,12 +1286,16 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         const _super = this._super.bind(this);
         const args = arguments;
 
-        // TODO review in master, this was done in stable to keep the speed fix
-        // as stable as possible (to have a reference to a widget even if not a
-        // colorPalette widget).
-        this.colorPalette = new Widget(this);
-        this.colorPalette.getColorNames = () => [];
-        await this.colorPalette.appendTo(document.createDocumentFragment());
+        if (this.options.dataAttributes.lazyPalette === 'true') {
+            // TODO review in master, this was done in stable to keep the speed
+            // fix as stable as possible (to have a reference to a widget even
+            // if not a colorPalette widget).
+            this.colorPalette = new Widget(this);
+            this.colorPalette.getColorNames = () => [];
+            await this.colorPalette.appendTo(document.createDocumentFragment());
+        } else {
+            await this._renderColorPalette();
+        }
 
         // Build the select element with a custom span to hold the color preview
         this.colorPreviewEl = document.createElement('span');
@@ -2005,7 +2009,7 @@ const ListUserValueWidget = UserValueWidget.extend({
         });
         if (!this.selectMenuEl.children.length) {
             const title = document.createElement('we-title');
-            title.textContent = _("No more records");
+            title.textContent = _t("No more records");
             this.selectMenuEl.appendChild(title);
         }
     },
@@ -2765,7 +2769,7 @@ const SnippetOptionWidget = Widget.extend({
      *
      * @type {boolean}
      */
-    displayHandles: false,
+    displayOverlayOptions: false,
 
     /**
      * The option `$el` is supposed to be the associated DOM UI element.
@@ -3842,7 +3846,7 @@ const registry = {};
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 registry.sizing = SnippetOptionWidget.extend({
-    displayHandles: true,
+    displayOverlayOptions: true,
 
     /**
      * @override
@@ -4101,28 +4105,6 @@ registry['sizing_y'] = registry.sizing.extend({
  * Allows for media to be replaced.
  */
 registry.ReplaceMedia = SnippetOptionWidget.extend({
-    /**
-     * @override
-     */
-    start() {
-        const $button = this.$el.find('we-button.fa');
-        this.$overlayRemove = this.$overlay.find('.oe_snippet_remove');
-        $button.insertBefore(this.$overlayRemove);
-
-        return this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async updateUIVisibility() {
-        this.$overlayRemove.toggleClass('d-none', this.$target.is('.fa'));
-        return this._super(...arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -4138,6 +4120,49 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         // to be refactored when the new editor is merged
         this.$target.dblclick();
     },
+});
+
+/**
+ * General options that are common to a font awesome icon and an image.
+ */
+registry.StaticMediaTools = SnippetOptionWidget.extend({
+    currentShapes: {},
+    alignments: {
+        left: ['float-left'],
+        center: ['d-block', 'mx-auto'],
+        right: ['float-right'],
+    },
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    toggleShapeRounded(previewMode) {
+        this._toggleShape(previewMode, 'rounded');
+    },
+    toggleShapeCircle(previewMode) {
+        this._toggleShape(previewMode, 'rounded-circle');
+    },
+    toggleShapeShadow(previewMode) {
+        this._toggleShape(previewMode, 'shadow');
+    },
+    toggleShapeThumbnail(previewMode) {
+        this._toggleShape(previewMode, 'img-thumbnail');
+    },
+    setPadding(previewMode, padding) {
+        this.$target.css('padding', padding);
+    },
+    align(previewMode, alignment, params) {
+        if (previewMode === true) {
+            this.currentAlignment = this._getAlignment();
+        }
+        const targetAlignment = previewMode === 'reset' ? this.currentAlignment : alignment;
+        for (const value of params.possibleValues) {
+            this.$target.toggleClass(this.alignments[value] || '', value === targetAlignment);
+        }
+        if (previewMode === false) {
+            this.currentAlignment = alignment;
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -4146,12 +4171,140 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    async _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === 'replace_media_overlay_opt') {
-            return !this.$target.is('.fa');
+    _computeWidgetState(methodName, params) {
+        if (['toggleShapeRounded', 'toggleShapeCircle', 'toggleShapeShadow', 'toggleShapeThumbnail'].includes(methodName)) {
+            return params.possibleValues.find(c => this.$target.hasClass(c)) || '';
+        } else if (methodName === 'setPadding') {
+            return this.$target.css('padding');
+        } else if (methodName === 'align') {
+            return this._getAlignment();
         }
         return this._super(...arguments);
-    }
+    },
+    _getAlignment() {
+        for (const [alignment, [alignClass]] of Object.entries(this.alignments)) {
+            if (this.$target.hasClass(alignClass)) {
+                return alignment;
+            }
+        }
+        return '';
+    },
+    _toggleShape(previewMode, shape) {
+        if (previewMode === true) {
+            this.currentShapes[shape] = this.$target.hasClass(shape);
+            this.$target.toggleClass(shape, true);
+        } else if (previewMode === 'reset') {
+            this.$target.toggleClass(shape, this.currentShapes[shape]);
+        } else if (previewMode === false) {
+            this.$target.toggleClass(shape, !this.currentShapes[shape]);
+            this.currentShapes[shape] = this.$target.hasClass(shape);
+        }
+    },
+});
+
+/**
+ * General options of a font awesome icon.
+ */
+registry.FontawesomeTools = SnippetOptionWidget.extend({
+    setSize(previewMode, size, params) {
+        if (previewMode === true) {
+            this.currentSize = params.possibleValues.find(c => this.$target.hasClass(c)) || '';
+        }
+        for (const value of params.possibleValues) {
+            if (previewMode === 'reset') {
+                this.$target.toggleClass(value, value === this.currentSize);
+            } else {
+                this.$target.toggleClass(value, value === size)
+            }
+        }
+        if (previewMode === false) {
+            this.currentSize = size;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'setSize') {
+            return params.possibleValues.find(c => this.$target.hasClass(c)) || '';
+        } else if (methodName === 'align') {
+            return this._getAlignment();
+        }
+        return this._super(...arguments);
+    },
+});
+
+/**
+ * General options of an image.
+ */
+registry.ImageTools = SnippetOptionWidget.extend({
+    setWidth(previewMode, width) {
+        if (previewMode === true) {
+            this.currentWidth = this.$target.css('width');
+        }
+        if (previewMode === 'reset') {
+            this.$target.css('width', this.currentWidth);
+        } else {
+            this.$target.css('width', width);
+        }
+        if (previewMode === false) {
+            this.currentWidth = width;
+        }
+    },
+    setAlt(previewMode, alt) {
+        this.$target.attr('alt', alt);
+    },
+    setTitle(previewMode, title) {
+        this.$target.attr('title', title);
+    },
+    crop() {
+        new weWidgets.ImageCropWidget(this, this.$target[0]).appendTo(this.options.wysiwyg.$editable);
+    },
+    transform() {
+        if (this.$target.data('transfo-destroy')) {
+            this.$target.removeData('transfo-destroy');
+            return;
+        }
+        const document = this.$target[0].ownerDocument
+        this.$target.transfo({ document });
+        const mousedown = mousedownEvent => {
+            if (!$(mousedownEvent.target).closest('.transfo-container').length) {
+                this.$target.transfo('destroy');
+                $(document).off('mousedown', mousedown);
+            }
+            if ($(mousedownEvent.target).closest('#image-transform').length) {
+                this.$target
+                    .data('transfo-destroy', true)
+                    .attr('style', (this.$target.attr('style') || '')
+                    .replace(/[^;]*transform[\w:]*;?/g, ''));
+            }
+            this.$target.trigger('content_changed');
+        };
+        $(document).on('mousedown', mousedown);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'setWidth') {
+            return this.$target[0].style.width || '';
+        } else if (methodName === 'setAlt') {
+            return this.$target.attr('alt');
+        } else if (methodName === 'setTitle') {
+            return this.$target.attr('title');
+        }
+        return this._super(...arguments);
+    },
 });
 
 /*
@@ -4212,7 +4365,10 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     /**
      * @see this.selectClass for parameters
      */
-    setQuality(previewMode, widgetValue, params) {
+    async setQuality(previewMode, widgetValue, params) {
+        if (previewMode) {
+            return;
+        }
         this._getImg().dataset.quality = widgetValue;
         return this._applyOptions();
     },
@@ -4296,27 +4452,10 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @override
      */
     async _renderCustomXML(uiFragment) {
-        const isLocalURL = href => new URL(href, window.location.origin).origin === window.location.origin;
-
         const img = this._getImg();
         if (!this.originalSrc || !['image/png', 'image/jpeg'].includes(img.dataset.mimetype)) {
-            return [...uiFragment.childNodes].forEach(node => {
-                if (node.matches('.o_we_external_warning')) {
-                    node.classList.remove('d-none');
-                    if (isLocalURL(img.getAttribute('src'))) {
-                        const title = node.querySelector('we-title');
-                        title.textContent = ` ${_t("Quality options unavailable")}`;
-                        $(title).prepend('<i class="fa fa-warning" />');
-                        if (img.dataset.mimetype) {
-                            title.setAttribute('title', _t("Only PNG and JPEG images support quality options and image filtering"));
-                        } else {
-                            title.setAttribute('title', _t("Due to technical limitations, you can only change optimization settings on this image by choosing it again in the media-dialog or reuploading it (double click on the image)"));
-                        }
-                    }
-                } else {
-                    node.remove();
-                }
-            });
+            [...uiFragment.childNodes].forEach(node => node.remove());
+            return;
         }
         const $select = $(uiFragment).find('we-select[data-name=width_select_opt]');
         (await this._computeAvailableWidths()).forEach(([value, label]) => {
@@ -5034,6 +5173,40 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         });
     },
     /**
+     * Inserts or removes the given container at the right position in the
+     * document.
+     *
+     * @param {HTMLElement} [newContainer] container to insert, null to remove
+     */
+    _insertShapeContainer(newContainer) {
+        const target = this.$target[0];
+
+        const shapeContainer = target.querySelector(':scope > .o_we_shape');
+        if (shapeContainer) {
+            shapeContainer.remove();
+        }
+        if (newContainer) {
+            const preShapeLayerElement = this._getLastPreShapeLayerElement();
+            if (preShapeLayerElement) {
+                $(preShapeLayerElement).after(newContainer);
+            } else {
+                this.$target.prepend(newContainer);
+            }
+        }
+        return newContainer;
+    },
+    /**
+     * Creates and inserts a container for the shape with the right classes.
+     *
+     * @param {string} shape the shape name for which to create a container
+     */
+    _createShapeContainer(shape) {
+        const shapeContainer = this._insertShapeContainer(document.createElement('div'));
+        this.$target[0].style.position = 'relative';
+        shapeContainer.className = `o_we_shape o_${shape.replace(/\//g, '_')}`;
+        return shapeContainer;
+    },
+    /**
      * Handles everything related to saving state before preview and restoring
      * it after a preview or locking in the changes when not in preview.
      *
@@ -5042,25 +5215,10 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      */
     _handlePreviewState(previewMode, computeShapeData) {
         const target = this.$target[0];
-        const insertShapeContainer = newContainer => {
-            const shapeContainer = target.querySelector(':scope > .o_we_shape');
-            if (shapeContainer) {
-                shapeContainer.remove();
-            }
-            if (newContainer) {
-                const preShapeLayerElement = this._getLastPreShapeLayerElement();
-                if (preShapeLayerElement) {
-                    $(preShapeLayerElement).after(newContainer);
-                } else {
-                    this.$target.prepend(newContainer);
-                }
-            }
-            return newContainer;
-        };
 
         let changedShape = false;
         if (previewMode === 'reset') {
-            insertShapeContainer(this.prevShapeContainer);
+            this._insertShapeContainer(this.prevShapeContainer);
             if (this.prevShape) {
                 target.dataset.oeShapeData = this.prevShape;
             } else {
@@ -5090,16 +5248,11 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         const {shape, colors, flip = []} = json ? JSON.parse(json) : {};
         let shapeContainer = target.querySelector(':scope > .o_we_shape');
         if (!shape) {
-            return insertShapeContainer(null);
+            return this._insertShapeContainer(null);
         }
         // When changing shape we want to reset the shape container (for transparency color)
         if (changedShape) {
-            shapeContainer = insertShapeContainer(null);
-        }
-        if (!shapeContainer) {
-            shapeContainer = insertShapeContainer(document.createElement('div'));
-            target.style.position = 'relative';
-            shapeContainer.className = `o_we_shape o_${shape.replace(/\//g, '_')}`;
+            shapeContainer = this._createShapeContainer(shape);
         }
         // Compat: remove old flip classes as flipping is now done inside the svg
         shapeContainer.classList.remove('o_we_flip_x', 'o_we_flip_y');
@@ -5282,6 +5435,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 // options for shape will only be available after _toggleShape() returned
                 this._requestUserValueWidgets('bg_shape_opt')[0].enable();
             }});
+            this._createShapeContainer(shapeToSelect);
             return this._handlePreviewState(false, () => ({shape: shapeToSelect, colors: this._getImplicitColors(shapeToSelect)}));
         }
     },

@@ -54,7 +54,7 @@
             <t t-if="not additional_title and main_object and 'name' in main_object">
                 <t t-set="additional_title" t-value="main_object.name"/>
             </t>
-            <t t-set="default_title"> <t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-raw="(website or res_company).name"/> </t>
+            <t t-set="default_title"> <t t-if="additional_title"><t t-out="additional_title"/> | </t><t t-out="(website or res_company).name"/> </t>
             <t t-set="seo_object" t-value="seo_object or main_object"/>
             <t t-if="seo_object and 'website_meta_title' in seo_object and seo_object.website_meta_title">
                 <t t-set="title" t-value="seo_object.website_meta_title"/>
@@ -176,10 +176,10 @@
 
 <template id="custom_code_layout" name="Custom Code Layout" inherit_id="website.layout" priority="55">
     <xpath expr="//head" position="inside">
-        <t t-raw="website.custom_code_head"/>
+        <t t-out="website.custom_code_head"/>
     </xpath>
     <xpath expr="//body" position="inside">
-        <t t-raw="website.custom_code_footer"/>
+        <t t-out="website.custom_code_footer"/>
     </xpath>
 </template>
 
@@ -214,7 +214,7 @@
 <!-- Navbar Nav -->
 <template id="navbar_nav" name="Navbar Nav">
     <ul id="top_menu" t-attf-class="nav navbar-nav o_menu_loading #{_nav_class}">
-        <t t-raw="0"/>
+        <t t-out="0"/>
     </ul>
 </template>
 
@@ -405,7 +405,7 @@
                             <i class="fa fa-1x fa-fw fa-envelope mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span>
                         </div>
                         <div class="col-lg-2 text-lg-right pb16">
-                            <i class="fa fa-1x fa-fw fa-phone mr-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 691-3277">+1 (650) 691-3277</a></span>
+                            <i class="fa fa-1x fa-fw fa-phone mr-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span>
                         </div>
                     </div>
                 </div>
@@ -513,7 +513,7 @@
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_vertical_2">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
-                    <small><i class="fa fa-1x fa-fw fa-phone mr-2"/><a href="tel:+1 (650) 691-3277">+1 (650) 691-3277</a></small>
+                    <small><i class="fa fa-1x fa-fw fa-phone mr-2"/><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></small>
                 </div>
             </section>
         </div>
@@ -610,7 +610,7 @@
                     </div>
                     <!-- Contact -->
                     <small><i class="fa fa-envelope fa-fw mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></small><br/>
-                    <small><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 691-3277">+1 (650) 691-3277</a></span></small>
+                    <small><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></small>
                     <!-- Separator -->
                     <div class="s_hr text-left pt16 pb16" data-name="Separator">
                         <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-top-color: var(--400);"/>
@@ -770,7 +770,7 @@
                         <div class="col-lg-8">
                             <small>
                                 <span class="text-muted"><b>Contact us</b></span>
-                                <i class="fa fa-1x fa-fw fa-phone ml-3 mr-2"/><a href="tel:+1 (650) 691-3277">+1 (650) 691-3277</a>
+                                <i class="fa fa-1x fa-fw fa-phone ml-3 mr-2"/><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a>
                                 <i class="fa fa-1x fa-fw fa-envelope ml-3 mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span>
                             </small>
                         </div>
@@ -1336,7 +1336,7 @@
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout" priority="20">
     <xpath expr="t" position="replace">
         <t t-call="website.layout">
-            <div class="oe_website_login_container" t-raw="0"/>
+            <div class="oe_website_login_container" t-out="0"/>
         </t>
     </xpath>
 </template>
@@ -1369,7 +1369,7 @@
                             <ul class="list-unstyled">
                                 <li><i class="fa fa-comment fa-fw mr-2"/><span><a href="/contactus">Contact us</a></span></li>
                                 <li><i class="fa fa-envelope fa-fw mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
-                                <li><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 691-3277">+1 (650) 691-3277</a></span></li>
+                                <li><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
                             </ul>
                             <div class="s_share text-left" data-name="Social Media">
                                 <h5 class="s_share_title d-none">Follow us</h5>
@@ -1413,7 +1413,7 @@
                         </div>
                         <div class="col-lg-3">
                             <ul class="list-unstyled mb-2">
-                                <li><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 691-3277">+1 (650) 691-3277</a></span></li>
+                                <li><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
                                 <li><i class="fa fa-envelope fa-fw mr-2"/><span><a href="mailto:hello@mycompany.com">hello@mycompany.com</a></span></li>
                             </ul>
                             <div class="s_share text-left no_icon_color" data-name="Social Media">
@@ -1458,7 +1458,7 @@
                     </div>
                     <p class="text-center mb-1">250 Executive Park Blvd, Suite 3400 • San Francisco CA 94134 • United States</p>
                     <ul class="list-inline text-center">
-                        <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-phone mr-2"/><span class="o_force_ltr"><a href="tel:1 (650) 691-3277">+1 (650) 691-3277</a></span></li>
+                        <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-phone mr-2"/><span class="o_force_ltr"><a href="tel:1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
                         <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-envelope mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
                     </ul>
                 </div>
@@ -1515,7 +1515,7 @@
                             <h5>Get in touch</h5>
                             <ul class="list-unstyled">
                                 <li class="py-1"><i class="fa fa-1x fa-fw fa-envelope mr-2"/><a href="mailto:info@yourcompany.com">info@yourcompany.com</a></li>
-                                <li class="py-1"><i class="fa fa-1x fa-fw fa-phone mr-2"/><span class="o_force_ltr"><a href="tel:1 (650) 691-3277">+1 (650) 691-3277</a></span></li>
+                                <li class="py-1"><i class="fa fa-1x fa-fw fa-phone mr-2"/><span class="o_force_ltr"><a href="tel:1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
                             </ul>
                         </div>
                         <div class="col-lg-3 pb16">
@@ -1584,7 +1584,7 @@
                         </div>
                         <div class="col-lg-3 pt16 pb16">
                             <p class="mb-2">Call us</p>
-                            <h5><span class="o_force_ltr"><a href="tel:1 (650) 691-3277">+1 (650) 691-3277</a></span></h5>
+                            <h5><span class="o_force_ltr"><a href="tel:1 (650) 555-0111">+1 (650) 555-0111</a></span></h5>
                         </div>
                         <div class="col-lg-3 pt16 pb16">
                             <p class="mb-2">Send us a message</p>
@@ -1707,7 +1707,7 @@
                         </div>
                         <div class="col-lg-6 pb24">
                             <ul class="list-unstyled mb-0">
-                                <li><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 691-3277">+1 (650) 691-3277</a></span></li>
+                                <li><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
                                 <li><i class="fa fa-envelope fa-fw mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
                             </ul>
                         </div>
@@ -1743,6 +1743,12 @@
 <template id="footer_no_copyright" inherit_id="website.layout" name="Footer No Copyright" active="False">
     <xpath expr="//div[hasclass('o_footer_copyright')]" position="before">
         <t t-set="no_copyright" t-value="True"/>
+    </xpath>
+</template>
+
+<template id="footer_copyright_company_name" inherit_id="website.layout">
+    <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]" position="replace">
+        <span class="o_footer_copyright_name mr-2">Copyright &amp;copy; Company name</span>
     </xpath>
 </template>
 
@@ -1932,7 +1938,7 @@
          t-attf-class="o_record_cover_container d-flex flex-column h-100 o_colored_level o_cc #{_cp.get('background_color_class')} #{use_size and _cp.get('resize_class')} #{use_text_align and _cp.get('text_align_class')} #{additionnal_classes}">
         <div t-attf-class="o_record_cover_component o_record_cover_image #{snippet_autofocus and 'o_we_snippet_autofocus'}" t-attf-style="background-image: #{_bg};"/>
         <div t-if="use_filters" t-attf-class="o_record_cover_component o_record_cover_filter oe_black" t-attf-style="opacity: #{_cp.get('opacity', 0.0)};"/>
-        <t t-raw="0"/>
+        <t t-out="0"/>
     </div>
 </template>
 
@@ -1944,7 +1950,7 @@
             <button class="btn btn-success js_publish_btn">Published</button>
             <button type="button" t-attf-class="btn btn-default dropdown-toggle dropdown-toggle-split" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown"/>
             <div class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
-                <t t-raw="0"/>
+                <t t-out="0"/>
                 <a role="menuitem" t-attf-href="/web#view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}&amp;menu_id=#{menu or object.env['ir.model.data'].xmlid_to_res_id('website.menu_website_configuration')}"
                     title='Edit in backend' class="dropdown-item" t-if="publish_edit">Edit</a>
             </div>
@@ -1995,7 +2001,7 @@
               </t>
               <t t-if="version">
                 <h1><t t-esc="res_company.name"/>
-                    <small>Odoo Version <t t-raw="version.get('server_version')"/></small>
+                    <small>Odoo Version <t t-out="version.get('server_version')"/></small>
                 </h1>
                 <p>
                     Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
@@ -2011,12 +2017,12 @@
                 <dl class="dl-horizontal" t-foreach="apps" t-as="app">
                     <dt>
                         <a t-att-href="app.website" t-if="app.website">
-                            <t t-raw="app.shortdesc"/>
+                            <t t-out="app.shortdesc"/>
                         </a>
-                        <span t-raw="app.shortdesc" t-if="not app.website"/>
+                        <span t-out="app.shortdesc" t-if="not app.website"/>
                     </dt>
                     <dd>
-                        <span t-raw="app.summary"/>
+                        <span t-out="app.summary"/>
                     </dd><dd class="text-muted" groups='base.group_no_one'>
                         Technical name: <span t-field="app.name"/>, author: <span t-field="app.author"/>
                     </dd>
@@ -2027,11 +2033,11 @@
                     <dl class="dl-horizontal" t-foreach="l10n" t-as="app">
                         <dt>
                             <a t-attf-href="https://www.odoo.com/page/accounting/#{app.name}">
-                                <t t-raw="app.shortdesc"/>
+                                <t t-out="app.shortdesc"/>
                             </a>
                         </dt>
                         <dd>
-                            <span t-raw="app.summary"/>
+                            <span t-out="app.summary"/>
                         </dd><dd class="text-muted" groups='base.group_no_one'>
                             Technical name: <span t-field="app.name"/>, author: <span t-field="app.author"/>
                         </dd>
@@ -2240,7 +2246,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 #   custom   #
 ##############
 
-<t t-raw="request.website.sudo().robots_txt" />
+<t t-out="request.website.sudo().robots_txt" />
 </t>
 </template>
 
@@ -2255,7 +2261,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="sitemap_xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 <urlset t-attf-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <t t-raw="content"/>
+    <t t-out="content"/>
 </urlset>
 </template>
 
@@ -2382,11 +2388,11 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     <t t-set='final_page' t-value="(next_page and page.url != next_page.url) or not next_page or specific_page"/>
     <tr t-att-style='not final_page and "color:#999"'>
         <td>
-            <t groups="website.group_multi_website">
+            <t t-if="debug">
                 <i t-if='specific_page and prev_page and prev_page.url == page.url and not prev_page.website_id' class="fa fa-level-up fa-rotate-90 ml32 mr4"/>
-                <i t-else="1" class="fa fa-globe mr4" t-att-style="'visibility:hidden;' if specific_page else ''"/>
+                <i t-else="1" class="fa fa-globe mr4" title="Websites-shared page" t-att-style="'visibility:hidden;' if specific_page else ''"/>
             </t>
-            <i t-if="page.is_homepage" class="fa fa-home" title="Home"/> <span t-esc="page.name"/>
+            <i t-if="page.is_homepage" class="fa fa-home" title="Homepage"/> <span t-esc="page.name"/>
         </td>
         <td>
             <a t-if='final_page' t-att-href="page.url"><t t-esc="page.url"/></a>

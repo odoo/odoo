@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ir_profile_view_search" model="ir.ui.view">
+        <field name="name">IR Profile Search</field>
+        <field name="model">ir.profile</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Name"/>
+                <field name="session" string="Session"/>
+                <filter name="group_session" string="Session" context="{'group_by':'session'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="ir_profile_view_list" model="ir.ui.view">
+        <field name="name">IR Profile List</field>
+        <field name="model">ir.profile</field>
+        <field name="arch" type="xml">
+            <tree string="Profile Session" default_order="session desc, id desc">
+                <field name="create_date"/>
+                <field name="session"/>
+                <field name="name"/>
+                <field name="entry_count"/>
+                <field name="speedscope_url" widget="url"/>
+                <field name="duration"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ir_profile_view_form" model="ir.ui.view">
+        <field name="name">IR Profile Form</field>
+        <field name="model">ir.profile</field>
+        <field name="arch" type="xml">
+            <form string="IR Profile">
+                <group>
+                    <field name="name"/>
+                    <field name="session"/>
+                    <field name="entry_count"/>
+                    <field name="speedscope_url" widget="url"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_menu_ir_profile" model="ir.actions.act_window">
+        <field name="name">Ir profile</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.profile</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_group_session': 1}</field>
+    </record>
+
+    <menuitem 
+        name="Profiling"
+        action="action_menu_ir_profile" 
+        id="menu_ir_profile" 
+        parent="base.next_id_9"/>
+
+</odoo>

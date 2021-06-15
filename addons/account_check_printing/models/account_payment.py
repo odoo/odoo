@@ -85,7 +85,7 @@ class AccountPayment(models.Model):
     def _inverse_check_number(self):
         for payment in self:
             if payment.check_number:
-                sequence = payment.journal_id.check_sequence_id
+                sequence = payment.journal_id.check_sequence_id.sudo()
                 sequence.padding = len(payment.check_number)
 
     @api.depends('payment_type', 'journal_id', 'partner_id')
@@ -93,7 +93,8 @@ class AccountPayment(models.Model):
         super()._compute_payment_method_id()
         for record in self:
             preferred = record.partner_id.with_company(record.company_id).property_payment_method_id
-            if record.payment_type == 'outbound' and preferred in record.journal_id.outbound_payment_method_ids:
+            if (record.payment_type == 'outbound'
+                    and preferred in record.journal_id.outbound_payment_method_line_ids.mapped('payment_method_id')):
                 record.payment_method_id = preferred
 
     def action_post(self):

@@ -11,10 +11,6 @@
             eval="obj().search([
                 ('type', '=', 'cash'),
                 ('company_id', '=', ref('l10n_in.demo_company_in'))], limit=1).id"/>
-        <field name="payment_method_id" model="account.journal"
-            eval="obj().search([
-                ('type', '=', 'cash'),
-                ('company_id', '=', ref('l10n_in.demo_company_in'))], limit=1).inbound_payment_method_ids[0].id"/>
     </record>
 
     <function model="account.payment" name="action_post">

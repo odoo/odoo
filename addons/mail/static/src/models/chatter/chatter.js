@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
-import { create, insert, link } from '@mail/model/model_field_command';
+import { create, insert, link, unlink, update } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -87,6 +87,21 @@ function factory(dependencies) {
          */
         _computeIsDisabled() {
             return !this.thread || this.thread.isTemporary;
+        }
+
+        /**
+         * @private
+         * @returns {mail.thread_viewer}
+         */
+        _computeThreadViewer() {
+            const threadViewerData = {
+                hasThreadView: this.hasThreadView,
+                thread: this.thread ? link(this.thread) : unlink(),
+            };
+            if (!this.threadViewer) {
+                return create(threadViewerData);
+            }
+            return update(threadViewerData);
         }
 
         /**
@@ -273,6 +288,7 @@ function factory(dependencies) {
                 'threadId',
                 'threadModel',
             ],
+            isOnChange: true,
         }),
         /**
          * Not a real field, used to trigger its compute method when one of the
@@ -283,6 +299,7 @@ function factory(dependencies) {
             dependencies: [
                 'threadIsLoadingAttachments',
             ],
+            isOnChange: true,
         }),
         /**
          * Determines the `mail.thread` that should be displayed by `this`.
@@ -318,10 +335,14 @@ function factory(dependencies) {
          * Determines the `mail.thread_viewer` managing the display of `this.thread`.
          */
         threadViewer: one2one('mail.thread_viewer', {
-            default: create(),
-            inverse: 'chatter',
+            compute: '_computeThreadViewer',
+            dependencies: [
+                'hasThreadView',
+                'thread',
+            ],
             isCausal: true,
             readonly: true,
+            required: true,
         }),
     };
 

@@ -13,6 +13,7 @@ import pprint
 import re
 import time
 import uuid
+import warnings
 
 from dateutil.relativedelta import relativedelta
 
@@ -73,18 +74,25 @@ def transfer_node_to_modifiers(node, modifiers, context=None, current_node_path=
         else:
             modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
 
-    for a in ('invisible', 'readonly', 'required'):
-        if node.get(a):
-            v = bool(safe_eval.safe_eval(node.get(a), {'context': context or {}}))
+    for attr in ('invisible', 'readonly', 'required'):
+        value_str = node.get(attr)
+        if value_str:
+            # most (~95%) elements are 0/1/True/False
+            if value_str == '1' or value_str == 'True':
+                value = True
+            elif value_str == '0' or value_str == 'False':
+                value = False
+            else:
+                value = bool(safe_eval.safe_eval(value_str, {'context': context or {}}))
             node_path = current_node_path or ()
-            if 'tree' in node_path and 'header' not in node_path and a == 'invisible':
+            if 'tree' in node_path and 'header' not in node_path and attr == 'invisible':
                 # Invisible in a tree view has a specific meaning, make it a
                 # new key in the modifiers attribute.
-                modifiers['column_invisible'] = v
-            elif v or (a not in modifiers or not isinstance(modifiers[a], list)):
+                modifiers['column_invisible'] = value
+            elif value or (attr not in modifiers or not isinstance(modifiers[attr], list)):
                 # Don't set the attribute to False if a dynamic value was
                 # provided (i.e. a domain from attrs or states).
-                modifiers[a] = v
+                modifiers[attr] = value
 
 
 def simplify_modifiers(modifiers):
@@ -389,30 +397,28 @@ actual arch.
         for view in self:
             try:
                 # verify the view is valid xml and that the inheritance resolves
-                view_arch = etree.fromstring(view.arch.encode('utf-8'))
+                view_arch = etree.fromstring(view.arch)
                 view._valid_inheritance(view_arch)
-                view_def = view.read_combined(['arch'])
-                view_arch_utf8 = view_def['arch']
+                combined_arch = view._get_combined_arch()
                 if view.type == 'qweb':
                     continue
-                view_doc = etree.fromstring(view_arch_utf8)
             except ValueError as e:
                 err = ValidationError(_(
                     "Error while validating view:\n\n%(error)s",
                     error=tools.ustr(e),
                 )).with_traceback(e.__traceback__)
-                err.context = None
+                err.context = getattr(e, 'context', None)
                 raise err from None
 
             try:
                 # verify that all fields used are valid, etc.
-                view.postprocess_and_fields(view_doc, validate=True)
+                view.postprocess_and_fields(combined_arch, validate=True)
                 # RNG-based validation is not possible anymore with 7.0 forms
-                view_docs = [view_doc]
-                if view_docs[0].tag == 'data':
+                combined_archs = [combined_arch]
+                if combined_archs[0].tag == 'data':
                     # A <data> element is a wrapper for multiple root nodes
-                    view_docs = view_docs[0]
-                for view_arch in view_docs:
+                    combined_archs = combined_archs[0]
+                for view_arch in combined_archs:
                     check = valid_view(view_arch, env=self.env, model=view.model)
                     view_name = ('%s (%s)' % (view.name, view.xml_id)) if view.xml_id else view.name
                     if not check:
@@ -423,7 +429,7 @@ actual arch.
                     if check == "Warning":
                         _logger.warning('Invalid view %s definition in %s \n%s', view_name, view.arch_fs, view.arch)
             except ValueError as e:
-                lines = view_arch_utf8.splitlines(keepends=True)
+                lines = etree.tostring(combined_arch, encoding='unicode').splitlines(keepends=True)
                 fivelines = "".join(lines[max(0, e.context["line"]-3):e.context["line"]+2])
                 err = ValidationError(_(
                     "Error while validating view near:\n\n%(fivelines)s\n%(error)s",
@@ -446,7 +452,7 @@ actual arch.
     @api.constrains('inherit_id')
     def _check_000_inheritance(self):
         # NOTE: constraints methods are check alphabetically. Always ensure this method will be
-        #       called before other constraint metheods to avoid infinite loop in `read_combined`.
+        #       called before other constraint methods to avoid infinite loop in `_get_combined_arch`.
         if not self._check_recursion(parent='inherit_id'):
             raise ValidationError(_('You cannot create recursive inherited views.'))
 
@@ -566,12 +572,9 @@ actual arch.
     # Inheritance mecanism
     #------------------------------------------------------
     @api.model
-    def _get_inheriting_views_arch_domain(self, model):
-        return [
-            ['model', '=', model],
-            ['mode', '=', 'extension'],
-            ['active', '=', True],
-        ]
+    def _get_inheriting_views_domain(self):
+        """ Return a domain to filter the sub-views to inherit from. """
+        return [('active', '=', True)]
 
     @api.model
     def _get_filter_xmlid_query(self):
@@ -581,62 +584,86 @@ actual arch.
                   WHERE res_id IN %(res_ids)s AND model = 'ir.ui.view' AND module IN %(modules)s
                """
 
-    def get_inheriting_views_arch(self, model):
-        """Retrieves the sets of views that should currently be used in the
-           system in the right order. During the module upgrade phase it
-           may happen that a view is present in the database but the fields it relies on are not
-           fully loaded yet. This method only considers views that belong to modules whose code
-           is already loaded. Custom views defined directly in the database are loaded only
-           after the module initialization phase is completely finished.
-
-           :param str model: model identifier of the inheriting views.
-           :return: list of ir.ui.view
+    def _get_inheriting_views(self):
         """
-        self.ensure_one()
+        Determine the views that inherit from the current recordset, and return
+        them as a recordset, ordered by priority then by id.
+        """
         self.check_access_rights('read')
-
-        # retrieve all the views transitively inheriting from view_id
-        domain = self._get_inheriting_views_arch_domain(model)
+        domain = self._get_inheriting_views_domain()
         e = expression(domain, self.env['ir.ui.view'])
         from_clause, where_clause, where_params = e.query.get_sql()
-        assert from_clause == '"ir_ui_view"'
-        self.flush(['active'])
-        query = """
+        assert from_clause == '"ir_ui_view"', f"Unexpected from clause: {from_clause}"
+
+        self._flush_search(domain, fields=['inherit_id', 'priority', 'model', 'mode'], order='id')
+        query = f"""
             WITH RECURSIVE ir_ui_view_inherits AS (
-                SELECT id, inherit_id, priority
+                SELECT id, inherit_id, priority, mode, model
                 FROM ir_ui_view
-                WHERE inherit_id = %s AND {where_clause}
+                WHERE id IN %s AND ({where_clause})
             UNION
-                SELECT iuv.id, iuv.inherit_id, iuv.priority
-                FROM ir_ui_view iuv
-                INNER JOIN ir_ui_view_inherits iuvi ON iuvi.id = iuv.inherit_id
-                WHERE {sub_where_clause}
+                SELECT ir_ui_view.id, ir_ui_view.inherit_id, ir_ui_view.priority,
+                       ir_ui_view.mode, ir_ui_view.model
+                FROM ir_ui_view
+                INNER JOIN ir_ui_view_inherits parent ON parent.id = ir_ui_view.inherit_id
+                WHERE coalesce(ir_ui_view.model, '') = coalesce(parent.model, '')
+                      AND ir_ui_view.mode = 'extension'
+                      AND ({where_clause})
             )
-            SELECT id
-            FROM ir_ui_view_inherits
-            ORDER BY priority, id;
-        """.format(
-            where_clause=where_clause,
-            sub_where_clause=where_clause.replace('ir_ui_view', 'iuv'),
-        )
-        self.env.cr.execute(query, [self.id] + where_params + where_params)
-        view_ids = [r[0] for r in self.env.cr.fetchall()]
+            SELECT
+                v.id, v.inherit_id, v.mode,
+                ARRAY(SELECT r.group_id FROM ir_ui_view_group_rel r WHERE r.view_id=v.id)
+            FROM ir_ui_view_inherits v
+            ORDER BY v.priority, v.id
+        """
+        # ORDER BY v.priority, v.id:
+        # 1/ sort by priority: abritrary value set by developers on some
+        #    views to solve "dependency hell" problems and force a view
+        #    to be combined earlier or later. e.g. all views created via
+        #    studio have a priority=99 to be loaded last.
+        # 2/ sort by view id: the order the views were inserted in the
+        #    database. e.g. base views are placed before stock ones.
 
+        self.env.cr.execute(query, [tuple(self.ids)] + where_params + where_params)
+        rows = self.env.cr.fetchall()
+
+        # filter out forbidden views
+        if any(row[3] for row in rows):
+            user_groups = set(self.env.user.groups_id.ids)
+            rows = [row for row in rows if not (row[3] and user_groups.isdisjoint(row[3]))]
+
+        views = self.browse(row[0] for row in rows)
+
+        # optimization: fill in cache of inherit_id and mode
+        self.env.cache.update(views, type(self).inherit_id, [row[1] for row in rows])
+        self.env.cache.update(views, type(self).mode, [row[2] for row in rows])
+
+        # During an upgrade, we can only use the views that have been
+        # fully upgraded already.
         if self.pool._init and not self._context.get('load_all_views'):
-            # check that all found ids have a corresponding xml_id in a loaded module
-            check_view_ids = self._context.get('check_view_ids') or []
-            ids_to_check = [vid for vid in view_ids if vid not in check_view_ids]
-            if ids_to_check:
-                loaded_modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
-                query = self._get_filter_xmlid_query()
-                self.env.cr.execute(query, {'res_ids': tuple(ids_to_check), 'modules': loaded_modules})
-                valid_view_ids = [r[0] for r in self.env.cr.fetchall()] + check_view_ids
-                view_ids = [vid for vid in view_ids if vid in valid_view_ids]
+            views = views._filter_loaded_views()
 
-        def accessible(view):
-            return not view.groups_id or (view.groups_id & self.env.user.groups_id)
+        return views
 
-        return self.browse(view_ids).sudo().filtered(accessible)
+    def _filter_loaded_views(self):
+        """
+        During the module upgrade phase it may happen that a view is
+        present in the database but the fields it relies on are not
+        fully loaded yet. This method only considers views that belong
+        to modules whose code is already loaded. Custom views defined
+        directly in the database are loaded only after the module
+        initialization phase is completely finished.
+        """
+        # check that all found ids have a corresponding xml_id in a loaded module
+        check_view_ids = self.env.context['check_view_ids']
+        ids_to_check = [vid for vid in self.ids if vid not in check_view_ids]
+        if not ids_to_check:
+            return self
+        loaded_modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
+        query = self._get_filter_xmlid_query()
+        self.env.cr.execute(query, {'res_ids': tuple(ids_to_check), 'modules': loaded_modules})
+        valid_view_ids = {r[0] for r in self.env.cr.fetchall()} | set(check_view_ids)
+        return self.browse(vid for vid in self.ids if vid in valid_view_ids)
 
     def _check_view_access(self):
         """ Verify that a view is accessible by the current user based on the
@@ -747,29 +774,73 @@ actual arch.
             self.handle_view_error(str(e), specs_tree)
         return source
 
-    def apply_view_inheritance(self, source, model):
-        """ Apply all the (directly and indirectly) inheriting views.
-
-        :param source: a parent architecture to modify (with parent modifications already applied)
-        :param model: the original model for which we create a view (not
-            necessarily the same as the source's model); only the inheriting
-            views with that specific model will be applied.
-        :return: a modified source where all the modifying architecture are applied
+    def _combine(self, hierarchy: dict):
         """
-        inherit_tree = collections.defaultdict(list)
-        for view in self.get_inheriting_views_arch(model):
-            inherit_tree[view.inherit_id].append(view)
-        return self._apply_view_inheritance(source, inherit_tree)
+        Return self's arch combined with its inherited views archs.
 
-    def _apply_view_inheritance(self, source, inherit_tree):
-        # recursively apply inheritance following the given inheritance tree
-        for view in inherit_tree[self]:
-            arch_tree = etree.fromstring(view.arch.encode('utf-8'))
-            if self._context.get('inherit_branding'):
-                view.inherit_branding(arch_tree)
-            source = view.apply_inheritance_specs(source, arch_tree)
-            source = view._apply_view_inheritance(source, inherit_tree)
-        return source
+        :param hierarchy: mapping from parent views to their child views
+        :return: combined architecture
+        :rtype: Element
+        """
+        self.ensure_one()
+        assert self.mode == 'primary'
+
+        # We achieve a pre-order depth-first hierarchy traversal where
+        # primary views (and their children) are traversed after all the
+        # extensions for the current primary view have been visited.
+        #
+        # https://en.wikipedia.org/wiki/Tree_traversal#Depth-first_search_of_binary_tree
+        #
+        # Example:                  hierarchy = {
+        #                               1: [2, 3],  # primary view
+        #             1*                2: [4, 5],
+        #            / \                3: [],
+        #           2   3               4: [6],     # primary view
+        #          / \                  5: [7, 8],
+        #         4*  5                 6: [],
+        #        /   / \                7: [],
+        #       6   7   8               8: [],
+        #                           }
+        #
+        # Tree traversal order (`view` and `queue` at the `while` stmt):
+        #   1 [2, 3]
+        #   2 [5, 3, 4]
+        #   5 [7, 8, 3, 4]
+        #   7 [8, 3, 4]
+        #   8 [3, 4]
+        #   3 [4]
+        #   4 [6]
+        #   6 []
+        combined_arch = etree.fromstring(self.arch)
+        if self.env.context.get('inherit_branding'):
+            combined_arch.attrib.update({
+                'data-oe-model': 'ir.ui.view',
+                'data-oe-id': str(self.id),
+                'data-oe-field': 'arch',
+            })
+
+        # The depth-first traversal is implemented with a double-ended queue.
+        # The queue is traversed from left to right, and after each view in the
+        # queue is processed, its children are pushed at the left of the queue,
+        # so that they are traversed in order.  The queue is therefore mostly
+        # used as a stack.  An exception is made for primary views, which are
+        # pushed at the other end of the queue, so that they are applied after
+        # all extensions have been applied.
+        queue = collections.deque(sorted(hierarchy[self], key=lambda v: v.mode))
+        while queue:
+            view = queue.popleft()
+            arch = etree.fromstring(view.arch)
+            if view.env.context.get('inherit_branding'):
+                view.inherit_branding(arch)
+            combined_arch = view.apply_inheritance_specs(combined_arch, arch)
+
+            for child_view in reversed(hierarchy[view]):
+                if child_view.mode == 'primary':
+                    queue.append(child_view)
+                else:
+                    queue.appendleft(child_view)
+
+        return combined_arch
 
     def read_combined(self, fields=None):
         """
@@ -781,46 +852,47 @@ actual arch.
           .. note:: ``arch`` is always added to the fields list even if not
                     requested (similar to ``id``)
         """
-        # introduce check_view_ids in context
-        if 'check_view_ids' not in self._context:
-            self = self.with_context(check_view_ids=[])
-
-        check_view_ids = self._context['check_view_ids']
-
-        # if view_id is not a root view, climb back to the top.
-        root = self
-        while root.mode != 'primary':
-            # Add inherited views to the list of loading forced views
-            # Otherwise, inherited views could not find elements created in their direct parents if that parent is defined in the same module
-            check_view_ids.append(root.id)
-            root = root.inherit_id
-
-        # arch and model fields are always returned
+        warnings.warn("use get_combined_arch() instead", DeprecationWarning, stacklevel=2)
         if fields:
             fields = list({'arch', 'model'}.union(fields))
+        [result] = self.read(fields)
+        result['arch'] = self.get_combined_arch()
+        return result
 
-        # read the view arch
-        [view_data] = root.read(fields=fields)
-        view_arch = etree.fromstring(view_data['arch'].encode('utf-8'))
-        if not root.inherit_id:
-            if self._context.get('inherit_branding'):
-                view_arch.attrib.update({
-                    'data-oe-model': 'ir.ui.view',
-                    'data-oe-id': str(root.id),
-                    'data-oe-field': 'arch',
-                })
-            arch_tree = view_arch
-        else:
-            if self._context.get('inherit_branding'):
-                root.inherit_branding(view_arch)
-            parent_view = root.inherit_id.read_combined(fields=fields)
-            arch_tree = etree.fromstring(parent_view['arch'])
-            arch_tree = self.browse(parent_view['id']).apply_inheritance_specs(arch_tree, view_arch)
+    def get_combined_arch(self):
+        """ Return the arch of ``self`` (as a string) combined with its inherited views. """
+        return etree.tostring(self._get_combined_arch(), encoding='unicode')
 
-        # and apply inheritance
-        arch = root.apply_view_inheritance(arch_tree, self.model)
+    def _get_combined_arch(self):
+        """ Return the arch of ``self`` (as an etree) combined with its inherited views. """
+        root = self
+        view_ids = []
+        while True:
+            view_ids.append(root.id)
+            if not root.inherit_id:
+                break
+            root = root.inherit_id
 
-        return dict(view_data, arch=etree.tostring(arch, encoding='unicode'))
+        views = self.browse(view_ids)
+
+        # Add inherited views to the list of loading forced views
+        # Otherwise, inherited views could not find elements created in
+        # their direct parents if that parent is defined in the same module
+        # introduce check_view_ids in context
+        if 'check_view_ids' not in views.env.context:
+            views = views.with_context(check_view_ids=[])
+        views.env.context['check_view_ids'].extend(view_ids)
+
+        # Map each node to its children nodes. Note that all children nodes are
+        # part of a single prefetch set, which is all views to combine.
+        tree_views = views._get_inheriting_views()
+        hierarchy = collections.defaultdict(list)
+        for view in tree_views:
+            hierarchy[view.inherit_id].append(view)
+
+        # optimization: make root part of the prefetch set, too
+        arch = root.with_prefetch(tree_views._prefetch_ids)._combine(hierarchy)
+        return arch
 
     def _apply_groups(self, node, name_manager, node_info):
         #pylint: disable=unused-argument
@@ -939,40 +1011,44 @@ actual arch.
         """ Process the given arch node, which may be the complete arch or some
         subnode, and fill in the name manager with field information.
         """
-        # compute default
-        tag = node.tag
-        parent = node.getparent()
-        node_info = dict(
-            modifiers={},
-            attr_model=name_manager.Model,
-            editable=editable,
-        )
-        current_node_path = current_node_path + [tag]
+        stack = [(node, current_node_path, editable)]
+        while stack:
+            node, current_node_path, editable = stack.pop()
 
-        postprocessor = getattr(self, '_postprocess_tag_%s' % tag, False)
-        if postprocessor:
-            postprocessor(node, name_manager, node_info)
-            if node.getparent() is not parent:
-                # the node has been removed, stop processing here
-                return
+            # compute default
+            tag = node.tag
+            parent = node.getparent()
+            node_info = dict(
+                modifiers={},
+                attr_model=name_manager.Model,
+                editable=editable,
+            )
+            current_node_path = current_node_path + [tag]
 
-        elif tag in {item[0] for item in type(self.env['ir.ui.view']).type.selection}:
-            node_info['editable'] = False
+            postprocessor = getattr(self, '_postprocess_tag_%s' % tag, False)
+            if postprocessor:
+                postprocessor(node, name_manager, node_info)
+                if node.getparent() is not parent:
+                    # the node has been removed, stop processing here
+                    continue
 
-        if name_manager.validate:
-            # structure validation
-            validator = getattr(self, '_validate_tag_%s' % tag, False)
-            if validator:
-                validator(node, name_manager, node_info)
-            self._validate_attrs(node, name_manager, node_info)
+            elif tag in {item[0] for item in type(self.env['ir.ui.view']).type.selection}:
+                node_info['editable'] = False
 
-        self._apply_groups(node, name_manager, node_info)
-        transfer_node_to_modifiers(node, node_info['modifiers'], self._context, current_node_path)
-        transfer_modifiers_to_node(node_info['modifiers'], node)
+            if name_manager.validate:
+                # structure validation
+                validator = getattr(self, '_validate_tag_%s' % tag, False)
+                if validator:
+                    validator(node, name_manager, node_info)
+                self._validate_attrs(node, name_manager, node_info)
 
-        # if present, iterate on node_info['children'] instead of node
-        for child in node_info.get('children', node):
-            self.postprocess(child, current_node_path, node_info['editable'], name_manager)
+            self._apply_groups(node, name_manager, node_info)
+            transfer_node_to_modifiers(node, node_info['modifiers'], self._context, current_node_path)
+            transfer_modifiers_to_node(node_info['modifiers'], node)
+
+            # if present, iterate on node_info['children'] instead of node
+            for child in reversed(node_info.get('children', node)):
+                stack.append((child, current_node_path, node_info['editable']))
 
     #------------------------------------------------------
     # Specific node postprocessors
@@ -1591,11 +1667,9 @@ actual arch.
                        'tuple(self._context.get(k) for k in self._read_template_keys())'),
     )
     def _read_template(self, view_id):
-        arch = self.browse(view_id).read_combined(['arch'])['arch']
-        arch_tree = etree.fromstring(arch)
+        arch_tree = self.browse(view_id)._get_combined_arch()
         self.distribute_branding(arch_tree)
-        arch = etree.tostring(arch_tree, encoding='unicode')
-        return arch
+        return etree.tostring(arch_tree, encoding='unicode')
 
     @api.model
     def get_view_id(self, template):
@@ -1947,7 +2021,7 @@ class NameManager:
         self.mandatory_names_or_ids = dict()
         self.available_names_or_ids = set()
         self.validate = validate
-        self.Model = Model
+        self.Model = Model.with_context(lang=False)
         self.fields_get = self.Model.fields_get()
 
     def has_field(self, name, info=()):

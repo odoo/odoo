@@ -3049,6 +3049,55 @@ class StockMove(TransactionCase):
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.customer_location), 3.0)
 
+    def test_use_unreserved_move_line_4(self):
+        product_01 = self.env['product.product'].create({
+            'name': 'Product 01',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        product_02 = self.env['product.product'].create({
+            'name': 'Product 02',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        self.env['stock.quant']._update_available_quantity(product_01, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(product_02, self.stock_location, 1)
+
+        customer = self.env['res.partner'].create({'name': 'SuperPartner'})
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'partner_id': customer.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+
+        p01_move = self.env['stock.move'].create({
+            'name': 'SuperMove01',
+            'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'picking_id': picking.id,
+            'product_id': product_01.id,
+            'product_uom_qty': 1,
+            'product_uom': product_01.uom_id.id,
+        })
+        self.env['stock.move'].create({
+            'name': 'SuperMove02',
+            'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'picking_id': picking.id,
+            'product_id': product_02.id,
+            'product_uom_qty': 1,
+            'product_uom': product_02.uom_id.id,
+        })
+
+        picking.action_confirm()
+        picking.action_assign()
+        p01_move.product_uom_qty = 0
+        picking.do_unreserve()
+        picking.action_assign()
+        p01_move.product_uom_qty = 1
+        self.assertEqual(p01_move.state, 'confirmed')
+
     def test_edit_reserved_move_line_1(self):
         """ Test that editing a stock move line linked to an untracked product correctly and
         directly adapts the reservation. In this case, we edit the sublocation where we take the
@@ -4364,7 +4413,7 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
         })
         self.assertEqual(move1.state, 'draft')
-        self.assertEqual(move1.product_uom_qty, 0)
+        self.assertEqual(move1.product_uom_qty, 1)
         move1.product_uom_qty = 100
         move1.product_id = self.product_serial
         move1._onchange_product_id()
@@ -5157,6 +5206,152 @@ class StockMove(TransactionCase):
         line1_result_package = picking.move_line_ids[0].result_package_id
         line2_result_package = picking.move_line_ids[1].result_package_id
         self.assertNotEqual(line1_result_package, line2_result_package, "Product and Product1 should be in a different package.")
+
+    def test_move_line_aggregated_product_quantities(self):
+        """ Test the `stock.move.line` method `_get_aggregated_product_quantities`,
+        who returns data used to print delivery slips.
+        """
+        # Creates two other products.
+        product2 = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        product3 = self.env['product.product'].create({
+            'name': 'Product C',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        # Adds some quantity on stock.
+        self.env['stock.quant'].with_context(inventory_mode=True).create([{
+            'product_id': self.product.id,
+            'inventory_quantity': 100,
+            'location_id': self.stock_location.id,
+        }, {
+            'product_id': product2.id,
+            'inventory_quantity': 100,
+            'location_id': self.stock_location.id,
+        }, {
+            'product_id': product3.id,
+            'inventory_quantity': 100,
+            'location_id': self.stock_location.id,
+        }]).action_apply_inventory()
+
+        # Creates a delivery for a bunch of products.
+        delivery_form = Form(self.env['stock.picking'])
+        delivery_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = self.product
+            move.product_uom_qty = 10
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = product2
+            move.product_uom_qty = 10
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = product3
+            move.product_uom_qty = 10
+        delivery = delivery_form.save()
+        delivery.action_confirm()
+
+        # Delivers a part of the quantity, creates a backorder for the remaining qty.
+        delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.product).qty_done = 6
+        delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2).qty_done = 2
+        backorder_wizard_dict = delivery.button_validate()
+        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form.save().process()  # Creates the backorder.
+
+        first_backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery.id)], limit=1)
+        # Checks the values.
+        aggregate_values = delivery.move_line_ids._get_aggregated_product_quantities()
+        self.assertEqual(len(aggregate_values), 2)
+        sml1 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
+        sml2 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2)
+        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        self.assertEqual(aggregate_val_1['qty_ordered'], 10)
+        self.assertEqual(aggregate_val_1['qty_done'], 6)
+        self.assertEqual(aggregate_val_2['qty_ordered'], 10)
+        self.assertEqual(aggregate_val_2['qty_done'], 2)
+
+        # Delivers a part of the BO's qty., and creates an another backorder.
+        first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == self.product).qty_done = 4
+        first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product2).qty_done = 6
+        first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3).qty_done = 7
+        backorder_wizard_dict = first_backorder.button_validate()
+        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form.save().process()  # Creates the backorder.
+
+        second_backorder = self.env['stock.picking'].search([('backorder_id', '=', first_backorder.id)], limit=1)
+
+        # Checks the values for the original delivery.
+        aggregate_values = delivery.move_line_ids._get_aggregated_product_quantities()
+        self.assertEqual(len(aggregate_values), 2)
+        sml1 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
+        sml2 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2)
+        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        self.assertEqual(aggregate_val_1['qty_ordered'], 10)
+        self.assertEqual(aggregate_val_1['qty_done'], 6)
+        self.assertEqual(aggregate_val_2['qty_ordered'], 10)
+        self.assertEqual(aggregate_val_2['qty_done'], 2)
+        # Checks the values for the first back order.
+        aggregate_values = first_backorder.move_line_ids._get_aggregated_product_quantities()
+        self.assertEqual(len(aggregate_values), 3)
+        sml1 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
+        sml2 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product2)
+        sml3 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3)
+        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}__{sml3.product_uom_id.id}']
+        self.assertEqual(aggregate_val_1['qty_ordered'], 4)
+        self.assertEqual(aggregate_val_1['qty_done'], 4)
+        self.assertEqual(aggregate_val_2['qty_ordered'], 8)
+        self.assertEqual(aggregate_val_2['qty_done'], 6)
+        self.assertEqual(aggregate_val_3['qty_ordered'], 10)
+        self.assertEqual(aggregate_val_3['qty_done'], 7)
+
+        # Delivers a part of the second BO's qty. but doesn't create a backorder this time.
+        second_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3).qty_done = 3
+        backorder_wizard_dict = second_backorder.button_validate()
+        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form.save().process_cancel_backorder()
+
+        # Checks again the values for the original delivery.
+        aggregate_values = delivery.move_line_ids._get_aggregated_product_quantities()
+        self.assertEqual(len(aggregate_values), 2)
+        sml1 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
+        sml2 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2)
+        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        self.assertEqual(aggregate_val_1['qty_ordered'], 10)
+        self.assertEqual(aggregate_val_1['qty_done'], 6)
+        self.assertEqual(aggregate_val_2['qty_ordered'], 10)
+        self.assertEqual(aggregate_val_2['qty_done'], 2)
+        # Checks again the values for the first back order.
+        aggregate_values = first_backorder.move_line_ids._get_aggregated_product_quantities()
+        self.assertEqual(len(aggregate_values), 3)
+        sml1 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
+        sml2 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product2)
+        sml3 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3)
+        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}__{sml3.product_uom_id.id}']
+        self.assertEqual(aggregate_val_1['qty_ordered'], 4)
+        self.assertEqual(aggregate_val_1['qty_done'], 4)
+        self.assertEqual(aggregate_val_2['qty_ordered'], 8)
+        self.assertEqual(aggregate_val_2['qty_done'], 6)
+        self.assertEqual(aggregate_val_3['qty_ordered'], 10)
+        self.assertEqual(aggregate_val_3['qty_done'], 7)
+        # Checks the values for the second back order.
+        aggregate_values = second_backorder.move_line_ids._get_aggregated_product_quantities()
+        self.assertEqual(len(aggregate_values), 2)
+        sml1 = second_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3)
+        sm2 = second_backorder.move_lines.filtered(lambda ml: ml.product_id == product2)
+        aggregate_val_1 = aggregate_values[f'{product3.id}_{product3.name}__{sml1.product_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sm2.product_uom.id}']
+        self.assertEqual(aggregate_val_1['qty_ordered'], 3)
+        self.assertEqual(aggregate_val_1['qty_done'], 3)
+        self.assertEqual(aggregate_val_2['qty_ordered'], 2)
+        self.assertEqual(aggregate_val_2['qty_done'], 0)
 
     def test_move_sn_warning(self):
         """ Check that warnings pop up when duplicate SNs added or when SN isn't in

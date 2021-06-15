@@ -393,7 +393,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldBooleanToggle');
 
     QUnit.test('use boolean toggle widget in form view', async function (assert) {
-        assert.expect(1);
+        assert.expect(3);
 
         var form = await createView({
             View: FormView,
@@ -404,6 +404,13 @@ QUnit.module('basic_fields', {
         });
 
         assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle", "Boolean toggle widget applied to boolean field");
+        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle .fa-check-circle",
+            "Boolean toggle should have fa-check-circle icon");
+
+        await testUtils.dom.click(form.$('.o_field_widget[name=bar]'));
+        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle .fa-times-circle",
+            "Boolean toggle should have fa-times-circle icon");
+
         form.destroy();
     });
 
@@ -522,13 +529,10 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldNumeric');
 
     QUnit.test('numeric field: fields with keydown on numpad decimal key', async function (assert) {
-        assert.expect(6);
+        assert.expect(5);
 
         this.data.partner.fields.float_factor_field = { string: "Float Factor", type: 'float_factor' };
         this.data.partner.records[0].float_factor_field = 9.99;
-
-        this.data.partner.fields.float_time_field = { string: "Float Time", type: 'float_time' };
-        this.data.partner.records[0].float_time_field = 9.99;
 
         this.data.partner.fields.monetary = { string: "Monetary", type: 'monetary' };
         this.data.partner.records[0].monetary = 9.99;
@@ -545,7 +549,6 @@ QUnit.module('basic_fields', {
                 <form string="Partners">
                     <field name="float_factor_field" options="{'factor': 0.5}"/>
                     <field name="qux"/>
-                    <field name="float_time_field"/>
                     <field name="int_field"/>
                     <field name="monetary"/>
                     <field name="currency_id" invisible="1"/>
@@ -564,7 +567,6 @@ QUnit.module('basic_fields', {
         // Get all inputs
         const floatFactorField = form.el.querySelector('.o_input[name="float_factor_field"]');
         const floatInput = form.el.querySelector('.o_input[name="qux"]');
-        const floatTimeInput = form.el.querySelector('.o_input[name="float_time_field"]');
         const integerInput = form.el.querySelector('.o_input[name="int_field"]');
         const monetaryInput = form.el.querySelector('.o_input[name="monetary"]');
         const percentageInput = form.el.querySelector('.o_input[name="percentage"]');
@@ -580,11 +582,6 @@ QUnit.module('basic_fields', {
         floatInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
         await testUtils.nextTick();
         assert.ok(floatInput.value.endsWith('🇧🇪🇧🇪'));
-
-        floatTimeInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
-        floatTimeInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
-        await testUtils.nextTick();
-        assert.ok(floatTimeInput.value.endsWith('🇧🇪🇧🇪'));
 
         integerInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
         integerInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
@@ -1965,7 +1962,7 @@ QUnit.module('basic_fields', {
     QUnit.module('UrlWidget');
 
     QUnit.test('url widget in form view', async function (assert) {
-        assert.expect(9);
+        assert.expect(10);
 
         var form = await createView({
             View: FormView,
@@ -2008,6 +2005,13 @@ QUnit.module('basic_fields', {
             "should have proper new href link");
         assert.strictEqual(form.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a').text(), 'limbo',
             'the new value should be displayed');
+
+        await testUtils.form.clickEdit(form);
+        testUtils.fields.editInput(form.$('input[type="text"].o_field_widget'), '/web/limbo');
+
+        await testUtils.form.clickSave(form);
+        assert.hasAttrValue(form.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a'), 'href', '/web/limbo',
+            "should'nt have change link");
 
         form.destroy();
     });
@@ -2917,7 +2921,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
             async mockRPC(route, args) {
                 const _super = this._super;
-                if (route === '/web/static/src/img/placeholder.png') {
+                if (route === '/web/static/img/placeholder.png') {
                     assert.step('call placeholder route');
                 }
                 return _super.apply(this, arguments);
@@ -3689,6 +3693,7 @@ QUnit.module('basic_fields', {
                 '</form>',
             res_id: 1,
             session: {
+                // #tzoffset_daterange
                 // Date field should not have an offset as they are ignored. 
                 // However, in the test environement, a UTC timezone is set to run all tests. And if any code does not use the safe timezone method
                 // provided by the framework (which happens in this case inside the date range picker lib), unexpected behavior kicks in as the timezone
@@ -5776,6 +5781,74 @@ QUnit.module('basic_fields', {
         await testUtils.form.clickSave(form);
         assert.strictEqual(form.$('.o_field_widget').first().text(), '-11:48',
             'The new value should be saved and displayed properly.');
+
+        form.destroy();
+    });
+
+    QUnit.test('float_time field value formatted on blur', async function (assert) {
+        assert.expect(4);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                `<form string="Partners">
+                    <field name="qux" widget="float_time"/>
+                </form>`,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    assert.strictEqual(args.args[1].qux, 9.5, 'the correct float value should be saved');
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 5,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '09:06',
+            'The formatted time value should be displayed properly.');
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editAndTrigger(form.$('input[name=qux]'), '9.5', ['change']);
+        assert.strictEqual(form.$('input[name=qux]').val(), '09:30',
+            'The new value should be displayed properly in the input.');
+
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '09:30',
+            'The new value should be saved and displayed properly.');
+
+        form.destroy();
+    });
+
+    QUnit.test('float_time field with invalid value', async function (assert) {
+        assert.expect(5);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                `<form>
+                    <field name="qux" widget="float_time"/>
+                </form>`,
+            interceptsPropagate: {
+                call_service: function (ev) {
+                    if (ev.data.service === 'notification') {
+                        assert.strictEqual(ev.data.method, 'notify');
+                        assert.strictEqual(ev.data.args[0].title, 'Invalid fields:');
+                        assert.strictEqual(ev.data.args[0].message, '<ul><li>Qux</li></ul>');
+                    }
+                }
+            },
+        });
+
+        await testUtils.fields.editAndTrigger(form.$('input[name=qux]'), 'blabla', ['change']);
+        await testUtils.form.clickSave(form);
+        assert.hasClass(form.$('input[name=qux]'), 'o_field_invalid');
+
+        await testUtils.fields.editAndTrigger(form.$('input[name=qux]'), '6.5', ['change']);
+        assert.doesNotHaveClass(form.$('input[name=qux]'), 'o_field_invalid',
+            "date field should not be displayed as invalid now");
 
         form.destroy();
     });

@@ -138,6 +138,11 @@ var FieldMany2One = AbstractField.extend({
         // list of last autocomplete suggestions
         this.suggestions = [];
 
+        // flag used to prevent from selecting the highlighted item in the autocomplete
+        // dropdown when the user leaves the many2one by pressing Tab (unless he
+        // manually selected the item using UP/DOWN keys)
+        this.ignoreTabSelect = false;
+
         // use a DropPrevious to properly handle related record quick creations,
         // and store a createDef to be able to notify the environment that there
         // is pending quick create operation
@@ -231,7 +236,7 @@ var FieldMany2One = AbstractField.extend({
     _addAutocompleteSource: function (method, params) {
         this._autocompleteSources.push({
             method: method,
-            placeholder: (params.placeholder ? _t(params.placeholder) : _t('Loading...')) + '<i class="fa fa-spinner fa-spin pull-right"></i>' ,
+            placeholder: (params.placeholder ? _t(params.placeholder) : _t('Loading...')) + '<i class="fa fa-spin fa-circle-o-notch pull-right"></i>' ,
             validation: params.validation,
             loading: false,
             order: params.order || 999
@@ -274,10 +279,19 @@ var FieldMany2One = AbstractField.extend({
                 });
             },
             select: function (event, ui) {
-                // we do not want the select event to trigger any additional
-                // effect, such as navigating to another field.
-                event.stopImmediatePropagation();
-                event.preventDefault();
+                // do not select anything if the input is empty and the user
+                // presses Tab (except if he manually highlighted an item with
+                // up/down keys)
+                if (!self.floating && event.key === "Tab" && self.ignoreTabSelect) {
+                    return false;
+                }
+
+                if (event.key === "Enter") {
+                    // on Enter we do not want any additional effect, such as
+                    // navigating to another field
+                    event.stopImmediatePropagation();
+                    event.preventDefault();
+                }
 
                 var item = ui.item;
                 self.floating = false;
@@ -290,6 +304,11 @@ var FieldMany2One = AbstractField.extend({
             },
             focus: function (event) {
                 event.preventDefault(); // don't automatically select values on focus
+                if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+                    // the user manually selected an item by pressing up/down keys,
+                    // so select this item if he presses tab later on
+                    self.ignoreTabSelect = false;
+                }
             },
             open: function (event) {
                 self._onScroll = function (ev) {
@@ -300,6 +319,7 @@ var FieldMany2One = AbstractField.extend({
                 window.addEventListener('scroll', self._onScroll, true);
             },
             close: function (event) {
+                self.ignoreTabSelect = false;
                 // it is necessary to prevent ESC key from propagating to field
                 // root, to prevent unwanted discard operations.
                 if (event.which === $.ui.keyCode.ESCAPE) {
@@ -788,6 +808,9 @@ var FieldMany2One = AbstractField.extend({
      * @private
      */
     _onInputClick: function () {
+        if (this.autocomplete_bound && !this.$input.autocomplete("widget").is(":visible")) {
+            this.ignoreTabSelect = true;
+        }
         this._toggleAutoComplete();
     },
     /**
@@ -802,6 +825,8 @@ var FieldMany2One = AbstractField.extend({
             this.reinitialize({ id: firstValue.id, display_name: firstValue.name });
         } else if (this.can_create) {
             new M2ODialog(this, this.string, this.$input.val()).open();
+        } else {
+            this.$input.val("");
         }
     },
     /**
@@ -810,6 +835,14 @@ var FieldMany2One = AbstractField.extend({
      * @param {OdooEvent} ev
      */
     _onInputKeyup: function (ev) {
+        const $autocomplete = this.$input.autocomplete("widget");
+        // close autocomplete if no autocomplete item is selected and user presses TAB
+        // s.t. we properly move to the next field in this case
+        if (ev.which === $.ui.keyCode.TAB &&
+                $autocomplete.is(":visible") &&
+                !$autocomplete.find('.ui-menu-item .ui-state-active').length) {
+            this.$input.autocomplete("close");
+        }
         if (ev.which === $.ui.keyCode.ENTER || ev.which === $.ui.keyCode.TAB) {
             // If we pressed enter or tab, we want to prevent _onInputFocusout from
             // executing since it would open a M2O dialog to request
@@ -819,34 +852,13 @@ var FieldMany2One = AbstractField.extend({
         }
         this.isDirty = true;
         if (this.$input.val() === "") {
+            if (ev.key === "Backspace" || ev.key === "Delete") { // Backspace or Delete
+                this.ignoreTabSelect = true;
+            }
             this.reinitialize(false);
         } else if (this._getDisplayName(this.m2o_value) !== this.$input.val()) {
             this.floating = true;
             this._updateExternalButton();
-        }
-    },
-    /**
-     * @override
-     * @private
-     */
-    _onKeydown: function () {
-        this.floating = false;
-        this._super.apply(this, arguments);
-    },
-    /**
-     * Stops the left/right navigation move event if the cursor is not at the
-     * start/end of the input element. Stops any navigation move event if the
-     * user is selecting text.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onNavigationMove: function (ev) {
-        // TODO Maybe this should be done in a mixin or, better, the m2o field
-        // should be an InputField (but this requires some refactoring).
-        basicFields.InputField.prototype._onNavigationMove.apply(this, arguments);
-        if (this.mode === 'edit' && $(this.$input.autocomplete('widget')).is(':visible')) {
-            ev.stopPropagation();
         }
     },
     /**
@@ -1017,10 +1029,13 @@ const Many2OneAvatar = FieldMany2One.extend({
         if (this.mode === 'readonly') {
             this.template = null;
             this.tagName = 'div';
-            this.className = 'o_field_many2one_avatar';
             // disable the redirection to the related record on click, in readonly
             this.noOpen = true;
         }
+    },
+    start() {
+        this.el.classList.add('o_field_many2one_avatar');
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -1028,15 +1043,26 @@ const Many2OneAvatar = FieldMany2One.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Adds avatar image to before many2one value.
+     *
      * @override
      */
-    _renderReadonly() {
-        this.$el.empty();
-        if (this.value) {
-            this.$el.html(qweb.render(this._template, {
-                url: `/web/image/${this.field.relation}/${this.value.res_id}/image_128`,
-                value: this.m2o_value,
-            }));
+    _render() {
+        const m2oAvatar = qweb.render(this._template, {
+            url: `/web/image/${this.field.relation}/${this.value.res_id}/avatar_128`,
+            value: this.m2o_value,
+            widget: this,
+        });
+        if (this.mode === 'edit') {
+            this._super(...arguments);
+            if (this.el.querySelector('.o_m2o_avatar')) {
+                this.el.querySelector('.o_m2o_avatar').remove();
+            }
+            dom.prepend(this.$('.o_field_many2one_selection'), m2oAvatar);
+        }
+        if (this.mode === 'readonly') {
+            this.$el.empty();
+            dom.append(this.$el, m2oAvatar);
         }
     },
 });
@@ -1905,7 +1931,7 @@ var One2ManyKanbanRecord = KanbanRecord.extend({
                 if ($button.attr('warn')) {
                     $button.on('click', function (e) {
                         e.stopPropagation();
-                        self.do_warn(false, _t('Please click on the "save" button first'));
+                        self.displayNotification({ message: _t('Please click on the "save" button first'), type: 'danger' });
                     });
                 } else {
                     $button.attr('disabled', 'disabled');
@@ -2476,7 +2502,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
         var attachment_ids = this.value.res_ids;
         _.each(files, function (file) {
             if (file.error) {
-                self.do_warn(_t('Uploading Error'), file.error);
+                self.displayNotification({ title: _t('Uploading Error'), message: file.error, type: 'danger' });
             } else {
                 attachment_ids.push(file.id);
                 self.uploadedFiles[file.id] = true;
@@ -2743,7 +2769,7 @@ var FieldMany2ManyTagsAvatar = FieldMany2ManyTags.extend({
     _getRenderTagsContext: function () {
         var result = this._super.apply(this, arguments);
         result.avatarModel = this.nodeOptions.avatarModel || this.field.relation;
-        result.avatarField = this.nodeOptions.avatarField || 'image_128';
+        result.avatarField = this.nodeOptions.avatarField || 'avatar_128';
         return result;
     },
 });

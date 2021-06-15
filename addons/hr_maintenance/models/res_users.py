@@ -7,15 +7,9 @@ class Users(models.Model):
     equipment_ids = fields.One2many('maintenance.equipment', 'owner_user_id', string="Managed Equipments")
     equipment_count = fields.Integer(related='employee_id.equipment_count', string="Assigned Equipments")
 
-    def __init__(self, pool, cr):
-        """ Override of __init__ to add access rights.
-            Access rights are disabled by default, but allowed
-            on some specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
-        """
-        init_res = super(Users, self).__init__(pool, cr)
-        # duplicate list to avoid modifying the original reference
-        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + ['equipment_count']
-        return init_res
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + ['equipment_count']
 
 
 class Employee(models.Model):
