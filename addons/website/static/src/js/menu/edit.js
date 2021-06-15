@@ -323,11 +323,18 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @private
      */
     _addEditorMessages: function () {
+<<<<<<< HEAD
         const $editable = this._targetForEdition().find('.oe_structure.oe_empty, [data-oe-type="html"]');
         this.$editorMessageElements = $editable
             .not('[data-editor-message]')
             .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
         $editable.filter(':empty').attr('contenteditable', false);
+=======
+        const $target = this._targetForEdition();
+        const $skeleton = $target.find('.oe_structure.oe_empty, [data-oe-type="html"]');
+        this.$editorMessageElements = $skeleton.not('[data-editor-message]').attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
+        $skeleton.attr('contenteditable', function () { return !$(this).is(':empty'); });
+>>>>>>> 81d97f606a0... temp
     },
     /**
      * Returns the target for edition.
