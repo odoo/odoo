@@ -280,7 +280,8 @@ QUnit.module('hr', {}, function () {
             },
         });
 
-        assert.strictEqual(list.$('.o_data_cell:first .o_tag_badge_text').text().trim(), 'MarioYoshi');
+        assert.containsN(list, '.o_data_cell:first .o_field_many2manytags > span', 2,
+            "should have two avatar");
 
         // click on first employee badge
         await afterNextRender(() =>
@@ -322,6 +323,59 @@ QUnit.module('hr', {}, function () {
         );
 
         list.destroy();
+    });
+
+    QUnit.test('many2many_avatar_employee widget in kanban view', async function (assert) {
+        assert.expect(7);
+
+        const { widget: kanban } = await start({
+            hasView: true,
+            View: KanbanView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div class="oe_kanban_footer">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="employee_ids" widget="many2many_avatar_employee"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            mockRPC(route, args) {
+                if (args.method === 'read') {
+                    assert.step(`read ${args.model} ${args.args[0]}`);
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        assert.containsN(kanban, '.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar', 2,
+            "should have 2 avatar images");
+        assert.strictEqual(kanban.$('.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar:first').data('src'),
+            "/web/image/hr.employee.public/11/avatar_128",
+            "should have correct avatar image");
+        assert.strictEqual(kanban.$('.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar:eq(1)').data('src'),
+            "/web/image/hr.employee.public/23/avatar_128",
+            "should have correct avatar image");
+
+        await dom.click(kanban.$('.o_kanban_record:first .o_m2m_avatar:nth(0)'));
+        await dom.click(kanban.$('.o_kanban_record:first .o_m2m_avatar:nth(1)'));
+
+        assert.verifySteps([
+            "read hr.employee.public 11,23",
+            "read hr.employee.public 11",
+            "read hr.employee.public 23"
+        ]);
+
+        kanban.destroy();
     });
 
     QUnit.test('many2many_avatar_employee: click on an employee not associated with a user', async function (assert) {

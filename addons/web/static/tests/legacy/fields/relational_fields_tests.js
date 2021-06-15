@@ -4,6 +4,7 @@ odoo.define('web.relational_fields_tests', function (require) {
 var AbstractStorageService = require('web.AbstractStorageService');
 var FormController = require('web.FormController');
 var FormView = require('web.FormView');
+const KanbanView = require('web.KanbanView');
 var ListView = require('web.ListView');
 var RamStorage = require('web.RamStorage');
 var relationalFields = require('web.relational_fields');
@@ -2016,6 +2017,189 @@ QUnit.module('relational_fields', {
             "should have correct avatar image");
 
         form.destroy();
+    });
+
+    QUnit.test('widget many2many_tags_avatar in list view', async function (assert) {
+        assert.expect(18);
+
+        const records = [];
+        for (let id = 5; id <= 15; id++) {
+            records.push({
+                id,
+                display_name: `record ${id}`,
+            });
+        }
+        this.data.partner.records = this.data.partner.records.concat(records);
+
+        this.data.turtle.records.push({
+            id: 4,
+            display_name: "crime master gogo",
+            turtle_bar: true,
+            turtle_foo: "yop",
+            partner_ids: [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+        });
+        this.data.turtle.records[0].partner_ids = [1];
+        this.data.turtle.records[1].partner_ids = [1, 2, 4, 5, 6, 7];
+        this.data.turtle.records[2].partner_ids = [1, 2, 4, 5, 7];
+
+        const list = await createView({
+            View: ListView,
+            model: 'turtle',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="partner_ids" widget="many2many_tags_avatar"/></tree>',
+        });
+
+        assert.strictEqual(list.$('.o_data_row:first .o_field_many2manytags img.o_m2m_avatar').data('src'),
+            "/web/image/partner/1/avatar_128",
+            "should have correct avatar image");
+        assert.strictEqual(list.$('.o_data_row:first .o_many2many_tags_avatar_cell .o_field_many2manytags div').text().trim(),
+            "first record",
+            "should display like many2one avatar if there is only one record");
+
+        assert.containsN(list, '.o_data_row:eq(1) .o_field_many2manytags > span:not(.o_m2m_avatar_empty)', 4,
+            "should have 4 records");
+        assert.containsN(list, '.o_data_row:eq(2) .o_field_many2manytags > span:not(.o_m2m_avatar_empty)', 5,
+            "should have 5 records");
+        assert.containsOnce(list, '.o_data_row:eq(1) .o_field_many2manytags .o_m2m_avatar_empty',
+            "should have o_m2m_avatar_empty span");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_field_many2manytags .o_m2m_avatar_empty').text().trim(), "+2",
+            "should have +2 in o_m2m_avatar_empty");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_field_many2manytags img.o_m2m_avatar:first').data('src'),
+            "/web/image/partner/1/avatar_128",
+            "should have correct avatar image");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_field_many2manytags img.o_m2m_avatar:eq(1)').data('src'),
+            "/web/image/partner/2/avatar_128",
+            "should have correct avatar image");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_field_many2manytags img.o_m2m_avatar:eq(2)').data('src'),
+            "/web/image/partner/4/avatar_128",
+            "should have correct avatar image");
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_field_many2manytags img.o_m2m_avatar:eq(3)').data('src'),
+            "/web/image/partner/5/avatar_128",
+            "should have correct avatar image");
+        assert.containsNone(list, '.o_data_row:eq(2) .o_field_many2manytags .o_m2m_avatar_empty',
+            "should have o_m2m_avatar_empty span");
+        assert.containsN(list, '.o_data_row:eq(3) .o_field_many2manytags > span:not(.o_m2m_avatar_empty)', 4,
+            "should have 4 records");
+        assert.containsOnce(list, '.o_data_row:eq(3) .o_field_many2manytags .o_m2m_avatar_empty',
+            "should have o_m2m_avatar_empty span");
+        assert.strictEqual(list.$('.o_data_row:eq(3) .o_field_many2manytags .o_m2m_avatar_empty').text().trim(), "+9",
+            "should have +9 in o_m2m_avatar_empty");
+
+        list.$('.o_data_row:eq(1) .o_field_many2manytags .o_m2m_avatar_empty').trigger($.Event('mouseenter'));
+        await testUtils.nextTick();
+        assert.containsOnce(list, '.popover',
+            "should open a popover hover on o_m2m_avatar_empty");
+        assert.strictEqual(list.$('.popover .popover-body > div').text().trim(), "record 6record 7",
+            "should have a right text in popover");
+
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_many2many_tags_avatar_cell'));
+        assert.containsN(list, '.o_data_row.o_selected_row .o_many2many_tags_avatar_cell .badge', 1,
+            "should have 1 many2many badges in edit mode");
+
+        await testUtils.fields.many2one.clickOpenDropdown('partner_ids');
+        await testUtils.fields.many2one.clickItem('partner_ids', 'second record');
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
+        assert.containsN(list, '.o_data_row:eq(0) .o_field_many2manytags span', 2,
+            "should have 2 records");
+
+        list.destroy();
+    });
+
+    QUnit.test('widget many2many_tags_avatar in kanban view', async function (assert) {
+        assert.expect(13);
+
+        const records = [];
+        for (let id = 5; id <= 15; id++) {
+            records.push({
+                id,
+                display_name: `record ${id}`,
+            });
+        }
+        this.data.partner.records = this.data.partner.records.concat(records);
+
+        this.data.turtle.records.push({
+            id: 4,
+            display_name: "crime master gogo",
+            turtle_bar: true,
+            turtle_foo: "yop",
+            partner_ids: [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+        });
+        this.data.turtle.records[0].partner_ids = [1];
+        this.data.turtle.records[1].partner_ids = [1, 2, 4];
+        this.data.turtle.records[2].partner_ids = [1, 2, 4, 5];
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'turtle',
+            data: this.data,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="display_name"/>
+                                <div class="oe_kanban_footer">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="partner_ids" widget="many2many_tags_avatar"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'turtle,false,form': '<form><field name="display_name"/></form>',
+            },
+            intercepts: {
+                switch_view: function (event) {
+                    const { mode, model, res_id, view_type } = event.data;
+                    assert.deepEqual({ mode, model, res_id, view_type }, {
+                        mode: 'readonly',
+                        model: 'turtle',
+                        res_id: 1,
+                        view_type: 'form',
+                    }, "should trigger an event to open the clicked record in a form view");
+                },
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar').data('src'),
+            "/web/image/partner/1/avatar_128",
+            "should have correct avatar image");
+
+        assert.containsN(kanban, '.o_kanban_record:eq(1) .o_field_many2manytags span', 3,
+            "should have 3 records");
+        assert.containsN(kanban, '.o_kanban_record:eq(2) .o_field_many2manytags > span:not(.o_m2m_avatar_empty)', 2,
+            "should have 2 records");
+        assert.strictEqual(kanban.$('.o_kanban_record:eq(2) .o_field_many2manytags img.o_m2m_avatar:first').data('src'),
+            "/web/image/partner/1/avatar_128",
+            "should have correct avatar image");
+        assert.strictEqual(kanban.$('.o_kanban_record:eq(2) .o_field_many2manytags img.o_m2m_avatar:eq(1)').data('src'),
+            "/web/image/partner/2/avatar_128",
+            "should have correct avatar image");
+        assert.containsOnce(kanban, '.o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty',
+            "should have o_m2m_avatar_empty span");
+        assert.strictEqual(kanban.$('.o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty').text().trim(), "+2",
+            "should have +2 in o_m2m_avatar_empty");
+
+        assert.containsN(kanban, '.o_kanban_record:eq(3) .o_field_many2manytags > span:not(.o_m2m_avatar_empty)', 2,
+            "should have 2 records");
+        assert.containsOnce(kanban, '.o_kanban_record:eq(3) .o_field_many2manytags .o_m2m_avatar_empty',
+            "should have o_m2m_avatar_empty span");
+        assert.strictEqual(kanban.$('.o_kanban_record:eq(3) .o_field_many2manytags .o_m2m_avatar_empty').text().trim(), "9+",
+            "should have 9+ in o_m2m_avatar_empty");
+
+        kanban.$('.o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty').trigger($.Event('mouseenter'));
+        await testUtils.nextTick();
+        assert.containsOnce(kanban, '.popover',
+            "should open a popover hover on o_m2m_avatar_empty");
+        assert.strictEqual(kanban.$('.popover .popover-body > div').text().trim(), "aaarecord 5",
+            "should have a right text in popover");
+        await testUtils.dom.click(kanban.$('.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar'));
+
+        kanban.destroy();
     });
 
     QUnit.test('fieldmany2many tags: quick create a new record', async function (assert) {
