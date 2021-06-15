@@ -1169,7 +1169,7 @@ var SnippetsMenu = Widget.extend({
         this.customizePanel = document.createElement('div');
         this.customizePanel.classList.add('o_we_customize_panel', 'd-none');
         this._addToolbar();
-        this._checkEditorToolbarVisibilityCallback = this._checkEditorToolbarVisibility.bind(this)
+        this._checkEditorToolbarVisibilityCallback = this._checkEditorToolbarVisibility.bind(this);
         $(this.options.wysiwyg.odooEditor.document.body).on('click', this._checkEditorToolbarVisibilityCallback);
 
         if (this.options.enableTranslation) {
@@ -3015,7 +3015,8 @@ var SnippetsMenu = Widget.extend({
             !$(range.commonAncestorContainer).parents('#wrapwrap, .iframe-editor-wrapper .o_editable').length ||
             $(range.commonAncestorContainer).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"])').length ||
             (e && $(e.target).closest('.fa, img').length ||
-            this.options.wysiwyg.lastMediaClicked && $(this.options.wysiwyg.lastMediaClicked).is('.fa, img'))
+            this.options.wysiwyg.lastMediaClicked && $(this.options.wysiwyg.lastMediaClicked).is('.fa, img')) ||
+            (this.options.wysiwyg.lastElement && !this.options.wysiwyg.lastElement.isContentEditable)
         ) {
             $toolbarContainer.hide();
         } else {
