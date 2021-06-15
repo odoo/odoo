@@ -2286,6 +2286,8 @@ var SnippetsMenu = Widget.extend({
                         const genericPreview = document.createElement('div')
                         genericPreview.classList.add('o_we_generic_preview');
                         genericPreview.innerText = 'Snippet preview'
+                        // required to see the preview for dynamic snippets
+                        $toInsert.removeClass('d-none');
                         $toInsert.prepend(genericPreview);
                     }
 
