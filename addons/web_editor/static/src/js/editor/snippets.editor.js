@@ -190,8 +190,7 @@ var SnippetEditor = Widget.extend({
                     helper: () => {
                         const getSnippetEditorThumbnail = (snippet_name) => {
                             return document
-                            .querySelector(`#oe_snippets [data-snippet="${snippet_name}"]`)
-                            ?.parentNode;
+                            .querySelector(`#oe_snippets [data-snippet="${snippet_name}"]`)?.parentNode;
                         }
                         var template = getSnippetEditorThumbnail(this.$target.data('snippet'))
                         if (!template) {
