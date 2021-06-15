@@ -100,13 +100,15 @@
 }
 
 .o_we_generic_preview {
-    height: 120px;
-    width: available;
-    box-sizing: border-box;
-    background-color: rgb(182, 182, 182);
-    border: #000 medium dashed;
-    margin: 0 10px;
+    min-height: fit-content !important;
 
-    font-size: 3em;
+    font-size: 1em;
+    line-height: 1.5em;
     text-align: center;
+    
+    padding: 0;
+    margin: 0;
+    opacity: 0.9;
+    background-color: rgba($o-brand-odoo, 0.9) !important;
+    position: initial;
 }

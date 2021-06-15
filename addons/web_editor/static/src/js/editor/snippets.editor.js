@@ -184,8 +184,8 @@ var SnippetEditor = Widget.extend({
             const smoothScrollOptions = this.options.getScrollOptions({
                 jQueryDraggableOptions: {
                     cursorAt: {
-                        left: 10,
-                        top: 10
+                        left: 40,
+                        top: 45
                     },
                     handle: '.o_move_handle',
                     helper: () => {
@@ -204,11 +204,19 @@ var SnippetEditor = Widget.extend({
                             // locate the default template and clone it to alter its title
                             template = $(getSnippetEditorThumbnail('s_text_block')).clone();
                             template.find('.oe_snippet_thumbnail_title').text(thumbName);
+                            template = template[0];
                         }
+                        
+                        for (const className of ['.o_delete_btn', '.o_rename_btn']) {
+                            template.querySelectorAll(className).forEach(
+                                el => el.remove()
+                            );
+                        }
+
                         var $clone = $(template).clone().css({
-                                transform: 'rotate(-14deg)',
-                                border: 0,
-                            });
+                            transform: 'rotate(-14deg)',
+                            border: 0,
+                        });
                         $clone.appendTo(this.$body).removeClass('d-none');
                         return $clone;
                     },
@@ -2285,8 +2293,8 @@ var SnippetsMenu = Widget.extend({
 
                     if ($toInsert.hasClass('o_we_has_generic_preview')) {
                         const genericPreview = document.createElement('div')
-                        genericPreview.classList.add('o_we_generic_preview');
-                        genericPreview.innerText = 'Snippet preview'
+                        genericPreview.classList.add('o_we_generic_preview', 'oe_drop_zone', 'oe_insert');
+                        genericPreview.innerText = 'drop here'
                         // required to see the preview for dynamic snippets
                         $toInsert.removeClass('d-none');
                         $toInsert.prepend(genericPreview);
