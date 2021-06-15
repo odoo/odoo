@@ -2,8 +2,9 @@
 
 import fieldRegistry from 'web.field_registry';
 
-import { Many2OneAvatarUser, KanbanMany2OneAvatarUser } from '@mail/js/m2x_avatar_user';
+import { Many2OneAvatarUser, KanbanMany2OneAvatarUser, KanbanMany2ManyAvatarUser, ListMany2ManyAvatarUser } from '@mail/js/m2x_avatar_user';
 import { Many2ManyAvatarUser } from '@mail/js/m2x_avatar_user';
+import { KanbanMany2ManyTagsAvatar, ListMany2ManyTagsAvatar } from 'web.relational_fields';
 
 
 // This module defines variants of the Many2OneAvatarUser and Many2ManyAvatarUser
@@ -44,13 +45,25 @@ export const KanbanMany2OneAvatarEmployee = KanbanMany2OneAvatarUser.extend(M2XA
 fieldRegistry.add('many2one_avatar_employee', Many2OneAvatarEmployee);
 fieldRegistry.add('kanban.many2one_avatar_employee', KanbanMany2OneAvatarEmployee);
 
-export const Many2ManyAvatarEmployee = Many2ManyAvatarUser.extend(M2XAvatarEmployeeMixin, {
+const M2MAvatarEmployeeMixin = Object.assign(M2XAvatarEmployeeMixin, {
+    //----------------------------------------------------------------------
+    // Private
+    //----------------------------------------------------------------------
+
     _getEmployeeID(ev) {
         return parseInt(ev.target.getAttribute('data-id'), 10);
     },
 });
 
+export const Many2ManyAvatarEmployee = Many2ManyAvatarUser.extend(M2MAvatarEmployeeMixin, {});
+
+export const KanbanMany2ManyAvatarEmployee = KanbanMany2ManyAvatarUser.extend(M2MAvatarEmployeeMixin, {});
+
+export const ListMany2ManyAvatarEmployee = ListMany2ManyAvatarUser.extend(M2MAvatarEmployeeMixin, {});
+
 fieldRegistry.add('many2many_avatar_employee', Many2ManyAvatarEmployee);
+fieldRegistry.add('kanban.many2many_avatar_employee', KanbanMany2ManyAvatarEmployee);
+fieldRegistry.add('list.many2many_avatar_employee', ListMany2ManyAvatarEmployee);
 
 export default {
     Many2OneAvatarEmployee,

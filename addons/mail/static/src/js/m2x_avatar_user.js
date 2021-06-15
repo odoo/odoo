@@ -2,7 +2,7 @@
 
 import fieldRegistry from 'web.field_registry';
 import { Many2OneAvatar } from 'web.relational_fields';
-import { FieldMany2ManyTagsAvatar } from 'web.relational_fields';
+import { FieldMany2ManyTagsAvatar, KanbanMany2ManyTagsAvatar, ListMany2ManyTagsAvatar } from 'web.relational_fields';
 
 const { Component } = owl;
 
@@ -75,7 +75,7 @@ export const KanbanMany2OneAvatarUser = Many2OneAvatarUser.extend({
     _template: 'mail.KanbanMany2OneAvatarUser',
 });
 
-export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2XAvatarMixin, {
+const M2MAvatarMixin = Object.assign(M2XAvatarMixin, {
     events: Object.assign({}, FieldMany2ManyTagsAvatar.prototype.events, {
         'click .o_m2m_avatar': '_onAvatarClicked',
     }),
@@ -95,7 +95,15 @@ export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2XAvatarMixi
     },
 });
 
+export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixin, {});
+
+export const KanbanMany2ManyAvatarUser = KanbanMany2ManyTagsAvatar.extend(M2MAvatarMixin, {});
+
+export const ListMany2ManyAvatarUser = ListMany2ManyTagsAvatar.extend(M2MAvatarMixin, {});
+
 fieldRegistry.add('many2one_avatar_user', Many2OneAvatarUser);
 fieldRegistry.add('kanban.many2one_avatar_user', KanbanMany2OneAvatarUser);
 fieldRegistry.add('activity.many2one_avatar_user', KanbanMany2OneAvatarUser);
 fieldRegistry.add('many2many_avatar_user', Many2ManyAvatarUser);
+fieldRegistry.add('kanban.many2many_avatar_user', KanbanMany2ManyAvatarUser);
+fieldRegistry.add('list.many2many_avatar_user', ListMany2ManyAvatarUser);

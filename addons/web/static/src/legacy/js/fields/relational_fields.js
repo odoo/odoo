@@ -2772,6 +2772,72 @@ var FieldMany2ManyTagsAvatar = FieldMany2ManyTags.extend({
     },
 });
 
+
+// Remove event handlers on this widget to ensure that the kanban 'global
+// click' opens the clicked record
+const { click, ...M2MAvatarMixinEvents } = AbstractField.prototype.events;
+const M2MAvatarMixin = {
+    visibleAvatarCount: 3, // number of visible avatar
+    events: M2MAvatarMixinEvents,
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Open tooltip on empty avatar clicked
+     *
+     * @private
+     */
+    _bindPopover(ev) {
+        this.$('.o_m2m_avatar_empty').popover({
+            container: this.$el,
+            trigger: 'hover',
+            html: true,
+            placement: 'auto',
+            content: () => {
+                const elements = this.value ? _.pluck(this.value.data, 'data') : [];
+                return qweb.render('Many2ManyTagAvatarPopover', {
+                    elements: elements.slice(this.visibleAvatarCount - 1),
+                });
+            },
+        });
+    },
+    /**
+     * @override
+     */
+    _getRenderTagsContext() {
+        const result = this._super(...arguments);
+        result['widget'] = this;
+        return result;
+    },
+    /**
+     * @override
+     */
+    _renderReadonly() {
+        this.$el.addClass('o_field_many2manytags_multi');
+        return this._super(...arguments);
+    },
+    /**
+     * Override to bind popover
+     *
+     * @override
+     */
+    _renderTags() {
+        this._super(...arguments);
+        this._bindPopover();
+    },
+}
+
+const KanbanMany2ManyTagsAvatar = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixin, {
+    tag_template: 'KanbanMany2ManyTagAvatar',
+});
+
+const ListMany2ManyTagsAvatar = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixin, {
+    tag_template: 'ListMany2ManyTagAvatar',
+    visibleAvatarCount: 5,
+});
+
 var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     events: _.extend({}, FieldMany2ManyTags.prototype.events, {
         'click .dropdown-toggle': '_onOpenColorPicker',
@@ -3697,6 +3763,8 @@ return {
     FieldMany2ManyCheckBoxes: FieldMany2ManyCheckBoxes,
     FieldMany2ManyTags: FieldMany2ManyTags,
     FieldMany2ManyTagsAvatar: FieldMany2ManyTagsAvatar,
+    KanbanMany2ManyTagsAvatar: KanbanMany2ManyTagsAvatar,
+    ListMany2ManyTagsAvatar: ListMany2ManyTagsAvatar,
     FormFieldMany2ManyTags: FormFieldMany2ManyTags,
     KanbanFieldMany2ManyTags: KanbanFieldMany2ManyTags,
 
