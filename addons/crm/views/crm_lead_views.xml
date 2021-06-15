@@ -168,8 +168,8 @@
                                         type="object" context="{'default_email': email_from}" groups="base.group_user"
                                         attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>
                                     <field name="email_from" string="Email" widget="email"/>
-                                    <span class="fa fa-exclamation-triangle text-warning" 
-                                        title="By saving this change, the customer email will also be updated." 
+                                    <span class="fa fa-exclamation-triangle text-warning oe_edit_only"
+                                        title="By saving this change, the customer email will also be updated."
                                         attrs="{'invisible': [('partner_email_update', '=', False)]}"/>
                                 </div>
                                 <label for="phone" class="oe_inline"/>
@@ -179,8 +179,8 @@
                                         type="object" context="{'default_phone': phone}" groups="base.group_user"
                                         attrs="{'invisible': [('phone_blacklisted', '=', False)]}"/>
                                     <field name="phone" widget="phone"/>
-                                    <span class="fa fa-exclamation-triangle text-warning" 
-                                        title="By saving this change, the customer phone number will also be updated." 
+                                    <span class="fa fa-exclamation-triangle text-warning oe_edit_only"
+                                        title="By saving this change, the customer phone number will also be updated."
                                         attrs="{'invisible': [('partner_phone_update', '=', False)]}"/>
                                 </div>
                             </group>
@@ -203,8 +203,8 @@
                                         type="object" context="{'default_email': email_from}" groups="base.group_user"
                                         attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>
                                     <field name="email_from" id="email_from_group_lead_info" string="Email" widget="email"/>
-                                    <span class="fa fa-exclamation-triangle text-warning" 
-                                        title="By saving this change, the customer email will also be updated." 
+                                    <span class="fa fa-exclamation-triangle text-warning oe_edit_only"
+                                        title="By saving this change, the customer email will also be updated."
                                         attrs="{'invisible': [('partner_email_update', '=', False)]}"/>
                                 </div>
                                 <field name="email_cc" groups="base.group_no_one"/>
@@ -216,8 +216,8 @@
                                         type="object" context="{'default_phone': phone}" groups="base.group_user"
                                         attrs="{'invisible': [('phone_blacklisted', '=', False)]}"/>
                                     <field name="phone" id="phone_group_lead_info" widget="phone"/>
-                                    <span class="fa fa-exclamation-triangle text-warning" 
-                                        title="By saving this change, the customer phone number will also be updated." 
+                                    <span class="fa fa-exclamation-triangle text-warning oe_edit_only"
+                                        title="By saving this change, the customer phone number will also be updated."
                                         attrs="{'invisible': [('partner_phone_update', '=', False)]}"/>
                                 </div>
                                 <label for="mobile" class="oe_inline"/>
