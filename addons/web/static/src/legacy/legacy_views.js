@@ -101,10 +101,24 @@ function registerView(name, LegacyView) {
                     viewFields: result.fields_views.search.fields,
                 });
             }
+            const views = this.viewParams.action.views
+                .filter(([vid, vtype]) => vtype !== "search")
+                .map(([vid, vtype]) => {
+                    const view = this.props.viewSwitcherEntries.find((v) => v.type === vtype);
+                    if (view) {
+                        return Object.assign({}, view, {viewID: vid});
+                    } else {
+                        return {
+                            viewID: vid,
+                            type: vtype,
+                            multiRecord: !this.constructor.multiRecord,
+                        };
+                    }
+                });
             this.viewParams.action = Object.assign({}, this.viewParams.action, {
                 controlPanelFieldsView,
                 _views: this.viewParams.action.views,
-                views: this.props.viewSwitcherEntries,
+                views,
             });
         }
     }

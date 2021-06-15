@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import testUtils from "web.test_utils";
 import ListController from "web.ListController";
+import ListView from 'web.ListView';
 import { click, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
@@ -183,5 +184,72 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
 
         delete core.action_registry.map.customLegacy;
+    });
+
+    QUnit.test("Checks the availability of all views in the action", async (assert) => {
+        assert.expect(2);
+        patchWithCleanup(ListView.prototype, {
+            init(viewInfo, params) {
+                const action = params.action;
+                const views = action.views.map((view) => ([view.viewID, view.type]));
+                assert.deepEqual(views, [
+                    [1, "list"],
+                    [2, "kanban"],
+                    [3, "form"],
+                ]);
+                assert.deepEqual(action._views, [
+                    [1, "list"],
+                    [2, "kanban"],
+                    [3, "form"],
+                    [false, "search"],
+                ]);
+                this._super(...arguments);
+            },
+        });
+        const models = {
+            partner: {
+                fields: {
+                    display_name: {string: "Displayed name", type: "char", searchable: true},
+                    foo: {string: "Foo", type: "char", default: "My little Foo Value", searchable: true},
+                    bar: {string: "Bar", type: "boolean"},
+                    int_field: {string: "Integer field", type: "integer", group_operator: 'sum'},
+                },
+                records: [{
+                    id: 1,
+                    display_name: "first record",
+                    foo: "yop",
+                    int_field: 3,
+                }, {
+                    id: 2,
+                    display_name: "second record",
+                    foo: "lalala",
+                    int_field: 5,
+                }, {
+                    id: 4,
+                    display_name: "aaa",
+                    foo: "abc",
+                    int_field: 2,
+                }],
+            }
+        };
+        const views = {
+            "partner,1,list": '<list><field name="foo"/></list>',
+            'partner,2,kanban': '<kanban></kanban>',
+            "partner,3,form": `<form></form>`,
+            'partner,false,search': '<search></search>',
+        };
+        const serverData = { models, views };
+
+        const webClient = await createWebClient({
+            serverData,
+        });
+
+        await doAction(webClient, {
+            id: 1,
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[1, "list"], [2, "kanban"], [3, "form"]],
+
+        });
     });
 });
