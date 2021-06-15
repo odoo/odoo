@@ -1610,8 +1610,7 @@ body.editor_enable.editor_has_snippets {
     .ui-draggable {
         &:hover {
             cursor: -moz-grab; // mozilla
-            cursor: -webkit-grab; // chrome
-            cursor: grab; // non-standard
+            cursor: url(/web_editor/static/src/img/openhand.cur), default !important; // chrome
             cursor: move; // fallback
         }
     }
@@ -1977,9 +1976,8 @@ body.editor_enable.editor_has_snippets {
                     background-position: center;
                     background-repeat: no-repeat;
                     &:hover {
-                        cursor: move;
                         cursor: -moz-grab;
-                        cursor: -webkit-grab;
+                        cursor: url(/web_editor/static/src/img/openhand.cur), default !important; // chrome
                         cursor: grab;
                     }
                 }
