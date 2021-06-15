@@ -93,10 +93,13 @@ class ProviderGrid(models.Model):
 
         return self._get_price_from_picking(total, weight, volume, quantity)
 
+    def _get_price_from_picking_dict(self, total, weight, volume, quantity):
+        return {'price': total, 'volume': volume, 'weight': weight, 'wv': volume * weight, 'quantity': quantity}
+
     def _get_price_from_picking(self, total, weight, volume, quantity):
         price = 0.0
         criteria_found = False
-        price_dict = {'price': total, 'volume': volume, 'weight': weight, 'wv': volume * weight, 'quantity': quantity}
+        price_dict = self._get_price_from_picking_dict(total, weight, volume, quantity)
         if self.free_over and total >= self.amount:
             return 0
         for line in self.price_rule_ids:
