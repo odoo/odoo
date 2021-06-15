@@ -16,9 +16,19 @@ export function mapDoActionOptionAPI(legacyOptions) {
         additionalContext: legacyOptions.additional_context,
         clearBreadcrumbs: legacyOptions.clear_breadcrumbs,
         viewType: legacyOptions.view_type,
-        resId: legacyOptions.res_id,
         onClose: legacyOptions.on_close,
+        props: {
+            resId: legacyOptions.res_id,
+        },
     });
+    if (legacyOptions.controllerState) {
+        if (legacyOptions.controllerState.searchModel) {
+            legacyOptions.props.searchModel = legacyOptions.controllerState.searchModel;
+        }
+        if (legacyOptions.controllerState.searchPanel) {
+            legacyOptions.props.searchPanel = legacyOptions.controllerState.searchPanel;
+        }
+    }
     delete legacyOptions.additional_context;
     delete legacyOptions.clear_breadcrumbs;
     delete legacyOptions.view_type;
