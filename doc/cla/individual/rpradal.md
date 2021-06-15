@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Rémi Pradal remi.pradal@gmail.com https://github.com/rpradal
+Rémi Pradal remi.p@foodles.co https://github.com/rpradal
