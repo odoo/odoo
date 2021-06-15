@@ -144,7 +144,7 @@ class StockMoveLine(models.Model):
                 default_dest_location = self.location_dest_id
                 if self.env.context.get('default_location_dest_id'):
                     default_dest_location = self.env['stock.location'].browse([self.env.context.get('default_location_dest_id')])
-                self.location_dest_id = default_dest_location._get_putaway_strategy(self.product_id, qty_done)
+                self.location_dest_id = default_dest_location._get_putaway_strategy(self.product_id, qty_done, additional_qty=self._get_additional_qty())
             if self.picking_id:
                 product = self.product_id.with_context(lang=self.picking_id.partner_id.lang or self.env.user.lang)
                 self.description_picking = product._get_description(self.picking_id.picking_type_id)
@@ -211,13 +211,20 @@ class StockMoveLine(models.Model):
                 default_dest_location = self.location_dest_id
                 if self.env.context.get('default_location_dest_id'):
                     default_dest_location = self.env['stock.location'].browse([self.env.context.get('default_location_dest_id')])
-                self.location_dest_id = default_dest_location._get_putaway_strategy(self.product_id, qty_done)
+                additional_qty = self._get_additional_qty()
+                self.location_dest_id = default_dest_location._get_putaway_strategy(self.product_id, qty_done, additional_qty=additional_qty)
             if self.product_id.tracking == 'serial':
                 qty_done = self.product_uom_id._compute_quantity(self.qty_done, self.product_id.uom_id)
                 if float_compare(qty_done, 1.0, precision_rounding=self.product_id.uom_id.rounding) != 0:
                     message = _('You can only process 1.0 %s of products with unique serial number.', self.product_id.uom_id.name)
                     res['warning'] = {'title': _('Warning'), 'message': message}
         return res
+
+    def _get_additional_qty(self):
+        addtional_qty = {}
+        for ml in self.move_id._origin.move_line_ids:
+            addtional_qty[ml.location_dest_id.id] = addtional_qty.get(ml.location_dest_id.id, 0) - ml.product_qty
+        return addtional_qty
 
     def init(self):
         if not tools.index_exists(self._cr, 'stock_move_line_free_reservation_index'):
