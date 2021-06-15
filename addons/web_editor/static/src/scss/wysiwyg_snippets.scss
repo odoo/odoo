@@ -53,6 +53,7 @@ body.editor_enable.editor_has_snippets {
         background-color: rgba(62, 62, 70, 1);
         cursor: -moz-grabbing;
         cursor: -webkit-grabbing;
+        cursor: move;
         cursor: grabbing !important;
 
         font-size: 12px;
@@ -74,7 +75,7 @@ body.editor_enable.editor_has_snippets {
     }
 
     &.o_we_child_is_moved {
-        visibility: hidden;
+        opacity: 0;
     }
 
     > .oe_snippet_body {
@@ -2020,8 +2021,12 @@ body.editor_enable.editor_has_snippets {
 
             .o_we_overlay_content {
                 cursor: grab;
+                cursor: url(/web_editor/static/src/img/openhand.cur), default !important;
 
                 .o_we_grabbing {
+                    cursor: -webkit-grabbing;
+                    cursor: -moz-grabbing;
+                    cursor: move;
                     cursor: grabbing;
                 }
             }
