@@ -78,7 +78,7 @@ class StockRule(models.Model):
     def _get_matching_bom(self, product_id, company_id, values):
         if values.get('bom_id', False):
             return values['bom_id']
-        return self.env['mrp.bom']._bom_find(product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)[product_id]
+        return product_id.with_context(picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id).current_bom_id
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values, bom):
         date_planned = self._get_date_planned(product_id, company_id, values)
@@ -151,12 +151,11 @@ class ProcurementGroup(models.Model):
         product_by_company = defaultdict(OrderedSet)
         for procurement in procurements:
             product_by_company[procurement.company_id].add(procurement.product_id.id)
-        kits_by_company = {
-            company: self.env['mrp.bom']._bom_find(self.env['product.product'].browse(product_ids), company_id=company.id, bom_type='phantom')
-            for company, product_ids in product_by_company.items()
-        }
+        for company, product_ids in product_by_company.items():
+            # Cache and used the prefetch by company
+            product_ids.with_context(company_id=company.id, bom_type='phantom').current_bom_id
         for procurement in procurements:
-            bom_kit = kits_by_company[procurement.company_id].get(procurement.product_id)
+            bom_kit = procurement.product_id.with_context(company_id=procurement.company.id, bom_type='phantom').current_bom_id
             if bom_kit:
                 order_qty = procurement.product_uom._compute_quantity(procurement.product_qty, bom_kit.product_uom_id, round=False)
                 qty_to_produce = (order_qty / bom_kit.product_qty)

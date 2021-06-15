@@ -115,7 +115,7 @@ class MrpUnbuild(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
-            self.bom_id = self.env['mrp.bom']._bom_find(self.product_id, company_id=self.company_id.id)[self.product_id]
+            self.bom_id = self.product_id.with_context(company_id=self.company_id.id).current_bom_id
             self.product_uom_id = self.mo_id.product_id == self.product_id and self.mo_id.product_uom_id.id or self.product_id.uom_id.id
 
     @api.constrains('product_qty')

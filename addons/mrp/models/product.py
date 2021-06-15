@@ -68,12 +68,19 @@ class ProductProduct(models.Model):
         compute='_compute_used_in_bom_count', compute_sudo=False)
     mrp_product_qty = fields.Float('Manufactured',
         compute='_compute_mrp_product_qty', compute_sudo=False)
-    current_bom_id = fields.Many2one('mrp.bom', compute="_compute_current_bom_id")
+    current_bom_id = fields.Many2one('mrp.bom', compute='_compute_current_bom_id')
 
     @api.depends('variant_bom_ids', 'bom_ids')
-    @api.depends_context('company', 'bom_type', 'picking_type_id')
+    @api.depends_context('company_id', 'bom_type', 'picking_type')
     def _compute_current_bom_id(self):
-        
+        bom_by_product = self.env['mrp.bom']._bom_find(
+            self,
+            picking_type=self.env.context.get('picking_type', False),
+            company_id=self.env.context.get('company_id', False),
+            bom_type=self.env.context.get('bom_type', False),
+        )
+        for product in self:
+            product.current_bom_id = bom_by_product[product]
 
     def _compute_bom_count(self):
         for product in self:
@@ -94,7 +101,7 @@ class ProductProduct(models.Model):
         """ Return the components list ids in case of kit product.
         Return the product itself otherwise"""
         self.ensure_one()
-        bom_kit = self.env['mrp.bom']._bom_find(self, bom_type='phantom')[self]
+        bom_kit = self.with_context(bom_type='phantom').current_bom_id
         if bom_kit:
             boms, bom_sub_lines = bom_kit.explode(self, 1)
             return [bom_line.product_id.id for bom_line, data in bom_sub_lines if bom_line.product_id.type == 'product']
@@ -129,11 +136,10 @@ class ProductProduct(models.Model):
         This override is used to get the correct quantities of products
         with 'phantom' as BoM type.
         """
-        bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom')
-        kits = self.filtered(lambda p: bom_kits.get(p))
+        kits = self.with_context(bom_type='phantom').filtered(lambda p: p.current_bom_id)
         res = super(ProductProduct, self - kits)._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
-        for product in bom_kits:
-            boms, bom_sub_lines = bom_kits[product].explode(product, 1)
+        for product in kits:
+            boms, bom_sub_lines = product.current_bom_id.explode(product, 1)
             ratios_virtual_available = []
             ratios_qty_available = []
             ratios_incoming_qty = []
@@ -198,13 +204,13 @@ class ProductProduct(models.Model):
         return action
 
     def action_open_quants(self):
-        bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom')
-        components = self - self.env['product.product'].concat(*list(bom_kits.keys()))
-        for product in bom_kits:
-            boms, bom_sub_lines = bom_kits[product].explode(product, 1)
+        kits_products = self.with_context(bom_type='phantom').filtered("current_bom_id")
+        components = self - kits_products
+        for product in kits_products:
+            boms, bom_sub_lines = product.with_context(bom_type='phantom').current_bom_id.explode(product, 1)
             components |= self.env['product.product'].concat(*[l[0].product_id for l in bom_sub_lines])
         res = super(ProductProduct, components).action_open_quants()
-        if bom_kits:
+        if kits_products:
             res['context']['single_product'] = False
             res['context'].pop('default_product_tmpl_id', None)
         return res
