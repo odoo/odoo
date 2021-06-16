@@ -109,7 +109,7 @@
             <field name="target">new</field>
             <field name="context" eval="{
                 'default_composition_mode': 'mass_mail',
-                'default_partner_to': '${object.id or \'\'}',
+                'default_partner_to': '{{ object.id or \'\' }}',
                 'default_use_template': False,
                 'default_reply_to_force_new': True,
             }"/>

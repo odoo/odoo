@@ -11,7 +11,7 @@ class MailComposerMixin(models.AbstractModel):
     Main current purpose is to hide details related to subject and body computation
     and rendering based on a mail.template. It also give the base tools to control
     who is allowed to edit body, notably when dealing with templating language
-    like jinja or qweb.
+    like inline_template or qweb.
 
     It is meant to evolve in a near future with upcoming support of qweb and fine
     grain control of rendering access.
@@ -22,7 +22,7 @@ class MailComposerMixin(models.AbstractModel):
 
     # Content
     subject = fields.Char('Subject', compute='_compute_subject', readonly=False, store=True)
-    body = fields.Html('Contents', sanitize_style=True, compute='_compute_body', store=True, readonly=False)
+    body = fields.Html('Contents', compute='_compute_body', render_engine='qweb', store=True, readonly=False, sanitize=False)
     template_id = fields.Many2one('mail.template', 'Mail Template', domain="[('model', '=', render_model)]")
     # Access
     is_mail_template_editor = fields.Boolean('Is Editor', compute='_compute_is_mail_template_editor')
