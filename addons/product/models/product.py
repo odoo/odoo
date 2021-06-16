@@ -424,6 +424,9 @@ class ProductProduct(models.Model):
     def name_get(self):
         # TDE: this could be cleaned a bit I think
 
+        if not self._context.get('display_default_code', True) and not self._context.get('partner_id'):
+            return [(r.id, r.product_tmpl_id.name) for r in self.with_context(prefetch_fields=False)]
+
         def _name_get(d):
             name = d.get('name', '')
             code = self._context.get('display_default_code', True) and d.get('default_code', False) or False
