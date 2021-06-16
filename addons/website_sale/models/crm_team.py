@@ -45,7 +45,7 @@ class CrmTeam(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'tree,form',
             'domain': [('is_abandoned_cart', '=', True)],
-            'search_view_id': self.env.ref('sale.sale_order_view_search_inherit_sale').id,
+            'search_view_id': [self.env.ref('sale.sale_order_view_search_inherit_sale').id],
             'context': {
                 'search_default_team_id': self.id,
                 'default_team_id': self.id,
