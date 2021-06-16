@@ -39,12 +39,13 @@ var SwitchCompanyMenu = Widget.extend({
      */
     start: function () {
         var companiesList = '';
+        var company_name = session.user_companies.current_company[1]
         if (this.isMobile) {
             companiesList = '<li class="bg-info">' +
                 _t('Tap on the list to change company') + '</li>';
         }
         else {
-            this.$('.oe_topbar_name').text(session.user_companies.current_company[1]);
+            this.$('.oe_topbar_name').text(company_name.split(' ').slice(0, 2).join(' '));
         }
         _.each(session.user_companies.allowed_companies, function(company) {
             var a = '';
