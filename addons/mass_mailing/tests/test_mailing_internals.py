@@ -65,7 +65,7 @@ class TestMassMailValues(MassMailCommon):
             'name': 'TestMailing',
             'subject': 'Test',
             'mailing_type': 'mail',
-            'body_html': '<p>Hello ${object.name}</p>',
+            'body_html': '<p>Hello <t t-out="object.name"/></p>',
             'mailing_model_id': self.env['ir.model']._get('res.partner').id,
         })
         self.assertEqual(mailing.user_id, self.user_marketing)
@@ -115,7 +115,7 @@ class TestMassMailValues(MassMailCommon):
             'name': 'TestMailing',
             'subject': 'Test',
             'mailing_type': 'mail',
-            'body_html': '<p>Hello ${object.name}</p>',
+            'body_html': '<p>Hello <t t-out="object.name"/></p>',
             'mailing_model_id': self.env['ir.model']._get('res.partner').id,
         })
         self.assertEqual(literal_eval(mailing.mailing_domain), [('email', 'ilike', 'test.example.com')])
@@ -288,12 +288,12 @@ class TestMassMailFeatures(MassMailCommon, CronMixinCase):
             'subject': 'TestShortener',
             'body_html': """<div>
 Hi,
-% set url = "www.odoo.com"
-% set httpurl = "https://www.odoo.eu"
-Website0: <a id="url0" href="https://www.odoo.tz/my/${object.name}">https://www.odoo.tz/my/${object.name}</a>
+<t t-set="url" t-value="'www.odoo.com'"/>
+<t t-set="httpurl" t-value="'https://www.odoo.eu'"/>
+Website0: <a id="url0" t-attf-href="https://www.odoo.tz/my/{{object.name}}">https://www.odoo.tz/my/<t t-esc="object.name"/></a>
 Website1: <a id="url1" href="https://www.odoo.be">https://www.odoo.be</a>
-Website2: <a id="url2" href="https://${url}">https://${url}</a>
-Website3: <a id="url3" href="${httpurl}">${httpurl}</a>
+Website2: <a id="url2" t-attf-href="https://{{url}}">https://<t t-esc="url"/></a>
+Website3: <a id="url3" t-att-href="httpurl"><t t-esc="httpurl"/></a>
 External1: <a id="url4" href="https://www.example.com/foo/bar?baz=qux">Youpie</a>
 Email: <a id="url5" href="mailto:test@odoo.com">test@odoo.com</a></div>""",
             'mailing_model_id': self.env['ir.model']._get('mailing.list').id,

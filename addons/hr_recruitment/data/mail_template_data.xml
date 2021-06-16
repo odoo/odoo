@@ -5,9 +5,9 @@
     <record id="email_template_data_applicant_refuse" model="mail.template">
         <field name="name">Applicant: Refuse</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="subject">Your Job Application: ${object.job_id.name | safe}</field>
-        <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
-        <field name="partner_to">${object.partner_id.id or ''}</field>
+        <field name="subject">Your Job Application: {{ object.job_id.name }}</field>
+        <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
+        <field name="partner_to">{{ object.partner_id.id or '' }}</field>
         <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
     <tr>
@@ -15,10 +15,10 @@
             <div style="font-size: 13px; margin: 0px; padding: 0px;">
                 Hello,<br/><br/>
                 Thank you for your interest in joining the
-                <b>${object.company_id.name}</b> team.  We wanted to
-                let you know that, although your resume is competitive,
-                our hiring team reviewed your application and <b>did not
-                select it for further consideration</b>.
+                <b><t t-out="object.company_id.name or ''">YourCompany</t></b> team.  We
+                wanted to let you know that, although your resume is
+                competitive, our hiring team reviewed your application
+                and <b>did not select it for further consideration</b>.
                 <br/><br/>
                 Please note that recruiting is hard, and we can make
                 mistakes. Do not hesitate to reply to this email if you
@@ -35,16 +35,17 @@
                 <br/><br/>
                 Thank you,
                 <div style="font-size: 11px; color: grey;">
-                    % if object.user_id:
+                    <t t-if="object.user_id">
                         -- <br/>
-                        <strong>${object.user_id.name}</strong><br/>
-                        Email: ${object.user_id.email or ''}<br/>
-                        Phone: ${object.user_id.phone or ''}
-                    % else:
+                        <strong t-out="object.user_id.name or ''">Mitchell Admin</strong><br/>
+                        Email: <t t-out="object.user_id.email or ''">admin@yourcompany.example.com</t><br/>
+                        Phone: <t t-out="object.user_id.phone or ''">+1 650-123-4567</t>
+                    </t>
+                    <t t-else="">
                         -- <br/>
-                        ${object.company_id.name}<br/>
+                        <t t-out="object.company_id.name or ''">YourCompany</t><br/>
                         The HR Team
-                    % endif
+                    </t>
                 </div>
             </div>
         </td>
@@ -52,15 +53,15 @@
 </table>
         </field>
         <field name="auto_delete" eval="True"/>
-        <field name="lang">${object.partner_id.lang or ''}</field>
+        <field name="lang">{{ object.partner_id.lang or '' }}</field>
     </record>
 
     <record id="email_template_data_applicant_interest" model="mail.template">
         <field name="name">Applicant: Interest</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="subject">Your Job Application: ${object.job_id.name | safe}</field>
-        <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
-        <field name="partner_to">${object.partner_id.id or ''}</field>
+        <field name="subject">Your Job Application: {{ object.job_id.name }}</field>
+        <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
+        <field name="partner_to">{{ object.partner_id.id or '' }}</field>
         <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
     <tr>
@@ -76,36 +77,34 @@
                 position, your application has been short listed for a
                 call or an interview.
                 <br/><br/>
-                % if 'website_url' in object.job_id and object.job_id.website_url:
-                    <div style="padding: 16px 8px 16px 8px;">
-                        <a href="${object.job_id.website_url}"
-                            style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Job Description</a>
-                    </div>
-                % endif
+                <div t-if="'website_url' in object.joqb_id and object.job_id.website_url" style="padding: 16px 8px 16px 8px;">
+                    <a t-att-href="object.job_id.website_url"
+                        style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Job Description</a>
+                </div>
 
-                % if object.user_id:
+                <t t-if="object.user_id">
                     You will soon be contacted by:
                     <table>
                         <tr>
                             <td width="75">
-                                <img src="/web/image/res.users/${object.user_id.id}/avatar_128" alt="Avatar" style="vertical-align:baseline; width: 64px; height: 64px; object-fit: cover;" />
+                                <img t-attf-src="/web/image/res.users/{{ object.user_id.id }}/avatar_128" alt="Avatar" style="vertical-align:baseline; width: 64px; height: 64px; object-fit: cover;" />
                             </td>
                             <td>
-                                <strong>${object.user_id.name}</strong><br/>
-                                <span>Email: ${object.user_id.email or ''}</span><br/>
-                                <span>Phone: ${object.user_id.phone or ''}</span>
+                                <strong t-out="object.user_id.name or ''">Mitchell Admin</strong><br/>
+                                <span>Email: <t t-out="object.user_id.email or ''">admin@yourcompany.example.com</t></span><br/>
+                                <span>Phone: <t t-out="object.user_id.phone or ''">+1 650-123-4567</t></span>
                             </td>
                         </tr>
                     </table>
                     <br/><br/>
-                % endif
+                </t>
                 See you soon,
                 <div style="font-size: 11px; color: grey;">
                     -- <br/>
                     The HR Team
-                    % if 'website_url' in object.job_id and object.job_id.website_url
+                    <t t-if="'website_url' in object.job_id and hasattr(object.job_id, 'website_url') and object.job_id.website_url">
                         Discover <a href="/jobs" style="text-decoration:none;color:#717188;">all our jobs</a>.<br/>
-                    % endif
+                    </t>
                 </div>
 
                 <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
@@ -120,50 +119,50 @@
                 <br/>
 
                 <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;"/>
-                % set location = ''
-                % if object.job_id.address_id.name:
-                    <strong>${object.job_id.address_id.name}</strong><br/>
-                % endif
-                % if object.job_id.address_id.street:
-                    ${object.job_id.address_id.street}<br/>
-                    % set location = object.job_id.address_id.street
-                % endif
-                % if object.job_id.address_id.street2:
-                    ${object.job_id.address_id.street2}<br/>
-                    % set location = '%s, %s' % (location, object.job_id.address_id.street2)
-                % endif
-                % if object.job_id.address_id.city:
-                    ${object.job_id.address_id.city},
-                    % set location = '%s, %s' % (location, object.job_id.address_id.city)
-                % endif
-                % if object.job_id.address_id.state_id.name:
-                    ${object.job_id.address_id.state_id.name},
-                    % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)
-                % endif
-                % if object.job_id.address_id.zip:
-                    ${object.job_id.address_id.zip}
-                    % set location = '%s, %s' % (location, object.job_id.address_id.zip)
-                % endif
+                <t t-set="location" t-value="''"/>
+                <t t-if="object.job_id.address_id.name">
+                    <strong t-out="object.job_id.address_id.name or ''">Teksa SpA</strong><br/>
+                </t>
+                <t t-if="object.job_id.address_id.street">
+                    <t t-out="object.job_id.address_id.street or ''">Puerto Madero 9710</t><br/>
+                    <t t-set="location" t-value="object.job_id.address_id.street"/>
+                </t>
+                <t t-if="object.job_id.address_id.street2">
+                    <t t-out="object.job_id.address_id.street2 or ''">Of A15, Santiago (RM)</t><br/>
+                    <t t-set="location" t-value="'%s, %s' % (location, object.job_id.address_id.street2)"/>
+                </t>
+                <t t-if="object.job_id.address_id.city">
+                    <t t-out="object.job_id.address_id.city or ''">Pudahuel</t>,
+                    <t t-set="location" t-value="'%s, %s' % (location, object.job_id.address_id.city)"/>
+                </t>
+                <t t-if="object.job_id.address_id.state_id.name">
+                    <t t-out="object.job_id.address_id.state_id.name or ''">C1</t>,
+                    <t t-set="location" t-value="'%s, %s' % (location, object.job_id.address_id.state_id.name)"/>
+                </t>
+                <t t-if="object.job_id.address_id.zip">
+                    <t t-out="object.job_id.address_id.zip or ''">98450</t>
+                    <t t-set="location" t-value="'%s, %s' % (location, object.job_id.address_id.zip)"/>
+                </t>
                 <br/>
-                % if object.job_id.address_id.country_id.name:
-                    ${object.job_id.address_id.country_id.name}<br/>
-                    % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)
-                % endif
+                <t t-if="object.job_id.address_id.country_id.name">
+                    <t t-out="object.job_id.address_id.country_id.name or ''">Argentina</t><br/>
+                    <t t-set="location" t-value="'%s, %s' % (location, object.job_id.address_id.country_id.name)"/>
+                </t>
                 <br/>
             </div>
         </td>
     </tr>
 </table></field>
         <field name="auto_delete" eval="True"/>
-        <field name="lang">${object.partner_id.lang or ''}</field>
+        <field name="lang">{{ object.partner_id.lang or '' }}</field>
     </record>
 
     <record id="email_template_data_applicant_congratulations" model="mail.template">
         <field name="name">Applicant: Acknowledgement</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="subject">Your Job Application: ${object.job_id.name | safe}</field>
-        <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
-        <field name="partner_to">${object.partner_id.id or ''}</field>
+        <field name="subject">Your Job Application: {{ object.job_id.name }}</field>
+        <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
+        <field name="partner_to">{{ object.partner_id.id or '' }}</field>
         <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
     <tr>
@@ -172,34 +171,32 @@
                 Hello,
                 <br/><br/>
                 We confirm we successfully received your application for the job
-                "<a href="${object.job_id.website_url or ''}" style="color:#9A6C8E;"><strong>${object.job_id.name}</strong></a>" at <strong>${object.company_id.name}</strong>.
+                "<a t-att-href="hasattr(object.job_id, 'website_url') and object.job_id.website_url or ''" style="color:#9A6C8E;"><strong t-out="object.job_id.name or ''">Experienced Developer</strong></a>" at <strong t-out="object.company_id.name or ''">YourCompany</strong>.
                 <br/><br/>
                 We will come back to you shortly.
 
-                % if 'website_url' in object.job_id and object.job_id.website_url:
-                    <div style="padding: 16px 8px 16px 8px;">
-                        <a href="${object.job_id.website_url}"
-                            style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Job Description</a>
-                    </div>
-                % endif
+                <div t-if="'website_url' in object.job_id and object.job_id.website_url" style="padding: 16px 8px 16px 8px;">
+                    <a t-att-href="object.job_id.website_url"
+                        style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Job Description</a>
+                </div>
 
                 <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
-                % if object.user_id:
+                <t t-if="object.user_id">
                     <h3 style="color:#9A6C8E;"><strong>Your Contact:</strong></h3>
                     <table>
                         <tr>
                             <td width="75">
-                                <img src="/web/image/res.users/${object.user_id.id}/avatar_128" alt="Avatar" style="vertical-align:baseline; width: 64px; height: 64px; object-fit: cover;" />
+                                <img t-attf-src="/web/image/res.users/{{ object.user_id.id }}/avatar_128" alt="Avatar" style="vertical-align:baseline; width: 64px; height: 64px; object-fit: cover;" />
                             </td>
                             <td>
-                                <strong>${object.user_id.name}</strong><br/>
-                                <span>Email: ${object.user_id.email or ''}</span><br/>
-                                <span>Phone: ${object.user_id.phone or ''}</span>
+                                <strong t-out="object.user_id.name or ''">Mitchell Admin</strong><br/>
+                                <span>Email: <t t-out="object.user_id.email or ''">admin@yourcompany.example.com</t></span><br/>
+                                <span>Phone: <t t-out="object.user_id.phone or ''">+1 650-123-4567</t></span>
                             </td>
                         </tr>
                     </table>
                     <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
-                % endif
+                </t>
 
                 <h3 style="color:#9A6C8E;"><strong>What is the next step?</strong></h3>
                 We usually <strong>answer applications within a few days.</strong><br/><br/>
@@ -208,50 +205,50 @@
                 quickly enough (just reply to this email).
 
                 <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;"/>
-                % set location = ''
-                % if object.job_id.address_id.name:
-                    <strong>${object.job_id.address_id.name}</strong><br/>
-                % endif
-                % if object.job_id.address_id.street:
-                    ${object.job_id.address_id.street}<br/>
-                    % set location = object.job_id.address_id.street
-                % endif
-                % if object.job_id.address_id.street2:
-                    ${object.job_id.address_id.street2}<br/>
-                    % set location = '%s, %s' % (location, object.job_id.address_id.street2)
-                % endif
-                % if object.job_id.address_id.city:
-                    ${object.job_id.address_id.city},
-                    % set location = '%s, %s' % (location, object.job_id.address_id.city)
-                % endif
-                % if object.job_id.address_id.state_id.name:
-                    ${object.job_id.address_id.state_id.name},
-                    % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)
-                % endif
-                % if object.job_id.address_id.zip:
-                    ${object.job_id.address_id.zip}
-                    % set location = '%s, %s' % (location, object.job_id.address_id.zip)
-                % endif
+                <t t-set="location" t-value="''" />
+                <t t-if="object.job_id.address_id.name">
+                    <strong t-out="object.job_id.address_id.name or ''">Teksa SpA</strong><br/>
+                </t>
+                <t t-if="object.job_id.address_id.street">
+                    <t t-out="object.job_id.address_id.street or ''">Puerto Madero 9710</t><br/>
+                    <t t-set="location" t-value="object.job_id.address_id.street"/>
+                </t>
+                <t t-if="object.job_id.address_id.street2">
+                    <t t-out="object.job_id.address_id.street2 or ''">Of A15, Santiago (RM)</t><br/>
+                    <t t-set="location" t-value="'%s, %s' % (location, object.job_id.address_id.street2)"/>
+                </t>
+                <t t-if="object.job_id.address_id.city">
+                    <t t-out="object.job_id.address_id.city or ''">Pudahuel</t>,
+                    <t t-set="location" t-value="'%s, %s' % (location, object.job_id.address_id.city)"/>
+                </t>
+                <t t-if="object.job_id.address_id.state_id.name">
+                    <t t-out="object.job_id.address_id.state_id.name or ''">C1</t>,
+                    <t t-set="location" t-value="'%s, %s' % (location, object.job_id.address_id.state_id.name)"/>
+                </t>
+                <t t-if="object.job_id.address_id.zip">
+                    <t t-out="object.job_id.address_id.zip or ''">98450</t>
+                    <t t-set="location" t-value="'%s, %s' % (location, object.job_id.address_id.zip)"/>
+                </t>
                 <br/>
-                % if object.job_id.address_id.country_id.name:
-                    ${object.job_id.address_id.country_id.name}<br/>
-                    % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)
-                % endif
+                <t t-if="object.job_id.address_id.country_id.name">
+                    <t t-out="object.job_id.address_id.country_id.name or ''">Argentina</t><br/>
+                    <t t-set="location" t-value="'%s, %s' % (location, object.job_id.address_id.country_id.name)"/>
+                </t>
                 <br/>
             </div>
         </td>
     </tr>
 </table></field>
         <field name="auto_delete" eval="True"/>
-        <field name="lang">${object.partner_id.lang or ''}</field>
+        <field name="lang">{{ object.partner_id.lang or '' }}</field>
     </record>
 
     <record id="email_template_data_applicant_not_interested" model="mail.template">
         <field name="name">Applicant: Not interested anymore</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="subject">Your Job Application: ${object.job_id.name | safe}</field>
-        <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
-        <field name="partner_to">${object.partner_id.id or ''}</field>
+        <field name="subject">Your Job Application: {{ object.job_id.name }}</field>
+        <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
+        <field name="partner_to">{{ object.partner_id.id or '' }}</field>
         <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
     <tr>
@@ -263,16 +260,17 @@
                 <br/><br/>
                 Best<br/>
                 <div style="font-size: 11px; color: grey;">
-                    % if object.user_id:
+                    <t t-if="object.user_id">
                         -- <br/>
-                        <strong>${object.user_id.name}</strong><br/>
-                        Email: ${object.user_id.email or ''}<br/>
-                        Phone: ${object.user_id.phone or ''}
-                    % else:
+                        <strong t-out="object.user_id.name or ''">Marc Demo</strong><br/>
+                        Email: <t t-out="object.user_id.email or ''">mark.brown23@example.com</t><br/>
+                        Phone: <t t-out="object.user_id.phone or ''">+1 650-123-4567</t>
+                    </t>
+                    <t t-else="">
                         -- <br/>
-                        ${object.company_id.name}<br/>
+                        <t t-out="object.company_id.name or ''">YourCompany</t><br/>
                         The HR Team<br/>
-                    % endif
+                    </t>
                 </div>
             </div>
         </td>
@@ -280,7 +278,7 @@
 </table>
         </field>
         <field name="auto_delete" eval="True"/>
-        <field name="lang">${object.partner_id.lang or ''}</field>
+        <field name="lang">{{ object.partner_id.lang or '' }}</field>
     </record>
 
 </data></odoo>

@@ -12,7 +12,7 @@
         <field name="mailing_model_id" ref="crm.model_crm_lead"/>
         <field name="mailing_domain">[]</field>
         <field name="reply_to_mode">new</field>
-        <field name="reply_to">${object.company_id.email}</field>
+        <field name="reply_to">{{ object.company_id.email }}</field>
         <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
@@ -24,10 +24,10 @@
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Hello</span><br/>
                     <span style="font-size: 20px; font-weight: bold;">
-                        ${object.name}
+                        <t t-out="object.name" />
                     </span>
                 </td><td valign="middle" align="right">
-                    <img src="${'/logo.png?company=%s' % object.company_id.id}" style="padding: 0px; margin: 0px; height: 48px;" alt="${object.company_id.name}"/>
+                    <img t-att-src="'/logo.png?company=%s' % object.company_id.id" style="padding: 0px; margin: 0px; height: 48px;" t-att-alt="object.company_id.name"/>
                 </td></tr>
                 <tr><td colspan="2" style="text-align:center;">
                   <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;"/>
@@ -38,7 +38,7 @@
     <!-- CONTENT -->
     <tr>
         <td style="min-width: 590px;">
-            <p>Dear ${object.name}</p>
+            <p>Dear <t t-out="object.name" /></p>
             <p>Great stories have personality. Consider telling a great story that provides personality. Writing a story with personality for potential clients will assist with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
             <p>Great stories are for everyone even when only written for just one person. If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p>
         </td>
@@ -47,21 +47,21 @@
     <tr>
         <td align="center" style="min-width: 590px; padding: 0 8px 0 8px; font-size:11px;">
             <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
-            <b>${object.company_id.name}</b><br/>
+            <b><t t-out="object.company_id.name" /></b><br/>
             <div style="color: #999999;">
-                ${object.company_id.phone}
-                % if object.company_id.email
+                <t t-out="object.company_id.phone" />
+                <t t-if="object.company_id.email">
                 |
-                    <a href="${'mailto:%s' % object.company_id.email}" style="text-decoration:none; color: #999999;">
-                        ${object.company_id.email}
+                    <a t-att-href="'mailto:%s' % object.company_id.email" style="text-decoration:none; color: #999999;">
+                        <t t-out="object.company_id.email" />
                     </a>
-                % endif
-                % if object.company_id.website
+                </t>
+                <t t-if="object.company_id.website">
                 |
                     <a href="'%s' % object.company_id.website" style="text-decoration:none; color: #999999;">
-                        ${object.company_id.website}
+                        <t t-out="object.company_id.website" />
                     </a>
-                % endif
+                </t>
             </div>
         </td>
     </tr>

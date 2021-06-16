@@ -16,10 +16,10 @@
     <p class="tip_title">Tip: Let candidates apply by email</p>
     <p class="tip_content">
         By setting an alias to a job position, emails sent to this address create applications automatically. You can even use multiple trackers to get statistics according to the source of the application: LinkedIn, Monster, Indeed, etc.
-        % set record = object.env['hr.job'].search([('alias_name', '!=', False)], limit=1)
-        % if record and record.alias_domain
-        <a href="mailto:${record.alias_id.display_name}" target="_blank" style="color: #875a7b; text-decoration: none;">Try sending an email</a>
-        % endif
+        <t t-set="record" t-value="object.env['hr.job'].search([('alias_name', '!=', False)], limit=1)" />
+        <t t-if="record and record.alias_domain">
+            <a t-attf-href="mailto:{{record.alias_id.display_name}}" target="_blank" style="color: #875a7b; text-decoration: none;">Try sending an email</a>
+        </t>
     </p>
 </div>
             </field>
