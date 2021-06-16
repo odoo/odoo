@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+from freezegun import freeze_time
+
 from odoo.addons.crm.models.crm_lead import PARTNER_FIELDS_TO_SYNC, PARTNER_ADDRESS_FIELDS_TO_SYNC
 from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
@@ -369,6 +372,14 @@ class TestCRMLead(TestCrmCommon):
         lead.action_set_won()
         self.assertEqual(lead.probability, 100.0)
         self.assertEqual(lead.stage_id, self.stage_gen_won)  # generic won stage has lower sequence than team won stage
+
+    @users('user_sales_leads')
+    @freeze_time("2012-01-14")
+    def test_crm_lead_lost_date_closed(self):
+        self.assertFalse(self.lead_1.date_closed, "Initially, closed date is not set")
+        # Mark the lead as lost
+        self.lead_1.action_set_lost()
+        self.assertEqual(self.lead_1.date_closed, datetime.now(), "Closed date is updated after marking lead as lost")
 
     @users('user_sales_leads')
     def test_crm_lead_update_contact(self):
