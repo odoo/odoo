@@ -16,18 +16,16 @@ class LoyaltyProgram(models.Model):
         if client:
             spendable_points = tools.float_round(client.loyalty_points - order.spent_loyalty_points, 0, rounding_method='HALF-UP')
             for reward in self.reward_ids:
-                if reward.minimum_points > spendable_points:
+                if reward.minimum_points > spendable_points or reward.point_cost > spendable_points:
                     continue
-                elif reward.reward_type == 'discount' and reward.point_cost > spendable_points:
-                    continue
-                elif reward.reward_type == 'product' and reward.point_cost > spendable_points:
-                    continue
-                elif reward.reward_type == 'discount' and reward.discount_apply_on == 'specific_products':
+                if reward.reward_type == 'discount' and reward.discount_apply_on == 'specific_products':
                     if not (order.order_line.product_id & reward.discount_specific_product_ids):
                         continue
-                elif reward.reward_type == 'discount' and reward.discount_type == 'fixed_amount' and order.amount_total < reward.minimum_amount:
-                    continue
-                elif reward in order.order_line.loyalty_reward_id:
+                if reward.reward_type == 'discount' and reward.discount_type == 'fixed_amount':
+                    minimum_amount = self._compute_program_amount(reward.minimum_amount, order.currency_id)
+                    if order.amount_total < minimum_amount:
+                        continue
+                if reward in order.order_line.loyalty_reward_id:
                     continue
                 rewards.append(reward)
         return rewards

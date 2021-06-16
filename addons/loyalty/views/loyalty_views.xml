@@ -13,10 +13,15 @@
                         <h1><field name="name" placeholder="Loyalty Program Name"/></h1>
                     </div>
 
-                    <div>
-                        <label for="points"/>
-                        <field name="points"/>
-                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id"/>
+                            <td class="o_td_label">
+                                <field col="1" name="points_label" nolabel="1" class="o_form_label" style="border: none;"/>
+                            </td>
+                            <field col="2" name="points" nolabel="1"/>
+                        </group>
+                    </group>
 
                     <notebook>
                         <page id="rewards_ids" string="Rewards">
@@ -37,7 +42,7 @@
                                 <tree string="Rules">
                                     <field name="name" />
                                     <field name="points_quantity"/>
-                                    <field name="points_currency"/>
+                                    <field name="points_currency" string="Points per spent amount"/>
                                 </tree>
                             </field>
                         </page>
@@ -74,7 +79,10 @@
                     </group>
                     <group col='2'>
                         <field name="points_quantity"/>
-                        <field name="points_currency"/>
+                        <td class="o_td_label">
+                            <field col="1" name="points_currency_label" nolabel="1" class="o_form_label" style="border: none;"/>
+                        </td>
+                        <field col="2" name="points_currency" nolabel="1"/>
                     </group>
                 </group>
             </form>
@@ -91,7 +99,8 @@
                     <h1><field name="name" placeholder="e.g. Free Mug"/></h1>
                 </div>
                 <group>
-                    <field name="point_cost" attrs="{ 'invisible':[('reward_type','=','resale')] }"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="point_cost" attrs="{'invisible': [('reward_type', '=', 'resale')]}"/>
                     <field name="minimum_points" />
                 </group>
                 <group>
@@ -109,18 +118,18 @@
                         </div>
                         <label string="Fixed Amount" for="discount_fixed_amount" attrs="{'invisible': ['|',('discount_type', '!=', 'fixed_amount'), ('reward_type', '!=', 'discount')]}" />
                         <div attrs="{'invisible': ['|',('discount_type', '!=', 'fixed_amount'), ('reward_type', '!=', 'discount')]}">
-                            <field name="discount_fixed_amount" class="oe_inline" attrs="{'required':[('discount_type', '=', 'fixed_amount')]}"/>
+                            <field name="discount_fixed_amount" class="oe_inline" attrs="{'required':[('discount_type', '=', 'fixed_amount')]}" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                         </div>
                         <label string="Minimum Amount" for="minimum_amount" attrs="{'invisible': ['|',('discount_type', '!=', 'fixed_amount'), ('reward_type', '!=', 'discount')]}" />
                         <div attrs="{'invisible': ['|',('discount_type', '!=', 'fixed_amount'), ('reward_type', '!=', 'discount')]}">
-                            <field name="minimum_amount" class="oe_inline" attrs="{'required':[('discount_type', '=', 'fixed_amount')]}"/>
+                            <field name="minimum_amount" class="oe_inline" attrs="{'required': [('discount_type', '=', 'fixed_amount')]}" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                         </div>
 
                         <field name="discount_apply_on" attrs="{'invisible': ['|', ('reward_type', '=', 'product'), ('discount_type', '!=', 'percentage')]}" widget="radio"/>
                         <field name="discount_specific_product_ids" widget='many2many_tags' attrs="{'invisible': ['|', '|', ('discount_apply_on', '!=', 'specific_products'), ('discount_type', '!=', 'percentage'), ('reward_type', '=', 'product')], 'required': [('reward_type', '=', 'discount'), ('discount_apply_on', '=', 'specific_products'), ('discount_type', '=', 'percentage')]}" placeholder="Select products"/>
                         <label for="discount_max_amount" string="Max Discount Amount" attrs="{'invisible': ['|', ('reward_type', '=', 'product'), ('discount_type', '!=', 'percentage')]}"/>
                         <div attrs="{'invisible': ['|', ('reward_type', '=', 'product'), ('discount_type', '!=', 'percentage')]}">
-                            <field name="discount_max_amount" class="oe_inline"/>
+                            <field name="discount_max_amount" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                             <span class="oe_grey">if 0, no limit</span>
                         </div>
                     </group>

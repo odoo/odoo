@@ -188,7 +188,7 @@ class SaleOrder(models.Model):
     def _get_cart_loyalty_discount(self, reward):
         discount_per_tax = {}
         order_total = sum(self.order_line.mapped('price_subtotal'))
-        remaining_amount = [min(order_total, reward.discount_max_amount) if reward.discount_max_amount > 0 else order_total]
+        remaining_amount = [order_total]
         def track(taxes, discount):
             discount = min(remaining_amount[0], discount)
             if discount:
@@ -198,6 +198,9 @@ class SaleOrder(models.Model):
 
         lines = self.order_line.filtered(lambda x: not x._is_not_sellable_line())
         if reward.discount_type == 'percentage':
+            if reward.discount_max_amount > 0:
+                discount_max_amount = reward.loyalty_program_id._compute_program_amount(reward.discount_max_amount, self.currency_id)
+                remaining_amount = [min(order_total, discount_max_amount)]
             if reward.discount_apply_on == 'on_order':
                 for line in lines:
                     track(line.tax_id, line.currency_id.round(line.price_subtotal * (reward.discount_percentage / 100)))
@@ -214,9 +217,12 @@ class SaleOrder(models.Model):
                         price = line.price_unit
                         tax = line.tax_id
                 track(tax, discount)
-        else:
-            taxes = reward.discount_product_id.taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
-            track(taxes, reward.discount_fixed_amount)
+        else: # fixed amount
+            minimum_amount = reward.loyalty_program_id._compute_program_amount(reward.minimum_amount, self.currency_id)
+            if order_total >= minimum_amount:
+                taxes = reward.discount_product_id.taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
+                fixed_amount = reward.loyalty_program_id._compute_program_amount(reward.discount_fixed_amount, self.currency_id)
+                track(taxes, fixed_amount)
 
         return discount_per_tax
 
@@ -274,19 +280,20 @@ class SaleOrder(models.Model):
     def _get_won_points(self, loyalty):
         """The total of points won, excluding the points spent on rewards"""
         total_points = 0
+        currency_rate = loyalty._compute_program_amount(1, self.currency_id)
         for line in self.order_line.filtered(lambda line: not line.loyalty_reward_id):
             line_points = 0
             for rule in loyalty.rule_ids:
                 rule_points = 0
                 if rule.is_product_valid(line.product_id):
                     rule_points += rule.points_quantity * line.product_uom_qty
-                    rule_points += rule.points_currency * line.price_total
+                    rule_points += (rule.points_currency / currency_rate) * line.price_total
                 if rule_points > line_points:
                     line_points = rule_points
 
             total_points += line_points
 
-        total_points += self.amount_total * loyalty.points
+        total_points += self.amount_total * (loyalty.points / currency_rate)
         return max(0, tools.float_round(total_points, 0, rounding_method='HALF-UP'))
 
     def _get_spent_points(self):

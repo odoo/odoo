@@ -205,6 +205,11 @@ class TestLoyalty(TransactionCaseWithUserDemo):
         self.assertEqual(self.partner_id.loyalty_points, 100)
 
     def test_discount(self):
+        loyalty_id = self.env['loyalty.program'].create({
+            'name': 'Test Program',
+            'points': 0.01,
+        })
+
         self.partner_id.loyalty_points = 1000  # reward must be affordable
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_id.id,
@@ -223,6 +228,7 @@ class TestLoyalty(TransactionCaseWithUserDemo):
             'point_cost': 100,
             'discount_type': 'fixed_amount',
             'discount_fixed_amount': 20,
+            'loyalty_program_id': loyalty_id.id,
         })
         self.assertEqual(len(sale_order.order_line), 1)
         self.assertEqual(sale_order.amount_total, 115)  # 100+15%
@@ -241,6 +247,7 @@ class TestLoyalty(TransactionCaseWithUserDemo):
             'discount_type': 'percentage',
             'discount_percentage': 10,
             'discount_apply_on': 'on_order',
+            'loyalty_program_id': loyalty_id.id,
         })
         self.assertEqual(len(sale_order.order_line), 1)
         self.assertEqual(sale_order.amount_total, 115)  # 100+15%
@@ -274,6 +281,7 @@ class TestLoyalty(TransactionCaseWithUserDemo):
             'discount_type': 'percentage',
             'discount_percentage': 10,
             'discount_apply_on': 'cheapest_product',
+            'loyalty_program_id': loyalty_id.id,
         })
         self.assertEqual(len(sale_order.order_line), 2)
         self.assertEqual(sale_order.amount_total, 402.5)  # (2*100+3*50)+15% = 350+15%
@@ -293,6 +301,7 @@ class TestLoyalty(TransactionCaseWithUserDemo):
             'discount_percentage': 10,
             'discount_apply_on': 'specific_products',
             'discount_specific_product_ids': [self.product_1.id],
+            'loyalty_program_id': loyalty_id.id,
         })
         self.assertEqual(len(sale_order.order_line), 2)
         self.assertEqual(sale_order.amount_total, 402.5)  # (2*100+3*50)+15% = 350+15%
@@ -304,6 +313,10 @@ class TestLoyalty(TransactionCaseWithUserDemo):
         self.assertEqual(sale_order.amount_total, 402.5)  # (2*100+3*50)+15% = 350+15%
 
     def test_discount_with_taxes(self):
+        loyalty_id = self.env['loyalty.program'].create({
+            'name': 'Test Program',
+            'points': 0.01,
+        })
         tax_15 = self.env['account.tax'].create({
             'name': 'tax_15',
             'amount_type': 'percent',
@@ -336,6 +349,7 @@ class TestLoyalty(TransactionCaseWithUserDemo):
             'point_cost': 100,
             'discount_type': 'fixed_amount',
             'discount_fixed_amount': 20,
+            'loyalty_program_id': loyalty_id.id,
         })
         self.assertEqual(len(sale_order.order_line), 1)
         self.assertEqual(sale_order.amount_total, 115)  # 100+15%
@@ -354,6 +368,7 @@ class TestLoyalty(TransactionCaseWithUserDemo):
             'discount_type': 'percentage',
             'discount_percentage': 10,
             'discount_apply_on': 'on_order',
+            'loyalty_program_id': loyalty_id.id,
         })
         self.assertEqual(len(sale_order.order_line), 1)
         self.assertEqual(sale_order.amount_total, 115)  # 100+15%
@@ -400,6 +415,7 @@ class TestLoyalty(TransactionCaseWithUserDemo):
             'discount_type': 'percentage',
             'discount_percentage': 10,
             'discount_apply_on': 'cheapest_product',
+            'loyalty_program_id': loyalty_id.id,
         })
         self.assertEqual(len(sale_order.order_line), 2)
         self.assertEqual(sale_order.amount_total, 417.5)  # (2*100)+15%+(3*50)+25% = 200+15% + 150+25%
@@ -419,6 +435,7 @@ class TestLoyalty(TransactionCaseWithUserDemo):
             'discount_percentage': 10,
             'discount_apply_on': 'specific_products',
             'discount_specific_product_ids': [self.product_1.id],
+            'loyalty_program_id': loyalty_id.id,
         })
         self.assertEqual(len(sale_order.order_line), 2)
         self.assertEqual(sale_order.amount_total, 417.5)  # (2*100)+15%+(3*50)+25% = 200+15% + 150+25%
