@@ -46,6 +46,7 @@ Odoo Web Editor widget.
             'web_editor/static/lib/odoo-editor/src/tablepicker/TablePicker.js',
             'web_editor/static/lib/odoo-editor/src/powerbox/patienceDiff.js',
             'web_editor/static/lib/odoo-editor/src/powerbox/Powerbox.js',
+            'web_editor/static/lib/odoo-editor/src/qweb/Qweb.js',
             'web_editor/static/lib/odoo-editor/src/commands/align.js',
             'web_editor/static/lib/odoo-editor/src/commands/commands.js',
             'web_editor/static/lib/odoo-editor/src/commands/deleteBackward.js',
