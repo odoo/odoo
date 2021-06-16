@@ -96,7 +96,7 @@ class LeaveReport(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'hr.leave.report',
             'view_mode': 'tree,pivot,form',
-            'search_view_id': self.env.ref('hr_holidays.view_hr_holidays_filter_report').id,
+            'search_view_id': [self.env.ref('hr_holidays.view_hr_holidays_filter_report').id],
             'domain': domain,
             'context': {
                 'search_default_group_type': True,
