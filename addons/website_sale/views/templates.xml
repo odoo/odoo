@@ -568,7 +568,9 @@
             <t t-set="additional_title" t-value="product.name" />
             <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" data-editor-message="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
-                <section t-attf-class="container py-4 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}" id="product_detail" t-att-data-view-track="view_track and '1' or '0'">
+                <section t-attf-class="container py-4 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}" id="product_detail"
+                    t-att-data-view-track="view_track and '1' or '0'"
+                    t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))">
                     <div class="row">
                         <div class="col-lg-6">
                             <ol class="breadcrumb mb-2">
@@ -1814,7 +1816,7 @@
     </template>
 
     <template id="payment_confirmation_status">
-        <div class="oe_website_sale_tx_status mt-3" t-att-data-order-id="order.id">
+        <div class="oe_website_sale_tx_status mt-3" t-att-data-order-id="order.id" t-att-data-order-tracking-info="json.dumps(order_tracking_info)">
             <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
             <div t-attf-class="card #{
                 (payment_tx_id.state == 'pending' and 'bg-info') or

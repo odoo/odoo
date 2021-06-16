@@ -99,6 +99,11 @@ class TestUi(HttpCaseWithUserDemo):
 
         self.start_tour("/", 'website_sale_tour')
 
+    def test_05_google_analytics_tracking(self):
+        self.env['website'].browse(1).write({'google_analytics_key': 'G-XXXXXXXXXXX'})
+        self.start_tour("/shop", 'google_analytics_view_item')
+        self.start_tour("/shop", 'google_analytics_add_to_cart')
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):

@@ -1095,7 +1095,10 @@ class WebsiteSale(http.Controller):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
             order = request.env['sale.order'].sudo().browse(sale_order_id)
-            return request.render("website_sale.confirmation", {'order': order})
+            return request.render("website_sale.confirmation", {
+                'order': order,
+                'order_tracking_info': self.order_2_return_dict(order),
+            })
         else:
             return request.redirect('/shop')
 
@@ -1108,16 +1111,6 @@ class WebsiteSale(http.Controller):
             return request.make_response(pdf, headers=pdfhttpheaders)
         else:
             return request.redirect('/shop')
-
-    @http.route(['/shop/tracking_last_order'], type='json', auth="public")
-    def tracking_cart(self, **post):
-        """ return data about order in JSON needed for google analytics"""
-        ret = {}
-        sale_order_id = request.session.get('sale_last_order_id')
-        if sale_order_id:
-            order = request.env['sale.order'].sudo().browse(sale_order_id)
-            ret = self.order_2_return_dict(order)
-        return ret
 
     # ------------------------------------------------------
     # Edit
@@ -1163,10 +1156,9 @@ class WebsiteSale(http.Controller):
         for line in order_lines:
             product = line.product_id
             ret.append({
-                'id': line.order_id.id,
-                'sku': product.barcode or product.id,
-                'name': product.name or '-',
-                'category': product.categ_id.name or '-',
+                'item_id': product.barcode or product.id,
+                'item_name': product.name or '-',
+                'item_category': product.categ_id.name or '-',
                 'price': line.price_unit,
                 'quantity': line.product_uom_qty,
             })
@@ -1175,14 +1167,12 @@ class WebsiteSale(http.Controller):
     def order_2_return_dict(self, order):
         """ Returns the tracking_cart dict of the order for Google analytics basically defined to be inherited """
         return {
-            'transaction': {
-                'id': order.id,
-                'affiliation': order.company_id.name,
-                'revenue': order.amount_total,
-                'tax': order.amount_tax,
-                'currency': order.currency_id.name
-            },
-            'lines': self.order_lines_2_google_api(order.order_line)
+            'transaction_id': order.id,
+            'affiliation': order.company_id.name,
+            'value': order.amount_total,
+            'tax': order.amount_tax,
+            'currency': order.currency_id.name,
+            'items': self.order_lines_2_google_api(order.order_line),
         }
 
     @http.route(['/shop/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
