@@ -108,6 +108,7 @@ const Wysiwyg = Widget.extend({
             },
             noScrollSelector: 'body, .note-editable, .o_content, #wrapwrap',
             commands: commands,
+            plugins: options.editorPlugins,
         }, editorCollaborationOptions));
 
         const $wrapwrap = $('#wrapwrap');
@@ -686,7 +687,6 @@ const Wysiwyg = Widget.extend({
      */
     setValue: function (value) {
         this.$editable.html(value);
-        // todo: check if it's still usefull
         this.odooEditor.sanitize();
     },
     /**

@@ -851,7 +851,13 @@ export function isBlock(node) {
     }
     const tagName = node.nodeName.toUpperCase();
     // Every custom jw-* node will be considered as blocks.
-    if (tagName.startsWith('JW-') || tagName === 'T') {
+    if (
+        tagName.startsWith('JW-') ||
+        (tagName === 'T' &&
+            node.getAttribute('t-esc') === null &&
+            node.getAttribute('t-out') === null &&
+            node.getAttribute('t-raw') === null)
+    ) {
         return true;
     }
     if (tagName === 'BR') {
@@ -903,6 +909,16 @@ export function isUnbreakable(node) {
         isUnremovable(node) || // An unremovable node is always unbreakable.
         ['THEAD', 'TBODY', 'TFOOT', 'TR', 'TH', 'TD', 'SECTION', 'DIV'].includes(node.tagName) ||
         node.hasAttribute('t') ||
+        (node.nodeType === Node.ELEMENT_NODE &&
+            (node.nodeName === 'T' ||
+                node.getAttribute('t-if') ||
+                node.getAttribute('t-esc') ||
+                node.getAttribute('t-elif') ||
+                node.getAttribute('t-else') ||
+                node.getAttribute('t-foreach') ||
+                node.getAttribute('t-value') ||
+                node.getAttribute('t-out') ||
+                node.getAttribute('t-raw'))) ||
         node.classList.contains('oe_unbreakable')
     );
 }
@@ -916,7 +932,12 @@ export function isUnremovable(node) {
         node.parentElement &&
         !node.parentElement.isContentEditable &&
         node.nodeName !== 'A'; // links can be their own contenteditable but should be removable by default.
-    return isEditableRoot || (node.classList && node.classList.contains('oe_unremovable'));
+    return (
+        isEditableRoot ||
+        (node.nodeType === Node.ELEMENT_NODE &&
+            (node.getAttribute('t-set') || node.getAttribute('t-call'))) ||
+        (node.classList && node.classList.contains('oe_unremovable'))
+    );
 }
 
 export function containsUnbreakable(node) {
