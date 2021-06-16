@@ -354,6 +354,14 @@ class ProjectTask(models.Model):
     remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so', compute_sudo=True)
     remaining_hours_available = fields.Boolean(related="sale_line_id.remaining_hours_available")
 
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS | {
+            'allow_billable',
+            'remaining_hours_available',
+            'remaining_hours_so',
+        }
+
     @api.depends('sale_line_id', 'timesheet_ids', 'timesheet_ids.unit_amount')
     def _compute_remaining_hours_so(self):
         # TODO This is not yet perfectly working as timesheet.so_line stick to its old value although changed
