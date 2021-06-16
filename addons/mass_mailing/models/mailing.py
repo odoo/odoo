@@ -91,12 +91,12 @@ class MassMailing(models.Model):
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
-    campaign_id = fields.Many2one('utm.campaign', string='UTM Campaign', index=True)
-    source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='cascade',
+    campaign_id = fields.Many2one('utm.campaign', string='UTM Campaign', index=True, ondelete='set null')
+    source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='restrict',
                                 help="This is the link source, e.g. Search Engine, another domain, or name of email list")
     medium_id = fields.Many2one(
         'utm.medium', string='Medium',
-        compute='_compute_medium_id', readonly=False, store=True,
+        compute='_compute_medium_id', readonly=False, store=True, ondelete='restrict',
         help="UTM Medium: delivery method (email, sms, ...)")
     state = fields.Selection([('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')],
         string='Status', required=True, tracking=True, copy=False, default='draft', group_expand='_group_expand_states')
