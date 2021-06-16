@@ -405,3 +405,14 @@ class ProductTemplate(models.Model):
                 slugs = [slug(category) for category in product.public_categ_ids]
                 data['category_url'] = '/shop/category/%s' % ','.join(slugs)
         return results_data
+
+    @api.model
+    def get_google_analytics_data(self, combination):
+        product = self.env['product.product'].browse(combination['product_id'])
+        return {
+            'item_id': product.barcode or product.id,
+            'item_name': combination['display_name'],
+            'item_category': product.categ_id.name or '-',
+            'currency': product.currency_id.name,
+            'price': combination['list_price'],
+        }

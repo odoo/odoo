@@ -148,13 +148,12 @@ odoo.define('website_sale.website_sale', function (require) {
 var core = require('web.core');
 var config = require('web.config');
 var publicWidget = require('web.public.widget');
-var VariantMixin = require('sale.VariantMixin');
+var VariantMixin = require('website_sale.VariantMixin');
 var wSaleUtils = require('website_sale.utils');
 const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
 require("web.zoomodoo");
 const {extraMenuUpdateCallbacks} = require('website.content.menu');
 const dom = require('web.dom');
-
 
 publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
@@ -533,9 +532,16 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      * @returns {Promise}
      */
     _submitForm: function () {
-        let params = this.rootProduct;
-        params.add_qty = params.quantity;
+        const params = this.rootProduct;
 
+        const $product = $('#product_detail');
+        const productTrackingInfo = $product.data('product-tracking-info');
+        if (productTrackingInfo) {
+            productTrackingInfo.quantity = params.quantity;
+            $product.trigger('add_to_cart_event', [productTrackingInfo]);
+        }
+
+        params.add_qty = params.quantity;
         params.product_custom_attribute_values = JSON.stringify(params.product_custom_attribute_values);
         params.no_variant_attribute_values = JSON.stringify(params.no_variant_attribute_values);
         return this.addToCart(params);
@@ -961,6 +967,15 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
         this.$target.find('.o_portal_chatter_composer').css('top', dom.scrollFixedOffset() + 20);
     },
 });
+
+return {
+    WebsiteSale: publicWidget.registry.WebsiteSale,
+    WebsiteSaleLayout: publicWidget.registry.WebsiteSaleLayout,
+    websiteSaleCart: publicWidget.registry.websiteSaleCart,
+    WebsiteSaleCarouselProduct: publicWidget.registry.websiteSaleCarouselProduct,
+    WebsiteSaleProductPageReviews: publicWidget.registry.websiteSaleProductPageReviews,
+};
+
 });
 
 odoo.define('website_sale.price_range_option', function (require) {
