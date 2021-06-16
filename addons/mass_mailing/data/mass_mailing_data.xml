@@ -13,6 +13,18 @@
             <field name="numbercall">-1</field>
             <field eval="False" name="doall" />
         </record>
+        <!-- Cron that process the a/b testing -->
+        <record id="ir_cron_mass_mailing_ab_testing" model="ir.cron">
+            <field name="name">Mail Marketing: A/B Testing</field>
+            <field name="model_id" ref="model_mailing_ab_testing"/>
+            <field name="state">code</field>
+            <field name="code">model._process_mass_mailing_ab_testing()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="True"/>
+        </record>
         <record id="mailing_list_data" model="mailing.list">
             <field name="name">Newsletter</field>
         </record>

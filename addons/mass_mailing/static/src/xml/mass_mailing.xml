@@ -15,4 +15,22 @@
             </a>
         </t>
     </div>
+
+    <t t-name="mass_mailing.create_ab_testing_button">
+        <button type="button" class="btn btn-secondary o_button_create_ab_testing">
+            Create A/B Testing
+        </button>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="mass_mailing.list.buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <t t-call="mass_mailing.create_ab_testing_button"/>
+        </t>
+    </t>
+
+    <t t-extend="KanbanView.buttons" t-name="mass_mailing.kanban.buttons">
+        <t t-jquery="button" t-operation="after">
+            <t t-call="mass_mailing.create_ab_testing_button"/>
+        </t>
+    </t>
 </templates>

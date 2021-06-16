@@ -3,8 +3,10 @@
 
 from . import ir_model
 from . import link_tracker
+from . import mailing_ab_testing
 from . import mailing_contact
 from . import mailing_list
+from . import mailing_tag
 from . import mailing_trace
 from . import mailing
 from . import mail_mail

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="mass_mailing_mailing_ab_testing_view_form_sms" model="ir.ui.view">
+        <field name="name">mailing.ab.testing.form.sms</field>
+        <field name="model">mailing.ab.testing</field>
+        <field name="inherit_id" ref="mass_mailing.mass_mailing_mailing_ab_testing_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_add_mailing" type="object" class="btn btn-primary" string="Add SMS"
+                    attrs="{'invisible': ['|', ('state', '!=', 'new'), ('mailing_type', '!=', 'sms')]}"/>
+                <button name="action_send_mailings" type="object" class="btn btn-secondary" string="Send SMS"
+                    attrs="{'invisible': ['|', '|', ('state', 'in', ('done')), ('mailing_count', '&lt;', 2), ('mailing_type', '!=', 'sms')]}"/>
+                <button name="action_send_winner_mailing" type="object" class="btn btn-secondary" string="Send Winner SMS"
+                    attrs="{'invisible': ['|', '|', ('state', 'in', ('new', 'done')), ('testing_mode', '=', 'manual'), ('mailing_type', '!=', 'sms')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='based_on']" position="after">
+                <field name="sms_based_on" class="col"
+                    attrs="{'required': [('testing_mode', '=', 'based_on'), ('mailing_type', '=', 'sms')], 'readonly': [('state', '=', 'done')], 'invisible': ['|', ('testing_mode', '!=', 'based_on'), ('mailing_type', '!=', 'sms')]}"/>
+            </xpath>
+        </field>
+    </record>
+</data></odoo>

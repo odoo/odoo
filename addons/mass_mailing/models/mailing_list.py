@@ -28,6 +28,7 @@ class MassMailingList(models.Model):
         string='Mailing Lists', copy=False)
     mailing_count = fields.Integer(compute="_compute_mailing_list_count", string="Number of Mailing")
     mailing_ids = fields.Many2many('mailing.mailing', 'mail_mass_mailing_list_rel', string='Mass Mailings', copy=False)
+    testing_mailing_ids = fields.Many2many('mailing.ab.testing', 'mail_testing_mass_mailing_list_rel', string="Testing Campaigns", copy=False)
     subscription_ids = fields.One2many(
         'mailing.contact.subscription', 'list_id', string='Subscription Information',
         copy=True, depends=['contact_ids'])

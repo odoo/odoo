@@ -12,6 +12,9 @@ class UtmCampaign(models.Model):
         domain=[('mailing_type', '=', 'mail')],
         string='Mass Mailings')
     mailing_mail_count = fields.Integer('Number of Mass Mailing', compute="_compute_mailing_mail_count")
+    mailing_test_ids = fields.One2many('mailing.ab.testing', 'campaign_id',
+        domain=[('mailing_type', '=', 'mail')],
+        string="Mass Mailings Testing Campaigns")
     # stat fields
     received_ratio = fields.Integer(compute="_compute_statistics", string='Received Ratio')
     opened_ratio = fields.Integer(compute="_compute_statistics", string='Opened Ratio')
@@ -91,7 +94,10 @@ class UtmCampaign(models.Model):
         build for each mailing. """
         res = dict.fromkeys(self.ids, {})
         for campaign in self:
-            domain = [('campaign_id', '=', campaign.id)]
+            if campaign.mailing_test_ids:
+                domain = [('testing_campaign_id', '=', campaign.id)]
+            else:
+                domain = [('campaign_id', '=', campaign.id)]
             if model:
                 domain += [('model', '=', model)]
             res[campaign.id] = set(self.env['mailing.trace'].search(domain).mapped('res_id'))

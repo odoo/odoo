@@ -9,6 +9,7 @@
     'description': """UTM and mass mailing on lead / opportunities""",
     'depends': ['crm', 'mass_mailing'],
     'data': [
+        'views/mailing_ab_testing_views.xml',
         'views/mailing_mailing_views.xml',
     ],
     'demo': [

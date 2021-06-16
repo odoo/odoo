@@ -21,6 +21,7 @@
         'views/mailing_contact_views.xml',
         'views/mailing_trace_views.xml',
         'views/mailing_mailing_views.xml',
+        'views/mailing_ab_testing_views.xml',
         'views/link_tracker_views.xml',
         'views/mass_mailing_sms_templates_portal.xml',
         'views/utm_campaign_views.xml',

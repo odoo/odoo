@@ -19,6 +19,12 @@ professional emails and reuse templates.</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <!-- Group to enable A/B testing -->
+    <record id="group_mass_mailing_ab_testing" model="res.groups">
+        <field name="name">Manage Mass Mailing A/B Testing</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
     <data noupdate="1">
         <record id="base.default_user" model="res.users">
             <field name="groups_id" eval="[(4,ref('mass_mailing.group_mass_mailing_user'))]"/>

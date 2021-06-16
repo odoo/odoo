@@ -9,6 +9,7 @@
     'description': """UTM and mass mailing on sale orders""",
     'depends': ['sale', 'mass_mailing'],
     'data': [
+        'views/mailing_ab_testing_views.xml',
         'views/mailing_mailing_views.xml',
     ],
     'demo': [

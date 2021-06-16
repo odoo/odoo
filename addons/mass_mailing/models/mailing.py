@@ -112,12 +112,18 @@ class MassMailing(models.Model):
     reply_to = fields.Char(
         string='Reply To', compute='_compute_reply_to', readonly=False, store=True,
         help='Preferred Reply-To Address')
+    testing_mailing_id = fields.Many2one('mailing.ab.testing', string="Testing Mailing")
+    version_id = fields.Many2one('mailing.mailing.version', string="Version", copy=False)
+    is_winner = fields.Boolean('Is Winner of A/B Testing')
+
     # recipients
-    mailing_model_real = fields.Char(string='Recipients Real Model', compute='_compute_mailing_model_real')
+    mailing_model_real = fields.Char(string='Recipients Real Model Name', compute='_compute_mailing_model_real')
     mailing_model_id = fields.Many2one(
         'ir.model', string='Recipients Model', ondelete='cascade', required=True,
         domain=[('is_mailing_enabled', '=', True)],
         default=lambda self: self.env.ref('mass_mailing.model_mailing_list').id)
+    mailing_model_real_display_name = fields.Char('Recipients Real Model Display Name',
+        compute='_compute_mailing_model_real_display_name', readonly=True)
     mailing_model_name = fields.Char(
         string='Recipients Model Name', related='mailing_model_id.model',
         readonly=True, related_sudo=True)
@@ -131,8 +137,10 @@ class MassMailing(models.Model):
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
     contact_list_ids = fields.Many2many('mailing.list', 'mail_mass_mailing_list_rel', string='Mailing Lists')
-    contact_ab_pc = fields.Integer(string='A/B Testing percentage',
-        help='Percentage of the contacts that will be mailed. Recipients will be taken randomly.', default=100)
+    contact_ab_pc = fields.Float(string='A/B Testing (%)', compute='_compute_contact_ab_pc',
+        help='Percentage of the contacts that will be mailed based on A/B testing. Recipients will be taken randomly.')
+    manual_contact_ab_pc = fields.Integer(string='Manual A/B Testing (%)', default=100,
+        help='Percentage of the contacts that will be mailed. Recipients will be taken randomly.')
     unique_ab_testing = fields.Boolean(string='Allow A/B Testing', default=False,
         help='If checked, recipients will be mailed only once for the whole campaign. '
              'This lets you send different mailings to randomly selected recipients and test '
@@ -161,8 +169,11 @@ class MassMailing(models.Model):
     def _compute_total(self):
         for mass_mailing in self:
             total = self.env[mass_mailing.mailing_model_real].search_count(mass_mailing._parse_mailing_domain())
-            if mass_mailing.contact_ab_pc < 100:
-                total = int(total / 100.0 * mass_mailing.contact_ab_pc)
+            if mass_mailing.contact_ab_pc < 1:
+                if mass_mailing.testing_mailing_id and mass_mailing.is_winner:
+                    total = self.env['mailing.trace'].search_count([('mass_mailing_id', '=', mass_mailing.id)])
+                else:
+                    total = int(total * mass_mailing.contact_ab_pc)
             mass_mailing.total = total
 
     def _compute_clicks_ratio(self):
@@ -299,6 +310,27 @@ class MassMailing(models.Model):
         for mailing in self:
             mailing.render_model = mailing.mailing_model_real
 
+    @api.depends('mailing_model_real')
+    def _compute_mailing_model_real_display_name(self):
+        for mailing in self:
+            mailing.mailing_model_real_display_name = self.env['ir.model'].search([('model', '=', mailing.mailing_model_real)]).display_name
+
+    @api.depends('testing_mailing_id', 'is_winner', 'manual_contact_ab_pc')
+    def _compute_contact_ab_pc(self):
+        for mailing in self:
+            if mailing.is_winner:
+                ab_percentage = 1.0 - int(mailing.testing_mailing_id.sample_size) / 100
+            elif mailing.testing_mailing_id:
+                if mailing.testing_mailing_id.mailing_ids:
+                    has_winner = True if mailing.testing_mailing_id.mailing_ids.filtered(lambda m: m.is_winner) else False
+                    nbr_mailings = len(mailing.testing_mailing_id.mailing_ids) - int(has_winner)
+                    ab_percentage = int(mailing.testing_mailing_id.sample_size) / (100 * nbr_mailings)
+                else:
+                    ab_percentage = int(mailing.testing_mailing_id.sample_size) / 100
+            else:
+                ab_percentage = mailing.manual_contact_ab_pc / 100
+            mailing.contact_ab_pc = ab_percentage
+
     # ------------------------------------------------------
     # ORM
     # ------------------------------------------------------
@@ -349,6 +381,31 @@ class MassMailing(models.Model):
             }
         return False
 
+    def action_edit_mailing(self):
+        self.ensure_one()
+        return {
+            'name': _('New Mailing Test'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mailing.mailing',
+            'res_id': self.id,
+            'context': dict(self.env.context, edit=True, form_view_initial_mode='edit')
+        }
+
+    def action_select_as_winner(self):
+        self.ensure_one()
+        if self.testing_mailing_id:
+            final_mailing = self.copy()
+            old_version_name = self.version_id.name if self.version_id else _("Version")
+            version_name = _("%s - Final", old_version_name)
+            version_id = self.env['mailing.mailing.version']._search_create_version_id(version_name)
+            final_mailing.write({
+                'is_winner': True,
+                'version_id': version_id.id,
+            })
+            final_mailing.action_send_mail(self.testing_mailing_id._get_remaining_recipients())
+            self.testing_mailing_id.write({'state': 'done'})
+
     def action_test(self):
         self.ensure_one()
         ctx = dict(self.env.context, default_mass_mailing_id=self.id)
@@ -362,8 +419,11 @@ class MassMailing(models.Model):
         }
 
     def action_launch(self):
-        self.write({'schedule_type': 'now'})
-        return self.action_put_in_queue()
+        if self.testing_mailing_id:
+            self.testing_mailing_id.action_send_mailings(self)
+        else:
+            self.write({'schedule_type': 'now'})
+            self.action_put_in_queue()
 
     def action_schedule(self):
         self.ensure_one()
@@ -543,7 +603,7 @@ class MassMailing(models.Model):
         else:
             raise UserError(_("Unsupported mass mailing model %s", self.mailing_model_id.name))
 
-        if self.unique_ab_testing:
+        if self.testing_mailing_id or self.unique_ab_testing:
             query +="""
                AND s.campaign_id = %%(mailing_campaign_id)s;
             """
@@ -573,10 +633,10 @@ class MassMailing(models.Model):
         res_ids = self.env[self.mailing_model_real].search(mailing_domain).ids
 
         # randomly choose a fragment
-        if self.contact_ab_pc < 100:
+        if self.contact_ab_pc < 1:
             contact_nbr = self.env[self.mailing_model_real].search_count(mailing_domain)
-            topick = int(contact_nbr / 100.0 * self.contact_ab_pc)
-            if self.campaign_id and self.unique_ab_testing:
+            topick = int(contact_nbr * self.contact_ab_pc)
+            if self.campaign_id and self.testing_mailing_id:
                 already_mailed = self.campaign_id._get_mailing_recipients()[self.campaign_id.id]
             else:
                 already_mailed = set([])
@@ -688,7 +748,7 @@ class MassMailing(models.Model):
             mass_mailing = mass_mailing.with_context(**user.with_user(user).context_get())
             if len(mass_mailing._get_remaining_recipients()) > 0:
                 mass_mailing.state = 'sending'
-                mass_mailing.action_send_mail()
+                mass_mailing.action_send_mail(mass_mailing.testing_mailing_id._get_recipients() if mass_mailing.testing_mailing_id else None)
             else:
                 mass_mailing.write({
                     'state': 'done',

@@ -11,6 +11,9 @@
                     <filter string="My Mailings" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]"
                             help="Mailings that are assigned to me"/>
+                    <filter string="Testing Mailings" name="testing_mailings"
+                            domain="[('testing_mailing_id', '!=', False)]"
+                            help="Testing mailings from A/B Testing"/>
                     <separator/>
                     <filter name="filter_sent_date" date="sent_date"/>
                     <separator/>
@@ -30,7 +33,7 @@
             <field name="model">mailing.mailing</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Mailings" sample="1" decoration-info="state in ['draft', 'in_queue']">
+                <tree string="Mailings" sample="1" decoration-info="state in ['draft', 'in_queue']" js_class="mass_mailing_tree">
                     <field name="calendar_date" string="Date" widget="date"/>
                     <field name="subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                     <field name="mailing_model_id" string="Recipients" optional="hide"/>
@@ -163,7 +166,7 @@
                                 <div class="row">
                                     <div class="col-xs-12 col-md-3" >
                                         <field name="mailing_model_id" options="{'no_open': True, 'no_create': True}"
-                                            attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                            attrs="{'readonly': ['|', ('state', 'in', ('sending', 'done')), ('testing_mailing_id', '!=', False)]}"/>
                                     </div>
                                     <div attrs="{'invisible': [('mailing_model_name', '!=', 'mailing.list')]}" class="col-xs-12 col-md-9 pt-1">
                                         <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
@@ -171,18 +174,31 @@
                                             placeholder="Select mailing lists..." class="oe_inline"
                                             attrs="{
                                                 'required':[('mailing_model_name','=','mailing.list')],
-                                                'readonly': [('state', 'in', ('sending', 'done'))]
+                                                'readonly': ['|', ('state', 'in', ('sending', 'done')), ('testing_mailing_id', '!=', False)]
                                         }"/>
                                     </div>
                                 </div>
 
                                 <field name="mailing_model_name" invisible="1"/>
                                 <field name="mailing_model_real" invisible="1"/>
-                                <div attrs="{'invisible': [('mailing_model_name', '=', 'mailing.list')]}">
+                                <div attrs="{'invisible': ['|', ('mailing_model_name', '=', 'mailing.list'), ('testing_mailing_id', '!=', False)]}">
                                     <field name="mailing_domain" widget="domain" options="{'model': 'mailing_model_real'}"
-                                    attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                    attrs="{'readonly': ['|', ('state', 'in', ('sending', 'done')), ('testing_mailing_id', '!=', False)]}"/>
                                 </div>
                             </div>
+                        </group>
+                        <group attrs="{'invisible': [('testing_mailing_id', '=', False)]}">
+                            <group>
+                                <field name="testing_mailing_id" readonly="1"/>
+                                <field name="version_id" options="{'no_open': True}"/>
+                            </group>
+                            <group attrs="{'invisible': [('total', '=', 0)]}">
+                                <label for="contact_ab_pc" string="Sample Size"/>
+                                <span>
+                                    <field name="contact_ab_pc" readonly="1" widget="percentage" nolabel="1"/>
+                                    (<field name="total" class="mr-1"/><field name="mailing_model_real_display_name" readonly="1"/>)
+                                </span>
+                            </group>
                         </group>
                         <notebook>
                             <page string="Mail Body" name="mail_body">
@@ -227,8 +243,8 @@
                                 <group>
                                     <group string="Extra Options">
                                         <field class="o_text_overflow" name="preview" string="Preview Text" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
-                                        <label for="schedule_type" string="Schedule"/>
-                                        <div name="schedule_block">
+                                        <label for="schedule_type" string="Schedule" attrs="{'invisible': [('mailing_type', '!=', 'mail'), ('testing_mailing_id', '!=', False)]}"/>
+                                        <div name="schedule_block" attrs="{'invisible': [('mailing_type', '!=', 'mail'), ('testing_mailing_id', '!=', False)]}">
                                             <div class="row">
                                                 <div class="col-xs-12 col-md-6">
                                                     <field name="schedule_type"/>
@@ -287,12 +303,16 @@
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <field name="unique_ab_testing"
                                             groups="mass_mailing.group_mass_mailing_campaign"
-                                            attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
-                                        <label for="contact_ab_pc" groups="mass_mailing.group_mass_mailing_campaign"/>
+                                            attrs="{'readonly': [('state', 'in', ('sending', 'done'))],
+                                                    'invisible': ['|', ('testing_mailing_id', '!=', False), ('mailing_type', '!=', 'mail')]}"/>
+                                        <label for="manual_contact_ab_pc" string="A/B Testing (%)"
+                                            groups="mass_mailing.group_mass_mailing_campaign"
+                                            attrs="{'invisible': ['|', ('testing_mailing_id', '!=', False), ('mailing_type', '!=', 'mail')]}"/>
                                         <div name="contact_ab_pc" groups="mass_mailing.group_mass_mailing_campaign">
-                                            <field name="contact_ab_pc"
+                                            <field name="manual_contact_ab_pc"
                                                 class="oe_inline"
-                                                attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/> %
+                                                attrs="{'readonly': [('state', 'in', ('sending', 'done'))],
+                                                        'invisible': ['|', ('testing_mailing_id', '!=', False), ('mailing_type', '!=', 'mail')]}"/> %
                                         </div>
                                     </group>
                                     <group string="Advanced" groups="base.group_no_one">
@@ -319,7 +339,7 @@
             <field name="name">mailing.mailing.kanban</field>
             <field name="model">mailing.mailing</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="state" quick_create="false" sample="1">
+                <kanban default_group_by="state" quick_create="false" sample="1" js_class="mass_mailing_kanban">
                     <field name='state' readonly="1"/>
                     <field name='email_from' readonly="1"/>
                     <field name='color'/>
@@ -375,6 +395,11 @@
                                                     <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
                                                 </h5>
                                             </div>
+                                            <h4 t-if="record.testing_mailing_id.raw_value">
+                                                <span class="badge badge-pill badge-light">
+                                                    <field name="testing_mailing_id"/><t t-if="record.version_id.raw_value"> - <field name="version_id"/></t>
+                                                </span>
+                                            </h4>
                                         </div>
                                     </div>
                                     <div class="o_kanban_record_body" t-if="!selection_mode" attrs="{'invisible': [('sent_date', '=', False), ('schedule_date', '=', False), ('state', '!=', 'in_queue')]}">
@@ -521,7 +546,10 @@
         <menuitem name="Mailings" id="mass_mailing_menu"
             parent="mass_mailing_menu_root"
             sequence="1"
-            action="mailing_mailing_action_mail"
             groups="mass_mailing.group_mass_mailing_user"/>
 
+        <menuitem name="Mailings" id="mass_mailing_menu_mailings"
+            parent="mass_mailing_menu"
+            sequence="1"
+            action="mailing_mailing_action_mail"/>
 </odoo>

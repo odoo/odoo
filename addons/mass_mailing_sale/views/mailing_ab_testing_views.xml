@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mass_mailing_mailing_ab_testing_view_form" model="ir.ui.view">
+        <field name="name">mailing.ab.testing.view.form.inherit.sale</field>
+        <field name="model">mailing.ab.testing</field>
+        <field name="inherit_id" ref="mass_mailing.mass_mailing_mailing_ab_testing_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='clicks_ratio']" position="after">
+                <field name="sale_quotation_count" string="Quotations" readonly="1" optional="hide"/>
+                <field name="sale_invoiced_amount" readonly="1" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
