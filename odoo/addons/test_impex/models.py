@@ -174,3 +174,13 @@ class InheritsChild(models.Model):
 
     parent_id = fields.Many2one('export.inherits.parent', required=True, ondelete='cascade')
     value = fields.Integer()
+
+class Many2String(models.Model):
+    _name = _description = 'export.m2o.str'
+
+    child_id = fields.Many2one('export.m2o.str.child')
+
+class ChidToString(models.Model):
+    _name = _description = 'export.m2o.str.child'
+
+    name = fields.Char()
