@@ -10,8 +10,10 @@ from . import mailing
 from . import mail_mail
 from . import mail_render_mixin
 from . import mail_thread
+from . import res_company
 from . import res_config_settings
 from . import res_partner
 from . import res_users
-from . import utm
-from . import res_company
+from . import utm_campaign
+from . import utm_medium
+from . import utm_source

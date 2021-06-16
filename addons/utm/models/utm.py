@@ -3,7 +3,8 @@
 
 from random import randint
 
-from odoo import fields, models, api, SUPERUSER_ID
+from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo.exceptions import UserError
 
 
 class UtmStage(models.Model):
@@ -25,6 +26,16 @@ class UtmMedium(models.Model):
 
     name = fields.Char(string='Medium Name', required=True)
     active = fields.Boolean(default=True)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_utm_medium_email(self):
+        utm_medium_email = self.env.ref('utm.utm_medium_email', raise_if_not_found=False)
+        if utm_medium_email and utm_medium_email in self:
+            raise UserError(_(
+                "The UTM medium '%s' cannot be deleted as it is used in some main "
+                "functional flows, such as the recruitment and the mass mailing.",
+                utm_medium_email.name
+            ))
 
 
 class UtmCampaign(models.Model):

@@ -5,3 +5,5 @@ from . import hr_job
 from . import res_config_settings
 from . import calendar
 from . import digest
+from . import utm_campaign
+from . import utm_source

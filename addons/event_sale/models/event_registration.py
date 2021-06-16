@@ -17,9 +17,12 @@ class EventRegistration(models.Model):
             ('paid', 'Paid'),
             ('free', 'Free'),
         ], compute="_compute_payment_status", compute_sudo=True)
-    utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', readonly=False, store=True)
-    utm_source_id = fields.Many2one(compute='_compute_utm_source_id', readonly=False, store=True)
-    utm_medium_id = fields.Many2one(compute='_compute_utm_medium_id', readonly=False, store=True)
+    utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', readonly=False,
+        store=True, ondelete="set null")
+    utm_source_id = fields.Many2one(compute='_compute_utm_source_id', readonly=False,
+        store=True, ondelete="set null")
+    utm_medium_id = fields.Many2one(compute='_compute_utm_medium_id', readonly=False,
+        store=True, ondelete="set null")
 
     @api.depends('is_paid', 'sale_order_id.currency_id', 'sale_order_line_id.price_total')
     def _compute_payment_status(self):

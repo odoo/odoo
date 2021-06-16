@@ -12,7 +12,7 @@ class SMSComposer(models.TransientModel):
     # mass mode with mass sms
     mass_sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=True)
     mailing_id = fields.Many2one('mailing.mailing', string='Mailing')
-    utm_campaign_id = fields.Many2one('utm.campaign', string='Campaign')
+    utm_campaign_id = fields.Many2one('utm.campaign', string='Campaign', ondelete='set null')
 
     # ------------------------------------------------------------
     # Mass mode specific

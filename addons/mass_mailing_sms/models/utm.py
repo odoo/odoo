@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class UtmCampaign(models.Model):
@@ -66,3 +67,17 @@ class UtmCampaign(models.Model):
                 continue
             ab_testing_mailings.action_send_winner_mailing()
         return ab_testing_campaign
+
+
+class UtmMedium(models.Model):
+    _inherit = 'utm.medium'
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_utm_medium_sms(self):
+        utm_medium_sms = self.env.ref('mass_mailing_sms.utm_medium_sms', raise_if_not_found=False)
+        if utm_medium_sms and utm_medium_sms in self:
+            raise UserError(_(
+                "The UTM medium '%s' cannot be deleted as it is used in some main "
+                "functional flows, such as the SMS Marketing.",
+                utm_medium_sms.name
+            ))

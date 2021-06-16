@@ -8,7 +8,7 @@ class MailComposeMessage(models.TransientModel):
     _inherit = 'mail.compose.message'
 
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing', ondelete='cascade')
-    campaign_id = fields.Many2one('utm.campaign', string='Mass Mailing Campaign')
+    campaign_id = fields.Many2one('utm.campaign', string='Mass Mailing Campaign', ondelete='set null')
     mass_mailing_name = fields.Char(string='Mass Mailing Name', help='If set, a mass mailing will be created so that you can track its results in the Email Marketing app.')
     mailing_list_ids = fields.Many2many('mailing.list', string='Mailing List')
 
