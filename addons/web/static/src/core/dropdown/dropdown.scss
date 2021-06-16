@@ -122,6 +122,14 @@
     }
   }
 
+  &_item > *:first-child:last-child {
+    @extend .dropdown-item;
+  }
+
+  &_item.o_dropdown_active > *:first-child:last-child {
+    @extend .dropdown-item:hover;
+  }
+
   &_menu_group {
     @extend .dropdown-header;
   }
