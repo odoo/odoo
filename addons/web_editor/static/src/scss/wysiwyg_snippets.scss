@@ -823,8 +823,9 @@ body.editor_enable.editor_has_snippets {
                 // Needed otherwise cannot work because of flex display
                 @include o-text-overflow(block);
                 min-height: $o-we-sidebar-content-field-height - 2 * $o-we-sidebar-content-field-border-width;
-                line-height: $o-we-sidebar-content-field-height - 2 * $o-we-sidebar-content-field-border-width;
-
+                &, > .fa {
+                    line-height: $o-we-sidebar-content-field-height - 2 * $o-we-sidebar-content-field-border-width;
+                }
                 > img {
                     margin-bottom: 1px; // Not sure why but not really centered otherwise
                 }
