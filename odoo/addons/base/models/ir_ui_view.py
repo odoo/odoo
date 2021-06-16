@@ -2036,7 +2036,8 @@ class NameManager:
         self.mandatory_names_or_ids = dict()
         self.available_names_or_ids = set()
         self.validate = validate
-        self.Model = Model.with_context(lang=False)
+        # optimization: post-processing requires translations, but validation does not
+        self.Model = Model.with_context(lang=False) if validate else Model
         self.fields_get = self.Model.fields_get()
 
     def has_field(self, name, info=()):

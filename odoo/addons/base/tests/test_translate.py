@@ -570,7 +570,6 @@ class TestTranslationWrite(TransactionCase):
             "Did not fallback to source when reset"
         )
 
-
     def test_field_selection(self):
         """ Test translations of field selections. """
         field = self.env['ir.model']._fields['state']
@@ -587,6 +586,31 @@ class TestTranslationWrite(TransactionCase):
         fg = self.env['ir.model'].with_context(lang='fr_FR').fields_get(['state'])
         self.assertEqual(fg['state']['selection'],
                          [('manual', 'Custo'), ('base', 'Pas touche!')])
+
+    def test_fields_view_get(self):
+        """ Test translations of field descriptions in fields_view_get(). """
+        self.env['res.lang']._activate_lang('fr_FR')
+
+        # add translation for the string of field ir.model.name
+        ir_model_field = self.env['ir.model.fields']._get('ir.model', 'name')
+        LABEL = "Description du Modèle"
+        self.env['ir.translation'].create({
+            'type': 'model',
+            'name': 'ir.model.fields,field_description',
+            'lang': 'fr_FR',
+            'res_id': ir_model_field.id,
+            'src': 'Name',
+            'value': LABEL,
+        })
+
+        # check that fields_get() returns the expected label
+        model = self.env['ir.model'].with_context(lang='fr_FR')
+        info = model.fields_get(['name'])
+        self.assertEqual(info['name']['string'], LABEL)
+
+        # check that fields_view_get() also returns the expected label
+        info = model.fields_view_get()['fields']
+        self.assertEqual(info['name']['string'], LABEL)
 
 
 class TestXMLTranslation(TransactionCase):
