@@ -7786,7 +7786,7 @@ QUnit.module('Views', {
                             <div class="oe_kanban_global_click">
                                 <field name="display_name"/>
                                 <div class="test" t-if="!widget.isHtmlEmpty(record.description.raw_value)">
-                                    <t t-raw="record.description.raw_value"/>
+                                    <t t-out="record.description.value"/>
                                 </div>
                             </div>
                         </t></templates>

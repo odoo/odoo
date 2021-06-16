@@ -610,31 +610,29 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
      * @returns {Object} transformed record data
      */
     _transformRecord: function (recordData) {
-        var self = this;
-        var new_record = {};
-        _.each(this.state.getFieldNames(), function (name) {
-            var value = recordData[name];
-            var r = _.clone(self.fields[name] || {});
+        const new_record = Object.create(null);
+        for (const name of this.state.getFieldNames()) {
+            const value = recordData[name];
+            const r = new_record[name] = _.clone(this.fields[name] || {});
+            const formatter = r.type ? field_utils.format[r.type] : _.identity;
 
-            if ((r.type === 'date' || r.type === 'datetime') && value) {
-                r.raw_value = value.toDate();
-            } else if (r.type === 'one2many' || r.type === 'many2many') {
+            r.raw_value = value;
+            r.value = formatter(value, this.fields[name], recordData, this.state);
+            switch (r.type) {
+            case 'date': case 'datetime':
+                r.raw_value = value && value.toDate();
+                break;
+            case 'one2many': case 'many2many':
                 r.raw_value = value.count ? value.res_ids : [];
-            } else if (r.type === 'many2one') {
+                break;
+            case 'many2one':
                 r.raw_value = value && value.res_id || false;
-            } else {
-                r.raw_value = value;
+                break;
+            case 'html': // or should this be in `format` instead of _.identity?
+                r.value = utils.Markup(value);
+                break;
             }
-
-            if (r.type) {
-                var formatter = field_utils.format[r.type];
-                r.value = formatter(value, self.fields[name], recordData, self.state);
-            } else {
-                r.value = value;
-            }
-
-            new_record[name] = r;
-        });
+        }
         return new_record;
     },
     /**
