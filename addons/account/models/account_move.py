@@ -2175,11 +2175,19 @@ class AccountMove(models.Model):
                 accounts = move.mapped('line_ids.account_id') \
                     .filtered(lambda account: account.reconcile or account.internal_type == 'liquidity')
                 for account in accounts:
-                    (move.line_ids + reverse_move.line_ids)\
-                        .filtered(lambda line: line.account_id == account and line.balance)\
-                        .reconcile()
-
+                    aml_to_reconcile = self.get_refund_aml_to_reconcile(move, reverse_move, account)
+                    aml_to_reconcile.reconcile()
         return reverse_moves
+
+    def get_refund_aml_to_reconcile(self, move, reverse_move, account):
+        aml_to_reconcile = (move.line_ids + reverse_move.line_ids).filtered(lambda l: l.account_id == account and l.balance)
+        for aml in aml_to_reconcile:
+            product_accounts = aml.product_id.product_tmpl_id._get_product_accounts()
+            if aml.is_anglo_saxon_line:
+                aml_to_reconcile -= aml
+            elif product_accounts['stock_input'] == account or product_accounts['stock_output'] == account:
+                aml_to_reconcile -= aml
+        return aml_to_reconcile
 
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
