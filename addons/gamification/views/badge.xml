@@ -145,7 +145,7 @@
                                     <strong><t t-esc="record.stat_this_month.raw_value"/></strong> this month
                                 </div>
                                 <div t-if="!widget.isHtmlEmpty(record.description.value)" class="o_kanban_badge_description">
-                                    <em t-raw="record.description.raw_value"/>
+                                    <em t-out="record.description.value"/>
                                     <div>
                                         <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
                                             <img class="oe_kanban_avatar o_image_24_cover" t-att-src="kanban_image('res.users', 'avatar_128', owner)" t-att-data-member_id="owner" alt="Owner"/>
