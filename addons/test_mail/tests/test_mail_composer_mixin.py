@@ -15,8 +15,8 @@ class TestMailComposerMixin(TestMailCommon, TestRecipients):
         cls._init_mail_gateway()
 
         cls.mail_template = cls.env['mail.template'].create({
-            'subject': 'Subject for ${object.name}',
-            'body_html': '<p>Body for ${object.name}</p>',
+            'subject': 'Subject for {{ object.name }}',
+            'body_html': '<p>Body for <t t-out="object.name"/></p>',
         })
 
     @users("employee")
@@ -37,16 +37,16 @@ class TestMailComposerMixin(TestMailCommon, TestRecipients):
     def test_rendering(self):
         record = self.env['mail.test.composer.mixin'].create({
             'name': 'Invite',
-            'subject': 'Subject for ${object.name}',
-            'body': '<p>Content from ${user.name}</p>',
+            'subject': 'Subject for {{ object.name }}',
+            'body': '<p>Content from <t t-out="user.name"/></p>',
             'description': '<p>Description for <t t-esc="object.name"/></p>',
         })
-        self.assertEqual(record.subject, 'Subject for ${object.name}')
-        self.assertEqual(record.body, '<p>Content from ${user.name}</p>')
+        self.assertEqual(record.subject, 'Subject for {{ object.name }}')
+        self.assertEqual(record.body, '<p>Content from <t t-out="user.name"/></p>')
 
         subject = record._render_field('subject', record.ids)[record.id]
         self.assertEqual(subject, 'Subject for %s' % record.name)
         body = record._render_field('body', record.ids)[record.id]
         self.assertEqual(body, '<p>Content from %s</p>' % self.env.user.name)
         description = record._render_field('description', record.ids)[record.id]
-        self.assertEqual(description, '<p>Description for </p>')
+        self.assertEqual(description, '<p>Description for Invite</p>')

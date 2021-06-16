@@ -17,7 +17,7 @@ class TestMassMailValues(MassSMSCommon):
         cls.sms_template_partner = cls.env['sms.template'].create({
             'name': 'Test Template',
             'model_id': cls.env['ir.model']._get('res.partner').id,
-            'body': 'Dear ${object.display_name} this is an SMS.'
+            'body': 'Dear {{ object.display_name }} this is an SMS.'
         })
 
     @users('user_marketing')

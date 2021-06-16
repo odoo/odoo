@@ -452,8 +452,8 @@ class TestMessagePost(TestMailCommon, TestRecipients):
             'partner_to': '%s,%s' % (self.partner_2.id, self.user_admin.partner_id.id),
             'email_to': 'test@example.com',
             'email_cc': self.partner_1.email,
-            # After the HTML sanitizer, it will become "<p>Body for: ${object.name}<a href="">link</a></p>"
-            'body_html': 'Body for: ${object.name}<script>test</script><a href="javascript:alert(1)">link</a>',
+            # After the HTML sanitizer, it will become "<p>Body for: <t t-out="object.name" /><a href="">link</a></p>"
+            'body_html': 'Body for: <t t-out="object.name" /><script>test</script><a href="javascript:alert(1)">link</a>',
         })
 
         with self.mock_mail_gateway():

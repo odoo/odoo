@@ -27,7 +27,7 @@ class MassSMSTest(models.TransientModel):
         record = self.env[self.mailing_id.mailing_model_real].search([], limit=1)
         body = self.mailing_id.body_plaintext
         if record:
-            # Returns a proper error if there is a syntax error with jinja
+            # Returns a proper error if there is a syntax error with qweb
             body = self.env['mail.render.mixin']._render_template(body, self.mailing_id.mailing_model_real, record.ids)[record.id]
 
         # res_id is used to map the result to the number to log notifications as IAP does not return numbers...
