@@ -532,11 +532,11 @@ class MailRenderMixin(models.AbstractModel):
         self.ensure_one()
 
         if self.env.context.get('template_preview_lang'):
-            return dict((res_id, self.env.context['template_preview_lang']) for res_id in res_ids)
-
-        lang_to_res_ids = {}
-        for res_id, lang in self._render_lang(res_ids, engine=engine).items():
-            lang_to_res_ids.setdefault(lang, []).append(res_id)
+            lang_to_res_ids = {self.env.context['template_preview_lang']: res_ids}
+        else:
+            lang_to_res_ids = {}
+            for res_id, lang in self._render_lang(res_ids, engine=engine).items():
+                lang_to_res_ids.setdefault(lang, []).append(res_id)
 
         return dict(
             (lang, (self.with_context(lang=lang) if lang else self, lang_res_ids))
