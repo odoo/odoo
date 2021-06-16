@@ -28,6 +28,9 @@ var exportVariable = (function (exports) {
         BR: CTYPES.BR,
     };
 
+    const URL_REGEX = /((?:https?:\/\/)?(?:[a-z0-9-]{1,63}\.){1,2}[a-z]{2,15}(?:\/[^\s]*)?)/gi;
+    const URL_REGEX_WITH_INFOS = /((https?:\/\/)?([a-z0-9-]{1,63}\.){1,2}[a-z]{2,15}(\/[^\s]*)?)/gi;
+
     //------------------------------------------------------------------------------
     // Position and sizes
     //------------------------------------------------------------------------------
@@ -640,7 +643,12 @@ var exportVariable = (function (exports) {
         // A selection spanning multiple nodes and ending at position 0 of a
         // node, like the one resulting from a triple click, are corrected so
         // that it ends at the last position of the previous node instead.
-        if (correctTripleClick && !endOffset && !end.previousSibling) {
+        const beforeEnd = end.previousSibling;
+        if (
+            correctTripleClick &&
+            !endOffset &&
+            (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleStr(beforeEnd)))
+        ) {
             const previous = previousLeaf(end, editable, true);
             if (previous && closestElement(previous).isContentEditable) {
                 [end, endOffset] = [previous, nodeSize(previous)];
@@ -913,6 +921,26 @@ var exportVariable = (function (exports) {
                     ...closestElement(range.commonAncestorContainer).querySelectorAll(selector),
                 ].find(node => range.intersectsNode(node)))
         );
+    }
+
+    /**
+     * Returns an array of url infos for url matched in the given string.
+     *
+     * @param {String} string
+     * @returns {Array}
+     */
+    function getUrlsInfosInString(string) {
+        let infos = [],
+            match;
+        while ((match = URL_REGEX_WITH_INFOS.exec(string))) {
+            infos.push({
+                url: match[2] ? match[0] : 'https://' + match[0],
+                label: match[0],
+                index: match.index,
+                length: match[0].length,
+            });
+        }
+        return infos;
     }
 
     // optimize: use the parent Oid to speed up detection
@@ -1232,15 +1260,27 @@ var exportVariable = (function (exports) {
 
     /**
      * Add a BR in the given node if its closest ancestor block has nothing to make
-     * it visible.
+     * it visible, and/or add a zero-width space in the given node if it's an empty
+     * inline unremovable so the cursor can stay in it.
      *
      * @param {HTMLElement} el
+     * @returns {Object} { br: the inserted <br> if any,
+     *                     zws: the inserted zero-width space if any }
      */
     function fillEmpty(el) {
+        const fillers = {};
         const blockEl = closestBlock(el);
         if (isShrunkBlock(blockEl)) {
-            blockEl.appendChild(document.createElement('br'));
+            const br = document.createElement('br');
+            blockEl.appendChild(br);
+            fillers.br = br;
         }
+        if (!el.textContent.length && isUnremovable(el) && !isBlock(el)) {
+            const zws = document.createTextNode('\u200B');
+            el.appendChild(zws);
+            fillers.zws = zws;
+        }
+        return fillers;
     }
     /**
      * Removes the given node if invisible and all its invisible ancestors.
@@ -1745,7 +1785,7 @@ var exportVariable = (function (exports) {
         );
     }
 
-    function getRangePosition(el, options = {}) {
+    function getRangePosition(el, document, options = {}) {
         const selection = document.getSelection();
         if (!selection.isCollapsed || !selection.rangeCount) return;
         const range = selection.getRangeAt(0);
@@ -2818,6 +2858,9 @@ var exportVariable = (function (exports) {
             if (res) {
                 setCursor(sel.anchorNode, sel.anchorOffset, sel.focusNode, sel.focusOffset);
                 const node = findNode(closestPath(sel.focusNode), node => node.tagName === 'A');
+                for (const [param, value] of Object.entries(editor.options.defaultLinkAttributes)) {
+                    node.setAttribute(param, `${value}`);
+                }
                 const pos = [node.parentElement, childNodeIndex(node) + 1];
                 setCursor(...pos, ...pos, false);
             }
@@ -3316,6 +3359,9 @@ var exportVariable = (function (exports) {
             this._mainWrapperElement = document.createElement('div');
             this._mainWrapperElement.className = 'oe-commandbar-mainWrapper';
             this.el.append(this._mainWrapperElement);
+            this.el.addEventListener('mousedown', event => {
+                event.stopPropagation();
+            });
         }
 
         destroy() {
@@ -3407,6 +3453,7 @@ var exportVariable = (function (exports) {
                         event => {
                             this._currentValidate();
                             event.preventDefault();
+                            event.stopPropagation();
                         },
                         true,
                     );
@@ -3556,7 +3603,7 @@ var exportVariable = (function (exports) {
         }
 
         _resetPosition() {
-            const position = getRangePosition(this.el);
+            const position = getRangePosition(this.el, this.options.document);
             if (!position) {
                 this.hide();
                 return;
@@ -3701,7 +3748,7 @@ var exportVariable = (function (exports) {
                 }
             };
 
-            const offset = getRangePosition(this.el);
+            const offset = getRangePosition(this.el, this.options.document);
             this.el.style.left = `${offset.left}px`;
             this.el.style.top = `${offset.top}px`;
 
@@ -3754,6 +3801,7 @@ var exportVariable = (function (exports) {
                     },
                     toSanitize: true,
                     isRootEditable: true,
+                    defaultLinkAttributes: {},
                     getContentEditableAreas: () => [],
                     _t: string => string,
                 },
@@ -4547,8 +4595,11 @@ var exportVariable = (function (exports) {
             fillEmpty(closestBlock(range.endContainer));
             // Ensure trailing space remains visible.
             const joinWith = range.endContainer;
+            const joinSibling = joinWith && joinWith.nextSibling;
             const oldText = joinWith.textContent;
-            if (joinWith && oldText.endsWith(' ')) {
+            const hasSpaceAfter = joinSibling && joinSibling.textContent.startsWith(' ');
+            const shouldPreserveSpace = (doJoin || hasSpaceAfter) && joinWith && oldText.endsWith(' ');
+            if (shouldPreserveSpace) {
                 joinWith.textContent = oldText.replace(/ $/, '\u00A0');
                 setCursor(joinWith, nodeSize(joinWith));
             }
@@ -4576,13 +4627,19 @@ var exportVariable = (function (exports) {
             }
             next = joinWith && joinWith.nextSibling;
             if (
-                joinWith &&
-                oldText.endsWith(' ') &&
+                shouldPreserveSpace &&
                 !(next && next.nodeType === Node.TEXT_NODE && next.textContent.startsWith(' '))
             ) {
                 // Restore the text we modified in order to preserve trailing space.
                 joinWith.textContent = oldText;
                 setCursor(joinWith, nodeSize(joinWith));
+            }
+            if (joinWith) {
+                const el = closestElement(joinWith);
+                const { zws } = fillEmpty(el);
+                if (zws) {
+                    setCursor(zws, 0, zws, nodeSize(zws));
+                }
             }
         }
 
@@ -4628,6 +4685,13 @@ var exportVariable = (function (exports) {
          */
         _applyRawCommand(method, ...args) {
             const sel = this.document.getSelection();
+            if (
+                !this.editable.contains(sel.anchorNode) ||
+                (sel.anchorNode !== sel.focusNode && !this.editable.contains(sel.focusNode))
+            ) {
+                // Do not apply commands out of the editable area.
+                return false;
+            }
             if (!sel.isCollapsed && BACKSPACE_FIRST_COMMANDS.includes(method)) {
                 this.deleteRange(sel);
                 if (BACKSPACE_ONLY_COMMANDS.includes(method)) {
@@ -4866,15 +4930,15 @@ var exportVariable = (function (exports) {
                     groupName: 'Basic blocks',
                     title: 'Checklist',
                     description: 'Track tasks with a checklist.',
-                    fontawesome: 'fa-tasks',
+                    fontawesome: 'fa-check-square-o',
                     callback: () => {
                         this.execCommand('toggleList', 'CL');
                     },
                 },
                 {
                     groupName: 'Basic blocks',
-                    title: 'Horizontal rule',
-                    description: 'Insert an horizantal rule.',
+                    title: 'Separator',
+                    description: 'Insert an horizontal rule separator.',
                     fontawesome: 'fa-minus',
                     callback: () => {
                         this.execCommand('insertHorizontalRule');
@@ -4898,6 +4962,7 @@ var exportVariable = (function (exports) {
             }
             this.commandBar = new CommandBar({
                 editable: this.editable,
+                document: this.document,
                 _t: this.options._t,
                 onShow: () => {
                     this.commandbarTablePicker.hide();
@@ -5146,6 +5211,12 @@ var exportVariable = (function (exports) {
                         const range = selection.getRangeAt(0);
                         setCursor(range.endContainer, range.endOffset);
                     }
+                    // Check for url after user insert a space so we won't transform an incomplete url.
+                    if (ev.data.includes(' ') && selection && selection.anchorNode) {
+                        ev.preventDefault();
+                        this._convertUrlInElement(closestElement(selection.anchorNode));
+                        this.execCommand('insertText', ev.data);
+                    }
                     this.sanitize();
                     this.historyStep();
                 } else if (ev.inputType === 'insertLineBreak') {
@@ -5192,10 +5263,10 @@ var exportVariable = (function (exports) {
 
                 if (closestTag === 'LI') {
                     this._applyCommand('indentList', ev.shiftKey ? 'outdent' : 'indent');
-                    ev.preventDefault();
                 } else if (closestTag === 'TABLE') {
                     this._onTabulationInTable(ev);
-                    ev.preventDefault();
+                } else if (!ev.shiftKey) {
+                    this.execCommand('insertText', '\u00A0 \u00A0\u00A0');
                 }
                 ev.preventDefault();
             } else if (IS_KEYBOARD_EVENT_UNDO(ev)) {
@@ -5404,12 +5475,80 @@ var exportVariable = (function (exports) {
         }
 
         /**
+         * Convert valid url text into links inside the given element.
+         *
+         * @param {HTMLElement} el
+         */
+        _convertUrlInElement(el) {
+            // We will not replace url inside already existing Link element.
+            if (el.tagName === 'A') {
+                return;
+            }
+
+            for (let child of el.childNodes) {
+                if (child.nodeType === Node.TEXT_NODE && child.length > 3) {
+                    const childStr = child.nodeValue;
+                    const matches = getUrlsInfosInString(childStr);
+                    if (matches.length) {
+                        // We only to take care of the first match.
+                        // The method `_createLinkWithUrlInTextNode` will split the text node,
+                        // the other url matches will then be matched again in the nexts loops of el.childnodes.
+                        this._createLinkWithUrlInTextNode(
+                            child,
+                            matches[0].url,
+                            matches[0].index,
+                            matches[0].length,
+                        );
+                    }
+                }
+            }
+        }
+
+        /**
+         * Create a Link in the node text based on the given data
+         *
+         * @param {Node} textNode
+         * @param {String} url
+         * @param {int} index
+         * @param {int} length
+         */
+        _createLinkWithUrlInTextNode(textNode, url, index, length) {
+            setCursor(textNode, index, textNode, index + length);
+            this.document.execCommand('createLink', false, url);
+            const sel = this.document.getSelection();
+            const link = closestElement(sel.anchorNode, 'a');
+            for (const [param, value] of Object.entries(this.options.defaultLinkAttributes)) {
+                link.setAttribute(param, `${value}`);
+            }
+            sel.collapseToEnd();
+        }
+
+        /**
          * Prevent the pasting of HTML and paste text only instead.
          */
         _onPaste(ev) {
             ev.preventDefault();
             const pastedText = (ev.originalEvent || ev).clipboardData.getData('text/plain');
-            this.execCommand('insertText', pastedText);
+            const splitAroundUrl = pastedText.split(URL_REGEX);
+            const linkAttrs =
+                Object.entries(this.options.defaultLinkAttributes)
+                    .map(entry => entry.join('="'))
+                    .join('" ') + '" ';
+
+            for (let i = 0; i < splitAroundUrl.length; i++) {
+                // Even indexes will always be plain text, and odd indexes will always be URL.
+                if (i % 2) {
+                    const url = /^https?:\/\//gi.test(splitAroundUrl[i])
+                        ? splitAroundUrl[i]
+                        : 'https://' + splitAroundUrl[i];
+                    this.execCommand(
+                        'insertHTML',
+                        `<a href="${url}" ${linkAttrs}>${splitAroundUrl[i]}</a>`,
+                    );
+                } else if (splitAroundUrl[i] !== '') {
+                    this.execCommand('insertText', splitAroundUrl[i]);
+                }
+            }
         }
 
         /**
@@ -5552,6 +5691,8 @@ var exportVariable = (function (exports) {
     exports.OdooEditor = OdooEditor;
     exports.UNBREAKABLE_ROLLBACK_CODE = UNBREAKABLE_ROLLBACK_CODE;
     exports.UNREMOVABLE_ROLLBACK_CODE = UNREMOVABLE_ROLLBACK_CODE;
+    exports.URL_REGEX = URL_REGEX;
+    exports.URL_REGEX_WITH_INFOS = URL_REGEX_WITH_INFOS;
     exports.ancestors = ancestors;
     exports.boundariesIn = boundariesIn;
     exports.boundariesOut = boundariesOut;
@@ -5585,6 +5726,7 @@ var exportVariable = (function (exports) {
     exports.getSelectedNodes = getSelectedNodes;
     exports.getState = getState;
     exports.getTraversedNodes = getTraversedNodes;
+    exports.getUrlsInfosInString = getUrlsInfosInString;
     exports.insertListAfter = insertListAfter;
     exports.insertText = insertText;
     exports.isBlock = isBlock;
