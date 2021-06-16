@@ -52,5 +52,5 @@ class ProductMargin(models.TransientModel):
             'type': 'ir.actions.act_window',
             'views': views,
             'view_id': False,
-            'search_view_id': search_view_id,
+            'search_view_id': [search_view_id],
         }
