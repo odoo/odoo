@@ -43,7 +43,7 @@ class TestMassSMSCommon(TestMailFullCommon):
         cls.sms_template = cls.env['sms.template'].create({
             'name': 'Test Template',
             'model_id': cls.env['ir.model']._get('mail.test.sms').id,
-            'body': 'Dear ${object.display_name} this is a mass SMS.',
+            'body': 'Dear {{ object.display_name }} this is a mass SMS.',
         })
 
         cls.partner_numbers = [
@@ -237,11 +237,11 @@ class TestMassSMSInternals(TestMassSMSCommon):
     def test_mass_sms_test_button(self):
         mailing = self.env['mailing.mailing'].create({
             'name': 'TestButton',
-            'subject': 'Subject ${object.name}',
-            'preview': 'Preview ${object.name}',
+            'subject': 'Subject {{ object.name }}',
+            'preview': 'Preview {{ object.name }}',
             'state': 'draft',
             'mailing_type': 'sms',
-            'body_plaintext': 'Hello ${object.name}',
+            'body_plaintext': 'Hello {{ object.name }}',
             'mailing_model_id': self.env['ir.model']._get('res.partner').id,
         })
         mailing_test = self.env['mailing.sms.test'].with_user(self.user_marketing).create({
@@ -253,9 +253,9 @@ class TestMassSMSInternals(TestMassSMSCommon):
             with self.mockSMSGateway():
                 mailing_test.action_send_sms()
 
-        # Test if bad jinja in the body raises an error
+        # Test if bad inline_template in the body raises an error
         mailing.write({
-            'body_plaintext': 'Hello ${object.name_id.id}',
+            'body_plaintext': 'Hello {{ object.name_id.id }}',
         })
 
         with self.with_user('user_marketing'):
@@ -270,7 +270,7 @@ class TestMassSMS(TestMassSMSCommon):
     def test_mass_sms_links(self):
         mailing = self.env['mailing.mailing'].browse(self.mailing.ids)
         mailing.write({
-            'body_plaintext': 'Dear ${object.display_name} this is a mass SMS with two links http://www.odoo.com/smstest and http://www.odoo.com/smstest/${object.name}',
+            'body_plaintext': 'Dear {{ object.display_name }} this is a mass SMS with two links http://www.odoo.com/smstest and http://www.odoo.com/smstest/{{ object.name }}',
             'sms_template_id': False,
             'sms_force_send': True,
             'sms_allow_unsubscribe': True,

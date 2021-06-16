@@ -84,7 +84,7 @@ class MailComposer(models.TransientModel):
 
     # content
     subject = fields.Char('Subject', compute=False)
-    body = fields.Html('Contents', compute=False, default='', sanitize_style=True)
+    body = fields.Html('Contents', render_engine='qweb', compute=False, default='', sanitize_style=True)
     parent_id = fields.Many2one(
         'mail.message', 'Parent Message', index=True, ondelete='set null',
         help="Initial thread message.")
@@ -569,7 +569,7 @@ class MailComposer(models.TransientModel):
     def render_message(self, res_ids):
         """Generate template-based values of wizard, for the document records given
         by res_ids. This method is meant to be inherited by email_template that
-        will produce a more complete dictionary, using Jinja2 templates.
+        will produce a more complete dictionary, using qweb templates.
 
         Each template is generated for all res_ids, allowing to parse the template
         once, and render it multiple times. This is useful for mass mailing where

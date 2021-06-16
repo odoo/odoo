@@ -274,5 +274,5 @@ class SMSCommon(MailCommon, MockSMS):
         return cls.env['sms.template'].create({
             'name': 'Test Template',
             'model_id': cls.env['ir.model']._get(model).id,
-            'body': body if body else 'Dear ${object.display_name} this is an SMS.'
+            'body': body if body else 'Dear {{ object.display_name }} this is an SMS.'
         })

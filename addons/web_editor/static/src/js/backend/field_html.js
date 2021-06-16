@@ -13,8 +13,6 @@ var _lt = core._lt;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
 var QWeb = core.qweb;
 
-var jinjaRegex = /(^|\n)\s*%\s(end|set\s)/;
-
 /**
  * FieldHtml Widget
  * Intended to display HTML content. This widget uses the wysiwyg editor
@@ -96,6 +94,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             return this._super();
         }
         var _super = this._super.bind(this);
+        this.wysiwyg.odooEditor.clean();
         return this.wysiwyg.saveModifiedImages(this.$content).then(() => {
             this._isDirty = this.wysiwyg.isDirty();
             _super();
@@ -376,9 +375,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _textToHtml: function (text) {
         var value = text || "";
-        if (jinjaRegex.test(value)) { // is jinja
-            return value;
-        }
         try {
             $(text)[0].innerHTML; // crashes if text isn't html
         } catch (e) {

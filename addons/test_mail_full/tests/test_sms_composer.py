@@ -29,7 +29,7 @@ class TestSMSComposerComment(TestMailFullCommon, TestMailFullRecipients):
         cls.sms_template = cls.env['sms.template'].create({
             'name': 'Test Template',
             'model_id': cls.env['ir.model']._get('mail.test.sms').id,
-            'body': 'Dear ${object.display_name} this is an SMS.',
+            'body': 'Dear {{ object.display_name }} this is an SMS.',
         })
 
     def test_composer_comment_not_mail_thread(self):
@@ -448,11 +448,11 @@ class TestSMSComposerMass(TestMailFullCommon):
             'lang': 'fr_FR',
             'res_id': self.sms_template.id,
             'src': self.sms_template.body,
-            'value': 'Cher·e· ${object.display_name} ceci est un SMS.',
+            'value': 'Cher·e· {{ object.display_name }} ceci est un SMS.',
         })
         # set template to try to use customer lang
         self.sms_template.write({
-            'lang': '${object.customer_id.lang}',
+            'lang': '{{ object.customer_id.lang }}',
         })
         # set one customer as french speaking
         self.partners[2].write({'lang': 'fr_FR'})
@@ -505,11 +505,11 @@ class TestSMSComposerMass(TestMailFullCommon):
             'lang': 'fr_FR',
             'res_id': self.sms_template.id,
             'src': self.sms_template.body,
-            'value': "Hello ${object.display_name} ceci est en français.",
+            'value': "Hello {{ object.display_name }} ceci est en français.",
         })
         # set template to try to use customer lang
         self.sms_template.write({
-            'lang': '${object.customer_id.lang}',
+            'lang': '{{ object.customer_id.lang }}',
         })
         # create a second record linked to a customer in another language
         self.partners[2].write({'lang': 'fr_FR'})
@@ -558,7 +558,7 @@ class TestSMSComposerMass(TestMailFullCommon):
             })
             self.assertEqual(composer.composition_mode, "mass")
             # In english because by default but when sinding depending of record
-            self.assertEqual(composer.body, "Dear ${object.display_name} this is an SMS.")
+            self.assertEqual(composer.body, "Dear {{ object.display_name }} this is an SMS.")
 
             with self.mockSMSGateway():
                 composer.action_send_sms()

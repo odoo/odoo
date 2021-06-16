@@ -14,11 +14,11 @@ class TestMailingTest(TestMassMailCommon):
     def test_mailing_test_button(self):
         mailing = self.env['mailing.mailing'].create({
             'name': 'TestButton',
-            'subject': 'Subject ${object.name}',
-            'preview': 'Preview ${object.name}',
+            'subject': 'Subject {{ object.name }}',
+            'preview': 'Preview {{ object.name }}',
             'state': 'draft',
             'mailing_type': 'mail',
-            'body_html': '<p>Hello ${object.name}</p>',
+            'body_html': '<p>Hello <t t-out="object.name"/></p>',
             'mailing_model_id': self.env['ir.model']._get('res.partner').id,
         })
         mailing_test = self.env['mailing.mailing.test'].create({
@@ -39,23 +39,23 @@ class TestMailingTest(TestMassMailCommon):
         self.assertEqual(first_child.text.strip(), "Preview " + record.name,
                          "the preview node should contain the preview text")
 
-        # Test if bad jinja in the subject raises an error
-        mailing.write({'subject': 'Subject ${object.name_id.id}'})
+        # Test if bad inline_template in the subject raises an error
+        mailing.write({'subject': 'Subject {{ object.name_id.id }}'})
         with self.mock_mail_gateway(), self.assertRaises(Exception):
             mailing_test.send_mail_test()
 
-        # Test if bad jinja in the body raises an error
+        # Test if bad inline_template in the body raises an error
         mailing.write({
-            'subject': 'Subject ${object.name}',
-            'body_html': '<p>Hello ${object.name_id.id}</p>',
+            'subject': 'Subject {{ object.name }}',
+            'body_html': '<p>Hello {{ object.name_id.id }}</p>',
         })
         with self.mock_mail_gateway(), self.assertRaises(Exception):
             mailing_test.send_mail_test()
 
-        # Test if bad jinja in the preview raises an error
+        # Test if bad inline_template in the preview raises an error
         mailing.write({
-            'body_html': '<p>Hello ${object.name}</p>',
-            'preview': 'Preview ${object.name_id.id}',
+            'body_html': '<p>Hello <t t-out="object.name"/></p>',
+            'preview': 'Preview {{ object.name_id.id }}',
         })
         with self.mock_mail_gateway(), self.assertRaises(Exception):
             mailing_test.send_mail_test()

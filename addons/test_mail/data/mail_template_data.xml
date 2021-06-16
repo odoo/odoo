@@ -3,23 +3,23 @@
     <record id="mail_test_ticket_tracking_tpl" model="mail.template">
         <field name="name">Mail Test Full: Tracking Template</field>
         <field name="subject">Test Template</field>
-        <field name="partner_to">${object.customer_id.id | safe}</field>
-        <field name="body_html" type="html"><p>Hello ${object.name}</p></field>
+        <field name="partner_to">{{ object.customer_id.id }}</field>
+        <field name="body_html" type="html"><p>Hello <t t-out="object.name or ''"></t></p></field>
         <field name="model_id" ref="test_mail.model_mail_test_ticket"/>
         <field name="auto_delete" eval="True"/>
     </record>
 
     <record id="mail_test_container_tpl" model="mail.template">
         <field name="name">Mail Test: Template</field>
-        <field name="subject">Post on ${object.name}</field>
-        <field name="partner_to">${object.customer_id.id}</field>
-        <field name="body_html" type="html"><p>Adding stuff on ${object.name}</p></field>
+        <field name="subject">Post on {{ object.name }}</field>
+        <field name="partner_to">{{ object.customer_id.id }}</field>
+        <field name="body_html" type="html"><p>Adding stuff on <t t-out="object.name or ''"></t></p></field>
         <field name="model_id" ref="test_mail.model_mail_test_container"/>
         <field name="auto_delete" eval="True"/>
     </record>
 
     <template id="mail_test_ticket_tracking_view">
-    	<p><span t-esc="object.name"/> datetime has been updated to <span t-esc="object.datetime"/></p>
+    	<p><span t-out="object.name or ''"/> datetime has been updated to <span t-out="object.datetime or ''"/></p>
     </template>
 
     <template id="mail_test_ticket_test_template">
@@ -34,7 +34,7 @@
     </template>
 
     <template id="mail_template_simple_test">
-        <p>Hello <t t-esc="partner.name"/>,</p>
+        <p>Hello <t t-out="partner.name"/>,</p>
     </template>
 
 </odoo>

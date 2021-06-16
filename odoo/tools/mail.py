@@ -290,7 +290,6 @@ def is_html_empty(html_content):
     tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i|font)(?:(?=\s+\w*)[^/>]*|\s*)/?\s*\>')
     return not bool(re.sub(tag_re, '', html_content).strip())
 
-
 def html_keep_url(text):
     """ Transform the url into clickable link with <a/> tag """
     idx = 0

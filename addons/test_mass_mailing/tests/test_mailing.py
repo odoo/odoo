@@ -28,7 +28,7 @@ class TestMassMailing(TestMassMailCommon):
         mailing = self.env['mailing.mailing'].create({
             'name': 'TestName',
             'subject': 'TestSubject',
-            'body_html': 'Hello ${object.name}',
+            'body_html': 'Hello <t t-out="object.name" />',
             'reply_to_mode': 'new',
             'reply_to': '%s@%s' % (self.test_alias.alias_name, self.test_alias.alias_domain),
             'keep_archives': True,
@@ -190,7 +190,7 @@ class TestMassMailing(TestMassMailCommon):
         mailing = self.env['mailing.mailing'].create({
             'name': 'UTMTest',
             'subject': subject,
-            'body_html': '<p>Hello ${object.name}</p>',
+            'body_html': '<p>Hello <t t-out="object.name"/></p>',
             'reply_to_mode': 'new',
             'reply_to': '%s@%s' % (self.test_alias.alias_name, self.test_alias.alias_domain),
             'keep_archives': True,
@@ -322,7 +322,7 @@ class TestMassMailing(TestMassMailCommon):
         mailing = self.env['mailing.mailing'].create({
             'name': 'SourceName',
             'subject': 'MailingSubject',
-            'body_html': '<p>Hello ${object.name}</p>',
+            'body_html': '<p>Hello <t t-out="object.name"/></p>',
             'mailing_model_id': self.env['ir.model']._get('mailing.list').id,
             'contact_list_ids': [(4, ml.id) for ml in mailing_list_1 | mailing_list_2],
         })

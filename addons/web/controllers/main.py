@@ -19,19 +19,19 @@ import unicodedata
 from collections import OrderedDict, defaultdict
 
 import babel.messages.pofile
-import jinja2
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
-from lxml import etree
+from lxml import etree, html
 from markupsafe import Markup
 from werkzeug.urls import url_encode, url_decode, iri_to_uri
 
 import odoo
 import odoo.modules.registry
 from odoo.api import call_kw
+from odoo.addons.base.models.qweb import QWeb
 from odoo.modules import get_resource_path, module
 from odoo.tools import html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
 from odoo.tools.mimetypes import guess_mimetype
@@ -46,22 +46,11 @@ from odoo.service import db, security
 
 _logger = logging.getLogger(__name__)
 
-if hasattr(sys, 'frozen'):
-    # When running on compiled windows binary, we don't have access to package loader.
-    path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
-    loader = jinja2.FileSystemLoader(path)
-else:
-    loader = jinja2.PackageLoader('odoo.addons.web', "views")
-
-env = jinja2.Environment(loader=loader, autoescape=True)
-env.filters["json"] = json.dumps
-
 CONTENT_MAXAGE = http.STATIC_CACHE_LONG  # menus, translations, static qweb
 
 DBNAME_PATTERN = '^[a-zA-Z0-9][a-zA-Z0-9_.-]+$'
 
 COMMENT_PATTERN = r'Modified by [\s\w\-.]+ from [\s\w\-.]+'
-
 
 def none_values_filtered(func):
     @functools.wraps(func)
@@ -1066,7 +1055,27 @@ class Database(http.Controller):
             monodb = db_monodb()
             if monodb:
                 d['databases'] = [monodb]
-        return Markup(env.get_template("database_manager.html").render(d))
+
+        dirname = os.path.dirname(os.path.realpath(__file__))
+        templates = {}
+
+        text_file = open(dirname + "/../static/src/public/database_manager.qweb.html", "r")
+        template = text_file.read()
+        text_file.close()
+        text_file = open(dirname + "/../static/src/public/database_manager.master_input.qweb.html", "r")
+        templates['master_input'] = text_file.read()
+        text_file.close()
+        text_file = open(dirname + "/../static/src/public/database_manager.create_form.qweb.html", "r")
+        templates['create_form'] = text_file.read()
+        text_file.close()
+
+        def load(template_name, vals):
+            render_template(templates[template_name], vals)
+
+        def render_template(string, vals):
+            Markup(QWeb()._render(html.fragment_fromstring(string), vals, load=load))
+
+        return Markup(QWeb()._render(html.document_fromstring(template), d, load=load))
 
     @http.route('/web/database/selector', type='http', auth="none")
     def selector(self, **kw):

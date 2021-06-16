@@ -27,7 +27,7 @@ class TestSmsTemplateAccessRights(TransactionCase):
         cls.sms_templates = cls.env['sms.template'].create(vals)
 
         cls.sms_dynamic_template = cls.env['sms.template'].sudo().create({
-            'body': '${object.name}',
+            'body': '{{ object.name }}',
             'model_id': cls.env['ir.model'].sudo().search([('model', '=', 'res.partner')]).id,
         })
 
@@ -84,13 +84,13 @@ class TestSmsTemplateAccessRights(TransactionCase):
         self.assertEqual(sms_composer.body, self.partner.name, 'Simple user should be able to render SMS template')
 
         sms_composer.composition_mode = 'mass'
-        self.assertEqual(sms_composer.body, '${object.name}', 'In mass mode, we should not render the template')
+        self.assertEqual(sms_composer.body, '{{ object.name }}', 'In mass mode, we should not render the template')
 
         body = sms_composer._prepare_body_values(self.partner)[self.partner.id]
         self.assertEqual(body, self.partner.name, 'In mass mode, if the user did not change the body, he should be able to render it')
 
-        sms_composer.body = 'New body: ${4 + 9}'
-        with self.assertRaises(AccessError, msg='User should not be able to write new Jinja code'):
+        sms_composer.body = 'New body: {{ 4 + 9 }}'
+        with self.assertRaises(AccessError, msg='User should not be able to write new inline_template code'):
             sms_composer._prepare_body_values(self.partner)
 
     @users('user_system')

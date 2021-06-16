@@ -212,7 +212,7 @@ class TestSMSPost(TestMailFullCommon, TestMailFullRecipients):
         sms_template = self.env['sms.template'].create({
             'name': 'Test Template',
             'model_id': self.env['ir.model']._get('mail.test.sms').id,
-            'body': 'Dear ${object.display_name} this is an SMS.',
+            'body': 'Dear {{ object.display_name }} this is an SMS.',
         })
 
         with self.with_user('employee'):
@@ -226,7 +226,7 @@ class TestSMSPost(TestMailFullCommon, TestMailFullRecipients):
         with self.with_user('employee'):
             with self.mockSMSGateway():
                 test_record = self.env['mail.test.sms'].browse(self.test_record.id)
-                messages = test_record._message_sms_with_template(template_xmlid='test_mail_full.this_should_not_exists', template_fallback='Fallback for ${object.id}')
+                messages = test_record._message_sms_with_template(template_xmlid='test_mail_full.this_should_not_exists', template_fallback='Fallback for {{ object.id }}')
 
         self.assertSMSNotification([{'partner': self.partner_1, 'number': self.test_numbers_san[1]}], 'Fallback for %s' % self.test_record.id, messages)
 
@@ -234,7 +234,7 @@ class TestSMSPost(TestMailFullCommon, TestMailFullRecipients):
         sms_template = self.env['sms.template'].create({
             'name': 'Test Template',
             'model_id': self.env['ir.model']._get('mail.test.sms').id,
-            'body': 'Dear ${object.display_name} this is an SMS.',
+            'body': 'Dear {{ object.display_name }} this is an SMS.',
         })
         self.env['ir.model.data'].create({
             'name': 'this_should_exists',

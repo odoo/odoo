@@ -36,7 +36,7 @@
                         <group>
                             <field name="model_id" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
                             <field name="model" invisible="1"/>
-                            <field name="lang" groups="base.group_no_one" placeholder="e.g. en_US or ${object.partner_id.lang}"/>
+                            <field name="lang" groups="base.group_no_one" placeholder="e.g. en_US or {{ object.partner_id.lang }}"/>
                         </group>
                     </div>
                     <notebook>

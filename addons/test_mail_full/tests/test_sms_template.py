@@ -15,8 +15,8 @@ class TestSmsTemplate(TestMailFullCommon, TestMailFullRecipients):
         })
         cls.test_record = cls._reset_mail_context(cls.test_record)
 
-        cls.body_en = 'Dear ${object.display_name} this is an SMS.'
-        cls.body_fr = u"Hello ${object.display_name} ceci est en français."
+        cls.body_en = 'Dear {{ object.display_name }} this is an SMS.'
+        cls.body_fr = u"Hello {{ object.display_name }} ceci est en français."
         cls.sms_template = cls._create_sms_template('mail.test.sms', body=cls.body_en)
 
     def test_sms_template_render(self):
@@ -39,7 +39,7 @@ class TestSmsTemplate(TestMailFullCommon, TestMailFullRecipients):
         })
         # set template to try to use customer lang
         self.sms_template.write({
-            'lang': '${object.customer_id.lang}',
+            'lang': '{{ object.customer_id.lang }}',
         })
         # create a second record linked to a customer in another language
         self.partner_2.write({

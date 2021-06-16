@@ -16,9 +16,9 @@ class TestMailTemplate(MailCommon):
 
         cls.mail_template = cls.env['mail.template'].create({
             'name': 'Test template',
-            'subject': '${1 + 5}',
-            'body_html': '${4 + 9}',
-            'lang': '${object.lang}',
+            'subject': '{{ 1 + 5 }}',
+            'body_html': '<t t-out="4 + 9"/>',
+            'lang': '{{ object.lang }}',
             'auto_delete': True,
             'model_id': cls.env.ref('base.model_res_partner').id,
         })
@@ -37,7 +37,7 @@ class TestMailTemplate(MailCommon):
             'composition_mode': 'mass_mail',
             'model': 'res.partner',
             'template_id': self.mail_template.id,
-            'subject': '${1 + 5}',
+            'subject': '{{ 1 + 5 }}',
         })
 
         values = mail_compose_message.get_mail_values(self.partner_employee.ids)

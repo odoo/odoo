@@ -23,14 +23,15 @@ class TestMassMailCommon(MassMailCommon, TestMailCommon):
         cls.mailing_bl = cls.env['mailing.mailing'].with_user(cls.user_marketing).create({
             'name': 'SourceName',
             'subject': 'MailingSubject',
-            'preview': 'Hi ${object.name} :)',
-            'body_html': """<div><p>Hello ${object.name}</p>,
-% set url = "www.odoo.com"
-% set httpurl = "https://www.odoo.eu"
-<span>Website0: <a id="url0" href="https://www.odoo.tz/my/${object.name}">https://www.odoo.tz/my/${object.name}</a></span>
+            # `+ ""` is for insuring that _prepend_preview rule out that case
+            'preview': 'Hi {{ object.name + "" }} :)',
+            'body_html': """<div><p>Hello <t t-out="object.name"/></p>,
+<t t-set="url" t-value="'www.odoo.com'"/>
+<t t-set="httpurl" t-value="'https://www.odoo.eu'"/>f
+<span>Website0: <a id="url0" t-attf-href="https://www.odoo.tz/my/{{object.name}}">https://www.odoo.tz/my/<t t-out="object.name"/></a></span>
 <span>Website1: <a id="url1" href="https://www.odoo.be">https://www.odoo.be</a></span>
-<span>Website2: <a id="url2" href="https://${url}">https://${url}</a></span>
-<span>Website3: <a id="url3" href="${httpurl}">${httpurl}</a></span>
+<span>Website2: <a id="url2" t-attf-href="https://{{url}}">https://<t t-out="url"/></a></span>
+<span>Website3: <a id="url3" t-att-href="httpurl"><t t-out="httpurl"/></a></span>
 <span>External1: <a id="url4" href="https://www.example.com/foo/bar?baz=qux">Youpie</a></span>
 <span>Internal1: <a id="url5" href="/event/dummy-event-0">Internal link</a></span>
 <span>Internal2: <a id="url6" href="/view"/>View link</a></span>

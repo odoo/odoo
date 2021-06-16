@@ -59,11 +59,11 @@ class TestMailComposer(TestMailCommon, TestRecipients):
 
         cls.template = cls.env['mail.template'].create({
             'name': 'TestTemplate',
-            'subject': 'TemplateSubject ${object.name}',
-            'body_html': '<p>TemplateBody ${object.name}</p>',
-            'partner_to': '${object.customer_id.id if object.customer_id else ""}',
-            'email_to': '${(object.email_from if not object.customer_id else "") | safe}',
-            'email_from': '${(object.user_id.email_formatted or user.email_formatted) | safe}',
+            'subject': 'TemplateSubject {{ object.name }}',
+            'body_html': '<p>TemplateBody <t t-esc="object.name"></t></p>',
+            'partner_to': '{{ object.customer_id.id if object.customer_id else "" }}',
+            'email_to': '{{ (object.email_from if not object.customer_id else "") }}',
+            'email_from': '{{ (object.user_id.email_formatted or user.email_formatted) }}',
             'model_id': cls.env['ir.model']._get('mail.test.ticket').id,
             'mail_server_id': cls.mail_server.id,
             'auto_delete': True,
@@ -122,7 +122,7 @@ class TestComposerForm(TestMailComposer):
         attachment_data = self._generate_attachments_data(2)
         template_1 = self.template.copy({
             'attachment_ids': [(0, 0, a) for a in attachment_data],
-            'report_name': 'TestReport for ${object.name}.html',  # test cursor forces html
+            'report_name': 'TestReport for {{ object.name }}.html',  # test cursor forces html
             'report_template': self.test_report.id,
         })
         template_1_attachments = template_1.attachment_ids
@@ -201,7 +201,7 @@ class TestComposerInternals(TestMailComposer):
         attachment_data = self._generate_attachments_data(3)
         self.template.write({
             'attachment_ids': [(0, 0, a) for a in attachment_data],
-            'report_name': 'TestReport for ${object.name}.html',  # test cursor forces html
+            'report_name': 'TestReport for {{ object.name }}.html',  # test cursor forces html
             'report_template': self.test_report.id,
         })
         attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])
@@ -525,8 +525,8 @@ class TestComposerResultsComment(TestMailComposer):
             'attachment_ids': [(0, 0, a) for a in attachment_data],
             'email_to': '%s, %s, %s' % (email_to_1, email_to_2, email_to_3),
             'email_cc': email_cc_1,
-            'partner_to': '%s, ${object.customer_id.id if object.customer_id else ""}' % self.partner_admin.id,
-            'report_name': 'TestReport for ${object.name}',  # test cursor forces html
+            'partner_to': '%s, {{ object.customer_id.id if object.customer_id else "" }}' % self.partner_admin.id,
+            'report_name': 'TestReport for {{ object.name }}',  # test cursor forces html
             'report_template': self.test_report.id,
         })
         attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])
@@ -664,8 +664,8 @@ class TestComposerResultsMass(TestMailComposer):
             'attachment_ids': [(0, 0, a) for a in attachment_data],
             'email_to': '%s, %s, %s' % (email_to_1, email_to_2, email_to_3),
             'email_cc': email_cc_1,
-            'partner_to': '%s, ${object.customer_id.id if object.customer_id else ""}' % self.partner_admin.id,
-            'report_name': 'TestReport for ${object.name}',  # test cursor forces html
+            'partner_to': '%s, {{ object.customer_id.id if object.customer_id else "" }}' % self.partner_admin.id,
+            'report_name': 'TestReport for {{ object.name }}',  # test cursor forces html
             'report_template': self.test_report.id,
         })
         attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])

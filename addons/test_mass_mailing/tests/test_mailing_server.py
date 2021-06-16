@@ -29,12 +29,12 @@ class TestMassMailingServer(TestMassMailCommon, MockSmtplibCase):
         # Test sending mailing in batch
         mailings = self.env['mailing.mailing'].create([{
             'subject': 'Mailing',
-            'body_html': 'Body for ${object.name}',
+            'body_html': 'Body for <t t-out="object.name" />',
             'email_from': 'specific_user@test.com',
             'mailing_model_id': self.env['ir.model']._get('mailing.test.optout').id,
         }, {
             'subject': 'Mailing',
-            'body_html': 'Body for ${object.name}',
+            'body_html': 'Body for <t t-out="object.name" />',
             'email_from': 'unknown_name@test.com',
             'mailing_model_id': self.env['ir.model']._get('mailing.test.optout').id,
         }])
@@ -65,7 +65,7 @@ class TestMassMailingServer(TestMassMailCommon, MockSmtplibCase):
         # "notifications@domain" email.
         mailings = self.env['mailing.mailing'].create([{
             'subject': 'Mailing',
-            'body_html': 'Body for ${object.name}',
+            'body_html': 'Body for <t t-out="object.name" />',
             'email_from': '"Testing" <unknow_email@unknow_domain.com>',
             'mailing_model_id': self.env['ir.model']._get('mailing.test.optout').id,
         }])
@@ -89,12 +89,12 @@ class TestMassMailingServer(TestMassMailCommon, MockSmtplibCase):
         # We force a mail server on one mailing
         mailings = self.env['mailing.mailing'].create([{
             'subject': 'Mailing',
-            'body_html': 'Body for ${object.name}',
+            'body_html': 'Body for <t t-out="object.name" />',
             'email_from': self.server_user.from_filter,
             'mailing_model_id': self.env['ir.model']._get('mailing.test.optout').id,
         }, {
             'subject': 'Mailing',
-            'body_html': 'Body for ${object.name}',
+            'body_html': 'Body for <t t-out="object.name" />',
             'email_from': 'unknow_email@unknow_domain.com',
             'mailing_model_id': self.env['ir.model']._get('mailing.test.optout').id,
             'mail_server_id': self.server_notification.id,

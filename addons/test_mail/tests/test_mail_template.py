@@ -46,12 +46,12 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
         # create a complete test template
         cls.test_template = cls._create_template('mail.test.lang', {
             'attachment_ids': [(0, 0, cls._attachments[0]), (0, 0, cls._attachments[1])],
-            'body_html': '<p>English Body for ${object.name}</p>',
-            'lang': '${object.customer_id.lang or object.lang}',
+            'body_html': '<p>English Body for <t t-out="object.name"/></p>',
+            'lang': '{{ object.customer_id.lang or object.lang }}',
             'email_to': '%s, %s' % (cls.email_1, cls.email_2),
             'email_cc': '%s' % cls.email_3,
             'partner_to': '%s,%s' % (cls.partner_2.id, cls.user_admin.partner_id.id),
-            'subject': 'English for ${object.name}',
+            'subject': 'English for {{ object.name }}',
         })
 
         # Make sure Spanish translations have not been altered
@@ -80,7 +80,7 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
             'module': 'mail',
             'lang': 'es_ES',
             'res_id': cls.test_template.id,
-            'value': 'Spanish for ${object.name}',
+            'value': 'Spanish for {{ object.name }}',
             'state': 'translated',
         })
         cls.env['ir.translation'].create({
@@ -89,7 +89,7 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
             'module': 'mail',
             'lang': 'es_ES',
             'res_id': cls.test_template.id,
-            'value': '<p>Spanish Body for ${object.name}</p>',
+            'value': '<p>Spanish Body for <t t-out="object.name" /></p>',
             'state': 'translated',
         })
         view = cls.env['ir.ui.view'].create({
@@ -183,7 +183,7 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
     #         mock_datetime.side_effect = lambda *args, **kw: datetime(*args, **kw)
 
     #         self.email_template_in_2_days.write({
-    #             'scheduled_date': "${(datetime.datetime.now() + relativedelta(days=2)).strftime('%s')}" % DEFAULT_SERVER_DATETIME_FORMAT,
+    #             'scheduled_date': "{{ (datetime.datetime.now() + relativedelta(days=2)).strftime('%s') }}" % DEFAULT_SERVER_DATETIME_FORMAT,
     #         })
 
     #         mail_now_id = self.email_template.send_mail(self.test_record.id)
