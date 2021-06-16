@@ -28,22 +28,6 @@
 
 }
 
-.dropdown-menu .dropdown-item {
-  // Using <a> tags inside a '.dropdown-item' elements  should not be necessary
-  // since the class in usually applied to the <a> tag itself.
-  // The following rules will handle custom layouts needs (eg '.o_user_menu').
-  &:not(.disabled):not(:disabled) a:not(.disabled):not(:disabled) {
-    @include o-hover-text-color($dropdown-link-color, $dropdown-link-hover-color);
-    font-weight: inherit;
-  }
-
-  &.disabled a, &:disabled a {
-    @include o-hover-text-color(
-      $dropdown-link-disabled-color,
-      $dropdown-link-disabled-color);
-  }
-}
-
 .dropdown-header {
   @extend .font-weight-bold;
   padding-bottom: .1em;
@@ -80,20 +64,12 @@
     }
   }
 
-  &_item {
+  &_item > *:first-child:last-child {
     @extend .dropdown-item;
+  }
 
-    // we want the dropdownitem first child to define its own padding
-    // because it can be an <a href/>
-    padding: 0;
-    > *:first-child {
-      padding: $dropdown-item-padding-y $dropdown-item-padding-x;
-      display: flex;
-    }
-
-    &.o_dropdown_active {
-      @extend .dropdown-item:hover;
-    }
+  &_item.o_dropdown_active > *:first-child:last-child {
+    @extend .dropdown-item:hover;
   }
 
   &_menu_group {
