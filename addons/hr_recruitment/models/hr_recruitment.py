@@ -23,7 +23,7 @@ class RecruitmentSource(models.Model):
     _description = "Source of Applicants"
     _inherits = {"utm.source": "source_id"}
 
-    source_id = fields.Many2one('utm.source', "Source", ondelete='cascade', required=True)
+    source_id = fields.Many2one('utm.source', "Source", ondelete='restrict', required=True)
     email = fields.Char(related='alias_id.display_name', string="Email", readonly=True)
     job_id = fields.Many2one('hr.job', "Job", ondelete='cascade')
     alias_id = fields.Many2one('mail.alias', "Alias ID")
@@ -173,6 +173,10 @@ class Applicant(models.Model):
     meeting_ids = fields.One2many('calendar.event', 'applicant_id', 'Meetings')
     meeting_display_text = fields.Char(compute='_compute_meeting_display')
     meeting_display_date = fields.Date(compute='_compute_meeting_display')
+    # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
+    campaign_id = fields.Many2one(ondelete='set null')
+    medium_id = fields.Many2one(ondelete='set null')
+    source_id = fields.Many2one(ondelete='set null')
 
     @api.depends('date_open', 'date_closed')
     def _compute_day(self):

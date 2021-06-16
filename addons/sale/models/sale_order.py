@@ -278,6 +278,10 @@ class SaleOrder(models.Model):
                                            help="Technical Field, True if the pricelist was changed;\n"
                                                 " this will then display a recomputation button")
     tag_ids = fields.Many2many('crm.tag', 'sale_order_tag_rel', 'order_id', 'tag_id', string='Tags')
+    # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
+    campaign_id = fields.Many2one(ondelete='set null')
+    medium_id = fields.Many2one(ondelete='set null')
+    source_id = fields.Many2one(ondelete='set null')
 
     _sql_constraints = [
         ('date_order_conditional_required', "CHECK( (state IN ('sale', 'done') AND date_order IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),

@@ -23,6 +23,10 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Delivery address for current invoice.")
+    # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
+    campaign_id = fields.Many2one(ondelete='set null')
+    medium_id = fields.Many2one(ondelete='set null')
+    source_id = fields.Many2one(ondelete='set null')
 
     @api.onchange('partner_shipping_id', 'company_id')
     def _onchange_partner_shipping_id(self):

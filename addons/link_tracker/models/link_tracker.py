@@ -42,6 +42,10 @@ class LinkTracker(models.Model):
     code = fields.Char(string='Short URL code', compute='_compute_code')
     link_click_ids = fields.One2many('link.tracker.click', 'link_id', string='Clicks')
     count = fields.Integer(string='Number of Clicks', compute='_compute_count', store=True)
+    # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
+    campaign_id = fields.Many2one(ondelete='set null')
+    medium_id = fields.Many2one(ondelete='set null')
+    source_id = fields.Many2one(ondelete='set null')
 
     @api.depends("url")
     def _compute_absolute_url(self):
@@ -285,7 +289,7 @@ class LinkTrackerClick(models.Model):
 
     campaign_id = fields.Many2one(
         'utm.campaign', 'UTM Campaign',
-        related="link_id.campaign_id", store=True)
+        related="link_id.campaign_id", store=True, ondelete="set null")
     link_id = fields.Many2one(
         'link.tracker', 'Link',
         index=True, required=True, ondelete='cascade')
