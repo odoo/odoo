@@ -6,6 +6,7 @@ import { useService } from "../../core/service_hook";
 import { useEffect } from "../../core/effect_hook";
 import { registry } from "../../core/registry";
 import { debounce } from "../../core/utils/timing";
+import { ErrorHandler, NotUpdatable } from "../../core/utils/components";
 
 const { Component, hooks } = owl;
 const { useExternalListener, useRef } = hooks;
@@ -67,6 +68,14 @@ export class NavBar extends Component {
     willUnmount() {
         systrayRegistry.off("UPDATE", this);
         this.env.bus.off("MENUS:APP-CHANGED", this);
+    }
+
+    handleItemError(error, item) {
+        // remove the faulty component
+        item.isDisplayed = () => false;
+        Promise.resolve().then(() => {
+            throw error;
+        });
     }
 
     get currentApp() {
@@ -183,4 +192,4 @@ export class NavBar extends Component {
     }
 }
 NavBar.template = "web.NavBar";
-NavBar.components = { MenuDropdown, MenuItem };
+NavBar.components = { MenuDropdown, MenuItem, NotUpdatable, ErrorHandler };

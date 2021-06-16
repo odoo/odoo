@@ -3,11 +3,19 @@
 
     <t t-name="web.WebClient" owl="1">
         <body class="o_web_client" t-att-class="{'o_is_superuser': user.userId === 1}">
-            <NavBar/>
-            <ActionContainer/>
+            <NotUpdatable>
+                <NavBar/>
+            </NotUpdatable>
+            <NotUpdatable>
+                <ActionContainer/>
+            </NotUpdatable>
             <div>
                 <t t-foreach="Components" t-as="C" t-key="C[0]">
-                    <t t-component="C[1].Component" t-props="C[1].props"/>
+                    <NotUpdatable>
+                        <ErrorHandler onError="error => handleComponentError(error, C)">
+                            <t t-component="C[1].Component" t-props="C[1].props"/>
+                        </ErrorHandler>
+                    </NotUpdatable>
                 </t>
             </div>
         </body>

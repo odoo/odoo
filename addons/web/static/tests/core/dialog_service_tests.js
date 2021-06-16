@@ -250,6 +250,7 @@ QUnit.test("dialog component crashes", async (assert) => {
 
     env.services.dialog.add(FailingDialog);
     await prom;
+
     assert.verifySteps(["error"]);
     assert.containsOnce(pseudoWebClient, ".modal");
     assert.containsOnce(pseudoWebClient, ".modal .o_dialog_error");
