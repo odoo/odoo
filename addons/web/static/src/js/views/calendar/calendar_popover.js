@@ -183,8 +183,9 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
                 } else {
                     def = fieldWidget.mount($fieldContainer[0]);
                 }
-                self.$fieldsList.push($field);
-                defs.push(def);
+                defs.push(def.then(function () {
+                    self.$fieldsList.push($field);
+                }));
             });
             return Promise.all(defs);
         });
