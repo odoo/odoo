@@ -34,24 +34,6 @@ class TestSanitizer(BaseCase):
             html = html_sanitize(content)
             self.assertEqual(html, expected, 'html_sanitize is broken')
 
-    def test_mako(self):
-        cases = [
-            ('''<p>Some text</p>
-<% set signup_url = object.get_signup_url() %>
-% if signup_url:
-<p>
-    You can access this document and pay online via our Customer Portal:
-</p>''', '''<p>Some text</p>
-<% set signup_url = object.get_signup_url() %>
-% if signup_url:
-<p>
-    You can access this document and pay online via our Customer Portal:
-</p>''')
-        ]
-        for content, expected in cases:
-            html = html_sanitize(content, silent=False)
-            self.assertEqual(html, expected, 'html_sanitize: broken mako management')
-
     def test_evil_malicious_code(self):
         # taken from https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Tests
         cases = [

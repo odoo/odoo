@@ -28,6 +28,12 @@ token.tok_name[token.QWEB] = 'QWEB'
 ###          qweb tools          ###
 ####################################
 
+class QWebCodeFound(Exception):
+    """
+    Exception raised when a qweb compilation encounter dynamic content if the
+    option `raise_on_code` is True.
+    """
+
 class QWebException(Exception):
     def __init__(self, message, qweb, options, error=None, template=None, path=None, code=None):
         self.error = error
@@ -174,6 +180,8 @@ class QWeb(object):
                 self._compile_node(element, _options, 1) +
                 self._flushText(_options, 1))
         except QWebException as e:
+            raise e
+        except QWebCodeFound as e:
             raise e
         except Exception as e:
             raise QWebException("Error when compiling xml template", self, options,
@@ -337,6 +345,9 @@ class QWeb(object):
         # if tag don't have qweb attributes don't use directives
         if self._is_static_node(el, options):
             return self._compile_static_node(el, options, indent)
+
+        if options.get('raise_on_code'):
+            raise QWebCodeFound()
 
         path = options['root'].getpath(el)
         if options['last_path_node'] != path:

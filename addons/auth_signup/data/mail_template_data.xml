@@ -6,8 +6,8 @@
             <field name="name">Auth Signup: Reset Password</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="subject">Password reset</field>
-            <field name="email_from">"${object.company_id.name | safe}" &lt;${(object.company_id.email or user.email) | safe}&gt;</field>
-            <field name="email_to">${object.email_formatted | safe}</field>
+            <field name="email_from">"{{ object.company_id.name }}" &lt;{{ (object.company_id.email or user.email) }}&gt;</field>
+            <field name="email_to">{{ object.email_formatted }}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
@@ -19,10 +19,10 @@
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Your Account</span><br/>
                     <span style="font-size: 20px; font-weight: bold;">
-                        ${object.name}
+                        <t t-out="object.name or ''">Marc Demo</t>
                     </span>
                 </td><td valign="middle" align="right">
-                    <img src="/logo.png?company=${object.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.company_id.name}"/>
+                    <img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.company_id.name"/>
                 </td></tr>
                 <tr><td colspan="2" style="text-align:center;">
                   <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
@@ -36,21 +36,21 @@
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="top" style="font-size: 13px;">
                     <div>
-                        Dear ${object.name},<br/><br/>
+                        Dear <t t-out="object.name or ''">Marc Demo</t>,<br/><br/>
                         A password reset was requested for the Odoo account linked to this email.
                         You may change your password by following this link which will remain valid during 24 hours:<br/>
                         <div style="margin: 16px 0px 16px 0px;">
-                            <a href="${object.signup_url}"
+                            <a t-att-href="object.signup_url"
                                 style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
                                 Change password
                             </a>
                         </div>
                         If you do not expect this, you can safely ignore this email.<br/><br/>
                         Thanks,
-                        % if user.signature:
+                        <t t-if="user.signature">
                             <br/>
-                            ${user.signature | safe}
-                        % endif
+                            <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                        </t>
                     </div>
                 </td></tr>
                 <tr><td style="text-align:center;">
@@ -64,18 +64,17 @@
         <td align="center" style="min-width: 590px;">
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="middle" align="left">
-                    ${object.company_id.name}
+                    <t t-out="object.company_id.name or ''">YourCompany</t>
                 </td></tr>
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
-                    ${object.company_id.phone}
-                    % if object.company_id.email
-                        | <a href="'mailto:%s' % ${object.company_id.email}" style="text-decoration:none; color: #454748;">${object.company_id.email}</a>
-                    % endif
-                    % if object.company_id.website
-                        | <a href="'%s' % ${object.company_id.website}" style="text-decoration:none; color: #454748;">
-                        ${object.company_id.website}
-                    </a>
-                    % endif
+                    <t t-out="object.company_id.phone or ''">+1 650-123-4567</t>
+
+                    <t t-if="object.company_id.email">
+                        | <a t-att-href="'mailto:%s' % object.company_id.email" style="text-decoration:none; color: #454748;" t-out="object.company_id.email or ''">info@yourcompany.com</a>
+                    </t>
+                    <t t-if="object.company_id.website">
+                        | <a t-att-href="'%s' % object.company_id.website" style="text-decoration:none; color: #454748;" t-out="object.company_id.website or ''">http://www.example.com</a>
+                    </t>
                 </td></tr>
             </table>
         </td>
@@ -93,7 +92,7 @@
 </td></tr>
 </table>
             </field>
-            <field name="lang">${object.lang}</field>
+            <field name="lang">{{ object.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
@@ -101,9 +100,9 @@
         <record id="set_password_email" model="mail.template">
             <field name="name">Auth Signup: Odoo Connection</field>
             <field name="model_id" ref="base.model_res_users"/>
-            <field name="subject">${object.create_uid.name} from ${object.company_id.name} invites you to connect to Odoo</field>
-            <field name="email_from">"${object.company_id.name | safe}" &lt;${(object.company_id.email or user.email) | safe}&gt;</field>
-            <field name="email_to">${object.email_formatted | safe}</field>
+            <field name="subject">{{ object.create_uid.name }} from {{ object.company_id.name }} invites you to connect to Odoo</field>
+            <field name="email_from">"{{ object.company_id.name }}" &lt;{{ (object.company_id.email or user.email) }}&gt;</field>
+            <field name="email_to">{{ object.email_formatted }}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
@@ -115,10 +114,10 @@
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Welcome to Odoo</span><br/>
                     <span style="font-size: 20px; font-weight: bold;">
-                        ${object.name}
+                        <t t-out="object.name or ''">Marc Demo</t>
                     </span>
                 </td><td valign="middle" align="right">
-                    <img src="/logo.png?company=${object.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.company_id.name}"/>
+                    <img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.company_id.name"/>
                 </td></tr>
                 <tr><td colspan="2" style="text-align:center;">
                   <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
@@ -132,23 +131,23 @@
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="top" style="font-size: 13px;">
                     <div>
-                        Dear ${object.name},<br /><br />
-                        You have been invited by ${object.create_uid.name} of ${object.company_id.name} to connect on Odoo.
+                        Dear <t t-out="object.name or ''">Marc Demo</t>,<br /><br />
+                        You have been invited by <t t-out="object.create_uid.name or ''">OdooBot</t> of <t t-out="object.company_id.name or ''">YourCompany</t> to connect on Odoo.
                         <div style="margin: 16px 0px 16px 0px;">
-                            <a href="${object.signup_url}"
+                            <a t-att-href="object.signup_url"
                                 style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
                                 Accept invitation
                             </a>
                         </div>
-                        % set website_url = object.get_base_url()
-                        Your Odoo domain is: <b><a href='${website_url}'>${website_url}</a></b><br />
-                        Your sign in email is: <b><a href="/web/login?login=${object.email}" target="_blank">${object.email}</a></b><br /><br />
+                        <t t-set="website_url" t-value="object.get_base_url()"></t>
+                        Your Odoo domain is: <b><a t-att-href='website_url' t-out="website_url or ''">http://yourcompany.odoo.com</a></b><br />
+                        Your sign in email is: <b><a t-attf-href="/web/login?login={{ object.email }}" target="_blank" t-out="object.email or ''">mark.brown23@example.com</a></b><br /><br />
                         Never heard of Odoo? It’s an all-in-one business software loved by 7+ million users. It will considerably improve your experience at work and increase your productivity.
                         <br /><br />
                         Have a look at the <a href="https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Odoo Tour</a> to discover the tool.
                         <br /><br />
                         Enjoy Odoo!<br />
-                        --<br/>The ${object.company_id.name} Team
+                        --<br/>The <t t-out="object.company_id.name or ''">YourCompany</t> Team
                     </div>
                 </td></tr>
                 <tr><td style="text-align:center;">
@@ -162,18 +161,16 @@
         <td align="center" style="min-width: 590px;">
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="middle" align="left">
-                    ${object.company_id.name}
+                    <t t-out="object.company_id.name or ''">YourCompany</t>
                 </td></tr>
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
-                    ${object.company_id.phone}
-                    % if object.company_id.email
-                        | <a href="'mailto:%s' % ${object.company_id.email}" style="text-decoration:none; color: #454748;">${object.company_id.email}</a>
-                    % endif
-                    % if object.company_id.website
-                        | <a href="'%s' % ${object.company_id.website}" style="text-decoration:none; color: #454748;">
-                        ${object.company_id.website}
-                    </a>
-                    % endif
+                    <t t-out="object.company_id.phone or ''">+1 650-123-4567</t>
+                    <t t-if="object.company_id.email">
+                        | <a t-att-href="'mailto:%s' % object.company_id.email" style="text-decoration:none; color: #454748;" t-out="object.company_id.email or ''">info@yourcompany.com</a>
+                    </t>
+                    <t t-if="object.company_id.website">
+                        | <a t-att-href="'%s' % object.company_id.website" style="text-decoration:none; color: #454748;" t-out="object.company_id.website or ''">http://www.example.com</a>
+                    </t>
                 </td></tr>
             </table>
         </td>
@@ -190,7 +187,7 @@
     </table>
 </td></tr>
 </table></field>
-            <field name="lang">${object.lang}</field>
+            <field name="lang">{{ object.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
@@ -199,8 +196,8 @@
             <field name="name">Auth Signup: Unregistered Users</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="subject">Reminder for unregistered users</field>
-            <field name="email_from">${object.company_id.partner_id.email_formatted|safe}</field>
-            <field name="email_to">${object.email_formatted|safe}</field>
+            <field name="email_from">{{ object.company_id.partner_id.email_formatted }}</field>
+            <field name="email_to">{{ object.email_formatted }}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
@@ -209,7 +206,7 @@
     <tr>
         <td align="center" style="min-width: 590px;">
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
-                 % set invited_users = ctx['invited_users']
+                <t t-set="invited_users" t-value="ctx.get('invited_users', [])" />
                 <td style="text-align : left">
                     <span style="font-size: 20px; font-weight: bold;">
                         Pending Invitations
@@ -217,17 +214,17 @@
                 </td>
                 <tr><td valign="top" style="font-size: 13px;">
                     <div>
-                        Dear ${object.name or ''},<br/> <br/>
+                        Dear <t t-out="object.name or ''">Mitchell Admin</t>,<br/> <br/>
                         You added the following user(s) to your database but they haven't registered yet:
                         <ul>
-                            % for invited_user in invited_users:
-                                <li>${invited_user}</li>
-                            % endfor
+                            <t t-foreach="invited_users" t-as="invited_user">
+                                <li t-out="invited_user or ''">demo@example.com</li>
+                            </t>
                         </ul>
                         Follow up with them so they can access your database and start working with you.
                         <br /><br/>
                         Have a nice day!<br />
-                        --<br/>The ${object.company_id.name} Team
+                        --<br/>The <t t-out="object.company_id.name or ''">YourCompany</t> Team
                     </div>
                 </td></tr>
                 <tr><td style="text-align:center;">
@@ -241,7 +238,7 @@
 </td></tr>
 </table>
             </field>
-            <field name="lang">${object.partner_id.lang}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
@@ -249,9 +246,9 @@
         <record id="mail_template_user_signup_account_created" model="mail.template">
             <field name="name">Auth Signup: Odoo Account Created</field>
             <field name="model_id" ref="base.model_res_users"/>
-            <field name="subject">Welcome to ${object.company_id.name}!</field>
-            <field name="email_from">"${object.company_id.name | safe}" &lt;${(object.company_id.email or user.email) | safe}&gt;</field>
-            <field name="email_to">${object.email_formatted | safe}</field>
+            <field name="subject">Welcome to {{ object.company_id.name }}!</field>
+            <field name="email_from">"{{ object.company_id.name }}" &lt;{{ (object.company_id.email or user.email) }}&gt;</field>
+            <field name="email_to">{{ object.email_formatted }}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
@@ -263,10 +260,10 @@
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Your Account</span><br/>
                     <span style="font-size: 20px; font-weight: bold;">
-                        ${object.name}
+                        <t t-out="object.name or ''">Marc Demo</t>
                     </span>
                 </td><td valign="middle" align="right">
-                    <img src="/logo.png?company=${object.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.company_id.name}"/>
+                    <img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.company_id.name"/>
                 </td></tr>
                 <tr><td colspan="2" style="text-align:center;">
                   <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
@@ -280,21 +277,21 @@
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="top" style="font-size: 13px;">
                     <div>
-                        Dear ${object.name},<br/><br/>
+                        Dear <t t-out="object.name or ''">Marc Demo</t>,<br/><br/>
                         Your account has been successfully created!<br/>
-                        Your login is <strong>${object.email}</strong><br/>
+                        Your login is <strong><t t-out="object.email or ''">mark.brown23@example.com</t></strong><br/>
                         To gain access to your account, you can use the following link:
                         <div style="margin: 16px 0px 16px 0px;">
-                            <a href="/web/login?auth_login=${object.email}"
+                            <a t-attf-href="/web/login?auth_login={{object.email}}"
                                 style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
                                 Go to My Account
                             </a>
                         </div>
                         Thanks,<br/>
-                        % if user.signature:
+                        <t t-if="user.signature">
                             <br/>
-                            ${user.signature | safe}
-                        % endif
+                            <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                        </t>
                     </div>
                 </td></tr>
                 <tr><td style="text-align:center;">
@@ -308,18 +305,18 @@
         <td align="center" style="min-width: 590px;">
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="middle" align="left">
-                    ${object.company_id.name}
+                    <t t-out="object.company_id.name or ''">YourCompany</t>
                 </td></tr>
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
-                    ${object.company_id.phone}
-                    % if object.company_id.email
-                        | <a href="'mailto:%s' % ${object.company_id.email}" style="text-decoration:none; color: #454748;">${object.company_id.email}</a>
-                    % endif
-                    % if object.company_id.website
-                        | <a href="'%s' % ${object.company_id.website}" style="text-decoration:none; color: #454748;">
-                        ${object.company_id.website}
-                    </a>
-                    % endif
+                    <t t-out="object.company_id.phone or ''">+1 650-123-4567</t>
+                    <t t-if="object.company_id.email">
+                        | <a t-attf-href="'mailto:%s' % {{ object.company_id.email }}" style="text-decoration:none; color: #454748;"><t t-out="object.company_id.email or ''">info@yourcompany.com</t></a>
+                    </t>
+                    <t t-if="object.company_id.website">
+                        | <a t-attf-href="'%s' % {{ object.company_id.website }}" style="text-decoration:none; color: #454748;">
+                            <t t-out="object.company_id.website or ''">http://www.example.com</t>
+                        </a>
+                    </t>
                 </td></tr>
             </table>
         </td>
@@ -336,7 +333,7 @@
     </table>
 </td></tr>
 </table></field>
-            <field name="lang">${object.lang}</field>
+            <field name="lang">{{ object.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
