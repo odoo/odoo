@@ -29,6 +29,17 @@ VariantMixin._onChangeCombination = function (ev, $parent, combination) {
             $pricePerUom.parents(".o_base_unit_price_wrapper").addClass("d-none");
         }
     }
+
+    // Triggers a new JS event with the correct payload, which is then handled
+    // by the google analytics tracking code.
+    // Indeed, every time another variant is selected, a new view_item event
+    // needs to be tracked by google analytics.
+    if ('product_tracking_info' in combination) {
+        const $product = $('#product_detail');
+        $product.data('product-tracking-info', combination['product_tracking_info']);
+        $product.trigger('view_item_event', combination['product_tracking_info']);
+    }
+
     originalOnChangeCombination.apply(this, [ev, $parent, combination]);
 };
 

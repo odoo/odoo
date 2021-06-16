@@ -173,12 +173,18 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
     /**
      * @private
      */
-    _addToCart: function (productID, qty_id) {
+    _addToCart: function (productID, qty) {
+        const $tr = this.$(`tr[data-product-id="${productID}"]`);
+        const productTrackingInfo = $tr.data('product-tracking-info');
+        if (productTrackingInfo) {
+            productTrackingInfo.quantity = qty;
+            $tr.trigger('add_to_cart_event', [productTrackingInfo]);
+        }
         return this._rpc({
             route: "/shop/cart/update_json",
             params: {
                 product_id: parseInt(productID, 10),
-                add_qty: parseInt(qty_id, 10),
+                add_qty: parseInt(qty, 10),
                 display: false,
             },
         }).then(function (resp) {

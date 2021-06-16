@@ -163,7 +163,9 @@
                         <table class="table table-bordered table-striped table-hover text-center mt16 table-comparator " style="table-layout:auto" id="o_comparelist_table">
                             <body>
                                 <t t-foreach="wishes" t-as="wish">
-                                    <tr t-att-data-wish-id='wish.id' t-att-data-product-id='wish.product_id.id'>
+                                    <t t-set="combination_info" t-value="wish.product_id._get_combination_info_variant()"/>
+                                    <tr t-att-data-wish-id='wish.id' t-att-data-product-id='wish.product_id.id'
+                                        t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))">
                                         <td class='td-img align-middle'>
                                             <a t-att-href="wish.product_id.website_url">
                                                 <img t-attf-src="/web/image/product.product/#{wish.product_id.id}/image_128" class="img img-fluid" style="margin:auto;" alt="Product image"/>
@@ -175,7 +177,6 @@
                                             <button type="button" class="btn btn-link o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></button>
                                         </td>
                                         <td class="align-middle">
-                                            <t t-set="combination_info" t-value="wish.product_id._get_combination_info_variant()"/>
                                             <t t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"/>
                                             <small t-if="wish.product_id.base_unit_price" class="cart_product_base_unit_price d-block text-muted" groups="website_sale.group_show_uom_price">
                                                 <t t-call='website_sale.base_unit_price'><t t-set='product' t-value='wish.product_id' /></t>

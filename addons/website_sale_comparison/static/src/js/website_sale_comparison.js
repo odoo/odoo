@@ -305,8 +305,14 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
         this.getCartHandlerOptions(ev);
         // Override product image container for animation. 
         this.$itemImgContainer = this.$('#o_comparelist_table tr').first().find('td').eq(cellIndex);
-        const productId = parseInt($form.find('input[type="hidden"][name="product_id"]').first().val());
+        const $inputProduct = $form.find('input[type="hidden"][name="product_id"]').first();
+        const productId = parseInt($inputProduct.val());
         if (productId) {
+            const productTrackingInfo = $inputProduct.data('product-tracking-info');
+            if (productTrackingInfo) {
+                productTrackingInfo.quantity = 1;
+                $inputProduct.trigger('add_to_cart_event', [productTrackingInfo]);
+            }
             return this.addToCart({product_id: productId, add_qty: 1});
         }
     },
