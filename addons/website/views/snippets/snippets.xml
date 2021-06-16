@@ -448,7 +448,7 @@
     <t t-set="only_bg_image_exclude" t-value="''"/>
 
     <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax'"/>
-    <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_color_blocks_2, .s_image_gallery .carousel-item, .s_google_map, .s_map'"/>
+    <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_color_blocks_2, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] .row > div *'"/>
 
     <t t-call="web_editor.snippet_options_background_options">
         <t t-set="selector" t-value="both_bg_color_image_selector"/>
@@ -988,7 +988,7 @@
 
     <!-- Stretch section -->
     <div data-js="ContainerWidth" data-selector="section, .s_carousel .carousel-item, s_quotes_carousel .carousel-item"
-        data-target="> .container, > .container-fluid, > .o_container_small">
+        data-exclude="[data-snippet] .row > div *" data-target="> .container, > .container-fluid, > .o_container_small">
         <we-button-group string="Content Width">
             <we-button data-select-class="o_container_small"
                        data-img="/website/static/src/img/snippets_options/content_width_small.svg"
@@ -1003,7 +1003,7 @@
     </div>
 
     <!-- Min height of section -->
-    <div data-option-name="minHeight" data-selector="section">
+    <div data-option-name="minHeight" data-selector="section" data-exclude="[data-snippet] .row > div *">
         <we-button-group string="Height">
             <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
             <we-button data-select-class="o_half_screen_height" title="Half screen">50%</we-button>
@@ -1012,7 +1012,7 @@
     </div>
 
     <!-- Scroll to next section button (only for full height) -->
-    <div data-js="ScrollButton" data-selector="section">
+    <div data-js="ScrollButton" data-selector="section" data-exclude="[data-snippet] .row > div *">
         <we-checkbox string="Scroll down button"
                      data-toggle-button="true"
                      data-no-preview="true"
