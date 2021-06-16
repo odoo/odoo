@@ -18,46 +18,61 @@ function factory(dependencies) {
          * @return {Object}
          */
          static convertData(data) {
-            const messageTrackingValue = {
-                id: data.id,
-            };
+            const data2 = {};
+            if ('id' in data) {
+                data2.id = data.id;
+            }
             if ('changed_field' in data) {
-                messageTrackingValue.changedFieldOriginal = data.changed_field;
+                data2.changedField = data.changed_field;
             }
             if ('currency_id' in data) {
-                messageTrackingValue.currencyId = data.currency_id;
+                data2.currencyId = data.currency_id;
             }
             if ('field_type' in data) {
-                messageTrackingValue.fieldType = data.field_type;
+                data2.fieldType = data.field_type;
             }
             if ('new_value' in data) {
-                messageTrackingValue.newValueOriginal = data.new_value;
+                data2.newValue = data.new_value;
             }
             if ('old_value' in data) {
-                messageTrackingValue.oldValueOriginal = data.old_value;
+                data2.oldValue = data.old_value;
             }
-
-            return messageTrackingValue;
+            return data2;
         }
 
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
-        
+
         /**
-         * @private
-         * @returns {string}
+         * @override
          */
-         _computeChangedField() {
-            return _.str.sprintf(this.env._t("%s:"), this.changedFieldOriginal);
+         static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.id}`;
         }
 
         /**
          * @private
          * @returns {string}
          */
-        _formatValue(fieldType, value) {
-             switch (fieldType) {
+         _computeChangedField() {
+            return _.str.sprintf(this.env._t("%s:"), this.changedField);
+        }
+
+        /**
+         * @private
+         * @param {string} fieldType
+         * @param {string|boolean|float|number|integer|Array|Object} value
+         * @returns {string}
+         */
+        static _formatMessageTrackingValue(fieldType, value) {
+            /**
+             * Maps tracked field type to a JS formatter. Tracking values are
+             * not always stored in the same field type as their origin type.
+             * Field types that are not listed here are not supported by
+             * tracking in Python. Also see `create_tracking_values` in Python.
+             */
+            switch (fieldType) {
                 case 'boolean':
                     return format.boolean(value, undefined, { forceString: true });
                 /**
@@ -85,18 +100,11 @@ function factory(dependencies) {
                     return format.float(value);
                 case 'integer':
                     return format.integer(value);
-                case 'monetary':
-                    return format.monetary(value, undefined, {
-                        currency: this.currencyId
-                            ? this.env.session.currencies[this.currencyId]
-                            : undefined,
-                        forceString: true,
-                    });
                 case 'text':
                     return format.text(value);
                 default : 
                     return undefined;
-            }            
+            }
         }
 
         /**
@@ -104,13 +112,15 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeOldValue() {
-            /**
-             * Maps tracked field type to a JS formatter. Tracking values are
-             * not always stored in the same field type as their origin type.
-             * Field types that are not listed here are not supported by
-             * tracking in Python. Also see `create_tracking_values` in Python.
-             */
-            return this._formatValue(this.fieldType, this.oldValueOriginal)
+            if (this.fieldType == 'monetary') {
+                return format.monetary(this.oldValue, undefined, {
+                    currency: this.currencyId
+                        ? this.env.session.currencies[this.currencyId]
+                        : undefined,
+                    forceString: true,
+                });
+            }
+            return MessageTrackingValue._formatMessageTrackingValue(this.fieldType, this.oldValue);
         }
 
         /**
@@ -118,26 +128,36 @@ function factory(dependencies) {
          * @returns {string}
          */
          _computeNewValue() {
-            /**
-             * Maps tracked field type to a JS formatter. Tracking values are
-             * not always stored in the same field type as their origin type.
-             * Field types that are not listed here are not supported by
-             * tracking in Python. Also see `create_tracking_values` in Python.
-             */
-            return this._formatValue(this.fieldType, this.newValueOriginal)
+             if (this.fieldType == 'monetary') {
+                return format.monetary(this.newValue, undefined, {
+                    currency: this.currencyId
+                        ? this.env.session.currencies[this.currencyId]
+                        : undefined,
+                    forceString: true,
+                });
+            }
+            return MessageTrackingValue._formatMessageTrackingValue(this.fieldType, this.newValue);
         }
     }
 
     MessageTrackingValue.fields = {
-
-        changedField: attr({
+        /**
+         * The formatted string of the chanegd field name, such as "Status", "Date", etc.
+         */
+        changedFieldAsString: attr({
             compute: '_computeChangedField',
             dependencies: [
-                'changedFieldOriginal',
+                'changedField',
             ],
         }),
-        changedFieldOriginal: attr(),
+        changedField: attr(),
+        /**
+         * Used when the currency changes as the tracking value.
+         */
         currencyId: attr(),
+        /**
+         * Indicate the type of the tracking value, such as float, integer, date.
+         */
         fieldType: attr(),
         id: attr({
             required: true,
@@ -145,22 +165,24 @@ function factory(dependencies) {
         message: many2one('mail.message', {
             inverse: 'trackingValues',
         }),
-        newValue: attr({
+        newValueAsString: attr({
             compute: '_computeNewValue',
             dependencies: [
+                'currencyId',
                 'fieldType',
-                'newValueOriginal',
+                'newValue',
             ],
         }),
-        newValueOriginal: attr(),
-        oldValue: attr({
+        newValue: attr(),
+        oldValueAsString: attr({
             compute: '_computeOldValue',
             dependencies: [
+                'currencyId',
                 'fieldType',
-                'oldValueOriginal',
+                'oldValue',
             ],
         }),
-        oldValueOriginal: attr()
+        oldValue: attr(),
     };
 
     MessageTrackingValue.modelName = 'mail.message_tracking_value';
@@ -169,4 +191,3 @@ function factory(dependencies) {
 }
 
 registerNewModel('mail.message_tracking_value', factory);
-    

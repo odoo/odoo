@@ -26,15 +26,15 @@ MockServer.include({
      * @returns {Object[]}
      */
      _mockMailMessageMessageFormat(ids) {
-        const responses = this._super(...arguments);
-        for (const response of responses) {
+        const messageFormat = this._super(...arguments);
+        for (const formatter of messageFormat) {
             const rating = this._getRecords('rating.rating', [
-                ['message_id', '=', response.id],
+                ['message_id', '=', formatter.id],
             ]);
             if (rating.length > 0) {
-                response.rating_img = "/rating/static/src/img/rating_" + rating[0].rating + ".png";
+                formatter.rating_val = rating[0].rating;
             }
         }
-        return responses;
+        return messageFormat;
     },
 });

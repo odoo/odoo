@@ -19,16 +19,20 @@ This module allows a customer to give rating.
     'auto_install': False,
     'assets': {
         'web.assets_backend': [
+            'rating/static/src/components/thread_needaction_preview/thread_needaction_preview.scss',
+            'rating/static/src/components/thread_preview/thread_preview.scss',
             'rating/static/src/models/message/message.js',
         ],
         'web.assets_frontend': [
             'rating/static/src/scss/**/*',
         ],
+        'web.tests_assets': [
+            'rating/static/tests/helpers/mock_models.js',
+            'rating/static/tests/helpers/mock_server.js',
+        ],
         'web.qunit_suite_tests': [
             'rating/static/src/components/thread_needaction_preview/thread_needaction_preview_tests.js',
             'rating/static/src/components/thread_preview/thread_preview_tests.js',
-            'rating/static/tests/helpers/mock_models.js',
-            'rating/static/tests/helpers/mock_server.js',
         ],
         'web.assets_qweb': [
             'rating/static/src/components/thread_needaction_preview/thread_needaction_preview.xml',

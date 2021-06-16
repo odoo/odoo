@@ -334,6 +334,7 @@
             'mail/static/src/model/tests/model_field_command/unlink_tests.js',
             'mail/static/src/models/attachment/attachment_tests.js',
             'mail/static/src/models/message/message_tests.js',
+            'mail/static/src/models/message_tracking_value/message_tracking_value_tests.js',
             'mail/static/src/models/messaging/messaging_tests.js',
             'mail/static/src/models/thread/thread_tests.js',
             'mail/static/src/utils/throttle/throttle_tests.js',

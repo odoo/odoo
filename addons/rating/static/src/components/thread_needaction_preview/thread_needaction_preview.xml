@@ -2,11 +2,9 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ThreadNeedactionPreview" t-inherit-mode="extension">
         <xpath expr="//*[hasclass('o_ThreadNeedactionPreview_messageBody')]" position="replace">
-            <t t-if="thread.lastNeedactionMessageAsOriginThread and thread.lastNeedactionMessageAsOriginThread.ratingImg">
-                <span class="o_ThreadNeedactionPreview_rating_text">Rating:</span>
-                <span class="o_ThreadNeedactionPreview_rating_image">
-                    <img height="17px" t-att-src="thread.lastNeedactionMessageAsOriginThread.ratingImg"/>
-                </span>
+            <t t-if="thread.lastNeedactionMessageAsOriginThread and thread.lastNeedactionMessageAsOriginThread.ratingImgSource">
+                <span class="o_ThreadNeedactionPreview_ratingText">Rating:</span>
+                <img class="o_ThreadNeedactionPreview_ratingImage" t-att-src="thread.lastNeedactionMessageAsOriginThread.ratingImgSource" alt="Rating Face Image"/>
             </t>
             <t t-else="">$0</t>
         </xpath>

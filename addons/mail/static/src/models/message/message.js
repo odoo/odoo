@@ -125,8 +125,9 @@ function factory(dependencies) {
                 data2.subtype_id = data.subtype_id;
             }
             if ('tracking_value_ids' in data && data.tracking_value_ids) {
-                data2.trackingValues = insertAndReplace(data.tracking_value_ids.map(trackData => 
-                    this.env.models['mail.message_tracking_value'].convertData(trackData)))
+                data2.trackingValues = insertAndReplace(data.tracking_value_ids.map(trackingData => 
+                    this.env.models['mail.message_tracking_value'].convertData(trackingData)
+                ));
             }
             return data2;
         }

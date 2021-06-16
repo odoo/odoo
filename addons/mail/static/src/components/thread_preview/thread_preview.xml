@@ -49,24 +49,30 @@
                                 />
                             </t>
                             <span class="o_ThreadPreview_messageBody">
+                                <t t-if="!thread.lastMessage or thread.lastMessage.trackingValues.length == 0">
+                                    <t t-esc="inlineLastMessageBody"/>
+                                </t>
                                 <t t-if="thread.lastMessage and thread.lastMessage.trackingValues.length > 0">
                                     <span class="o_ThreadPreview_trackingValue">
                                         <span class="o_ThreadPreview_trackingValueFieldName">
-                                            <t t-esc="thread.lastMessage.trackingValues[0].changedField"/>
+                                            <t t-if="thread.lastMessage.trackingValues[0].changedFieldAsString">
+                                                <t t-esc="thread.lastMessage.trackingValues[0].changedFieldAsString"/>
+                                            </t>
                                         </span>
                                         <span class="o_ThreadPreview_trackingValueOldValue">
-                                            <t t-esc="thread.lastMessage.trackingValues[0].oldValue"/>
+                                            <t t-if="thread.lastMessage.trackingValues[0].oldValueAsString">
+                                                <t t-esc="thread.lastMessage.trackingValues[0].oldValueAsString"/>
+                                            </t>
                                         </span>
                                         <span class="o_ThreadPreview_arrow">
                                             <div class="o_ThreadPreview_trackingValueSeparator fa fa-long-arrow-right" role="img"/>
                                         </span>
                                         <span class="o_ThreadPreview_trackingValueNewValue">
-                                            <t t-esc="thread.lastMessage.trackingValues[0].newValue"/>
+                                            <t t-if="thread.lastMessage.trackingValues[0].newValueAsString">
+                                                <t t-esc="thread.lastMessage.trackingValues[0].newValueAsString"/>
+                                            </t>
                                         </span>
                                     </span>
-                                </t>
-                                <t t-else="">
-                                    <t t-esc="inlineLastMessageBody"/>
                                 </t>
                             </span>
                         </span>

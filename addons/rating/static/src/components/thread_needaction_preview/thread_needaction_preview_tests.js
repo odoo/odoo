@@ -79,13 +79,13 @@ QUnit.test('rating value displayed on the systray', async function (assert) {
         "should have a ThreadNeedactionPreview in the body"
     );
     assert.strictEqual(
-        document.querySelector('.o_ThreadNeedactionPreview_rating_text').textContent,
+        document.querySelector('.o_ThreadNeedactionPreview_ratingText').textContent,
         "Rating:",
         "should display the correct content (Rating:)"
     );
     assert.containsOnce(
         document.body,
-        '.o_ThreadNeedactionPreview_rating_image',
+        '.o_ThreadNeedactionPreview_ratingImage',
         "should have a rating image in the body"
     );
 });

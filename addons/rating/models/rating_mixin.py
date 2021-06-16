@@ -191,7 +191,7 @@ class RatingMixin(models.AbstractModel):
         else:
             rating = self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', '=', self.ids[0])], limit=1)
         if rating:
-            rating.write({'rating': rate, 'feedback': feedback, 'consumed': True,})
+            rating.write({'rating': rate, 'feedback': feedback, 'consumed': True})
             if hasattr(self, 'message_post'):
                 feedback = tools.plaintext2html(feedback or '')
                 message = self.message_post(
