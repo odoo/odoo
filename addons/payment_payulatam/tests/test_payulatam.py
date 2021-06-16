@@ -3,42 +3,53 @@
 from freezegun import freeze_time
 
 from odoo.exceptions import ValidationError
+from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
-from .common import PayulatamCommon
+from .common import PayULatamCommon
 from ..controllers.main import PayuLatamController
 from ..models.payment_acquirer import SUPPORTED_CURRENCIES
 
 
 @tagged('post_install', '-at_install')
-class PayUlatamTest(PayulatamCommon):
+class PayULatamTest(PayULatamCommon):
 
-    def test_compatible_acquirers(self):
-        for curr in SUPPORTED_CURRENCIES:
-            currency = self._prepare_currency(curr)
-            acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-                partner_id=self.partner.id,
-                company_id=self.company.id,
-                currency_id=currency.id,
+    def test_compatibility_with_supported_currencies(self):
+        """ Test that the PayULatam acquirer is compatible with all supported currencies. """
+        for supported_currency_code in SUPPORTED_CURRENCIES:
+            supported_currency = self._prepare_currency(supported_currency_code)
+            compatible_acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+                self.company.id, self.partner.id, currency_id=supported_currency.id,
             )
-            self.assertIn(self.payulatam, acquirers)
+            self.assertIn(self.payulatam, compatible_acquirers)
 
-        acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-            partner_id=self.partner.id,
-            company_id=self.company.id,
-            currency_id=self.currency_euro.id,
+    def test_incompatibility_with_unsupported_currency(self):
+        """ Test that the PayULatam acquirer is not compatible with an unsupported currency. """
+        compatible_acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+            self.company.id, self.partner.id, currency_id=self.currency_euro.id,
         )
-        self.assertNotIn(self.payulatam, acquirers)
+        self.assertNotIn(self.payulatam, compatible_acquirers)
 
-    # freeze time for consistent singularize_prefix behavior during the test
-    @freeze_time("2011-11-02 12:00:21")
-    def test_reference(self):
-        tx = self.create_transaction(flow="redirect", reference="")
-        self.assertEqual(tx.reference, "tx-20111102120021",
-            "Payulatam: transaction reference wasn't correctly singularized.")
+    @freeze_time('2011-11-02 12:00:21')  # Freeze time for consistent singularization behavior
+    def test_reference_is_singularized(self):
+        """ Test singularization of reference prefixes. """
+        reference = self.env['payment.transaction']._compute_reference(self.payulatam.provider)
+        self.assertEqual(
+            reference, 'tx-20111102120021', "transaction reference was not correctly singularized"
+        )
+
+    @freeze_time('2011-11-02 12:00:21')  # Freeze time for consistent singularization behavior
+    def test_reference_is_computed_based_on_document_name(self):
+        """ Test computation of reference prefixes based on the provided invoice. """
+        invoice = self.env['account.move'].create({})
+        reference = self.env['payment.transaction']._compute_reference(
+            self.payulatam.provider, invoice_ids=[Command.set([invoice.id])]
+        )
+        self.assertEqual(reference, 'MISC/2011/11/0001-20111102120021')
 
     def test_redirect_form_values(self):
+        """ Test the values of the redirect form inputs. """
         tx = self.create_transaction(flow='redirect')
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = tx._get_processing_values()
@@ -56,13 +67,15 @@ class PayUlatamTest(PayulatamCommon):
             'buyerEmail': self.partner.email,
             'buyerFullName': self.partner.name,
             'responseUrl': self._build_url(PayuLatamController._return_url),
-            'test': str(1), # test is always done in test mode.
+            'test': str(1),  # testing is always performed in test mode
         }
         expected_values['signature'] = self.payulatam._payulatam_generate_sign(
-            expected_values, incoming=False)
+            expected_values, incoming=False
+        )
 
-        self.assertEqual(form_info['action'],
-            'https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/')
+        self.assertEqual(
+            form_info['action'], 'https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/'
+        )
         self.assertDictEqual(form_info['inputs'], expected_values)
 
     def test_feedback_processing(self):

@@ -20,7 +20,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     @api.model
-    def _compute_reference(self, provider, prefix=None, **kwargs):
+    def _compute_reference(self, provider, prefix=None, separator='-', **kwargs):
         """ Override of payment to ensure that Ogone requirements for references are satisfied.
 
         Ogone requirements for references are as follows:
@@ -31,12 +31,20 @@ class PaymentTransaction(models.Model):
 
         :param str provider: The provider of the acquirer handling the transaction
         :param str prefix: The custom prefix used to compute the full reference
+        :param str separator: The custom separator used to separate the prefix from the suffix
         :return: The unique reference for the transaction
         :rtype: str
         """
         if provider != 'ogone':
             return super()._compute_reference(provider, prefix=prefix, **kwargs)
 
+        if not prefix:
+            # If no prefix is provided, it could mean that a module has passed a kwarg intended for
+            # the `_compute_reference_prefix` method, as it is only called if the prefix is empty.
+            # We call it manually here because singularizing the prefix would generate a default
+            # value if it was empty, hence preventing the method from ever being called and the
+            # transaction from received a reference named after the related document.
+            prefix = self.sudo()._compute_reference_prefix(provider, separator, **kwargs) or None
         prefix = payment_utils.singularize_reference_prefix(prefix=prefix, max_length=40)
         return super()._compute_reference(provider, prefix=prefix, **kwargs)
 
