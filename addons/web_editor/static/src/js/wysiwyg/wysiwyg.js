@@ -555,6 +555,7 @@ const Wysiwyg = Widget.extend({
                 forceNewWindow: this.options.linkForceNewWindow,
                 wysiwyg: this,
             }, this.$editable[0], {}, undefined, options.link);
+            const restoreSelection = preserveCursor(this.odooEditor.document);
             linkDialog.open();
             linkDialog.on('save', this, data => {
                 const linkWidget = linkDialog.linkWidget;
@@ -566,14 +567,19 @@ const Wysiwyg = Widget.extend({
                     data.rel = 'ugc';
                 }
                 linkWidget.applyLinkToDom(data);
-
-                getDeepRange(this.odooEditor.editable, {range: data.range, select: true});
                 this.odooEditor.historyStep();
                 // At this point, the dialog is still open and prevents the
                 // focus in the editable, even though that is where the
                 // selection is. This waits so the dialog is destroyed when we
                 // set the focus.
-                setTimeout(() => this.odooEditor.editable.focus(), 0);
+                setTimeout(() => this.odooEditor.document.getSelection().collapseToEnd(), 0);
+            });
+            linkDialog.on('closed', this, function () {
+                // If the linkDialog content has been saved
+                // the previous selection in not relevant anymore.
+                if (linkDialog.destroyAction !== 'save') {
+                    restoreSelection();
+                }
             });
         }
     },
@@ -1137,6 +1143,24 @@ const Wysiwyg = Widget.extend({
         const commands = [
             {
                 groupName: 'Basic blocks',
+                title: 'Quote',
+                description: 'Add a blockquote section.',
+                fontawesome: 'fa-quote-right',
+                callback: () => {
+                    this.odooEditor.execCommand('setTag', 'blockquote');
+                },
+            },
+            {
+                groupName: 'Basic blocks',
+                title: 'Code',
+                description: 'Add a code section.',
+                fontawesome: 'fa-code',
+                callback: () => {
+                    this.odooEditor.execCommand('setTag', 'pre');
+                },
+            },
+            {
+                groupName: 'Navigation',
                 title: 'Link',
                 description: 'Add a link.',
                 fontawesome: 'fa-link',
@@ -1145,21 +1169,34 @@ const Wysiwyg = Widget.extend({
                 },
             },
             {
-                groupName: 'Basic blocks',
+                groupName: 'Navigation',
                 title: 'Button',
                 description: 'Add a button.',
                 fontawesome: 'fa-link',
                 callback: () => {
                     this.toggleLinkTools({forceDialog: true});
+                    // Force the button style after the link modal is open.
+                    setTimeout(() => {
+                        $(".o_link_dialog .link-style[value=primary]").click();
+                    }, 150);
                 },
             },
             {
-                groupName: 'Basic blocks',
+                groupName: 'Medias',
                 title: 'Image',
-                description: 'Add an image.',
+                description: 'Insert an image.',
                 fontawesome: 'fa-file-image-o',
                 callback: () => {
                     this.openMediaDialog();
+                },
+            },
+            {
+                groupName: 'Medias',
+                title: 'Video',
+                description: 'Insert a video.',
+                fontawesome: 'fa-file-video-o',
+                callback: () => {
+                    this.openMediaDialog({noVideos: false, noImages: true, noIcons: true, noDocuments: true});
                 },
             },
         ];
@@ -1181,7 +1218,7 @@ const Wysiwyg = Widget.extend({
             {
                 groupName: 'Website',
                 title: 'Alert',
-                description: 'Complete this description.',
+                description: 'Insert an alert snippet.',
                 fontawesome: 'fa-info',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_alert"]');
@@ -1190,7 +1227,7 @@ const Wysiwyg = Widget.extend({
             {
                 groupName: 'Website',
                 title: 'Rating',
-                description: 'Complete this description.',
+                description: 'Insert a rating snippet.',
                 fontawesome: 'fa-star-half-o',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_rating"]');
@@ -1199,7 +1236,7 @@ const Wysiwyg = Widget.extend({
             {
                 groupName: 'Website',
                 title: 'Card',
-                description: 'Complete this description.',
+                description: 'Insert a card snippet.',
                 fontawesome: 'fa-sticky-note',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_card"]');
@@ -1208,7 +1245,7 @@ const Wysiwyg = Widget.extend({
             {
                 groupName: 'Website',
                 title: 'Share',
-                description: 'Complete this description.',
+                description: 'Insert a share snippet.',
                 fontawesome: 'fa-share-square-o',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_share"]');
@@ -1217,7 +1254,7 @@ const Wysiwyg = Widget.extend({
             {
                 groupName: 'Website',
                 title: 'Text Highlight',
-                description: 'Complete this description.',
+                description: 'Insert a text Highlight snippet.',
                 fontawesome: 'fa-sticky-note',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_text_highlight"]');
@@ -1226,7 +1263,7 @@ const Wysiwyg = Widget.extend({
             {
                 groupName: 'Website',
                 title: 'Chart',
-                description: 'Complete this description.',
+                description: 'Insert a chart snippet.',
                 fontawesome: 'fa-bar-chart',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_chart"]');
@@ -1235,7 +1272,7 @@ const Wysiwyg = Widget.extend({
             {
                 groupName: 'Website',
                 title: 'Progress Bar',
-                description: 'Complete this description.',
+                description: 'Insert a progress bar snippet.',
                 fontawesome: 'fa-spinner',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_progress_bar"]');
@@ -1244,7 +1281,7 @@ const Wysiwyg = Widget.extend({
             {
                 groupName: 'Website',
                 title: 'Badge',
-                description: 'Complete this description.',
+                description: 'Insert a badge snippet.',
                 fontawesome: 'fa-tags',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_badge"]');
@@ -1253,13 +1290,22 @@ const Wysiwyg = Widget.extend({
             {
                 groupName: 'Website',
                 title: 'Blockquote',
-                description: 'Complete this description.',
+                description: 'Insert a blockquote snippet.',
                 fontawesome: 'fa-quote-left',
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_blockquote"]');
                 },
             },
-        ]
+            {
+                groupName: 'Website',
+                title: 'Separator',
+                description: 'Insert an horizontal separator sippet.',
+                fontawesome: 'fa-minus',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_hr"]');
+                },
+            },
+        ];
     },
 
     /**
