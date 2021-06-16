@@ -17,6 +17,12 @@ describe('Autostep', () => {
             contentBefore: '<p>a[]</p>',
             stepFunction: async editor => {
                 const originalHistoryLength = editor._historySteps.length;
+
+                // Wait for some plugin (e.g. QWEB) that currently use a
+                // setTimeout in order to wait for the editable to be inserted
+                // in the DOM to perform logic that reset the autostep timeout.
+                await timeoutPromise(20);
+
                 appendSpan(editor.editable.querySelector('p'));
                 await timeoutPromise(20).then(() => {
                     window.chai.assert.strictEqual(
@@ -66,6 +72,12 @@ describe('Autostep', () => {
             contentBefore: '<p>a[]</p>',
             stepFunction: async editor => {
                 const originalHistoryLength = editor._historySteps.length;
+
+                // Wait for some plugin (e.g. QWEB) that currently use a
+                // setTimeout in order to wait for the editable to be inserted
+                // in the DOM to perform logic that reset the autostep timeout.
+                await timeoutPromise(20);
+
                 editor.automaticStepUnactive('test');
                 appendSpan(editor.editable.querySelector('p'));
                 editor.automaticStepActive('test');
@@ -113,6 +125,11 @@ describe('Autostep', () => {
             contentBefore: '<p>a[]</p>',
             stepFunction: async editor => {
                 const originalHistoryLength = editor._historySteps.length;
+
+                // Wait for some plugin (e.g. QWEB) that currently use a
+                // setTimeout in order to wait for the editable to be inserted
+                // in the DOM to perform logic that reset the autostep timeout.
+                await timeoutPromise(20);
 
                 editor.automaticStepUnactive('test');
                 editor.automaticStepUnactive('test2');
