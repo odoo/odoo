@@ -499,8 +499,6 @@ actual arch.
                         pass
             if not values.get('key') and values.get('type') == 'qweb':
                 values['key'] = "gen_key.%s" % str(uuid.uuid4())[:6]
-                if values.get('model'):
-                    values['key'] = "%s.gen_key_%s" % (values.get('model'), str(uuid.uuid4())[:6])
             if not values.get('name'):
                 values['name'] = "%s %s" % (values.get('model'), values['type'])
             # Create might be called with either `arch` (xml files), `arch_base` (form view) or `arch_db`.
