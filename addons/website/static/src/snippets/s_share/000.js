@@ -20,6 +20,11 @@ const ShareWidget = publicWidget.Widget.extend({
                 return href.replace(urlRegex, function (match, a, b, c) {
                     return a + url + c;
                 }).replace(titleRegex, function (match, a, b, c) {
+                    if (href.indexOf('https://wa.me/?text') !== -1) {
+                        // For WhatsApp, everything needs to be sent via 'text' parameter. Page URL will
+                        // be parsed and converted into hyperlink automatically by the platform
+                        return a + title + url + c;
+                    }
                     return a + title + c;
                 });
             });
