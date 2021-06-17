@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+  crm:
+    container_name: wishpond_crm
+    build: ./
+    depends_on:
+      - postgres
+    ports:
+      - "80:8069"
+    environment:
+      - PGHOST=postgres
+      - PGUSER=crm
+      - PGPASSWORD=password
+    volumes:
+      - wishpond_crm:/var/lib/odoo
+      - ./deployment/docker/odoo.conf:/etc/odoo/odoo.conf
+
+  postgres:
+    container_name: wishpond_postgres
+    image: postgres:12.7
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=crm
+      - POSTGRES_PASSWORD=password
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres:/var/lib/postgresql/data/pgdata
+
+volumes:
+  wishpond_crm:
+  postgres:
