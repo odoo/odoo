@@ -17,7 +17,7 @@ This module adds several features to the Point of Sale that are specific to rest
 
 """,
     'depends': ['point_of_sale'],
-    'website': 'https://www.odoo.com/page/point-of-sale-restaurant',
+    'website': 'https://www.odoo.com/app/point-of-sale-restaurant',
     'data': [
         'security/ir.model.access.csv',
         'views/pos_order_views.xml',
