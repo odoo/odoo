@@ -168,7 +168,8 @@ class Orderpoint(models.Model):
     def _quantity_in_progress(self):
         res = super(Orderpoint, self)._quantity_in_progress()
         for poline in self.env['purchase.order.line'].search([('state','in',('draft','sent','to approve')),('orderpoint_id','in',self.ids)]):
-            res[poline.orderpoint_id.id] += poline.product_uom._compute_quantity(poline.product_qty, poline.orderpoint_id.product_uom, round=False)
+            if poline.product_uom.category_id == poline.orderpoint_id.product_uom.category_id:
+                res[poline.orderpoint_id.id] += poline.product_uom._compute_quantity(poline.product_qty, poline.orderpoint_id.product_uom, round=False)
         return res
 
     def action_view_purchase(self):
@@ -186,6 +187,12 @@ class Orderpoint(models.Model):
         result['domain'] = "[('id','in',%s)]" % (purchase_ids.ids)
 
         return result
+
+    def write(self, vals):
+        if vals.get('product_id'):
+            po_lines = self.env['purchase.order.line'].search([('state','in',('draft','sent','to approve')),('orderpoint_id','in',self.ids)])
+            po_lines.write({'orderpoint_id': False})
+        return super(Orderpoint, self).write(vals)
 
 
 class ProductionLot(models.Model):
