@@ -1418,6 +1418,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     _renderColorPalette: function () {
         const options = {
             selectedColor: this._value,
+            $editable: this.$target.closest('.o_editable'),
         };
         if (this.options.dataAttributes.excluded) {
             options.excluded = this.options.dataAttributes.excluded.replace(/ /g, '').split(',');
