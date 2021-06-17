@@ -29,7 +29,8 @@ var exportVariable = (function (exports) {
     };
 
     const URL_REGEX = /((?:https?:\/\/)?(?:[a-z0-9-]{1,63}\.){1,2}[a-z]{2,15}(?:\/[^\s]*)?)/gi;
-    const URL_REGEX_WITH_INFOS = /((https?:\/\/)?([a-z0-9-]{1,63}\.){1,2}[a-z]{2,15}(\/[^\s]*)?)/gi;
+    const URL_REGEX_WITH_INFOS = /((https?:\/\/)?([a-z0-9-]{1,63}\.){1,2}[a-z]{2,15}(\/[^\s]*)?(\s|$))/gi;
+    const YOUTUBE_URL_GET_VIDEO_ID = /^(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:youtube\.com|youtu\.be)(?:\/(?:[\w-]+\?v=|embed\/|v\/)?)([^\s?&#]+)(?:\S+)?$/i;
 
     //------------------------------------------------------------------------------
     // Position and sizes
@@ -260,6 +261,7 @@ var exportVariable = (function (exports) {
      * Returns a list of all the ancestors nodes of the provided node.
      *
      * @param {Node} node
+     * @param {Node} [editable] include to prevent bubbling up further than the editable.
      * @returns {HTMLElement[]}
      */
     function ancestors(node, editable) {
@@ -794,6 +796,7 @@ var exportVariable = (function (exports) {
         'UL',
         // The following elements are not in the W3C list, for some reason.
         'SELECT',
+        'OPTION',
         'TR',
         'TD',
         'TBODY',
@@ -850,10 +853,7 @@ var exportVariable = (function (exports) {
      */
     function isBold(node) {
         const fontWeight = +getComputedStyle(closestElement(node)).fontWeight;
-        return (
-            fontWeight > 500 ||
-            fontWeight > +getComputedStyle(closestBlock(node)).fontWeight
-        );
+        return fontWeight > 500 || fontWeight > +getComputedStyle(closestBlock(node)).fontWeight;
     }
 
     function isUnbreakable(node) {
@@ -1256,6 +1256,21 @@ var exportVariable = (function (exports) {
         sel.getRangeAt(0).insertNode(txt);
         restore();
         setCursor(...boundariesOut(txt), false);
+    }
+
+    /**
+     * Remove node from the DOM while preserving their contents if any.
+     *
+     * @param {Node} node
+     * @returns {Node[]}
+     */
+    function unwrapContents(node) {
+        const contents = [...node.childNodes];
+        for (const child of contents) {
+            node.parentNode.insertBefore(child, node);
+        }
+        node.parentNode.removeChild(node);
+        return contents;
     }
 
     /**
@@ -1838,6 +1853,9 @@ var exportVariable = (function (exports) {
         }
 
         return offset;
+    }
+    function getClosestNotEditable(node, root) {
+        return node && ancestors(node, root).includes(root) && node.closest('[contenteditable=false]');
     }
 
     Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
@@ -2589,11 +2607,30 @@ var exportVariable = (function (exports) {
         let nodeToInsert;
         const insertedNodes = [...fakeEl.childNodes];
         while ((nodeToInsert = fakeEl.childNodes[0])) {
+            if (isBlock(nodeToInsert) && !isBlock(startNode)) {
+                // Split blocks at the edges if inserting new blocks (preventing
+                // <p><p>text</p></p> scenarios).
+                while (startNode.parentElement !== editor.editable && !isBlock(startNode.parentElement)) {
+                    let offset = childNodeIndex(startNode);
+                    if (!insertBefore) {
+                        offset += 1;
+                    }
+                    if (offset) {
+                        const [left, right] = splitElement(startNode.parentElement, offset);
+                        startNode = insertBefore ? right : left;
+                    } else {
+                        startNode = startNode.parentElement;
+                    }
+                }
+            }
             if (insertBefore) {
                 startNode.before(nodeToInsert);
                 insertBefore = false;
             } else {
                 startNode.after(nodeToInsert);
+            }
+            if (isShrunkBlock(startNode)) {
+                startNode.remove();
             }
             startNode = nodeToInsert;
         }
@@ -2917,10 +2954,14 @@ var exportVariable = (function (exports) {
             const blocks = new Set();
 
             for (const node of getTraversedNodes(editor.editable)) {
-                const block = closestBlock(node);
-                if (!['OL', 'UL'].includes(block.tagName)) {
-                    const ublock = block.closest('ol, ul');
-                    ublock && getListMode(ublock) == mode ? li.add(block) : blocks.add(block);
+                if (node.nodeType === Node.TEXT_NODE && !isVisibleStr(node)) {
+                    node.remove();
+                } else {
+                    const block = closestBlock(node);
+                    if (!['OL', 'UL'].includes(block.tagName)) {
+                        const ublock = block.closest('ol, ul');
+                        ublock && getListMode(ublock) == mode ? li.add(block) : blocks.add(block);
+                    }
                 }
             }
 
@@ -3354,7 +3395,7 @@ var exportVariable = (function (exports) {
             this.el.style.width = `${this.options.width}px`;
             document.body.append(this.el);
 
-            this.options.editable.addEventListener('keydown', this.onKeydown.bind(this), true);
+            this.addKeydownTrigger('/', { commands: this.options.commands });
 
             this._mainWrapperElement = document.createElement('div');
             this._mainWrapperElement.className = 'oe-commandbar-mainWrapper';
@@ -3413,8 +3454,17 @@ var exportVariable = (function (exports) {
                             });
                         });
                     }
-
-                    commandElWrapper.innerHTML = `
+                    let commandImgEl, commandTitleEl, commandDescriptionEl;
+                    switch (command.style) {
+                        case 'small':
+                            commandTitleEl = document.createElement('div');
+                            commandTitleEl.setAttribute('class', 'oe-commandbar-commandSmall');
+                            commandTitleEl.setAttribute('title', command.description);
+                            commandTitleEl.innerText = command.title;
+                            commandElWrapper.append(commandTitleEl);
+                            break;
+                        default:
+                            commandElWrapper.innerHTML = `
                     <div class="oe-commandbar-commandLeftCol">
                         <i class="oe-commandbar-commandImg fa"></i>
                     </div>
@@ -3423,18 +3473,19 @@ var exportVariable = (function (exports) {
                         </div>
                         <div class="oe-commandbar-commandDescription">
                         </div>
-                    </div>
-                `;
-                    const commandImgEl = commandElWrapper.querySelector('.oe-commandbar-commandImg');
-                    const commandTitleEl = commandElWrapper.querySelector(
-                        '.oe-commandbar-commandTitle',
-                    );
-                    const commandDescriptionEl = commandElWrapper.querySelector(
-                        '.oe-commandbar-commandDescription',
-                    );
-                    commandTitleEl.innerText = command.title;
-                    commandDescriptionEl.innerText = command.description;
-                    commandImgEl.classList.add(command.fontawesome);
+                    </div>`;
+                            commandImgEl = commandElWrapper.querySelector('.oe-commandbar-commandImg');
+                            commandTitleEl = commandElWrapper.querySelector(
+                                '.oe-commandbar-commandTitle',
+                            );
+                            commandDescriptionEl = commandElWrapper.querySelector(
+                                '.oe-commandbar-commandDescription',
+                            );
+                            commandTitleEl.innerText = command.title;
+                            commandDescriptionEl.innerText = command.description;
+                            commandImgEl.classList.add(command.fontawesome);
+                    }
+
                     groupWrapperEl.append(commandElWrapper);
 
                     const commandElWrapperMouseMove = () => {
@@ -3450,122 +3501,163 @@ var exportVariable = (function (exports) {
                     commandElWrapper.addEventListener('mousemove', commandElWrapperMouseMove);
                     commandElWrapper.addEventListener(
                         'mousedown',
-                        event => {
+                        ev => {
+                            ev.preventDefault();
+                            ev.stopImmediatePropagation();
                             this._currentValidate();
-                            event.preventDefault();
-                            event.stopPropagation();
                         },
                         true,
                     );
                 }
             }
+            this._resetPosition();
         }
 
-        onKeydown(event) {
-            const selection = document.getSelection();
-            if (!selection.isCollapsed || !selection.rangeCount) return;
-
-            if (event.key === '/' && !this._active) {
-                this.options.onActivate && this.options.onActivate();
-
-                const showOnceOnKeyup = () => {
-                    this.show();
-                    event.target.removeEventListener('keyup', showOnceOnKeyup, true);
-                    initialTarget = event.target;
-                    oldValue = event.target.innerText;
-                };
-                event.target.addEventListener('keyup', showOnceOnKeyup, true);
-                this._active = true;
-                this.render(this.options.commands);
-                this._resetPosition();
-
-                let initialTarget;
-                let oldValue;
-
-                const keyup = event => {
-                    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-                        event.preventDefault();
-                        return;
+        addKeydownTrigger(triggerKey, options) {
+            this.options.editable.addEventListener(
+                'keydown',
+                ev => {
+                    const selection = this.options.document.getSelection();
+                    if (!selection.isCollapsed || !selection.rangeCount) return;
+                    if (ev.key === triggerKey && !this._active) {
+                        this.open({ ...options, openOnKeyupTarget: ev.target });
                     }
-                    if (!initialTarget) return;
-                    const diff = patienceDiff(
-                        oldValue.split(''),
-                        initialTarget.innerText.split(''),
-                        true,
-                    );
-                    this._lastText = diff.bMove.join('').trim();
+                },
+                true,
+            );
+        }
 
-                    if (this._lastText.match(/\s/)) {
-                        this._stop();
-                        return;
-                    }
-                    const term = this._lastText;
+        open(openOptions) {
+            this.options.onActivate && this.options.onActivate();
+            this._currentOpenOptions = openOptions;
 
-                    this._currentFilteredCommands = this._filter(term);
-                    this.render(this._currentFilteredCommands);
-                    this._resetPosition();
-                };
-                const keydown = e => {
-                    if (e.key === 'Enter') {
-                        e.stopImmediatePropagation();
-                        this._currentValidate();
-                        e.preventDefault();
-                    } else if (e.key === 'Escape') {
-                        e.stopImmediatePropagation();
-                        this._stop();
-                        e.preventDefault();
-                    } else if (e.key === 'Backspace' && !this._lastText) {
-                        this._stop();
-                    } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        e.stopImmediatePropagation();
+            const openOnKeyupTarget = this._currentOpenOptions.openOnKeyupTarget;
+            const onValueChangeFunction = term =>
+                this._currentOpenOptions.valueChangeFunction
+                    ? this._currentOpenOptions.valueChangeFunction(term)
+                    : this._filter(term, this._currentOpenOptions.commands);
 
-                        const index = this._currentFilteredCommands.findIndex(
-                            c => c === this._currentSelectedCommand,
-                        );
-                        if (!this._currentFilteredCommands.length || index === -1) {
-                            this._currentSelectedCommand = undefined;
-                        } else {
-                            const n = e.key === 'ArrowDown' ? 1 : -1;
-                            const newIndex = cycle(index + n, this._currentFilteredCommands.length - 1);
-                            this._currentSelectedCommand = this._currentFilteredCommands[newIndex];
-                        }
-                        e.preventDefault();
-                        this.render(this._currentFilteredCommands);
-                    }
-                };
-                const mousemove = () => {
-                    this._hoverActive = true;
-                };
+            const showOnceOnKeyup = () => {
+                this.show();
+                openOnKeyupTarget.removeEventListener('keyup', showOnceOnKeyup, true);
+                initialTarget = openOnKeyupTarget;
+                this._initialValue = openOnKeyupTarget.innerText;
+            };
+            openOnKeyupTarget.addEventListener('keyup', showOnceOnKeyup, true);
 
-                this._stop = () => {
-                    this._active = false;
-                    this.hide();
-                    this._currentSelectedCommand = undefined;
+            this._active = true;
+            this._currentFilteredCommands = this._currentOpenOptions.commands;
+            this.render(this._currentOpenOptions.commands);
 
-                    document.removeEventListener('mousedown', this._stop);
-                    document.removeEventListener('keyup', keyup);
-                    document.removeEventListener('keydown', keydown, true);
-                    document.removeEventListener('mousemove', mousemove);
+            let initialTarget;
 
-                    this.options.onStop && this.options.onStop();
-                };
-                this._currentValidate = () => {
-                    const command = this._currentFilteredCommands.find(
+            const keyup = async ev => {
+                if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+                    ev.preventDefault();
+                    return;
+                }
+                if (!initialTarget) return;
+                const diff = patienceDiff(
+                    this._initialValue.split(''),
+                    initialTarget.innerText.split(''),
+                    true,
+                );
+                this._lastText = diff.bMove.join('');
+                if (this._lastText.match(/\s/) && this._currentOpenOptions.closeOnSpace !== false) {
+                    this._stop();
+                    return;
+                }
+                const term = this._lastText;
+
+                this._currentFilteredCommands =
+                    term === '' ? this._currentOpenOptions.commands : await onValueChangeFunction(term);
+                this.render(this._currentFilteredCommands);
+            };
+            const keydown = ev => {
+                if (ev.key === 'Enter') {
+                    ev.stopImmediatePropagation();
+                    this._currentValidate();
+                    ev.preventDefault();
+                } else if (ev.key === 'Escape') {
+                    ev.stopImmediatePropagation();
+                    this._stop();
+                    ev.preventDefault();
+                } else if (ev.key === 'Backspace' && !this._lastText) {
+                    this._stop();
+                } else if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+                    ev.preventDefault();
+                    ev.stopImmediatePropagation();
+
+                    const index = this._currentFilteredCommands.findIndex(
                         c => c === this._currentSelectedCommand,
                     );
-                    if (command) {
-                        this.options.preValidate && this.options.preValidate();
-                        command.callback();
-                        this.options.postValidate && this.options.postValidate();
+                    if (!this._currentFilteredCommands.length || index === -1) {
+                        this._currentSelectedCommand = undefined;
+                    } else {
+                        const n = ev.key === 'ArrowDown' ? 1 : -1;
+                        const newIndex = cycle(index + n, this._currentFilteredCommands.length - 1);
+                        this._currentSelectedCommand = this._currentFilteredCommands[newIndex];
                     }
-                    this._stop();
-                };
-                document.addEventListener('mousedown', this._stop);
-                document.addEventListener('keyup', keyup);
-                document.addEventListener('keydown', keydown, true);
+                    ev.preventDefault();
+                    this.render(this._currentFilteredCommands);
+                }
+            };
+            const mousemove = () => {
+                this._hoverActive = true;
+            };
+
+            this._stop = () => {
+                this._active = false;
+                this.hide();
+                this._currentSelectedCommand = undefined;
+
+                this.options.document.removeEventListener('keyup', keyup);
+                this.options.document.removeEventListener('keydown', keydown, true);
+                this.options.document.removeEventListener('mousemove', mousemove);
+                this.options.document.removeEventListener('mousedown', this._stop);
+                if (document !== this.options.document) {
+                    document.removeEventListener('mousemove', mousemove);
+                    document.removeEventListener('mousedown', this._stop);
+                }
+
+                this.options.onStop && this.options.onStop();
+            };
+            this._currentValidate = () => {
+                const command = this._currentFilteredCommands.find(
+                    c => c === this._currentSelectedCommand,
+                );
+                if (command) {
+                    !command.isIntermediateStep &&
+                        this.options.preValidate &&
+                        this.options.preValidate();
+                    command.callback();
+                    !command.isIntermediateStep &&
+                        this.options.postValidate &&
+                        this.options.postValidate();
+                }
+                !command.isIntermediateStep && this._stop();
+            };
+            this.options.document.addEventListener('keyup', keyup);
+            this.options.document.addEventListener('keydown', keydown, true);
+            this.options.document.addEventListener('mousemove', mousemove);
+            this.options.document.addEventListener('mousedown', this._stop);
+            // If the Golbal document is diferent than the provided options.document,
+            // which happend when the editor is inside an Iframe.
+            // We need to listen to the mouse event on both document
+            // to be sure the command bar will always close when clicking outside of it.
+            if (document !== this.options.document) {
                 document.addEventListener('mousemove', mousemove);
+                document.addEventListener('mousedown', this._stop);
             }
+        }
+
+        nextOpenOptions(openOptions) {
+            this._currentOpenOptions = openOptions;
+            this._initialValue = (
+                this._currentOpenOptions.openOnKeyupTarget || this.options.editable
+            ).innerText;
+            this._currentFilteredCommands = this._currentOpenOptions.commands;
+            this.render(this._currentOpenOptions.commands);
         }
 
         show() {
@@ -3583,8 +3675,8 @@ var exportVariable = (function (exports) {
         // private
         // -------------------------------------------------------------------------
 
-        _filter(term) {
-            let commands = this.options.commands;
+        _filter(term, commands) {
+            const initalCommands = commands;
             term = term.toLowerCase();
             term = term.replaceAll(/\s/g, '\\s');
             const regex = new RegExp(
@@ -3594,7 +3686,7 @@ var exportVariable = (function (exports) {
                     .join('.*'),
             );
             if (term.length) {
-                commands = this.options.commands.filter(command => {
+                commands = initalCommands.filter(command => {
                     const commandText = (command.groupName + ' ' + command.title).toLowerCase();
                     return commandText.match(regex);
                 });
@@ -3608,7 +3700,12 @@ var exportVariable = (function (exports) {
                 this.hide();
                 return;
             }
-            const { left, top } = position;
+            let { left, top } = position;
+            if (this.options.getContextFromParentRect) {
+                const parentContextRect = this.options.getContextFromParentRect();
+                left += parentContextRect.left;
+                top += parentContextRect.top;
+            }
 
             this.el.style.left = `${left}px`;
             this.el.style.top = `${top}px`;
@@ -3779,6 +3876,68 @@ var exportVariable = (function (exports) {
     const IS_KEYBOARD_EVENT_REDO = ev => ev.key === 'y' && (ev.ctrlKey || ev.metaKey);
     const IS_KEYBOARD_EVENT_BOLD = ev => ev.key === 'b' && (ev.ctrlKey || ev.metaKey);
 
+    const CLIPBOARD_BLACKLISTS = {
+        unwrap: ['.Apple-interchange-newline', 'DIV'], // These elements' children will be unwrapped.
+        remove: ['META', 'STYLE', 'SCRIPT'], // These elements will be removed along with their children.
+    };
+    const CLIPBOARD_WHITELISTS = {
+        nodes: [
+            // Style
+            'P',
+            'H1',
+            'H2',
+            'H3',
+            'H4',
+            'H5',
+            'H6',
+            'BLOCKQUOTE',
+            'PRE',
+            // List
+            'UL',
+            'OL',
+            'LI',
+            // Inline style
+            'I',
+            'B',
+            'U',
+            'EM',
+            'STRONG',
+            // Table
+            'TABLE',
+            'TH',
+            'TBODY',
+            'TR',
+            'TD',
+            // Miscellaneous
+            'IMG',
+            'BR',
+            'A',
+            '.fa',
+        ],
+        classes: [
+            // Media
+            /^float-/,
+            'd-block',
+            'mx-auto',
+            'img-fluid',
+            'img-thumbnail',
+            'rounded',
+            'rounded-circle',
+            /^padding-/,
+            /^shadow/,
+            // Odoo colors
+            /^text-o-/,
+            /^bg-o-/,
+            // Odoo checklists
+            'o_checked',
+            'o_checklist',
+            // Miscellaneous
+            /^btn/,
+            /^fa/,
+        ],
+        attributes: ['class', 'href', 'src'],
+    };
+
     function defaultOptions(defaultObject, object) {
         const newObject = Object.assign({}, defaultObject, object);
         for (const [key, value] of Object.entries(object)) {
@@ -3885,6 +4044,7 @@ var exportVariable = (function (exports) {
 
             this.addDomListener(this.editable, 'keydown', this._onKeyDown);
             this.addDomListener(this.editable, 'input', this._onInput);
+            this.addDomListener(this.editable, 'beforeinput', this._onBeforeInput);
             this.addDomListener(this.editable, 'mousedown', this._onMouseDown);
             this.addDomListener(this.editable, 'mouseup', this._onMouseup);
             this.addDomListener(this.editable, 'paste', this._onPaste);
@@ -4120,7 +4280,9 @@ var exportVariable = (function (exports) {
                     }
                 }
             }
-            this.dispatchEvent(new Event('observerApply'));
+            if (records.length) {
+                this.dispatchEvent(new Event('observerApply'));
+            }
         }
         filterMutationRecords(records) {
             // Save the first attribute in a cache to compare only the first
@@ -4749,9 +4911,17 @@ var exportVariable = (function (exports) {
                 }
             }
         }
-        _removeContenteditableLinks() {
-            for (const node of this.editable.querySelectorAll('a[contenteditable]')) {
-                node.removeAttribute('contenteditable');
+        _resetContenteditableLinks() {
+            if (this._fixLinkMutatedElements) {
+                for (const element of this._fixLinkMutatedElements.wasContenteditableTrue) {
+                    element.setAttribute('contenteditable', 'true');
+                }
+                for (const element of this._fixLinkMutatedElements.wasContenteditableFalse) {
+                    element.setAttribute('contenteditable', 'false');
+                }
+                for (const element of this._fixLinkMutatedElements.wasContenteditableNull) {
+                    element.removeAttribute('contenteditable');
+                }
             }
         }
         _activateContenteditable() {
@@ -4963,6 +5133,7 @@ var exportVariable = (function (exports) {
             this.commandBar = new CommandBar({
                 editable: this.editable,
                 document: this.document,
+                getContextFromParentRect: this.options.getContextFromParentRect,
                 _t: this.options._t,
                 onShow: () => {
                     this.commandbarTablePicker.hide();
@@ -4971,6 +5142,11 @@ var exportVariable = (function (exports) {
                     this._beforeCommandbarStepIndex = this._historySteps.length - 1;
                     this.observerUnactive();
                     for (const element of document.querySelectorAll(this.options.noScrollSelector)) {
+                        element.classList.add('oe-noscroll');
+                    }
+                    for (const element of this.document.querySelectorAll(
+                        this.options.noScrollSelector,
+                    )) {
                         element.classList.add('oe-noscroll');
                     }
                     this.observerActive();
@@ -4984,6 +5160,9 @@ var exportVariable = (function (exports) {
                 onStop: () => {
                     this.observerUnactive();
                     for (const element of document.querySelectorAll('.oe-noscroll')) {
+                        element.classList.remove('oe-noscroll');
+                    }
+                    for (const element of this.document.querySelectorAll('.oe-noscroll')) {
                         element.classList.remove('oe-noscroll');
                     }
                     this.observerActive();
@@ -5162,9 +5341,102 @@ var exportVariable = (function (exports) {
             }
         }
 
+        // PASTING / DROPPING
+
+        /**
+         * Prepare clipboard data (text/html) for safe pasting into the editor.
+         *
+         * @private
+         * @param {string} clipboardData
+         * @returns {string}
+         */
+        _prepareClipboardData(clipboardData) {
+            const container = document.createElement('fake-container');
+            container.innerHTML = clipboardData;
+            for (const child of [...container.childNodes]) {
+                this._cleanForPaste(child);
+            }
+            return container.innerHTML;
+        }
+        /**
+         * Clean a node for safely pasting. Cleaning an element involves unwrapping
+         * its contents if it's an illegal (blacklisted or not whitelisted) element,
+         * or removing its illegal attributes and classes.
+         *
+         * @param {Node} node
+         */
+        _cleanForPaste(node) {
+            if (!this._isWhitelisted(node) || this._isBlacklisted(node)) {
+                if (node.matches(CLIPBOARD_BLACKLISTS.remove.join(','))) {
+                    node.remove();
+                } else {
+                    // Unwrap the illegal node's contents.
+                    for (const unwrappedNode of unwrapContents(node)) {
+                        this._cleanForPaste(unwrappedNode);
+                    }
+                }
+            } else if (node.nodeType !== Node.TEXT_NODE) {
+                // Remove all illegal attributes and classes from the node, then
+                // clean its children.
+                for (const attribute of [...node.attributes]) {
+                    if (!this._isWhitelisted(attribute)) {
+                        node.removeAttribute(attribute.name);
+                    }
+                }
+                for (const klass of [...node.classList]) {
+                    if (!this._isWhitelisted(klass)) {
+                        node.classList.remove(klass);
+                    }
+                }
+                for (const child of [...node.childNodes]) {
+                    this._cleanForPaste(child);
+                }
+            }
+        }
+        /**
+         * Return true if the given attribute, class or node is whitelisted for
+         * pasting, false otherwise.
+         *
+         * @private
+         * @param {Attr | string | Node} item
+         * @returns {boolean}
+         */
+        _isWhitelisted(item) {
+            if (item instanceof Attr) {
+                return CLIPBOARD_WHITELISTS.attributes.includes(item.name);
+            } else if (typeof item === 'string') {
+                return CLIPBOARD_WHITELISTS.classes.some(okClass =>
+                    okClass instanceof RegExp ? okClass.test(item) : okClass === item,
+                );
+            } else {
+                return (
+                    item.nodeType === Node.TEXT_NODE ||
+                    item.matches(CLIPBOARD_WHITELISTS.nodes.join(','))
+                );
+            }
+        }
+        /**
+         * Return true if the given node is blacklisted for pasting, false
+         * otherwise.
+         *
+         * @private
+         * @param {Node} node
+         * @returns {boolean}
+         */
+        _isBlacklisted(node) {
+            return (
+                node.nodeType !== Node.TEXT_NODE &&
+                node.matches([].concat(...Object.values(CLIPBOARD_BLACKLISTS)).join(','))
+            );
+        }
+
         //--------------------------------------------------------------------------
         // Handlers
         //--------------------------------------------------------------------------
+
+        _onBeforeInput(ev) {
+            this._lastBeforeInputType = ev.inputType;
+        }
 
         /**
          * If backspace/delete input, rollback the operation and handle the
@@ -5179,21 +5451,28 @@ var exportVariable = (function (exports) {
             const cursor = this._historySteps[this._historySteps.length - 1].cursor;
             const { focusOffset, focusNode, anchorNode, anchorOffset } = cursor || {};
             const wasCollapsed = !cursor || (focusNode === anchorNode && focusOffset === anchorOffset);
+
+            // Sometimes google chrome wrongly triggers an input event with `data`
+            // being `null` on `deleteContentForward` `insertParagraph`. Luckily,
+            // chrome provide the proper signal with the event `beforeinput`.
+            const isChromeDeleteforward =
+                ev.inputType === 'insertText' &&
+                ev.data === null &&
+                this._lastBeforeInputType === 'deleteContentForward';
+            const isChromeInsertParagraph =
+                ev.inputType === 'insertText' &&
+                ev.data === null &&
+                this._lastBeforeInputType === 'insertParagraph';
             if (this.keyboardType === KEYBOARD_TYPES.PHYSICAL || !wasCollapsed) {
                 if (ev.inputType === 'deleteContentBackward') {
                     this.historyRollback();
                     ev.preventDefault();
                     this._applyCommand('oDeleteBackward');
-                } else if (ev.inputType === 'deleteContentForward') {
+                } else if (ev.inputType === 'deleteContentForward' || isChromeDeleteforward) {
                     this.historyRollback();
                     ev.preventDefault();
                     this._applyCommand('oDeleteForward');
-                } else if (
-                    ev.inputType === 'insertParagraph' ||
-                    (ev.inputType === 'insertText' && ev.data === null)
-                ) {
-                    // Sometimes the browser wrongly triggers an insertText
-                    // input event with null data on enter.
+                } else if (ev.inputType === 'insertParagraph' || isChromeInsertParagraph) {
                     this.historyRollback();
                     ev.preventDefault();
                     if (this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
@@ -5212,7 +5491,12 @@ var exportVariable = (function (exports) {
                         setCursor(range.endContainer, range.endOffset);
                     }
                     // Check for url after user insert a space so we won't transform an incomplete url.
-                    if (ev.data.includes(' ') && selection && selection.anchorNode) {
+                    if (
+                        ev.data.includes(' ') &&
+                        selection &&
+                        selection.anchorNode &&
+                        !this.commandBar._active
+                    ) {
                         ev.preventDefault();
                         this._convertUrlInElement(closestElement(selection.anchorNode));
                         this.execCommand('insertText', ev.data);
@@ -5269,6 +5553,7 @@ var exportVariable = (function (exports) {
                     this.execCommand('insertText', '\u00A0 \u00A0\u00A0');
                 }
                 ev.preventDefault();
+                ev.stopPropagation();
             } else if (IS_KEYBOARD_EVENT_UNDO(ev)) {
                 // Ctrl-Z
                 ev.preventDefault();
@@ -5303,36 +5588,6 @@ var exportVariable = (function (exports) {
 
             if (this._currentMouseState === 'mouseup') {
                 this._fixFontAwesomeSelection();
-            }
-
-            // When the browser set the selection inside a node that is
-            // contenteditable=false, it breaks the edition upon keystroke. Move the
-            // selection so that it remain in an editable area. An example of this
-            // case happend when the selection goes into a fontawesome node.
-            const startContainer =
-                selection.rangeCount && closestElement(selection.getRangeAt(0).startContainer);
-            const contenteditableFalseNode =
-                startContainer &&
-                !startContainer.isContentEditable &&
-                ancestors(startContainer, this.editable).includes(this.editable) &&
-                startContainer.closest('[contenteditable=false]');
-            if (contenteditableFalseNode) {
-                selection.removeAllRanges();
-                const range = new Range();
-                if (contenteditableFalseNode.previousSibling) {
-                    range.setStart(
-                        contenteditableFalseNode.previousSibling,
-                        contenteditableFalseNode.previousSibling.length,
-                    );
-                    range.setEnd(
-                        contenteditableFalseNode.previousSibling,
-                        contenteditableFalseNode.previousSibling.length,
-                    );
-                } else {
-                    range.setStart(contenteditableFalseNode.parentElement, 0);
-                    range.setEnd(contenteditableFalseNode.parentElement, 0);
-                }
-                selection.addRange(range);
             }
         }
 
@@ -5400,10 +5655,63 @@ var exportVariable = (function (exports) {
             }
         }
 
+        _fixSelectionOnContenteditableFalse() {
+            // When the browser set the selection inside a node that is
+            // contenteditable=false, it breaks the edition upon keystroke. Move the
+            // selection so that it remain in an editable area. An example of this
+            // case happend when the selection goes into a fontawesome node.
+
+            const selection = this.document.getSelection();
+            if (!selection.rangeCount) {
+                return;
+            }
+            const range = selection.getRangeAt(0);
+            const newRange = range.cloneRange();
+            const startContainer = closestElement(range.startContainer);
+            const endContainer = closestElement(range.endContainer);
+
+            const startContainerNotEditable = getClosestNotEditable(startContainer, this.editable);
+            const endContainerNotEditable = getClosestNotEditable(endContainer, this.editable);
+            const bothNotEditable = startContainerNotEditable && endContainerNotEditable;
+
+            if (startContainerNotEditable) {
+                if (startContainerNotEditable.previousSibling) {
+                    newRange.setStart(
+                        startContainerNotEditable.previousSibling,
+                        startContainerNotEditable.previousSibling.length,
+                    );
+                    if (bothNotEditable) {
+                        newRange.setEnd(
+                            startContainerNotEditable.previousSibling,
+                            startContainerNotEditable.previousSibling.length,
+                        );
+                    }
+                } else {
+                    newRange.setStart(startContainerNotEditable.parentElement, 0);
+                    if (bothNotEditable) {
+                        newRange.setEnd(startContainerNotEditable.parentElement, 0);
+                    }
+                }
+            }
+            if (!bothNotEditable && endContainerNotEditable) {
+                if (endContainerNotEditable.nextSibling) {
+                    newRange.setEnd(endContainerNotEditable.nextSibling, 0);
+                } else {
+                    newRange.setEnd(...endPos(endContainerNotEditable.parentElement));
+                }
+            }
+            if (startContainerNotEditable || endContainerNotEditable) {
+                selection.removeAllRanges();
+                selection.addRange(newRange);
+            }
+        }
+
         _onMouseup(ev) {
             this._currentMouseState = ev.type;
 
             this._fixFontAwesomeSelection();
+
+            this._fixSelectionOnContenteditableFalse();
         }
 
         _onMouseDown(ev) {
@@ -5416,13 +5724,32 @@ var exportVariable = (function (exports) {
             // editable zones.
             this.automaticStepSkipStack();
             const link = closestElement(ev.target, 'a');
-            if (link && !link.querySelector('div') && !closestElement(ev.target, '.o_not_editable')) {
-                this._removeContenteditableLinks();
+            this._resetContenteditableLinks();
+            if (
+                link &&
+                !link.querySelector('div') &&
+                !closestElement(ev.target, '.o_not_editable') &&
+                link.getAttribute('contenteditable') !== 'false'
+            ) {
                 const editableChildren = link.querySelectorAll('[contenteditable=true]');
                 this._stopContenteditable();
+
+                this._fixLinkMutatedElements = {
+                    wasContenteditableTrue: [...editableChildren],
+                    wasContenteditableFalse: [],
+                    wasContenteditableNull: [],
+                };
+                const contentEditableAttribute = link.getAttribute('contenteditable');
+                if (contentEditableAttribute === 'true') {
+                    this._fixLinkMutatedElements.wasContenteditableTrue.push(link);
+                } else if (contentEditableAttribute === 'false') {
+                    this._fixLinkMutatedElements.wasContenteditableFalse.push(link);
+                } else {
+                    this._fixLinkMutatedElements.wasContenteditableNull.push(link);
+                }
+
                 [...editableChildren, link].forEach(node => node.setAttribute('contenteditable', true));
             } else {
-                this._removeContenteditableLinks();
                 this._activateContenteditable();
             }
 
@@ -5472,6 +5799,7 @@ var exportVariable = (function (exports) {
                 }
                 this._onKeyupResetContenteditableNodes = [];
             }
+            this._fixSelectionOnContenteditableFalse();
         }
 
         /**
@@ -5524,35 +5852,108 @@ var exportVariable = (function (exports) {
         }
 
         /**
-         * Prevent the pasting of HTML and paste text only instead.
+         * Handle safe pasting of html or plain text into the editor.
          */
         _onPaste(ev) {
             ev.preventDefault();
-            const pastedText = (ev.originalEvent || ev).clipboardData.getData('text/plain');
-            const splitAroundUrl = pastedText.split(URL_REGEX);
-            const linkAttrs =
-                Object.entries(this.options.defaultLinkAttributes)
-                    .map(entry => entry.join('="'))
-                    .join('" ') + '" ';
+            const clipboardData = ev.clipboardData.getData('text/html');
+            if (clipboardData) {
+                this.execCommand('insertHTML', this._prepareClipboardData(clipboardData));
+            } else {
+                const text = ev.clipboardData.getData('text/plain');
+                const splitAroundUrl = text.split(URL_REGEX);
+                const linkAttrs =
+                    Object.entries(this.options.defaultLinkAttributes)
+                        .map(entry => entry.join('="'))
+                        .join('" ') + '" ';
 
-            for (let i = 0; i < splitAroundUrl.length; i++) {
-                // Even indexes will always be plain text, and odd indexes will always be URL.
-                if (i % 2) {
-                    const url = /^https?:\/\//gi.test(splitAroundUrl[i])
-                        ? splitAroundUrl[i]
-                        : 'https://' + splitAroundUrl[i];
-                    this.execCommand(
-                        'insertHTML',
-                        `<a href="${url}" ${linkAttrs}>${splitAroundUrl[i]}</a>`,
-                    );
-                } else if (splitAroundUrl[i] !== '') {
-                    this.execCommand('insertText', splitAroundUrl[i]);
+                for (let i = 0; i < splitAroundUrl.length; i++) {
+                    // Even indexes will always be plain text, and odd indexes will always be URL.
+                    if (i % 2) {
+                        const url = /^https?:\/\//gi.test(splitAroundUrl[i])
+                            ? splitAroundUrl[i]
+                            : 'https://' + splitAroundUrl[i];
+                        const youtubeUrl = YOUTUBE_URL_GET_VIDEO_ID.exec(url);
+                        const urlFileExtention = url.split('.').pop();
+                        const baseEmbedCommand = [
+                            {
+                                groupName: 'paste',
+                                title: 'Paste as URL',
+                                description: 'Create an URL.',
+                                fontawesome: 'fa-link',
+                                callback: () => {
+                                    this.historyUndo();
+                                    this.execCommand(
+                                        'insertHTML',
+                                        `<a href="${url}" ${linkAttrs}>${splitAroundUrl[i]}</a>`,
+                                    );
+                                },
+                            },
+                            {
+                                groupName: 'paste',
+                                title: 'Paste as text',
+                                description: 'Simple text paste.',
+                                fontawesome: 'fa-font',
+                                callback: () => {},
+                            },
+                        ];
+
+                        this.execCommand('insertText', splitAroundUrl[i]);
+                        if (['jpg', 'jpeg', 'png', 'gif'].includes(urlFileExtention)) {
+                            this.commandBar.open({
+                                commands: [
+                                    {
+                                        groupName: 'Embed',
+                                        title: 'Embed Image',
+                                        description: 'Embed the image in the document.',
+                                        fontawesome: 'fa-image',
+                                        callback: () => {
+                                            this.historyUndo();
+                                            this.execCommand('insertHTML', `<img src="${url}" />`);
+                                        },
+                                    },
+                                ].concat(baseEmbedCommand),
+                            });
+                        } else if (youtubeUrl) {
+                            this.commandBar.open({
+                                commands: [
+                                    {
+                                        groupName: 'Embed',
+                                        title: 'Embed Youtube Video',
+                                        description: 'Embed the youtube video in the document.',
+                                        fontawesome: 'fa-youtube-play',
+                                        callback: () => {
+                                            this.historyUndo();
+                                            this.execCommand(
+                                                'insertHTML',
+                                                `<iframe width="560" height="315" src="https://www.youtube.com/embed/${youtubeUrl[1]}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`,
+                                            );
+                                        },
+                                    },
+                                ].concat(baseEmbedCommand),
+                            });
+                        } else {
+                            this.execCommand(
+                                'insertHTML',
+                                `<a href="${url}" ${linkAttrs}>${splitAroundUrl[i]}</a>`,
+                            );
+                        }
+                    } else if (splitAroundUrl[i] !== '') {
+                        const textFragments = splitAroundUrl[i].split('\n');
+                        let textIndex = 1;
+                        for (const textFragment of textFragments) {
+                            this.execCommand('insertText', textFragment);
+                            if (textIndex < textFragments.length) {
+                                this._applyCommand('oShiftEnter');
+                            }
+                            textIndex++;
+                        }
+                    }
                 }
             }
         }
-
         /**
-         * Prevent the dropping of HTML and paste text only instead.
+         * Handle safe dropping of html into the editor.
          */
         _onDrop(ev) {
             ev.preventDefault();
@@ -5566,21 +5967,21 @@ var exportVariable = (function (exports) {
                 ancestor = ancestor.parentNode;
             }
             const transferItem = [...(ev.originalEvent || ev).dataTransfer.items].find(
-                item => item.type === 'text/plain',
+                item => item.type === 'text/html',
             );
             if (transferItem) {
                 transferItem.getAsString(pastedText => {
                     if (isInEditor && !sel.isCollapsed) {
                         this.deleteRange(sel);
                     }
-                    if (document.caretPositionFromPoint) {
+                    if (this.document.caretPositionFromPoint) {
                         const range = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
                         setCursor(range.offsetNode, range.offset);
-                    } else if (document.caretRangeFromPoint) {
+                    } else if (this.document.caretRangeFromPoint) {
                         const range = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
                         setCursor(range.startContainer, range.startOffset);
                     }
-                    insertText(this.document.getSelection(), pastedText);
+                    this.execCommand('insertHTML', this._prepareClipboardData(pastedText));
                 });
             }
             this.historyStep();
@@ -5589,10 +5990,13 @@ var exportVariable = (function (exports) {
         _bindToolbar() {
             for (const buttonEl of this.toolbar.querySelectorAll('[data-call]')) {
                 buttonEl.addEventListener('mousedown', ev => {
-                    this.execCommand(buttonEl.dataset.call, buttonEl.dataset.arg1);
+                    const sel = this.document.getSelection();
+                    if (sel.anchorNode && ancestors(sel.anchorNode).includes(this.editable)) {
+                        this.execCommand(buttonEl.dataset.call, buttonEl.dataset.arg1);
 
-                    ev.preventDefault();
-                    this._updateToolbar();
+                        ev.preventDefault();
+                        this._updateToolbar();
+                    }
                 });
             }
         }
@@ -5693,6 +6097,7 @@ var exportVariable = (function (exports) {
     exports.UNREMOVABLE_ROLLBACK_CODE = UNREMOVABLE_ROLLBACK_CODE;
     exports.URL_REGEX = URL_REGEX;
     exports.URL_REGEX_WITH_INFOS = URL_REGEX_WITH_INFOS;
+    exports.YOUTUBE_URL_GET_VIDEO_ID = YOUTUBE_URL_GET_VIDEO_ID;
     exports.ancestors = ancestors;
     exports.boundariesIn = boundariesIn;
     exports.boundariesOut = boundariesOut;
@@ -5714,6 +6119,7 @@ var exportVariable = (function (exports) {
     exports.getAdjacentNextSiblings = getAdjacentNextSiblings;
     exports.getAdjacentPreviousSiblings = getAdjacentPreviousSiblings;
     exports.getAdjacents = getAdjacents;
+    exports.getClosestNotEditable = getClosestNotEditable;
     exports.getCursorDirection = getCursorDirection;
     exports.getCursors = getCursors;
     exports.getDeepRange = getDeepRange;
@@ -5773,6 +6179,7 @@ var exportVariable = (function (exports) {
     exports.splitTextNode = splitTextNode;
     exports.startPos = startPos;
     exports.toggleClass = toggleClass;
+    exports.unwrapContents = unwrapContents;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

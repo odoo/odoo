@@ -36,7 +36,10 @@ const LinkTools = Link.extend({
         this.$link.addClass('oe_edited_link');
         this.$button.addClass('active');
         return this._super(...arguments).then(() => {
-            dom.scrollTo(this.$(':visible:last')[0], {duration: 0});
+            const lastVisible = this.$(':visible:last')[0];
+            if (lastVisible) {
+                dom.scrollTo(lastVisible, {duration: 0});
+            }
         });
     },
     destroy: function () {
