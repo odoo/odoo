@@ -8,7 +8,7 @@
     'sequence': 1004,
     'version': '1.1',
     'summary': 'Event: manage sponsors and exhibitors',
-    'website': 'https://www.odoo.com/page/events',
+    'website': 'https://www.odoo.com/app/events',
     'description': "",
     'depends': [
         'website_event',

@@ -5,7 +5,7 @@
     'version' : '0.1',
     'sequence': 185,
     'category': 'Human Resources/Fleet',
-    'website' : 'https://www.odoo.com/page/fleet',
+    'website' : 'https://www.odoo.com/app/fleet',
     'summary' : 'Manage your fleet and track car costs',
     'description' : """
 Vehicle, leasing, insurances, cost

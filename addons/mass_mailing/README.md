@@ -2,7 +2,7 @@ Odoo Mass Mailing
 -----------------
 
 Easily send mass mailing to your leads, opportunities or customers
-with Odoo <a href="https://www.odoo.com/page/mailing#">Email Marketing</a>. Track
+with Odoo <a href="https://www.odoo.com/app/email-marketing">Email Marketing</a>. Track
 marketing campaigns performance to improve conversion rates. Design
 professional emails and reuse templates in a few clicks.
 
@@ -18,7 +18,7 @@ Setup several email servers with their own IP/domain to optimise opening rates.
 Organize Marketing Campaigns
 ----------------------------
 
-Design, Send, Track by Campaigns with our <a href="https://www.odoo.com/page/mailing">Lead Automation</a> app.
+Design, Send, Track by Campaigns with our <a href="https://www.odoo.com/app/email-marketing">Lead Automation</a> app.
 
 Get real time statistics on campaigns performance to improve your conversion
 rate. Track mails sent, received, opened and answered.
@@ -32,8 +32,8 @@ Integrated with Odoo Apps
 Get access to mass mailing features from every Odoo app to improve the way your
 users communicate.
 
-Send template of emails from Odoo <a href="https://www.odoo.com/page/mailing">CRM opportunities</a>, select leads based
-on marketing segments, send <a href="https://www.odoo.com/page/recruitment">job offers</a> and automate
+Send template of emails from Odoo <a href="https://www.odoo.com/app/email-marketing">CRM opportunities</a>, select leads based
+on marketing segments, send <a href="https://www.odoo.com/app/recruitment">job offers</a> and automate
 answers to applicants, reuse email template in the lead automation marketing
 campaigns.
 
@@ -90,7 +90,7 @@ company's bottom line.
 Integrate a contact form in your website easily. Forms submissions create leads
 automatically in Odoo CRM. Leads can be used in marketing campaigns.
 
-Manage your <a href="https://www.odoo.com/page/crm">sales funnel</a> with no
+Manage your <a href="https://www.odoo.com/app/crm">sales funnel</a> with no
 effort. Attract leads, follow-up on phone calls and meetings. Analyse the
 quality of your leads to make informed decisions and save time by integrating
 emails directly into the application.

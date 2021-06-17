@@ -7,7 +7,7 @@
     'description': "",
     'version': '2.5',
     'sequence': 60,
-    'website': 'https://www.odoo.com/page/mailing',
+    'website': 'https://www.odoo.com/app/email-marketing',
     'category': 'Marketing/Email Marketing',
     'depends': [
         'contacts',
