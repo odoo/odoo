@@ -227,14 +227,17 @@ class Location(models.Model):
                 ('product_id', '=', product.id),
                 ('location_dest_id', 'in', locations.ids),
                 ('state', 'not in', ['draft', 'done', 'cancel'])
-            ], ['location_dest_id', 'product_id', 'product_qty:sum'], ['location_dest_id'])
+            ], ['location_dest_id', 'product_id', 'product_qty:array_agg', 'qty_done:array_agg', 'product_uom_id:array_agg'], ['location_dest_id'])
             quant_data = self.env['stock.quant'].read_group([
                 ('product_id', '=', product.id),
                 ('location_id', 'in', locations.ids),
             ], ['location_id', 'product_id', 'quantity:sum'], ['location_id'])
 
             for values in move_line_data:
-                qty_by_location[values['location_dest_id'][0]] = values['product_qty']
+                uoms = self.env['uom.uom'].browse(values['product_uom_id'])
+                qty_done = sum(max(ml_uom._compute_quantity(float(qty), product.uom_id), float(qty_reserved))
+                               for qty_reserved, qty, ml_uom in zip(values['product_qty'], values['qty_done'], list(uoms)))
+                qty_by_location[values['location_dest_id'][0]] = qty_done
             for values in quant_data:
                 qty_by_location[values['location_id'][0]] += values['quantity']
 
@@ -296,8 +299,12 @@ class Location(models.Model):
             # check if only allow same product
             if self.storage_category_id.allow_new_product == "same" and self.quant_ids and self.quant_ids.product_id != product:
                 return False
+
             # check if enough space
             product_capacity = self.storage_category_id.product_capacity_ids.filtered(lambda pc: pc.product_id == product)
+            # To handle new line without quantity in order to avoid suggesting a location already full
+            if product_capacity and location_qty >= product_capacity.quantity:
+                return False
             if product_capacity and quantity + location_qty > product_capacity.quantity:
                 return False
         return True
