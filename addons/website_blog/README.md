@@ -1,7 +1,7 @@
 Odoo Blogs
 ----------
 
-Write, Design, Promote and Engage with <a href="https://www.odoo.com/page/blog-engine">Odoo Blogs</a>.
+Write, Design, Promote and Engage with <a href="https://www.odoo.com/app/blog">Odoo Blogs</a>.
 
 Express yourself with the Odoo enterprise grade blogging platform. Write
 beautiful blog posts, engage with visitors, translate content and moderate

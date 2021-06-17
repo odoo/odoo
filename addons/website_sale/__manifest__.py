@@ -6,7 +6,7 @@
     'category': 'Website/Website',
     'sequence': 50,
     'summary': 'Sell your products online',
-    'website': 'https://www.odoo.com/page/e-commerce',
+    'website': 'https://www.odoo.com/app/ecommerce',
     'version': '1.1',
     'description': "",
     'depends': ['website', 'sale', 'website_payment', 'website_mail', 'website_form', 'portal_rating', 'digest'],

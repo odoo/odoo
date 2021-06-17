@@ -7,7 +7,7 @@
     'category': 'Productivity/Discuss',
     'summary': 'Add OdooBot in discussions',
     'description': "",
-    'website': 'https://www.odoo.com/page/discuss',
+    'website': 'https://www.odoo.com/app/discuss',
     'depends': ['mail'],
     'auto_install': True,
     'installable': True,

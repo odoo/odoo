@@ -197,7 +197,7 @@
     <xpath expr="//t[@t-call='web.brand_promotion_message']" position="replace">
         <t t-call="web.brand_promotion_message">
             <t t-set="_message">
-                Create a <a target="_blank" href="http://www.odoo.com/page/website-builder?utm_source=db&amp;utm_medium=website">free website</a>
+                Create a <a target="_blank" href="http://www.odoo.com/app/website?utm_source=db&amp;utm_medium=website">free website</a>
             </t>
             <t t-set="_utm_medium" t-valuef="website"/>
         </t>
@@ -2032,7 +2032,7 @@
                     <h2 class='mt32'>Installed Localizations / Account Charts</h2>
                     <dl class="dl-horizontal" t-foreach="l10n" t-as="app">
                         <dt>
-                            <a t-attf-href="https://www.odoo.com/page/accounting/#{app.name}">
+                            <a t-attf-href="https://www.odoo.com/app/accounting/#{app.name}">
                                 <t t-out="app.shortdesc"/>
                             </a>
                         </dt>

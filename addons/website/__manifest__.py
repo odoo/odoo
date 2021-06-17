@@ -5,8 +5,8 @@
     'name': 'Website',
     'category': 'Website/Website',
     'sequence': 20,
-    'summary': 'Website builder',
-    'website': 'https://www.odoo.com/page/website-builder',
+    'summary': 'Enterprise website builder',
+    'website': 'https://www.odoo.com/app/website',
     'version': '1.0',
     'description': "",
     'depends': [

@@ -47,7 +47,7 @@
     ],
     'installable': True,
     'application': True,
-    'website': 'https://www.odoo.com/page/point-of-sale-shop',
+    'website': 'https://www.odoo.com/app/point-of-sale-shop',
     'assets': {
         'web.assets_tests': [
             'point_of_sale/static/tests/tours/**/*',

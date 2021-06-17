@@ -8,7 +8,7 @@
     'sequence': 95,
     'summary': 'Centralize employee information',
     'description': "",
-    'website': 'https://www.odoo.com/page/employees',
+    'website': 'https://www.odoo.com/app/employees',
     'images': [
         'images/hr_department.jpeg',
         'images/hr_employee.jpeg',
