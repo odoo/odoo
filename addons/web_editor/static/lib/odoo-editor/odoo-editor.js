@@ -260,6 +260,7 @@ var exportVariable = (function (exports) {
      * Returns a list of all the ancestors nodes of the provided node.
      *
      * @param {Node} node
+     * @param {Node} [editable] include to prevent bubbling up further than the editable.
      * @returns {HTMLElement[]}
      */
     function ancestors(node, editable) {
@@ -794,6 +795,7 @@ var exportVariable = (function (exports) {
         'UL',
         // The following elements are not in the W3C list, for some reason.
         'SELECT',
+        'OPTION',
         'TR',
         'TD',
         'TBODY',
@@ -1256,6 +1258,21 @@ var exportVariable = (function (exports) {
         sel.getRangeAt(0).insertNode(txt);
         restore();
         setCursor(...boundariesOut(txt), false);
+    }
+
+
+    /**
+     * Remove node from the DOM while preserving their contents if any.
+     *
+     * @param {Node} node
+     * @returns {Node[]}
+     */
+    function unwrapContents (node) {
+        const contents = [...node.childNodes];
+        for (const child of contents) {
+            node.parentNode.insertBefore(child, node);
+        }    node.parentNode.removeChild(node);
+        return contents;
     }
 
     /**
@@ -2589,11 +2606,30 @@ var exportVariable = (function (exports) {
         let nodeToInsert;
         const insertedNodes = [...fakeEl.childNodes];
         while ((nodeToInsert = fakeEl.childNodes[0])) {
+            if (isBlock(nodeToInsert) && !isBlock(startNode)) {
+                // Split blocks at the edges if inserting new blocks (preventing
+                // <p><p>text</p></p> scenarios).
+                while (startNode.parentElement !== editor.editable && !isBlock(startNode.parentElement)) {
+                    let offset = childNodeIndex(startNode);
+                    if (!insertBefore) {
+                        offset += 1;
+                    }
+                    if (offset) {
+                        const [left, right] = splitElement(startNode.parentElement, offset);
+                        startNode = insertBefore ? right : left;
+                    } else {
+                        startNode = startNode.parentElement;
+                    }
+                }
+            }
             if (insertBefore) {
                 startNode.before(nodeToInsert);
                 insertBefore = false;
             } else {
                 startNode.after(nodeToInsert);
+            }
+            if (isShrunkBlock(startNode)) {
+                startNode.remove();
             }
             startNode = nodeToInsert;
         }
@@ -2917,10 +2953,14 @@ var exportVariable = (function (exports) {
             const blocks = new Set();
 
             for (const node of getTraversedNodes(editor.editable)) {
-                const block = closestBlock(node);
-                if (!['OL', 'UL'].includes(block.tagName)) {
-                    const ublock = block.closest('ol, ul');
-                    ublock && getListMode(ublock) == mode ? li.add(block) : blocks.add(block);
+                if (node.nodeType === Node.TEXT_NODE && !isVisibleStr(node)) {
+                    node.remove();
+                } else {
+                    const block = closestBlock(node);
+                    if (!['OL', 'UL'].includes(block.tagName)) {
+                        const ublock = block.closest('ol, ul');
+                        ublock && getListMode(ublock) == mode ? li.add(block) : blocks.add(block);
+                    }
                 }
             }
 
@@ -3779,6 +3819,47 @@ var exportVariable = (function (exports) {
     const IS_KEYBOARD_EVENT_REDO = ev => ev.key === 'y' && (ev.ctrlKey || ev.metaKey);
     const IS_KEYBOARD_EVENT_BOLD = ev => ev.key === 'b' && (ev.ctrlKey || ev.metaKey);
 
+    const CLIPBOARD_BLACKLISTS = {
+        unwrap: ['.Apple-interchange-newline', 'DIV'], // These elements' children will be unwrapped.
+        remove: ['META', 'STYLE', 'SCRIPT'], // These elements will be removed along with their children.
+    };
+    const CLIPBOARD_WHITELISTS = {
+        nodes: [
+            // Style
+            'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 'PRE',
+            // List
+            'UL', 'OL', 'LI',
+            // Inline style
+            'I', 'B', 'U', 'EM', 'STRONG',
+            // Table
+            'TABLE', 'TH', 'TBODY', 'TR', 'TD',
+            // Miscellaneous
+            'IMG', 'BR', 'A', '.fa',
+        ],
+        classes: [
+            // Media
+            /^float-/,
+            'd-block',
+            'mx-auto',
+            'img-fluid',
+            'img-thumbnail',
+            'rounded',
+            'rounded-circle',
+            /^padding-/,
+            /^shadow/,
+            // Odoo colors
+            /^text-o-/,
+            /^bg-o-/,
+            // Odoo checklists
+            'o_checked',
+            'o_checklist',
+            // Miscellaneous
+            /^btn/,
+            /^fa/,
+        ],
+        attributes: ['class', 'href', 'src'],
+    };
+
     function defaultOptions(defaultObject, object) {
         const newObject = Object.assign({}, defaultObject, object);
         for (const [key, value] of Object.entries(object)) {
@@ -3885,6 +3966,7 @@ var exportVariable = (function (exports) {
 
             this.addDomListener(this.editable, 'keydown', this._onKeyDown);
             this.addDomListener(this.editable, 'input', this._onInput);
+            this.addDomListener(this.editable, 'beforeinput', this._onBeforeInput);
             this.addDomListener(this.editable, 'mousedown', this._onMouseDown);
             this.addDomListener(this.editable, 'mouseup', this._onMouseup);
             this.addDomListener(this.editable, 'paste', this._onPaste);
@@ -4120,7 +4202,9 @@ var exportVariable = (function (exports) {
                     }
                 }
             }
-            this.dispatchEvent(new Event('observerApply'));
+            if (records.length) {
+                this.dispatchEvent(new Event('observerApply'));
+            }
         }
         filterMutationRecords(records) {
             // Save the first attribute in a cache to compare only the first
@@ -4973,6 +5057,11 @@ var exportVariable = (function (exports) {
                     for (const element of document.querySelectorAll(this.options.noScrollSelector)) {
                         element.classList.add('oe-noscroll');
                     }
+                    for (const element of this.document.querySelectorAll(
+                        this.options.noScrollSelector,
+                    )) {
+                        element.classList.add('oe-noscroll');
+                    }
                     this.observerActive();
                 },
                 preValidate: () => {
@@ -4984,6 +5073,9 @@ var exportVariable = (function (exports) {
                 onStop: () => {
                     this.observerUnactive();
                     for (const element of document.querySelectorAll('.oe-noscroll')) {
+                        element.classList.remove('oe-noscroll');
+                    }
+                    for (const element of this.document.querySelectorAll('.oe-noscroll')) {
                         element.classList.remove('oe-noscroll');
                     }
                     this.observerActive();
@@ -5162,9 +5254,98 @@ var exportVariable = (function (exports) {
             }
         }
 
+        // PASTING / DROPPING
+
+        /**
+         * Prepare clipboard data (text/html) for safe pasting into the editor.
+         *
+         * @private
+         * @param {string} clipboardData
+         * @returns {string}
+         */
+         _prepareClipboardData(clipboardData) {
+            const container = document.createElement('fake-container');
+            container.innerHTML = clipboardData;
+            for (const child of [...container.childNodes]) {
+                this._cleanForPaste(child);
+            }
+            return container.innerHTML;
+        }
+        /**
+         * Clean a node for safely pasting. Cleaning an element involves unwrapping
+         * its contents if it's an illegal (blacklisted or not whitelisted) element,
+         * or removing its illegal attributes and classes.
+         *
+         * @param {Node} node
+         */
+        _cleanForPaste(node) {
+            if (!this._isWhitelisted(node) || this._isBlacklisted(node)) {
+                if (node.matches(CLIPBOARD_BLACKLISTS.remove.join(','))) {
+                    node.remove();
+                } else {
+                    // Unwrap the illegal node's contents.
+                    for (const unwrappedNode of unwrapContents(node)) {
+                        this._cleanForPaste(unwrappedNode);
+                    }
+                }
+            } else if (node.nodeType !== Node.TEXT_NODE) {
+                // Remove all illegal attributes and classes from the node, then
+                // clean its children.
+                for (const attribute of [...node.attributes]) {
+                    if (!this._isWhitelisted(attribute)) {
+                        node.removeAttribute(attribute.name);
+                    }
+                }
+                for (const klass of [...node.classList]) {
+                    if (!this._isWhitelisted(klass)) {
+                        node.classList.remove(klass);
+                    }
+                }
+                for (const child of [...node.childNodes]) {
+                    this._cleanForPaste(child);
+                }
+            }
+        }
+        /**
+         * Return true if the given attribute, class or node is whitelisted for
+         * pasting, false otherwise.
+         *
+         * @private
+         * @param {Attr | string | Node} item
+         * @returns {boolean}
+         */
+        _isWhitelisted(item) {
+            if (item instanceof Attr) {
+                return CLIPBOARD_WHITELISTS.attributes.includes(item.name);
+            } else if (typeof item === 'string') {
+                return CLIPBOARD_WHITELISTS.classes.some(okClass => (
+                    okClass instanceof RegExp ? okClass.test(item) : okClass === item
+                ));
+            } else {
+                return item.nodeType === Node.TEXT_NODE ||
+                    item.matches(CLIPBOARD_WHITELISTS.nodes.join(','));
+            }
+        }
+        /**
+         * Return true if the given node is blacklisted for pasting, false
+         * otherwise.
+         *
+         * @private
+         * @param {Node} node
+         * @returns {boolean}
+         */
+        _isBlacklisted(node) {
+            return node.nodeType !== Node.TEXT_NODE &&
+                node.matches([].concat(...Object.values(CLIPBOARD_BLACKLISTS)).join(','));
+        }
+
         //--------------------------------------------------------------------------
         // Handlers
         //--------------------------------------------------------------------------
+
+        _onBeforeInput(ev) {
+            this._lastBeforeInputType = ev.inputType;
+        }
 
         /**
          * If backspace/delete input, rollback the operation and handle the
@@ -5179,21 +5360,28 @@ var exportVariable = (function (exports) {
             const cursor = this._historySteps[this._historySteps.length - 1].cursor;
             const { focusOffset, focusNode, anchorNode, anchorOffset } = cursor || {};
             const wasCollapsed = !cursor || (focusNode === anchorNode && focusOffset === anchorOffset);
+
+            // Sometimes google chrome wrongly triggers an input event with `data`
+            // being `null` on `deleteContentForward` `insertParagraph`. Luckily,
+            // chrome provide the proper signal with the event `beforeinput`.
+            const isChromeDeleteforward =
+                ev.inputType === 'insertText' &&
+                ev.data === null &&
+                this._lastBeforeInputType === 'deleteContentForward';
+            const isChromeInsertParagraph =
+                ev.inputType === 'insertText' &&
+                ev.data === null &&
+                this._lastBeforeInputType === 'insertParagraph';
             if (this.keyboardType === KEYBOARD_TYPES.PHYSICAL || !wasCollapsed) {
                 if (ev.inputType === 'deleteContentBackward') {
                     this.historyRollback();
                     ev.preventDefault();
                     this._applyCommand('oDeleteBackward');
-                } else if (ev.inputType === 'deleteContentForward') {
+                } else if (ev.inputType === 'deleteContentForward' || isChromeDeleteforward) {
                     this.historyRollback();
                     ev.preventDefault();
                     this._applyCommand('oDeleteForward');
-                } else if (
-                    ev.inputType === 'insertParagraph' ||
-                    (ev.inputType === 'insertText' && ev.data === null)
-                ) {
-                    // Sometimes the browser wrongly triggers an insertText
-                    // input event with null data on enter.
+                } else if (ev.inputType === 'insertParagraph' || isChromeInsertParagraph) {
                     this.historyRollback();
                     ev.preventDefault();
                     if (this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
@@ -5269,6 +5457,7 @@ var exportVariable = (function (exports) {
                     this.execCommand('insertText', '\u00A0 \u00A0\u00A0');
                 }
                 ev.preventDefault();
+                ev.stopPropagation();
             } else if (IS_KEYBOARD_EVENT_UNDO(ev)) {
                 // Ctrl-Z
                 ev.preventDefault();
@@ -5524,35 +5713,47 @@ var exportVariable = (function (exports) {
         }
 
         /**
-         * Prevent the pasting of HTML and paste text only instead.
+         * Handle safe pasting of html or plain text into the editor.
          */
         _onPaste(ev) {
             ev.preventDefault();
-            const pastedText = (ev.originalEvent || ev).clipboardData.getData('text/plain');
-            const splitAroundUrl = pastedText.split(URL_REGEX);
-            const linkAttrs =
-                Object.entries(this.options.defaultLinkAttributes)
-                    .map(entry => entry.join('="'))
-                    .join('" ') + '" ';
+            const clipboardData = ev.clipboardData.getData('text/html');
+            if (clipboardData) {
+                this.execCommand('insertHTML', this._prepareClipboardData(clipboardData));
+            } else {
+                const text = ev.clipboardData.getData('text/plain');
+                const splitAroundUrl = text.split(URL_REGEX);
+                const linkAttrs =
+                    Object.entries(this.options.defaultLinkAttributes)
+                        .map(entry => entry.join('="'))
+                        .join('" ') + '" ';
 
-            for (let i = 0; i < splitAroundUrl.length; i++) {
-                // Even indexes will always be plain text, and odd indexes will always be URL.
-                if (i % 2) {
-                    const url = /^https?:\/\//gi.test(splitAroundUrl[i])
-                        ? splitAroundUrl[i]
-                        : 'https://' + splitAroundUrl[i];
-                    this.execCommand(
-                        'insertHTML',
-                        `<a href="${url}" ${linkAttrs}>${splitAroundUrl[i]}</a>`,
-                    );
-                } else if (splitAroundUrl[i] !== '') {
-                    this.execCommand('insertText', splitAroundUrl[i]);
+                for (let i = 0; i < splitAroundUrl.length; i++) {
+                    // Even indexes will always be plain text, and odd indexes will always be URL.
+                    if (i % 2) {
+                        const url = /^https?:\/\//gi.test(splitAroundUrl[i])
+                            ? splitAroundUrl[i]
+                            : 'https://' + splitAroundUrl[i];
+                        this.execCommand(
+                            'insertHTML',
+                            `<a href="${url}" ${linkAttrs}>${splitAroundUrl[i]}</a>`,
+                        );
+                    } else if (splitAroundUrl[i] !== '') {
+                        const textFragments = splitAroundUrl[i].split('\n');
+                        let textIndex = 1;
+                        for (const textFragment of textFragments) {
+                            this.execCommand('insertText', textFragment);
+                            if (textIndex < textFragments.length) {
+                                this._applyCommand('oShiftEnter');
+                            }
+                            textIndex++;
+                        }
+                    }
                 }
             }
         }
-
         /**
-         * Prevent the dropping of HTML and paste text only instead.
+         * Handle safe dropping of html into the editor.
          */
         _onDrop(ev) {
             ev.preventDefault();
@@ -5566,21 +5767,21 @@ var exportVariable = (function (exports) {
                 ancestor = ancestor.parentNode;
             }
             const transferItem = [...(ev.originalEvent || ev).dataTransfer.items].find(
-                item => item.type === 'text/plain',
+                item => item.type === 'text/html',
             );
             if (transferItem) {
                 transferItem.getAsString(pastedText => {
                     if (isInEditor && !sel.isCollapsed) {
                         this.deleteRange(sel);
                     }
-                    if (document.caretPositionFromPoint) {
+                    if (this.document.caretPositionFromPoint) {
                         const range = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
                         setCursor(range.offsetNode, range.offset);
-                    } else if (document.caretRangeFromPoint) {
+                    } else if (this.document.caretRangeFromPoint) {
                         const range = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
                         setCursor(range.startContainer, range.startOffset);
                     }
-                    insertText(this.document.getSelection(), pastedText);
+                    this.execCommand('insertHTML', this._prepareClipboardData(pastedText));
                 });
             }
             this.historyStep();
@@ -5589,10 +5790,13 @@ var exportVariable = (function (exports) {
         _bindToolbar() {
             for (const buttonEl of this.toolbar.querySelectorAll('[data-call]')) {
                 buttonEl.addEventListener('mousedown', ev => {
-                    this.execCommand(buttonEl.dataset.call, buttonEl.dataset.arg1);
+                    const sel = this.document.getSelection();
+                    if (sel.anchorNode && ancestors(sel.anchorNode).includes(this.editable)) {
+                        this.execCommand(buttonEl.dataset.call, buttonEl.dataset.arg1);
 
-                    ev.preventDefault();
-                    this._updateToolbar();
+                        ev.preventDefault();
+                        this._updateToolbar();
+                    }
                 });
             }
         }
@@ -5773,6 +5977,7 @@ var exportVariable = (function (exports) {
     exports.splitTextNode = splitTextNode;
     exports.startPos = startPos;
     exports.toggleClass = toggleClass;
+    exports.unwrapContents = unwrapContents;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
