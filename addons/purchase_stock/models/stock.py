@@ -247,7 +247,8 @@ class Orderpoint(models.Model):
         qty_by_product_location, dummy = self.product_id._get_quantity_in_progress(self.location_id.ids)
         for orderpoint in self:
             product_qty = qty_by_product_location.get((orderpoint.product_id.id, orderpoint.location_id.id), 0.0)
-            product_uom_qty = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.product_uom, round=False)
+            if orderpoint.product_id.uom_id.category_id == orderpoint.product_uom.category_id:
+                product_uom_qty = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.product_uom, round=False)
             res[orderpoint.id] += product_uom_qty
         return res
 
@@ -259,6 +260,13 @@ class Orderpoint(models.Model):
         if route_id and orderpoint_wh_supplier:
             orderpoint_wh_supplier.route_id = route_id[0].id
         return super()._set_default_route_id()
+
+    def write(self, vals):
+        if vals.get('product_id'):
+            po_lines = self.env['purchase.order.line'].search([('state','in',('draft','sent','to approve')),('orderpoint_id','in',self.ids)])
+            po_lines.write({'orderpoint_id': False})
+        return super(Orderpoint, self).write(vals)
+
 
 
 class ProductionLot(models.Model):
