@@ -47,13 +47,13 @@
                             <div class="container o_kanban_card_content mt-0 mt-sm-3">
                                 <t t-if="record.state.raw_value == 'recruit'">
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-7">
                                             <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">
-                                                <field name="application_count"/> Applications
+                                                <field name="new_application_count"/> New Applications
                                             </button>
                                         </div>
-                                        <div class="col-6">
-                                            <field name="new_application_count"/> New Applications <br/>
+                                        <div class="col-5">
+                                            <field name="all_application_count"/> Applications<br/>
                                             <field name="no_of_recruitment"/> To Recruit
                                         </div>
                                     </div>
