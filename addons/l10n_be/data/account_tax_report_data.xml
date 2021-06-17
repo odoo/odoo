@@ -76,10 +76,11 @@
 
     <record id="tax_report_title_operations_sortie_46" model="account.tax.report.line">
         <field name="name">46 - Livraisons intra-communautaires exemptées</field>
+        <field name="code">c46</field>
         <field name="report_id" ref="tax_report_vat"/>
         <field name="parent_id" ref="tax_report_title_operations_sortie"/>
         <field name="sequence">7</field>
-        <field name="formula">None</field>
+        <field name="formula"></field>
     </record>
 
     <record id="tax_report_line_46L" model="account.tax.report.line">
@@ -111,10 +112,11 @@
 
     <record id="tax_report_title_operations_sortie_48" model="account.tax.report.line">
         <field name="name">48 - Notes de crédit aux opérations grilles [44] et [46]</field>
+        <field name="code">c48</field>
         <field name="report_id" ref="tax_report_vat"/>
         <field name="parent_id" ref="tax_report_title_operations_sortie"/>
         <field name="sequence">9</field>
-        <field name="formula">None</field>
+        <field name="formula"></field>
     </record>
 
     <record id="tax_report_line_48s44" model="account.tax.report.line">
