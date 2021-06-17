@@ -16,4 +16,15 @@
             </xpath>
         </field>
     </record>
+
+    <record id="view_production_graph_inherit_mrp_account" model="ir.ui.view">
+        <field name="name">mrp.production.graph.inherited.mrp.account</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.view_production_graph"/>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="inside">
+                <field name="extra_cost" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
