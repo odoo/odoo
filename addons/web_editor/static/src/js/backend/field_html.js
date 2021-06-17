@@ -189,7 +189,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             iframeCssAssets: this.nodeOptions.cssEdit,
             snippets: this.nodeOptions.snippets,
             value: this.value,
-            mediaModalParams: {noVideos: true},
+            mediaModalParams: {
+                noVideos: 'noVideos' in this.nodeOptions ? this.nodeOptions.noVideos: true,
+            },
             linkForceNewWindow: true,
 
             tabsize: 0,
