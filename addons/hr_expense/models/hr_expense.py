@@ -161,7 +161,7 @@ class HrExpense(models.Model):
 
     @api.onchange('company_id')
     def _onchange_expense_company_id(self):
-        self.employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid), ('company_id', '=', self.company_id.id)])
+        self.employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid), ('company_id', '=', self.company_id.id)], limit=1)
 
     @api.onchange('product_uom_id')
     def _onchange_product_uom_id(self):
