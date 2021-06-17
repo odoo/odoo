@@ -1968,7 +1968,7 @@ class TestStockFlow(TestStockCommon):
 
         # Validates the two receipts and checks the move lines' lot.
         (receipt_1 | receipt_2).button_validate()
-        lots = self.env['stock.production.lot'].search([('product_id', '=', product_lot.id)])
+        lots = self.env['stock.production.lot'].search([('product_id', '=', product_lot.id)], order='name asc')
         self.assertEqual(len(lots), 5)
         lot1, lot2, lot3, lot4, lot5 = lots
         self.assertEqual(lot1.name, 'lot-001')
