@@ -239,6 +239,14 @@
 
             </div>
         </xpath>
+
+        <!-- RG 5003: Add legend for 'A' documents that have a Monotribuista receptor -->
+        <p name="comment" position="after">
+            <p t-if="o.partner_id.l10n_ar_afip_responsibility_type_id.code in ['6', '13'] and o.l10n_latam_document_type_id.l10n_ar_letter == 'A'" >
+                El crédito fiscal discriminado en el presente comprobante, sólo podrá ser computado a efectos del Régimen de Sostenimiento e Inclusión Fiscal para Pequeños Contribuyentes de la Ley Nº 27.618
+            </p>
+        </p>
+
     </template>
 
     <!-- FIXME: Temp fix to allow fetching invoice_documemt in Studio Reports with localisation -->
@@ -254,6 +262,14 @@
             <t t-if="o._get_name_invoice_report() == 'l10n_ar.report_invoice_document'"
                 t-call="l10n_ar.report_invoice_document" t-lang="lang"/>
         </xpath>
+
+        <!-- RG 5003: Add legend for 'A' documents that have a Monotribuista receptor -->
+        <p name="comment" position="after">
+            <p t-if="o.partner_id.l10n_ar_afip_responsibility_type_id.code in ['6', '13'] and o.l10n_latam_document_type_id.l10n_ar_letter == 'A'" >
+                El crédito fiscal discriminado en el presente comprobante, sólo podrá ser computado a efectos del Régimen de Sostenimiento e Inclusión Fiscal para Pequeños Contribuyentes de la Ley Nº 27.618
+            </p>
+        </p>
+
     </template>
 
 </odoo>
