@@ -174,6 +174,12 @@ class FleetVehicleLogContract(models.Model):
         if self.vehicle_id:
             self.odometer_unit = self.vehicle_id.odometer_unit
 
+    @api.model_create_multi
+    def create(self, vals):
+        res = super(FleetVehicleLogContract, self).create(vals)
+        res.cost_id.write({'contract_id': res.id})
+        return res
+
     @api.multi
     def write(self, vals):
         res = super(FleetVehicleLogContract, self).write(vals)
