@@ -20,6 +20,14 @@ const ShareWidget = publicWidget.Widget.extend({
                 return href.replace(urlRegex, function (match, a, b, c) {
                     return a + url + c;
                 }).replace(titleRegex, function (match, a, b, c) {
+                    if ($a.hasClass('s_share_whatsapp')) {
+                        // WhatsApp does not support the "url" GET parameter.
+                        // Instead we need to include the url within the passed "text" parameter, merging everything together.
+                        // e.g of output:
+                        // https://wa.me/?text=%20OpenWood%20Collection%20Online%20Reveal%20%7C%20My%20Website%20http%3A%2F%2Flocalhost%3A8888%2Fevent%2Fopenwood-collection-online-reveal-2021-06-21-2021-06-23-8%2Fregister
+                        // see https://faq.whatsapp.com/general/chats/how-to-use-click-to-chat/ for more details
+                        return a + title + url + c;
+                    }
                     return a + title + c;
                 });
             });
