@@ -427,7 +427,7 @@ class Partner(models.Model):
         """ Handle sync of commercial fields to descendants """
         commercial_partner = self.commercial_partner_id
         sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
-        sync_children = self.child_ids.filtered(lambda c: not c.is_company)
+        sync_children = self.with_context(active_test=False).search([('parent_id', '=', self.id), ('is_company', '=', False)])
         for child in sync_children:
             child._commercial_sync_to_children()
         res = sync_children.write(sync_vals)
@@ -451,21 +451,22 @@ class Partner(models.Model):
         self._children_sync(values)
 
     def _children_sync(self, values):
-        if not self.child_ids:
+        child_ids = self.with_context(active_test=False).search([('parent_id', '=', self.id)])
+        if not child_ids:
             return
         # 2a. Commercial Fields: sync if commercial entity
         if self.commercial_partner_id == self:
             commercial_fields = self._commercial_fields()
             if any(field in values for field in commercial_fields):
                 self._commercial_sync_to_children()
-        for child in self.child_ids.filtered(lambda c: not c.is_company):
+        for child in child_ids.filtered(lambda c: not c.is_company):
             if child.commercial_partner_id != self.commercial_partner_id:
                 self._commercial_sync_to_children()
                 break
         # 2b. Address fields: sync if address changed
         address_fields = self._address_fields()
         if any(field in values for field in address_fields):
-            contacts = self.child_ids.filtered(lambda c: c.type == 'contact')
+            contacts = child_ids.filtered(lambda c: c.type == 'contact')
             contacts.update_address(values)
 
     def _handle_first_contact_creation(self):
