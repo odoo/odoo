@@ -802,13 +802,15 @@ var FieldMany2One = AbstractField.extend({
                     readonly: !self.can_write,
                     on_saved: function (record, changed) {
                         if (changed) {
-                            const _setValue = self._setValue.bind(self, self.value.data, {
-                                forceChange: true,
-                            });
-                            self.trigger_up('reload', {
-                                db_id: self.value.id,
-                                onSuccess: _setValue,
-                                onFailure: _setValue,
+                            new Promise(function (resolve, reject) {
+                                self.trigger_up('reload_model', {
+                                    db_id: self.value.id,
+                                    onSuccess: resolve,
+                                });
+                            }).then(() => {
+                                self._setValue(self.value.data, { forceChange: true }).then(function () {
+                                    self.trigger_up('reload', { db_id: self.value.id, 'no_reload': true });
+                                });
                             });
                         }
                     },

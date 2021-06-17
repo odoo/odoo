@@ -1534,6 +1534,64 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('update many2one in form dialog inside editable o2m calls onchange', async function (assert) {
+            assert.expect(13);
+
+            this.data.partner.onchanges.trululu = function () { };
+            this.data.partner.records[0].p = [1];
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form>
+                        <sheet>
+                            <field name="p">
+                                <tree editable="bottom">
+                                    <field name="trululu"/>
+                                    <field name="display_name"/>
+                                </tree>
+                            </field>
+                        </sheet>
+                    </form>`,
+                archs: {
+                    'partner,false,form': '<form><field name="display_name"/></form>',
+                },
+                mockRPC: function (route, args) {
+                    assert.step(args.method);
+                    if (args.method === 'get_formview_id') {
+                        return Promise.resolve(false);
+                    }
+                    if (args.method === 'onchange') {
+                        assert.strictEqual(args.args[1].trululu.id, 1,
+                            "onchange is triggered with correct id");
+                    }
+                    return this._super(...arguments);
+                },
+                res_id: 1,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            await testUtils.dom.click(form.$('.o_data_cell[name="trululu"]'));
+            await testUtils.dom.click(form.$('.o_data_cell[name="trululu"] .o_external_button'));
+            const $modal = $('.modal');
+            assert.equal($modal.length, 1, 'There should be 1 modal opened');
+
+            await testUtils.fields.editInput($('.modal input[name="display_name"]'), 'test');
+            await testUtils.dom.click($('.modal button.btn-primary'));
+
+            // Test whether the value has changed
+            assert.strictEqual($('.modal').length, 0,
+                "the modal should be closed");
+            assert.strictEqual(form.$('.o_data_cell:contains(test)').text(), 'test',
+                "the partner name should have been updated to 'test'");
+            assert.verifySteps(['read', 'read', 'get_formview_id', 'load_views', 'read', 'write', 'read', 'onchange']);
+
+            form.destroy();
+        });
+
         QUnit.test('item not dropped on discard with empty required field (default_get)', async function (assert) {
             // This test simulates discarding a record that has been created with
             // one of its required field that is empty. When we discard the changes

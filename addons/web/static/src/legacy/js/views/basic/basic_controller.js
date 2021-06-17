@@ -24,6 +24,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         discard_changes: '_onDiscardChanges',
         pager_changed: '_onPagerChanged',
         reload: '_onReload',
+        reload_model: '_onReloadModel',
         resequence_records: '_onResequenceRecords',
         set_dirty: '_onSetDirty',
         load_optional_fields: '_onLoadOptionalFields',
@@ -849,8 +850,12 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var handle = data.db_id;
         var prom;
         if (handle) {
-            // reload the relational field given its db_id
-            prom = this.model.reload(handle).then(this._confirmSave.bind(this, handle));
+            if (ev.data.no_reload) {
+                prom = this._confirmSave(handle);
+            } else {
+                // reload the relational field given its db_id
+                prom = this.model.reload(handle).then(this._confirmSave.bind(this, handle));
+            }
         } else {
             // no db_id given, so reload the main record
             prom = this.reload({
@@ -859,6 +864,16 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             });
         }
         prom.then(ev.data.onSuccess).guardedCatch(ev.data.onFailure);
+    },
+    _onReloadModel(ev) {
+        ev.stopPropagation();
+        const data = ev && ev.data || {};
+        const handle = data.db_id;
+        if (handle) {
+            return this.model.reload(handle).then(ev.data.onSuccess).guardedCatch(ev.data.onFailure);
+        } else {
+            return Promise.resolve();
+        }
     },
     /**
      * Resequence records in the given order.
