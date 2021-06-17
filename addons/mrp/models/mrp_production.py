@@ -1715,7 +1715,9 @@ class MrpProduction(models.Model):
                 ])
                 if duplicates:
                     # Maybe some move lines have been compensated by unbuild
-                    duplicates_unbuild = self.env['stock.move.line'].search_count(domain_unbuild)
+                    duplicates_unbuild = self.env['stock.move.line'].search_count(domain_unbuild + [
+                        ('move_id.unbuild_id', '!=', False)
+                    ])
                     if not (duplicates_unbuild and duplicates - duplicates_unbuild == 0):
                         raise UserError(message)
                 # Check presence of same sn in current production
@@ -1749,7 +1751,9 @@ class MrpProduction(models.Model):
                 ])
                 if duplicates:
                     # Maybe some move lines have been compensated by unbuild
-                    duplicates_unbuild = self.env['stock.move.line'].search_count(domain_unbuild)
+                    duplicates_unbuild = self.env['stock.move.line'].search_count(domain_unbuild + [
+                            ('move_id.unbuild_id', '!=', False)
+                        ])
                     if not (duplicates_unbuild and duplicates - duplicates_unbuild == 0):
                         raise UserError(message)
                 # Check presence of same sn in current production
