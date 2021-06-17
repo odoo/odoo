@@ -198,7 +198,7 @@
                     <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations" optional="show"/>
                     <field name="location_dest_id" options="{'no_create': True}" string="To" groups="stock.group_stock_multi_locations" optional="show"/>
                     <field name="partner_id" optional="show"/>
-                    <field name="signature" string="Signed" optional="hide" widget="boolean" groups="stock.group_stock_sign_delivery"/>
+                    <field name="signature" string="Signed" optional="hide" groups="stock.group_stock_sign_delivery"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
                     <field name="scheduled_date" optional="show" widget="remaining_days" attrs="{'invisible':[('state', 'in', ('done', 'cancel'))]}"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible':[('state', 'in', ('done', 'cancel'))]}"/>
