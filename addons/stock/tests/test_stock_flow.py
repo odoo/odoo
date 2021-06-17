@@ -1969,7 +1969,7 @@ class TestStockFlow(TestStockCommon):
         (receipt_1 | receipt_2).button_validate()
         lots = self.env['stock.production.lot'].search([('product_id', '=', product_lot.id)])
         self.assertEqual(len(lots), 5)
-        lot1, lot2, lot3, lot4, lot5 = lots
+        lot3, lot4, lot1, lot5, lot2 = lots  # the order is not only by id.
         self.assertEqual(lot1.name, 'lot-001')
         self.assertEqual(lot2.name, 'lot-002')
         self.assertEqual(lot3.name, 'lot-003')
