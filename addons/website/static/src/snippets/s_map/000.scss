@@ -39,6 +39,11 @@ $s-map-desc-hover-alpha: 0.55 !default;
         background: rgba($s-map-desc-hover-bg, $s-map-desc-hover-alpha);
         color: color-yiq(rgba($s-map-desc-hover-bg, $s-map-desc-hover-alpha));
     }
+    .s_map_color_filter {
+        @include o-position-absolute(0, 0, 0, 0);
+        position: absolute !important;
+        pointer-events: none;
+    }
 }
 
 .editor_enable .s_map {
