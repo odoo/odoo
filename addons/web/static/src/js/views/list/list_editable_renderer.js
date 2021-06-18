@@ -315,7 +315,7 @@ ListRenderer.include({
     editRecord: function (recordID) {
         var $row = this._getRow(recordID);
         var rowIndex = $row.prop('rowIndex') - 1;
-        this._selectCell(rowIndex, 0);
+        return this._selectCell(rowIndex, 0);
     },
     /**
      * Gives focus to a specific cell, given its row and its related column.
