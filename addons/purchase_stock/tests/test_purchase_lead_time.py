@@ -273,6 +273,9 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
     def test_reordering_days_to_purchase(self):
         company = self.env.ref('base.main_company')
+        company2 = self.env['res.company'].create({
+            'name': 'Second Company',
+        })
         company.write({'po_lead': 0.00})
         self.patcher = patch('odoo.addons.stock.models.stock_orderpoint.fields.Date', wraps=fields.Date)
         self.mock_date = self.patcher.start()
@@ -280,15 +283,26 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         vendor = self.env['res.partner'].create({
             'name': 'Colruyt'
         })
+        vendor2 = self.env['res.partner'].create({
+            'name': 'Delhaize'
+        })
 
         self.env.company.days_to_purchase = 2.0
 
         product = self.env['product.product'].create({
             'name': 'Chicory',
             'type': 'product',
-            'seller_ids': [(0, 0, {'name': vendor.id, 'delay': 1.0})]
+            'seller_ids': [
+                (0, 0, {'name': vendor2.id, 'delay': 15.0, 'company_id': company2.id}),
+                (0, 0, {'name': vendor.id, 'delay': 1.0, 'company_id': company.id})
+            ]
         })
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = product
+        orderpoint_form.product_min_qty = 0.0
+        orderpoint = orderpoint_form.save()
+
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'].with_company(company2))
         orderpoint_form.product_id = product
         orderpoint_form.product_min_qty = 0.0
         orderpoint = orderpoint_form.save()
