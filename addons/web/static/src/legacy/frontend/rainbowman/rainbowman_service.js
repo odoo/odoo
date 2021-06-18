@@ -7,7 +7,5 @@ import { bus } from "web.core";
  * isn't a parent of the current context. Like in the tour manager in website. 
  */
 bus.on("show-effect", this, (payload) => {
-  new RainbowMan({ message: payload.message, fadeout: payload.fadeout }).appendTo(
-    document.getElementsByTagName("body")[0]
-  );
+    new RainbowMan(payload).appendTo(document.getElementsByTagName("body")[0]);
 });

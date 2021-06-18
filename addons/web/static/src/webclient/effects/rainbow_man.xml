@@ -35,7 +35,10 @@
                     <div class="o_reward_msg">
                         <div class="o_reward_msg_card">
                             <div class="o_reward_msg_content">
-                                <t t-if="!props.Component" t-raw="props.message" />
+                                <t t-if="!props.Component">
+                                    <t t-if="props.messageIsHtml" t-raw="props.message" />
+                                    <t t-else="" t-esc="props.message" />
+                                </t>
                                 <t t-else="" t-component="props.Component" t-props="props.props"/>
                             </div>
                             <div class="o_reward_shadow_container">

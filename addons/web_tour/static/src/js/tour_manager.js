@@ -432,7 +432,12 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 message = _t('<strong><b>Good job!</b> You went through all steps of this tour.</strong>');
             }
             const fadeout = this.tours[tour_name].fadeout;
-            core.bus.trigger('show-effect', {type: "rainbowman", message, fadeout});
+            core.bus.trigger('show-effect', {
+                type: "rainbowman",
+                message,
+                fadeout,
+                messageIsHtml: true,
+            });
         }
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));
