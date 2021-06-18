@@ -24,6 +24,12 @@ class AccountBankStatement(models.Model):
                 raise UserError(_("You cannot delete a bank statement linked to Point of Sale session."))
         return super( AccountBankStatement, self).unlink()
 
+    def button_post(self):
+        for statement in self:
+            if statement.journal_id.type == 'cash' and statement.pos_session_id and statement.pos_session_id.state != 'closed':
+                raise UserError(_("You cannot manually post a cash bank statement from an ongoing POS session"))
+        return super().button_post()
+
 class AccountBankStatementLine(models.Model):
     _inherit = 'account.bank.statement.line'
 

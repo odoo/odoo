@@ -395,20 +395,7 @@ class AccountBankStatement(models.Model):
             return action
 
     def button_post(self):
-        ''' Move the bank statements from 'draft' to 'posted'. '''
-        if any(statement.state != 'open' for statement in self):
-            raise UserError(_("Only new statements can be posted."))
-
-        self._check_balance_end_real_same_as_computed()
-
-        for statement in self:
-            if not statement.name:
-                statement._set_next_sequence()
-
-        self.write({'state': 'posted'})
-        lines_of_moves_to_post = self.line_ids.filtered(lambda line: line.move_id.state != 'posted')
-        if lines_of_moves_to_post:
-            lines_of_moves_to_post.move_id._post(soft=False)
+        return self._post_statement()
 
     def button_validate(self):
         if any(statement.state != 'posted' or not statement.all_lines_reconciled for statement in self):
@@ -491,6 +478,21 @@ class AccountBankStatement(models.Model):
         self.ensure_one()
         return "%s %s %04d/%02d/00000" % (self.journal_id.code, _('Statement'), self.date.year, self.date.month)
 
+    def _post_statement(self):
+        ''' Move the bank statements from 'draft' to 'posted'. '''
+        if any(statement.state != 'open' for statement in self):
+            raise UserError(_("Only new statements can be posted."))
+
+        self._check_balance_end_real_same_as_computed()
+
+        for statement in self:
+            if not statement.name:
+                statement._set_next_sequence()
+
+        self.write({'state': 'posted'})
+        lines_of_moves_to_post = self.line_ids.filtered(lambda line: line.move_id.state != 'posted')
+        if lines_of_moves_to_post:
+            lines_of_moves_to_post.move_id._post(soft=False)
 
 class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"

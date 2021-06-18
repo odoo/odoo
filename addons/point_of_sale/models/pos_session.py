@@ -707,7 +707,7 @@ class PosSession(models.Model):
         for statement in self.statement_ids:
             if not self.config_id.cash_control:
                 statement.write({'balance_end_real': statement.balance_end})
-            statement.button_post()
+            statement._post_statement()
             all_lines = (
                   split_cash_statement_lines[statement].mapped('move_id.line_ids').filtered(lambda aml: aml.account_id.internal_type == 'receivable')
                 | combine_cash_statement_lines[statement].mapped('move_id.line_ids').filtered(lambda aml: aml.account_id.internal_type == 'receivable')
