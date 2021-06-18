@@ -17,17 +17,6 @@ export class ActivityBox extends Component {
         return this.env.models['mail.chatter'].get(this.props.chatterLocalId);
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onClickTitle() {
-        this.chatter.toggleActivityBoxVisibility();
-    }
-
 }
 
 Object.assign(ActivityBox, {

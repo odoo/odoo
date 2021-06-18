@@ -28,6 +28,14 @@ function factory(dependencies) {
         /**
          * @override
          */
+        _created() {
+            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
+            this.onClickActivityBoxTitle = this.onClickActivityBoxTitle.bind(this);
+        }
+
+        /**
+         * @override
+         */
         _willDelete() {
             this._stopAttachmentsLoading();
             return super._willDelete(...arguments);
@@ -39,6 +47,13 @@ function factory(dependencies) {
 
         focus() {
             this.update({ isDoFocus: true });
+        }
+
+        /**
+         * Handles click on activity box title.
+         */
+        onClickActivityBoxTitle() {
+            this.update({ isActivityBoxVisible: !this.isActivityBoxVisible });
         }
 
         async refresh() {
@@ -64,10 +79,6 @@ function factory(dependencies) {
             this.update({ isComposerVisible: true });
             this.thread.composer.update({ isLog: false });
             this.focus();
-        }
-
-        toggleActivityBoxVisibility() {
-            this.update({ isActivityBoxVisible: !this.isActivityBoxVisible });
         }
 
         //----------------------------------------------------------------------
