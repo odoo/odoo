@@ -11,36 +11,7 @@ odoo.define('hr.employee_chat', function (require) {
     var KanbanRenderer = require('web.KanbanRenderer');
     var KanbanRecord = require('web.KanbanRecord');
 
-    const { Component } = owl;
-
-    // CHAT MIXIN
-    var ChatMixin = {
-        /**
-         * @override
-         */
-        _render: function () {
-            var self = this;
-            return this._super.apply(this, arguments).then(function () {
-                var $chat_button = self.$el.find('.o_employee_chat_btn');
-                $chat_button.off('click').on('click', self._onOpenChat.bind(self));
-            });
-        },
-
-        destroy: function () {
-            if (this.$el) {
-                this.$el.find('.o_employee_chat_btn').off('click');
-            }
-            return this._super();
-        },
-
-        _onOpenChat: function (ev) {
-            ev.preventDefault();
-            ev.stopImmediatePropagation();
-            const env = Component.env;
-            env.messaging.openChat({ employeeId: this.state.data.id });
-            return true;
-        },
-    };
+    const ChatMixin = require('hr.chat_mixin');
 
     // USAGE OF CHAT MIXIN IN FORM VIEWS
     var EmployeeFormRenderer = FormRenderer.extend(ChatMixin);
