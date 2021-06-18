@@ -25,10 +25,6 @@ function factory(dependencies) {
             this.delete();
         }
 
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
-
         /**
          * @static
          * @param {Object} data
@@ -211,6 +207,26 @@ function factory(dependencies) {
                     },
                 },
             });
+        }
+
+        /**
+         * Handle {click} on activity component.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickActivity(ev) {
+            if (
+                ev.target.tagName === 'A' &&
+                ev.target.dataset.oeId &&
+                ev.target.dataset.oeModel
+            ) {
+                this.env.messaging.openProfile({
+                    id: Number(ev.target.dataset.oeId),
+                    model: ev.target.dataset.oeModel,
+                });
+                // avoid following dummy href
+                ev.preventDefault();
+            }
         }
 
         //----------------------------------------------------------------------

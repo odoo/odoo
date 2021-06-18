@@ -129,19 +129,8 @@ export class Activity extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClick(ev) {
-        if (
-            ev.target.tagName === 'A' &&
-            ev.target.dataset.oeId &&
-            ev.target.dataset.oeModel
-        ) {
-            this.env.messaging.openProfile({
-                id: Number(ev.target.dataset.oeId),
-                model: ev.target.dataset.oeModel,
-            });
-            // avoid following dummy href
-            ev.preventDefault();
-        }
+    _onClickActivity(ev) {
+        this.activity.onClickActivity(ev);
     }
 
     /**
