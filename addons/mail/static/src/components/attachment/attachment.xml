@@ -43,14 +43,14 @@
                                     <div class="o_Attachment_action o_Attachment_actionUnlink"
                                         t-att-class="{
                                             'o-pretty': attachment.isLinkedToComposer,
-                                        }" t-on-click="_onClickUnlink" title="Remove"
+                                        }" t-on-click="attachment.onClickUnlink" title="Remove"
                                     >
                                         <i class="fa fa-times"/>
                                     </div>
                                 </t>
                                 <!-- Download button -->
                                 <t t-if="props.isDownloadable and !attachment.isUploading" t-key="'download'">
-                                    <div class="o_Attachment_action o_Attachment_actionDownload" t-on-click="_onClickDownload" title="Download">
+                                    <div class="o_Attachment_action o_Attachment_actionDownload" t-on-click="attachment.onClickDownload" title="Download">
                                         <i class="fa fa-download"/>
                                     </div>
                                 </t>
@@ -90,22 +90,22 @@
                         </t>
                         <!-- Remove button -->
                         <t t-if="props.isEditable">
-                            <div class="o_Attachment_asideItem o_Attachment_asideItemUnlink" t-att-class="{ 'o-pretty': attachment.isLinkedToComposer }" t-on-click="_onClickUnlink" title="Remove">
+                            <div class="o_Attachment_asideItem o_Attachment_asideItemUnlink" t-att-class="{ 'o-pretty': attachment.isLinkedToComposer }" t-on-click="attachment.onClickUnlink" title="Remove">
                                 <i class="fa fa-times"/>
                             </div>
                         </t>
                         <!-- Download button -->
                         <t t-if="props.isDownloadable and !attachment.isUploading">
-                            <div class="o_Attachment_asideItem o_Attachment_asideItemDownload" t-on-click="_onClickDownload" title="Download">
+                            <div class="o_Attachment_asideItem o_Attachment_asideItemDownload" t-on-click="attachment.onClickDownload" title="Download">
                                 <i class="fa fa-download"/>
                             </div>
                         </t>
                     </div>
                 </t>
-                <t t-if="state.hasDeleteConfirmDialog">
+                <t t-if="attachment.hasDeleteConfirmDialog">
                     <AttachmentDeleteConfirmDialog
                         attachmentLocalId="props.attachmentLocalId"
-                        t-on-dialog-closed="_onDeleteConfirmDialogClosed"
+                        t-on-dialog-closed="attachment.onDeleteConfirmDialogClosed"
                     />
                 </t>
             </t>

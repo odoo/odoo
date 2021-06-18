@@ -2,7 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useRefs } from '@mail/component_hooks/use_refs/use_refs';
-import { link } from '@mail/model/model_field_command';
+import { isEventHandled } from '@mail/utils/utils';
 
 import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
@@ -131,16 +131,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Download the attachment.
-     *
-     * @private
-     */
-    _download() {
-        const id = this.attachmentViewer.attachment.id;
-        this.env.services.navigate(`/web/content/ir.attachment/${id}/datas`, { download: true });
-    }
-
-    /**
      * Determine whether the current image is rendered for the 1st time, and if
      * that's the case, display a spinner until loaded.
      *
@@ -169,40 +159,6 @@ export class AttachmentViewer extends Component {
         if (this._iframeViewerPdfRef.el) {
             hidePDFJSButtons(this._iframeViewerPdfRef.el);
         }
-    }
-
-    /**
-     * Display the previous attachment in the list of attachments.
-     *
-     * @private
-     */
-    _next() {
-        const attachmentViewer = this.attachmentViewer;
-        const index = attachmentViewer.attachments.findIndex(attachment =>
-            attachment === attachmentViewer.attachment
-        );
-        const nextIndex = (index + 1) % attachmentViewer.attachments.length;
-        attachmentViewer.update({
-            attachment: link(attachmentViewer.attachments[nextIndex]),
-        });
-    }
-
-    /**
-     * Display the previous attachment in the list of attachments.
-     *
-     * @private
-     */
-    _previous() {
-        const attachmentViewer = this.attachmentViewer;
-        const index = attachmentViewer.attachments.findIndex(attachment =>
-            attachment === attachmentViewer.attachment
-        );
-        const nextIndex = index === 0
-            ? attachmentViewer.attachments.length - 1
-            : index - 1;
-        attachmentViewer.update({
-            attachment: link(attachmentViewer.attachments[nextIndex]),
-        });
     }
 
     /**
@@ -345,7 +301,11 @@ export class AttachmentViewer extends Component {
         }
         // TODO: clicking on the background should probably be handled by the dialog?
         // task-2092965
-        this._close();
+        if (!isEventHandled(ev, 'attachmentViewer.clickNext') &&
+            !isEventHandled(ev, 'attachmentViewer.clickPrevious')
+        ) {
+            this._close();
+        }
     }
 
     /**
@@ -356,17 +316,6 @@ export class AttachmentViewer extends Component {
      */
     _onClickClose(ev) {
         this._close();
-    }
-
-    /**
-     * Called when clicking on download icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickDownload(ev) {
-        ev.stopPropagation();
-        this._download();
     }
 
     /**
@@ -404,28 +353,6 @@ export class AttachmentViewer extends Component {
             return;
         }
         ev.stopPropagation();
-    }
-
-    /**
-     * Called when clicking on next icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickNext(ev) {
-        ev.stopPropagation();
-        this._next();
-    }
-
-    /**
-     * Called when clicking on previous icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickPrevious(ev) {
-        ev.stopPropagation();
-        this._previous();
     }
 
     /**
@@ -501,10 +428,10 @@ export class AttachmentViewer extends Component {
     _onKeydown(ev) {
         switch (ev.key) {
             case 'ArrowRight':
-                this._next();
+                this.attachmentViewer.onKeydown(ev, 'next');
                 break;
             case 'ArrowLeft':
-                this._previous();
+                this.attachmentViewer.onKeydown(ev, 'previous');
                 break;
             case 'Escape':
                 this._close();
@@ -528,17 +455,6 @@ export class AttachmentViewer extends Component {
                 return;
         }
         ev.stopPropagation();
-    }
-
-    /**
-     * Called when new image has been loaded
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onLoadImage(ev) {
-        ev.stopPropagation();
-        this.attachmentViewer.update({ isImageLoading: false });
     }
 
     /**

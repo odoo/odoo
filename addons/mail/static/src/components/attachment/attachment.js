@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 
-const { Component, useState } = owl;
+const { Component } = owl;
 
 export class Attachment extends Component {
 
@@ -11,9 +12,7 @@ export class Attachment extends Component {
      */
     constructor(...args) {
         super(...args);
-        this.state = useState({
-            hasDeleteConfirmDialog: false,
-        });
+        useComponentToModel({ fieldName: 'component', modelName: 'mail.attachment', propNameAsRecordLocalId: 'attachmentLocalId' });
     }
 
     //--------------------------------------------------------------------------
@@ -94,16 +93,6 @@ export class Attachment extends Component {
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * Download the attachment when clicking on donwload icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickDownload(ev) {
-        ev.stopPropagation();
-        this.env.services.navigate(`/web/content/ir.attachment/${this.attachment.id}/datas`, { download: true });
-    }
 
     /**
      * Open the attachment viewer when clicking on viewable attachment.
@@ -123,29 +112,6 @@ export class Attachment extends Component {
         });
     }
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickUnlink(ev) {
-        ev.stopPropagation();
-        if (!this.attachment) {
-            return;
-        }
-        if (this.attachment.isLinkedToComposer) {
-            this.attachment.remove();
-            this.trigger('o-attachment-removed', { attachmentLocalId: this.props.attachmentLocalId });
-        } else {
-            this.state.hasDeleteConfirmDialog = true;
-        }
-    }
-
-   /**
-    * @private
-    */
-    _onDeleteConfirmDialogClosed() {
-        this.state.hasDeleteConfirmDialog = false;
-    }
 }
 
 Object.assign(Attachment, {

@@ -14,6 +14,33 @@ function factory(dependencies) {
     }
     class Attachment extends dependencies['mail.model'] {
 
+        /**
+         * @override
+         */
+        _created() {
+            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
+            this.onClickAttachmentDeleteConfirmDialogCancel = this.onClickAttachmentDeleteConfirmDialogCancel.bind(this);
+            this.onClickAttachmentDeleteConfirmDialogOk = this.onClickAttachmentDeleteConfirmDialogOk.bind(this);
+            this.onClickDownload = this.onClickDownload.bind(this);
+            this.onClickUnlink = this.onClickUnlink.bind(this);
+            this.onDeleteConfirmDialogClosed = this.onDeleteConfirmDialogClosed.bind(this);
+
+            // Reconciliation between uploading attachment and real attachment.
+            if (this.isUploading) {
+                return;
+            }
+            const relatedUploadingAttachment = this.messaging.models['mail.attachment']
+                .find(attachment =>
+                    attachment.filename === this.filename &&
+                    attachment.isUploading
+                );
+            if (relatedUploadingAttachment) {
+                const composers = relatedUploadingAttachment.composers;
+                relatedUploadingAttachment.delete();
+                this.update({ composers: replace(composers) });
+            }
+        }
+
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------
@@ -61,6 +88,85 @@ function factory(dependencies) {
                 }
             }
             return super.create(...arguments);
+        }
+
+        /**
+         * Send the attachment for the browser to download.
+         */
+        download() {
+            this.env.services.navigate(`/web/content/ir.attachment/${this.id}/datas`, { download: true });
+        }
+
+        /**
+         * Handle click on download icon.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickDownload() {
+            this.download();
+        }
+
+        /**
+         * Handle click on the cancel button of confirm delete dialog.
+         */
+        onClickAttachmentDeleteConfirmDialogCancel() {
+            this.dialogRef.comp._close();
+        }
+
+        /**
+         * Handle click on the ok button of confirm delete dialog.
+         */
+        async onClickAttachmentDeleteConfirmDialogOk() {
+            await this.remove();
+            this.dialogRef.comp._close();
+            this.componentAttachmentDeleteConfirmDialog.trigger('o-attachment-removed', { attachmentLocalId: this.localId });
+        }
+
+        /**
+         * Handle click on the dialog cancel button when deleting an attachment.
+         */
+        onClickAttachmentDeleteConfirmDialogCancel() {
+            this.dialogRef.comp._close();
+        }
+
+        /**
+         * Handle click on the dialog confirm button when deleting an attachment.
+         */
+        async onClickAttachmentDeleteConfirmDialogOk() {
+            await this.remove();
+            this.dialogRef.comp._close();
+            this.componentAttachmentDeleteConfirmDialog.trigger('o-attachment-removed', { attachmentLocalId: this.localId });
+        }
+
+        /**
+         * Handle the click on delete attachment and open the confirm dialog.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickUnlink(ev) {
+            ev.stopPropagation();
+            if (!this.exists()) {
+                return;
+            }
+            if (this.isLinkedToComposer) {
+                this.remove();
+                this.component.trigger('o-attachment-removed', { attachmentLocalId: this.localId });
+            } else {
+                this.update({
+                    hasDeleteConfirmDialog: true,
+                });
+            }
+        }
+
+        /**
+         * Synchronize the `hasDeleteConfirmDialog` when the dialog is closed.
+         */
+        onDeleteConfirmDialogClosed() {
+            if (this.exists()) {
+                this.update({
+                    hasDeleteConfirmDialog: false,
+                });
+            }
         }
 
         /**
@@ -125,27 +231,6 @@ function factory(dependencies) {
          */
         static _createRecordLocalId(data) {
             return `${this.modelName}_${data.id}`;
-        }
-
-        /**
-         * Reconciliation between uploading attachment and real attachment.
-         *
-         * @private
-         */
-        _created() {
-            if (this.isUploading) {
-                return;
-            }
-            const relatedUploadingAttachment = this.messaging.models['mail.attachment']
-                .find(attachment =>
-                    attachment.filename === this.filename &&
-                    attachment.isUploading
-                );
-            if (relatedUploadingAttachment) {
-                const composers = relatedUploadingAttachment.composers;
-                relatedUploadingAttachment.delete();
-                this.update({ composers: replace(composers) });
-            }
         }
 
         /**
@@ -338,9 +423,18 @@ function factory(dependencies) {
         composers: many2many('mail.composer', {
             inverse: 'attachments',
         }),
+        component: attr(),
+        /**
+         * States the OWL component of this delete confirm dialog.
+         */
+        componentAttachmentDeleteConfirmDialog: attr(),
         defaultSource: attr({
             compute: '_computeDefaultSource',
         }),
+        /**
+         * States the OWL ref of the "dialog" window.
+         */
+        dialogRef: attr(),
         displayName: attr({
             compute: '_computeDisplayName',
         }),
@@ -350,6 +444,12 @@ function factory(dependencies) {
         filename: attr(),
         fileType: attr({
             compute: '_computeFileType',
+        }),
+        /**
+         * States the status of the delete confirm dialog (open/closed).
+         */
+        hasDeleteConfirmDialog: attr({
+            default: false,
         }),
         id: attr({
             required: true,
