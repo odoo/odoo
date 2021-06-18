@@ -8,8 +8,10 @@ from odoo.exceptions import ValidationError
 class Skill(models.Model):
     _name = 'hr.skill'
     _description = "Skill"
+    _order = "sequence"
 
     name = fields.Char(required=True)
+    sequence = fields.Integer(default=10)
     skill_type_id = fields.Many2one('hr.skill.type', ondelete='cascade')
 
 
@@ -20,8 +22,8 @@ class EmployeeSkill(models.Model):
     _order = "skill_level_id"
 
     employee_id = fields.Many2one('hr.employee', required=True, ondelete='cascade')
-    skill_id = fields.Many2one('hr.skill', required=True)
-    skill_level_id = fields.Many2one('hr.skill.level', required=True)
+    skill_id = fields.Many2one('hr.skill', compute='_compute_skill_id', store=True, domain="[('skill_type_id', '=', skill_type_id)]", readonly=False, required=True)
+    skill_level_id = fields.Many2one('hr.skill.level', compute='_compute_skill_level_id', domain="[('skill_type_id', '=', skill_type_id)]", store=True, readonly=False, required=True)
     skill_type_id = fields.Many2one('hr.skill.type', required=True)
     level_progress = fields.Integer(related='skill_level_id.level_progress')
 
@@ -41,6 +43,21 @@ class EmployeeSkill(models.Model):
             if record.skill_level_id not in record.skill_type_id.skill_level_ids:
                 raise ValidationError(_("The skill level %(level)s is not valid for skill type: %(type)s", level=record.skill_level_id.name, type=record.skill_type_id.name))
 
+    @api.depends('skill_type_id')
+    def _compute_skill_id(self):
+        for record in self:
+            if record.skill_id.skill_type_id != record.skill_type_id:
+                record.skill_id = False
+
+    @api.depends('skill_id')
+    def _compute_skill_level_id(self):
+        for record in self:
+            if not record.skill_id:
+                record.skill_level_id = False
+            else:
+                skill_levels = record.skill_type_id.skill_level_ids
+                record.skill_level_id = skill_levels.filtered('default_level') or skill_levels[0] if skill_levels else False
+
 
 class SkillLevel(models.Model):
     _name = 'hr.skill.level'
@@ -50,7 +67,34 @@ class SkillLevel(models.Model):
     skill_type_id = fields.Many2one('hr.skill.type', ondelete='cascade')
     name = fields.Char(required=True)
     level_progress = fields.Integer(string="Progress", help="Progress from zero knowledge (0%) to fully mastered (100%).")
+    default_level = fields.Boolean(help="If checked, this level will be the default one selected when choosing this skill.")
 
+    def create(self, vals_list):
+        levels = super().create(vals_list)
+        levels.skill_type_id._set_default_level()
+        return levels
+
+    def write(self, values):
+        levels = super().write(values)
+        self.skill_type_id._set_default_level()
+        return levels
+
+    def unlink(self):
+        skill_types = self.skill_type_id
+        res = super().unlink()
+        skill_types._set_default_level()
+        return res
+
+    @api.constrains('default_level', 'skill_type_id')
+    def _constrains_default_level(self):
+        for skill_type in set(self.mapped('skill_type_id')):
+            if len(skill_type.skill_level_ids.filtered('default_level')) > 1:
+                raise ValidationError(_('Only one default level is allowed per skill type.'))
+
+    def action_set_default(self):
+        self.ensure_one()
+        self.skill_type_id.skill_level_ids.with_context(no_skill_level_check=True).default_level = False
+        self.default_level = True
 
 class SkillType(models.Model):
     _name = 'hr.skill.type'
@@ -59,3 +103,11 @@ class SkillType(models.Model):
     name = fields.Char(required=True)
     skill_ids = fields.One2many('hr.skill', 'skill_type_id', string="Skills")
     skill_level_ids = fields.One2many('hr.skill.level', 'skill_type_id', string="Levels")
+
+    def _set_default_level(self):
+        if self.env.context.get('no_skill_level_check'):
+            return
+
+        for types in self:
+            if not types.skill_level_ids.filtered('default_level'):
+                types.skill_level_ids[:1].default_level = True

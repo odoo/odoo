@@ -219,6 +219,27 @@ var SkillsRenderer = AbstractGroupedOne2ManyRenderer.extend({
             self.$el.find('table').toggleClass('table-striped');
         });
     },
+
+    _onAddRecord: function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        let ctx = _.extend(JSON.parse(ev.currentTarget.dataset.context || '{}'), this.state.getContext());
+        this._rpc({
+            model: 'hr.skill.type',
+            method: 'search_count',
+            args: [[
+                    ['skill_ids', '!=', false],
+                    ['skill_level_ids', '!=', false]
+                ]],
+        }).then(count => {
+            if (count) {
+                this.unselectRow().then(() => this.trigger_up('add_record', {context: [ctx]}));
+            } else {
+                this.do_action('hr_skills.hr_skill_type_action');
+            }
+        });
+    }
 });
 
 
