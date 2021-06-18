@@ -492,18 +492,19 @@ class TestMailgateway(TestMailCommon):
 
         # Test: No group created, incoming bounce is counted
         self.assertEqual(self.test_record.message_bounce, 0, 'The bounced thread should have no bounced messages by default')
-        new_groups = self.format_and_process(
-            MAIL_TEMPLATE,
-            email_from='Valid Lelitre <valid.lelitre@agrolait.com>',
-            to='valid.other@gmail.com, oops+{msg_id}-{model}-{res_id}@example.com'.format(
-                msg_id=self.fake_email.id,
-                model=self.fake_email.model,
-                res_id=self.fake_email.res_id,
-            ),
-            subject='Your email bounced, be more careful next time plea se',
-        )
+        with self.mock_mail_gateway():
+            new_groups = self.format_and_process(
+                MAIL_TEMPLATE,
+                email_from='Valid Lelitre <valid.lelitre@agrolait.com>',
+                to='valid.other@gmail.com, oops+{msg_id}-{model}-{res_id}@example.com'.format(
+                    msg_id=self.fake_email.id,
+                    model=self.fake_email.model,
+                    res_id=self.fake_email.res_id,
+                ),
+                subject='Your email bounced, be more careful next time plea se',
+            )
         self.assertFalse(new_groups)
-        self.assertEqual(len(self._mails), 0, 'message_process: incoming bounce produces no mails')
+        self.assertNotSentEmail()  # message_process: incoming bounce produces no mails
         self.assertEqual(self.test_record.message_bounce, 1, 'The bounced thread should have 1 bounced message')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
@@ -522,11 +523,12 @@ class TestMailgateway(TestMailCommon):
             ),
         })
         # Test: group created, bounce-similar email is treated as a normal address
-        new_groups = self.format_and_process(
-            MAIL_TEMPLATE,
-            email_from='Valid Lelitre <valid.lelitre@agrolait.com>',
-            to=alien_bounce_partner.email + ', groups@example.com',
-        )
+        with self.mock_mail_gateway():
+            new_groups = self.format_and_process(
+                MAIL_TEMPLATE,
+                email_from='Valid Lelitre <valid.lelitre@agrolait.com>',
+                to=alien_bounce_partner.email + ', groups@example.com',
+            )
         self.assertEqual(new_groups.message_ids[0].author_id, self.partner_1, 'message_process: recognized email -> author_id')
         self.assertIn('Valid Lelitre <valid.lelitre@agrolait.com>', new_groups.message_ids[0].email_from, 'message_process: recognized email -> email_from')
         self.assertEqual(new_groups.message_ids.partner_ids, alien_bounce_partner, 'message_process: alien bounce-like address should be subscribed as a normal partner')
@@ -1215,11 +1217,12 @@ class TestMailgateway(TestMailCommon):
         self.env['ir.config_parameter'].set_param('mail.catchall.domain', 'example.com')
         self.env['ir.config_parameter'].set_param('mail.catchall.domain.strict', True)
         with self.assertRaises(ValueError):
-            self.format_and_process(
-                MAIL_TEMPLATE,
-                email_from='Valid Lelitre <valid.lelitre@agrolait.com>',
-                to='groups@alien.com, other@gmail.com',
-            )
+            with self.mock_mail_gateway():
+                self.format_and_process(
+                    MAIL_TEMPLATE,
+                    email_from='Valid Lelitre <valid.lelitre@agrolait.com>',
+                    to='groups@alien.com, other@gmail.com',
+                )
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_fallback(self):
