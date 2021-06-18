@@ -9,6 +9,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
     const cpHelpers = testUtils.controlPanel;
     const { createComponent } = testUtils;
+    const { patchDate } = testUtils.mock;
 
     QUnit.module('Components', {
         beforeEach: function () {
@@ -285,6 +286,52 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             await testUtils.fields.editSelect(cfi.el.querySelector('div.o_filter_condition > span.o_generator_menu_value input'), '02/22/2017 11:00:00'); // in TZ
             await cpHelpers.applyFilter(cfi);
 
+            cfi.destroy();
+        });
+
+        QUnit.test('custom filter datetime with equal operator and "" input value', async function (assert) {
+            assert.expect(5);
+
+            const unpatchDate = patchDate(2021, 5, 18, 14, 0, 0);
+
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
+                    const preFilter = preFilters[0];
+                    assert.strictEqual(preFilter.description,
+                        'DateTime is equal to "06/18/2021 00:00:00"',
+                        "description should be in localized format");
+                    assert.deepEqual(preFilter.domain,
+                        '[["date_time_field","=","2021-06-18 02:00:00"]]',
+                        "domain should be in UTC format");
+                    }
+                }
+            const searchModel = new MockedSearchModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                session: {
+                    getTZOffset() {
+                        return -240;
+                    },
+                },
+                env: { searchModel },
+            });
+
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'date_time_field');
+
+            assert.strictEqual(cfi.el.querySelector('.o_generator_menu_field').value, 'date_time_field');
+            assert.strictEqual(cfi.el.querySelector('.o_generator_menu_operator').value, 'between');
+
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_operator'), '=');
+
+            await testUtils.fields.editInput(cfi.el.querySelector('div.o_filter_condition > span.o_generator_menu_value input'), "");
+            await cpHelpers.applyFilter(cfi);
+
+            unpatchDate();
             cfi.destroy();
         });
 
