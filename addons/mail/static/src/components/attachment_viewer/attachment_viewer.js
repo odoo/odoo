@@ -3,7 +3,7 @@
 import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useRefs } from '@mail/component_hooks/use_refs/use_refs';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { link } from '@mail/model/model_field_command';
+import { isEventHandled } from '@mail/utils/utils';
 
 import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
@@ -165,40 +165,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Display the previous attachment in the list of attachments.
-     *
-     * @private
-     */
-    _next() {
-        const attachmentViewer = this.attachmentViewer;
-        const index = attachmentViewer.attachments.findIndex(attachment =>
-            attachment === attachmentViewer.attachment
-        );
-        const nextIndex = (index + 1) % attachmentViewer.attachments.length;
-        attachmentViewer.update({
-            attachment: link(attachmentViewer.attachments[nextIndex]),
-        });
-    }
-
-    /**
-     * Display the previous attachment in the list of attachments.
-     *
-     * @private
-     */
-    _previous() {
-        const attachmentViewer = this.attachmentViewer;
-        const index = attachmentViewer.attachments.findIndex(attachment =>
-            attachment === attachmentViewer.attachment
-        );
-        const nextIndex = index === 0
-            ? attachmentViewer.attachments.length - 1
-            : index - 1;
-        attachmentViewer.update({
-            attachment: link(attachmentViewer.attachments[nextIndex]),
-        });
-    }
-
-    /**
      * Prompt the browser print of this attachment.
      *
      * @private
@@ -338,7 +304,11 @@ export class AttachmentViewer extends Component {
         }
         // TODO: clicking on the background should probably be handled by the dialog?
         // task-2092965
-        this._close();
+        if (!isEventHandled(ev, 'attachmentViewer.clickNext') &&
+            !isEventHandled(ev, 'attachmentViewer.clickPrevious')
+        ) {
+            this._close();
+        }
     }
 
     /**
@@ -395,8 +365,7 @@ export class AttachmentViewer extends Component {
      * @param {MouseEvent} ev
      */
     _onClickNext(ev) {
-        ev.stopPropagation();
-        this._next();
+        this.attachmentViewer.onClickNext(ev);
     }
 
     /**
@@ -406,8 +375,7 @@ export class AttachmentViewer extends Component {
      * @param {MouseEvent} ev
      */
     _onClickPrevious(ev) {
-        ev.stopPropagation();
-        this._previous();
+        this.attachmentViewer.onClickPrevious(ev);
     }
 
     /**
@@ -483,10 +451,10 @@ export class AttachmentViewer extends Component {
     _onKeydown(ev) {
         switch (ev.key) {
             case 'ArrowRight':
-                this._next();
+                this.attachmentViewer.onKeydown(ev, 'next');
                 break;
             case 'ArrowLeft':
-                this._previous();
+                this.attachmentViewer.onKeydown(ev, 'previous');
                 break;
             case 'Escape':
                 this._close();

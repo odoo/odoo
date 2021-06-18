@@ -3,6 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one } from '@mail/model/model_field';
 import { link } from '@mail/model/model_field_command';
+import { markEventHandled } from '@mail/utils/utils';
 
 function factory(dependencies) {
 
@@ -23,21 +24,12 @@ function factory(dependencies) {
         }
 
         /**
-         * Handle click on download icon.
-         *
-         * @param {MouseEvent} ev
-         */
-        onClickDownload() {
-            this.attachment.download();
-        }
-
-        /**
          * Handle onclick on next button
          *
          * @param {MouseEvent} ev
          */
         onClickNext(ev) {
-            ev.stopPropagation();
+            markEventHandled(ev, 'attachmentViewer.clickNext');
             this._next();
         }
 
@@ -47,7 +39,7 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClickPrevious(ev) {
-            ev.stopPropagation();
+            markEventHandled(ev, 'attachmentViewer.clickPrevious');
             this._previous();
         }
 
@@ -64,16 +56,6 @@ function factory(dependencies) {
             if (direction === 'previous') {
                 this._previous();
             }
-        }
-
-        /**
-         * Handle onload on the attachment viewer image
-         *
-         * @param {Event} ev
-         */
-        onLoadImage(ev) {
-            ev.stopPropagation();
-            this.update({ isImageLoading: false });
         }
 
         //----------------------------------------------------------------------
