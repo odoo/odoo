@@ -2355,6 +2355,32 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertEqual(len(caba_move.line_ids), 4, "All lines should be there")
         self.assertEqual(caba_move.line_ids.filtered(lambda x: x.tax_line_id).balance, 66.66, "Tax amount should take into account both lines")
 
+    def test_caba_double_tax_negative_line(self):
+        """ Tests making a cash basis invoice with 2 lines using the same tax: a positive and a negative one.
+        """
+        invoice = self.init_invoice('in_invoice', amounts=[300, -60], post=True, taxes=self.cash_basis_tax_a_third_amount)
+
+        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'amount': 320,
+            'payment_date': invoice.date,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+        })
+
+        pmt_wizard._create_payments()
+
+        partial_rec = invoice.mapped('line_ids.matched_debit_ids')
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+
+        self.assertRecordValues(caba_move.line_ids.sorted(lambda line: (-abs(line.balance), -line.debit, line.account_id)), [
+            # Base amount:
+            {'debit': 240.0,    'credit': 0.0,      'tax_tag_ids': self.tax_tags[0].ids,    'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 240.0,    'tax_tag_ids': [],                      'account_id': self.cash_basis_base_account.id},
+            # tax:
+            {'debit': 80.0,     'credit': 0.0,      'tax_tag_ids': self.tax_tags[1].ids,    'account_id': self.tax_account_1.id},
+            {'debit': 0.0,      'credit': 80.0,     'tax_tag_ids': [],                      'account_id': self.cash_basis_transfer_account.id},
+        ])
+
     def test_caba_dest_acc_reconciliation_partial_pmt(self):
         """ Test the reconciliation of tax lines (when using a reconcilable tax account)
         for partially paid invoices with cash basis taxes.
