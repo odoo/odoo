@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Activity" owl="1">
-        <div class="o_Activity" t-on-click="_onClick">
+        <div class="o_Activity" t-on-click="activity.onClickActivity">
             <t t-if="activity">
                 <div class="o_Activity_sidebar">
                     <div class="o_Activity_user">
@@ -47,12 +47,12 @@
                                 <t t-esc="assignedUserText"/>
                             </div>
                         </t>
-                        <a class="o_Activity_detailsButton btn btn-link" t-on-click="_onClickDetailsButton" role="button">
+                        <a class="o_Activity_detailsButton btn btn-link" t-on-click="activity.onClickDetailsButton" role="button">
                             <i class="fa fa-info-circle" role="img" title="Info"/>
                         </a>
                     </div>
 
-                    <t t-if="state.areDetailsVisible">
+                    <t t-if="activity.areDetailsVisible">
                         <div class="o_Activity_details">
                             <dl class="dl-horizontal">
                                 <t t-if="activity.type">
@@ -126,20 +126,20 @@
                                 </Popover>
                             </t>
                             <t t-else="">
-                                <button class="o_Activity_toolButton o_Activity_uploadButton btn btn-link" t-on-click="_onClickUploadDocument">
+                                <button class="o_Activity_toolButton o_Activity_uploadButton btn btn-link" t-on-click="activity.onClickUploadDocument">
                                     <i class="fa fa-upload"/> Upload Document
                                 </button>
                                 <FileUploader
                                     t-if="activity.thread"
                                     threadLocalId="activity.thread.localId"
-                                    t-on-o-attachment-created="_onAttachmentCreated"
+                                    t-on-o-attachment-created="activity.onAttachmentCreated"
                                     t-ref="fileUploader"
                                 />
                             </t>
-                            <button class="o_Activity_toolButton o_Activity_editButton btn btn-link" t-on-click="_onClickEdit">
+                            <button class="o_Activity_toolButton o_Activity_editButton btn btn-link" t-on-click="activity.onClickEdit">
                                 <i class="fa fa-pencil"/> Edit
                             </button>
-                            <button class="o_Activity_toolButton o_Activity_cancelButton btn btn-link" t-on-click="_onClickCancel" >
+                            <button class="o_Activity_toolButton o_Activity_cancelButton btn btn-link" t-on-click="activity.onClickCancel" >
                                 <i class="fa fa-times"/> Cancel
                             </button>
                         </div>

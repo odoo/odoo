@@ -8,6 +8,23 @@ function factory(dependencies) {
 
     class Activity extends dependencies['mail.model'] {
 
+        /**
+         * @override
+         */
+        _created() {
+            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
+            this.onAttachmentCreated = this.onAttachmentCreated.bind(this);
+            this.onBlur = this.onBlur.bind(this);
+            this.onClickActivity = this.onClickActivity.bind(this);
+            this.onClickCancel = this.onClickCancel.bind(this);
+            this.onClickDetailsButton = this.onClickDetailsButton.bind(this);
+            this.onClickDiscard = this.onClickDiscard.bind(this);
+            this.onClickDone = this.onClickDone.bind(this);
+            this.onClickDoneAndScheduleNext = this.onClickDoneAndScheduleNext.bind(this);
+            this.onClickEdit = this.onClickEdit.bind(this);
+            this.onClickUploadDocument = this.onClickUploadDocument.bind(this);
+            this.onKeydown = this.onKeydown.bind(this);
+        }
 
         //----------------------------------------------------------------------
         // Public
@@ -24,10 +41,6 @@ function factory(dependencies) {
             }));
             this.delete();
         }
-
-        //----------------------------------------------------------------------
-        // Public
-        //----------------------------------------------------------------------
 
         /**
          * @static
@@ -121,30 +134,6 @@ function factory(dependencies) {
             return data2;
         }
 
-        /**
-         * Opens (legacy) form view dialog to edit current activity and updates
-         * the activity when dialog is closed.
-         */
-        edit() {
-            const action = {
-                type: 'ir.actions.act_window',
-                name: this.env._t("Schedule Activity"),
-                res_model: 'mail.activity',
-                view_mode: 'form',
-                views: [[false, 'form']],
-                target: 'new',
-                context: {
-                    default_res_id: this.thread.id,
-                    default_res_model: this.thread.model,
-                },
-                res_id: this.id,
-            };
-            this.env.bus.trigger('do-action', {
-                action,
-                options: { on_close: () => this.fetchAndUpdate() },
-            });
-        }
-
         async fetchAndUpdate() {
             const [data] = await this.async(() => this.env.services.rpc({
                 model: 'mail.activity',
@@ -213,9 +202,141 @@ function factory(dependencies) {
             });
         }
 
+        /**
+         * Handles event on attachment creation by the file uploader.
+         *
+         * @param {CustomEvent} ev
+         * @param {Object} ev.detail
+         * @param {mail.attachment} ev.detail.attachment
+         */
+        onAttachmentCreated(ev) {
+            this.markAsDone({ attachments: [ev.detail.attachment] });
+        }
+
+        /**
+         * Handles click on the done bottom of the attachment popover.
+         */
+        async onClickDone() {
+            await this.markAsDone({
+                feedback: this.feedbackTextareaRef.el.value,
+            });
+            this.componentPopOver.trigger('reload', { keepChanges: true });
+        }
+
+        /**
+         * Handles click on the Done and Schedule next button og the attachment popover.
+         */
+        onClickDoneAndScheduleNext() {
+            this.markAsDoneAndScheduleNext({
+                feedback: this.feedbackTextareaRef.el.value,
+            });
+        }
+
+        /**
+         * Handles blur event on the feedback textarea.
+         */
+        onBlur() {
+            this.update({
+                feedbackBackup: this.feedbackTextareaRef.el.value,
+            });
+        }
+
+        /**
+         * Handle click on activity component.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickActivity(ev) {
+            if (
+                ev.target.tagName === 'A' &&
+                ev.target.dataset.oeId &&
+                ev.target.dataset.oeModel
+            ) {
+                this.messaging.openProfile({
+                    id: Number(ev.target.dataset.oeId),
+                    model: ev.target.dataset.oeModel,
+                });
+                // avoid following dummy href
+                ev.preventDefault();
+            }
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        async onClickCancel(ev) {
+            ev.preventDefault();
+            await this.deleteServerRecord();
+            this.component.trigger('reload', { keepChanges: true });
+        }
+
+        /**
+         * Handle click on activity detail button.
+         */
+        onClickDetailsButton() {
+            this.update({ areDetailsVisible: !this.areDetailsVisible });
+        }
+
+        /**
+         * Handle click on activity edit button.
+         */
+        onClickEdit() {
+            /**
+             * Opens (legacy) form view dialog to edit current activity and updates
+             * the activity when dialog is closed.
+             */
+            const action = {
+                type: 'ir.actions.act_window',
+                name: this.env._t("Schedule Activity"),
+                res_model: 'mail.activity',
+                view_mode: 'form',
+                views: [[false, 'form']],
+                target: 'new',
+                context: {
+                    default_res_id: this.thread.id,
+                    default_res_model: this.thread.model,
+                },
+                res_id: this.id,
+            };
+            this.env.bus.trigger('do-action', {
+                action,
+                options: { on_close: () => this.fetchAndUpdate() },
+            });
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickUploadDocument(ev) {
+            this.fileUploaderRef.comp.openBrowserFileUploader();
+        }
+
+        /**
+         * Handles onKeydown event.
+         */
+        onKeydown(ev) {
+            if (ev.key === 'Escape') {
+                this._closePopOver();
+            }
+        }
+
+        /**
+         * Handles click on the discard button for the popover.
+         */
+        onClickDiscard() {
+            this._closePopOver();
+        }
+
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
+
+        /**
+         * @private
+         */
+        _closePopOver() {
+            this.componentPopOver.trigger('o-popover-close');
+        }
 
         /**
          * @private
@@ -245,6 +366,12 @@ function factory(dependencies) {
     }
 
     Activity.fields = {
+        /**
+         * Determines if the detail box is visible.
+         */
+        areDetailsVisible: attr({
+            default: false,
+        }),
         assignee: many2one('mail.user'),
         attachments: many2many('mail.attachment', {
             inverse: 'activities',
@@ -254,6 +381,14 @@ function factory(dependencies) {
         }),
         category: attr(),
         creator: many2one('mail.user'),
+        /**
+         * States the OWL component of this acivity.
+         */
+        component: attr(),
+        /**
+         * States the OWL component of this acivity popover.
+         */
+        componentPopOver: attr(),
         dateCreate: attr(),
         dateDeadline: attr(),
         /**
@@ -262,6 +397,14 @@ function factory(dependencies) {
          * In all other cases, this field value should not be trusted.
          */
         feedbackBackup: attr(),
+        /**
+         * States the OWL ref of the "feedbackTextarea" of this activity popover.
+         */
+        feedbackTextareaRef: attr(),
+        /**
+         * States the OWL ref of the "fileUpload" of this activity.
+         */
+        fileUploaderRef: attr(),
         chaining_type: attr({
             default: 'suggest',
         }),

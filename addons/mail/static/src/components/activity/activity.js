@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 
 import {
     auto_str_to_date,
@@ -8,8 +10,7 @@ import {
     getLangDatetimeFormat,
 } from 'web.time';
 
-const { Component, useState } = owl;
-const { useRef } = owl.hooks;
+const { Component } = owl;
 
 export class Activity extends Component {
 
@@ -18,14 +19,8 @@ export class Activity extends Component {
      */
     constructor(...args) {
         super(...args);
-        this.state = useState({
-            areDetailsVisible: false,
-        });
-        /**
-         * Reference of the file uploader.
-         * Useful to programmatically prompts the browser file uploader.
-         */
-        this._fileUploaderRef = useRef('fileUploader');
+        useComponentToModel({ fieldName: 'component', modelName: 'mail.activity', propNameAsRecordLocalId: 'activityLocalId' });
+        useRefToModel({ fieldName: 'fileUploaderRef', modelName: 'mail.activity', propNameAsRecordLocalId: 'activityLocalId', refName: 'fileUploader' });
     }
 
     //--------------------------------------------------------------------------
@@ -97,72 +92,6 @@ export class Activity extends Component {
      */
     get summary() {
         return _.str.sprintf(this.env._t("“%s”"), this.activity.summary);
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {CustomEvent} ev
-     * @param {Object} ev.detail
-     * @param {mail.attachment} ev.detail.attachment
-     */
-    _onAttachmentCreated(ev) {
-        this.activity.markAsDone({ attachments: [ev.detail.attachment] });
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClick(ev) {
-        if (
-            ev.target.tagName === 'A' &&
-            ev.target.dataset.oeId &&
-            ev.target.dataset.oeModel
-        ) {
-            this.messaging.openProfile({
-                id: Number(ev.target.dataset.oeId),
-                model: ev.target.dataset.oeModel,
-            });
-            // avoid following dummy href
-            ev.preventDefault();
-        }
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    async _onClickCancel(ev) {
-        ev.preventDefault();
-        await this.activity.deleteServerRecord();
-        this.trigger('reload', { keepChanges: true });
-    }
-
-    /**
-     * @private
-     */
-    _onClickDetailsButton() {
-        this.state.areDetailsVisible = !this.state.areDetailsVisible;
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickEdit(ev) {
-        this.activity.edit();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickUploadDocument(ev) {
-        this._fileUploaderRef.comp.openBrowserFileUploader();
     }
 
 }
