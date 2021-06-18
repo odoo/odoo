@@ -71,7 +71,7 @@
                                     </div>
                                     <div t-if="env.pos.config.tip_product_id" class="button js_tip"
                                         t-on-click="addTip">
-                                        <i class="fa fa-heart" /> Tip
+                                        <i class="fa fa-heart" /> Tip <t t-if="currentOrder.get_tip() != 0">(<t t-esc="env.pos.format_currency(currentOrder.get_tip())"/>)</t>
                                     </div>
                                     <div t-if="env.pos.config.iface_cashdrawer" class="button js_cashdrawer"
                                         t-on-click="openCashbox">
