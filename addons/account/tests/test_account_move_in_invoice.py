@@ -1141,6 +1141,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': fields.Date.from_string('2019-02-01'),
             'reason': 'no reason',
             'refund_method': 'refund',
+            'journal_id': self.invoice.journal_id.id,
         })
         reversal = move_reversal.reverse_moves()
         reverse_move = self.env['account.move'].browse(reversal['res_id'])
@@ -1192,6 +1193,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': fields.Date.from_string('2019-02-01'),
             'reason': 'no reason again',
             'refund_method': 'cancel',
+            'journal_id': self.invoice.journal_id.id,
         })
         reversal = move_reversal.reverse_moves()
         reverse_move = self.env['account.move'].browse(reversal['res_id'])
@@ -1255,6 +1257,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': fields.Date.from_string('2017-01-01'),
             'reason': 'no reason',
             'refund_method': 'refund',
+            'journal_id': self.invoice.journal_id.id,
         })
         reversal = move_reversal.reverse_moves()
         reverse_move = self.env['account.move'].browse(reversal['res_id'])
@@ -1312,6 +1315,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': fields.Date.from_string('2017-01-01'),
             'reason': 'no reason again',
             'refund_method': 'cancel',
+            'journal_id': self.invoice.journal_id.id,
         })
         reversal = move_reversal.reverse_moves()
         reverse_move = self.env['account.move'].browse(reversal['res_id'])

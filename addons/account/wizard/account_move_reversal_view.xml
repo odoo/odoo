@@ -10,6 +10,7 @@
                     <field name="company_id" invisible="1"/>
                     <field name="move_ids" invisible="1"/>
                     <field name="move_type" invisible="1"/>
+                    <field name="available_journal_ids" invisible="1"/>
                     <group>
                          <group attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'in_invoice'))]}">
                             <field name="refund_method" widget="radio" attrs="{'readonly': [('residual', '=', 0)]}"/>
@@ -28,15 +29,15 @@
                          </group>
                     </group>
                     <group>
-                         <group>
-                             <field name="reason" attrs="{'invisible': [('move_type', '=', 'entry')]}"/>
-                             <field name="date_mode" string="Reversal Date" widget="radio"/>
-                         </group>
-                         <group>
-                            <field name="journal_id"/>
-                            <field name="date" string="Refund Date" attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'in_invoice')), ('date_mode', '!=', 'custom')], 'required':[('date_mode', '=', 'custom')]}"/>
-                            <field name="date" attrs="{'invisible': ['|', ('move_type', 'in', ('out_invoice', 'in_invoice')), ('date_mode', '!=', 'custom')], 'required':[('date_mode', '=', 'custom')]}"/>
-                         </group>
+                        <group>
+                            <field name="reason" attrs="{'invisible': [('move_type', '=', 'entry')]}"/>
+                            <field name="date_mode" string="Reversal Date" widget="radio"/>
+                        </group>
+                        <group>
+                        <field name="journal_id" domain="[('id', 'in', available_journal_ids)]"/>
+                        <field name="date" string="Refund Date" attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'in_invoice')), ('date_mode', '!=', 'custom')], 'required':[('date_mode', '=', 'custom')]}"/>
+                        <field name="date" attrs="{'invisible': ['|', ('move_type', 'in', ('out_invoice', 'in_invoice')), ('date_mode', '!=', 'custom')], 'required':[('date_mode', '=', 'custom')]}"/>
+                        </group>
                     </group>
                     <footer>
                         <button string='Reverse' name="reverse_moves" type="object" class="btn-primary"/>
