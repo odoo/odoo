@@ -1,6 +1,7 @@
 odoo.define('hr_timesheet.timesheet_uom', function (require) {
 'use strict';
 
+const { registry } = require("@web/core/registry");
 const basicFields = require('web.basic_fields');
 const fieldUtils = require('web.field_utils');
 
@@ -11,7 +12,6 @@ const fieldRegistry = require('web.field_registry');
 require('web._field_registry');
 
 const session = require('web.session');
-const AbstractWebClient = require('web.AbstractWebClient');
 
 const TimesheetUOMMultiCompanyMixin = {
     init: function(parent, name, record, options) {
@@ -90,9 +90,25 @@ const FieldTimesheetTime = basicFields.FieldFloatTime.extend(TimesheetUOMMultiCo
     }
 });
 
-AbstractWebClient.include({
-    init: function () {
-        this._super(...arguments);
+const timesheetUomService = {
+    dependencies: ["legacy_session"],
+    start() {
+        const timesheetUomInfo = {
+            widget: null,
+            factor: 1,
+        };
+        if (session.user_context &&
+            session.user_context.allowed_company_ids &&
+            session.user_context.allowed_company_ids.length) {
+            const currentCompanyId = session.user_context.allowed_company_ids[0];
+            const currentCompany = session.user_companies.allowed_companies[currentCompanyId];
+            const currentCompanyTimesheetUOMId = currentCompany.timesheet_uom_id || false;
+            timesheetUomInfo.factor = currentCompany.timesheet_uom_factor || 1;
+            if (currentCompanyTimesheetUOMId) {
+                timesheetUomInfo.widget = session.uom_ids[currentCompanyTimesheetUOMId].timesheet_widget;
+            }
+        }
+
         /**
          * Binding depending on Company Preference
          *
@@ -100,10 +116,8 @@ AbstractWebClient.include({
          * Simply match the 'timesheet_uom' widget key with the correct
          * implementation (float_time, float_toggle, ...). The default
          * value will be 'float_factor'.
-        **/
-        const widgetName = this.currentCompanyTimesheetUOM &&
-                           this.currentCompanyTimesheetUOM.timesheet_widget ||
-                           'float_factor';
+         **/
+        const widgetName = timesheetUomInfo.widget || 'float_factor';
 
         let FieldTimesheetUom = null;
 
@@ -113,9 +127,9 @@ AbstractWebClient.include({
             FieldTimesheetUom = FieldTimesheetTime;
         } else {
             FieldTimesheetUom = (
-                    fieldRegistry.get(widgetName) &&
-                    fieldRegistry.get(widgetName).extend({ })
-                ) || FieldTimesheetFactor;
+                fieldRegistry.get(widgetName) &&
+                fieldRegistry.get(widgetName).extend({ })
+            ) || FieldTimesheetFactor;
         }
         fieldRegistry.add('timesheet_uom', FieldTimesheetUom);
 
@@ -133,7 +147,7 @@ AbstractWebClient.include({
         // bind the formatter and parser method, and tweak the options
         const _tweak_options = (options) => {
             if (!_.contains(options, 'factor')) {
-                options.factor = this.currentCompanyTimesheetUOMFactor;
+                options.factor = timesheetUomInfo.factor;
             }
             return options;
         };
@@ -161,13 +175,16 @@ AbstractWebClient.include({
             const parser = fieldUtils.parse[FieldTimesheetUom.prototype.formatType];
             return parser(value, field, options);
         };
+        return timesheetUomInfo;
     },
-});
+};
+registry.category("services").add("timesheet_uom", timesheetUomService);
 
 return {
     FieldTimesheetFactor,
     FieldTimesheetTime,
     FieldTimesheetToggle,
+    timesheetUomService,
 };
 
 });

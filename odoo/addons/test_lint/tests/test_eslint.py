@@ -27,6 +27,7 @@ GLOBAL = ','.join([
         'Popover',
         'StackTrace',
         'QUnit',
+        'luxon',
         'moment',
         'py',
         'ClipboardJS',

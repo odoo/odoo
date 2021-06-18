@@ -1,0 +1,13 @@
+.o_debug_mode .fa { /* Active profiling red dot should be overed on the bottom right corner of the bug icon*/
+    position: relative;
+    .fa {
+        position: absolute;
+        bottom: -0.1em;
+        right: -0.4em;
+        font-size: 0.8em;
+    }
+}
+
+.open_profiling { /* Fix dropdown-item padding missing because of float: right*/
+    padding: 3px;
+}

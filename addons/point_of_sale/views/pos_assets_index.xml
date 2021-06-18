@@ -32,11 +32,12 @@
                 'login_number': login_number,
                 'debug': debug,
             })"/>;
+            odoo.loadTemplatesPromise = fetch(`/web/webclient/qweb/${odoo.session_info.cache_hashes.qweb}?bundle=web.assets_qweb`).then(doc => doc.text());
         </script>
 
         <t t-call="point_of_sale.assets_common"/>
         <t t-call="web.conditional_assets_tests"/>
-        <script type="text/javascript" src="/point_of_sale/static/src/js/main.js"></script>
+        <t t-call-assets="point_of_sale.assets_backend_prod_only" />
     </head>
     <body>
     </body>

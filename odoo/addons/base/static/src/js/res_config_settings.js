@@ -190,7 +190,7 @@ var BaseSettingRenderer = FormRenderer.extend({
             module.settingView.find('.o_setting_box').removeClass('o_hidden');
             module.settingView.find('h2').removeClass('o_hidden');
             module.settingView.find('.settingSearchHeader').addClass('o_hidden');
-            module.settingView.find('.o_settings_container').addClass('mt16');
+            module.settingView.find('.o_settings_container').addClass('mt16').removeClass('mb-0');
         });
         this.activeTab.removeClass('o_hidden').addClass('selected');
         this.activeView.removeClass('o_hidden');
@@ -233,7 +233,7 @@ var BaseSettingRenderer = FormRenderer.extend({
             module.settingView.find('.o_setting_box').addClass('o_hidden');
             module.settingView.find('h2').addClass('o_hidden');
             module.settingView.find('.settingSearchHeader').addClass('o_hidden');
-            module.settingView.find('.o_settings_container').removeClass('mt16');
+            module.settingView.find('.o_settings_container').removeClass('mt16').addClass('mb-0');
             var resultSetting = module.settingView.find(".o_form_label:containsTextLike('" + self.searchText + "')");
             if (resultSetting.length > 0) {
                 resultSetting.each(function () {

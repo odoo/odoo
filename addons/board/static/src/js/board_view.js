@@ -446,6 +446,19 @@ var BoardView = FormView.extend({
         this._super.apply(this, arguments);
         this.controllerParams.customViewID = viewInfo.custom_view_id;
     },
+    /**
+     * @override
+     */
+    _extractParamsFromAction(action) {
+        action.target = "inline";
+        action.flags = action.flags || {};
+        Object.assign(action.flags, {
+            hasActionMenus: false,
+            hasSearchView: false,
+            headless: true,
+        });
+        return this._super.apply(this, arguments);
+    },
 });
 
 return BoardView;

@@ -4,7 +4,7 @@
 import re
 import odoo.tests
 
-RE_ONLY = re.compile('QUnit\.only\(')
+RE_ONLY = re.compile(r'QUnit\.(only|debug)\(')
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -34,7 +34,7 @@ class WebSuite(odoo.tests.HttpCase):
                 continue
             with open(filename, 'rb') as fp:
                 if RE_ONLY.search(fp.read().decode('utf-8')):
-                    self.fail("`QUnit.only()` used in file %r" % asset['url'])
+                    self.fail("`QUnit.only()` or `QUnit.debug()` used in file %r" % asset['url'])
 
 
 @odoo.tests.tagged('post_install', '-at_install')

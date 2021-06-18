@@ -2,14 +2,16 @@ odoo.define("hr_timesheet.timesheet_uom_tests_env", function (require) {
 "use strict";
 
 const session = require('web.session');
-const AbstractWebClient = require('web.AbstractWebClient');
 const { createView } = require("web.test_utils");
 const ListView = require('web.ListView');
+const { timesheetUomService } = require('hr_timesheet.timesheet_uom');
+const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
+const { registry } = require("@web/core/registry");
 
 /**
  * Sets the timesheet related widgets testing environment up.
  */
-const SetupTimesheetUOMWidgetsTestEnvironment = function () {
+function SetupTimesheetUOMWidgetsTestEnvironment () {
     this.allowedCompanies = {
         1: {
             id: 1,
@@ -138,16 +140,18 @@ const SetupTimesheetUOMWidgetsTestEnvironment = function () {
             ],
         },
     };
-    this.triggerAbstractWebClientInit = function (sessionToApply, doNotUseEnvSession = false) {
+    this.patchSessionAndStartServices = async function (sessionToApply, doNotUseEnvSession = false) {
         /*
         Adds the timesheet_uom to the fieldRegistry by setting the session and
-        instantiating AbstractWebClient as the process of adding the right widget
-        is included in the init function of AbstractWebClient.
+        starting the timesheet_uom service which registers the widget in the registry.
         */
         session.user_companies = Object.assign(
             { },
             !doNotUseEnvSession && this.session.user_companies || { },
             sessionToApply && sessionToApply.user_companies);
+        if (Object.keys(session.user_companies).length === 0) {
+            delete session.user_companies;
+        }
         session.user_context = Object.assign(
             { },
             !doNotUseEnvSession && this.session.user_context || { },
@@ -162,15 +166,16 @@ const SetupTimesheetUOMWidgetsTestEnvironment = function () {
         if (sessionToApply && 'uid' in sessionToApply) {
             session.uid = sessionToApply.uid;
         }
-        if (!this.abstractWebClient) {
-            this.abstractWebClient = new AbstractWebClient();
-        } else {
-            this.abstractWebClient.init();
+        const serviceRegistry = registry.category("services");
+        if (!serviceRegistry.contains("timesheet_uom")) {
+            // Remove dependency on legacy_session since we're patching the session directly
+            serviceRegistry.add("timesheet_uom", Object.assign({}, timesheetUomService, { dependencies: [] }));
         }
+        await makeTestEnv(); // Start services
     };
-    this.createView = async function(options) {
+    this.createView = async function (options) {
         const sessionToApply = options && options.session || { };
-        this.triggerAbstractWebClientInit(sessionToApply);
+        await this.patchSessionAndStartServices(sessionToApply);
         return await createView(Object.assign(
             {
                 View: ListView,

@@ -33,7 +33,7 @@ tour.register('sale_timesheet_tour', {
         actions.text('Service Product (Prepaid Hours)', this.$anchor.find('input'));
     },
 }, {
-    trigger: 'ul.ui-menu.ui-widget.ui-autocomplete > li:first-child > a',
+    trigger: 'ul.ui-menu.ui-widget.ui-autocomplete > li:first-child > a:contains(Service Product (Prepaid Hours))',
     content: 'Select the prepaid service product in the autocomplete dropdown',
     run: 'click',
 }, {
@@ -155,11 +155,11 @@ tour.register('sale_timesheet_tour', {
             console.error('The quantity delivered on this Sales Order Item should be equal to 1.00 hour. qtyDelivered = ' + qtyDelivered);
     },
 }, {
-    trigger: 'a[data-menu-xmlid="project.menu_project_config"]',
+    trigger: 'button[data-menu-xmlid="project.menu_project_config"]',
     content: 'Click on the Configuration menu.',
     run: 'click',
 }, {
-    trigger: 'a[role="menuitem"][data-menu-xmlid="project.menu_projects_config"]',
+    trigger: 'li[data-menu-xmlid="project.menu_projects_config"]',
     content: 'Select Configuration > Projects.',
     run: 'click',
 }, {
@@ -241,7 +241,7 @@ tour.register('sale_timesheet_tour', {
     trigger: '.o_form_button_save',
     content: 'Save Project',
 }, {
-    trigger: 'a[role="menuitem"][data-menu-xmlid="project.menu_projects"]',
+    trigger: 'li[data-menu-xmlid="project.menu_projects"]',
     content: 'Select Projects'
 }, {
     trigger: 'div.o_kanban_primary_left :contains("Project for Freeman")',

@@ -1,6 +1,7 @@
 .o_timeoff_calendar .o_content {
     .o_timeoff_container {
         height: 6rem;
+        box-shadow: inset 0 -1px 0 $border-color;
 
         + .o_calendar_container {
             height: calc(100% - 6rem);
@@ -12,7 +13,7 @@
     }
 
     .o_timeoff_card {
-        border-right: #adb5bd solid 2px;
+        border-right: $border-color solid 2px;
         text-align: center;
         margin-top: 4px;
         div {

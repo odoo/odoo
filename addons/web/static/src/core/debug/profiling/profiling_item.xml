@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DebugMenu.ProfilingItem" owl="1">
+        <DropdownItem class="o_debug_profiling_item" payload="{}">
+            <span class="o_profiling_switch">
+                <span class="custom-control custom-switch" t-on-click.stop.prevent="profiling.toggleProfiling()">
+                    <input type="checkbox" class="custom-control-input" id="enable_profiling" t-att-checked="profiling.state.isEnabled"/>
+                    <label class="custom-control-label">
+                        Enable profiling
+                        <span t-if="profiling.state.isEnabled" class="profiling_items text-danger fa fa-circle"></span>
+                    </label>
+                </span>
+                <i class="o_open_profiling float-right fa fa-list fa-lg" t-on-click="openProfiles"/>
+            </span>
+            <t t-if="profiling.state.isEnabled">
+                <span class="o_profiling_switch custom-control custom-switch" t-on-click.stop.prevent="profiling.toggleCollector('sql')">
+                    <input type="checkbox" class="custom-control-input" id="profile_sql"
+                        t-att-checked="profiling.isCollectorEnabled('sql')"/>
+                    <label class="custom-control-label" for="profile_sql">Record sql</label>
+                </span>
+                <span t-if="profiling.state.isEnabled" class="o_profiling_switch custom-control custom-switch" t-on-click.stop.prevent="profiling.toggleCollector('traces_async')">
+                    <input type="checkbox" class="custom-control-input" id="profile_traces_async"
+                        t-att-checked="profiling.isCollectorEnabled('traces_async')"/>
+                    <label class="custom-control-label" for="profile_traces_async">Record traces</label>
+                </span>
+                <div t-if="profiling.isCollectorEnabled('traces_async')" class="input-group input-group-sm" t-on-click.stop.prevent="">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">Interval</div>
+                    </div>
+                    <select class="profile_param form-control" t-on-change="changeParam('traces_async_interval')">
+                        <t t-set="interval" t-value="profiling.state.params.traces_async_interval"/>
+                        <option value="">Default</option>
+                        <option value="0.001" t-att-selected="interval === '0.001'">0.001</option>
+                        <option value="0.01" t-att-selected="interval === '0.01'">0.01</option>
+                        <option value="0.1" t-att-selected="interval === '0.1'">0.1</option>
+                        <option value="1" t-att-selected="interval === '1'">1</option>
+                    </select>
+                </div>
+            </t>
+        </DropdownItem>
+    </t>
+
+</templates>

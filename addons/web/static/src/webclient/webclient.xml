@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.WebClient" owl="1">
+        <body class="o_web_client" t-att-class="{'o_is_superuser': user.userId === 1}">
+            <NotUpdatable>
+                <NavBar/>
+            </NotUpdatable>
+            <NotUpdatable>
+                <ActionContainer/>
+            </NotUpdatable>
+            <div>
+                <t t-foreach="Components" t-as="C" t-key="C[0]">
+                    <NotUpdatable>
+                        <ErrorHandler onError="error => handleComponentError(error, C)">
+                            <t t-component="C[1].Component" t-props="C[1].props"/>
+                        </ErrorHandler>
+                    </NotUpdatable>
+                </t>
+            </div>
+        </body>
+    </t>
+
+</templates>
