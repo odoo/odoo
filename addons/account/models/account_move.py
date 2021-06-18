@@ -4552,9 +4552,13 @@ class AccountMoveLine(models.Model):
                         # Tax line.
                         grouping_key = self.env['account.partial.reconcile']._get_cash_basis_tax_line_grouping_key_from_record(line)
                         if grouping_key in account_vals_to_fix:
+                            debit = account_vals_to_fix[grouping_key]['debit'] + vals['debit']
+                            credit = account_vals_to_fix[grouping_key]['credit'] + vals['credit']
+                            balance = debit - credit
+
                             account_vals_to_fix[grouping_key].update({
-                                'debit': account_vals_to_fix[grouping_key]['debit'] + vals['debit'],
-                                'credit': account_vals_to_fix[grouping_key]['credit'] + vals['credit'],
+                                'debit': balance if balance > 0 else 0,
+                                'credit': -balance if balance < 0 else 0,
                                 'tax_base_amount': account_vals_to_fix[grouping_key]['tax_base_amount'] + line.tax_base_amount,
                             })
                         else:
