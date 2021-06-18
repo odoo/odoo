@@ -15,6 +15,8 @@ import { debugService } from "@web/core/debug/debug_service";
 import ControlPanel from "web.ControlPanel";
 import core from "web.core";
 import AbstractAction from "web.AbstractAction";
+import Widget from "web.Widget";
+import SystrayMenu from "web.SystrayMenu";
 
 let serverData;
 
@@ -351,5 +353,33 @@ QUnit.module("ActionManager", (hooks) => {
             gipsy: "the acid queen",
             doctor: "quackson",
         });
+    });
+
+    QUnit.test("Systray item triggers do action on legacy service provider", async (assert) => {
+        assert.expect(3);
+        function createMockActionService(assert) {
+            return {
+                dependencies: [],
+                start() {
+                    return {
+                        doAction(params) {
+                            assert.step("do action");
+                            assert.strictEqual(params, 128, "The doAction parameters are invalid.");
+                        },
+                        loadState() {},
+                    };
+                },
+            };
+        }
+        registry.category("services").add("action", createMockActionService(assert));
+        const FakeSystrayItemWidget = Widget.extend({
+            on_attach_callback() {
+                this.do_action(128);
+            },
+        });
+        SystrayMenu.Items.push(FakeSystrayItemWidget);
+        await createWebClient({ serverData });
+        assert.verifySteps(["do action"]);
+        delete SystrayMenu.Items.FakeSystrayItemWidget;
     });
 });
