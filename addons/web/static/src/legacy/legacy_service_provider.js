@@ -1,17 +1,29 @@
 /** @odoo-module **/
 
 import { bus } from "web.core";
+import Context from "web.Context";
+
 import { browser } from "../core/browser/browser";
 import { registry } from "../core/registry";
+import { mapDoActionOptionAPI } from "./utils";
 
 export const legacyServiceProvider = {
-    dependencies: ["effect"],
+    dependencies: ["effect", "action"],
     start({ services }) {
         browser.addEventListener("show-effect", (ev) => {
             services.effect.add(ev.detail.type, ev.detail);
         });
         bus.on("show-effect", this, (payload) => {
             services.effect.add(payload.type, payload);
+        });
+
+        browser.addEventListener("do-action", (ev) => {
+            const payload = ev.detail;
+            if (payload.action.context) {
+                payload.action.context = new Context(payload.action.context).eval();
+            }
+            const legacyOptions = mapDoActionOptionAPI(payload.options);
+            services.action.doAction(payload.action, legacyOptions);
         });
     },
 };
