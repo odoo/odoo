@@ -116,6 +116,7 @@ class CompanyLDAP(models.Model):
             return False
         except ldap.LDAPError as e:
             _logger.error('An LDAP exception occurred: %s', e)
+            return False
         return entry
 
     def _query(self, conf, filter, retrieve_attributes=None):
