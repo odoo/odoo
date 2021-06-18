@@ -117,30 +117,6 @@ function factory(dependencies) {
             return data2;
         }
 
-        /**
-         * Opens (legacy) form view dialog to edit current activity and updates
-         * the activity when dialog is closed.
-         */
-        edit() {
-            const action = {
-                type: 'ir.actions.act_window',
-                name: this.env._t("Schedule Activity"),
-                res_model: 'mail.activity',
-                view_mode: 'form',
-                views: [[false, 'form']],
-                target: 'new',
-                context: {
-                    default_res_id: this.thread.id,
-                    default_res_model: this.thread.model,
-                },
-                res_id: this.id,
-            };
-            this.env.bus.trigger('do-action', {
-                action,
-                options: { on_close: () => this.fetchAndUpdate() },
-            });
-        }
-
         async fetchAndUpdate() {
             const [data] = await this.async(() => this.env.services.rpc({
                 model: 'mail.activity',
@@ -227,6 +203,33 @@ function factory(dependencies) {
                 // avoid following dummy href
                 ev.preventDefault();
             }
+        }
+
+        /**
+         * Handle click on activity edit button.
+         */
+        onClickEdit() {
+            /**
+             * Opens (legacy) form view dialog to edit current activity and updates
+             * the activity when dialog is closed.
+             */
+            const action = {
+                type: 'ir.actions.act_window',
+                name: this.env._t("Schedule Activity"),
+                res_model: 'mail.activity',
+                view_mode: 'form',
+                views: [[false, 'form']],
+                target: 'new',
+                context: {
+                    default_res_id: this.thread.id,
+                    default_res_model: this.thread.model,
+                },
+                res_id: this.id,
+            };
+            this.env.bus.trigger('do-action', {
+                action,
+                options: { on_close: () => this.fetchAndUpdate() },
+            });
         }
 
         //----------------------------------------------------------------------

@@ -154,14 +154,6 @@ export class Activity extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickEdit(ev) {
-        this.activity.edit();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickUploadDocument(ev) {
         this._fileUploaderRef.comp.openBrowserFileUploader();
     }
