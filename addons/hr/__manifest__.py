@@ -50,7 +50,8 @@
     'assets': {
         'web.assets_backend': [
             'hr/static/src/scss/hr.scss',
-            'hr/static/src/js/chat.js',
+            'hr/static/src/js/chat_mixin.js',
+            'hr/static/src/js/hr_employee.js',
             'hr/static/src/js/language.js',
             'hr/static/src/js/m2x_avatar_employee.js',
             'hr/static/src/js/standalone_m2o_avatar_employee.js',
