@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.ListScreen" owl="1">
+        <div class="list-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
+            <div class="screen-full-width">
+                <div class="rightpane">
+                    <div class="control-panel">
+                        <div class="item button back" t-on-click="trigger('close-screen')">
+                            <i class="fa fa-angle-double-left"></i>
+                            <span> Back</span>
+                        </div>
+                        <div class="item selectors">
+                            <t t-foreach="listInfos" t-as="name" t-key="name">
+                                <t t-set="_listInfo" t-value="listInfos[name]" />
+                                <div class="button" t-att-class="{ highlight: activeListInfo ? activeListInfo.name === _listInfo.name : false }" t-on-click="trigger('set-list-info', _listInfo)">
+                                    <span t-esc="_listInfo.name" />
+                                </div>
+                            </t>
+                        </div>
+                        <div class="item search-box">
+                            <span class="icon">
+                                <i class="fa fa-search" />
+                            </span>
+                            <input type="text" t-model="state.searchString" t-on-keydown="onInputKeydown" placeholder="E.g. steward" />
+                            <span class="clear" t-on-click="trigger('clear-search')">
+                                <i class="fa fa-remove" />
+                            </span>
+                        </div>
+                        <div class="item">
+                            <div class="page-controls">
+                                <div class="previous" t-att-class="{ disabled: isAtFirstPage() }" t-on-click="trigger('set-page', { increment: -1 })">
+                                    <i class="fa fa-fw fa-caret-left" role="img" aria-label="Previous Order List"
+                                        title="Previous Order List"></i>
+                                </div>
+                                <div class="next" t-att-class="{ disabled: isAtLastPage() }" t-on-click="trigger('set-page', { increment: 1 })">
+                                    <i class="fa fa-fw fa-caret-right" role="img" aria-label="Next Order List"
+                                        title="Next Order List"></i>
+                                </div>
+                            </div>
+                            <div class="page">
+                                <span>
+                                    <t t-esc="getPageNumber()" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div t-if="activeListInfo" class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <t t-foreach="activeListInfo.fieldsToShow" t-as="fieldName" t-key="fieldName">
+                                        <t t-set="_headerDetails" t-value="getHeaderDisplayDetails(fieldName)" />
+                                        <th t-att-class="_headerDetails.classes">
+                                            <t t-esc="_headerDetails.text" />
+                                        </th>
+                                    </t>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="activeListInfo.items" t-as="item" t-key="item.id">
+                                    <t t-set="_recordDetails" t-value="getRecordDisplayDetails(item)" />
+                                    <tr t-on-click="trigger('click-record', item)">
+                                        <t t-foreach="activeListInfo.fieldsToShow" t-as="fieldName" t-key="fieldName">
+                                            <t t-set="_fieldValue" t-value="_recordDetails[fieldName]" />
+                                            <td t-att-class="_fieldValue.classes">
+                                                <t t-esc="_fieldValue.text" />
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

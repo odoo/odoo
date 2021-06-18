@@ -85,6 +85,7 @@
             'point_of_sale/static/src/js/Screens/ClientListScreen/ClientLine.js',
             'point_of_sale/static/src/js/Screens/ClientListScreen/ClientDetailsEdit.js',
             'point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js',
+            'point_of_sale/static/src/js/Screens/ListScreen/ListScreen.js',
             'point_of_sale/static/src/js/Screens/OrderManagementScreen/ControlButtons/InvoiceButton.js',
             'point_of_sale/static/src/js/Screens/OrderManagementScreen/ControlButtons/ReprintReceiptButton.js',
             'point_of_sale/static/src/js/Screens/OrderManagementScreen/OrderFetcher.js',

@@ -298,6 +298,9 @@ td {
 .pos .pos-right-align {
     text-align: right;
 }
+.pos .pos-left-align {
+    text-align: left;
+}
 .pos .pos-center-align {
     text-align: center;
 }
@@ -2883,7 +2886,7 @@ td {
     overflow-y: auto;
 }
 
-.order-management-screen .control-panel {
+.control-panel {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -2891,43 +2894,43 @@ td {
     margin: 0.5rem;
 }
 
-.order-management-screen .control-panel .item {
+.control-panel .item {
     font-size: medium;
 }
 
-.order-management-screen .control-panel .item .page-controls {
+.control-panel .item .page-controls {
     display: flex;
     flex-direction: row;
     align-items: center;
     font-size: x-large;
 }
 
-.order-management-screen .control-panel .page-controls > div {
+.control-panel .page-controls > div {
     border: darkgray solid 1px;
     border-radius: 2px;
 }
 
-.order-management-screen .control-panel .page-controls > div:hover {
+.control-panel .page-controls > div:hover {
     color: rgb(110,200,155);
 }
 
-.order-management-screen .control-panel .page-controls .previous {
+.control-panel .page-controls .previous {
     margin-right: 0.2rem;
 }
 
-.order-management-screen .control-panel .page-controls .next {
+.control-panel .page-controls .next {
     margin-left: 0.2rem;
 }
 
 
-.order-management-screen .control-panel .search-box {
+.control-panel .search-box {
     flex: 1;
     position: relative;
     text-align: center;
     margin: 0.2rem;
 }
 
-.order-management-screen .control-panel .search-box .clear {
+.control-panel .search-box .clear {
     position: relative;
     right: 25px;
     cursor: pointer;
@@ -2935,14 +2938,14 @@ td {
     font-size: 13px;
 }
 
-.order-management-screen .control-panel .search-box .icon {
+.control-panel .search-box .icon {
     position: relative;
     left: 25px;
     color: #808080;
     font-size: 13px;
 }
 
-.order-management-screen .control-panel .search-box input {
+.control-panel .search-box input {
     border: 1px solid #cecbcb;
     padding: 10px 30px;
     margin: auto;
@@ -2952,13 +2955,13 @@ td {
     font-size: 13px;
 }
 
-.order-management-screen .control-panel .search-box input:focus {
+.control-panel .search-box input:focus {
     outline: none;
     box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
     color: rgb(153, 153, 255);
 }
 
-.order-management-screen .control-panel .button {
+.control-panel .button {
     line-height: 32px;
     padding: 3px 13px;
     font-size: 20px;
@@ -2969,8 +2972,23 @@ td {
     transition: all 150ms linear;
 }
 
-.order-management-screen .control-panel .button:hover {
+.control-panel .button:hover {
     background: #efefef;
+}
+
+.control-panel .item.selectors {
+    display: flex;
+    margin: 0px 10px;
+}
+
+.control-panel .item.selectors div {
+    margin: 0px 10px;
+}
+
+.control-panel .disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    background: #CCC;
 }
 
 .order-management-screen .back-to-list {
@@ -3610,3 +3628,80 @@ td {
 .pos .pos-topheader .oe_status:hover {
     background: rgb(104,69,95);
 }
+
+/*#region: ListScreen */
+
+.list-screen .table-container {
+    overflow-y: auto;
+    max-height: 100%;
+    font-size: medium;
+}
+
+.list-screen .table-container table {
+    width: 100%;
+    table-layout: auto;
+}
+
+/*#region: fix the th border when scrolling the table contents */
+
+.list-screen .table-container table th::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    top : 1px;
+}
+
+.list-screen .table-container table th::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-bottom: 1px solid ;
+    border-top: 1px solid ;
+    display: block;
+    top : -1px;
+}
+
+/*#endregion*/
+
+.list-screen .table-container tr {
+    border-bottom: solid rgb(150,150,150) 1px;
+}
+
+.list-screen .table-container tr th:first-child,
+.list-screen .table-container tr td:first-child {
+    padding-left: 20px;
+}
+
+.list-screen .table-container tr th:last-child,
+.list-screen .table-container tr td:last-child {
+    padding-right: 20px;
+}
+
+.list-screen .table-container tr th,
+.list-screen .table-container tr td {
+    padding: 10px 10px;
+}
+
+.list-screen .table-container tbody tr {
+    background-color:  rgb(230,230,230);
+}
+
+.list-screen .table-container tbody tr:hover {
+    color: white;
+    background-color:  rgb(110,200,155);
+}
+
+.list-screen table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #cecece;
+    border-bottom: solid 1px;
+    border-top: solid 1px;
+}
+
+/*#endregion*/
