@@ -172,7 +172,7 @@ var KanbanRecord = Widget.extend({
      * @returns {string} the url of the image
      */
     _getImageURL: function (model, field, id, placeholder) {
-        id = (_.isArray(id) ? id[0] : id) || null;
+        id = (_.isArray(id) ? id[0] : id) || false;
         var isCurrentRecord = this.modelName === model && this.recordData.id === id;
         var url;
         if (isCurrentRecord && this.record[field] && this.record[field].raw_value && !utils.is_bin_size(this.record[field].raw_value)) {
