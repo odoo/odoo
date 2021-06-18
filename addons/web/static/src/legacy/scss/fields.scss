@@ -542,6 +542,9 @@
         font-weight: 500;
         @include o-text-overflow;
         transition: none; // remove transition to prevent badges from flickering at reload
+        &.o_field_empty {
+            display: none !important;
+        }
     }
 }
 
