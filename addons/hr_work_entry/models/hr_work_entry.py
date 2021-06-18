@@ -5,7 +5,7 @@ from contextlib import contextmanager
 from dateutil.relativedelta import relativedelta
 from psycopg2 import OperationalError
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class HrWorkEntry(models.Model):
@@ -61,7 +61,10 @@ class HrWorkEntry(models.Model):
     @api.depends('work_entry_type_id', 'employee_id')
     def _compute_name(self):
         for work_entry in self:
-            work_entry.name = "%s: %s" % (work_entry.work_entry_type_id.name, work_entry.employee_id.name)
+            if not work_entry.employee_id:
+                work_entry.name = _('Undefined')
+            else:
+                work_entry.name = "%s: %s" % (work_entry.work_entry_type_id.name or _('Undefined Type'), work_entry.employee_id.name)
 
     @api.depends('state')
     def _compute_conflict(self):
@@ -213,7 +216,7 @@ class HrWorkEntryType(models.Model):
     _description = 'HR Work Entry Type'
 
     name = fields.Char(required=True, translate=True)
-    code = fields.Char(required=True)
+    code = fields.Char(required=True, help="Carefull, the Code is used in many references, changing it could lead to unwanted changes.")
     color = fields.Integer(default=0)
     sequence = fields.Integer(default=25)
     active = fields.Boolean(

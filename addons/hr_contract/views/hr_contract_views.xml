@@ -103,7 +103,7 @@
                     <field name="department_id" operator="child_of"/>
                     <field name="resource_calendar_id"/>
                     <filter string="Running" name="running" domain="[('state', '=', 'open')]"/>
-                    <filter string="Need Action" name="to_renew" domain="['&amp;', ('state', '=', 'open'), ('kanban_state', '=', 'blocked')]"/>
+                    <filter string="Not Running" name="not_running" domain="[('state', '!=', 'open')]"/>
                     <separator />
                     <filter string="Employed" name="current_employee" domain="[('employee_id.active', '=', True)]"/>
                     <separator/>
@@ -117,9 +117,12 @@
                     <filter string="Future Activities" name="activities_upcoming_all"
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
-                        <filter string="Job Position" name="job" domain="[]" context="{'group_by': 'job_id'}"/>
-                        <filter string="Status" name='group_by_state' domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Status" name="group_by_state" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Employee" name="group_by_employee" domain="[]" context="{'group_by': 'employee_id'}"/>
+                        <filter string="Start Date" name="group_by_date_start" domain="[]" context="{'group_by': 'date_start'}"/>
+                        <filter string="Job Position" name="group_by_job" domain="[]" context="{'group_by': 'job_id'}"/>
+                        <filter string="Working Schedule" name="group_by_resource_calendar_id" domain="[]" context="{'group_by': 'resource_calendar_id'}"/>
+                        <filter string="Salary Structure Type" name="group_by_structure_type_id" domain="[]" context="{'group_by': 'structure_type_id'}"/>
                     </group>
                 </search>
             </field>
@@ -149,8 +152,8 @@
                             <group name="top_info_left">
                                 <field name="active" invisible="1"/>
                                 <field name="employee_id"/>
-                                <field name="date_start"/>
-                                <field name="date_end"/>
+                                <field name="date_start" string="Contract Start Date"/>
+                                <field name="date_end" string="Contract End Date"/>
                                 <field name="company_country_id" invisible="1"/>
                                 <field name="country_code" invisible="1"/>
                                 <field name="structure_type_id" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
@@ -169,11 +172,12 @@
                             <group name="top_info_right">
                                 <field name="department_id"/>
                                 <field name="job_id"/>
-                                <field name="hr_responsible_id"/>
+                                <field name="hr_responsible_id" required="1"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Contract Details" name="other">
+                                <group><group name="contract_details"/></group>
                                 <group name="notes_group" string="Notes">
                                     <field name="notes" nolabel="1"/>
                                 </group>
@@ -205,18 +209,18 @@
             <field name="name">hr.contract.tree</field>
             <field name="model">hr.contract</field>
             <field name="arch" type="xml">
-                <tree string="Contracts" multi_edit="1" sample="1" default_order = 'date_start desc'>
+                <tree string="Contracts" multi_edit="1" sample="1" default_order='date_start ASC'>
                     <field name="name" readonly="1"/>
                     <field name="employee_id" readonly="1" widget="many2one_avatar_employee"/>
                     <field name="job_id"/>
-                    <field name="resource_calendar_id"/>
                     <field name="date_start" readonly="1"/>
                     <field name="date_end" readonly="1"/>
+                    <field name="resource_calendar_id" optional="show"/>
+                    <field name="structure_type_id" optional="show"/>
                     <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'close'" decoration-success="state == 'open'"/>
-                    <field name="kanban_state" widget="state_selection" readonly="1"/>
                     <field name="wage" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
-                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
                 </tree>
             </field>
         </record>
@@ -248,7 +252,7 @@
                                         <field name="name"/>
                                     </strong>
                                 </div>
-                                <div class="text-muted o_kanban_record_subtitle o_hr_contract_job_id">
+                                <div class="text-muted o_kanban_record_subtitle o_hr_contract_job_id" name="div_job_id">
                                     <field name="job_id"/>
                                 </div>
                                 <div class="oe_kanban_bottom_right">

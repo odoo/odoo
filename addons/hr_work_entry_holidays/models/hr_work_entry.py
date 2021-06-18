@@ -89,4 +89,6 @@ class HrWorkEntryType(models.Model):
     _inherit = 'hr.work.entry.type'
     _description = 'HR Work Entry Type'
 
-    leave_type_ids = fields.One2many('hr.leave.type', 'work_entry_type_id', string='Time Off Type')
+    leave_type_ids = fields.One2many(
+        'hr.leave.type', 'work_entry_type_id', string='Time Off Type',
+        help="Every new time off type in this list will be reported as select work entry in payslip.")
