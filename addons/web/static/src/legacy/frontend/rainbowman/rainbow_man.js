@@ -35,6 +35,7 @@ var RainbowMan = Widget.extend({
             fadeout: 'medium',
             img_url: '/web/static/img/smile.svg',
             message: _t('Well Done!'),
+            messageIsHtml: false,
         });
         this.delay = rainbowDelay[this.options.fadeout];
     },
@@ -61,7 +62,16 @@ var RainbowMan = Widget.extend({
                 }, 600); // destroy only after fadeout animation is completed
             }, this.delay);
         }
-        this.$('.o_reward_msg_content').append(this.options.message);
+        let message = this.options.message;
+        if (!this.options.messageIsHtml) {
+            if (message instanceof jQuery) {
+                message = message.text();
+            } else if (message instanceof Element) {
+                message = message.textContent;
+            }
+            message = document.createTextNode(message);
+        }
+        this.$('.o_reward_msg_content').append(message);
         return this._super.apply(this, arguments);
     }
 });

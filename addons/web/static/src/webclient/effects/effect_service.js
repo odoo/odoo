@@ -54,6 +54,8 @@ export const effectService = {
          *    Can be a simple a string
          *    Can be a string representation of html (prefer component if you want interactions in the DOM)
          *    Can be a function returning a string (like _t)
+         * @param {boolean} [params.messageIsHtml]
+         *    The message can be a string representation of html but it needs to be marked as well
          * @param {"slow"|"medium"|"fast"|"no"} [params.fadeout="medium"]
          *    Delay for rainbowman to disappear
          *    'fast' will make rainbowman dissapear quickly
@@ -72,6 +74,7 @@ export const effectService = {
                 fadeout: params.fadeout,
                 id: ++effectId,
                 message: convertRainBowMessage(params.message) || env._t("Well Done!"),
+                messageIsHtml: params.messageIsHtml || false,
                 Component: params.Component,
                 props: params.props,
             });

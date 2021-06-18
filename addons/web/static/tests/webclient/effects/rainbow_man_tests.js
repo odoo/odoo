@@ -27,6 +27,7 @@ QUnit.module("RainbowMan", (hooks) => {
     hooks.beforeEach(async () => {
         rainbowManDefault = {
             message: "<div>Congrats!</div>",
+            messageIsHtml: true,
             fadeout: "nextTick",
         };
         target = getFixture();
@@ -70,6 +71,21 @@ QUnit.module("RainbowMan", (hooks) => {
         assert.containsOnce(parent.el, ".o_reward_rainbow");
         await click(target);
         assert.containsNone(target, ".o_reward");
+        parent.destroy();
+    });
+
+    QUnit.test("rendering a rainbowman with an escaped message", async function (assert) {
+        assert.expect(3);
+        const env = await makeTestEnv({ serviceRegistry });
+        const parent = await mount(Parent, { env, target });
+        env.services.effect.add("rainbowman", { ...rainbowManDefault, messageIsHtml: false });
+        await nextTick();
+        assert.containsOnce(parent.el, ".o_reward");
+        assert.containsOnce(parent.el, ".o_reward_rainbow");
+        assert.strictEqual(
+            parent.el.querySelector(".o_reward_msg_content").textContent,
+            "<div>Congrats!</div>"
+        );
         parent.destroy();
     });
 });
