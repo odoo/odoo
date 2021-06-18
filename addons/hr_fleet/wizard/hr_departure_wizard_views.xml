@@ -5,8 +5,14 @@
         <field name="model">hr.departure.wizard</field>
         <field name="inherit_id" ref="hr.hr_departure_wizard_view_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='archive_private_address']" position="after">
-                <field name="release_campany_car"/>
+            <xpath expr="//div[@id='activities_label']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@id='activities']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@id='activities']" position="inside">
+                <div><field name="release_campany_car"/><label for="release_campany_car" string="Company Car"/></div>
             </xpath>
         </field>
     </record>

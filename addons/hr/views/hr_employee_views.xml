@@ -223,7 +223,7 @@
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <tree string="Employees" multi_edit="1" sample="1">
+                <tree string="Employees" multi_edit="1" sample="1" js_class="hr_employee_list">
                     <field name="name" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1"/>
                     <field name="work_email"/>
@@ -236,6 +236,7 @@
                     <field name="parent_id"/>
                     <field name="work_location_id" optional="hide"/>
                     <field name="coach_id" invisible="1"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>

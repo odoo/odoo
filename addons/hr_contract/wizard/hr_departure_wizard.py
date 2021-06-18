@@ -8,7 +8,8 @@ from odoo.exceptions import UserError
 class HrDepartureWizard(models.TransientModel):
     _inherit = 'hr.departure.wizard'
 
-    set_date_end = fields.Boolean(string="Set Contract End Date", default=True)
+    set_date_end = fields.Boolean(string="Set Contract End Date", default=True,
+        help="Set the end date on the current contract.")
 
     def action_register_departure(self):
         """If set_date_end is checked, set the departure date as the end date to current running contract,
