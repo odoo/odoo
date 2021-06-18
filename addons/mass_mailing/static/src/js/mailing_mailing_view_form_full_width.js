@@ -57,6 +57,34 @@ const MassMailingFullWidthFormController = FormController.extend({
         }
     },
     /**
+     * Reposition the sidebar so it always occupies the full available visible
+     * height, no matter the scroll position. This way, the sidebar is always
+     * visible and as big as possible.
+     *
+     * @private
+     */
+    _repositionMailingEditorSidebar() {
+        const windowHeight = $(window).height();
+        const $iframeDocument = this.$iframe.contents();
+        const $sidebar = $iframeDocument.find('#oe_snippets');
+        const isFullscreen =  this._isFullScreen();
+        if (isFullscreen) {
+            $sidebar.height(windowHeight);
+            this.$iframe.height(windowHeight);
+            $sidebar.css({
+                top: '',
+                bottom: '',
+            });
+        } else {
+            const iframeTop = this.$iframe.offset().top;
+            $sidebar.css({
+                height: '',
+                top: Math.max(0, this.$('.o_content').offset().top - iframeTop),
+                bottom: this.$iframe.height() - windowHeight + iframeTop,
+            });
+        }
+    },
+    /**
      * Return true if the mailing editor is in full screen mode, false
      * otherwise.
      *
@@ -83,6 +111,8 @@ const MassMailingFullWidthFormController = FormController.extend({
     /**
      * Resize the given iframe so its height fits its contents and initialize a
      * resize observer to resize on each size change in its contents.
+     * This also ensures the contents of the sidebar remain visible no matter
+     * how much we resize the iframe and scroll down.
      *
      * @private
      * @param {JQuery} ev.data.$iframe
@@ -100,6 +130,7 @@ const MassMailingFullWidthFormController = FormController.extend({
         const iframeTarget = $iframeDoc.find('#iframe_target');
         if (hasIframeChanged) {
             $iframeDoc.find('body').on('click', '.o_fullscreen_btn', this._onToggleFullscreen.bind(this));
+            this.$('.o_content').on('scroll', this._repositionMailingEditorSidebar.bind(this));
             if (iframeTarget[0]) {
                 this._resizeObserver.disconnect();
                 this._resizeObserver.observe(iframeTarget[0]);
@@ -116,7 +147,9 @@ const MassMailingFullWidthFormController = FormController.extend({
     /**
      * Switch "scrolling modes" on toggle fullscreen mode: in fullscreen mode,
      * the scroll happens within the iframe whereas in regular mode we pretend
-     * there is no iframe and scroll in the top document.
+     * there is no iframe and scroll in the top document. Also reposition the
+     * sidebar since toggling the fullscreen mode visibly changes the
+     * positioning of elements in the document.
      *
      * @private
      */
@@ -134,14 +167,17 @@ const MassMailingFullWidthFormController = FormController.extend({
             this._$scrollable = this._$scrollable || wysiwyg.snippetsMenu.$scrollable;
             wysiwyg.snippetsMenu.$scrollable = isFullscreen ? $iframeDoc.find('.note-editable') : this._$scrollable;
         }
+        this._repositionMailingEditorSidebar();
     },
     /**
-     * Resize the iframe whenever the contents of the iframe change height.
+     * Resize the iframe and reposition the sidebar whenever the contents of the
+     * iframe change height.
      *
      * @private
      */
     _onResizeIframeContents() {
         this._resizeMailingEditorIframe();
+        this._repositionMailingEditorSidebar();
     },
 });
 
