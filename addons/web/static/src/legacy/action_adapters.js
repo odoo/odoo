@@ -9,20 +9,9 @@ import { Dialog } from "../core/dialog/dialog";
 import { useEffect } from "../core/effect_hook";
 import { useService } from "../core/service_hook";
 import { ViewNotFoundError } from "../webclient/actions/action_service";
-import { cleanDomFromBootstrap, mapDoActionOptionAPI } from "./utils";
+import { cleanDomFromBootstrap, wrapSuccessOrFail, mapDoActionOptionAPI } from "./utils";
 
 const { Component, tags } = owl;
-
-function wrapSuccessOrFail(promise, { on_success, on_fail } = {}) {
-    return promise.then(on_success || (() => {})).catch((reason) => {
-        if (on_fail) {
-            on_fail(reason);
-        }
-        if (reason instanceof Error) {
-            throw reason;
-        }
-    });
-}
 
 class ActionAdapter extends ComponentAdapter {
     setup() {
@@ -88,8 +77,8 @@ class ActionAdapter extends ComponentAdapter {
             if (payload.action.context) {
                 payload.action.context = new Context(payload.action.context).eval();
             }
-            this.onReverseBreadcrumb = ev.data.options && ev.data.options.on_reverse_breadcrumb;
-            const legacyOptions = mapDoActionOptionAPI(ev.data.options);
+            this.onReverseBreadcrumb = payload.options && payload.options.on_reverse_breadcrumb;
+            const legacyOptions = mapDoActionOptionAPI(payload.options);
             wrapSuccessOrFail(this.actionService.doAction(payload.action, legacyOptions), payload);
         } else if (ev.name === "breadcrumb_clicked") {
             this.actionService.restore(payload.controllerID);

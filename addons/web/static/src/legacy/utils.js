@@ -279,3 +279,14 @@ export function makeLegacyCrashManagerService(legacyEnv) {
         },
     };
 }
+
+export function wrapSuccessOrFail(promise, { on_success, on_fail } = {}) {
+    return promise.then(on_success || (() => {})).catch((reason) => {
+        if (on_fail) {
+            on_fail(reason);
+        }
+        if (reason instanceof Error) {
+            throw reason;
+        }
+    });
+}
