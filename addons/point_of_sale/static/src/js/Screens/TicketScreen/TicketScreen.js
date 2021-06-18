@@ -86,7 +86,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                     title: 'Existing orderlines',
                     body: `${order.name} has total amount of ${this.getTotal(
                         order
-                    )}, are you sure you want delete this order?`,
+                    )}.\n Are you sure you want delete this order?`,
                 });
                 if (!confirmed) return;
             }
