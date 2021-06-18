@@ -481,17 +481,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Called when new image has been loaded
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onLoadImage(ev) {
-        ev.stopPropagation();
-        this.attachmentViewer.update({ isImageLoading: false });
-    }
-
-    /**
      * @private
      * @param {DragEvent} ev
      */

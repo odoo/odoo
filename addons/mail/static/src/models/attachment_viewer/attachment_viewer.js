@@ -58,6 +58,13 @@ function factory(dependencies) {
             }
         }
 
+        /**
+         * Handle onload on the attachment viewer image
+         */
+        onLoadImage() {
+            this.update({ isImageLoading: false });
+        }
+
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------

@@ -89,6 +89,14 @@
                             <i class="fa fa-download fa-fw" role="img"/>
                         </div>
                     </div>
+                    <div class="o_AttachmentViewer_zoomer" t-ref="zoomer">
+                        <t t-if="attachmentViewer.isImageLoading">
+                            <div class="o_AttachmentViewer_loading">
+                                <i class="fa fa-3x fa-circle-o-notch fa-fw fa-spin" role="img" title="Loading"/>
+                            </div>
+                        </t>
+                        <img class="o_AttachmentViewer_view o_AttachmentViewer_viewImage" t-on-click="_onClickImage" t-on-mousedown="_onMousedownImage" t-on-wheel="_onWheelImage" t-on-load="attachmentViewer.onLoadImage()" t-att-src="attachmentViewer.attachment.defaultSource" t-att-style="imageStyle" draggable="false" alt="Viewer" t-key="'image_' + attachmentViewer.attachment.id" t-ref="image_{{ attachmentViewer.attachment.id }}"/>
+                    </div>
                 </t>
                 <t t-if="attachmentViewer.attachments.length > 1">
                     <div class="o_AttachmentViewer_buttonNavigation o_AttachmentViewer_buttonNavigationPrevious" t-on-click="_onClickPrevious" title="Previous (Left-Arrow)" role="button">
