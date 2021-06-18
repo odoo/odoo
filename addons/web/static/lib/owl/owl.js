@@ -3660,16 +3660,28 @@
             this.vnode = component.__owl__.vnode || h("div");
             const qweb = component.env.qweb;
             let root = component;
-            let canCatch = false;
-            while (component && !(canCatch = !!component.catchError)) {
-                root = component;
-                component = component.__owl__.parent;
+            function handle(error) {
+                let canCatch = false;
+                qweb.trigger("error", error);
+                while (component && !(canCatch = !!component.catchError)) {
+                    root = component;
+                    component = component.__owl__.parent;
+                }
+                if (canCatch) {
+                    try {
+                        component.catchError(error);
+                    }
+                    catch (e) {
+                        root = component;
+                        component = component.__owl__.parent;
+                        return handle(e);
+                    }
+                    return true;
+                }
+                return false;
             }
-            qweb.trigger("error", error);
-            if (canCatch) {
-                component.catchError(error);
-            }
-            else {
+            let isHandled = handle(error);
+            if (!isHandled) {
                 // the 3 next lines aim to mark the root fiber as being in error, and
                 // to force it to end, without waiting for its children
                 this.root.counter = 0;
@@ -5398,9 +5410,9 @@
     exports.utils = utils;
 
 
-    __info__.version = '1.3.1';
-    __info__.date = '2021-06-10T08:37:12.080Z';
-    __info__.hash = 'd121155';
+    __info__.version = '1.3.2';
+    __info__.date = '2021-06-18T08:42:12.863Z';
+    __info__.hash = '2e83c73';
     __info__.url = 'https://github.com/odoo/owl';
 
 
