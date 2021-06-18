@@ -27,7 +27,7 @@
                         <label class="col-form-label font-weight-bold" for="country_id">Country
                             <span class="s_website_form_mark"> *</span>
                         </label>
-                        <select t-att-disabled="'1' if country and country.id and partner_id else None" id="country_id" name="country_id" t-attf-class="form-control #{error.get('country_id') and 'is-invalid' or ''}">
+                        <select t-att-disabled="'1' if country and country.id and partner_id else None" id="country_id" name="country_id" t-attf-class="o_wpayment_fee_impact form-control #{error.get('country_id') and 'is-invalid' or ''}">
                             <option value="">Country...</option>
                             <t t-foreach="countries" t-as="c">
                                 <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
@@ -47,7 +47,7 @@
                                     <div class="custom-control custom-radio my-2">
                                         <t t-set="is_checked" t-value="float(amount) == float(donation_amount)"/>
                                         <t t-set="has_checked" t-value="has_checked or is_checked"/>
-                                        <input class="custom-control-input" type="radio" name="amount"
+                                        <input class="o_wpayment_fee_impact custom-control-input" type="radio" name="amount"
                                             t-attf-id="amount_#{donation_amount_index}" t-att-value="donation_amount"
                                             t-att-checked="is_checked or None"/>
                                         <label class="custom-control-label mt-0" t-attf-for="amount_#{donation_amount_index}">
@@ -59,7 +59,7 @@
                                     </div>
                                 </t>
                                 <div t-attf-class="custom-control custom-radio my-2 #{not donation_layout and 'd-none' or ''}">
-                                    <input class="custom-control-input" type="radio" id="other_amount" name="amount"
+                                    <input class="o_wpayment_fee_impact custom-control-input" type="radio" id="other_amount" name="amount"
                                         t-att-value="amount" t-att-checked="not has_checked or None"/>
                                     <label class="custom-control-label mt-0 d-block" for="other_amount">
                                         <t t-call="website_payment.donation_input">
@@ -85,6 +85,10 @@
                 </div>
                 <h3 class="o_page_header mt16 mb4">Payment Details</h3>
             </t>
+        </xpath>
+        <!-- Make fee badges recognizable so that they can be updated upon amount changes -->
+        <xpath expr="//t[@t-if='fees_by_acquirer.get(acquirer)']/span" position="attributes">
+            <attribute name="class" add="o_payment_fee" separator=" "/>
         </xpath>
         <!-- Adapt Pay confirm button -->
         <xpath expr="//t[@t-set='label']" position="after">
@@ -128,7 +132,7 @@
     </template>
 
     <template id="website_payment.donation_input" name="Donation input">
-        <input type="number" class="form-control o_amount_input" t-att-min="donation_options.get('minimumAmount')"
-            t-att-max="donation_options.get('maximumAmount')" t-att-value="amount" placeholder="Custom Amount"/>
+        <input type="number" class="o_wpayment_fee_impact form-control o_amount_input" t-att-min="donation_options.get('minimumAmount')"
+            t-att-max="donation_options.get('maximumAmount')" t-att-value="amount" placeholder="Custom Amount" id="other_amount_value"/>
     </template>
 </odoo>
