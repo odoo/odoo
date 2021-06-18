@@ -238,6 +238,14 @@ class Channel(models.Model):
         notification = _('<div class="o_mail_notification">left the channel</div>')
         # post 'channel left' message as root since the partner just unsubscribed from the channel
         self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
+        self.env['bus.bus'].sendone((self._cr.dbname, 'mail.channel', self.id), {
+            'type': 'channel_members_leaving',
+            'payload': {
+                'id': self.id,
+                'leaving_members': list(partner.mail_partner_format().values()),
+                'member_count': len(self.channel_partner_ids),
+            },
+        })
         return result
 
     def add_members(self, partner_ids):
@@ -283,6 +291,14 @@ class Channel(models.Model):
                     new_partner_name=channel_partner.partner_id.name,
                 )
             channel_partner.channel_id.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment", notify_by_email=False)
+            self.env['bus.bus'].sendone((self._cr.dbname, 'mail.channel', channel_partner.channel_id.id), {
+                'type': 'new_channel_members',
+                'payload': {
+                    'id': channel_partner.channel_id.id,
+                    'member_count': len(channel_partner.channel_id.channel_partner_ids),
+                    'new_members': list(channel_partner.partner_id.mail_partner_format().values()),
+                },
+            })
 
     def _action_remove_members(self, partners):
         """ Private implementation to remove members from channels. Done as sudo
@@ -541,7 +557,7 @@ class Channel(models.Model):
             info['last_message_id'] = channel_last_message_ids.get(channel.id, False)
             # listeners of the channel
             channel_partners = channel.channel_last_seen_partner_ids
-
+            info['member_count'] = len(channel_partners)
             # find the channel partner state, if logged user
             if self.env.user and self.env.user.partner_id:
                 info['message_needaction_counter'] = channel.message_needaction_counter

@@ -190,6 +190,9 @@ function factory(dependencies) {
                 });
                 data2.serverLastMessage = insert(messageData);
             }
+            if ('member_count' in data) {
+                data2.memberCount = data.member_count;
+            }
             if ('message_needaction_counter' in data) {
                 data2.message_needaction_counter = data.message_needaction_counter;
             }
@@ -1857,6 +1860,11 @@ function factory(dependencies) {
         localMessageUnreadCounter: attr({
             compute: '_computeLocalMessageUnreadCounter',
         }),
+        /**
+         * States the number of members in this thread according to the server.
+         * Only makes sense if this thread is a channel.
+         */
+        memberCount: attr(),
         members: many2many('mail.partner', {
             inverse: 'memberThreads',
         }),
