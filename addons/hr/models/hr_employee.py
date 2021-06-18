@@ -117,7 +117,7 @@ class HrEmployeePrivate(models.Model):
         help="PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if enabled in Configuration) and to change the cashier in the Point of Sale application.")
     departure_reason_id = fields.Many2one("hr.departure.reason", string="Departure Reason", groups="hr.group_hr_user",
                                           copy=False, tracking=True, ondelete='restrict')
-    departure_description = fields.Text(string="Additional Information", groups="hr.group_hr_user", copy=False, tracking=True)
+    departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False, tracking=True)
     departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
     message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
     id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_user")
@@ -363,7 +363,7 @@ class HrEmployeePrivate(models.Model):
             # Launch automatic offboarding plans
             archived_employees._launch_plans_from_trigger(trigger='employee_archive')
 
-        if len(self) == 1 and not self.active:
+        if len(self) == 1 and not self.active and not self.env.context.get('no_wizard', False):
             return {
                 'type': 'ir.actions.act_window',
                 'name': _('Register Departure'),
