@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
 
 from odoo.http import request
@@ -13,5 +12,5 @@ class StripeController(http.Controller):
 
     @http.route('/payment/stripe/webhook', type='json', auth='public', csrf=False)
     def stripe_webhook(self, **kwargs):
-        request.env['payment.acquirer'].sudo()._handle_stripe_webhook(kwargs)
+        request.env['payment.acquirer'].sudo()._handle_stripe_webhook(request.jsonrequest)
         return 'OK'
