@@ -63,6 +63,10 @@ function factory(dependencies) {
             return super.create(...arguments);
         }
 
+        download() {
+            this.env.services.navigate(`/web/content/ir.attachment/${this.id}/datas`, { download: true });
+        }
+
         /**
          * View provided attachment(s), with given attachment initially. Prompts
          * the attachment viewer.

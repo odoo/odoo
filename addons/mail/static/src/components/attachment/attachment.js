@@ -111,8 +111,7 @@ export class Attachment extends Component {
      * @param {MouseEvent} ev
      */
     _onClickDownload(ev) {
-        ev.stopPropagation();
-        this.env.services.navigate(`/web/content/ir.attachment/${this.attachment.id}/datas`, { download: true });
+        this.attachment.onClickDownload(ev);
     }
 
     /**

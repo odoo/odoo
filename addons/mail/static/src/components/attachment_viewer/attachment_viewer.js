@@ -134,16 +134,6 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * Download the attachment.
-     *
-     * @private
-     */
-    _download() {
-        const id = this.attachmentViewer.attachment.id;
-        this.env.services.navigate(`/web/content/ir.attachment/${id}/datas`, { download: true });
-    }
-
-    /**
      * Determine whether the current image is rendered for the 1st time, and if
      * that's the case, display a spinner until loaded.
      *
@@ -359,17 +349,6 @@ export class AttachmentViewer extends Component {
      */
     _onClickClose(ev) {
         this._close();
-    }
-
-    /**
-     * Called when clicking on download icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickDownload(ev) {
-        ev.stopPropagation();
-        this._download();
     }
 
     /**
