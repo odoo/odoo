@@ -438,11 +438,16 @@ class AccountPartialReconcile(models.Model):
                     if grouping_key in partial_lines_to_create:
                         aggregated_vals = partial_lines_to_create[grouping_key]['vals']
 
+                        debit = aggregated_vals['debit'] + cb_line_vals['debit']
+                        credit = aggregated_vals['credit'] + cb_line_vals['credit']
+                        balance = debit - credit
+
                         aggregated_vals.update({
-                            'debit': aggregated_vals['debit'] + cb_line_vals['debit'],
-                            'credit': aggregated_vals['credit'] + cb_line_vals['credit'],
+                            'debit': balance if balance > 0 else 0,
+                            'credit': -balance if balance < 0 else 0,
                             'amount_currency': aggregated_vals['amount_currency'] + cb_line_vals['amount_currency'],
                         })
+
                         if line.tax_repartition_line_id:
                             aggregated_vals.update({
                                 'tax_base_amount': aggregated_vals['tax_base_amount'] + cb_line_vals['tax_base_amount'],
