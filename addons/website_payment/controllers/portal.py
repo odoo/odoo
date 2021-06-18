@@ -33,6 +33,19 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         return self.payment_pay(**kwargs)
 
+    @http.route('/donation/get_acquirer_fees', type='json', auth='public', website=True, sitemap=False)
+    def get_acquirer_fees(self, acquirer_ids=None, amount=None, currency_id=None, country_id=None):
+        acquirers_sudo = request.env['payment.acquirer'].sudo().browse(acquirer_ids)
+        currency = request.env['res.currency'].browse(currency_id)
+        country = request.env['res.country'].browse(country_id)
+
+        # Compute the fees taken by acquirers supporting the feature
+        fees_by_acquirer = {
+            acq_sudo.id: acq_sudo._compute_fees(amount, currency, country)
+            for acq_sudo in acquirers_sudo.filtered('fees_active')
+        }
+        return fees_by_acquirer
+
     @http.route('/donation/transaction/<minimum_amount>', type='json', auth='public', website=True, sitemap=False)
     def donation_transaction(self, amount, currency_id, partner_id, access_token, minimum_amount=0, **kwargs):
         if float(amount) < float(minimum_amount):

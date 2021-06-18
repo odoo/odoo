@@ -4,6 +4,10 @@ import {_t} from 'web.core';
 import checkoutForm from 'payment.checkout_form';
 
 checkoutForm.include({
+    events: _.extend({}, checkoutForm.prototype.events || {}, {
+        'change .o_wpayment_fee_impact': '_onFeeParameterChange',
+    }),
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -74,5 +78,63 @@ checkoutForm.include({
             'donation_comment': this.$('#donation_comment').val(),
             'donation_recipient_email': this.$('input[name="donation_recipient_email"]').val(),
         } : transactionRouteParams;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Update the fees associated to each acquirer.
+     *
+     * Called upon change of any parameter that might impact the fees (marked with
+     * .o_wpayment_fee_impact).
+     *
+     * @private
+     * @param {Event} ev
+     * @return {undefined}
+     */
+    _onFeeParameterChange: function (ev) {
+        const targetId = ev.target.id;
+        if (targetId.indexOf("amount") >= 0) {
+            this.txContext.amount = ev.target.value;
+        }
+        const acquirerIds = [];
+        for (const card of this.$('.o_payment_option_card:has(.o_payment_fee)')) {
+            const radio = $(card).find('input[name="o_payment_radio"]');
+            if (radio.data("paymentOptionType") === 'acquirer') {
+                acquirerIds.push(radio.data("paymentOptionId"));
+            }
+        }
+        const countryId = this.$('select[name="country_id"]').val();
+        if (acquirerIds && this.txContext.amount) {
+            this._rpc({
+                route: '/donation/get_acquirer_fees',
+                params: {
+                    'acquirer_ids': acquirerIds,
+                    'amount': this.txContext.amount !== undefined
+                        ? parseFloat(this.txContext.amount) : null,
+                    'currency_id': this.txContext.currencyId
+                        ? parseInt(this.txContext.currencyId) : null,
+                    'country_id': countryId,
+                },
+            }).then(feesPerAcquirer => {
+                for (const card of this.$('.o_payment_option_card:has(.o_payment_fee)')) {
+                    const radio = $(card).find('input[name="o_payment_radio"]');
+                    if (radio.data("paymentOptionType") === 'acquirer') {
+                        const acquirerId = radio.data("paymentOptionId");
+                        const chunk = $(card).find('.o_payment_fee .oe_currency_value')[0];
+                        chunk.innerText = (feesPerAcquirer[acquirerId] || 0).toFixed(2);
+                    }
+                }
+            }).guardedCatch(error => {
+                error.event.preventDefault();
+                this._displayError(
+                    _t("Server Error"),
+                    _t("We could not obtain payment fees."),
+                    error.message.data.message
+                );
+            });
+        }
     },
 });
