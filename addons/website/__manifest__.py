@@ -101,7 +101,7 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
-            ('replace', 'web/static/src/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
+            ('replace', 'web/static/src/legacy/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
             'website/static/src/scss/website.scss',
             'website/static/src/scss/website.ui.scss',
             'website/static/src/js/set_view_track.js',
@@ -185,7 +185,7 @@
         'website.assets_editor': [
             ('include', 'web._assets_helpers'),
             'web/static/lib/bootstrap/scss/_variables.scss',
-            'web/static/src/scss/ace.scss',
+            'web/static/src/legacy/scss/ace.scss',
             'website/static/src/scss/website.editor.ui.scss',
             'website/static/src/scss/website.theme_install.scss',
             'website/static/src/js/menu/content.js',
@@ -211,7 +211,7 @@
             'http://test.external.link/javascript1.js',
             '/web/static/lib/jquery.ui/jquery-ui.css',
             'http://test.external.link/style1.css',
-            '/web/static/src/js/boot.js',
+            '/web/static/src/boot.js',
             'http://test.external.link/javascript2.js',
             'http://test.external.link/style2.css',
         ],

@@ -22,6 +22,9 @@ trigger an automatic reminder email.
         'views/base_automation_view.xml',
     ],
     'assets': {
+        'web.assets_qweb': [
+            'base_automation/static/src/xml/*.xml',
+        ],
         'web.assets_backend': [
             'base_automation/static/src/js/**/*',
         ],
