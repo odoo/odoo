@@ -67,31 +67,37 @@ export const viewService = {
         async function loadViews(params, options) {
             const key = JSON.stringify([params.model, params.views, params.context, options]);
             if (!cache[key]) {
-                const result = await orm.call(params.model, "load_views", [], {
-                    views: params.views,
-                    options: {
-                        action_id: options.actionId || false,
-                        load_filters: options.withFilters || false,
-                        toolbar: options.withActionMenus || false,
-                    },
-                    context: params.context,
-                });
-                const viewDescriptions = result; // for legacy purpose, keys in result are left in viewDescriptions
+                cache[key] = orm
+                    .call(params.model, "load_views", [], {
+                        views: params.views,
+                        options: {
+                            action_id: options.actionId || false,
+                            load_filters: options.withFilters || false,
+                            toolbar: options.withActionMenus || false,
+                        },
+                        context: params.context,
+                    })
+                    .then((result) => {
+                        const viewDescriptions = result; // for legacy purpose, keys in result are left in viewDescriptions
 
-                for (const [_, viewType] of params.views) {
-                    const viewDescription = result.fields_views[viewType];
-                    viewDescription.fields = Object.assign(
-                        {},
-                        result.fields,
-                        viewDescription.fields
-                    ); // before a deep freeze was done.
-                    if (viewType === "search" && options.withFilters) {
-                        viewDescription.irFilters = result.filters;
-                    }
-                    viewDescriptions[viewType] = viewDescription;
-                }
-
-                cache[key] = viewDescriptions;
+                        for (const [_, viewType] of params.views) {
+                            const viewDescription = result.fields_views[viewType];
+                            viewDescription.fields = Object.assign(
+                                {},
+                                result.fields,
+                                viewDescription.fields
+                            ); // before a deep freeze was done.
+                            if (viewType === "search" && options.withFilters) {
+                                viewDescription.irFilters = result.filters;
+                            }
+                            viewDescriptions[viewType] = viewDescription;
+                        }
+                        return viewDescriptions;
+                    })
+                    .catch((error) => {
+                        delete cache[key];
+                        return Promise.reject(error);
+                    });
             }
             return cache[key];
         }
