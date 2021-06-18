@@ -9,7 +9,7 @@ from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError, ValidationError, RedirectWarning
-from odoo.osv.expression import OR
+from odoo.osv.expression import OR, AND
 
 from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
@@ -56,6 +56,8 @@ class ProjectTaskType(models.Model):
             " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n")
     is_closed = fields.Boolean('Closing Stage', help="Tasks in this stage are considered as closed.")
     disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning')
+    personal_stage_ids = fields.One2many('project.personal.stage', 'stage_id')
+    user_id = fields.Many2one('res.users')
 
     def unlink_wizard(self, stage_view=False):
         self = self.with_context(active_test=False)
@@ -96,6 +98,17 @@ class ProjectTaskType(models.Model):
             else:
                 stage.disabled_rating_warning = False
 
+class ProjectPersonnalTaskType(models.Model):
+    _name = 'project.personal.stage'
+    _description = 'My Stages'
+
+    task_id = fields.Many2one('project.task', required=True)
+    stage_id = fields.Many2one('project.task.type', required=True)
+    user_id = fields.Many2one('res.users', required=True)
+
+    _sql_constraints = [
+        ('project_personal_stage_unique', 'UNIQUE (task_id, user_id)', 'A task can only have a single personal stage by user.'),
+    ]
 
 class Project(models.Model):
     _name = "project.project"
@@ -667,6 +680,10 @@ class Task(models.Model):
         return self.env.company
 
     @api.model
+    def _expand_personal_stages(self, stages, domain, order):
+        return self.env['project.task.type'].search([('user_id', '=', self.env.user.id)])
+
+    @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         search_domain = [('id', 'in', stages.ids)]
         if 'default_project_id' in self.env.context:
@@ -674,6 +691,9 @@ class Task(models.Model):
 
         stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
+
+    def _get_personal_stage_domain(self):
+        return [('user_id', '=', self.env.user.id)]
 
     active = fields.Boolean(default=True)
     name = fields.Char(string='Title', tracking=True, required=True, index=True)
@@ -688,6 +708,12 @@ class Task(models.Model):
         store=True, readonly=False, ondelete='restrict', tracking=True, index=True,
         default=_get_default_stage_id, group_expand='_read_group_stage_ids',
         domain="[('project_ids', '=', project_id)]", copy=False)
+    personal_stage_ids = fields.One2many(
+        'project.personal.stage', 'task_id', string="Personal Stages")
+    personal_stage_id = fields.Many2one(  # Only one valid result according to ir.rule + sql_constrains
+        'project.task.type',
+        domain=_get_personal_stage_domain, group_expand='_expand_personal_stages',
+        compute='_compute_personal_stage_id', inverse='_inverse_personal_stage_id')
     tag_ids = fields.Many2many('project.tags', string='Tags')
     kanban_state = fields.Selection([
         ('normal', 'In Progress'),
@@ -853,6 +879,29 @@ class Task(models.Model):
     def _check_no_cyclic_dependencies(self):
         if not self._check_m2m_recursion('depend_on_ids'):
             raise ValidationError(_("You cannot create cyclic dependency."))
+
+    @api.depends('personal_stage_ids')
+    def _compute_personal_stage_id(self):
+        for task in self:
+            task.personal_stage_id = task.personal_stage_ids[0].stage_id if task.personal_stage_ids else False
+
+    def _inverse_personal_stage_id(self):
+        for task in self:
+            task._assign_personal_stage(task.personal_stage_id)
+
+    def _assign_personal_stage(self, stage):
+        for task in self:
+            if task.personal_stage_ids:
+                if stage:
+                    task.personal_stage_ids.stage_id = stage
+                else:
+                    task.personal_stage_ids.unlink()
+            elif stage:
+                self.env['project.personal.stage'].create({
+                    'user_id': self.env.user.id,
+                    'task_id': task.id,
+                    'stage_id': stage.id,
+                })
 
     @api.model
     def _get_recurrence_fields(self):
@@ -1190,9 +1239,16 @@ class Task(models.Model):
                 recurrence = self.env['project.task.recurrence'].create(rec_values)
                 vals['recurrence_id'] = recurrence.id
         tasks = super().create(vals_list)
+        user_tasks = defaultdict(lambda: self.env['project.task'])
         for task in tasks:
             if task.project_id.privacy_visibility == 'portal':
                 task._portal_ensure_token()
+            if task.user_id:
+                user_tasks[task.user_id] |= task
+        for user, tasks in user_tasks.items():
+            stage = self.env['project.task.type'].search([('user_id', '=', user.id)], limit=1) # should get first stage in sequence
+            if stage:
+                tasks._assign_personal_stage(stage)
         return tasks
 
     def write(self, vals):
@@ -1212,7 +1268,10 @@ class Task(models.Model):
         # user_id change: update date_assign
         if vals.get('user_id') and 'date_assign' not in vals:
             vals['date_assign'] = now
-
+        if vals.get('user_id'):
+            stage = self.env['project.task.type'].sudo().search([('user_id', '=', vals['user_id'])], limit=1) # should get first stage in sequence
+            if stage:
+                self._assign_personal_stage(stage)
         # recurrence fields
         rec_fields = vals.keys() & self._get_recurrence_fields()
         if rec_fields:
@@ -1260,6 +1319,25 @@ class Task(models.Model):
         if any(self.mapped('recurrence_id')):
             # TODO: show a dialog to stop the recurrence
             raise UserError(_('You cannot delete recurring tasks. Please disable the recurrence first.'))
+
+    @api.model
+    def _web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False,
+                        lazy=True, expand=False, expand_limit=None, expand_orderby=False):
+        if groupby == ['personal_stage_id'] and not limit and not offset and not orderby and lazy and not expand and not expand_limit and not expand_orderby:
+            task_stages = defaultdict(lambda: self.env['project.task'])
+            tasks = self.env['project.task'].search(domain)
+            for task in tasks:
+                task_stages[task.personal_stage_id] |= task
+            return [{
+                'personal_stage_id_count': len(tasks),
+                'personal_stage_id': (stage.id, stage.display_name),
+                '__domain': AND([domain, [('id', 'in', tasks.ids)]]),
+                '__fold': False,
+            } for stage, tasks in task_stages.items()]
+        else:
+            return super()._web_read_group(
+                domain, fields, groupby, limit=limit, offset=offset, orderby=orderby,
+                lazy=lazy, expand=expand, expand_limit=expand_limit, expand_orderby=expand_orderby)
 
     # ---------------------------------------------------
     # Subtasks

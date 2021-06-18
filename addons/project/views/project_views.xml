@@ -821,6 +821,8 @@
                                     <field name="email_cc" groups="base.group_no_one"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="displayed_image_id" groups="base.group_no_one"/>
+                                    <field name="personal_stage_ids" invisible="1"/>
+                                    <field name="personal_stage_id" attrs="{'invisible': &quot;[('user_id', '!=', uid)]&quot;}"/>
                                 </group>
                                 <group>
                                     <field name="date_assign" groups="base.group_no_one"/>
@@ -998,6 +1000,19 @@
             </field>
          </record>
 
+        <!-- Project Task Kanban View -->
+        <record id="project_task_view_kanban_groupby_personal_tasks" model="ir.ui.view" >
+            <field name="name">project.task.kanban</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_kanban"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="default_group_by">personal_stage_id</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_task_tree2" model="ir.ui.view">
             <field name="name">project.task.tree</field>
             <field name="model">project.task</field>
@@ -1132,13 +1147,19 @@
             </field>
         </record>
 
+        <record id="act_window_view_project_task_all_tasks" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="action_view_all_task"/>
+            <field name="view_id" ref="project_task_view_kanban_groupby_personal_tasks"/>
+        </record>
+
         <record id="open_view_task_list_kanban" model="ir.actions.act_window.view">
-            <field name="sequence" eval="0"/>
+            <field name="sequence" eval="1"/>
             <field name="view_mode">kanban</field>
             <field name="act_window_id" ref="action_view_task"/>
         </record>
         <record id="open_view_task_list_tree" model="ir.actions.act_window.view">
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="0"/>
             <field name="view_mode">tree</field>
             <field name="act_window_id" ref="action_view_task"/>
         </record>

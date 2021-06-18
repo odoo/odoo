@@ -157,5 +157,20 @@
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
     </record>
 
+    <record id="ir_rule_project_personal_stage_my" model="ir.rule">
+        <field name="name">Project: See my own personal stage</field>
+        <field name="model_id" ref="project.model_project_personal_stage"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+    </record>
+
+    <record id="ir_rule_project_task_type" model="ir.rule">
+        <field name="name">Project: See my task type or global ones</field>
+        <field name="model_id" ref="project.model_project_task_type"/>
+        <field name="domain_force">[
+            '|',
+            ('user_id', '=', False),
+            ('user_id', '=', user.id)
+        ]</field>
+    </record>
 </data>
 </odoo>

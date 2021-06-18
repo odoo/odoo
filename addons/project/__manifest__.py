@@ -48,6 +48,7 @@
     'installable': True,
     'auto_install': False,
     'application': True,
+    'post_init_hook': '_generate_personal_stages',
     'assets': {
         'web.assets_backend': [
             'project/static/src/css/project.css',
