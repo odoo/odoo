@@ -24,6 +24,7 @@ export default class ToursDialog extends Dialog {
      */
     _onStartTour(ev) {
         this.tourService.reset(ev.target.dataset.name);
+        this.close();
     }
     /**
      * Starts the given tour in test mode.
@@ -33,6 +34,7 @@ export default class ToursDialog extends Dialog {
      */
     _onTestTour(ev) {
         this.tourService.run(ev.target.dataset.name);
+        this.close();
     }
 }
 ToursDialog.bodyTemplate = "web_tour.ToursDialog";
