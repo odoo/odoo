@@ -95,12 +95,12 @@ class AccountInvoiceReport(models.Model):
                 move.invoice_date_due,
                 uom_template.id                                             AS product_uom_id,
                 template.categ_id                                           AS product_categ_id,
-                line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
+                line.quantity / NULLIF(COALESCE(uom_line.factor, 1) * COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS quantity,
                 -line.balance * currency_table.rate                         AS price_subtotal,
                 -COALESCE(line.balance
                    / NULLIF(line.quantity, 0.0)
-                   / NULLIF(COALESCE(uom_line.factor, 1), 0.0)
+                   * NULLIF(COALESCE(uom_line.factor, 1), 0.0)
                    / NULLIF(COALESCE(uom_template.factor, 1), 0.0),
                    0.0) * currency_table.rate
                                                                             AS price_average,
