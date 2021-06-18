@@ -9,8 +9,10 @@ from odoo import api, fields, models
 class HrDepartureWizard(models.TransientModel):
     _inherit = 'hr.departure.wizard'
 
-    cancel_leaves = fields.Boolean("Cancel Future Leaves", default=True)
-    archive_allocation = fields.Boolean("Archive Employee Allocations", default=True)
+    cancel_leaves = fields.Boolean("Cancel Future Leaves", default=True,
+        help="Cancel all time off after this date.")
+    archive_allocation = fields.Boolean("Archive Employee Allocations", default=True,
+        help="Remove employee from existing accrual plans.")
 
     def action_register_departure(self):
         super(HrDepartureWizard, self).action_register_departure()
