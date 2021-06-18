@@ -420,23 +420,19 @@ class StockQuant(models.Model):
         else:
             in_date = fields.Datetime.now()
 
-        for quant in quants:
-            try:
-                with self._cr.savepoint(flush=False):  # Avoid flush compute store of package
-                    self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE NOWAIT", [quant.id], log_exceptions=False)
-                    quant.write({
-                        'quantity': quant.quantity + quantity,
-                        'in_date': in_date,
-                    })
-                    break
-            except OperationalError as e:
-                if e.pgcode == '55P03':  # could not obtain the lock
-                    continue
-                else:
-                    # Because savepoint doesn't flush, we need to invalidate the cache
-                    # when there is a error raise from the write (other than lock-error)
-                    self.clear_caches()
-                    raise
+        quant = None
+        if quants:
+            # see _acquire_one_job for explanations
+            self._cr.execute("SELECT id FROM stock_quant WHERE id IN %s LIMIT 1 FOR NO KEY UPDATE SKIP LOCKED", [tuple(quants.ids)])
+            stock_quant_result = self._cr.fetchone()
+            if stock_quant_result:
+                quant = self.browse(stock_quant_result[0])
+
+        if quant:
+            quant.write({
+                'quantity': quant.quantity + quantity,
+                'in_date': in_date,
+            })
         else:
             self.create({
                 'product_id': product_id.id,
