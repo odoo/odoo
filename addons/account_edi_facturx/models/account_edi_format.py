@@ -192,17 +192,19 @@ class AccountEdiFormat(models.Model):
                                        account_predictive_bills_disable_prediction=True)) as invoice_form:
             # Partner (first step to avoid warning 'Warning! You must first select a partner.').
             partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
-            elements = tree.xpath('//ram:' + partner_type + '/ram:SpecifiedTaxRegistration/ram:ID', namespaces=tree.nsmap)
-            partner = elements and self.env['res.partner'].search([('vat', '=', elements[0].text)], limit=1)
-            if not partner:
-                elements = tree.xpath('//ram:' + partner_type + '/ram:Name', namespaces=tree.nsmap)
-                partner_name = elements and elements[0].text
-                partner = elements and self.env['res.partner'].search([('name', 'ilike', partner_name)], limit=1)
-            if not partner:
-                elements = tree.xpath('//ram:' + partner_type + '//ram:URIID[@schemeID=\'SMTP\']', namespaces=tree.nsmap)
-                partner = elements and self.env['res.partner'].search([('email', '=', elements[0].text)], limit=1)
-            if partner:
-                invoice_form.partner_id = partner
+            invoice_form.partner_id = self._retrieve_partner(
+                name=self._find_value('//ram:' + partner_type + '/ram:Name', tree, namespaces=tree.nsmap),
+                mail=self._find_value('//ram:' + partner_type + '//ram:URIID[@schemeID=\'SMTP\']', tree, namespaces=tree.nsmap),
+                vat=self._find_value('//ram:' + partner_type + '/ram:SpecifiedTaxRegistration/ram:ID', tree, namespaces=tree.nsmap),
+            )
+
+            # Delivery partner
+            if 'partner_shipping_id' in invoice._fields:
+                invoice_form.partner_shipping_id = self._retrieve_partner(
+                    name=self._find_value('//ram:ShipToTradeParty/ram:Name', tree, namespaces=tree.nsmap),
+                    mail=self._find_value('//ram:ShipToTradeParty//ram:URIID[@schemeID=\'SMTP\']', tree, namespaces=tree.nsmap),
+                    vat=self._find_value('//ram:ShipToTradeParty/ram:SpecifiedTaxRegistration/ram:ID', tree, namespaces=tree.nsmap),
+                )
 
             # Reference.
             elements = tree.xpath('//rsm:ExchangedDocument/ram:ID', namespaces=tree.nsmap)
