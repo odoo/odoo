@@ -54,6 +54,13 @@ function factory(dependencies) {
             }
         }
 
+        /**
+         * Handle click on activity box title
+         */
+        onClickActivityBoxTitle() {
+            this.update({ isActivityBoxVisible: !this.isActivityBoxVisible });
+        }
+
         showLogNote() {
             this.update({ isComposerVisible: true });
             this.thread.composer.update({ isLog: true });
@@ -64,10 +71,6 @@ function factory(dependencies) {
             this.update({ isComposerVisible: true });
             this.thread.composer.update({ isLog: false });
             this.focus();
-        }
-
-        toggleActivityBoxVisibility() {
-            this.update({ isActivityBoxVisible: !this.isActivityBoxVisible });
         }
 
         //----------------------------------------------------------------------
