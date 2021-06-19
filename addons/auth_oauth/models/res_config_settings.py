@@ -18,6 +18,9 @@ class ResConfigSettings(models.TransientModel):
     auth_oauth_google_enabled = fields.Boolean(string='Allow users to sign in with Google')
     auth_oauth_google_client_id = fields.Char(string='Client ID')
     server_uri_google = fields.Char(string='Server uri')
+    auth_oauth_microsoft_enabled = fields.Boolean(string='Allow users to sign in with Microsoft')
+    auth_oauth_microsoft_client_id = fields.Char(string='Microsoft Client ID')
+    auth_oauth_microsoft_client_secret = fields.Char(string='Microsoft Client Secret')
 
     @api.model
     def get_values(self):
