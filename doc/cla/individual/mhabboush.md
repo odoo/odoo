@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Mahmoud Habboush iii.ma7mod.iii@gmail.com https://github.com/mhabboush
+Mahmoud Habboush mhabboush@users.noreply.github.com https://github.com/mhabboush
