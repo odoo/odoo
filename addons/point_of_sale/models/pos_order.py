@@ -822,7 +822,7 @@ class PosOrder(models.Model):
                 pos_order.invoice_id.sudo().with_context(
                     force_company=self.env.user.company_id.id, pos_picking_id=pos_order.picking_id
                 ).action_invoice_open()
-                pos_order.account_move = pos_order.invoice_id.move_id
+                pos_order.account_move = pos_order.invoice_id.sudo().move_id
         return order_ids
 
     def test_paid(self):
