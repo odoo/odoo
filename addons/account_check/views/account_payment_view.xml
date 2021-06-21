@@ -36,6 +36,7 @@
                     attrs="{'invisible': [('payment_method_code', 'not in', ['new_third_checks', 'new_own_checks'])], 'required': [('payment_method_code', 'in', ['new_third_checks', 'new_own_checks'])]}"
                     domain="[('id', 'in', available_check_ids)]"
                     context="{'default_amount': amount, 'default_company_id': company_id, 'default_first_partner_id': partner_id, 'default_journal_id': journal_id, 'default_currency_id': currency_id, 'default_type': check_type, 'from_payment': True}"
+                    options="{'no_quick_create': True}"
                 />
             </field>
         </field>
