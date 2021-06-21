@@ -3877,7 +3877,7 @@ QUnit.module('Views', {
         assert.containsOnce(calendar, '.o_cw_popover');
         popoverText = calendar.el.querySelector('.o_cw_popover')
             .textContent.replace(/\s{2,}/g, ' ').trim();
-        assert.strictEqual(popoverText, 'December 12, 2016 event 2 10:55 event 3 15:55');
+        assert.strictEqual(popoverText, 'December 12, 2016 10:55 event 2 15:55 event 3');
         await testUtils.dom.click(calendar.el.querySelector('.o_cw_popover_close'));
         assert.containsNone(calendar, '.o_cw_popover');
 
