@@ -160,7 +160,7 @@
             <search>
                 <field name="name" string="Acquirer" filter_domain="['|', ('name', 'ilike', self), ('description', 'ilike', self)]"/>
                 <field name="provider"/>
-                <filter name="acquirer_installed" string="Installed" domain="[('module_state', '!=', 'installed')]"/>
+                <filter name="acquirer_installed" string="Installed" domain="[('module_state', '=', 'installed')]"/>
                 <group expand="0" string="Group By">
                     <filter string="Provider" name="provider" context="{'group_by': 'provider'}"/>
                     <filter string="State" name="state" context="{'group_by': 'state'}"/>
