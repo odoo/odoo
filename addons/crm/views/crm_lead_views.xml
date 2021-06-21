@@ -711,7 +711,7 @@
                     <field name="priority" optional="hide" widget="priority"/>
                     <field name="activity_ids" widget="list_activity"/>
                     <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
-                    <field name="activity_date_deadline_my" string="My Deadline" widget="remaining_days" options="{'allow_order': '1'}"/>
+                    <field name="my_activity_date_deadline" string="My Deadline" widget="remaining_days" options="{'allow_order': '1'}"/>
                     <field name="activity_calendar_event_id" invisible="1"/>
                     <field name="campaign_id" optional="hide"/>
                     <field name="medium_id" optional="hide"/>
@@ -729,10 +729,10 @@
                     <field name="message_needaction" invisible="1"/>
                     <button name="%(crm.action_lead_mail_compose)d" type="action" string="Email" icon="fa-envelope"/>
                     <button name="action_reschedule_meeting" class="text-warning" type="object" string="Reschedule"
-                        icon="fa-calendar" attrs="{'invisible': ['|', ('activity_date_deadline_my', '=', False),
+                        icon="fa-calendar" attrs="{'invisible': ['|', ('my_activity_date_deadline', '=', False),
                         ('activity_calendar_event_id', '=', False)]}"/>
                     <button name="action_snooze" class="text-warning" type="object" string="Snooze 7d"
-                        icon="fa-bell-slash" attrs="{'invisible': ['|', ('activity_date_deadline_my', '=', False),
+                        icon="fa-bell-slash" attrs="{'invisible': ['|', ('my_activity_date_deadline', '=', False),
                         ('activity_calendar_event_id', '!=', False)]}"/>
                 </tree>
             </field>
@@ -746,7 +746,7 @@
             <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
             <field name="arch" type="xml">
                 <xpath expr="//tree" position="attributes">
-                    <attribute name="default_order">activity_date_deadline_my</attribute>
+                    <attribute name="default_order">my_activity_date_deadline</attribute>
                 </xpath>
                 <field name="user_id" position="attributes">
                     <attribute name="optional">hide</attribute>
