@@ -218,6 +218,15 @@ function factory(dependencies) {
             this.update({ isDoFocus: false });
         }
 
+        /**
+         * Handle onInput for discuss quick search.
+         *
+         * @param {String} value
+         */
+        onInputQuickSearch(value) {
+            this.update({ sidebarQuickSearchValue: value });
+        }
+
         onReplyingToMessageMessagePosted() {
             this.env.services['notification'].notify({
                 message: _.str.sprintf(

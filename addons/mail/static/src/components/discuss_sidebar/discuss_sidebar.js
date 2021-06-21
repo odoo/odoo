@@ -180,10 +180,7 @@ export class DiscussSidebar extends Component {
      * @param {KeyboardEvent} ev
      */
     _onInputQuickSearch(ev) {
-        ev.stopPropagation();
-        this.discuss.update({
-            sidebarQuickSearchValue: this._quickSearchInputRef.el.value,
-        });
+        this.discuss.onInputQuickSearch(ev.target.value);
     }
 
 }
