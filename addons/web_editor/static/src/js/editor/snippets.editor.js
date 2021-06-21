@@ -820,7 +820,6 @@ var SnippetEditor = Widget.extend({
             $selectorChildren: $selectorChildren,
         });
 
-        this.$body.addClass('move-important');
 
         this.$editable.find('.oe_drop_zone').droppable({
             over: function () {
@@ -889,7 +888,6 @@ var SnippetEditor = Widget.extend({
         var $from = $clone.parent();
 
         this.$el.removeClass('d-none');
-        this.$body.removeClass('move-important');
         $clone.remove();
 
         if (this.dropped) {
