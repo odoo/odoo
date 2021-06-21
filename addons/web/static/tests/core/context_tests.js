@@ -16,9 +16,11 @@ QUnit.module("utils", {}, () => {
         assert.deepEqual(ctx1, ctx2);
     });
 
-    QUnit.test("can accept undefined", (assert) => {
+    QUnit.test("can accept undefined or empty string", (assert) => {
         assert.deepEqual(makeContext(undefined), {});
         assert.deepEqual(makeContext({ a: 1 }, undefined, { b: 2 }), { a: 1, b: 2 });
+        assert.deepEqual(makeContext(""), {});
+        assert.deepEqual(makeContext({ a: 1 }, "", { b: 2 }), { a: 1, b: 2 });
     });
 
     QUnit.test("evaluate strings", (assert) => {
