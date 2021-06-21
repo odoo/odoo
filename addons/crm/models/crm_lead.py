@@ -139,10 +139,6 @@ class Lead(models.Model):
         ('red', 'Next activity late'),
         ('green', 'Next activity is planned')], string='Kanban State',
         compute='_compute_kanban_state')
-    activity_date_deadline_my = fields.Date(
-        'My Activities Deadline', compute='_compute_activity_date_deadline_my',
-        search='_search_activity_date_deadline_my', compute_sudo=False,
-        readonly=True, store=False, groups="base.group_user")
     tag_ids = fields.Many2many(
         'crm.tag', 'crm_tag_rel', 'lead_id', 'tag_id', string='Tags',
         help="Classify and analyze your lead/opportunity categories like: Training, Service")
@@ -247,26 +243,6 @@ class Lead(models.Model):
                 else:
                     kanban_state = 'red'
             lead.kanban_state = kanban_state
-
-    @api.depends('activity_ids.date_deadline')
-    @api.depends_context('uid')
-    def _compute_activity_date_deadline_my(self):
-        todo_activities = []
-        if self.ids:
-            todo_activities = self.env['mail.activity'].search([
-                ('user_id', '=', self._uid),
-                ('res_model', '=', self._name),
-                ('res_id', 'in', self.ids)
-            ], order='date_deadline ASC')
-
-        for record in self:
-            record.activity_date_deadline_my = next(
-                (activity.date_deadline for activity in todo_activities if activity.res_id == record.id),
-                False
-            )
-
-    def _search_activity_date_deadline_my(self, operator, operand):
-        return ['&', ('activity_ids.user_id', '=', self._uid), ('activity_ids.date_deadline', operator, operand)]
 
     @api.depends('company_id')
     def _compute_user_company_ids(self):
@@ -704,11 +680,11 @@ class Lead(models.Model):
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        """ Override to support ordering on activity_date_deadline_my.
+        """ Override to support ordering on my_activity_date_deadline.
 
         Ordering through web client calls search_read with an order parameter set.
         Search_read then calls search. In this override we therefore override search
-        to intercept a search without count with an order on activity_date_deadline_my.
+        to intercept a search without count with an order on my_activity_date_deadline.
         In that case we do the search in two steps.
 
         First step: fill with deadline-based results
@@ -733,14 +709,14 @@ class Lead(models.Model):
         All other search and search_read are left untouched by this override to avoid
         side effects. Search_count is not affected by this override.
         """
-        if count or not order or 'activity_date_deadline_my' not in order:
+        if count or not order or 'my_activity_date_deadline' not in order:
             return super(Lead, self).search(args, offset=offset, limit=limit, order=order, count=count)
         order_items = [order_item.strip().lower() for order_item in (order or self._order).split(',')]
 
         # Perform a read_group on my activities to get a mapping lead_id / deadline
         # Remember date_deadline is required, we always have a value for it. Only
         # the earliest deadline per lead is kept.
-        activity_asc = any('activity_date_deadline_my asc' in item for item in order_items)
+        activity_asc = any('my_activity_date_deadline asc' in item for item in order_items)
         my_lead_activities = self.env['mail.activity'].read_group(
             [('res_model', '=', self._name), ('user_id', '=', self.env.uid)],
             ['res_id', 'date_deadline:min'],
@@ -750,7 +726,7 @@ class Lead(models.Model):
         my_lead_mapping = dict((item['res_id'], item['date_deadline']) for item in my_lead_activities)
         my_lead_ids = list(my_lead_mapping.keys())
         my_lead_domain = expression.AND([[('id', 'in', my_lead_ids)], args])
-        my_lead_order = ', '.join(item for item in order_items if 'activity_date_deadline_my' not in item)
+        my_lead_order = ', '.join(item for item in order_items if 'my_activity_date_deadline' not in item)
 
         # Search leads linked to those activities and order them. See docstring
         # of this method for more details.
@@ -768,13 +744,13 @@ class Lead(models.Model):
         # Fill with remaining leads. If a limit is given, simply remove count of
         # already fetched. Otherwise keep none. If an offset is set we have to
         # reduce it by already fetch results hereabove. Order is updated to exclude
-        # activity_date_deadline_my when calling super() .
+        # my_activity_date_deadline when calling super() .
         lead_limit = (limit - len(my_lead_ids_keep)) if limit else None
         if offset:
             lead_offset = max((offset - len(search_res), 0))
         else:
             lead_offset = 0
-        lead_order = ', '.join(item for item in order_items if 'activity_date_deadline_my' not in item)
+        lead_order = ', '.join(item for item in order_items if 'my_activity_date_deadline' not in item)
 
         other_lead_res = super(Lead, self).search(
             expression.AND([[('id', 'not in', my_lead_ids_skip)], args]),

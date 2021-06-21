@@ -46,7 +46,7 @@ class TestCrmMailActivity(TestCrmCommon):
 
         # assert initial data, ensure we did not break base behavior
         for lead in test_leads:
-            self.assertFalse(lead.activity_date_deadline_my)
+            self.assertFalse(lead.my_activity_date_deadline)
         search_res = self.env['crm.lead'].search([('id', 'in', test_leads.ids)], limit=5, offset=0, order='id ASC')
         self.assertEqual(search_res.ids, test_leads[:5].ids)
         search_res = self.env['crm.lead'].search([('id', 'in', test_leads.ids)], limit=5, offset=5, order='id ASC')
@@ -82,11 +82,11 @@ class TestCrmMailActivity(TestCrmCommon):
         expected_leads_desc = self.env['crm.lead'].browse([test_leads[lid].id for lid in expected_ids_desc])
 
         for idx, lead in enumerate(test_leads):
-            self.assertEqual(lead.activity_date_deadline_my, deadlines_my[idx])
+            self.assertEqual(lead.my_activity_date_deadline, deadlines_my[idx])
             self.assertEqual(lead.activity_date_deadline, deadlines_gl[idx], 'Fail at %s' % idx)
 
         # Let's go for a first batch of search
-        _order = 'activity_date_deadline_my ASC, %s' % default_order
+        _order = 'my_activity_date_deadline ASC, %s' % default_order
         _domain = [('id', 'in', test_leads.ids)]
 
         search_res = self.env['crm.lead'].search(_domain, limit=None, offset=0, order=_order)
@@ -98,7 +98,7 @@ class TestCrmMailActivity(TestCrmCommon):
         search_res = self.env['crm.lead'].search(_domain, limit=None, offset=3, order=_order)
         self.assertEqual(expected_leads_asc[3:].ids, search_res.ids)
 
-        _order = 'activity_date_deadline_my DESC, %s' % default_order
+        _order = 'my_activity_date_deadline DESC, %s' % default_order
         search_res = self.env['crm.lead'].search(_domain, limit=None, offset=0, order=_order)
         self.assertEqual(expected_leads_desc.ids, search_res.ids)
         search_res = self.env['crm.lead'].search(_domain, limit=4, offset=0, order=_order)
