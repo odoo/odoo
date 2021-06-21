@@ -209,27 +209,15 @@ export class Discuss extends Component {
      * @param {string} ev.detail.tabId
      */
     _onSelectMobileNavbarTab(ev) {
-        ev.stopPropagation();
-        if (this.discuss.activeMobileNavbarTabId === ev.detail.tabId) {
-            return;
-        }
-        this.discuss.clearReplyingToMessage();
-        this.discuss.update({ activeMobileNavbarTabId: ev.detail.tabId });
-        if (
-            this.discuss.activeMobileNavbarTabId === 'mailbox' &&
-            (!this.discuss.thread || this.discuss.thread.model !== 'mailbox')
-        ) {
-            this.discuss.update({ thread: link(this.env.messaging.inbox) });
-        }
-        if (this.discuss.activeMobileNavbarTabId !== 'mailbox') {
-            this.discuss.update({ thread: unlink() });
-        }
-        if (this.discuss.activeMobileNavbarTabId !== 'chat') {
-            this.discuss.update({ isAddingChat: false });
-        }
-        if (this.discuss.activeMobileNavbarTabId !== 'channel') {
-            this.discuss.update({ isAddingChannel: false });
-        }
+        this.discuss.onSelectMobileNavbarTab(ev);
+    }
+
+    /**
+     * @private
+     * @param {CustomEvent} ev
+     */
+    _onThreadRendered(ev) {
+        this.trigger('o-update-control-panel');
     }
 
 }

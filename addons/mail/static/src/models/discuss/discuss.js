@@ -189,6 +189,36 @@ function factory(dependencies) {
         }
 
         /**
+         * Handle onSelect for mobile navbar.
+         *
+         * @param {CustomEvent} ev
+         * @param {Object} ev.detail
+         * @param {string} ev.detail.tabId
+         */
+        onSelectMobileNavbarTab(ev) {
+            if (this.activeMobileNavbarTabId === ev.detail.tabId) {
+                return;
+            }
+            this.clearReplyingToMessage();
+            if (
+                this.activeMobileNavbarTabId === 'mailbox' &&
+                (!this.thread || this.thread.model !== 'mailbox')
+            ) {
+                this.update({ thread: link(this.env.messaging.inbox) });
+            }
+            if (this.activeMobileNavbarTabId !== 'mailbox') {
+                this.update({ thread: unlink() });
+            }
+            if (this.activeMobileNavbarTabId !== 'chat') {
+                this.update({ isAddingChat: false });
+            }
+            if (this.activeMobileNavbarTabId !== 'channel') {
+                this.update({ isAddingChannel: false });
+            }
+            this.update({ activeMobileNavbarTabId: ev.detail.tabId });
+        }
+
+        /**
          * Open thread from init active id. `initActiveId` is used to refer to
          * a thread that we may not have full data yet, such as when messaging
          * is not yet initialized.
