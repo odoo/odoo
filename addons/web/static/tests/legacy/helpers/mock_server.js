@@ -1160,7 +1160,7 @@ var MockServer = Class.extend({
         if (!action) {
             // when the action doesn't exist, the real server doesn't crash, it
             // simply returns false
-            console.warn("No action found for ID " + kwargs.action_id);
+            console.warn(`No action found for ID ${kwargs.action_id} during test ${QUnit.config.current.testName} (legacy)`);
         }
         return action || false;
     },
