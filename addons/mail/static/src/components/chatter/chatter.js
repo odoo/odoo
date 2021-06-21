@@ -106,13 +106,6 @@ export class Chatter extends Component {
 
     /**
      * @private
-     */
-    _onComposerMessagePosted() {
-        this.chatter.update({ isComposerVisible: false });
-    }
-
-    /**
-     * @private
      * @param {MouseEvent} ev
      */
     _onScrollPanelScroll(ev) {

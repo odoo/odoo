@@ -61,6 +61,13 @@ function factory(dependencies) {
             this.update({ isActivityBoxVisible: !this.isActivityBoxVisible });
         }
 
+        /**
+         * Handle message posted even.
+         */
+        onComposerMessagePosted() {
+            this.update({ isComposerVisible: false });
+        }
+
         showLogNote() {
             this.update({ isComposerVisible: true });
             this.thread.composer.update({ isLog: true });
