@@ -158,7 +158,7 @@ class SaleOrderLine(models.Model):
         lines = super().create(vals_list)
         for line in lines:
             if line.product_id and line.order_id.state == 'sale':
-                msg = _("Extra line with %s ") % (line.product_id.display_name,)
+                msg = _("Extra line with %s", line.product_id.display_name)
                 line.order_id.message_post(body=msg)
                 # create an analytic account if at least an expense product
                 if line.product_id.expense_policy not in [False, 'no'] and not line.order_id.analytic_account_id:
