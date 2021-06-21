@@ -34,7 +34,7 @@ NOTA: En la lógica de impresón de cheques y en general, solo se tienen en cuen
     'images': [
     ],
     'depends': [
-        'account',
+        'account_check_printing',
     ],
     'data': [
         'data/account_payment_method_data.xml',
