@@ -171,6 +171,13 @@ function factory(dependencies) {
         }
 
         /**
+         * Handle inFocusin on composer.:wa
+         */
+        onFocusinComposer() {
+            this.update({ isDoFocus: false });
+        }
+
+        /**
          * Open thread from init active id. `initActiveId` is used to refer to
          * a thread that we may not have full data yet, such as when messaging
          * is not yet initialized.
