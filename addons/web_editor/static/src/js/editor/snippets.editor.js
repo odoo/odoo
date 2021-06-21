@@ -2340,6 +2340,9 @@ var SnippetsMenu = Widget.extend({
                     $toInsert.find('.o_we_generic_preview').remove();
                     self.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
 
+                    self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging o_we_selected_snippet');
+                    $(ev.target).removeClass('o_we_child_is_moved');
+
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
                         var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
                         if ($el.length) {
@@ -2383,15 +2386,10 @@ var SnippetsMenu = Widget.extend({
 
                             self.options.wysiwyg.odooEditor.unbreakableStepUnactive();
                             self.options.wysiwyg.odooEditor.historyStep();
-
-                            self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging o_we_selected_snippet');
-                            $(ev.target).removeClass('o_we_child_is_moved');
                         });
                     } else {
                         $toInsert.remove();
                         dragAndDropResolve();
-                        self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging o_we_selected_snippet');
-                        $(ev.target).removeClass('o_we_child_is_moved');
                     }
                 },
             },
