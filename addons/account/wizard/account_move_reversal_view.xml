@@ -29,7 +29,7 @@
                     </group>
                     <group>
                          <group>
-                             <field name="reason" attrs="{'invisible': [('move_type', '==', 'entry')], 'reason': [('move_type', '==', 'entry')]}"/>
+                             <field name="reason" attrs="{'invisible': [('move_type', '=', 'entry')]}"/>
                              <field name="date_mode" string="Reversal Date" widget="radio"/>
                          </group>
                          <group>
