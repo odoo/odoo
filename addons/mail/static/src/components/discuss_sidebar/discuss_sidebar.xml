@@ -52,7 +52,7 @@
                         Direct Messages
                     </div>
                     <div class="o-autogrow"/>
-                    <div class="o_DiscussSidebar_groupHeaderItem o_DiscussSidebar_groupHeaderItemAdd fa fa-plus" t-on-click="_onClickChatAdd" title="Start a conversation"/>
+                    <div class="o_DiscussSidebar_groupHeaderItem o_DiscussSidebar_groupHeaderItemAdd fa fa-plus" t-on-click="discuss.onClickChatAdd()" title="Start a conversation"/>
                 </div>
                 <div class="o_DiscussSidebar_list">
                     <t t-if="discuss.isAddingChat">

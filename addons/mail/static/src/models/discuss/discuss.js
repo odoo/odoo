@@ -162,6 +162,15 @@ function factory(dependencies) {
         }
 
         /**
+         * Called when clicking on add chat icon.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickChatAdd(ev) {
+            this.update({ isAddingChat: true });
+        }
+
+        /**
          * Called when clicking on a mailbox selection item.
          *
          * @param {MouseEvent} ev

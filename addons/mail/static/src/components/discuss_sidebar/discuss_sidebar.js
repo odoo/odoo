@@ -167,17 +167,6 @@ export class DiscussSidebar extends Component {
     }
 
     /**
-     * Called when clicking on add chat icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickChatAdd(ev) {
-        ev.stopPropagation();
-        this.discuss.update({ isAddingChat: true });
-    }
-
-    /**
      * @private
      * @param {CustomEvent} ev
      */
