@@ -148,17 +148,6 @@ export class DiscussSidebar extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Called when clicking on add channel icon.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickChannelAdd(ev) {
-        ev.stopPropagation();
-        this.discuss.update({ isAddingChannel: true });
-    }
-
-    /**
      * Called when clicking on channel title.
      *
      * @private

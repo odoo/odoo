@@ -21,7 +21,7 @@
                         Channels
                     </div>
                     <div class="o-autogrow"/>
-                    <div class="o_DiscussSidebar_groupHeaderItem o_DiscussSidebar_groupHeaderItemAdd fa fa-plus" t-on-click="_onClickChannelAdd" title="Add or join a channel"/>
+                    <div class="o_DiscussSidebar_groupHeaderItem o_DiscussSidebar_groupHeaderItemAdd fa fa-plus" t-on-click="discuss.onClickChannelAdd()" title="Add or join a channel"/>
                 </div>
                 <div class="o_DiscussSidebar_list">
                     <t t-if="discuss.isAddingChannel">

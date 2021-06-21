@@ -162,17 +162,7 @@ function factory(dependencies) {
         }
 
         /**
-         * Called when clicking on add chat icon.
-         *
-         * @private
-         * @param {MouseEvent} ev
-         */
-        onClickChatAdd(ev) {
-            this.update({ isAddingChat: true });
-        }
-
-        /**
-         * Handel onClick on a mailbox selection item.
+         * Called when clicking on a mailbox selection item.
          *
          * @param {MouseEvent} ev
          */
@@ -217,10 +207,6 @@ function factory(dependencies) {
          */
         onFocusinComposer(ev) {
             this.update({ isDoFocus: false });
-        }
-
-        onInputQuickSearch(value) {
-            this.update({ sidebarQuickSearchValue: value });
         }
 
         onReplyingToMessageMessagePosted() {
