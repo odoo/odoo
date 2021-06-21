@@ -20,6 +20,7 @@ QUnit.module("py", {}, () => {
         assert.ok(checkAST("-12", "negative integer value"));
         assert.ok(checkAST("True", "boolean"));
         assert.ok(checkAST(`"some string"`, "a string"));
+        assert.ok(checkAST("", "the empty string"));
         assert.ok(checkAST("None", "None"));
     });
 

@@ -364,5 +364,5 @@ function _parse(tokens, bp = 0) {
  * @returns {AST}
  */
 export function parse(tokens) {
-    return _parse(tokens, 0);
+    return tokens.length ? _parse(tokens, 0) : { type: 0, value: "" };
 }
