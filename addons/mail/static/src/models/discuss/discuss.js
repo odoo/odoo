@@ -143,6 +143,48 @@ function factory(dependencies) {
             });
         }
 
+        onDialogClosedModerationDiscard() {
+            this.update({ hasModerationDiscardDialog: false });
+        }
+
+        onDialogClosedModerationReject() {
+            this.update({ hasModerationRejectDialog: false });
+        }
+
+        /**
+         * Called when clicking on add channel icon.
+         *
+         * @private
+         * @param {MouseEvent} ev
+         */
+        onClickChannelAdd() {
+            this.update({ isAddingChannel: true });
+        }
+
+        /**
+         * Called when clicking on add chat icon.
+         *
+         * @private
+         * @param {MouseEvent} ev
+         */
+        onClickChatAdd(ev) {
+            this.update({ isAddingChat: true });
+        }
+
+        /**
+         * Handel onClick on a mailbox selection item.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickSelectionMailbox(ev) {
+            const { mailboxLocalId } = ev.currentTarget.dataset;
+            const mailbox = this.env.models['mail.thread'].get(mailboxLocalId);
+            if (!mailbox) {
+                return;
+            }
+            mailbox.open();
+        }
+
         /**
          * Handles click on the mobile "new chat" button.
          *
@@ -173,8 +215,12 @@ function factory(dependencies) {
         /**
          * Handle inFocusin on composer.:wa
          */
-        onFocusinComposer() {
+        onFocusinComposer(ev) {
             this.update({ isDoFocus: false });
+        }
+
+        onInputQuickSearch(value) {
+            this.update({ sidebarQuickSearchValue: value });
         }
 
         onReplyingToMessageMessagePosted() {
