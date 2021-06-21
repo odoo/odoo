@@ -249,6 +249,7 @@ function get_file(options) {
             data.append(k, v);
         });
     }
+    data.append('token', 'dummy-because-api-expects-one');
     if (core.csrf_token) {
         data.append('csrf_token', core.csrf_token);
     }
