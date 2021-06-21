@@ -103,7 +103,11 @@
                                 <field name="operation_ids"
                                     attrs="{'invisible': [('type','not in',('normal','phantom'))]}"
                                     groups="mrp.group_mrp_routings"
+<<<<<<< HEAD
                                     context="{'bom_id_invisible': True, 'default_company_id': company_id, 'default_bom_id': id, 'tree_view_ref': 'mrp.mrp_routing_workcenter_bom_tree_view'}"/>
+=======
+                                    context="{'bom_id_invisible': True, 'default_company_id': company_id, 'default_product_tmpl_ids': [product_tmpl_id]}"/>
+>>>>>>> 2fb4dbba5a4... temp
                         </page>
                         <page string="By-products"
                             name="by_products"
