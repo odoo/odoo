@@ -22,7 +22,11 @@ class ResPartner(models.Model):
             ('date_order', '>', fields.Date.today() - timedelta(365)),
             ('qty_received', '!=', 0),
             ('order_id.state', 'in', ['done', 'purchase'])
-        ]).filtered(lambda l: l.product_id.sudo().product_tmpl_id.type != 'service')
+        ])
+        order_lines = self.env['purchase.order.line'].sudo().search([
+            ('id', 'in', order_lines.ids),
+            ('product_id.product_tmpl_id.type',  '!=', 'service'),
+        ])
         lines_qty_done = defaultdict(lambda: 0)
         moves = self.env['stock.move'].search([
             ('purchase_line_id', 'in', order_lines.ids),
