@@ -9522,6 +9522,14 @@ msgid ""
 "                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Bedrijfsadres</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Factuuradres</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Afleveradres</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Ander adres</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Privéadres</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Adres</b>\n"
+"                            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -24030,7 +24038,7 @@ msgstr "Online vacatures"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_membership
 msgid "Online Members Directory"
-msgstr "Online leden archief"
+msgstr "Online ledenlijst"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_form_project
@@ -28303,12 +28311,13 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__format__tgz
 msgid "TGZ Archive"
-msgstr "TGZ-archiefbestand"
+msgstr "TGZ gecomprimeerd bestand"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "TGZ format: bundles multiple PO(T) files as a single archive"
-msgstr "TGZ-formaat: bundelt meerdere PO(T) -bestanden als een enkel archief"
+msgstr ""
+"TGZ-formaat: bundelt meerdere PO(T) -bestanden als éé gecomprimeerd bestand."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__starttls

@@ -936,7 +936,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create record: cancel and validate without using the buttons', async function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         var nbRecords = 4;
         var kanban = await createView({
@@ -971,6 +971,14 @@ QUnit.module('Views', {
         await testUtils.dom.click(kanban.$('.o_kanban_group .o_kanban_record:first'));
         assert.containsNone(kanban, '.o_kanban_quick_create',
             "the quick create should be destroyed when the user clicks outside");
+
+        // click to input and drag the mouse outside, should not cancel the quick creation
+        await testUtils.dom.click(kanban.$('.o_kanban_header .o_kanban_quick_add i').first());
+        $quickCreate = kanban.$('.o_kanban_quick_create');
+        await testUtils.dom.triggerMouseEvent($quickCreate.find('input'), 'mousedown');
+        await testUtils.dom.click(kanban.$('.o_kanban_group .o_kanban_record:first').first());
+        assert.containsOnce(kanban, '.o_kanban_quick_create',
+            "the quick create should not have been destroyed after clicking outside");
 
         // click to really add an element
         await testUtils.dom.click(kanban.$('.o_kanban_header .o_kanban_quick_add i').first());
