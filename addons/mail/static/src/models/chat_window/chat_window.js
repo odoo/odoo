@@ -177,6 +177,13 @@ function factory(dependencies) {
         }
 
         /**
+         * Called when an element in the thread becomes focused.
+         */
+        onFocusinThread() {
+            this.update({ isFocused: true });
+        }
+
+        /**
          * Swap this chat window with the previous one.
          */
         shiftPrev() {

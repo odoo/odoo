@@ -197,7 +197,7 @@ export class ChatWindow extends Component {
             // prevent crash on destroy
             return;
         }
-        this.chatWindow.update({ isFocused: true });
+        this.chatWindow.onFocusinThread();
     }
 
     /**
