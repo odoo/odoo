@@ -25,6 +25,10 @@ var _t = core._t;
 var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     className: 'oe_form_field oe_form_field_html_text',
     supportedFieldTypes: ['html'],
+    events: _.extend({}, basic_fields.DebouncedField.prototype.events, {
+        'click': '_onClick',
+    }),
+
 
     /**
      * @override
@@ -311,6 +315,38 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
         return $();
     },
 
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Retargets clicks on field content to the field itself to avoid problems
+     * with delegate handlers reacting to clicks on user-controlled content.
+     *
+     * @private
+     */
+    _onClick: function (ev) {
+        if (ev.target === this.el) {
+            return;
+        }
+        if (this.mode === "edit" && !$(ev.target).closest('.note-editable').length) {
+            return;
+        }
+        ev.stopImmediatePropagation();
+        var eventCopy;
+        if (typeof MouseEvent === "function") {
+            eventCopy = new MouseEvent(ev.type, ev);
+        } else {
+            // Internet explorer
+            eventCopy = document.createEvent("MouseEvent");
+            eventCopy.initMouseEvent(
+                ev.type, ev.bubbles, ev.cancelable, ev.view, ev.detail,
+                ev.screenX, ev.screenY, ev.clientX, ev.clientY, ev.ctrlKey,
+                ev.altKey, ev.shiftKey, ev.metaKey, ev.button, ev.relatedTarget
+            );
+        }
+        this.el.dispatchEvent(eventCopy);
+    },
 });
 
 var FieldTextHtml = AbstractField.extend({
