@@ -158,7 +158,7 @@
      */
     async function getNextMenu() {
         const menus = document.querySelectorAll(
-            ".o_menu_sections .o_dropdown_toggler, .o_menu_sections .o_dropdown_item"
+            ".o_menu_sections > .o_dropdown > .o_dropdown_toggler, .o_menu_sections > .o_dropdown_item"
         );
         if (menuIndex === menus.length) {
             menuIndex = 0;
@@ -374,7 +374,7 @@
     async function _clickEverywhere(xmlId) {
         ensureSetup();
         console.log("Starting ClickEverywhere test");
-        console.log(`Odoo flavor: ${isEnterprise} ? 'Enterprise' : 'Community'`);
+        console.log(`Odoo flavor: ${isEnterprise ? "Enterprise" : "Community"}`);
         const startTime = performance.now();
         testedApps = [];
         testedMenus = [];
