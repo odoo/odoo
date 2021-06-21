@@ -14,6 +14,10 @@ QUnit.module("py", {}, () => {
         assert.deepEqual(parseExpr("None"), { type: 3 /* None */ });
     });
 
+    QUnit.test("cannot parse empty string", (assert) => {
+        assert.throws(() => parseExpr(""), /Error: Missing token/);
+    });
+
     QUnit.test("can parse unary operator -", (assert) => {
         assert.deepEqual(parseExpr("-1"), {
             type: 6 /* UnaryOperator */,

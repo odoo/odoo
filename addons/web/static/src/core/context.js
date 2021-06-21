@@ -16,8 +16,10 @@ import { evaluateExpr } from "./py_js/py";
 export function makeContext(...contexts) {
     let context = {};
     for (let ctx of contexts) {
-        const subCtx = typeof ctx === "string" ? evaluateExpr(ctx, context) : ctx;
-        Object.assign(context, subCtx);
+        if (ctx !== "") {
+            const subCtx = typeof ctx === "string" ? evaluateExpr(ctx, context) : ctx;
+            Object.assign(context, subCtx);
+        }
     }
     return context;
 }

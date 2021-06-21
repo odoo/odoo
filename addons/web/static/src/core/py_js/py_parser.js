@@ -364,5 +364,8 @@ function _parse(tokens, bp = 0) {
  * @returns {AST}
  */
 export function parse(tokens) {
-    return _parse(tokens, 0);
+    if (tokens.length) {
+        return _parse(tokens, 0);
+    }
+    throw new ParserError("Missing token");
 }

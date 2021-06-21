@@ -12,6 +12,10 @@ QUnit.module("py", {}, () => {
             assert.strictEqual(evaluateExpr('"foo"'), "foo");
         });
 
+        QUnit.test("empty expression", (assert) => {
+            assert.throws(() => evaluateExpr(""), /Error: Missing token/);
+        });
+
         QUnit.test("numbers", (assert) => {
             assert.strictEqual(evaluateExpr("1.2"), 1.2);
             assert.strictEqual(evaluateExpr(".12"), 0.12);
