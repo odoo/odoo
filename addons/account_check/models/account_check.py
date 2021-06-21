@@ -150,14 +150,15 @@ class AccountCheck(models.Model):
     #             rec.name = '%08d' % rec.number
 
     # TODO improve this, actually is harcoded to argentina the 8 digits number
-    @api.onchange('name')
-    def _onchange_name(self):
-        for rec in self:
-            try:
-                if rec.name:
-                    rec.name = '%08d' % int(rec.name)
-            except Exception:
-                pass
+    # @api.onchange('name')
+    # def _onchange_name(self):
+    #     import pdb; pdb.set_trace()
+    #     for rec in self:
+    #         try:
+    #             if rec.name:
+    #                 rec.name = '%08d' % int(rec.name)
+    #         except Exception:
+    #             pass
 
     @api.onchange('issuer_vat')
     def onchange_issuer_vat(self):
@@ -355,11 +356,11 @@ class AccountCheck(models.Model):
     #         elif not rec.amount_company_currency:
     #             rec.amount_company_currency = rec.amount
 
-    def name_get(self):
-        result = []
-        for rec in self:
-            name = rec.name
-            if rec.type == 'third_check':
-                name = '%s (%s - %s)' % (name, rec.bank_id.name, rec.issuer_vat)
-            result.append((rec.id, name))
-        return result
+    # def name_get(self):
+    #     result = []
+    #     for rec in self:
+    #         name = rec.name
+    #         if rec.type == 'third_check':
+    #             name = '%s (%s - %s)' % (name, rec.bank_id.name, rec.issuer_vat)
+    #         result.append((rec.id, name))
+    #     return result

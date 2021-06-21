@@ -9,6 +9,7 @@ class AccountMove(models.Model):
         the check operation (handed, delivered, etc) on the payment
         """
         res = super().button_draft()
-        if self.payment_id.check_id and self.payment_id.state != 'cancel':
-            self.payment_id._do_checks_operations(cancel=True)
+        for rec in self:
+            if rec.payment_id.check_id and rec.payment_id.state != 'cancel':
+                rec.payment_id._do_checks_operations(cancel=True)
         return res
