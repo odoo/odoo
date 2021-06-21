@@ -68,6 +68,15 @@ function factory(dependencies) {
             this.update({ isComposerVisible: false });
         }
 
+        /**
+         * Handle click on attachement.
+         */
+        onClickAttachment() {
+            this.update({
+                isAttachmentBoxVisible: !this.isAttachmentBoxVisible,
+            });
+        }
+
         showLogNote() {
             this.update({ isComposerVisible: true });
             this.thread.composer.update({ isLog: true });

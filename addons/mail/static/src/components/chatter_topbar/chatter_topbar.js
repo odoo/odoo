@@ -39,16 +39,6 @@ export class ChatterTopbar extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickAttachments(ev) {
-        this.chatter.update({
-            isAttachmentBoxVisible: !this.chatter.isAttachmentBoxVisible,
-        });
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickClose(ev) {
         this.trigger('o-close-chatter');
     }
