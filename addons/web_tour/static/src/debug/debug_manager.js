@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import ToursDialog from "@web_tour/debug/tour_dialog_component";
 import utils from "web_tour.utils";
 
-function disableTours({ env }) {
+export function disableTours({ env }) {
     if (!env.services.user.isSystem) {
         return null;
     }
@@ -17,8 +17,9 @@ function disableTours({ env }) {
         type: "item",
         description: env._t("Disable Tours"),
         callback: async () => {
-            await env.services.orm.call("web_tour.tour", "consume", [activeTours]);
-            for (const tourName of activeTours) {
+            const tourNames = activeTours.map(tour => tour.name);
+            await env.services.orm.call("web_tour.tour", "consume", [tourNames]);
+            for (const tourName of tourNames) {
                 browser.localStorage.removeItem(utils.get_debugging_key(tourName));
             }
             browser.location.reload();
@@ -27,7 +28,7 @@ function disableTours({ env }) {
     };
 }
 
-function startTour({ env }) {
+export function startTour({ env }) {
     if (!env.services.user.isSystem) {
         return null;
     }
