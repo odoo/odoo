@@ -281,10 +281,9 @@ class StockMove(models.Model):
     def _get_move_lines(self):
         """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move.
         In some context, such as MRP, it is necessary to compute quantity_done on filtered sock.move.line."""
-        self.ensure_one()
-        if self.picking_type_id.show_reserved is False:
-            return self.move_line_nosuggest_ids
-        return self.move_line_ids
+        move_show_reserved = self.filtered('picking_type_id.show_reserved')
+        other_moves = self - move_show_reserved
+        return move_show_reserved.move_line_ids | other_moves.move_line_nosuggest_ids
 
     @api.depends('move_orig_ids.date', 'move_orig_ids.state', 'state', 'date')
     def _compute_delay_alert_date(self):
@@ -318,13 +317,10 @@ class StockMove(models.Model):
                         move_line.qty_done, move.product_uom, round=False)
                 move.quantity_done = quantity_done
         else:
-            # compute
-            move_lines_ids = set()
-            for move in self:
-                move_lines_ids |= set(move._get_move_lines().ids)
+            move_lines = self._get_move_lines()
 
             data = self.env['stock.move.line'].read_group(
-                [('id', 'in', list(move_lines_ids))],
+                [('id', 'in', move_lines.ids)],
                 ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
                 lazy=False
             )
