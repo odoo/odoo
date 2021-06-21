@@ -39,12 +39,7 @@ NOTA: En la lógica de impresón de cheques y en general, solo se tienen en cuen
     'data': [
         'data/account_payment_method_data.xml',
         'views/account_payment_view.xml',
-        'views/account_check_view.xml',
-        'views/account_journal_view.xml',
-        'views/account_checkbook_view.xml',
         'wizards/account_payment_register_views.xml',
-        'security/ir.model.access.csv',
-        'security/account_check_security.xml',
     ],
     'demo': [
     ],
