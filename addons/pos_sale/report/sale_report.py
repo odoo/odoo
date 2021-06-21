@@ -103,6 +103,9 @@ class SaleReport(models.Model):
             u.factor,
             pos.crm_team_id
         '''
-        current = '(SELECT %s FROM %s GROUP BY %s)' % (select_, from_, groupby_)
+
+        where_ = 'l.sale_order_line_id is NULL'
+
+        current = '(SELECT %s FROM %s WHERE %s GROUP BY %s)' % (select_, from_, where_, groupby_)
 
         return '%s UNION ALL %s' % (res, current)
