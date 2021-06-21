@@ -117,7 +117,7 @@
                     t-attf-style="width: #{count ? (count * 100 / widget.groupCount) : 0}%;"/>
             </t>
         </div>
-        <div class="o_kanban_counter_side"><b><t t-esc="widget.totalCounterValue || 0"/></b></div>
+        <div class="o_kanban_counter_side" t-att-title="widget.sumFieldLabel || ''"><b><t t-esc="widget.totalCounterValue || 0"/></b></div>
     </div>
 </t>
 
