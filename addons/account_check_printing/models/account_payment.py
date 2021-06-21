@@ -38,7 +38,28 @@ class AccountPayment(models.Model):
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
              "or if the current numbering is wrong, you can change it in the journal configuration page.",
     )
+    use_checkbooks = fields.Boolean(related='journal_id.use_checkbooks')
     payment_method_id = fields.Many2one(index=True)
+    checkbook_type = fields.Selection(related='checkbook_id.type')
+    checkbook_id = fields.Many2one(
+        'account.checkbook',
+        'Checkbook',
+        store=True,
+        compute='_compute_checkbook',
+        readonly=True,
+        states={'draft': [('readonly', False)]},
+    )
+    check_payment_date = fields.Date(
+        readonly=True,
+        states={'draft': [('readonly', False)]},
+    )
+
+    @api.depends('payment_method_id.code', 'journal_id.use_checkbooks')
+    def _compute_checkbook(self):
+        with_checkbooks = self.filtered(lambda x: x.payment_method_id.code == 'check_printing' and x.journal_id.use_checkbooks)
+        (self - with_checkbooks).checkbook_id = False
+        for rec in with_checkbooks:
+            rec.checkbook_id = rec.journal_id.checkbook_ids.filtered(lambda x: x.state == 'active')
 
     @api.constrains('check_number', 'journal_id')
     def _constrains_check_number(self):
