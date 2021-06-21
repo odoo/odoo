@@ -329,7 +329,7 @@ class SaleOrder(models.Model):
                 order.expected_date = False
 
     @api.onchange('expected_date')
-    def _onchange_commitment_date(self):
+    def _onchange_expected_date(self):
         self.commitment_date = self.expected_date
 
     @api.depends('transaction_ids')
