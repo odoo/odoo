@@ -42,7 +42,7 @@
                             class="o_ChatWindow_newMessageFormInput"
                             placeholder="newMessageFormInputPlaceholder"
                             select="chatWindow.onAutocompleteSelect.bind(chatWindow)"
-                            source="_onAutocompleteSource"
+                            source="chatWindow.onAutocompleteSource.bind(chatWindow)"
                             t-ref="input"
                         />
                     </div>

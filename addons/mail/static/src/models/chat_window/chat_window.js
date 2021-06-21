@@ -151,6 +151,32 @@ function factory(dependencies) {
         }
 
         /**
+         * Called when typing in the autocomplete input of the 'new_message' chat
+         * window.
+         *
+         * @private
+         * @param {Object} req
+         * @param {string} req.term
+         * @param {function} res
+         */
+        onAutocompleteSource(req, res) {
+            this.env.models['mail.partner'].imSearch({
+                callback: (partners) => {
+                    const suggestions = partners.map(partner => {
+                        return {
+                            id: partner.id,
+                            value: partner.nameOrDisplayName,
+                            label: partner.nameOrDisplayName,
+                        };
+                    });
+                    res(_.sortBy(suggestions, 'label'));
+                },
+                keyword: _.escape(req.term),
+                limit: 10,
+            });
+        }
+
+        /**
          * Swap this chat window with the previous one.
          */
         shiftPrev() {

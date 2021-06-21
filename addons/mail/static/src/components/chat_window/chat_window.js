@@ -43,8 +43,6 @@ export class ChatWindow extends Component {
         this._threadRef = useRef('thread');
         this._onWillHideHomeMenu = this._onWillHideHomeMenu.bind(this);
         this._onWillShowHomeMenu = this._onWillShowHomeMenu.bind(this);
-        // the following are passed as props to children
-        this._onAutocompleteSource = this._onAutocompleteSource.bind(this);
         this._constructor(...args);
     }
 
@@ -165,32 +163,6 @@ export class ChatWindow extends Component {
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
-    /**
-     * Called when typing in the autocomplete input of the 'new_message' chat
-     * window.
-     *
-     * @private
-     * @param {Object} req
-     * @param {string} req.term
-     * @param {function} res
-     */
-    _onAutocompleteSource(req, res) {
-        this.env.models['mail.partner'].imSearch({
-            callback: (partners) => {
-                const suggestions = partners.map(partner => {
-                    return {
-                        id: partner.id,
-                        value: partner.nameOrDisplayName,
-                        label: partner.nameOrDisplayName,
-                    };
-                });
-                res(_.sortBy(suggestions, 'label'));
-            },
-            keyword: _.escape(req.term),
-            limit: 10,
-        });
-    }
 
     /**
      * Called when clicking on header of chat window. Usually folds the chat
