@@ -7,51 +7,44 @@
         <field name="inherit_id" ref="account.view_account_payment_form" />
         <field name="arch" type="xml">
             <form>
-                <field name="check_type" invisible="1"/>
                 <field name="available_check_ids" invisible="1"/>
             </form>
             <xpath expr="//div[@name='amount_div']//field[@name='amount']" position="attributes">
-                <attribute name="attrs">{'readonly': [('check_type', '!=', False)]}</attribute>
+                <attribute name="attrs">{'readonly': [('payment_method_code', 'in', ['in_third_checks', 'out_third_checks'])]}</attribute>
                 <attribute name="force_save">1</attribute>
             </xpath>
-            <field name="destination_journal_id" position="after">
-                <!-- view check (with all fields) -->
+            <field name="check_payment_date" position="after">
                 <field
                     name="check_id"
-                    class="oe_read_only"
-                    attrs="{'invisible': [('check_id', '=', False)]}"
-                />
-                <!-- select check -->
-                <field
-                    name="check_id"
-                    class="oe_edit_only"
-                    attrs="{'invisible': [('payment_method_code', 'not in', ['in_own_checks', 'in_third_checks', 'out_third_checks'])], 'required': [('payment_method_code', 'in', ['in_own_checks', 'in_third_checks', 'out_third_checks'])]}"
+                    attrs="{'invisible': [('payment_method_code', 'not in', ['in_third_checks', 'out_third_checks'])], 'required': [('payment_method_code', 'in', ['in_third_checks', 'out_third_checks'])]}"
                     domain="[('id', 'in', available_check_ids)]"
                     options="{'no_create': True}"
                 />
-                <!-- new check -->
-                <field
-                    name="check_id"
-                    class="oe_edit_only"
-                    attrs="{'invisible': [('payment_method_code', 'not in', ['new_third_checks', 'new_own_checks'])], 'required': [('payment_method_code', 'in', ['new_third_checks', 'new_own_checks'])]}"
-                    domain="[('id', 'in', available_check_ids)]"
-                    context="{'default_amount': amount, 'default_company_id': company_id, 'default_first_partner_id': partner_id, 'default_journal_id': journal_id, 'default_currency_id': currency_id, 'default_type': check_type, 'from_payment': True}"
-                    options="{'no_quick_create': True}"
-                />
+                <field name="check_number" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')], 'readonly': [('state', '!=', 'draft')]}"/>
+                <field name="check_payment_date" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')]}"/>
+                <field name="third_check_issue_date" string="Check Issue Date" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
+                <field name="third_check_bank_id" string="Check Bank" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
+                <field name="third_check_issuer_vat" string="Check Issuer Vat" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
+                <field name="third_check_issuer_name" string="Check Issuer" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
             </field>
         </field>
     </record>
 
-<!--  Checks search view -->
-    <record id="view_account_payment_search" model="ir.ui.view">
-        <field name="name">account.payment.check.search</field>
-        <field name="model">account.payment</field>
-        <field name="inherit_id" ref="account.view_account_payment_search"/>
-        <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="check_id"/>
-            </field>
-        </field>
+<!-- Third Check Views and menus -->
+
+    <record model="ir.actions.act_window" id="action_third_check">
+        <field name="name">Third Checks</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">tree,form,calendar,graph,pivot</field>
+        <field name="view_id" ref="account_check_printing.view_account_check_tree"/>
+        <field name="domain">[('payment_method_code', '=', 'new_third_checks')]</field>
+        <!-- <field name="context">{'search_default_state':'holding','default_type':'third_check', 'search_default_groupby_journal_id': 1}</field> -->
     </record>
+
+    <menuitem
+        action="action_third_check"
+        id="menu_third_check"
+        sequence="40"
+        parent="account.menu_finance_receivables"/>
 
 </odoo>

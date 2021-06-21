@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_payment_register_form" model="ir.ui.view">
+        <field name="name">account.payment.register.form</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <field name="payment_method_id" position="after">
+                <field name="use_checkbooks" invisible="1"/>
+                <field name="payment_method_code" invisible="1"/>
+                <field name="checkbook_type" invisible="1"/>
+                <field name="checkbook_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('use_checkbooks', '=', False)], 'required': [('payment_method_code', '=', 'check_printing'), ('use_checkbooks', '=', True)]}" domain="[('journal_id', '=', journal_id), ('state', '=', 'active')]"/>
+                <field name="check_manual_sequencing" invisible="1"/>
+                <field name="check_number" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_number', '=', False)]}"/>
+                <field name="check_payment_date" attrs="{'invisible': [('checkbook_type', '!=', 'deferred')], 'required': [('checkbook_type', '=', 'deferred')]}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
