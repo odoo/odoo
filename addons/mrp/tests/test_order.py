@@ -292,6 +292,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(sum(mo.move_finished_ids.mapped('quantity_done')), 5)
 
     def test_update_quantity_3(self):
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
         bom = self.env['mrp.bom'].create({
             'product_id': self.product_6.id,
             'product_tmpl_id': self.product_6.product_tmpl_id.id,
@@ -1743,6 +1744,7 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_multi_button_plan(self):
         """ Test batch methods (confirm/validate) of the MO with the same bom """
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
         self.bom_2.type = "normal"  # avoid to get the operation of the kit bom
 
         mo_3 = Form(self.env['mrp.production'])
@@ -1786,6 +1788,7 @@ class TestMrpOrder(TestMrpCommon):
     def test_workcenter_timezone(self):
         # Workcenter is based in Bangkok
         # Possible working hours are Monday to Friday, from 8:00 to 12:00 and from 13:00 to 17:00 (UTC+7)
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
         workcenter = self.workcenter_1
         workcenter.resource_calendar_id.tz = 'Asia/Bangkok'
 

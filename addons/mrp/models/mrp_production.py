@@ -677,7 +677,7 @@ class MrpProduction(models.Model):
 
     @api.onchange('bom_id')
     def _onchange_workorder_ids(self):
-        if self.bom_id:
+        if self.bom_id and self.env.user.has_group('mrp.group_mrp_routings'):
             self._create_workorder()
         else:
             self.workorder_ids = False
