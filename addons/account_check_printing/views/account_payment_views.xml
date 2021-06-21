@@ -72,8 +72,8 @@
             <field name="inherit_id" ref="account.view_account_payment_tree"/>
             <field name="arch" type="xml">
                 <field name="payment_method_id" position="replace"/>
-                <field name="journal_id" position="after">
-                    <field name="checkbook_id"/>
+                <field name="name" position="replace">
+                    <field name="check_number"/>
                 </field>
                 <field name="date" position="after">
                     <field name="check_payment_date" string="Payment Date"/>
