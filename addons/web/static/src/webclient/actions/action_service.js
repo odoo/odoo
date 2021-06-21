@@ -1194,7 +1194,9 @@ function makeActionManager(env) {
         }
         if (action.context) {
             const activeId = action.context.active_id;
-            newState.active_id = activeId ? `${activeId}` : undefined;
+            if (activeId) {
+                newState.active_id = `${activeId}`;
+            }
             const activeIds = action.context.active_ids;
             // we don't push active_ids if it's a single element array containing
             // the active_id to make the url shorter in most cases

@@ -3,8 +3,9 @@
 import { registry } from "@web/core/registry";
 import testUtils from "web.test_utils";
 import ListController from "web.ListController";
-import ListView from 'web.ListView';
+import ListView from "web.ListView";
 import { click, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
+import { registerCleanup } from "../../helpers/cleanup";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
 import { ClientActionAdapter } from "@web/legacy/action_adapters";
@@ -191,7 +192,7 @@ QUnit.module("ActionManager", (hooks) => {
         patchWithCleanup(ListView.prototype, {
             init(viewInfo, params) {
                 const action = params.action;
-                const views = action.views.map((view) => ([view.viewID, view.type]));
+                const views = action.views.map((view) => [view.viewID, view.type]);
                 assert.deepEqual(views, [
                     [1, "list"],
                     [2, "kanban"],
@@ -209,34 +210,43 @@ QUnit.module("ActionManager", (hooks) => {
         const models = {
             partner: {
                 fields: {
-                    display_name: {string: "Displayed name", type: "char", searchable: true},
-                    foo: {string: "Foo", type: "char", default: "My little Foo Value", searchable: true},
-                    bar: {string: "Bar", type: "boolean"},
-                    int_field: {string: "Integer field", type: "integer", group_operator: 'sum'},
+                    display_name: { string: "Displayed name", type: "char", searchable: true },
+                    foo: {
+                        string: "Foo",
+                        type: "char",
+                        default: "My little Foo Value",
+                        searchable: true,
+                    },
+                    bar: { string: "Bar", type: "boolean" },
+                    int_field: { string: "Integer field", type: "integer", group_operator: "sum" },
                 },
-                records: [{
-                    id: 1,
-                    display_name: "first record",
-                    foo: "yop",
-                    int_field: 3,
-                }, {
-                    id: 2,
-                    display_name: "second record",
-                    foo: "lalala",
-                    int_field: 5,
-                }, {
-                    id: 4,
-                    display_name: "aaa",
-                    foo: "abc",
-                    int_field: 2,
-                }],
-            }
+                records: [
+                    {
+                        id: 1,
+                        display_name: "first record",
+                        foo: "yop",
+                        int_field: 3,
+                    },
+                    {
+                        id: 2,
+                        display_name: "second record",
+                        foo: "lalala",
+                        int_field: 5,
+                    },
+                    {
+                        id: 4,
+                        display_name: "aaa",
+                        foo: "abc",
+                        int_field: 2,
+                    },
+                ],
+            },
         };
         const views = {
             "partner,1,list": '<list><field name="foo"/></list>',
-            'partner,2,kanban': '<kanban></kanban>',
+            "partner,2,kanban": "<kanban></kanban>",
             "partner,3,form": `<form></form>`,
-            'partner,false,search': '<search></search>',
+            "partner,false,search": "<search></search>",
         };
         const serverData = { models, views };
 
@@ -248,8 +258,98 @@ QUnit.module("ActionManager", (hooks) => {
             id: 1,
             res_model: "partner",
             type: "ir.actions.act_window",
-            views: [[1, "list"], [2, "kanban"], [3, "form"]],
+            views: [
+                [1, "list"],
+                [2, "kanban"],
+                [3, "form"],
+            ],
+        });
+    });
 
+    QUnit.test("client actions may take and push their params", async function (assert) {
+        assert.expect(2);
+
+        const ClientAction = AbstractAction.extend({
+            init(parent, action) {
+                this._super(...arguments);
+                assert.deepEqual(action.params, {
+                    active_id: 99,
+                    take: "five",
+                    active_ids: "1,2",
+                    list: [9, 10],
+                });
+            },
+        });
+        core.action_registry.add("clientAction", ClientAction);
+        registerCleanup(() => delete core.action_registry.map.clientAction);
+        const webClient = await createWebClient({});
+
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "clientAction",
+            params: {
+                active_id: 99,
+                take: "five",
+                active_ids: "1,2",
+                list: [9, 10],
+            },
+        });
+
+        assert.deepEqual(webClient.env.services.router.current.hash, {
+            action: "clientAction",
+            active_id: 99,
+            take: "five",
+            active_ids: "1,2",
+        });
+    });
+
+    QUnit.test("client actions honour do_push_state", async function (assert) {
+        assert.expect(2);
+
+        const ClientAction = AbstractAction.extend({
+            init(parent) {
+                this._super(...arguments);
+                this.parent = parent;
+                this.parent.do_push_state({ pinball: "wizard" });
+            },
+
+            async start() {
+                await this._super(...arguments);
+                const btn = document.createElement("button");
+                btn.classList.add("tommy");
+                btn.addEventListener("click", () => {
+                    this.parent.do_push_state({ gipsy: "the acid queen" });
+                });
+                this.el.append(btn);
+            },
+
+            getState() {
+                return {
+                    doctor: "quackson",
+                };
+            },
+        });
+        core.action_registry.add("clientAction", ClientAction);
+        registerCleanup(() => delete core.action_registry.map.clientAction);
+        const webClient = await createWebClient({});
+
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "clientAction",
+        });
+
+        assert.deepEqual(webClient.env.services.router.current.hash, {
+            action: "clientAction",
+            pinball: "wizard",
+            doctor: "quackson",
+        });
+
+        await click(webClient.el, ".tommy");
+        assert.deepEqual(webClient.env.services.router.current.hash, {
+            action: "clientAction",
+            pinball: "wizard",
+            gipsy: "the acid queen",
+            doctor: "quackson",
         });
     });
 });

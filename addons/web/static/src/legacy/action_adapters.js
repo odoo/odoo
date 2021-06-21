@@ -41,12 +41,12 @@ class ActionAdapter extends ComponentAdapter {
         useEffect(
             () => {
                 this.title.setParts({ action: this.widget.getTitle() });
-                const query = objectToQuery(this.widget.getState());
+                const query = this.widget.getState();
                 Object.assign(query, this.tempQuery);
                 this.tempQuery = null;
                 this.__widget = this.widget;
                 if (!this.wowlEnv.inDialog) {
-                    this.router.pushState(query);
+                    this.pushState(query);
                 }
                 this.wowlEnv.bus.on("ACTION_MANAGER:UPDATE", this, () => {
                     this.env.bus.trigger("close_dialogs");
@@ -73,6 +73,15 @@ class ActionAdapter extends ComponentAdapter {
         throw new Error("Should be implement by specific adapters");
     }
 
+    pushState(state) {
+        const query = objectToQuery(state);
+        if (this.tempQuery) {
+            Object.assign(this.tempQuery, query);
+            return;
+        }
+        this.router.pushState(query);
+    }
+
     _trigger_up(ev) {
         const payload = ev.data;
         if (ev.name === "do_action") {
@@ -85,12 +94,7 @@ class ActionAdapter extends ComponentAdapter {
         } else if (ev.name === "breadcrumb_clicked") {
             this.actionService.restore(payload.controllerID);
         } else if (ev.name === "push_state") {
-            const query = objectToQuery(payload.state);
-            if (this.tempQuery) {
-                Object.assign(this.tempQuery, query);
-                return;
-            }
-            this.router.pushState(query);
+            this.pushState(payload.state);
         } else if (ev.name === "set_title_part") {
             const { part, title } = payload;
             this.title.setParts({ [part]: title || null });
@@ -163,6 +167,18 @@ export class ClientActionAdapter extends ActionAdapter {
     setup() {
         super.setup();
         useDebugMenu("action", { action: this.props.widgetArgs[0] });
+        owl.hooks.onMounted(() => {
+            const action = this.props.widgetArgs[0];
+            if ("params" in action) {
+                const newState = {};
+                Object.entries(action.params).forEach(([k, v]) => {
+                    if (typeof v === "string" || typeof v === "number") {
+                        newState[k] = v;
+                    }
+                });
+                this.wowlEnv.services.router.pushState(newState);
+            }
+        });
         this.env = Component.env;
     }
 
@@ -189,7 +205,9 @@ export class ClientActionAdapter extends ActionAdapter {
         return this.widget.do_show();
     }
 
-    do_push_state() {}
+    do_push_state(state) {
+        this.pushState(state);
+    }
 }
 
 const magicReloadSymbol = Symbol("magicReload");
