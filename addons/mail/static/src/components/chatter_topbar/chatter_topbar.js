@@ -71,21 +71,6 @@ export class ChatterTopbar extends Component {
         });
     }
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickSendMessage(ev) {
-        if (!this.chatter.composer) {
-            return;
-        }
-        if (this.chatter.isComposerVisible && !this.chatter.composer.isLog) {
-            this.chatter.update({ isComposerVisible: false });
-        } else {
-            this.chatter.showSendMessage();
-        }
-    }
-
 }
 
 Object.assign(ChatterTopbar, {

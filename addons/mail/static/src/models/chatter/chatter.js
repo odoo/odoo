@@ -88,6 +88,17 @@ function factory(dependencies) {
             }
         }
 
+        onClickSendMessage() {
+            if (!this.composer) {
+                return;
+            }
+            if (this.isComposerVisible && !this.composer.isLog) {
+                this.update({ isComposerVisible: false });
+            } else {
+                this.showSendMessage();
+            }
+        }
+
         showLogNote() {
             this.update({ isComposerVisible: true });
             this.thread.composer.update({ isLog: true });
