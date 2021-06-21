@@ -2391,13 +2391,17 @@ class AccountMove(models.Model):
         if cancel:
             reverse_moves.with_context(move_reverse_cancel=cancel)._post(soft=False)
             for move, reverse_move in zip(self, reverse_moves):
-                accounts = move.mapped('line_ids.account_id') \
-                    .filtered(lambda account: account.reconcile or account.internal_type == 'liquidity')
-                for account in accounts:
-                    (move.line_ids + reverse_move.line_ids)\
-                        .filtered(lambda line: line.account_id == account and not line.reconciled)\
-                        .with_context(move_reverse_cancel=cancel)\
-                        .reconcile()
+                lines = move.line_ids.filtered(
+                    lambda x: (x.account_id.reconcile or x.account_id.internal_type == 'liquidity')
+                              and not x.reconciled
+                )
+                for line in lines:
+                    counterpart_lines = reverse_move.line_ids.filtered(
+                        lambda x: x.account_id == line.account_id
+                                  and x.currency_id == line.currency_id
+                                  and not x.reconciled
+                    )
+                    (line + counterpart_lines).with_context(move_reverse_cancel=cancel).reconcile()
 
         return reverse_moves
 
@@ -3307,7 +3311,7 @@ class AccountMoveLine(models.Model):
 
         # Apply fiscal position.
         if product_taxes and fiscal_position:
-            product_taxes_after_fp = fiscal_position.map_tax(product_taxes, partner=self.partner_id)
+            product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
 
             if set(product_taxes.ids) != set(product_taxes_after_fp.ids):
                 flattened_taxes_before_fp = product_taxes._origin.flatten_taxes_hierarchy()
@@ -3409,9 +3413,7 @@ class AccountMoveLine(models.Model):
         # 100 as balance but set 120 as price_unit.
         if self.tax_ids and self.move_id.fiscal_position_id and self.move_id.fiscal_position_id.tax_ids:
             price_subtotal = self._get_price_total_and_subtotal()['price_subtotal']
-            self.tax_ids = self.move_id.fiscal_position_id.map_tax(
-                self.tax_ids._origin,
-                partner=self.move_id.partner_id)
+            self.tax_ids = self.move_id.fiscal_position_id.map_tax(self.tax_ids._origin)
             accounting_vals = self._get_fields_onchange_subtotal(
                 price_subtotal=price_subtotal,
                 currency=self.move_id.company_currency_id)
@@ -3645,7 +3647,7 @@ class AccountMoveLine(models.Model):
             line.account_id = line._get_computed_account()
             taxes = line._get_computed_taxes()
             if taxes and line.move_id.fiscal_position_id:
-                taxes = line.move_id.fiscal_position_id.map_tax(taxes, partner=line.partner_id)
+                taxes = line.move_id.fiscal_position_id.map_tax(taxes)
             line.tax_ids = taxes
             line.product_uom_id = line._get_computed_uom()
             line.price_unit = line._get_computed_price_unit()
@@ -3653,9 +3655,11 @@ class AccountMoveLine(models.Model):
     @api.onchange('product_uom_id')
     def _onchange_uom_id(self):
         ''' Recompute the 'price_unit' depending of the unit of measure. '''
+        if self.display_type in ('line_section', 'line_note'):
+            return
         taxes = self._get_computed_taxes()
         if taxes and self.move_id.fiscal_position_id:
-            taxes = self.move_id.fiscal_position_id.map_tax(taxes, partner=self.partner_id)
+            taxes = self.move_id.fiscal_position_id.map_tax(taxes)
         self.tax_ids = taxes
         self.price_unit = self._get_computed_price_unit()
 
@@ -3669,7 +3673,7 @@ class AccountMoveLine(models.Model):
                 taxes = line._get_computed_taxes()
 
                 if taxes and line.move_id.fiscal_position_id:
-                    taxes = line.move_id.fiscal_position_id.map_tax(taxes, partner=line.partner_id)
+                    taxes = line.move_id.fiscal_position_id.map_tax(taxes)
 
                 line.tax_ids = taxes
 
@@ -4360,12 +4364,16 @@ class AccountMoveLine(models.Model):
             if debit_line_currency == credit_line_currency:
                 # Reconcile on the same currency.
 
-                # The debit line is now fully reconciled.
+                # The debit line is now fully reconciled because:
+                # - either amount_residual & amount_residual_currency are at 0.
+                # - either the credit_line is not an exchange difference one.
                 if not has_debit_residual_curr_left and (has_credit_residual_curr_left or not has_debit_residual_left):
                     debit_line = None
                     continue
 
-                # The credit line is now fully reconciled.
+                # The credit line is now fully reconciled because:
+                # - either amount_residual & amount_residual_currency are at 0.
+                # - either the debit is not an exchange difference one.
                 if not has_credit_residual_curr_left and (has_debit_residual_curr_left or not has_credit_residual_left):
                     credit_line = None
                     continue
@@ -4377,13 +4385,13 @@ class AccountMoveLine(models.Model):
             else:
                 # Reconcile on the company's currency.
 
-                # The debit line is now fully reconciled.
-                if not has_debit_residual_left and (has_credit_residual_left or not has_debit_residual_curr_left):
+                # The debit line is now fully reconciled since amount_residual is 0.
+                if not has_debit_residual_left:
                     debit_line = None
                     continue
 
-                # The credit line is now fully reconciled.
-                if not has_credit_residual_left and (has_debit_residual_left or not has_credit_residual_curr_left):
+                # The credit line is now fully reconciled since amount_residual is 0.
+                if not has_credit_residual_left:
                     credit_line = None
                     continue
 
@@ -4544,9 +4552,13 @@ class AccountMoveLine(models.Model):
                         # Tax line.
                         grouping_key = self.env['account.partial.reconcile']._get_cash_basis_tax_line_grouping_key_from_record(line)
                         if grouping_key in account_vals_to_fix:
+                            debit = account_vals_to_fix[grouping_key]['debit'] + vals['debit']
+                            credit = account_vals_to_fix[grouping_key]['credit'] + vals['credit']
+                            balance = debit - credit
+
                             account_vals_to_fix[grouping_key].update({
-                                'debit': account_vals_to_fix[grouping_key]['debit'] + vals['debit'],
-                                'credit': account_vals_to_fix[grouping_key]['credit'] + vals['credit'],
+                                'debit': balance if balance > 0 else 0,
+                                'credit': -balance if balance < 0 else 0,
                                 'tax_base_amount': account_vals_to_fix[grouping_key]['tax_base_amount'] + line.tax_base_amount,
                             })
                         else:

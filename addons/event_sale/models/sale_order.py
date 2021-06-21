@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
         for so in self:
             # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
             so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
-            if any(line.event_id for line in so.order_line):
+            if any(line.event_ok for line in so.order_line):
                 return self.env['ir.actions.act_window'] \
                     .with_context(default_sale_order_id=so.id) \
                     ._for_xml_id('event_sale.action_sale_order_event_registration')
@@ -74,7 +74,7 @@ class SaleOrderLine(models.Model):
         RegistrationSudo = self.env['event.registration'].sudo()
         registrations = RegistrationSudo.search([('sale_order_line_id', 'in', self.ids)])
         registrations_vals = []
-        for so_line in self.filtered('event_id'):
+        for so_line in self.filtered('event_ok'):
             existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)
             if confirm:
                 existing_registrations.filtered(lambda self: self.state not in ['open', 'cancel']).action_confirm()

@@ -140,9 +140,8 @@ class SaleOrder(models.Model):
 
     def _get_reward_values_discount(self, program):
         if program.discount_type == 'fixed_amount':
-            taxes = program.discount_line_product_id.taxes_id
-            if self.fiscal_position_id:
-                taxes = self.fiscal_position_id.map_tax(taxes)
+            product_taxes = program.discount_line_product_id.taxes_id.filtered(lambda tax: tax.company_id == self.company_id)
+            taxes = self.fiscal_position_id.map_tax(product_taxes)
             return [{
                 'name': _("Discount: %s", program.name),
                 'product_id': program.discount_line_product_id.id,
@@ -505,7 +504,7 @@ class SaleOrderLine(models.Model):
             fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id.get_fiscal_position(line.order_partner_id.id)
             # If company_id is set, always filter taxes by the company
             taxes = line.tax_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
-            line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id)
+            line.tax_id = fpos.map_tax(taxes)
 
     # Invalidation of `coupon.program.order_count`
     # `test_program_rules_validity_dates_and_uses`,

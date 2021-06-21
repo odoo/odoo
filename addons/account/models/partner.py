@@ -66,7 +66,7 @@ class AccountFiscalPosition(models.Model):
                     else:
                         raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country."))
 
-    def map_tax(self, taxes, product=None, partner=None):
+    def map_tax(self, taxes):
         if not self:
             return taxes
         result = self.env['account.tax']

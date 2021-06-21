@@ -50,13 +50,13 @@
             @include o-position-absolute($bottom: 0, $right: 0);
 
             &.planned {
-                color: theme-color('success');
+                @extend .text-success;
             }
             &.overdue {
-                color: theme-color('danger');
+                @extend .text-danger;
             }
             &.today {
-                color: theme-color('warning');
+                @extend .text-warning;
             }
         }
     }
@@ -116,7 +116,7 @@
             padding:5px;
             cursor: pointer;
             &:hover {
-                color: theme-color('success');
+                color: o-text-color('success');
             }
         }
         .o_kanban_counter {

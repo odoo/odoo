@@ -2,14 +2,6 @@
 <templates xml:space="preserve">
 
     <!--
-        extends the debug mode menu to allow access to the attachment list view of the current record.
-    -->
-    <t t-extend="WebClient.DebugManager.View">
-        <t t-jquery="a[data-action='get_metadata']" t-operation="after">
-            <a role="menuitem" href="#" data-action="getMailMessages" class="dropdown-item">Manage Messages</a>
-        </t>
-    </t>
-    <!--
         @param {mail.DocumentViewer} widget
     -->
     <t t-name="DocumentViewer.Content">

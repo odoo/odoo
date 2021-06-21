@@ -4,6 +4,25 @@ import contentMenu from 'website.contentMenu';
 import weWidgets from 'wysiwyg.widgets';
 import {_t} from 'web.core';
 
+weWidgets.LinkPopoverWidget.include({
+    /**
+     * @override
+     */
+    start() {
+        // hide popover while typing on mega menu
+        if (this.target.closest('.o_mega_menu')) {
+            let timeoutID = undefined;
+            this.$target.on('keydown.link_popover', () => {
+                this.$target.popover('hide');
+                clearTimeout(timeoutID);
+                timeoutID = setTimeout(() => this.$target.popover('show'), 1500);
+            });
+        }
+
+        return this._super(...arguments);
+    },
+});
+
 const NavbarLinkPopoverWidget = weWidgets.LinkPopoverWidget.extend({
     events: _.extend({}, weWidgets.LinkPopoverWidget.prototype.events, {
         'click .js_edit_menu': '_onEditMenuClick',

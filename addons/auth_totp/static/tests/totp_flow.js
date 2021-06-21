@@ -219,7 +219,7 @@ tour.register('totp_admin_disables', {
     }
 }, {
     content: "Open Actions menu",
-    trigger: 'button.o_dropdown_toggler_btn:contains("Action")'
+    trigger: 'button.o_dropdown_toggler:contains("Action")'
 }, {
     content: "Select totp remover",
     trigger: 'a.dropdown-item:contains(Disable TOTP on users)'

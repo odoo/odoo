@@ -1,0 +1,129 @@
+// = Default Boostrap Classes customizations
+// ----------------------------------------------------------------------------
+.dropdown-menu {
+  min-width: 100%;
+  max-height: 70vh;
+  overflow: auto;
+  background-clip: border-box;
+  box-shadow: $o-dropdown-box-shadow;
+}
+
+.dropdown-item {
+  &.active {
+    position: relative;
+    @extend .font-weight-bold;
+
+    &:not(.o_dropdown_item_active_noarrow):before {
+      @include o-position-absolute(0);
+      transform: translate(-1.5em, 90%);
+      font: .7em/1em FontAwesome;
+      color: $primary;
+      content: "\f00c";
+    }
+  }
+
+  &.selected { // Legacy
+    @extend .dropdown-item.active;
+  }
+
+}
+
+.dropdown-menu .dropdown-item {
+  // Using <a> tags inside a '.dropdown-item' elements  should not be necessary
+  // since the class in usually applied to the <a> tag itself.
+  // The following rules will handle custom layouts needs (eg '.o_user_menu').
+  &:not(.disabled):not(:disabled) a:not(.disabled):not(:disabled) {
+    @include o-hover-text-color($dropdown-link-color, $dropdown-link-hover-color);
+    font-weight: inherit;
+  }
+
+  &.disabled a, &:disabled a {
+    @include o-hover-text-color(
+      $dropdown-link-disabled-color,
+      $dropdown-link-disabled-color);
+  }
+}
+
+.dropdown-header {
+  @extend .font-weight-bold;
+  padding-bottom: .1em;
+
+  &:not(:first-child) {
+    margin-top: .3em;
+  }
+}
+
+.dropdown-divider:first-child {
+  display: none;
+}
+
+.o_rtl {
+  .dropdown-menu {
+    @extend .dropdown-menu-right;
+  }
+}
+
+// = Extend Owl custom classes to visually match Boostrap ones
+// ----------------------------------------------------------------------------
+.o_dropdown {
+  @extend .dropdown;
+
+  &_toggler {
+    @extend .dropdown-toggle;
+  }
+
+  &_menu {
+    @extend .dropdown-menu;
+
+    &.o_dropdown_menu_right {
+      @extend .dropdown-menu-right;
+    }
+  }
+
+  &_item {
+    @extend .dropdown-item;
+
+    // we want the dropdownitem first child to define its own padding
+    // because it can be an <a href/>
+    padding: 0;
+    > *:first-child {
+      padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+      display: flex;
+    }
+
+    &.o_dropdown_active {
+      @extend .dropdown-item:hover;
+    }
+  }
+
+  &_menu_group {
+    @extend .dropdown-header;
+  }
+}
+
+// = Owl components specific rules
+// -----------------------------------------------------------------------------
+.o_dropdown_item:not(.disabled):not(:disabled) {
+  // Needed 'cause <DropdownItem> generate <li> html tags that for browsers are
+  // normally not clickable.
+  cursor: pointer;
+}
+
+button.o_dropdown_toggler {
+  > span {
+    min-width: max-content;
+  }
+
+  &%--state-active {
+    outline: none;
+    box-shadow: none !important;
+  }
+
+  &.o_dropdown_active {
+    @extend %--state-active;
+  }
+
+  @include hover-focus-active() {
+    @extend %--state-active;
+  }
+}

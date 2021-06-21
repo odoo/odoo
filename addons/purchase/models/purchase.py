@@ -940,7 +940,7 @@ class PurchaseOrderLine(models.Model):
             fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id.get_fiscal_position(line.order_id.partner_id.id)
             # filter taxes by company
             taxes = line.product_id.supplier_taxes_id.filtered(lambda r: r.company_id == line.env.company)
-            line.taxes_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_id)
+            line.taxes_id = fpos.map_tax(taxes)
 
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'qty_received', 'product_uom_qty', 'order_id.state')
     def _compute_qty_invoiced(self):
@@ -1285,13 +1285,11 @@ class PurchaseOrderLine(models.Model):
             date=po.date_order and po.date_order.date(),
             uom_id=product_id.uom_po_id)
 
-        taxes = product_id.supplier_taxes_id
-        fpos = po.fiscal_position_id
-        taxes_id = fpos.map_tax(taxes, product_id, seller.name)
-        if taxes_id:
-            taxes_id = taxes_id.filtered(lambda x: x.company_id.id == company_id.id)
+        product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id.id == company_id.id)
+        taxes = po.fiscal_position_id.map_tax(product_taxes)
 
-        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, product_id.supplier_taxes_id, taxes_id, company_id) if seller else 0.0
+        price_unit = self.env['account.tax']._fix_tax_included_price_company(
+            seller.price, product_taxes, taxes, company_id) if seller else 0.0
         if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
             price_unit = seller.currency_id._convert(
                 price_unit, po.currency_id, po.company_id, po.date_order or fields.Date.today())
@@ -1313,7 +1311,7 @@ class PurchaseOrderLine(models.Model):
             'product_uom': product_id.uom_po_id.id,
             'price_unit': price_unit,
             'date_planned': date_planned,
-            'taxes_id': [(6, 0, taxes_id.ids)],
+            'taxes_id': [(6, 0, taxes.ids)],
             'order_id': po.id,
         }
 

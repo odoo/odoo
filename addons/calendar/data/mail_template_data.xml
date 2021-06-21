@@ -36,7 +36,7 @@
         Your meeting <strong>${object.event_id.name}</strong> has been booked.
         % endif
     </p>
-    <div style="text-align: center; margin: 16px 0px 16px 0px;">
+    <div style="text-align: center; padding: 16px 0px 16px 0px;">
         % if not is_online or object.state != 'accepted':
         <a href="/calendar/meeting/accept?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
@@ -164,7 +164,7 @@
         ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.
         % endif
     </p>
-    <div style="text-align: center; margin: 16px 0px 16px 0px;">
+    <div style="text-align: center; padding: 16px 0px 16px 0px;">
         <a href="/calendar/meeting/accept?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Accept</a>
@@ -266,7 +266,7 @@
         Hello ${object.common_name},<br/><br/>
         This is a reminder for the below event :
     </p>
-    <div style="text-align: center; margin: 16px 0px 16px 0px;">
+    <div style="text-align: center; padding: 16px 0px 16px 0px;">
         <a href="/calendar/${'recurrence' if recurrent else 'meeting'}/accept?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Accept</a>

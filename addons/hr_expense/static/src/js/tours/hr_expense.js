@@ -36,7 +36,7 @@ tour.register('hr_expense_tour' , {
     content: _t('<p>Select expenses to submit them to your manager</p>'),
     position: 'bottom'
 }, {
-    trigger: '.o_dropdown_toggler_btn',
+    trigger: '.o_dropdown_toggler',
     extra_trigger: ".o_expense_tree",
     content: _t('<p>Click on <b> Action Create Report </b> to submit selected expenses to your manager</p>'),
     position: 'right',

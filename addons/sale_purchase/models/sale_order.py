@@ -229,15 +229,14 @@ class SaleOrderLine(models.Model):
             date=purchase_order.date_order and purchase_order.date_order.date(), # and purchase_order.date_order[:10],
             uom_id=self.product_id.uom_po_id
         )
-        fpos = purchase_order.fiscal_position_id
-        taxes = fpos.map_tax(self.product_id.supplier_taxes_id)
-        if taxes:
-            taxes = taxes.filtered(lambda t: t.company_id.id == self.company_id.id)
+        supplier_taxes = self.product_id.supplier_taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
+        taxes = purchase_order.fiscal_position_id.map_tax(supplier_taxes)
 
         # compute unit price
         price_unit = 0.0
         if supplierinfo:
-            price_unit = self.env['account.tax'].sudo()._fix_tax_included_price_company(supplierinfo.price, self.product_id.supplier_taxes_id, taxes, self.company_id)
+            price_unit = self.env['account.tax'].sudo()._fix_tax_included_price_company(
+                supplierinfo.price, supplier_taxes, taxes, self.company_id)
             if purchase_order.currency_id and supplierinfo.currency_id != purchase_order.currency_id:
                 price_unit = supplierinfo.currency_id.compute(price_unit, purchase_order.currency_id)
 

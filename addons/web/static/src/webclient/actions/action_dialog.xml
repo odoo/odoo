@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.ActionDialog" t-inherit="web.Dialog" t-inherit-mode="primary" owl="1">
+    <xpath expr="//header/h4[contains(concat(' ',normalize-space(@class),' '),' modal-title ')]" position="before">
+      <DebugMenu t-if="env.debug" />
+    </xpath>
+    <xpath expr="//main[@class='modal-body']" position="attributes">
+      <attribute name="t-att-class">
+        {"o_act_window": actionType === "ir.actions.act_window"}
+      </attribute>
+    </xpath>
+  </t>
+
+  <t t-name="web.ActionDialogBody" owl="1">
+    <t t-if="props.ActionComponent" t-component="props.ActionComponent" t-props="props.actionProps" t-ref="actionRef"/>
+  </t>
+
+  <t t-name="web.LegacyAdaptedActionDialogFooter" owl="1">
+    <t t-if="!isLegacy">
+      <t t-slot="buttons">
+        <button class="btn btn-primary" t-on-click="_close">
+          <t>Ok</t>
+        </button>
+      </t>
+    </t>
+  </t>
+
+</templates>

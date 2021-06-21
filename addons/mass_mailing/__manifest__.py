@@ -5,7 +5,7 @@
     'name': 'Email Marketing',
     'summary': 'Design, send and track emails',
     'description': "",
-    'version': '2.4',
+    'version': '2.5',
     'sequence': 60,
     'website': 'https://www.odoo.com/page/mailing',
     'category': 'Marketing/Email Marketing',
@@ -65,7 +65,7 @@
             ('include', 'web._assets_helpers'),
             'web/static/lib/bootstrap/scss/_variables.scss',
             'mass_mailing/static/src/scss/mass_mailing.ui.scss',
-            'web/static/src/scss/webclient.scss',
+            'web/static/src/legacy/scss/webclient.scss',
         ],
         'web.assets_common': [
             'mass_mailing/static/src/js/tours/**/*',
