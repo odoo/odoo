@@ -442,3 +442,66 @@ def adapt_version(version):
     return version
 
 current_test = None
+<<<<<<< HEAD
+=======
+
+def run_unit_tests(module_name, position='at_install'):
+    """
+    :returns: ``True`` if all of ``module_name``'s tests succeeded, ``False``
+              if any of them failed.
+    :rtype: bool
+    """
+    global current_test
+    # avoid dependency hell
+    from odoo.tests.common import TagsSelector, OdooSuite
+    current_test = module_name
+    mods = get_test_modules(module_name)
+    threading.currentThread().testing = True
+    config_tags = TagsSelector(tools.config['test_tags'])
+    position_tag = TagsSelector(position)
+    r = True
+    for m in mods:
+        tests = unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
+        suite = OdooSuite(t for t in tests if position_tag.check(t) and config_tags.check(t))
+
+        if suite.countTestCases():
+            t0 = time.time()
+            t0_sql = odoo.sql_db.sql_counter
+            _logger.info('%s running tests.', m.__name__)
+            result = OdooTestRunner().run(suite)
+            if time.time() - t0 > 5:
+                _logger.log(25, "%s tested in %.2fs, %s queries", m.__name__, time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
+            if not result.wasSuccessful():
+                r = False
+                _logger.error("Module %s: %d failures, %d errors", module_name, len(result.failures), len(result.errors))
+
+    current_test = None
+    threading.currentThread().testing = False
+    return r
+
+def unwrap_suite(test):
+    """
+    Attempts to unpack testsuites (holding suites or cases) in order to
+    generate a single stream of terminals (either test cases or customized
+    test suites). These can then be checked for run/skip attributes
+    individually.
+
+    An alternative would be to use a variant of @unittest.skipIf with a state
+    flag of some sort e.g. @unittest.skipIf(common.runstate != 'at_install'),
+    but then things become weird with post_install as tests should *not* run
+    by default there
+    """
+    if isinstance(test, unittest.TestCase):
+        yield test
+        return
+
+    subtests = list(test)
+    # custom test suite (no test cases)
+    if not len(subtests):
+        yield test
+        return
+
+    for item in itertools.chain.from_iterable(
+            unwrap_suite(t) for t in subtests):
+        yield item
+>>>>>>> fedc14912c8... temp

@@ -621,7 +621,10 @@ class SingleTransactionCase(BaseCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.registry = odoo.registry(get_db_name())
+<<<<<<< HEAD
         cls.addClassCleanup(cls.registry.reset_changes)
+=======
+>>>>>>> fedc14912c8... temp
         cls.addClassCleanup(cls.registry.clear_caches)
 
         cls.cr = cls.registry.cursor()
@@ -1290,7 +1293,26 @@ class HttpCaseCommon(BaseCase):
             cls.browser.stop()
             cls.browser = None
 
+<<<<<<< HEAD
     def url_open(self, url, data=None, files=None, timeout=10, headers=None, allow_redirects=True):
+=======
+    def setUp(self):
+        super(HttpCase, self).setUp()
+
+        if self.registry_test_mode:
+            self.registry.enter_test_mode(self.cr)
+            self.addCleanup(self.registry.leave_test_mode)
+        # setup a magic session_id that will be rollbacked
+        self.session = odoo.http.root.session_store.new()
+        self.session_id = self.session.sid
+        self.session.db = get_db_name()
+        odoo.http.root.session_store.save(self.session)
+        # setup an url opener helper
+        self.opener = requests.Session()
+        self.opener.cookies['session_id'] = self.session_id
+
+    def url_open(self, url, data=None, files=None, timeout=10, headers=None):
+>>>>>>> fedc14912c8... temp
         self.env['base'].flush()
         if url.startswith('/'):
             url = "http://%s:%s%s" % (HOST, odoo.tools.config['http_port'], url)
