@@ -6,7 +6,6 @@ import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { AutocompleteInput } from '@mail/components/autocomplete_input/autocomplete_input';
 import { ChatWindowHeader } from '@mail/components/chat_window_header/chat_window_header';
 import { ThreadView } from '@mail/components/thread_view/thread_view';
-import { isEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -210,7 +209,7 @@ export class ChatWindow extends Component {
             // ignore focus out due to record being deleted
             return;
         }
-        this.chatWindow.update({ isFocused: false });
+        this.chatWindow.onFocusout();
     }
 
     /**
@@ -222,27 +221,7 @@ export class ChatWindow extends Component {
             // prevent crash during delete
             return;
         }
-        switch (ev.key) {
-            case 'Tab':
-                ev.preventDefault();
-                if (ev.shiftKey) {
-                    this.chatWindow.focusPreviousVisibleUnfoldedChatWindow();
-                } else {
-                    this.chatWindow.focusNextVisibleUnfoldedChatWindow();
-                }
-                break;
-            case 'Escape':
-                if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
-                    break;
-                }
-                if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
-                    break;
-                }
-                ev.preventDefault();
-                this.chatWindow.focusNextVisibleUnfoldedChatWindow();
-                this.chatWindow.close();
-                break;
-        }
+        this.chatWindow.onKeydown(ev);
     }
 
     /**

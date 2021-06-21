@@ -3,6 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
 import { clear, create, link, unlink, update } from '@mail/model/model_field_command';
+import { isEventHandled } from '@mail/utils/utils';
 
 function factory(dependencies) {
 
@@ -181,6 +182,42 @@ function factory(dependencies) {
          */
         onFocusinThread() {
             this.update({ isFocused: true });
+        }
+
+        /**
+         * Handle onFocusout of the chat window.
+         */
+        onFocusout() {
+            this.update({ isFocused: false });
+        }
+
+        /**
+         * Handle keydown on chat_window.
+         *
+         * @param {KeyboardEvent} ev
+         */
+        onKeydown(ev) {
+            switch (ev.key) {
+                case 'Tab':
+                    ev.preventDefault();
+                    if (ev.shiftKey) {
+                        this.focusPreviousVisibleUnfoldedChatWindow();
+                    } else {
+                        this.focusNextVisibleUnfoldedChatWindow();
+                    }
+                    break;
+                case 'Escape':
+                    if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
+                        break;
+                    }
+                    if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
+                        break;
+                    }
+                    ev.preventDefault();
+                    this.focusNextVisibleUnfoldedChatWindow();
+                    this.close();
+                    break;
+            }
         }
 
         /**
