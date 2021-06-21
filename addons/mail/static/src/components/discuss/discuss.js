@@ -204,20 +204,6 @@ export class Discuss extends Component {
 
     /**
      * @private
-     */
-    _onReplyingToMessageMessagePosted() {
-        this.env.services['notification'].notify({
-            message: _.str.sprintf(
-                this.env._t(`Message posted on "%s"`),
-                this.discuss.replyingToMessage.originThread.displayName
-            ),
-            type: 'info',
-        });
-        this.discuss.clearReplyingToMessage();
-    }
-
-    /**
-     * @private
      * @param {CustomEvent} ev
      * @param {Object} ev.detail
      * @param {string} ev.detail.tabId

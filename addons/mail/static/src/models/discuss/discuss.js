@@ -177,6 +177,17 @@ function factory(dependencies) {
             this.update({ isDoFocus: false });
         }
 
+        onReplyingToMessageMessagePosted() {
+            this.env.services['notification'].notify({
+                message: _.str.sprintf(
+                    this.env._t(`Message posted on "%s"`),
+                    this.replyingToMessage.originThread.displayName
+                ),
+                type: 'info',
+            });
+            this.clearReplyingToMessage();
+        }
+
         /**
          * Open thread from init active id. `initActiveId` is used to refer to
          * a thread that we may not have full data yet, such as when messaging
