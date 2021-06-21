@@ -26,12 +26,6 @@ export class DiscussSidebar extends Component {
          * chats based on this input content.
          */
         this._quickSearchInputRef = useRef('quickSearchInput');
-
-        // bind since passed as props
-        this._onAddChannelAutocompleteSelect = this._onAddChannelAutocompleteSelect.bind(this);
-        this._onAddChannelAutocompleteSource = this._onAddChannelAutocompleteSource.bind(this);
-        this._onAddChatAutocompleteSelect = this._onAddChatAutocompleteSelect.bind(this);
-        this._onAddChatAutocompleteSource = this._onAddChatAutocompleteSource.bind(this);
     }
 
     //--------------------------------------------------------------------------
@@ -152,48 +146,6 @@ export class DiscussSidebar extends Component {
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     * @param {Object} ui
-     * @param {Object} ui.item
-     * @param {integer} ui.item.id
-     */
-    _onAddChannelAutocompleteSelect(ev, ui) {
-        this.discuss.handleAddChannelAutocompleteSelect(ev, ui);
-    }
-
-    /**
-     * @private
-     * @param {Object} req
-     * @param {string} req.term
-     * @param {function} res
-     */
-    _onAddChannelAutocompleteSource(req, res) {
-        this.discuss.handleAddChannelAutocompleteSource(req, res);
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     * @param {Object} ui
-     * @param {Object} ui.item
-     * @param {integer} ui.item.id
-     */
-    _onAddChatAutocompleteSelect(ev, ui) {
-        this.discuss.handleAddChatAutocompleteSelect(ev, ui);
-    }
-
-    /**
-     * @private
-     * @param {Object} req
-     * @param {string} req.term
-     * @param {function} res
-     */
-    _onAddChatAutocompleteSource(req, res) {
-        this.discuss.handleAddChatAutocompleteSource(req, res);
-    }
 
     /**
      * Called when clicking on add channel icon.
