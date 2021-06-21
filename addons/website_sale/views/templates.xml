@@ -1895,21 +1895,21 @@
 
     <template id="carousel_product_indicators" name="Carousel Product">
         <div t-ignore="True" t-attf-class="o_carousel_product_indicators {{indicators_div_class}}">
-            <ol t-if="len(product_images) > 1" t-attf-class="carousel-indicators {{indicators_list_class}} position-static mx-auto my-0 text-left">
-                <t t-foreach="product_images" t-as="product_image">
+            <ol t-attf-class="carousel-indicators {{indicators_list_class}} position-static mx-auto my-0 text-left">
+                <t t-if="len(product_images) > 1" t-foreach="product_images" t-as="product_image">
                     <li t-attf-class="m-1 mb-2 align-top {{'active' if product_image_first else ''}}" data-target="#o-carousel-product" t-att-data-slide-to="str(product_image_index)">
                         <div t-field="product_image.image_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_64_contain", "alt-field": "name"}'/>
                         <i t-if="product_image._name == 'product.image' and product_image.embed_code" class="fa fa-2x fa-play-circle o_product_video_thumb"/>
                     </li>
                 </t>
                 <t t-if="len(product_images) == 1" t-foreach="product_images" t-as="product_image">
-                    <li t-attf-class="css_non_editable_mode_hidden d-inline-block m-1 align-top {{'active' if product_image_first else ''}}" data-target="#o-carousel-product" t-att-data-slide-to="str(product_image_index)">
+                    <li t-attf-class="css_non_editable_mode_hidden m-1 mb-2 align-top {{'active' if product_image_first else ''}}" data-target="#o-carousel-product" t-att-data-slide-to="str(product_image_index)">
                         <div class="o_carousel_product_tooltip" t-field="product_image.image_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_64_contain", "alt-field": "name"}'/>
                         <i t-if="product_image._name == 'product.image' and product_image.embed_code" class="fa fa-2x fa-play-circle-o o_product_video_thumb"/>
                     </li>
                 </t>
                 <li groups="website.group_website_designer" t-att-data-product-id="product.id" t-att-data-product-name="product.name" t-att-data-slide-to="str(len(product_images) > 1 and len(product_images) or 1)"
-                    t-attf-class="css_non_editable_mode_hidden d-inline-block m-1 align-top o_wsale_product_add_media">
+                    class="css_non_editable_mode_hidden m-1 mb-2 align-top o_wsale_product_add_media o_not_editable">
                     <i class="fa fa-upload o_carousel_product_tooltip" data-toggle="tooltip" data-placement="bottom" aria-label="Double click to add" title="Double click to add"/>
                 </li>
             </ol>

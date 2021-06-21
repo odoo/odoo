@@ -52,43 +52,12 @@ WebsiteNewMenu.include({
 odoo.define('website_sale.editor', function (require) {
 'use strict';
 
-var editor = require('web_editor.editor');
 var options = require('web_editor.snippets.options');
 var publicWidget = require('web.public.widget');
 const Wysiwyg = require('web_editor.wysiwyg');
 const extraProductMedia = require('website_sale.extra_product_media');
 const {qweb, _t} = require('web.core');
 
-editor.Class.include({
-    /**
-     * @override
-     */
-    start: function () {
-        const def = this._super.apply(this, arguments);
-        const $addMedia = $('#product_detail .o_wsale_product_add_media');
-        if ($addMedia && $addMedia.length) {
-            this.extraProductMedia = new extraProductMedia(this);
-            this.extraProductMedia.attachTo($addMedia);
-        }
-        return def;
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    save: async function (reload) {
-        const _super = this._super;
-        const $addMedia = $('#wrapwrap').find('#product_detail .o_wsale_product_add_media');
-        if ($addMedia && $addMedia.length){
-            await this.extraProductMedia._save();
-        }
-        return _super.apply(this, arguments);
-    },
-});
 
 Wysiwyg.include({
     custom_events: Object.assign(Wysiwyg.prototype.custom_events, {
@@ -121,9 +90,25 @@ Wysiwyg.include({
     /**
      * @override
      */
+    start: function () {
+        const _super = this._super.bind(this);
+        const addMedia = document.querySelector('#product_detail .o_wsale_product_add_media');
+        if (addMedia) {
+            this.extraProductMedia = new extraProductMedia(this);
+            this.extraProductMedia.attachTo($(addMedia));
+        }
+        return _super(...arguments);
+    },
+    /**
+     * @override
+     */
     async _saveViewBlocks() {
         const _super = this._super.bind(this);
         await this._saveRibbons();
+        const addMedia = document.querySelector('#product_detail .o_wsale_product_add_media');
+        if (addMedia){
+            await this.extraProductMedia._save();
+        }
         return _super(...arguments);
     },
 

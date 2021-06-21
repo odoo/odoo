@@ -9,8 +9,8 @@
     </t>
 
     <t t-name="carouselIndicator">
-        <li t-if="video_url or image_1920" class="d-inline-block m-1 align-top o_wsale_product_new_img" data-target='#o-carousel-product' t-att-data-slide-to="index">
-            <img class="img img-fluid" alt="Binary file" t-attf-src="#{video_url ? 'data:image/png;base64,' : ''}#{image_1920}" name="image_1920" border="1"/>
+        <li t-if="video_url or image_1920" class="m-1 mb-2 align-top o_wsale_product_new_img" data-target='#o-carousel-product' t-att-data-slide-to="index">
+            <img class="img o_image_64_contain" alt="Binary file" t-attf-src="#{video_url ? 'data:image/png;base64,' : ''}#{image_1920}" name="image_1920" border="1"/>
             <i t-if="video_url" class="fa fa-2x fa-play-circle-o o_product_video_thumb"/>
         </li>
     </t>

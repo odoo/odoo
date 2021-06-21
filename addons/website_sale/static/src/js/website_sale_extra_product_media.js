@@ -17,13 +17,13 @@ const extraProductMedia = Widget.extend({
      * @override
      */
     start: function () {
-        const def = this._super.apply(this, arguments);
+        const _super = this._super.bind(this);
         this.productMedias = [];
         this.currentIndex = this.$el.data('slide-to');
         this.productID = this.$el.data('product-id');
         this.isEnableCarouselControl = this.currentIndex === 1;
         $('.o_carousel_product_tooltip').tooltip();
-        return def;
+        return _super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -54,7 +54,11 @@ const extraProductMedia = Widget.extend({
     _updateCarouselIndicatorAndInnerItem: async function (values) {
         const result = await this._getProductThumbnailImageContent(values);
         if (result && result.error) {
-            this.do_notify(_t('Error'), result.error, true);
+            this.displayNotification({
+                type: 'danger',
+                title: _t("Error"),
+                message: result.error,
+              });
         }
         if (result && !result.error && result.image_1920) {
             this.productMedias.push(result);
@@ -109,6 +113,8 @@ const extraProductMedia = Widget.extend({
      *
      */
     _onClickUploadMedia: function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
         return new Promise(resolve => {
             const $image = $('<img>', {class: 'img img-responsive'});
             const mediaDialog = new weWidgets.MediaDialog(this, {
