@@ -287,7 +287,7 @@ class TestOnchangeProductId(TransactionCase):
             'name': 'Test2', 'sale_warn': 'block', 'sale_warn_msg': 'Cannot afford our services'})
 
         sale_order = self.env['sale.order'].create({'partner_id': partner_with_warning.id})
-        warning = sale_order.onchange_partner_id_warning()
+        warning = sale_order._onchange_partner_id_warning()
         self.assertDictEqual(warning, {
             'warning': {
                 'title': "Warning for Test",
@@ -296,7 +296,7 @@ class TestOnchangeProductId(TransactionCase):
         })
 
         sale_order.partner_id = partner_with_block_warning
-        warning = sale_order.onchange_partner_id_warning()
+        warning = sale_order._onchange_partner_id_warning()
         self.assertDictEqual(warning, {
             'warning': {
                 'title': "Warning for Test2",

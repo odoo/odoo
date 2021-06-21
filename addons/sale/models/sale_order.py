@@ -430,12 +430,9 @@ class SaleOrder(models.Model):
             )._get_default_team_id(user_id=self.user_id.id, domain=None)
 
     @api.onchange('partner_id')
-    def onchange_partner_id_warning(self):
+    def _onchange_partner_id_warning(self):
         if not self.partner_id:
             return
-        warning = {}
-        title = False
-        message = False
         partner = self.partner_id
 
         # If partner has no warning, check its company
@@ -446,18 +443,16 @@ class SaleOrder(models.Model):
             # Block if partner only has warning but parent company is blocked
             if partner.sale_warn != 'block' and partner.parent_id and partner.parent_id.sale_warn == 'block':
                 partner = partner.parent_id
-            title = ("Warning for %s") % partner.name
-            message = partner.sale_warn_msg
-            warning = {
-                    'title': title,
-                    'message': message,
-            }
+
             if partner.sale_warn == 'block':
                 self.update({'partner_id': False, 'partner_invoice_id': False, 'partner_shipping_id': False, 'pricelist_id': False})
-                return {'warning': warning}
 
-        if warning:
-            return {'warning': warning}
+            return {
+                'warning': {
+                    'title': _("Warning for %s") % partner.name,
+                    'message': partner.sale_warn_msg,
+                }
+            }
 
     @api.onchange('commitment_date')
     def _onchange_commitment_date(self):
