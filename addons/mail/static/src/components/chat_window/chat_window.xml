@@ -41,7 +41,7 @@
                         <AutocompleteInput
                             class="o_ChatWindow_newMessageFormInput"
                             placeholder="newMessageFormInputPlaceholder"
-                            select="_onAutocompleteSelect"
+                            select="chatWindow.onAutocompleteSelect.bind(chatWindow)"
                             source="_onAutocompleteSource"
                             t-ref="input"
                         />

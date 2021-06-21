@@ -130,6 +130,27 @@ function factory(dependencies) {
         }
 
         /**
+         * Called when selecting an item in the autocomplete input of the
+         * 'new_message' chat window.
+         *
+         * @private
+         * @param {Event} ev
+         * @param {Object} ui
+         * @param {Object} ui.item
+         * @param {integer} ui.item.id
+         */
+        async onAutocompleteSelect(ev, ui) {
+            const chat = await this.env.messaging.getChat({ partnerId: ui.item.id });
+            if (!chat) {
+                return;
+            }
+            this.manager.openThread(chat, {
+                makeActive: true,
+                replaceNewMessage: true,
+            });
+        }
+
+        /**
          * Swap this chat window with the previous one.
          */
         shiftPrev() {
