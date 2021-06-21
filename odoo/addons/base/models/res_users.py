@@ -1475,7 +1475,23 @@ class UsersView(models.Model):
                 selection_vals = [(False, '')]
                 if app.xml_id == 'base.module_category_user_type':
                     selection_vals = []
+<<<<<<< HEAD
                 field_name = name_selection_groups(gs.ids)
+=======
+
+                # FIXME: in Accounting, the groups in the selection are not
+                # totally ordered, and their order therefore partially depends
+                # on their name, which is translated!  However, the group name
+                # used in the "user groups view" corresponds to the group order
+                # without translations.
+                field_name_gs = gs
+                if app.xml_id == 'base.module_category_accounting_accounting':
+                    # put field_name_gs in the same order as in the user form view
+                    order = {g: len(g.trans_implied_ids & gs) for g in gs}
+                    field_name_gs = gs.with_context(lang=None).sorted('name').sorted(order.get)
+
+                field_name = name_selection_groups(field_name_gs.ids)
+>>>>>>> aac7e22ef6b... temp
                 if allfields and field_name not in allfields:
                     continue
                 # selection group field
