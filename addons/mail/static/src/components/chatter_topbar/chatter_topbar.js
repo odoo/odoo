@@ -47,21 +47,6 @@ export class ChatterTopbar extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickLogNote(ev) {
-        if (!this.chatter.composer) {
-            return;
-        }
-        if (this.chatter.isComposerVisible && this.chatter.composer.isLog) {
-            this.chatter.update({ isComposerVisible: false });
-        } else {
-            this.chatter.showLogNote();
-        }
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickScheduleActivity(ev) {
         const action = {
             type: 'ir.actions.act_window',

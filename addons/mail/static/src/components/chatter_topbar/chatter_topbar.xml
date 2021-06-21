@@ -26,7 +26,7 @@
                                 'o-bordered': chatter.hasExternalBorder,
                             }"
                             t-att-disabled="chatter.isDisabled"
-                            t-on-click="_onClickLogNote"
+                            t-on-click="chatter.onClickLogNote()"
                             title="Log a note"
                             data-hotkey="shift+m"
                         >

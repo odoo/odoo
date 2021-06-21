@@ -77,6 +77,17 @@ function factory(dependencies) {
             });
         }
 
+        onClickLogNote() {
+            if (!this.composer) {
+                return;
+            }
+            if (this.isComposerVisible && this.composer.isLog) {
+                this.update({ isComposerVisible: false });
+            } else {
+                this.showLogNote();
+            }
+        }
+
         showLogNote() {
             this.update({ isComposerVisible: true });
             this.thread.composer.update({ isLog: true });
