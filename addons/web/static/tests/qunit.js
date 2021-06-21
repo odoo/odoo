@@ -363,6 +363,13 @@
             });
         }
     });
+    const oldError = QUnit.onError;
+    QUnit.onError = err => {
+        if (err.message === 'ResizeObserver loop limit exceeded') {
+            return true;
+        }
+        return oldError(err);
+    }
 
     // -----------------------------------------------------------------------------
     // Add sort button
