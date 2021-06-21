@@ -1560,9 +1560,8 @@ QUnit.module('relational_fields', {
             res_id: 1,
         });
 
-        // Click to try to open colorpicker
-        await testUtils.dom.click(form.$('.badge:first() .dropdown-toggle'));
-        assert.containsNone(document.body, '.o_colorpicker');
+        assert.containsNone(form, '.badge:first() .dropdown-toggle',
+            "should not have dropdown-toggle class");
 
         form.destroy();
     });

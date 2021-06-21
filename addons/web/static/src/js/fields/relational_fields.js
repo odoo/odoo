@@ -2428,7 +2428,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     init: function () {
         this._super.apply(this, arguments);
 
-        this.hasDropdown = !!this.colorField;
+        this.hasDropdown = !!this.colorField && !this.nodeOptions.no_edit_color;
     },
 
     //--------------------------------------------------------------------------
@@ -2441,10 +2441,6 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
      */
     _onOpenColorPicker: function (ev) {
         ev.preventDefault();
-        if (this.nodeOptions.no_edit_color) {
-            ev.stopPropagation();
-            return;
-        }
         var tagID = $(ev.currentTarget).parent().data('id');
         var tagColor = $(ev.currentTarget).parent().data('color');
         var tag = _.findWhere(this.value.data, { res_id: tagID });
