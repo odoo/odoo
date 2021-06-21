@@ -30,12 +30,19 @@
                     <group string="Check Printing"
                            attrs="{'invisible': ['|', '!', ('selected_payment_method_codes', 'ilike', ',check_printing,'), ('type', '!=', 'bank')]}">
                         <field name="check_sequence_id" invisible="1"/>
-                        <field name="check_manual_sequencing"
-                        />
+                        <field name="check_manual_sequencing"/>
+                        <field name="use_checkbooks"/>
+                        <label for="checkbook_ids" attrs="{'invisible': [('use_checkbooks', '=', False)]}" colspan="2"/>
+                        <field name="checkbook_ids" attrs="{'invisible': [('use_checkbooks', '=', False)]}" colspan="2" nolabel="1"/>
                         <field name="check_next_number"
                                attrs="{'invisible': [('check_manual_sequencing', '=', False)]}"/>
                     </group>
                 </xpath>
+        <!-- <field name="arch" type="xml">
+            <page name="bank_account">
+                <field name="show_checkbooks" invisible="1"/>
+            </page>
+        </field> -->
             </field>
         </record>
 </odoo>

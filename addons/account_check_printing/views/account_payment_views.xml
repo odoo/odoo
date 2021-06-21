@@ -16,6 +16,7 @@
                 <xpath expr="//field[@name='payment_method_line_id']" position="after">
                     <field name="check_manual_sequencing" invisible="1"/>
                     <field name="check_number" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_number', '=', False)]}"/>
+                    <field name="check_payment_date" attrs="{'invisible': [('checkbook_type', '!=', 'deferred')], 'required': [('checkbook_type', '=', 'deferred')]}"/>
                 </xpath>
                 <xpath expr="//field[@name='name']" position='before'>
                     <widget name="web_ribbon" title="Sent" attrs="{'invisible': [('is_move_sent', '!=', True)]}"/>
@@ -35,5 +36,64 @@
                 </xpath>
             </field>
         </record>
+
+    <!-- Own Check Views and menus -->
+
+        <record model="ir.ui.view" id="view_account_check_calendar">
+            <field name="name">account.check.calendar</field>
+            <field name="model">account.payment</field>
+            <field name="arch" type="xml">
+                <calendar
+                        mode="month"
+                        date_start="check_payment_date"
+                        color="journal_id">
+                    <field name="amount"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_check_pivot">
+            <field name="name">account.check.calendar</field>
+            <field name="model">account.payment</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="check_payment_date" type="row" interval="month"/>
+                    <field name="check_payment_date" type="row" interval="week"/>
+                <field name="amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_check_tree">
+            <field name="name">account.check.tree</field>
+            <field name="model">account.payment</field>
+            <field name="priority">100</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="account.view_account_payment_tree"/>
+            <field name="arch" type="xml">
+                <field name="payment_method_id" position="replace"/>
+                <field name="journal_id" position="after">
+                    <field name="checkbook_id"/>
+                </field>
+                <field name="date" position="after">
+                    <field name="check_payment_date" string="Payment Date"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_own_check">
+            <field name="name">Own Checks</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_mode">tree,form,calendar,graph,pivot</field>
+            <field name="view_id" ref="view_account_check_tree"/>
+            <field name="domain">[('payment_method_code', '=', 'check_printing')]</field>
+            <!-- <field name="context">{'search_default_state':'handed', 'default_type':'own_check'}</field> -->
+        </record>
+
+        <menuitem
+            action="action_own_check"
+            id="menu_own_check"
+            sequence="50"
+            parent="account.menu_finance_payables"/>
 
 </odoo>
