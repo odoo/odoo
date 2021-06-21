@@ -26,7 +26,7 @@
                     <filter string="Followed Tasks" name="my_followed_tasks" domain="[('message_is_follower', '=', True)]" />
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <separator/>
-                    <filter string="Starred" name="starred" domain="[('priority', 'in', [1, 2])]"/>
+                    <filter string="Starred" name="starred" domain="[('priority', 'in', [0, 1])]"/>
                     <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter string="Rated tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
                     <separator/>
