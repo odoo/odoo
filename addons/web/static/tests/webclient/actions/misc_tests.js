@@ -6,7 +6,7 @@ import core from "web.core";
 import testUtils from "web.test_utils";
 import Widget from "web.Widget";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
+import {hushConsole, legacyExtraNextTick, patchWithCleanup} from "../../helpers/utils";
 import {
     createWebClient,
     doAction,
@@ -97,6 +97,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("properly handle case when action id does not exist", async (assert) => {
         assert.expect(2);
         const webClient = await createWebClient({ serverData });
+        patchWithCleanup(window, {console: hushConsole}, {pure: true});
         patchWithCleanup(webClient.env.services.notification, {
             add(message) {
                 assert.strictEqual(message, "No action with id '4448' could be found");
