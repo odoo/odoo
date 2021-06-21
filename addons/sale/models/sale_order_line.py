@@ -93,7 +93,7 @@ class SaleOrderLine(models.Model):
                 line.qty_to_invoice = 0
 
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'untaxed_amount_to_invoice')
-    def _get_invoice_qty(self):
+    def _compute_qty_invoiced(self):
         """
         Compute the quantity invoiced. If case of a refund, the quantity invoiced is decreased. Note
         that this is the case only if the refund is generated from the SO and that is intentional: if
@@ -112,17 +112,17 @@ class SaleOrderLine(models.Model):
             line.qty_invoiced = qty_invoiced
 
     @api.depends('price_unit', 'discount')
-    def _get_price_reduce(self):
+    def _compute_price_reduce(self):
         for line in self:
             line.price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
 
     @api.depends('price_total', 'product_uom_qty')
-    def _get_price_reduce_tax(self):
+    def _compute_price_reduce_taxinc(self):
         for line in self:
             line.price_reduce_taxinc = line.price_total / line.product_uom_qty if line.product_uom_qty else 0.0
 
     @api.depends('price_subtotal', 'product_uom_qty')
-    def _get_price_reduce_notax(self):
+    def _compute_price_reduce_taxexcl(self):
         for line in self:
             line.price_reduce_taxexcl = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
 
@@ -233,10 +233,10 @@ class SaleOrderLine(models.Model):
     price_tax = fields.Float(compute='_compute_amount', string='Total Tax', store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
 
-    price_reduce = fields.Float(compute='_get_price_reduce', string='Price Reduce', digits='Product Price', store=True)
+    price_reduce = fields.Float(compute='_compute_price_reduce', string='Price Reduce', digits='Product Price', store=True)
     tax_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
-    price_reduce_taxinc = fields.Monetary(compute='_get_price_reduce_tax', string='Price Reduce Tax inc', store=True)
-    price_reduce_taxexcl = fields.Monetary(compute='_get_price_reduce_notax', string='Price Reduce Tax excl', store=True)
+    price_reduce_taxinc = fields.Monetary(compute='_compute_price_reduce_taxinc', string='Price Reduce Tax inc', store=True)
+    price_reduce_taxexcl = fields.Monetary(compute='_compute_price_reduce_taxexcl', string='Price Reduce Tax excl', store=True)
 
     discount = fields.Float(string='Discount (%)', digits='Discount', default=0.0)
 
@@ -272,7 +272,7 @@ class SaleOrderLine(models.Model):
         compute='_get_to_invoice_qty', string='To Invoice Quantity', store=True,
         digits='Product Unit of Measure')
     qty_invoiced = fields.Float(
-        compute='_get_invoice_qty', string='Invoiced Quantity', store=True,
+        compute='_compute_qty_invoiced', string='Invoiced Quantity', store=True,
         compute_sudo=True,
         digits='Product Unit of Measure')
 
