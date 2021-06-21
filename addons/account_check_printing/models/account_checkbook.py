@@ -21,7 +21,7 @@ class AccountCheckbook(models.Model):
         copy=False,
         domain=[('code', '=', 'own_check')],
         help="Checks numbering sequence.",
-        context={'default_code': 'own_check'},
+        context={'default_code': 'account.checkbook'},
     )
     next_number = fields.Integer(
         'Next Number',
@@ -30,9 +30,9 @@ class AccountCheckbook(models.Model):
         compute='_compute_next_number',
         inverse='_inverse_next_number',
     )
-    own_check_subtype = fields.Selection(
+    type = fields.Selection(
         [('deferred', 'Deferred'), ('currents', 'Currents'), ('electronic', 'Electronic')],
-        string='Check Subtype',
+        string='Check type',
         required=True,
         default='deferred',
         help='* Con cheques corrientes el asiento generado por el pago '
@@ -45,14 +45,10 @@ class AccountCheckbook(models.Model):
     )
     journal_id = fields.Many2one(
         'account.journal', 'Journal',
-        help='Journal where it is going to be used',
         readonly=True,
         required=True,
-        domain=[('type', '=', 'bank')],
         ondelete='cascade',
-        context={'default_type': 'bank'},
         states={'draft': [('readonly', False)]},
-        auto_join=True,
     )
     range_to = fields.Integer(
         'To Number',
@@ -65,7 +61,7 @@ class AccountCheckbook(models.Model):
         [('draft', 'Draft'), ('active', 'In Use'), ('used', 'Used')],
         string='State',
         # readonly=True,
-        default='draft',
+        default='active',
         copy=False,
     )
     numerate_on_printing = fields.Boolean(
@@ -75,14 +71,6 @@ class AccountCheckbook(models.Model):
         # states={'draft': [('readonly', False)]},
         help='No number will be assigne while creating payment, number will be'
         'assigned after printing check.'
-    )
-    report_template = fields.Many2one(
-        'ir.actions.report',
-        'Report',
-        domain="[('model', '=', 'account.payment')]",
-        context="{'default_model': 'account.payment'}",
-        help='Report to use when printing checks. If not report selected, '
-        'report with name "check_report" will be used',
     )
 
     @api.depends('sequence_id.number_next_actual')
@@ -109,22 +97,22 @@ class AccountCheckbook(models.Model):
                 'implementation': 'no_gap',
                 'padding': 8,
                 'number_increment': 1,
-                'code': 'own_check',
+                'code': 'acccount.checkbook',
                 # si no lo pasamos, en la creacion se setea 1
                 'number_next_actual': next_number,
                 'company_id': rec.journal_id.company_id.id,
             })
 
-    @api.depends('own_check_subtype', 'range_to')
+    @api.depends('type', 'range_to')
     def _compute_name(self):
         for rec in self:
-            if not rec.own_check_subtype:
+            if not rec.type:
                 rec.name = False
                 continue
             name = {
                 'deferred': _('Deferred Checks'),
                 'currents': _('Currents Checks'),
-                'electronic': _('Electronic Checks')}.get(rec.own_check_subtype)
+                'electronic': _('Electronic Checks')}.get(rec.type)
             if rec.range_to:
                 name += _(' up to %s') % rec.range_to
             rec.name = name
