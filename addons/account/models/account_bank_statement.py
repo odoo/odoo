@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import math
-
 from odoo import api, fields, models, _
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, html2plaintext
 from odoo.tools.misc import formatLang, format_date
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv.expression import get_unaccent_wrapper
+from odoo.addons.base.models.res_bank import sanitize_account_number
 
 
 class AccountCashboxLine(models.Model):
@@ -524,10 +524,16 @@ class AccountBankStatementLine(models.Model):
     transaction_type = fields.Char(string='Transaction Type')
     payment_ref = fields.Char(string='Label', required=True)
     amount = fields.Monetary(currency_field='currency_id')
-    amount_currency = fields.Monetary(currency_field='foreign_currency_id',
-        help="The amount expressed in an optional other currency if it is a multi-currency entry.")
-    foreign_currency_id = fields.Many2one('res.currency', string='Foreign Currency',
-        help="The optional other currency if it is a multi-currency entry.")
+    amount_currency = fields.Monetary(
+        string="Amount in Currency",
+        currency_field='foreign_currency_id',
+        help="The amount expressed in an optional other currency if it is a multi-currency entry.",
+    )
+    foreign_currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        string="Foreign Currency",
+        help="The optional other currency if it is a multi-currency entry.",
+    )
     amount_residual = fields.Float(string="Residual Amount",
         compute="_compute_is_reconciled",
         store=True,
@@ -575,156 +581,68 @@ class AccountBankStatementLine(models.Model):
                 other_lines += line
         return liquidity_lines, suspense_lines, other_lines
 
-    @api.model
-    def _prepare_liquidity_move_line_vals(self):
-        ''' Prepare values to create a new account.move.line record corresponding to the
-        liquidity line (having the bank/cash account).
-        :return:        The values to create a new account.move.line record.
-        '''
+    def _prepare_counterpart_amounts_using_st_line_rate(self, currency, balance, amount_currency):
+        """ Convert the amounts passed as parameters to the statement line currency using the rates provided by the
+        bank. The computed amounts are the one that could be set on the statement line as a counterpart journal item
+        to fully paid the provided amounts as parameters.
+
+        :param currency:        The currency in which is expressed 'amount_currency'.
+        :param balance:         The amount expressed in company currency. Only needed when the currency passed as
+                                parameter is neither the statement line's foreign currency, neither the journal's
+                                currency.
+        :param amount_currency: The amount expressed in the 'currency' passed as parameter.
+        :return:                A python dictionary containing:
+            * balance:          The amount to consider expressed in company's currency.
+            * amount_currency:  The amount to consider expressed in statement line's foreign currency.
+        """
         self.ensure_one()
 
-        statement = self.statement_id
-        journal = statement.journal_id
-        company_currency = journal.company_id.currency_id
-        journal_currency = journal.currency_id or company_currency
-
-        if self.foreign_currency_id and journal_currency:
-            currency_id = journal_currency.id
-            if self.foreign_currency_id == company_currency:
-                amount_currency = self.amount
-                balance = self.amount_currency
-            else:
-                amount_currency = self.amount
-                balance = journal_currency._convert(amount_currency, company_currency, journal.company_id, self.date)
-        elif self.foreign_currency_id and not journal_currency:
-            amount_currency = self.amount_currency
-            balance = self.amount
-            currency_id = self.foreign_currency_id.id
-        elif not self.foreign_currency_id and journal_currency:
-            currency_id = journal_currency.id
-            amount_currency = self.amount
-            balance = journal_currency._convert(amount_currency, journal.company_id.currency_id, journal.company_id, self.date)
-        else:
-            currency_id = company_currency.id
-            amount_currency = self.amount
-            balance = self.amount
-
-        return {
-            'name': self.payment_ref,
-            'move_id': self.move_id.id,
-            'partner_id': self.partner_id.id,
-            'currency_id': currency_id,
-            'account_id': journal.default_account_id.id,
-            'debit': balance > 0 and balance or 0.0,
-            'credit': balance < 0 and -balance or 0.0,
-            'amount_currency': amount_currency,
-        }
-
-    @api.model
-    def _prepare_counterpart_move_line_vals(self, counterpart_vals, move_line=None):
-        ''' Prepare values to create a new account.move.line move_line.
-        By default, without specified 'counterpart_vals' or 'move_line', the counterpart line is
-        created using the suspense account. Otherwise, this method is also called during the
-        reconciliation to prepare the statement line's journal entry. In that case,
-        'counterpart_vals' will be used to create a custom account.move.line (from the reconciliation widget)
-        and 'move_line' will be used to create the counterpart of an existing account.move.line to which
-        the newly created journal item will be reconciled.
-        :param counterpart_vals:    A python dictionary containing:
-            'balance':                  Optional amount to consider during the reconciliation. If a foreign currency is set on the
-                                        counterpart line in the same foreign currency as the statement line, then this amount is
-                                        considered as the amount in foreign currency. If not specified, the full balance is took.
-                                        This value must be provided if move_line is not.
-            'amount_residual':          The residual amount to reconcile expressed in the company's currency.
-                                        /!\ This value should be equivalent to move_line.amount_residual except we want
-                                        to avoid browsing the record when the only thing we need in an overview of the
-                                        reconciliation, for example in the reconciliation widget.
-            'amount_residual_currency': The residual amount to reconcile expressed in the foreign's currency.
-                                        Using this key doesn't make sense without passing 'currency_id' in vals.
-                                        /!\ This value should be equivalent to move_line.amount_residual_currency except
-                                        we want to avoid browsing the record when the only thing we need in an overview
-                                        of the reconciliation, for example in the reconciliation widget.
-            **kwargs:                   Additional values that need to land on the account.move.line to create.
-        :param move_line:           An optional account.move.line move_line representing the counterpart line to reconcile.
-        :return:                    The values to create a new account.move.line move_line.
-        '''
-        self.ensure_one()
-
-        statement = self.statement_id
-        journal = statement.journal_id
+        journal = self.journal_id
         company_currency = journal.company_id.currency_id
         journal_currency = journal.currency_id or company_currency
         foreign_currency = self.foreign_currency_id or journal_currency or company_currency
-        statement_line_rate = (self.amount_currency / self.amount) if self.amount else 0.0
 
-        balance_to_reconcile = counterpart_vals.pop('balance', None)
-        amount_residual = -counterpart_vals.pop('amount_residual', move_line.amount_residual if move_line else 0.0) \
-            if balance_to_reconcile is None else balance_to_reconcile
-        amount_residual_currency = -counterpart_vals.pop('amount_residual_currency', move_line.amount_residual_currency if move_line else 0.0)\
-            if balance_to_reconcile is None else balance_to_reconcile
-
-        if 'currency_id' in counterpart_vals:
-            currency_id = counterpart_vals['currency_id'] or company_currency.id
-        elif move_line:
-            currency_id = move_line.currency_id.id or company_currency.id
+        journal_amount = self.amount
+        if foreign_currency == journal_currency:
+            transaction_amount = journal_amount
         else:
-            currency_id = foreign_currency.id
-
-        if currency_id not in (foreign_currency.id, journal_currency.id):
-            currency_id = company_currency.id
-            amount_residual_currency = 0.0
-
-        amounts = {
-            company_currency.id: 0.0,
-            journal_currency.id: 0.0,
-            foreign_currency.id: 0.0,
-        }
-
-        amounts[currency_id] = amount_residual_currency
-        amounts[company_currency.id] = amount_residual
-
-        if currency_id == journal_currency.id and journal_currency != company_currency:
-            if foreign_currency != company_currency:
-                amounts[company_currency.id] = journal_currency._convert(amounts[currency_id], company_currency, journal.company_id, self.date)
-            if statement_line_rate:
-                amounts[foreign_currency.id] = amounts[currency_id] * statement_line_rate
-        elif currency_id == foreign_currency.id and self.foreign_currency_id:
-            if statement_line_rate:
-                amounts[journal_currency.id] = amounts[foreign_currency.id] / statement_line_rate
-                if foreign_currency != company_currency:
-                    amounts[company_currency.id] = journal_currency._convert(amounts[journal_currency.id], company_currency, journal.company_id, self.date)
+            transaction_amount = self.amount_currency
+        if journal_currency == company_currency:
+            company_amount = journal_amount
+        elif foreign_currency == company_currency:
+            company_amount = transaction_amount
         else:
-            amounts[journal_currency.id] = company_currency._convert(amounts[company_currency.id], journal_currency, journal.company_id, self.date)
-            if statement_line_rate:
-                amounts[foreign_currency.id] = amounts[journal_currency.id] * statement_line_rate
+            company_amount = journal_currency._convert(journal_amount, company_currency, journal.company_id, self.date)
 
-        if foreign_currency == company_currency and journal_currency != company_currency and self.foreign_currency_id:
-            balance = amounts[foreign_currency.id]
-        else:
-            balance = amounts[company_currency.id]
+        rate_journal2foreign_curr = journal_amount and abs(transaction_amount) / abs(journal_amount)
+        rate_comp2journal_curr = company_amount and abs(journal_amount) / abs(company_amount)
 
-        if foreign_currency != company_currency and self.foreign_currency_id:
-            amount_currency = amounts[foreign_currency.id]
-            currency_id = foreign_currency.id
-        elif journal_currency != company_currency and not self.foreign_currency_id:
-            amount_currency = amounts[journal_currency.id]
-            currency_id = journal_currency.id
+        if currency == foreign_currency:
+            trans_amount_currency = amount_currency
+            if rate_journal2foreign_curr:
+                journ_amount_currency = journal_currency.round(trans_amount_currency / rate_journal2foreign_curr)
+            else:
+                journ_amount_currency = 0.0
+            if rate_comp2journal_curr:
+                new_balance = company_currency.round(journ_amount_currency / rate_comp2journal_curr)
+            else:
+                new_balance = 0.0
+        elif currency == journal_currency:
+            trans_amount_currency = foreign_currency.round(amount_currency * rate_journal2foreign_curr)
+            if rate_comp2journal_curr:
+                new_balance = company_currency.round(amount_currency / rate_comp2journal_curr)
+            else:
+                new_balance = 0.0
         else:
-            amount_currency = amounts[company_currency.id]
-            currency_id = company_currency.id
+            journ_amount_currency = journal_currency.round(balance * rate_comp2journal_curr)
+            trans_amount_currency = foreign_currency.round(journ_amount_currency * rate_journal2foreign_curr)
+            new_balance = balance
 
         return {
-            **counterpart_vals,
-            'name': counterpart_vals.get('name', move_line.name if move_line else ''),
-            'move_id': self.move_id.id,
-            'partner_id': self.partner_id.id or counterpart_vals.get('partner_id', move_line.partner_id.id if move_line else False),
-            'currency_id': currency_id,
-            'account_id': counterpart_vals.get('account_id', move_line.account_id.id if move_line else False),
-            'debit': balance if balance > 0.0 else 0.0,
-            'credit': -balance if balance < 0.0 else 0.0,
-            'amount_currency': amount_currency,
+            'amount_currency': trans_amount_currency,
+            'balance': new_balance,
         }
 
-    @api.model
     def _prepare_move_line_default_vals(self, counterpart_account_id=None):
         ''' Prepare the dictionary to create the default account.move.lines for the current account.bank.statement.line
         record.
@@ -737,44 +655,49 @@ class AccountBankStatementLine(models.Model):
 
         if not counterpart_account_id:
             raise UserError(_(
-                "You can't create a new statement line without a suspense account set on the %s journal."
-            ) % self.journal_id.display_name)
+                "You can't create a new statement line without a suspense account set on the %s journal.",
+                self.journal_id.display_name,
+            ))
 
-        liquidity_line_vals = self._prepare_liquidity_move_line_vals()
+        journal = self.journal_id
+        company_currency = journal.company_id.currency_id
+        journal_currency = journal.currency_id or company_currency
+        foreign_currency = self.foreign_currency_id or journal_currency or company_currency
 
-        # Ensure the counterpart will have a balance exactly equals to the amount in journal currency.
-        # This avoid some rounding issues when the currency rate between two currencies is not symmetrical.
-        # E.g:
-        # A.convert(amount_a, B) = amount_b
-        # B.convert(amount_b, A) = amount_c != amount_a
+        journal_amount = self.amount
+        if foreign_currency == journal_currency:
+            transaction_amount = journal_amount
+        else:
+            transaction_amount = self.amount_currency
+        if journal_currency == company_currency:
+            company_amount = journal_amount
+        elif foreign_currency == company_currency:
+            company_amount = transaction_amount
+        else:
+            company_amount = journal_currency._convert(journal_amount, company_currency, journal.company_id, self.date)
 
-        counterpart_vals = {
+        liquidity_line_vals = {
             'name': self.payment_ref,
-            'account_id': counterpart_account_id,
-            'amount_residual': liquidity_line_vals['debit'] - liquidity_line_vals['credit'],
+            'move_id': self.move_id.id,
+            'partner_id': self.partner_id.id,
+            'account_id': journal.default_account_id.id,
+            'currency_id': journal_currency.id,
+            'amount_currency': journal_amount,
+            'debit': company_amount > 0 and company_amount or 0.0,
+            'credit': company_amount < 0 and -company_amount or 0.0,
         }
 
-        if self.foreign_currency_id and self.foreign_currency_id != self.company_currency_id:
-            # Ensure the counterpart will have exactly the same amount in foreign currency as the amount set in the
-            # statement line to avoid some rounding issues when making a currency conversion.
-
-            counterpart_vals.update({
-                'currency_id': self.foreign_currency_id.id,
-                'amount_residual_currency': self.amount_currency,
-            })
-        elif liquidity_line_vals['currency_id']:
-            # Ensure the counterpart will have a balance exactly equals to the amount in journal currency.
-            # This avoid some rounding issues when the currency rate between two currencies is not symmetrical.
-            # E.g:
-            # A.convert(amount_a, B) = amount_b
-            # B.convert(amount_b, A) = amount_c != amount_a
-
-            counterpart_vals.update({
-                'currency_id': liquidity_line_vals['currency_id'],
-                'amount_residual_currency': liquidity_line_vals['amount_currency'],
-            })
-
-        counterpart_line_vals = self._prepare_counterpart_move_line_vals(counterpart_vals)
+        # Create the counterpart line values.
+        counterpart_line_vals = {
+            'name': self.payment_ref,
+            'account_id': counterpart_account_id,
+            'move_id': self.move_id.id,
+            'partner_id': self.partner_id.id,
+            'currency_id': foreign_currency.id,
+            'amount_currency': -transaction_amount,
+            'debit': -company_amount if company_amount < 0.0 else 0.0,
+            'credit': company_amount if company_amount > 0.0 else 0.0,
+        }
         return [liquidity_line_vals, counterpart_line_vals]
 
     # -------------------------------------------------------------------------
@@ -1014,244 +937,129 @@ class AccountBankStatementLine(models.Model):
             st_line.move_id.write(st_line_vals)
 
     # -------------------------------------------------------------------------
-    # RECONCILIATION METHODS
-    # -------------------------------------------------------------------------
-
-    def _prepare_reconciliation(self, lines_vals_list, allow_partial=False):
-        ''' Helper for the "reconcile" method used to get a full preview of the reconciliation result. This method is
-        quite useful to deal with reconcile models or the reconciliation widget because it ensures the values seen by
-        the user are exactly the values you get after reconciling.
-
-        :param lines_vals_list: See the 'reconcile' method.
-        :param allow_partial:   In case of matching a line having an higher amount, allow creating a partial instead
-                                an open balance on the statement line.
-        :return: The diff to be applied on the statement line as a tuple
-        (
-            lines_to_create:    The values to create the account.move.line on the statement line.
-            payments_to_create: The values to create the account.payments.
-            open_balance_vals:  A dictionary to create the open-balance line or None if the reconciliation is full.
-            existing_lines:     The counterpart lines to which the reconciliation will be done.
-        )
-        '''
-        self.ensure_one()
-        journal = self.journal_id
-        company_currency = journal.company_id.currency_id
-        foreign_currency = self.foreign_currency_id or journal.currency_id or company_currency
-
-        liquidity_lines, suspense_lines, other_lines = self._seek_for_lines()
-
-        # Ensure the statement line has not yet been already reconciled.
-        # If the move has 'to_check' enabled, it means the statement line has created some lines that
-        # need to be checked later and replaced by the real ones.
-        if not self.move_id.to_check and other_lines:
-            raise UserError(_("The statement line has already been reconciled."))
-
-        # A list of dictionary containing:
-        # - line_vals:          The values to create the account.move.line on the statement line.
-        # - payment_vals:       The optional values to create a bridge account.payment
-        # - counterpart_line:   The optional counterpart line to reconcile with 'line'.
-        reconciliation_overview = []
-
-        total_balance = liquidity_lines.balance
-        total_amount_currency = liquidity_lines.amount_currency
-        sign = 1 if liquidity_lines.balance > 0.0 else -1
-
-        # Step 1: Split 'lines_vals_list' into two batches:
-        # - The existing account.move.lines that need to be reconciled with the statement line.
-        #       => Will be managed at step 2.
-        # - The account.move.lines to be created from scratch.
-        #       => Will be managed directly.
-
-        # In case of the payment is matched directly with an higher amount, don't create an open
-        # balance but a partial reconciliation.
-        partial_rec_needed = allow_partial
-
-        to_browse_ids = []
-        to_process_vals = []
-        for vals in lines_vals_list:
-            # Don't modify the params directly.
-            vals = dict(vals)
-
-            if 'id' in vals:
-                # Existing account.move.line.
-                to_browse_ids.append(vals.pop('id'))
-                to_process_vals.append(vals)
-                if any(x in vals for x in ('balance', 'amount_residual', 'amount_residual_currency')):
-                    partial_rec_needed = False
-            else:
-                # Newly created account.move.line from scratch.
-                line_vals = self._prepare_counterpart_move_line_vals(vals)
-                total_balance += line_vals['debit'] - line_vals['credit']
-                total_amount_currency += line_vals['amount_currency']
-                reconciliation_overview.append({'line_vals': line_vals})
-                partial_rec_needed = False
-
-        # Step 2: Browse counterpart lines all in one and process them.
-
-        existing_lines = self.env['account.move.line'].browse(to_browse_ids)
-
-        i = 0
-        for line, counterpart_vals in zip(existing_lines, to_process_vals):
-            line_vals = self._prepare_counterpart_move_line_vals(counterpart_vals, move_line=line)
-            balance = line_vals['debit'] - line_vals['credit']
-            amount_currency = line_vals['amount_currency']
-            i += 1
-
-            if i == len(existing_lines):
-                # Last line.
-
-                if partial_rec_needed and sign * (total_amount_currency + amount_currency) < 0.0:
-
-                    # On the last aml, when the total matched amount becomes higher than the residual amount of the
-                    # statement line, make sure to not create an open balance later.
-                    line_vals = self._prepare_counterpart_move_line_vals(
-                        {
-                            **counterpart_vals,
-                            'amount_residual': -math.copysign(total_balance, balance),
-                            'amount_residual_currency': -math.copysign(total_amount_currency, amount_currency),
-                            'currency_id': foreign_currency.id,
-                        },
-                        move_line=line,
-                    )
-                    balance = line_vals['debit'] - line_vals['credit']
-                    amount_currency = line_vals['amount_currency']
-
-            elif sign * total_amount_currency < 0.0:
-                # The partial reconciliation is no longer an option since the total matched amount is now higher than
-                # the residual amount of the statement line but this is not the last line to process. Then, since we
-                # don't want to create zero balance lines, do nothing and let the open-balance be created like it
-                # should.
-                partial_rec_needed = False
-
-            total_balance += balance
-            total_amount_currency += amount_currency
-
-            reconciliation_overview.append({
-                'line_vals': line_vals,
-                'counterpart_line': line,
-            })
-
-        # Step 3: Fix rounding issue due to currency conversions.
-        # Add the remaining balance on the first encountered line starting with the custom ones.
-
-        if foreign_currency.is_zero(total_amount_currency) and not company_currency.is_zero(total_balance):
-            vals = reconciliation_overview[0]['line_vals']
-            new_balance = vals['debit'] - vals['credit'] - total_balance
-            vals.update({
-                'debit': new_balance if new_balance > 0.0 else 0.0,
-                'credit': -new_balance if new_balance < 0.0 else 0.0,
-            })
-            total_balance = 0.0
-
-        # Step 4: If the journal entry is not yet balanced, create an open balance.
-
-        if self.company_currency_id.round(total_balance):
-            counterpart_vals = {
-                'name': '%s: %s' % (self.payment_ref, _('Open Balance')),
-                'balance': -total_balance,
-                'currency_id': self.company_currency_id.id,
-            }
-
-            partner = self.partner_id or existing_lines.mapped('partner_id')[:1]
-            if partner:
-                if self.amount > 0:
-                    open_balance_account = partner.with_company(self.company_id).property_account_receivable_id
-                else:
-                    open_balance_account = partner.with_company(self.company_id).property_account_payable_id
-
-                counterpart_vals['account_id'] = open_balance_account.id
-                counterpart_vals['partner_id'] = partner.id
-            else:
-                if self.amount > 0:
-                    open_balance_account = self.company_id.partner_id.with_company(self.company_id).property_account_receivable_id
-                else:
-                    open_balance_account = self.company_id.partner_id.with_company(self.company_id).property_account_payable_id
-                counterpart_vals['account_id'] = open_balance_account.id
-
-            open_balance_vals = self._prepare_counterpart_move_line_vals(counterpart_vals)
-        else:
-            open_balance_vals = None
-
-        return reconciliation_overview, open_balance_vals
-
-    def reconcile(self, lines_vals_list, to_check=False, allow_partial=False):
-        ''' Perform a reconciliation on the current account.bank.statement.line with some
-        counterpart account.move.line.
-        If the statement line entry is not fully balanced after the reconciliation, an open balance will be created
-        using the partner.
-
-        :param lines_vals_list: A list of python dictionary containing:
-            'id':               Optional id of an existing account.move.line.
-                                For each line having an 'id', a new line will be created in the current statement line.
-            'balance':          Optional amount to consider during the reconciliation. If a foreign currency is set on the
-                                counterpart line in the same foreign currency as the statement line, then this amount is
-                                considered as the amount in foreign currency. If not specified, the full balance is taken.
-                                This value must be provided if 'id' is not.
-            **kwargs:           Custom values to be set on the newly created account.move.line.
-        :param to_check:        Mark the current statement line as "to_check" (see field for more details).
-        :param allow_partial:   In case of matching a line having an higher amount, allow creating a partial instead
-                                of an open balance on the statement line.
-        '''
-        self.ensure_one()
-        liquidity_lines, suspense_lines, other_lines = self._seek_for_lines()
-
-        reconciliation_overview, open_balance_vals = self._prepare_reconciliation(
-            lines_vals_list,
-            allow_partial=allow_partial,
-        )
-
-        # ==== Manage res.partner.bank ====
-
-        if self.account_number and self.partner_id and not self.partner_bank_id:
-            self.partner_bank_id = self._find_or_create_bank_account()
-
-        # ==== Check open balance ====
-
-        if open_balance_vals:
-            if not open_balance_vals.get('partner_id'):
-                raise UserError(_("Unable to create an open balance for a statement line without a partner set."))
-            if not open_balance_vals.get('account_id'):
-                raise UserError(_("Unable to create an open balance for a statement line because the receivable "
-                                  "/ payable accounts are missing on the partner."))
-
-        # ==== Create & reconcile lines on the bank statement line ====
-
-        to_create_commands = [(0, 0, open_balance_vals)] if open_balance_vals else []
-        to_delete_commands = [(2, line.id) for line in suspense_lines + other_lines]
-
-        # Cleanup previous lines.
-        self.move_id.with_context(check_move_validity=False, skip_account_move_synchronization=True, force_delete=True).write({
-            'line_ids': to_delete_commands + to_create_commands,
-            'to_check': to_check,
-        })
-
-        line_vals_list = [reconciliation_vals['line_vals'] for reconciliation_vals in reconciliation_overview]
-        new_lines = self.env['account.move.line'].create(line_vals_list)
-        new_lines = new_lines.with_context(skip_account_move_synchronization=True)
-        for reconciliation_vals, line in zip(reconciliation_overview, new_lines):
-            if reconciliation_vals.get('counterpart_line'):
-                counterpart_line = reconciliation_vals['counterpart_line']
-            else:
-                continue
-
-            (line + counterpart_line).reconcile()
-
-        # Assign partner if needed (for example, when reconciling a statement
-        # line with no partner, with an invoice; assign the partner of this invoice)
-        if not self.partner_id:
-            rec_overview_partners = set(overview['counterpart_line'].partner_id.id
-                                        for overview in reconciliation_overview
-                                        if overview.get('counterpart_line'))
-            if len(rec_overview_partners) == 1 and rec_overview_partners != {False}:
-                self.line_ids.write({'partner_id': rec_overview_partners.pop()})
-
-        # Refresh analytic lines.
-        self.move_id.line_ids.analytic_line_ids.unlink()
-        self.move_id.line_ids.create_analytic_lines()
-
-    # -------------------------------------------------------------------------
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
+
+    def _get_st_line_strings_for_matching(self, allowed_fields=None):
+        """ Collect the strings that could be used on the statement line to perform some matching.
+
+        :param allowed_fields: A explicit list of fields to consider.
+        :return: A list of strings.
+        """
+        self.ensure_one()
+
+        def _get_text_value(field_name):
+            if self._fields[field_name].type == 'html':
+                return html2plaintext(self[field_name])
+            else:
+                return self[field_name]
+
+        st_line_text_values = []
+        if allowed_fields is None or 'payment_ref' in allowed_fields:
+            value = _get_text_value('payment_ref')
+            if value:
+                st_line_text_values.append(value)
+        if allowed_fields is None or 'narration' in allowed_fields:
+            value = _get_text_value('narration')
+            if value:
+                st_line_text_values.append(value)
+        if allowed_fields is None or 'ref' in allowed_fields:
+            value = _get_text_value('ref')
+            if value:
+                st_line_text_values.append(value)
+        return st_line_text_values
+
+    def _get_default_amls_matching_domain(self):
+        return [
+            # Base domain.
+            ('display_type', 'not in', ('line_section', 'line_note')),
+            ('move_id.state', '=', 'posted'),
+            ('company_id', '=', self.company_id.id),
+            # Reconciliation domain.
+            ('reconciled', '=', False),
+            ('account_id.reconcile', '=', True),
+            # Special domain for payments.
+            '|',
+            ('account_id.internal_type', 'not in', ('receivable', 'payable')),
+            ('payment_id', '=', False),
+            # Special domain for statement lines.
+            ('statement_line_id', '!=', self.id),
+        ]
+
+    def _retrieve_partner(self):
+        self.ensure_one()
+
+        # Retrieve the partner from the statement line.
+        if self.partner_id:
+            return self.partner_id
+
+        # Retrieve the partner from the bank account.
+        if self.account_number:
+            account_number_nums = sanitize_account_number(self.account_number)
+            if account_number_nums:
+                domain = [('sanitized_acc_number', 'ilike', account_number_nums)]
+                for extra_domain in ([('company_id', '=', self.company_id.id)], []):
+                    bank_accounts = self.env['res.partner.bank'].search(extra_domain + domain)
+                    if len(bank_accounts.partner_id) == 1:
+                        return bank_accounts.partner_id
+
+        # Retrieve the partner from the partner name.
+        if self.partner_name:
+            domain = [
+                ('parent_id', '=', False),
+                ('name', 'ilike', self.partner_name),
+            ]
+            for extra_domain in ([('company_id', '=', self.company_id.id)], []):
+                partner = self.env['res.partner'].search(extra_domain + domain, limit=1)
+                if partner:
+                    return partner
+
+        # Retrieve the partner from the reconcile models.
+        rec_models = self.env['account.reconcile.model'].search([
+            ('rule_type', '!=', 'writeoff_button'),
+            ('company_id', '=', self.company_id.id),
+        ])
+        for rec_model in rec_models:
+            partner = rec_model._get_partner_from_mapping(self)
+            if partner and rec_model._is_applicable_for(self, partner):
+                return partner
+
+        # Retrieve the partner from statement line text values.
+        st_line_text_values = self._get_st_line_strings_for_matching()
+        unaccent = get_unaccent_wrapper(self._cr)
+        sub_queries = []
+        params = []
+        for text_value in st_line_text_values:
+            if not text_value:
+                continue
+
+            # Find a partner having a name contained inside the statement line values.
+            # Take care a partner could contain some special characters in its name that needs to be escaped.
+            sub_queries.append(rf'''
+                {unaccent("%s")} ~* ('^' || (
+                   SELECT STRING_AGG(CONCAT('(?=.*\m', chunk[1], '\M)'), '')
+                   FROM regexp_matches({unaccent('name')}, '\w{{3,}}', 'g') AS chunk
+                ))
+            ''')
+            params.append(text_value)
+
+        if sub_queries:
+            self.env['res.partner'].flush_model(['company_id', 'name'])
+            self._cr.execute(
+                '''
+                    SELECT id
+                    FROM res_partner
+                    WHERE (company_id IS NULL OR company_id = %s)
+                        AND name IS NOT NULL
+                        AND (''' + ') OR ('.join(sub_queries) + ''')
+                ''',
+                [self.company_id.id] + params,
+            )
+            rows = self._cr.fetchall()
+            if len(rows) == 1:
+                return self.env['res.partner'].browse(rows[0][0])
+
+        return self.env['res.partner']
 
     def _find_or_create_bank_account(self):
         bank_account = self.env['res.partner.bank'].search([

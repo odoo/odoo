@@ -1065,16 +1065,14 @@ tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the
     position: 'bottom',
 },
 ...tour.stepUtils.statusbarButtonsSteps('Post', _t('Processing'), ".breadcrumb-item.active:contains('the_flow.statement')").map(tour.stepUtils.editionEnterpriseModifier),
-...tour.stepUtils.statusbarButtonsSteps('Reconcile', _t('Reconcile'), ".o_statusbar_status .btn.dropdown-toggle:contains(Processing)").map(tour.stepUtils.editionEnterpriseModifier),
+...tour.stepUtils.statusbarButtonsSteps('Reconcile', _t('Reconcile'), ".o_statusbar_status .btn.dropdown-toggle:contains(Processing)")
+    .map(function(step){return {mobile: false, ...step}})
+    .map(tour.stepUtils.editionEnterpriseModifier),
 {
+    mobile: false,
     edition: "enterprise",
-    trigger: "button.o_reconcile, button.o_validate",
+    trigger: "button[name='button_validate']",
     content: Markup(_t('<p><b>Click on Reconcile</p>')),
     position: "right",
-}, {
-    edition: "enterprise",
-    trigger: ".button_back_to_statement",
-    content: Markup(_t('<p><b>Close this statement.</p>')),
-    position: "bottom",
 }]);
 });
