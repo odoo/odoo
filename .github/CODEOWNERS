@@ -30,11 +30,11 @@
 
 # Generic fallback rules
 
-# /addons/account*/ @odoo/rd-accounting
+/addons/account*/ @odoo/rd-accounting
 /addons/auth_*/ @odoo/rd-security
 /addons/crm*/ @odoo/rd-sm
 /addons/event*/ @odoo/rd-sm
-# /addons/l10n_*/ @odoo/rd-accounting
+/addons/l10n_*/ @odoo/rd-accounting
 /addons/*/data/mail_template_data.xml @odoo/rd-sm
 /addons/*/models/ir_http.py @odoo/rd-website @odoo/rd-security
 /addons/*/models/ir_qweb.py @odoo/rd-website @odoo/rd-security
@@ -113,7 +113,7 @@
 /addons/test_website/ @odoo/rd-website
 
 /addons/web/ @odoo/rd-framework-js
-/addons/web/controllers/main.py @odoo/rd-framework-js @odoo/rd-images @odoo/rd-security 
+/addons/web/controllers/main.py @odoo/rd-framework-js @odoo/rd-images @odoo/rd-security
 /addons/web/models/ir_qweb.py @odoo/rd-framework-js @odoo/rd-images @odoo/rd-website
 /addons/web/tests/test_image.py @odoo/rd-images
 
