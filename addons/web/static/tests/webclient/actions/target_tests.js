@@ -4,8 +4,17 @@ import testUtils from "web.test_utils";
 import core from "web.core";
 import AbstractAction from "web.AbstractAction";
 import { registry } from "@web/core/registry";
-import { legacyExtraNextTick } from "../../helpers/utils";
+import {
+    click,
+    legacyExtraNextTick,
+    patchWithCleanup,
+    makeDeferred,
+} from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
+import { registerCleanup } from "../../helpers/cleanup";
+import { errorService } from "@web/core/errors/error_service";
+import { useService } from "@web/core/service_hook";
+import { ClientErrorDialog } from "@web/core/errors/error_dialogs";
 
 let serverData;
 
@@ -319,6 +328,86 @@ QUnit.module("ActionManager", (hooks) => {
 
         // execute an action in target="new"
         await doAction(webClient, 5);
+        assert.verifySteps([]);
+    });
+
+    QUnit.test("do not commit a dialog in error", async (assert) => {
+        assert.expect(6);
+
+        const handler = (ev) => {
+            // need to preventDefault to remove error from console (so python test pass)
+            ev.preventDefault();
+        };
+        window.addEventListener("unhandledrejection", handler);
+        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
+
+        patchWithCleanup(QUnit, {
+            onUnhandledRejection: () => {},
+        });
+
+        class ErrorClientAction extends owl.Component {
+            setup() {
+                throw new Error("my error");
+            }
+        }
+        ErrorClientAction.template = owl.tags.xml`<div/>`;
+        registry.category("actions").add("failing", ErrorClientAction);
+
+        class ClientActionTargetNew extends owl.Component {}
+        ClientActionTargetNew.template = owl.tags.xml`<div class="my_action_new" />`;
+        registry.category("actions").add("clientActionNew", ClientActionTargetNew);
+
+        class ClientAction extends owl.Component {
+            setup() {
+                this.action = useService("action");
+            }
+            async onClick() {
+                try {
+                    await this.action.doAction(
+                        { type: "ir.actions.client", tag: "failing", target: "new" },
+                        { onClose: () => assert.step("failing dialog closed") }
+                    );
+                } catch (e) {
+                    assert.strictEqual(e.message, "my error");
+                }
+            }
+        }
+        ClientAction.template = owl.tags.xml`<div class="my_action" t-on-click="onClick" />`;
+        registry.category("actions").add("clientAction", ClientAction);
+
+        const errorDialogOpened = makeDeferred();
+        patchWithCleanup(ClientErrorDialog.prototype, {
+            mounted() {
+                this._super(...arguments);
+                errorDialogOpened.resolve();
+            },
+        });
+
+        registry.category("services").add("error", errorService);
+        const webClient = await createWebClient({});
+
+        await doAction(webClient, { type: "ir.actions.client", tag: "clientAction" });
+        await click(webClient.el, ".my_action");
+        await errorDialogOpened;
+
+        assert.containsOnce(webClient, ".modal");
+        await click(webClient.el, ".modal-body button.btn-link");
+        assert.ok(
+            webClient.el
+                .querySelector(".modal-body .o_error_detail")
+                .textContent.includes("my error")
+        );
+
+        await click(webClient.el, ".modal-footer button");
+        assert.containsNone(webClient, ".modal");
+
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "clientActionNew",
+            target: "new",
+        });
+        assert.containsOnce(webClient, ".modal .my_action_new");
+
         assert.verifySteps([]);
     });
 
