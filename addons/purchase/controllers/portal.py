@@ -18,8 +18,11 @@ class CustomerPortal(CustomerPortal):
 
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
+        partner = request.env.user.partner_id
+
         if 'purchase_count' in counters:
             values['purchase_count'] = request.env['purchase.order'].search_count([
+                ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
                 ('state', 'in', ['purchase', 'done', 'cancel'])
             ]) if request.env['purchase.order'].check_access_rights('read', raise_exception=False) else 0
         return values
@@ -41,8 +44,12 @@ class CustomerPortal(CustomerPortal):
     def portal_my_purchase_orders(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
         values = self._prepare_portal_layout_values()
         PurchaseOrder = request.env['purchase.order']
+        partner = request.env.user.partner_id
 
-        domain = []
+        domain = [
+            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+            ('state', 'in', ['purchase', 'done', 'cancel'])
+        ]
 
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
