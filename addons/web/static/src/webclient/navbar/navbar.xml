@@ -20,7 +20,7 @@
           t-esc="currentApp.name"
           class="o_menu_brand"
           t-ref="menuBrand"
-          t-on-click="menuService.selectMenu(currentApp)"
+          t-on-click.prevent="menuService.selectMenu(currentApp)"
         />
 
         <!-- Current App Sections -->
@@ -54,7 +54,7 @@
           t-att-class="{ o_dropdown_active: menuService.getCurrentApp() === app }"
           payload="app"
         >
-          <a t-att-href="getMenuItemHref(app)" t-esc="app.name" />
+          <a t-att-href="getMenuItemHref(app)" t-esc="app.name" t-on-click.prevent="" />
         </MenuItem>
       </t>
     </Dropdown>
@@ -80,6 +80,7 @@
           <MenuItem title="section.name" class="o_nav_entry" payload="section" hotkey="hotkey">
             <a
               t-att-href="getMenuItemHref(section)"
+              t-on-click.prevent=""
               t-att-data-section="section.id"
               t-esc="section.name"
             />
@@ -115,7 +116,7 @@
   <t t-name="web.NavBar.SectionsMenu.Dropdown.MenuSlot" owl="1">
     <t t-foreach="items" t-as="item" t-key="item.id">
       <MenuItem t-if="!item.childrenTree.length" payload="item">
-        <a t-att-href="getMenuItemHref(item)" t-esc="item.name" />
+        <a t-att-href="getMenuItemHref(item)" t-esc="item.name" t-on-click.prevent="" />
       </MenuItem>
 
       <t t-else="">
@@ -126,7 +127,7 @@
           t-key="subItem.id"
           class="o_dropdown_menu_group_entry"
           payload="subItem">
-          <a t-att-href="getMenuItemHref(subItem)" t-esc="subItem.name" />
+          <a t-att-href="getMenuItemHref(subItem)" t-esc="subItem.name" t-on-click.prevent="" />
         </MenuItem>
       </t>
     </t>
@@ -140,7 +141,7 @@
 
           <t t-if="!section.childrenTree.length">
             <MenuItem class="o_more_dropdown_section" payload="section">
-              <a t-att-href="getMenuItemHref(section)" t-esc="section.name" />
+              <a t-att-href="getMenuItemHref(section)" t-esc="section.name" t-on-click.prevent="" />
             </MenuItem>
           </t>
           <t t-else="">
