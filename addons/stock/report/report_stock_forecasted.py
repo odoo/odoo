@@ -134,12 +134,6 @@ class ReplenishmentReport(models.AbstractModel):
         }
 
     def _get_report_lines(self, product_template_ids, product_variant_ids, wh_location_ids):
-        def _rollup_move_dests(move, seen):
-            for dst in move.move_dest_ids:
-                if dst.id not in seen:
-                    seen.add(dst.id)
-                    _rollup_move_dests(dst, seen)
-            return seen
 
         def _reconcile_out_with_ins(lines, out, ins, demand, product_rounding, only_matching_move_dest=True):
             index_to_remove = []
@@ -180,7 +174,7 @@ class ReplenishmentReport(models.AbstractModel):
             ins_per_product[in_.product_id.id].append({
                 'qty': in_.product_qty,
                 'move': in_,
-                'move_dests': _rollup_move_dests(in_, set())
+                'move_dests': in_._rollup_move_dests(set())
             })
         currents = {c['id']: c['qty_available'] for c in outs.product_id.read(['qty_available'])}
 
