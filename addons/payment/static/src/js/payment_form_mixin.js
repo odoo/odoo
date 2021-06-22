@@ -297,6 +297,8 @@ odoo.define('payment.payment_form_mixin', require => {
                 'currency_id': this.txContext.currencyId
                     ? parseInt(this.txContext.currencyId) : null,
                 'partner_id': parseInt(this.txContext.partnerId),
+                'invoice_id': this.txContext.invoiceId
+                    ? parseInt(this.txContext.invoiceId) : null,
                 'flow': flow,
                 'tokenization_requested': this.txContext.tokenizationRequested,
                 'validation_route': this.txContext.validationRoute

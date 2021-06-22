@@ -17,6 +17,7 @@
             - 'transaction_route' - The route used to create a transaction when the user clicks Pay
             - 'landing_route' - The route the user is redirected to after the transaction
             - 'footer_template_id' - The template id for the submit button. Optional
+            - 'invoice_id' - The id of the account move being paid. Optional
         -->
         <form name="o_payment_checkout"
               class="o_payment_form mt-3 clearfix"
@@ -27,7 +28,8 @@
               t-att-data-access-token="access_token"
               t-att-data-transaction-route="transaction_route"
               t-att-data-landing-route="landing_route"
-              t-att-data-allow-token-selection="True">
+              t-att-data-allow-token-selection="True"
+              t-att-data-invoice-id="invoice_id">
 
             <t t-set="acquirer_count" t-value="len(acquirers) if acquirers else 0"/>
             <t t-set="token_count" t-value="len(tokens) if tokens else 0"/>
@@ -166,6 +168,7 @@
               t-att-data-reference-prefix="reference_prefix"
               t-att-data-partner-id="partner_id"
               t-att-data-access-token="access_token"
+              t-att-data-invoice-id="invoice_id"
               t-att-data-transaction-route="transaction_route"
               t-att-data-assign-token-route="assign_token_route"
               t-att-data-validation-route="validation_route"
