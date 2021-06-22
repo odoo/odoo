@@ -1452,22 +1452,21 @@ class TestViews(ViewCase):
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_invalid_subfield(self):
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'invalid subfield',
-                'model': 'ir.ui.view',
-                'arch': """
-                    <form string="View">
+        arch = """
+            <form string="View">
+                <field name="name"/>
+                <field name="inherit_children_ids">
+                    <tree name="Children">
                         <field name="name"/>
-                        <field name="inherit_children_ids">
-                            <tree name="Children">
-                                <field name="name"/>
-                                <field name="not_a_field"/>
-                            </tree>
-                        </field>
-                    </form>
-                """,
-            })
+                        <field name="not_a_field"/>
+                    </tree>
+                </field>
+            </form>
+        """
+        self.assertInvalid(
+            arch,
+            '''Field "not_a_field" does not exist in model "ir.ui.view"''',
+        )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_context_in_view(self):
@@ -1477,17 +1476,11 @@ class TestViews(ViewCase):
                 <field name="inherit_id" context="{'stuff': model}"/>
             </form>
         """
-        self.View.create({
-            'name': 'valid context',
-            'model': 'ir.ui.view',
-            'arch': arch % '<field name="model"/>',
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid context',
-                'model': 'ir.ui.view',
-                'arch': arch % '',
-            })
+        self.assertValid(arch % '<field name="model"/>')
+        self.assertInvalid(
+            arch % '',
+            """Field 'model' used in context ({'stuff': model}) must be present in view but is missing.""",
+        )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_context_in_subview(self):
@@ -1502,24 +1495,15 @@ class TestViews(ViewCase):
                 </field>
             </form>
         """
-        self.View.create({
-            'name': 'valid context',
-            'model': 'ir.ui.view',
-            'arch': arch % ('', '<field name="model"/>'),
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid context',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', ''),
-            })
-        with self.assertRaises(ValidationError):
-            # field is in view but not in subview
-            self.View.create({
-                'name': 'valid context',
-                'model': 'ir.ui.view',
-                'arch': arch % ('<field name="model"/>', ''),
-            })
+        self.assertValid(arch % ('', '<field name="model"/>'))
+        self.assertInvalid(
+            arch % ('', ''),
+            """Field 'model' used in context ({'stuff': model}) must be present in view but is missing.""",
+        )
+        self.assertInvalid(
+            arch % ('<field name="model"/>', ''),
+            """Field 'model' used in context ({'stuff': model}) must be present in view but is missing.""",
+        )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_context_in_subview_with_parent(self):
@@ -1534,23 +1518,15 @@ class TestViews(ViewCase):
                 </field>
             </form>
         """
-        self.View.create({
-            'name': 'valid context',
-            'model': 'ir.ui.view',
-            'arch': arch % ('<field name="model"/>', ''),
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid context',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', ''),
-            })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid context',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', '<field name="model"/>'),
-            })
+        self.assertValid(arch % ('<field name="model"/>', ''))
+        self.assertInvalid(
+            arch % ('', ''),
+            """Field 'model' used in context ({'stuff': parent.model}) must be present in view but is missing.""",
+        )
+        self.assertInvalid(
+            arch % ('', '<field name="model"/>'),
+            """Field 'model' used in context ({'stuff': parent.model}) must be present in view but is missing.""",
+        )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_context_in_subsubview_with_parent(self):
@@ -1570,29 +1546,19 @@ class TestViews(ViewCase):
                 </field>
             </form>
         """
-        self.View.create({
-            'name': 'valid context',
-            'model': 'ir.ui.view',
-            'arch': arch % ('<field name="model"/>', '', ''),
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid context',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', '', ''),
-            })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid context',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', '<field name="model"/>', ''),
-            })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid context',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', '', '<field name="model"/>'),
-            })
+        self.assertValid(arch % ('<field name="model"/>', '', ''))
+        self.assertInvalid(
+            arch % ('', '', ''),
+            """Field 'model' used in context ({'stuff': parent.parent.model}) must be present in view but is missing.""",
+        )
+        self.assertInvalid(
+            arch % ('', '<field name="model"/>', ''),
+            """Field 'model' used in context ({'stuff': parent.parent.model}) must be present in view but is missing.""",
+        )
+        self.assertInvalid(
+            arch % ('', '', '<field name="model"/>'),
+            """Field 'model' used in context ({'stuff': parent.parent.model}) must be present in view but is missing.""",
+        )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_id_case(self):
@@ -1618,7 +1584,7 @@ class TestViews(ViewCase):
         # self.assertInvalid(arch % ('<field name="name"/><field name="type"/>', "'tata' if name else 'tutu'", 'type'), 'xxxx')
         self.assertInvalid(
             arch % ('', '0 if name else 1', '1'),
-            """Field name used in domain of <field name="inherit_id">  ([(0 if name else 1, '=', 1)]) must be present in view but is missing""",
+            """Field 'name' used in domain of <field name="inherit_id"> ([(0 if name else 1, '=', 1)]) must be present in view but is missing""",
         )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
@@ -1629,17 +1595,11 @@ class TestViews(ViewCase):
                 <field name="inherit_id" domain="[('model', '=', model)]"/>
             </form>
         """
-        self.View.create({
-            'name': 'valid domain',
-            'model': 'ir.ui.view',
-            'arch': arch % '<field name="model"/>',
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid domain',
-                'model': 'ir.ui.view',
-                'arch': arch % '',
-            })
+        self.assertValid(arch % '<field name="model"/>')
+        self.assertInvalid(
+            arch % '',
+            """Field 'model' used in domain of <field name="inherit_id"> ([('model', '=', model)]) must be present in view but is missing.""",
+        )
 
     def test_domain_unknown_field(self):
         self.assertInvalid("""
@@ -1648,7 +1608,7 @@ class TestViews(ViewCase):
                     <field name="inherit_id" domain="[('invalid_field', '=', 'res.users')]"/>
                 </form>
             """,
-            '''Unknown field "ir.ui.view.invalid_field" in domain of <field name="inherit_id"> "[('invalid_field', '=', 'res.users')]"''',
+            '''Unknown field "ir.ui.view.invalid_field" in domain of <field name="inherit_id"> ([('invalid_field', '=', 'res.users')])''',
         )
 
     def test_domain_field_searchable(self):
@@ -1663,7 +1623,7 @@ class TestViews(ViewCase):
         # computed field, not stored, no search
         self.assertInvalid(
             arch % 'xml_id',
-            '''Unsearchable field "ir.ui.view.xml_id" in path 'xml_id' in domain of <field name="inherit_id"> ="[('xml_id', '=', 'test')]"''',
+            '''Unsearchable field 'xml_id' in path 'xml_id' in domain of <field name="inherit_id"> ([('xml_id', '=', 'test')])''',
         )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
@@ -1687,23 +1647,15 @@ class TestViews(ViewCase):
                 </field>
             </form>
         """
-        self.View.create({
-            'name': 'valid domain',
-            'model': 'ir.ui.view',
-            'arch': arch % ('', '<field name="model"/>'),
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid domain',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', ''),
-            })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid domain',
-                'model': 'ir.ui.view',
-                'arch': arch % ('<field name="model"/>', ''),
-            })
+        self.assertValid(arch % ('', '<field name="model"/>'))
+        self.assertInvalid(
+            arch % ('', ''),
+            """Field 'model' used in domain of <field name="inherit_id"> ([('model', '=', model)]) must be present in view but is missing.""",
+        )
+        self.assertInvalid(
+            arch % ('<field name="model"/>', ''),
+            """Field 'model' used in domain of <field name="inherit_id"> ([('model', '=', model)]) must be present in view but is missing.""",
+        )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_in_subview_with_parent(self):
@@ -1718,28 +1670,16 @@ class TestViews(ViewCase):
                 </field>%s
             </form>
         """
-        self.View.create({
-            'name': 'valid domain',
-            'model': 'ir.ui.view',
-            'arch': arch % ('<field name="model"/>', '', ''),
-        })
-        self.View.create({
-            'name': 'valid domain',
-            'model': 'ir.ui.view',
-            'arch': arch % ('', '', '<field name="model"/>'),
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid domain',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', '', ''),
-            })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid domain',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', '<field name="model"/>', ''),
-            })
+        self.assertValid(arch % ('<field name="model"/>', '', ''))
+        self.assertValid(arch % ('', '', '<field name="model"/>'))
+        self.assertInvalid(
+            arch % ('', '', ''),
+            """Field 'model' used in domain of <field name="inherit_id"> ([('model', '=', parent.model)]) must be present in view but is missing.""",
+        )
+        self.assertInvalid(
+            arch % ('', '<field name="model"/>', ''),
+            """Field 'model' used in domain of <field name="inherit_id"> ([('model', '=', parent.model)]) must be present in view but is missing.""",
+        )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_on_field_in_view(self):
@@ -1752,17 +1692,11 @@ class TestViews(ViewCase):
                 <field name="inherit_id"/>
             </form>
         """
-        self.View.create({
-            'name': 'valid domain',
-            'model': 'ir.ui.view',
-            'arch': arch % '<field name="model"/>',
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid domain',
-                'model': 'ir.ui.view',
-                'arch': arch % '',
-            })
+        self.assertValid(arch % '<field name="model"/>')
+        self.assertInvalid(
+            arch % '',
+            """Field 'model' used in domain of field 'inherit_id' ([('model', '=', model)]) must be present in view but is missing.""",
+        )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_on_field_in_subview(self):
@@ -1780,23 +1714,15 @@ class TestViews(ViewCase):
                 </field>
             </form>
         """
-        self.View.create({
-            'name': 'valid domain',
-            'model': 'ir.ui.view',
-            'arch': arch % ('', '<field name="model"/>'),
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid domain',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', ''),
-            })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid domain',
-                'model': 'ir.ui.view',
-                'arch': arch % ('<field name="model"/>', ''),
-            })
+        self.assertValid(arch % ('', '<field name="model"/>'))
+        self.assertInvalid(
+            arch % ('', ''),
+            """Field 'model' used in domain of field 'inherit_id' ([('model', '=', model)]) must be present in view but is missing.""",
+        )
+        self.assertInvalid(
+            arch % ('<field name="model"/>', ''),
+            """Field 'model' used in domain of field 'inherit_id' ([('model', '=', model)]) must be present in view but is missing.""",
+        )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_on_field_in_subview_with_parent(self):
@@ -1814,23 +1740,15 @@ class TestViews(ViewCase):
                 </field>
             </form>
         """
-        self.View.create({
-            'name': 'valid domain',
-            'model': 'ir.ui.view',
-            'arch': arch % ('<field name="model"/>', ''),
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid domain',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', ''),
-            })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid domain',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', '<field name="model"/>'),
-            })
+        self.assertValid(arch % ('<field name="model"/>', ''))
+        self.assertInvalid(
+            arch % ('', ''),
+            """Field 'model' used in domain of field 'inherit_id' ([('model', '=', parent.model)]) must be present in view but is missing.""",
+        )
+        self.assertInvalid(
+            arch % ('', '<field name="model"/>'),
+            """Field 'model' used in domain of field 'inherit_id' ([('model', '=', parent.model)]) must be present in view but is missing.""",
+        )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_on_field_in_noneditable_subview(self):
@@ -1848,17 +1766,11 @@ class TestViews(ViewCase):
                 </field>
             </form>
         """
-        self.View.create({
-            'name': 'valid domain',
-            'model': 'ir.ui.view',
-            'arch': arch % '',
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid domain',
-                'model': 'ir.ui.view',
-                'arch': arch % ' editable="bottom"',
-            })
+        self.assertValid(arch % '')
+        self.assertInvalid(
+            arch % ' editable="bottom"',
+            """Field 'model' used in domain of field 'inherit_id' ([('model', '=', model)]) must be present in view but is missing.""",
+        )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_on_readonly_field_in_view(self):
@@ -1871,11 +1783,7 @@ class TestViews(ViewCase):
                 <field name="inherit_id" readonly="1"/>
             </form>
         """
-        self.View.create({
-            'name': 'valid domain',
-            'model': 'ir.ui.view',
-            'arch': arch,
-        })
+        self.assertValid(arch)
 
         self.patch(field, 'readonly', True)
         arch = """
@@ -1884,11 +1792,7 @@ class TestViews(ViewCase):
                 <field name="inherit_id"/>
             </form>
         """
-        self.View.create({
-            'name': 'valid domain',
-            'model': 'ir.ui.view',
-            'arch': arch,
-        })
+        self.assertValid(arch)
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_on_readonly_field_in_subview(self):
@@ -1906,17 +1810,11 @@ class TestViews(ViewCase):
                 </field>
             </form>
         """
-        self.View.create({
-            'name': 'valid domain',
-            'model': 'ir.ui.view',
-            'arch': arch % ' readonly="1"',
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid domain',
-                'model': 'ir.ui.view',
-                'arch': arch % '',
-            })
+        self.assertValid(arch % ' readonly="1"')
+        self.assertInvalid(
+            arch % '',
+            """Field 'model' used in domain of field 'inherit_id' ([('model', '=', model)]) must be present in view but is missing.""",
+        )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_modifier_attribute_is_boolean(self):
@@ -1949,11 +1847,11 @@ class TestViews(ViewCase):
         )
         self.assertInvalid(
             arch % ('name', 'invalid_field'),
-            """Unknown field "ir.ui.view.invalid_field" in domain of <filter name="draft"> "[('invalid_field', '=', 'dummy')]""",
+            """Unknown field "ir.ui.view.invalid_field" in domain of <filter name="draft"> ([('invalid_field', '=', 'dummy')])""",
         )
         self.assertInvalid(
             arch % ('name', 'inherit_children_ids.invalid_field'),
-            """Unknown field "ir.ui.view.invalid_field" in domain of <filter name="draft"> "[('inherit_children_ids.invalid_field', '=', 'dummy')]""",
+            """Unknown field "ir.ui.view.invalid_field" in domain of <filter name="draft"> ([('inherit_children_ids.invalid_field', '=', 'dummy')])""",
         )
         # todo add check for non searchable fields and group by
 
@@ -1978,7 +1876,7 @@ class TestViews(ViewCase):
                     <filter string="Dummy" name="draft" domain="['name', '=', 'dummy']"/>
                 </search>
             """,
-            """Invalid domain format while checking ['name', '=', 'dummy'] in domain of <filter name="draft">""",
+            """Invalid domain format ['name', '=', 'dummy'] in domain of <filter name="draft">""",
         )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
@@ -1995,19 +1893,19 @@ class TestViews(ViewCase):
         self.assertValid(arch % ('', '<field name="inherit_id"/>', 'view_access', 'inherit_id'))
         self.assertInvalid(
             arch % ('<field name="inherit_id"/>', '', 'view_access', 'inherit_id'),
-            """Field inherit_id used in domain of <field name="groups_id">  ([['view_access', '=', inherit_id]]) must be present in view but is missing.""",
+            """Field 'inherit_id' used in domain of <field name="groups_id"> ([['view_access', '=', inherit_id]]) must be present in view but is missing.""",
         )
         self.assertInvalid(
             arch % ('', '<field name="inherit_id"/>', 'view_access', 'view_access'),
-            """Field view_access used in domain of <field name="groups_id">  ([['view_access', '=', view_access]]) must be present in view but is missing.""",
+            """Field 'view_access' used in domain of <field name="groups_id"> ([['view_access', '=', view_access]]) must be present in view but is missing.""",
         )
         self.assertInvalid(
             arch % ('', '<field name="inherit_id"/>', 'inherit_id', 'inherit_id'),
-            """Unknown field "res.groups.inherit_id" in domain of <field name="groups_id"> "[['inherit_id', '=', inherit_id]]""",
+            """Unknown field "res.groups.inherit_id" in domain of <field name="groups_id"> ([['inherit_id', '=', inherit_id]])""",
         )
         self.assertInvalid(
             arch % ('', '<field name="inherit_id" select="multi"/>', 'view_access', 'inherit_id'),
-            """Field inherit_id used in domain of <field name="groups_id">  ([['view_access', '=', inherit_id]]) is present in view but is in select multi.""",
+            """Field 'inherit_id' used in domain of <field name="groups_id"> ([['view_access', '=', inherit_id]]) is present in view but is in select multi.""",
         )
 
         arch = """
@@ -2040,17 +1938,11 @@ class TestViews(ViewCase):
                        attrs="{'readonly': [('model', '=', 'ir.ui.view')]}"/>
             </form>
         """
-        self.View.create({
-            'name': 'valid attrs',
-            'model': 'ir.ui.view',
-            'arch': arch % '<field name="model"/>',
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid attrs',
-                'model': 'ir.ui.view',
-                'arch': arch % '',
-            })
+        self.assertValid(arch % '<field name="model"/>')
+        self.assertInvalid(
+            arch % '',
+            """Field 'model' used in attrs ({'readonly': [('model', '=', 'ir.ui.view')]}) must be present in view but is missing""",
+        )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_attrs_invalid_domain(self):
@@ -2064,7 +1956,7 @@ class TestViews(ViewCase):
         """
         self.assertInvalid(
             arch,
-            """Invalid domain format while checking {'readonly': [('model', 'ir.ui.view')]} in attrs.readonly""",
+            """Invalid domain format {'readonly': [('model', 'ir.ui.view')]} in attrs""",
         )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
@@ -2081,23 +1973,15 @@ class TestViews(ViewCase):
                 </field>
             </form>
         """
-        self.View.create({
-            'name': 'valid attrs',
-            'model': 'ir.ui.view',
-            'arch': arch % ('', '<field name="model"/>'),
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid attrs',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', ''),
-            })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid attrs',
-                'model': 'ir.ui.view',
-                'arch': arch % ('<field name="model"/>', ''),
-            })
+        self.assertValid(arch % ('', '<field name="model"/>'))
+        self.assertInvalid(
+            arch % ('', ''),
+            """Field 'model' used in attrs ({'readonly': [('model', '=', 'ir.ui.view')]}) must be present in view but is missing.""",
+        )
+        self.assertInvalid(
+            arch % ('<field name="model"/>', ''),
+            """Field 'model' used in attrs ({'readonly': [('model', '=', 'ir.ui.view')]}) must be present in view but is missing.""",
+        )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_attrs_subfield_with_parent(self):
@@ -2113,23 +1997,15 @@ class TestViews(ViewCase):
                 </field>
             </form>
         """
-        self.View.create({
-            'name': 'valid attrs',
-            'model': 'ir.ui.view',
-            'arch': arch % ('<field name="model"/>', ''),
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid attrs',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', ''),
-            })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'valid attrs',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', '<field name="model"/>'),
-            })
+        self.assertValid(arch % ('<field name="model"/>', ''))
+        self.assertInvalid(
+            arch % ('', ''),
+            """Field 'model' used in attrs ({'readonly': [('parent.model', '=', 'ir.ui.view')]}) must be present in view but is missing.""",
+        )
+        self.assertInvalid(
+            arch % ('', '<field name="model"/>'),
+            """Field 'model' used in attrs ({'readonly': [('parent.model', '=', 'ir.ui.view')]}) must be present in view but is missing.""",
+        )
 
     def test_button(self):
         arch = """
@@ -2198,29 +2074,19 @@ class TestViews(ViewCase):
                 </groupby>
             </tree>
         """
-        self.View.create({
-            'name': 'valid groupby',
-            'model': 'ir.ui.view',
-            'arch': arch % ('', '<field name="noupdate"/>'),
-        })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'invalid groupby',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', ''),
-            })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'invalid groupby',
-                'model': 'ir.ui.view',
-                'arch': arch % ('<field name="noupdate"/>', ''),
-            })
-        with self.assertRaises(ValidationError):
-            self.View.create({
-                'name': 'invalid groupby',
-                'model': 'ir.ui.view',
-                'arch': arch % ('', '<field name="noupdate"/><field name="fake_field"/>'),
-            })
+        self.assertValid(arch % ('', '<field name="noupdate"/>'))
+        self.assertInvalid(
+            arch % ('', ''),
+            """Field 'noupdate' used in attrs ({'invisible': [('noupdate', '=', True)]}) must be present in view but is missing.""",
+        )
+        self.assertInvalid(
+            arch % ('<field name="noupdate"/>', ''),
+            '''Field "noupdate" does not exist in model "ir.ui.view"''',
+        )
+        self.assertInvalid(
+            arch % ('', '<field name="noupdate"/><field name="fake_field"/>'),
+            '''Field "fake_field" does not exist in model "ir.model.data"''',
+        )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_check_xml_on_reenable(self):
@@ -2265,7 +2131,7 @@ class TestViews(ViewCase):
         )
         self.assertInvalid(
             '<form><label for="model"/></form>',
-            "Name or id 'model' used in 'label for' must be present in view but is missing.",
+            """Name or id 'model' in <label for="..."> must be present in view but is missing.""",
         )
 
     def test_col_colspan_numerical(self):
