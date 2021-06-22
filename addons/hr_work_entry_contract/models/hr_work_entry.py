@@ -16,6 +16,7 @@ class HrWorkEntry(models.Model):
 
     contract_id = fields.Many2one('hr.contract', string="Contract", required=True)
     employee_id = fields.Many2one(domain=[('contract_ids.state', 'in', ('open', 'pending'))])
+    work_entry_source = fields.Selection(related='contract_id.work_entry_source')
 
     def _init_column(self, column_name):
         if column_name != 'contract_id':
