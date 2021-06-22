@@ -312,7 +312,11 @@ class ResPartner(models.Model):
 
         vat = clean(vat, ' -.').upper().strip()
 
-        if not (len(vat) == 14):
+        # Remove the prefix
+        if vat.startswith("NL"):
+            vat = vat[2:]
+
+        if not len(vat) == 12:
             return False
 
         # Check the format
@@ -324,9 +328,6 @@ class ResPartner(models.Model):
         char_to_int = {k: str(ord(k) - 55) for k in string.ascii_uppercase}
         char_to_int['+'] = '36'
         char_to_int['*'] = '37'
-
-        # Remove the prefix
-        vat = vat[2:]
 
         # 2 possible checks:
         # - For natural persons

@@ -43,15 +43,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Caro/a ${object.partner_id.name or 'participant'}<br/><br/>\n"
-"        Sfortunatamente non sei riuscito a passare la certificazione e non sei più membro del corso: ${object.slide_partner_id.channel_id.name}.<br/><br/>\n"
-"        Non esitare ad iscriverti ancora!\n"
+"        Gentile ${object.partner_id.name or 'partecipante'}<br/><br/>\n"
+"        purtroppo non hai superato la certificazione e non sei più iscritto al corso: ${object.slide_partner_id.channel_id.name}.<br/><br/>\n"
+"        Non esitare a iscriverti di nuovo!\n"
 "        <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a href=\"${(object.slide_partner_id.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                Iscriviti ora\n"
 "            </a>\n"
 "        </div>\n"
-"        Grazie per la tua partecipazione.\n"
+"        Grazie per la partecipazione.\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -477,6 +477,7 @@ msgstr "La risposta inserita non è valida."
 msgid ""
 "The courses this survey is linked to through the e-learning application"
 msgstr ""
+"Corsi ai quali è collegato il sondaggio tramite l'applicazione e-learning"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
@@ -498,6 +499,8 @@ msgstr ""
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_ids
 msgid "The slides this survey is linked to through the e-learning application"
 msgstr ""
+"Diapositive alle quali è collegato il sondaggio tramite l'applicazione "
+"e-learning"
 
 #. module: website_slides_survey
 #: model:survey.question,constr_error_msg:website_slides_survey.furniture_certification_page_1

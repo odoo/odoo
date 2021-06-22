@@ -1718,7 +1718,7 @@ var AbstractFieldBinary = AbstractField.extend({
         this._super.apply(this, arguments);
         this.fields = record.fields;
         this.useFileAPI = !!window.FileReader;
-        this.max_upload_size = 64 * 1024 * 1024; // 64Mo
+        this.max_upload_size = session.max_file_upload_size || 128 * 1024 * 1024;
         this.accepted_file_extensions = (this.nodeOptions && this.nodeOptions.accepted_file_extensions) || this.accepted_file_extensions || '*';
         if (!this.useFileAPI) {
             var self = this;

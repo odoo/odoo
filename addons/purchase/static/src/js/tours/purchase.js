@@ -112,7 +112,7 @@ tour.register('purchase_tour' , {
     trigger: ".modal-footer button[name='action_send_mail']",
     extra_trigger: ".modal-footer button[name='action_send_mail']",
     content: _t("Send the request for quotation to your vendor."),
-    position: "bottom",
+    position: "left",
     run: 'click',
 }, {
     trigger: ".ui-sortable-handle",

@@ -1073,8 +1073,15 @@ header {
                 }
             }
         }
-        body.o_connected_user:not(.editor_has_snippets) #wrapwrap > header {
-            top: $o-navbar-height;
+        body.o_connected_user {
+            &:not(.editor_has_snippets) #wrapwrap > header {
+                top: $o-navbar-height;
+            }
+            &.editor_has_snippets #wrapwrap > header {
+                @if $-hamburger-right {
+                    right: $o-we-sidebar-width;
+                }
+            }
         }
     }
 } @else if o-website-value('header-template') == 'boxed' {

@@ -83,7 +83,7 @@ msgstr "%d сообщений"
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "%d days overdue"
-msgstr "%d дней просрочено"
+msgstr "%d дней просрочки"
 
 #. module: mail
 #. openerp-web
@@ -161,7 +161,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/activity.xml:0
 #, python-format
 msgid ", due on"
-msgstr ", надлежащее"
+msgstr ", срок"
 
 #. module: mail
 #. openerp-web
@@ -679,7 +679,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Add attachment"
-msgstr "Добавить прикрепления"
+msgstr "Добавить вложения"
 
 #. module: mail
 #. openerp-web
@@ -1976,7 +1976,7 @@ msgstr "Модель документа"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_name
 msgid "Document Name"
-msgstr "название документа"
+msgstr "Название документа"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2037,13 +2037,13 @@ msgstr "Выпадающее меню"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
 msgid "Due Date"
-msgstr "Срок выполнения"
+msgstr "Срок исполнения"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_date_deadline_range
 msgid "Due Date In"
-msgstr "Дата исполнения в"
+msgstr "Срок исполнения через"
 
 #. module: mail
 #. openerp-web
@@ -2064,7 +2064,7 @@ msgstr "Через %d дней:"
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Due on"
-msgstr ""
+msgstr "Срок"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
@@ -2118,7 +2118,7 @@ msgstr "Редактировать подписку"
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Email"
-msgstr "Электронная почта"
+msgstr "Email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__email
@@ -2592,7 +2592,7 @@ msgstr "Иконка со шрифтом Font awesome, например. fa-task
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
 msgid "Formatted Email"
-msgstr "Форматированная электронная почта"
+msgstr "Форматированный адрес email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -3577,7 +3577,7 @@ msgstr "управление сообщениями"
 #: code:addons/mail/static/src/xml/activity.xml:0
 #, python-format
 msgid "Mark Done"
-msgstr "Пометить сделанным"
+msgstr "Выполнено"
 
 #. module: mail
 #. openerp-web
@@ -3596,7 +3596,7 @@ msgstr "Отметить все как прочитанные"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Mark as Done"
-msgstr "Отметить сделанным"
+msgstr "Выполнено"
 
 #. module: mail
 #. openerp-web
@@ -3605,14 +3605,14 @@ msgstr "Отметить сделанным"
 #: code:addons/mail/static/src/components/thread_preview/thread_preview.xml:0
 #, python-format
 msgid "Mark as Read"
-msgstr "Пометить как прочитанное"
+msgstr "Отметить как прочитанное"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Mark as Todo"
-msgstr "Маркировать как TODO"
+msgstr "Отметить"
 
 #. module: mail
 #. openerp-web
@@ -3620,7 +3620,7 @@ msgstr "Маркировать как TODO"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Mark as done"
-msgstr "Отметить сделанным"
+msgstr "Выполнено"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
@@ -4577,9 +4577,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Опциональный номер записи, к которой будут присоединены все входящие "
-"сообщения, даже если на них не было ответа. Если установлено, это отключит "
-"создание новых записей полностью."
+"Опциональный ID чата (записи), в который будут направляться все входящие "
+"сообщения, даже они не адресованы для него. Если установить, то это отключит"
+" создание новых записей полностью."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_id
@@ -4598,7 +4598,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__report_template
 msgid "Optional report to print and attach"
-msgstr "Необязательный отчёт для печати и прикрепления"
+msgstr "Необязательный отчёт для печати и вложений"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_render_mixin__lang
@@ -5412,7 +5412,7 @@ msgstr "Запланировать действие"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Schedule activities to help you get things done."
-msgstr ""
+msgstr "Планируйте действия, чтобы не забыть о них."
 
 #. module: mail
 #. openerp-web
@@ -5804,10 +5804,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Статус основан на действиях\n"
-"Просрочено: срок выполнения истек\n"
-"Сегодня: запланировано на сегодня\n"
-"Запланировано: срок действия в будущем."
+"Статус основан на плановых действиях\n"
+"Просрочено: срок исполнения истек\n"
+"Сегодня: выполнить сегодня\n"
+"Запланировано: срок в будущем."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__sub_model_object_field
@@ -6174,7 +6174,7 @@ msgstr "Кому (Партнеры)"
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_todo
 msgid "To Do"
-msgstr "Сделать"
+msgstr "Задача"
 
 #. module: mail
 #. openerp-web
@@ -7094,7 +7094,7 @@ msgstr "для"
 #: code:addons/mail/static/src/components/activity/activity.js:0
 #, python-format
 msgid "for %s"
-msgstr ""
+msgstr "для %s"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
