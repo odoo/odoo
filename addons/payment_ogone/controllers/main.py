@@ -18,6 +18,15 @@ _logger = logging.getLogger(__name__)
 class OgoneController(http.Controller):
     _flexcheckout_return_url = '/payment/ogone/flexcheckout'
     _directlink_return_url = '/payment/ogone/directlink'
+    _backward_compatibility_urls = [
+        '/payment/ogone/accept', '/payment/ogone/test/accept',
+        '/payment/ogone/decline', '/payment/ogone/test/decline',
+        '/payment/ogone/exception', '/payment/ogone/test/exception',
+        '/payment/ogone/cancel', '/payment/ogone/test/cancel',
+        '/payment/ogone/validate/accept',
+        '/payment/ogone/validate/decline',
+        '/payment/ogone/validate/exception',
+    ]  # Facilitates the migration of users who registered the URLs in Ogone's backend prior to 14.3
 
     @http.route(
         _flexcheckout_return_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False
@@ -69,7 +78,8 @@ class OgoneController(http.Controller):
             return werkzeug.utils.redirect('/payment/status')
 
     @http.route(
-        _directlink_return_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False
+        [_directlink_return_url] + _backward_compatibility_urls, type='http', auth='public',
+        methods=['GET', 'POST'], csrf=False
     )  # 'GET' or 'POST' depending on the configuration in Ogone backend
     def ogone_return_from_directlink(self, **feedback_data):
         """ Process the data returned by Ogone after redirection to Directlink authentication page.
