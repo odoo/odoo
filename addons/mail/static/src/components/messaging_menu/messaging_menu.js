@@ -31,8 +31,6 @@ export class MessagingMenu extends Component {
         useShouldUpdateBasedOnProps();
 
         // bind since passed as props
-        this._onMobileNewMessageInputSelect = this._onMobileNewMessageInputSelect.bind(this);
-        this._onMobileNewMessageInputSource = this._onMobileNewMessageInputSource.bind(this);
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
         this._constructor(...args);
     }
@@ -154,41 +152,6 @@ export class MessagingMenu extends Component {
     _onHideMobileNewMessage(ev) {
         ev.stopPropagation();
         this.messagingMenu.toggleMobileNewMessage();
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     * @param {Object} ui
-     * @param {Object} ui.item
-     * @param {integer} ui.item.id
-     */
-    _onMobileNewMessageInputSelect(ev, ui) {
-        this.env.messaging.openChat({ partnerId: ui.item.id });
-    }
-
-    /**
-     * @private
-     * @param {Object} req
-     * @param {string} req.term
-     * @param {function} res
-     */
-    _onMobileNewMessageInputSource(req, res) {
-        const value = _.escape(req.term);
-        this.env.models['mail.partner'].imSearch({
-            callback: partners => {
-                const suggestions = partners.map(partner => {
-                    return {
-                        id: partner.id,
-                        value: partner.nameOrDisplayName,
-                        label: partner.nameOrDisplayName,
-                    };
-                });
-                res(_.sortBy(suggestions, 'label'));
-            },
-            keyword: value,
-            limit: 10,
-        });
     }
 
     /**

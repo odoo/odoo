@@ -43,8 +43,8 @@
                                     customClass="id + '_mobileNewMessageInputAutocomplete'"
                                     isFocusOnMount="true"
                                     placeholder="mobileNewMessageInputPlaceholder"
-                                    select="_onMobileNewMessageInputSelect"
-                                    source="_onMobileNewMessageInputSource"
+                                    select="discuss.handleAddChatAutocompleteSelect.bind(discuss)"
+                                    source="discuss.handleAddChatAutocompleteSource.bind(discuss)"
                                     t-on-o-hide="_onHideMobileNewMessage"
                                 />
                             </t>
