@@ -975,7 +975,12 @@ class TestReports(TestReportsCommon):
             'move_dest_ids': [(4, delivery2.move_lines[0].id)],
         })
         receipt.action_confirm()
-        self.env['base'].flush()
+
+        # Test compute _compute_forecast_information
+        self.assertEqual(delivery.move_lines.forecast_availability, 0.0)
+        self.assertEqual(delivery2.move_lines.forecast_availability, 200)
+        self.assertFalse(delivery.move_lines.forecast_expected_date)
+        self.assertEqual(delivery2.move_lines.forecast_expected_date, receipt.move_lines.date)
 
         _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
 
@@ -1030,7 +1035,12 @@ class TestReports(TestReportsCommon):
             'move_dest_ids': [(4, delivery2.move_lines[0].id)],
         })
         receipt.action_confirm()
-        self.env['base'].flush()
+
+        # Test compute _compute_forecast_information
+        self.assertEqual(delivery.move_lines.forecast_availability, 100)
+        self.assertEqual(delivery2.move_lines.forecast_availability, 200)
+        self.assertEqual(delivery.move_lines.forecast_expected_date, receipt.move_lines.date)
+        self.assertEqual(delivery2.move_lines.forecast_expected_date, receipt.move_lines.date)
 
         _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
 
@@ -1044,7 +1054,7 @@ class TestReports(TestReportsCommon):
 
     def test_report_forecast_10_report_line_corresponding_to_picking_highlighted(self):
         """ When accessing the report from a stock move, checks if the correct picking is highlighted in the report
-            and if the forecasted availability for incoming moves is correct
+            and if the forecasted availability for incoming and outcoming moves is correct
         """
         # Creation of one delivery with date 'today'
         delivery_form = Form(self.env['stock.picking'])
@@ -1058,29 +1068,53 @@ class TestReports(TestReportsCommon):
         delivery1.action_confirm()
 
         # Creation of one receipt with date 'today + 1' and smaller qty than the delivery
+        scheduled_date1 = datetime.now() + timedelta(days=1)
         receipt_form = Form(self.env['stock.picking'])
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        receipt_form.scheduled_date = date.today() + timedelta(days=1)
+        receipt_form.scheduled_date = scheduled_date1
         with receipt_form.move_ids_without_package.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 150
         receipt1 = receipt_form.save()
         receipt1.action_confirm()
         self.assertEqual(receipt1.move_lines.forecast_availability, -50.0)
+        self.assertEqual(delivery1.move_lines.forecast_availability, 150)
+        self.assertEqual(delivery1.move_lines.forecast_expected_date, scheduled_date1)
 
         # Creation of an identical receipt which should lead to a positive forecast availability
-        receipt2 = receipt1.copy()
+        scheduled_date2 = datetime.now() + timedelta(days=3)
+        receipt_form = Form(self.env['stock.picking'])
+        receipt_form.partner_id = self.partner
+        receipt_form.picking_type_id = self.picking_type_in
+        receipt_form.scheduled_date = scheduled_date2
+        with receipt_form.move_ids_without_package.new() as move:
+            move.product_id = self.product
+            move.product_uom_qty = 150
+        receipt2 = receipt_form.save()
         receipt2.action_confirm()
         for move in receipt2.move_lines:
             move.quantity_done = 150
+
+        # Check forecast_information of delivery1
+        delivery1.move_lines._compute_forecast_information()  # Because depends not "complete"
+        self.assertEqual(delivery1.move_lines.forecast_availability, 200)
+        self.assertEqual(delivery1.move_lines.forecast_expected_date, scheduled_date2)
+
         receipt2.button_validate()
         self.assertEqual(receipt1.move_lines.forecast_availability, 100.0)
 
+        # Check forecast_information of delivery1, because the receipt2 as been validate the forecast_expected_date == receipt1.scheduled_date
+        delivery1.move_lines._compute_forecast_information()
+        self.assertEqual(delivery1.move_lines.forecast_availability, 200)
+        self.assertEqual(delivery1.move_lines.forecast_expected_date, scheduled_date1)
+
         delivery2 = delivery1.copy()
+        delivery2_form = Form(delivery2)
+        delivery2_form.scheduled_date = datetime.now() + timedelta(days=1)
+        delivery2 = delivery2_form.save()
         delivery2.action_confirm()
-        receipt1.move_lines._compute_forecast_information()
-        self.assertEqual(receipt1.move_lines.forecast_availability, -100.0)
+        self.assertEqual(delivery2.move_lines.forecast_availability, 100)
 
         # Check for both deliveries and receipts if the highlight (is_matched) corresponds to the correct picking
         for picking in [delivery1, delivery2, receipt1, receipt2]:
@@ -1173,6 +1207,22 @@ class TestReports(TestReportsCommon):
         self.assertEqual(lines[1]['document_out'].id, delivery_at_confirm.id)
         self.assertEqual(lines[2]['document_out'].id, delivery_by_date_priority.id)
         self.assertEqual(lines[3]['document_out'].id, delivery_manual.id)
+
+        all_delivery = delivery_by_date | delivery_at_confirm | delivery_by_date_priority | delivery_manual
+        self.assertEqual(all_delivery.move_lines.mapped("forecast_availability"), [0, 0, 0, 0])
+
+        # Creation of one receipt to fulfill the 2 first deliveries delivery_by_date and delivery_at_confirm
+        receipt_form = Form(self.env['stock.picking'])
+        receipt_form.partner_id = self.partner
+        receipt_form.picking_type_id = self.picking_type_in
+        receipt_form.scheduled_date = date.today() + timedelta(days=1)
+        with receipt_form.move_ids_without_package.new() as move:
+            move.product_id = self.product
+            move.product_uom_qty = 6
+        receipt1 = receipt_form.save()
+        receipt1.action_confirm()
+
+        self.assertEqual(all_delivery.move_lines.mapped("forecast_availability"), [3, 3, 0, 0])
 
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
