@@ -22,7 +22,8 @@ class TestMenusAdmin(odoo.tests.HttpCase):
 class TestMenusDemo(odoo.tests.HttpCase):
 
     def test_01_click_everywhere_as_demo(self):
-        menus = self.env['ir.ui.menu'].load_menus(False)
+        user_demo = self.env.ref("base.user_demo")
+        menus = self.env['ir.ui.menu'].with_user(user_demo.id).load_menus(False)
         for app_id in menus['root']['children']:
             with self.subTest(app=menus[app_id]['name']):
                 _logger.runbot('Testing %s', menus[app_id]['name'])
