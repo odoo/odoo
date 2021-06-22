@@ -107,7 +107,6 @@ class ReplenishmentReport(models.AbstractModel):
         return res
 
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reservation=False):
-        timezone = self._context.get('tz')
         product = product or (move_out.product_id if move_out else move_in.product_id)
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
 
@@ -142,10 +141,11 @@ class ReplenishmentReport(models.AbstractModel):
                     _rollup_move_dests(dst, seen)
             return seen
 
-        def _reconcile_out_with_ins(lines, out, ins, demand, only_matching_move_dest=True):
+        def _reconcile_out_with_ins(lines, out, ins, demand, product_rounding, only_matching_move_dest=True):
             index_to_remove = []
             for index, in_ in enumerate(ins):
-                if float_is_zero(in_['qty'], precision_rounding=out.product_id.uom_id.rounding):
+                if float_is_zero(in_['qty'], precision_rounding=product_rounding):
+                    index_to_remove.append(index)
                     continue
                 if only_matching_move_dest and in_['move_dests'] and out.id not in in_['move_dests']:
                     continue
@@ -155,10 +155,10 @@ class ReplenishmentReport(models.AbstractModel):
                 in_['qty'] -= taken_from_in
                 if in_['qty'] <= 0:
                     index_to_remove.append(index)
-                if float_is_zero(demand, precision_rounding=out.product_id.uom_id.rounding):
+                if float_is_zero(demand, precision_rounding=product_rounding):
                     break
-            for index in index_to_remove[::-1]:
-                ins.pop(index)
+            for index in reversed(index_to_remove):
+                del ins[index]
             return demand
 
         in_domain, out_domain = self._move_confirmed_domain(
@@ -168,14 +168,14 @@ class ReplenishmentReport(models.AbstractModel):
         reserved_outs = self.env['stock.move'].search(
             out_domain + [('state', 'in', ('partially_available', 'assigned'))],
             order='priority desc, date, id')
-        outs_per_product = defaultdict(lambda: [])
-        reserved_outs_per_product = defaultdict(lambda: [])
+        outs_per_product = defaultdict(list)
+        reserved_outs_per_product = defaultdict(list)
         for out in outs:
             outs_per_product[out.product_id.id].append(out)
         for out in reserved_outs:
             reserved_outs_per_product[out.product_id.id].append(out)
         ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
-        ins_per_product = defaultdict(lambda: [])
+        ins_per_product = defaultdict(list)
         for in_ in ins:
             ins_per_product[in_.product_id.id].append({
                 'qty': in_.product_qty,
@@ -186,8 +186,10 @@ class ReplenishmentReport(models.AbstractModel):
 
         lines = []
         for product in (ins | outs).product_id:
+            product_rounding = product.uom_id.rounding
             for out in reserved_outs_per_product[product.id]:
-                current = currents[out.product_id.id]
+                # Reconcile with reserved stock.
+                current = currents[product.id]
                 reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
                 currents[product.id] -= reserved
                 lines.append(self._prepare_report_line(reserved, move_out=out, reservation=True))
@@ -195,35 +197,38 @@ class ReplenishmentReport(models.AbstractModel):
             unreconciled_outs = []
             for out in outs_per_product[product.id]:
                 # Reconcile with the current stock.
-                current = currents[out.product_id.id]
                 reserved = 0.0
                 if out.state in ('partially_available', 'assigned'):
                     reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
                 demand = out.product_qty - reserved
+
+                if float_is_zero(demand, precision_rounding=product_rounding):
+                    continue
+                current = currents[product.id]
                 taken_from_stock = min(demand, current)
-                if not float_is_zero(taken_from_stock, precision_rounding=product.uom_id.rounding):
+                if not float_is_zero(taken_from_stock, precision_rounding=product_rounding):
                     currents[product.id] -= taken_from_stock
                     demand -= taken_from_stock
                     lines.append(self._prepare_report_line(taken_from_stock, move_out=out))
                 # Reconcile with the ins.
-                if not float_is_zero(demand, precision_rounding=product.uom_id.rounding):
-                    demand = _reconcile_out_with_ins(lines, out, ins_per_product[out.product_id.id], demand, only_matching_move_dest=True)
-                if not float_is_zero(demand, precision_rounding=product.uom_id.rounding):
+                if not float_is_zero(demand, precision_rounding=product_rounding):
+                    demand = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand, product_rounding, only_matching_move_dest=True)
+                if not float_is_zero(demand, precision_rounding=product_rounding):
                     unreconciled_outs.append((demand, out))
-            if unreconciled_outs:
-                for (demand, out) in unreconciled_outs:
-                    # Another pass, in case there are some ins linked to a dest move but that still have some quantity available
-                    demand = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand, only_matching_move_dest=False)
-                    if not float_is_zero(demand, precision_rounding=product.uom_id.rounding):
-                        # Not reconciled
-                        lines.append(self._prepare_report_line(demand, move_out=out, replenishment_filled=False))
+
+            # Another pass, in case there are some ins linked to a dest move but that still have some quantity available
+            for (demand, out) in unreconciled_outs:
+                demand = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand, product_rounding, only_matching_move_dest=False)
+                if not float_is_zero(demand, precision_rounding=product_rounding):
+                    # Not reconciled
+                    lines.append(self._prepare_report_line(demand, move_out=out, replenishment_filled=False))
             # Unused remaining stock.
             free_stock = currents.get(product.id, 0)
-            if not float_is_zero(free_stock, precision_rounding=product.uom_id.rounding):
+            if not float_is_zero(free_stock, precision_rounding=product_rounding):
                 lines.append(self._prepare_report_line(free_stock, product=product))
             # In moves not used.
             for in_ in ins_per_product[product.id]:
-                if float_is_zero(in_['qty'], precision_rounding=product.uom_id.rounding):
+                if float_is_zero(in_['qty'], precision_rounding=product_rounding):
                     continue
                 lines.append(self._prepare_report_line(in_['qty'], move_in=in_['move']))
         return lines
