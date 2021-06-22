@@ -13,12 +13,22 @@
     position: relative;
     @extend .font-weight-bold;
 
-    &:not(.o_dropdown_item_active_noarrow):before {
-      @include o-position-absolute(0);
-      transform: translate(-1.5em, 90%);
-      font: .7em/1em FontAwesome;
-      color: $primary;
-      content: "\f00c";
+    &:focus, &:hover  {
+      background-color: $dropdown-link-hover-bg;
+    }
+
+    &:not(.o_dropdown_item_active_noarrow) {
+      &:before {
+        @include o-position-absolute(0);
+        transform: translate(-1.5em, 90%);
+        font: .7em/1em FontAwesome;
+        color: $primary;
+        content: "\f00c";
+      }
+
+      &.disabled:before {
+        color: $dropdown-link-disabled-color;
+      }
     }
   }
 
@@ -71,6 +81,9 @@
       }
       &.selected > :first-child {
         @extend .active;
+      }
+      &.disabled > :first-child {
+        @extend .disabled;
       }
     }
   }
