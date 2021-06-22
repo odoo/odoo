@@ -3607,7 +3607,10 @@ var FieldReference = FieldMany2One.extend({
             this.$('.o_input_dropdown').show();
             if (!this.nodeOptions.model_field) {
                 // this class is used to display the two components (select & input) on the same line
-                this.$el.addClass('o_row');
+                if (this.nodeOptions.hide_model) {
+                    this.$el.addClass('o_row');
+                }
+                this.$el.find('.o_field_many2one_selection').addClass('o_row');
             }
         } else {
             // hide the many2one if the selection is empty
