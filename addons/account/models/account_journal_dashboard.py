@@ -486,10 +486,11 @@ class account_journal(models.Model):
 
     def to_check_ids(self):
         self.ensure_one()
-        domain = self.env['account.move.line']._get_suspense_moves_domain()
-        domain.append(('journal_id', '=', self.id))
-        statement_line_ids = self.env['account.move.line'].search(domain).mapped('statement_line_id')
-        return statement_line_ids
+        return self.env['account.bank.statement.line'].search([
+            ('journal_id', '=', self.id),
+            ('move_id.to_check', '=', True),
+            ('move_id.state', '=', 'posted'),
+        ])
 
     def _select_action_to_open(self):
         self.ensure_one()

@@ -59,7 +59,14 @@ class TestExpenses(TestExpenseCommon):
             ],
         })
         statement.button_post()
-        statement.line_ids.reconcile([{'id': liquidity_lines1.id}, {'id': liquidity_lines2.id}])
+        statement_line = statement.line_ids
+
+        # Reconcile without the bank reconciliation widget since the widget is in enterprise.
+        _st_liquidity_lines, st_suspense_lines, _st_other_lines = statement_line\
+            .with_context(skip_account_move_synchronization=True)\
+            ._seek_for_lines()
+        st_suspense_lines.account_id = liquidity_lines1.account_id
+        (st_suspense_lines + liquidity_lines1 + liquidity_lines2).reconcile()
 
         self.assertEqual(expense_sheet.payment_state, 'paid', 'payment_state should be paid')
 
