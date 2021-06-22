@@ -32,20 +32,20 @@ class AccountPayment(models.Model):
     )
     third_check_bank_id = fields.Many2one(
         'res.bank',
-        readonly=True,
-        states={'draft': [('readonly', False)]},
+        readonly=False,
+        states={'cancel': [('readonly', True)], 'posted': [('readonly', True)]},
         compute='_compute_third_check_data',
         store=True,
     )
     third_check_issuer_vat = fields.Char(
-        readonly=True,
-        states={'draft': [('readonly', False)]},
-        store=True,
+        readonly=False,
+        states={'cancel': [('readonly', True)], 'posted': [('readonly', True)]},
         compute='_compute_third_check_data',
+        store=True,
     )
     third_check_issuer_name = fields.Char(
-        readonly=True,
-        states={'draft': [('readonly', False)]},
+        readonly=False,
+        states={'cancel': [('readonly', True)], 'posted': [('readonly', True)]},
         compute='_compute_third_check_issuer_name',
         store=True,
     )
@@ -58,7 +58,7 @@ class AccountPayment(models.Model):
     @api.depends('payment_method_id.code', 'partner_id')
     def _compute_third_check_data(self):
         new_third_checks = self.filtered(lambda x: x.payment_method_id.code == 'new_third_checks')
-        (self - new_third_checks).update({'third_check_bank_id': False, 'third_check_issuer_vat': False, 'third_check_issue_date': False})
+        # (self - new_third_checks).update({'third_check_bank_id': False, 'third_check_issuer_vat': False, 'third_check_issue_date': False})
         for rec in new_third_checks:
             rec.update({
                 'third_check_bank_id': rec.partner_id.bank_ids and rec.partner_id.bank_ids[0].bank_id or False,
@@ -66,14 +66,14 @@ class AccountPayment(models.Model):
                 'third_check_issue_date': fields.Date.context_today(rec),
             })
 
-    @api.depends('third_check_issuer_vat')
+    @api.depends('third_check_issuer_vat', 'payment_method_id.code', 'partner_id')
     def _compute_third_check_issuer_name(self):
         """ We suggest owner name from owner vat """
-        with_vat = self.filtered(lambda x: x.third_check_issuer_vat)
-        (self - with_vat).third_check_issuer_name = False
-        for rec in with_vat:
-            rec.third_check_issuer_name = self.search(
-                [('third_check_issuer_vat', '=', self.third_check_issuer_vat)], limit=1).third_check_issuer_name or self.partner_id.name
+        new_third_checks = self.filtered(lambda x: x.payment_method_id.code == 'new_third_checks')
+        # (self - new_third_checks).third_check_issuer_name = False
+        for rec in new_third_checks:
+            rec.third_check_issuer_name = rec.third_check_issuer_vat and self.search(
+                [('third_check_issuer_vat', '=', rec.third_check_issuer_vat)], limit=1).third_check_issuer_name or rec.partner_id.name
 
     @api.depends('payment_method_id.code', 'partner_id', 'is_internal_transfer', 'journal_id')
     def _compute_available_checks(self):
@@ -156,6 +156,16 @@ class AccountPayment(models.Model):
     @api.onchange('available_check_ids')
     def reset_check_ids(self):
         self.check_id = False
+
+    # TODO improve this, actually is harcoded to argentina the 8 digits number
+    @api.onchange('check_number')
+    def _onchange_check_number(self):
+        for rec in self:
+            try:
+                if rec.check_number:
+                    rec.check_number = '%08d' % int(rec.check_number)
+            except Exception:
+                pass
 
     # @api.depends('payment_method_code')
     # def _compute_check_type(self):

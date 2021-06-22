@@ -23,8 +23,8 @@
                         options="{'no_create': True}"
                     />
                     <field name="check_number" readonly="0" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
-                    <field name="check_payment_date" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')]}"/>
                     <field name="third_check_issue_date" string="Check Issue Date" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
+                    <field name="check_payment_date" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')]}"/>
                     <field name="third_check_bank_id" string="Check Bank" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
                     <field name="third_check_issuer_vat" string="Check Issuer Vat" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
                     <field name="third_check_issuer_name" string="Check Issuer" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
