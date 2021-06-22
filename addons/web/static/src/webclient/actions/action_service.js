@@ -472,6 +472,7 @@ function makeActionManager(env) {
                     }).then(() => {
                         dialogCloseProm = undefined;
                     });
+                    dialog = nextDialog;
                 } else {
                     // LEGACY CODE COMPATIBILITY: remove when controllers will be written in owl
                     // we determine here which actions no longer occur in the nextStack,
@@ -529,6 +530,7 @@ function makeActionManager(env) {
 
         ControllerComponent.Component = controller.Component;
 
+        let nextDialog = {};
         if (action.target === "new") {
             cleanDomFromBootstrap();
             const actionDialogProps = {
@@ -556,7 +558,7 @@ function makeActionManager(env) {
                     }
                 },
             });
-            dialog = {
+            nextDialog = {
                 remove: removeDialog,
                 onClose: onClose || options.onClose,
             };
