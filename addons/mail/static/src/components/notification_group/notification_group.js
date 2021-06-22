@@ -56,21 +56,7 @@ export class NotificationGroup extends Component {
             // handled in `_onClickMarkAsRead`
             return;
         }
-        this.group.openDocuments();
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.messagingMenu.close();
-        }
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickMarkAsRead(ev) {
-        this.group.openCancelAction();
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.messagingMenu.close();
-        }
+        this.group.onClickGroup();
     }
 
 }

@@ -13,6 +13,26 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
+         * Handle onClick on a grouped notification.
+         */
+        onClickGroup() {
+            this.openDocuments();
+            if (!this.env.messaging.device.isMobile) {
+                this.env.messaging.messagingMenu.close();
+            }
+        }
+
+        /**
+         * Handle onClick on the mark as read button.
+         */
+        onClickMarkAsRead() {
+            this.openCancelAction();
+            if (!this.env.messaging.device.isMobile) {
+                this.env.messaging.messagingMenu.close();
+            }
+        }
+
+        /**
          * Opens the view that allows to cancel all notifications of the group.
          */
         openCancelAction() {
