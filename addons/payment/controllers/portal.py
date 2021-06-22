@@ -5,6 +5,7 @@ import werkzeug
 
 from odoo import _, http
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Command
 from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
@@ -41,7 +42,7 @@ class PaymentPortal(portal.CustomerPortal):
     )
     def payment_pay(
         self, reference=None, amount=None, currency_id=None, partner_id=None, company_id=None,
-        acquirer_id=None, access_token=None, **kwargs
+        acquirer_id=None, access_token=None, invoice_id=None, **kwargs
     ):
         """ Display the payment form with optional filtering of payment options.
 
@@ -62,14 +63,15 @@ class PaymentPortal(portal.CustomerPortal):
         :param str company_id: The related company, as a `res.company` id
         :param str acquirer_id: The desired acquirer, as a `payment.acquirer` id
         :param str access_token: The access token used to authenticate the partner
+        :param str invoice_id: The account move for which a payment id made, as a `account.move` id
         :param dict kwargs: Optional data. This parameter is not used here
         :return: The rendered checkout form
         :rtype: str
         :raise: werkzeug.exceptions.NotFound if the access token is invalid
         """
         # Cast numeric parameters as int or float and void them if their str value is malformed
-        currency_id, acquirer_id, partner_id, company_id = tuple(map(
-            self.cast_as_int, (currency_id, acquirer_id, partner_id, company_id)
+        currency_id, acquirer_id, partner_id, company_id, invoice_id = tuple(map(
+            self.cast_as_int, (currency_id, acquirer_id, partner_id, company_id, invoice_id)
         ))
         amount = self.cast_as_float(amount)
 
@@ -140,6 +142,7 @@ class PaymentPortal(portal.CustomerPortal):
             'transaction_route': '/payment/transaction',
             'landing_route': '/payment/confirmation',
             'partner_is_different': partner_is_different,
+            'invoice_id': invoice_id,
             **self._get_custom_rendering_context_values(**kwargs),
         }
         return request.render('payment.pay', rendering_context)
@@ -222,7 +225,8 @@ class PaymentPortal(portal.CustomerPortal):
 
     def _create_transaction(
         self, payment_option_id, reference_prefix, amount, currency_id, partner_id, flow,
-        tokenization_requested, validation_route, landing_route, custom_create_values=None, **kwargs
+        tokenization_requested, validation_route, landing_route, invoice_id=None,
+        custom_create_values=None, **kwargs
     ):
         """ Create a draft transaction based on the payment context and return it.
 
@@ -239,6 +243,7 @@ class PaymentPortal(portal.CustomerPortal):
         :param str validation_route: The route the user is redirected to in order to refund a
                                      validation transaction
         :param str landing_route: The route the user is redirected to after the transaction
+        :param int|None invoice_id: The account move for which a payment id made, as a `account.move` id
         :param dict custom_create_values: Additional create values overwriting the default ones
         :param dict kwargs: Locally unused data passed to `_is_tokenization_required` and
                             `_compute_reference`
@@ -270,6 +275,12 @@ class PaymentPortal(portal.CustomerPortal):
             raise UserError(
                 _("The payment should either be direct, with redirection, or made by a token.")
             )
+
+        if invoice_id:
+            if custom_create_values is None:
+                custom_create_values = {}
+            custom_create_values['invoice_ids'] = [Command.set([int(invoice_id)])]
+
         reference = request.env['payment.transaction']._compute_reference(
             acquirer_sudo.provider,
             prefix=reference_prefix,

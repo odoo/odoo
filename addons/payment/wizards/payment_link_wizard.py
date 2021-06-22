@@ -75,4 +75,5 @@ class PaymentLinkWizard(models.TransientModel):
                    f'&currency_id={payment_link.currency_id.id}' \
                    f'&partner_id={payment_link.partner_id.id}' \
                    f'&company_id={payment_link.company_id.id}' \
+                   f'&invoice_id={payment_link.res_id}' \
                    f'&access_token={payment_link.access_token}'
