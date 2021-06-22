@@ -368,9 +368,6 @@ class AccountMove(models.Model):
     invoice_filter_type_domain = fields.Char(compute='_compute_invoice_filter_type_domain',
         help="Technical field used to have a dynamic domain on journal / taxes in the form view.")
     bank_partner_id = fields.Many2one('res.partner', help='Technical field to get the domain on the bank', compute='_compute_bank_partner_id')
-    invoice_has_matching_suspense_amount = fields.Boolean(compute='_compute_has_matching_suspense_amount',
-        groups='account.group_account_invoice,account.group_account_readonly',
-        help="Technical field used to display an alert on invoices if there is at least a matching amount in any supsense account.")
     tax_lock_date_message = fields.Char(
         compute='_compute_tax_lock_date_message',
         help="Technical field used to display a message when the invoice's accounting date is prior of the tax lock date.")
@@ -1530,33 +1527,6 @@ class AccountMove(models.Model):
                     }))
 
             move.write({'line_ids': to_write})
-
-    def _get_domain_matching_suspense_moves(self):
-        self.ensure_one()
-        domain = self.env['account.move.line']._get_suspense_moves_domain()
-        domain += ['|', ('partner_id', '=?', self.partner_id.id), ('partner_id', '=', False)]
-        if self.is_inbound():
-            domain.append(('balance', '=', -self.amount_residual))
-        else:
-            domain.append(('balance', '=', self.amount_residual))
-        return domain
-
-    def _compute_has_matching_suspense_amount(self):
-        for r in self:
-            res = False
-            if r.state == 'posted' and r.is_invoice() and r.payment_state == 'not_paid':
-                domain = r._get_domain_matching_suspense_moves()
-                #there are more than one but less than 5 suspense moves matching the residual amount
-                if (0 < self.env['account.move.line'].search_count(domain) < 5):
-                    domain2 = [
-                        ('payment_state', '=', 'not_paid'),
-                        ('state', '=', 'posted'),
-                        ('amount_residual', '=', r.amount_residual),
-                        ('move_type', '=', r.move_type)]
-                    #there are less than 5 other open invoices of the same type with the same residual
-                    if self.env['account.move'].search_count(domain2) < 5:
-                        res = True
-            r.invoice_has_matching_suspense_amount = res
 
     @api.depends('partner_id', 'invoice_source_email', 'partner_id.name')
     def _compute_invoice_partner_display_info(self):
@@ -2904,12 +2874,6 @@ class AccountMove(models.Model):
             move.to_check = False
 
     def button_draft(self):
-        AccountMoveLine = self.env['account.move.line']
-        excluded_move_ids = []
-
-        if self._context.get('suspense_moves_mode'):
-            excluded_move_ids = AccountMoveLine.search(AccountMoveLine._get_suspense_moves_domain() + [('move_id', 'in', self.ids)]).mapped('move_id').ids
-
         for move in self:
             if move in move.line_ids.mapped('full_reconcile_id.exchange_move_id'):
                 raise UserError(_('You cannot reset to draft an exchange difference journal entry.'))
@@ -2920,7 +2884,7 @@ class AccountMove(models.Model):
                 # so we also check tax_cash_basis_origin_move_id, which stays unchanged
                 # (we need both, as tax_cash_basis_origin_move_id did not exist in older versions).
                 raise UserError(_('You cannot reset to draft a tax cash basis journal entry.'))
-            if move.restrict_mode_hash_table and move.state == 'posted' and move.id not in excluded_move_ids:
+            if move.restrict_mode_hash_table and move.state == 'posted':
                 raise UserError(_('You cannot modify a posted entry of this journal because it is in strict mode.'))
             # We remove all the analytics entries for this journal
             move.mapped('line_ids.analytic_line_ids').unlink()
@@ -3395,7 +3359,7 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
     _description = "Journal Item"
-    _order = "date desc, move_name desc, id"
+    _order = "date desc, move_name desc, sequence, id"
     _check_company_auto = True
 
     # ==== Business fields ====
@@ -5783,13 +5747,35 @@ class AccountMoveLine(models.Model):
         action['context'] = ctx
         return action
 
-    @api.model
-    def _get_suspense_moves_domain(self):
-        return [
-            ('move_id.to_check', '=', True),
-            ('full_reconcile_id', '=', False),
-            ('statement_line_id', '!=', False),
-        ]
+    def action_open_business_doc_from_aml(self):
+        self.ensure_one()
+
+        if self.payment_id:
+            name = _("Payment")
+            res_model = 'account.payment'
+            res_id = self.payment_id.id
+        elif self.statement_line_id:
+            name = _("Bank Transaction")
+            res_model = 'account.bank.statement.line'
+            res_id = self.statement_line_id.id
+        else:
+            name = _("Journal Entry")
+            res_model = 'account.move'
+            res_id = self.move_id.id
+
+        return {
+            'name': name,
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_id': self.env.ref('account.view_move_form').id,
+            'res_model': res_model,
+            'res_id': res_id,
+            'context': {
+                'create': False,
+                'delete': False,
+            },
+            'target': 'current',
+        }
 
     def _get_attachment_domains(self):
         self.ensure_one()

@@ -254,6 +254,32 @@ class ResCompany(models.Model):
             if account.code.startswith(old_code):
                 account.write({'code': self.get_new_account_code(account.code, old_code, new_code)})
 
+    def _get_fiscalyear_lock_statement_lines_redirect_action(self, unreconciled_statement_lines):
+        """ Get the action redirecting to the statement lines that are not already reconciled when setting a fiscal
+        year lock date.
+
+        :param unreconciled_statement_lines: The statement lines.
+        :return: A dictionary representing a window action.
+        """
+        statements = unreconciled_statement_lines.statement_id
+        action = {
+            'name': _("Unreconciled Statements"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.bank.statement',
+            'context': {'create': False},
+        }
+        if len(statements) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': statements.id,
+            })
+        else:
+            action.update({
+                'view_mode': 'list,form',
+                'domain': [('id', 'in', statements.ids)],
+            })
+        return action
+
     def _validate_fiscalyear_lock(self, values):
         if values.get('fiscalyear_lock_date'):
 
@@ -283,11 +309,7 @@ class ResCompany(models.Model):
             if unreconciled_statement_lines:
                 error_msg = _("There are still unreconciled bank statement lines in the period you want to lock."
                             "You should either reconcile or delete them.")
-                action_error = {
-                    'type': 'ir.actions.client',
-                    'tag': 'bank_statement_reconciliation_view',
-                    'context': {'statement_line_ids': unreconciled_statement_lines.ids, 'company_ids': self.ids},
-                }
+                action_error = self._get_fiscalyear_lock_statement_lines_redirect_action(unreconciled_statement_lines)
                 raise RedirectWarning(error_msg, action_error, _('Show Unreconciled Bank Statement Line'))
 
     def _get_user_fiscal_lock_date(self):

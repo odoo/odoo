@@ -731,7 +731,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         payment.action_post()
         invoice.action_post()
 
-        (counterpart_lines + invoice.line_ids.filtered(lambda line: line.account_internal_type == 'receivable'))\
+        (counterpart_lines + invoice.line_ids.filtered(lambda line: line.account_internal_type == 'receivable')) \
             .reconcile()
 
         self.assertRecordValues(payment, [{
@@ -753,7 +753,12 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         statement.button_post()
         statement_line = statement.line_ids
 
-        statement_line.reconcile([{'id': liquidity_lines.id}])
+        # Reconcile without the bank reconciliation widget since the widget is in enterprise.
+        _st_liquidity_lines, st_suspense_lines, _st_other_lines = statement_line\
+            .with_context(skip_account_move_synchronization=True)\
+            ._seek_for_lines()
+        st_suspense_lines.account_id = liquidity_lines.account_id
+        (st_suspense_lines + liquidity_lines).reconcile()
 
         self.assertRecordValues(payment, [{
             'is_reconciled': True,
