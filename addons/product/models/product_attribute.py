@@ -172,7 +172,13 @@ class ProductTemplateAttributeLine(models.Model):
     attribute_id = fields.Many2one('product.attribute', string="Attribute", ondelete='restrict', required=True, index=True)
     value_ids = fields.Many2many('product.attribute.value', string="Values", domain="[('attribute_id', '=', attribute_id)]",
         relation='product_attribute_value_product_template_attribute_line_rel', ondelete='restrict')
+    value_count = fields.Integer(compute='_compute_value_count', store=True)
     product_template_value_ids = fields.One2many('product.template.attribute.value', 'attribute_line_id', string="Product Attribute Values")
+
+    @api.depends('value_ids')
+    def _compute_value_count(self):
+        for record in self:
+            record.value_count = len(record.value_ids)
 
     @api.onchange('attribute_id')
     def _onchange_attribute_id(self):
