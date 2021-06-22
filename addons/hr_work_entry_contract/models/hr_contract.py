@@ -161,13 +161,19 @@ class HrContract(models.Model):
         for contract in self:
             # If we generate work_entries which exceeds date_start or date_stop, we change boundaries on contract
             if contract_vals:
-                date_stop_max = max([x['date_stop'] for x in contract_vals if x['contract_id'] == contract.id])
-                if date_stop_max > contract.date_generated_to:
-                    contract.date_generated_to = date_stop_max
+                #Handle empty work entries for certain contracts, could happen on an attendance based contract
+                #NOTE: this does not handle date_stop or date_start not being present in vals
+                dates_stop = [x['date_stop'] for x in contract_vals if x['contract_id'] == contract.id]
+                if dates_stop:
+                    date_stop_max = max(dates_stop)
+                    if date_stop_max > contract.date_generated_to:
+                        contract.date_generated_to = date_stop_max
 
-                date_start_min = min([x['date_start'] for x in contract_vals if x['contract_id'] == contract.id])
-                if date_start_min < contract.date_generated_from:
-                    contract.date_generated_from = date_start_min
+                dates_start = [x['date_start'] for x in contract_vals if x['contract_id'] == contract.id]
+                if dates_start:
+                    date_start_min = min(dates_start)
+                    if date_start_min < contract.date_generated_from:
+                        contract.date_generated_from = date_start_min
 
         return contract_vals
 
