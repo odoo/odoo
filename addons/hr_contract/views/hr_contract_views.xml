@@ -160,7 +160,7 @@
                                 <field name="structure_type_id" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]" options="{'no_open': True, 'no_create': True}"/>
                                 <field name="calendar_mismatch" invisible="1"/>
                                 <label for="resource_calendar_id"/>
-                                <div>
+                                <div id="resource_calendar_warning">
                                     <field name="resource_calendar_id" required="1" nolabel="1" options="{'no_open': True, 'no_create': True}"/>
                                     <span attrs="{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', '!=', 'open')]}"
                                         class="fa fa-exclamation-triangle text-danger o_calendar_warning pl-3">

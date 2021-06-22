@@ -81,6 +81,9 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
         user_date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
         return date.strftime(user_date_format)
 
+    def _work_entry_fields_to_nullify(self):
+        return ['active']
+
     def regenerate_work_entries(self):
         self.ensure_one()
         if not self.env.context.get('work_entry_skip_validation'):
@@ -98,7 +101,8 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
             ('date_start', '<=', date_to),
             ('state', '!=', 'validated')])
 
-        work_entries.write({'active': False})
+        write_vals = {field: False for field in self._work_entry_fields_to_nullify()}
+        work_entries.write(write_vals)
         self.employee_id.generate_work_entries(date_from, date_to, True)
         action = self.env["ir.actions.actions"]._for_xml_id('hr_work_entry.hr_work_entry_action')
         return action
