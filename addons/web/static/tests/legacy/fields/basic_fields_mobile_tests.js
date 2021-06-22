@@ -54,7 +54,7 @@ QUnit.module('basic_fields', {
     QUnit.module('PhoneWidget');
 
     QUnit.test('phone field in form view on extra small screens', async function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         var form = await createView({
             View: FormView,
@@ -70,8 +70,10 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
-        var $phoneLink = form.$('div.o_form_uri.o_field_widget.o_field_phone > a');
+        let $phoneLink = form.$('div.o_form_uri.o_field_widget.o_field_phone > a:not(".o_field_phone_sms")');
         assert.strictEqual($phoneLink.length, 1,
+            "should have a anchor with correct classes");
+        assert.containsOnce(form, 'div.o_form_uri.o_field_widget.o_field_phone > a.o_field_phone_sms',
             "should have a anchor with correct classes");
         assert.strictEqual($phoneLink.text(), 'yop',
             "value should be displayed properly");
@@ -90,7 +92,7 @@ QUnit.module('basic_fields', {
 
         // save
         await testUtils.form.clickSave(form);
-        $phoneLink = form.$('div.o_form_uri.o_field_widget.o_field_phone > a');
+        $phoneLink = form.$('div.o_form_uri.o_field_widget.o_field_phone > a:not(".o_field_phone_sms")');
         assert.strictEqual($phoneLink.text(), 'new',
             "new value should be displayed properly");
         assert.hasAttrValue($phoneLink, 'href', 'tel:new',
@@ -114,7 +116,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) a').first().text(), 'yop',
             "value should be displayed properly");
 
-        var $phoneLink = list.$('div.o_form_uri.o_field_widget.o_field_phone > a');
+        var $phoneLink = list.$('div.o_form_uri.o_field_widget.o_field_phone > a:not(".o_field_phone_sms")');
         assert.strictEqual($phoneLink.length, 3,
             "should have anchors with correct classes");
         assert.hasAttrValue($phoneLink.first(), 'href', 'tel:yop',
@@ -134,7 +136,7 @@ QUnit.module('basic_fields', {
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) a').first().text(), 'new',
             "value should be properly updated");
-        $phoneLink = list.$('div.o_form_uri.o_field_widget.o_field_phone > a');
+        $phoneLink = list.$('div.o_form_uri.o_field_widget.o_field_phone > a:not(".o_field_phone_sms")');
         assert.strictEqual($phoneLink.length, 3,
             "should still have anchors with correct classes");
         assert.hasAttrValue($phoneLink.first(), 'href', 'tel:new',
@@ -168,7 +170,7 @@ QUnit.module('basic_fields', {
 
         // save
         await testUtils.form.clickSave(form);
-        assert.strictEqual(form.$('.o_field_widget').text(), val,
+        assert.strictEqual(form.$('.o_field_widget > a:first').text(), val,
             "value should have been correctly escaped");
 
         form.destroy();

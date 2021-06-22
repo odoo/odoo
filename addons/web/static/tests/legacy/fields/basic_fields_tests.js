@@ -5985,7 +5985,7 @@ QUnit.module('basic_fields', {
             },
         });
 
-        var $phone = form.$('div.o_field_widget.o_form_uri.o_field_phone > a');
+        var $phone = form.$('div.o_field_widget.o_form_uri.o_field_phone > a:not(.o_field_phone_sms)');
         assert.strictEqual($phone.length, 1,
             "should have rendered the phone number as a link with correct classes");
         assert.strictEqual($phone.text(), 'yop',
@@ -6003,7 +6003,7 @@ QUnit.module('basic_fields', {
 
         // save
         await testUtils.form.clickSave(form);
-        assert.strictEqual(form.$('div.o_field_widget.o_form_uri.o_field_phone > a').text(), 'new',
+        assert.strictEqual(form.$('div.o_field_widget.o_form_uri.o_field_phone > a:not(.o_field_phone_sms)').text(), 'new',
             "new value should be displayed properly");
 
         form.destroy();
@@ -6029,7 +6029,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) a').first().text(), 'yop',
             "value should be displayed properly with a link to send SMS");
 
-        assert.containsN(list, 'div.o_field_widget.o_form_uri.o_field_phone > a', 5,
+        assert.containsN(list, 'div.o_field_widget.o_form_uri.o_field_phone > a:not(.o_field_phone_sms)', 5,
             "should have the correct classnames");
 
         // Edit a line and check the result
@@ -6046,7 +6046,7 @@ QUnit.module('basic_fields', {
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) a').first().text(), 'new',
             "value should be properly updated");
-        assert.containsN(list, 'div.o_field_widget.o_form_uri.o_field_phone > a', 5,
+        assert.containsN(list, 'div.o_field_widget.o_form_uri.o_field_phone > a:not(.o_field_phone_sms)', 5,
             "should still have links with correct classes");
 
         list.destroy();

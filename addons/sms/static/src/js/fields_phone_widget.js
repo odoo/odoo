@@ -33,7 +33,7 @@ Phone.include({
      */
     getFocusableElement() {
         if (this.enableSMS && this.mode === 'readonly') {
-            return this.$el.filter('.' + this.className).find('a');
+            return this.$el.find('a:first');
         }
         return this._super.apply(this, arguments);
     },
@@ -88,7 +88,7 @@ Phone.include({
             });
             $composerButton.prepend($('<i>', {class: 'fa fa-mobile'}));
             $composerButton.on('click', this._onClickSMS.bind(this));
-            this.$el = this.$el.add($composerButton);
+            this.$el = this.$el.append($composerButton);
         }
         return def;
     },
