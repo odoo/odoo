@@ -2,6 +2,7 @@
     display: flex;
     float: right;
     margin-right: 7px;
+    width: 100%;
     ul {
         display: flex;
         justify-content: flex-end;
@@ -15,6 +16,7 @@
         > li {
             border: 2px solid white;
             box-shadow: 0 0 0 1px gray('300');
+            margin: $o-kanban-inner-hmargin 4px 0 0;
             > a:focus {
                 outline: none;
             }
