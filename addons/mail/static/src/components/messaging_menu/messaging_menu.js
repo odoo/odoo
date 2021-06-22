@@ -126,7 +126,7 @@ export class MessagingMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickDesktopTabButton(ev) {
-        this.messagingMenu.update({ activeTabId: ev.currentTarget.dataset.tabId });
+        this.messagingMenu.onClickDesktopTabButton(ev);
     }
 
     /**
