@@ -35,16 +35,6 @@ export class FollowerSubtypeList extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Called when clicking on cancel button.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickCancel(ev) {
-        this.followerSubtypeList.follower.closeSubtypes();
-    }
-
-    /**
      * Called when clicking on apply button.
      *
      * @private
