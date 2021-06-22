@@ -3,6 +3,7 @@
 import testUtils from "web.test_utils";
 import core from "web.core";
 import AbstractAction from "web.AbstractAction";
+import { registry } from "@web/core/registry";
 import { legacyExtraNextTick } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
@@ -296,6 +297,30 @@ QUnit.module("ActionManager", (hooks) => {
             assert.strictEqual($(".modal:last .modal-body").text().trim(), "Another action");
         }
     );
+
+    QUnit.test('actions in target="new" do not update page title', async function (assert) {
+        const mockedTitleService = {
+            start() {
+                return {
+                    setParts({ action }) {
+                        if (action) {
+                            assert.step(action);
+                        }
+                    },
+                };
+            },
+        };
+        registry.category("services").add("title", mockedTitleService);
+        const webClient = await createWebClient({ serverData });
+
+        // sanity check: execute an action in target="current"
+        await doAction(webClient, 1);
+        assert.verifySteps(["Partners Action 1"]);
+
+        // execute an action in target="new"
+        await doAction(webClient, 5);
+        assert.verifySteps([]);
+    });
 
     QUnit.module('Actions in target="inline"');
     QUnit.test(

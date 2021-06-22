@@ -29,13 +29,13 @@ class ActionAdapter extends ComponentAdapter {
         let originalUpdateControlPanel;
         useEffect(
             () => {
-                this.title.setParts({ action: this.widget.getTitle() });
                 const query = this.widget.getState();
                 Object.assign(query, this.tempQuery);
                 this.tempQuery = null;
                 this.__widget = this.widget;
                 if (!this.wowlEnv.inDialog) {
                     this.pushState(query);
+                    this.title.setParts({ action: this.widget.getTitle() });
                 }
                 this.wowlEnv.bus.on("ACTION_MANAGER:UPDATE", this, () => {
                     this.env.bus.trigger("close_dialogs");
