@@ -402,20 +402,40 @@ class StockMove(models.Model):
                 total_availability = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id) if move.product_id else 0.0
                 move.availability = min(move.product_qty, total_availability)
 
-    @api.depends('product_id', 'picking_type_id', 'reserved_availability', 'priority', 'state', 'product_uom_qty', 'location_id')
+    @api.depends('product_id', 'product_qty', 'picking_type_id', 'reserved_availability', 'priority', 'state', 'product_uom_qty', 'location_id')
     def _compute_forecast_information(self):
         """ Compute forecasted information of the related product by warehouse."""
         self.forecast_availability = False
         self.forecast_expected_date = False
+
+        # Prefetch product info to avoid fetching all product fields
+        self.product_id.read(['type', 'uom_id'], load=False)
 
         not_product_moves = self.filtered(lambda move: move.product_id.type != 'product')
         for move in not_product_moves:
             move.forecast_availability = move.product_qty
 
         product_moves = (self - not_product_moves)
-        warehouse_by_location = {loc: loc.warehouse_id for loc in product_moves.location_id}
 
-        outgoing_unreserved_moves_per_warehouse = defaultdict(lambda: self.env['stock.move'])
+        outgoing_unreserved_moves_per_warehouse = defaultdict(set)
+        now = fields.Datetime.now()
+
+        def key_virtual_available(move, incoming=False):
+            warehouse_id = move.location_dest_id.warehouse_id.id if incoming else move.location_id.warehouse_id.id
+            return warehouse_id, max(move.date, now)
+
+        # Prefetch efficiently virtual_available for _consuming_picking_types draft move.
+        prefetch_virtual_available = defaultdict(set)
+        virtual_available_dict = {}
+        for move in product_moves:
+            if move.picking_type_id.code in self._consuming_picking_types() and move.state == 'draft':
+                prefetch_virtual_available[key_virtual_available(move)].add(move.product_id.id)
+            elif move.picking_type_id.code == 'incoming':
+                prefetch_virtual_available[key_virtual_available(move, incoming=True)].add(move.product_id.id)
+        for key_context, product_ids in prefetch_virtual_available.items():
+            read_res = self.env['product.product'].browse(product_ids).with_context(warehouse=key_context[0], to_date=key_context[1]).read(['virtual_available'])
+            virtual_available_dict[key_context] = {res['id']: res['virtual_available'] for res in read_res}
+
         for move in product_moves:
             if move.picking_type_id.code in self._consuming_picking_types():
                 if move.state == 'assigned':
@@ -423,32 +443,22 @@ class StockMove(models.Model):
                         move.reserved_availability, move.product_id.uom_id, rounding_method='HALF-UP')
                 elif move.state == 'draft':
                     # for move _consuming_picking_types and in draft -> the forecast_availability > 0 if in stock
-                    warehouse = move.location_id.warehouse_id
-                    next_date = max(move.date, fields.Datetime.now())
-                    move.forecast_availability = move.product_id.with_context(warehouse=warehouse.id, to_date=next_date).virtual_available - move.product_qty
+                    move.forecast_availability = virtual_available_dict[key_virtual_available(move)][move.product_id.id] - move.product_qty
                 elif move.state in ('waiting', 'confirmed', 'partially_available'):
-                    outgoing_unreserved_moves_per_warehouse[warehouse_by_location[move.location_id]] |= move
+                    outgoing_unreserved_moves_per_warehouse[move.location_id.warehouse_id].add(move.id)
             elif move.picking_type_id.code == 'incoming':
-                move.forecast_availability = move._get_forecast_availability_incoming()
+                forecast_availability = virtual_available_dict[key_virtual_available(move, incoming=True)][move.product_id.id]
+                if move.state == 'draft':
+                    forecast_availability += move.product_qty
+                move.forecast_availability = forecast_availability
 
-        for warehouse, moves in outgoing_unreserved_moves_per_warehouse.items():
+        for warehouse, moves_ids in outgoing_unreserved_moves_per_warehouse.items():
             if not warehouse:  # No prediction possible if no warehouse.
                 continue
-            product_variant_ids = moves.product_id.ids
-            wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
-                [('id', 'child_of', warehouse.view_location_id.id)],
-                ['id'],
-            )]
-            ForecastedReport = self.env['report.stock.report_product_product_replenishment']
-            forecast_lines = ForecastedReport.with_context(warehouse=warehouse.id)._get_report_lines(None, product_variant_ids, wh_location_ids)
+            moves = self.browse(moves_ids)
+            forecast_info = moves._get_forecast_availability_outgoing(warehouse)
             for move in moves:
-                lines = [l for l in forecast_lines if l["move_out"] == move._origin and l["replenishment_filled"] is True]
-                if lines:
-                    move.forecast_availability = sum(m['quantity'] for m in lines)
-                    move_ins_lines = list(filter(lambda report_line: report_line['move_in'], lines))
-                    if move_ins_lines:
-                        expected_date = max(m['move_in'].date for m in move_ins_lines)
-                        move.forecast_expected_date = expected_date
+                move.forecast_availability, move.forecast_expected_date = forecast_info[move]
 
     def _set_date_deadline(self, new_deadline):
         # Handle the propagation of `date_deadline` fields (up and down stream - only update by up/downstream documents)
@@ -893,14 +903,6 @@ class StockMove(models.Model):
                 return 'assigned'
             else:
                 return moves_todo[-1:].state or 'draft'
-
-    def _get_forecast_availability_incoming(self):
-        self.ensure_one()
-        warehouse = self.location_dest_id.warehouse_id
-        forecast_availability = self.product_id.with_context(warehouse=warehouse.id, to_date=self.date).virtual_available
-        if self.state == 'draft':
-            forecast_availability += self.product_qty
-        return forecast_availability
 
     @api.onchange('product_id', 'picking_type_id')
     def _onchange_product_id(self):
@@ -1891,3 +1893,115 @@ class StockMove(models.Model):
         moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains)]),
                                                          order='reservation_date, priority desc, date asc')
         moves_to_reserve._action_assign()
+
+    def _rollup_move_dests(self, seen):
+        for dst in self.move_dest_ids:
+            if dst.id not in seen:
+                seen.add(dst.id)
+                dst._rollup_move_dests(seen)
+        return seen
+
+    def _get_forecast_availability_outgoing(self, warehouse):
+        """ Get forcasted information (sum_qty_expected, max_date_expected) of self for in_locations_ids as the in locations.
+        It differ from _get_report_lines because it computes only the necessary information and return a
+        dict by move, which is making faster to use and compute.
+        :param qty: ids list/tuple of locations to consider as interne
+        :return: a defaultdict of moves in self, values are tuple(sum_qty_expected, max_date_expected)
+        :rtype: defaultdict
+        """
+
+        def _reconcile_out_with_ins(result, out, ins, demand, product_rounding, only_matching_move_dest=True):
+            index_to_remove = []
+            for index, in_ in enumerate(ins):
+                if float_is_zero(in_['qty'], precision_rounding=product_rounding):
+                    index_to_remove.append(index)
+                    continue
+                if only_matching_move_dest and in_['move_dests'] and out.id not in in_['move_dests']:
+                    continue
+                taken_from_in = min(demand, in_['qty'])
+                demand -= taken_from_in
+
+                if out.id in ids_in_self:
+                    result[out] = (result[out][0] + taken_from_in, max(d for d in (in_['move_date'], result[out][1]) if d))
+
+                in_['qty'] -= taken_from_in
+                if in_['qty'] <= 0:
+                    index_to_remove.append(index)
+                if float_is_zero(demand, precision_rounding=product_rounding):
+                    break
+            for index in reversed(index_to_remove):
+                # TODO: avoid this O(n²), maybe we shouldn't "clean" the in list
+                del ins[index]
+            return demand
+
+        ids_in_self = set(self.ids)
+        product_ids = self.product_id
+        wh_location_ids = self.env['stock.location'].search([('id', 'child_of', warehouse.view_location_id.id)]).ids
+
+        in_domain, out_domain = self.env['report.stock.report_product_product_replenishment']._move_confirmed_domain(
+            None, product_ids.ids, wh_location_ids
+        )
+        outs = self.env['stock.move'].search(out_domain, order='reservation_date, priority desc, date, id')
+        reserved_outs = self.env['stock.move'].search(
+            out_domain + [('state', 'in', ('partially_available', 'assigned'))],
+            order='priority desc, date, id')
+        ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
+        # Prefetch data to avoid future request
+        (outs - self).read(['product_id', 'product_uom', 'product_qty', 'state'], load=False)  # remove self because data is already fetch
+        ins.read(['product_id', 'product_qty', 'date', 'move_dest_ids'], load=False)
+        currents = {c['id']: c['qty_available'] for c in product_ids.with_context(warehouse=warehouse.id).read(['qty_available'])}
+
+        outs_per_product = defaultdict(list)
+        reserved_outs_per_product = defaultdict(list)
+        ins_per_product = defaultdict(list)
+        for out in outs:
+            outs_per_product[out.product_id.id].append(out)
+        for out in reserved_outs:
+            reserved_outs_per_product[out.product_id.id].append(out)
+        for in_ in ins:
+            ins_per_product[in_.product_id.id].append({
+                'qty': in_.product_qty,
+                'move_date': in_.date,
+                'move_dests': in_._rollup_move_dests(set())
+            })
+
+        result = defaultdict(lambda: (0.0, False))
+        for product in product_ids:
+            product_rounding = product.uom_id.rounding
+            for out in reserved_outs_per_product[product.id]:
+                # Reconcile with reserved stock.
+                current = currents[product.id]
+                reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
+                currents[product.id] -= reserved
+                if out.id in ids_in_self:
+                    result[out] = (result[out][0] + reserved, False)
+
+            unreconciled_outs = []
+            for out in outs_per_product[product.id]:
+                # Reconcile with the current stock.
+                reserved = 0.0
+                if out.state in ('partially_available', 'assigned'):
+                    reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
+                demand = out.product_qty - reserved
+
+                if float_is_zero(demand, precision_rounding=product_rounding):
+                    continue
+                current = currents[product.id]
+                taken_from_stock = min(demand, current)
+                if not float_is_zero(taken_from_stock, precision_rounding=product_rounding):
+                    currents[product.id] -= taken_from_stock
+                    demand -= taken_from_stock
+                    if out.id in ids_in_self:
+                        result[out] = (result[out][0] + taken_from_stock, False)
+
+                # Reconcile with the ins.
+                # The while loop will finish because it will pop from ins_per_product or decrease the demand until zero
+                if not float_is_zero(demand, precision_rounding=product_rounding):
+                    demand = _reconcile_out_with_ins(result, out, ins_per_product[product.id], demand, product_rounding, only_matching_move_dest=True)
+                if not float_is_zero(demand, precision_rounding=product_rounding):
+                    unreconciled_outs.append((demand, out))
+
+            for demand, out in unreconciled_outs:
+                _reconcile_out_with_ins(result, out, ins_per_product[product.id], demand, product_rounding, only_matching_move_dest=False)
+
+        return result
