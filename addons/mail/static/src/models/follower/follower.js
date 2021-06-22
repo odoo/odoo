@@ -53,6 +53,13 @@ function factory(dependencies) {
         }
 
         /**
+         * Called when clicking on apply button.
+         */
+        onClickApply() {
+            this.updateSubtypes();
+        }
+
+        /**
          * Called when clicking on cancel button.
          */
         onClickCancel() {
