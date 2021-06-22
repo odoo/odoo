@@ -53,6 +53,27 @@ function factory(dependencies) {
         }
 
         /**
+         * Called when clicking on apply button.
+         */
+        onClickApply() {
+            this.updateSubtypes();
+        }
+
+        /**
+         * Called when clicking on cancel button.
+         */
+        onClickCancel() {
+            this.closeSubtypes();
+        }
+
+        /**
+         * Handle onClick on follower remove button.
+         */
+        onClickRemove() {
+            this.remove();
+        }
+
+        /**
          * Opens the most appropriate view that is a profile for this follower.
          */
         async openProfile() {

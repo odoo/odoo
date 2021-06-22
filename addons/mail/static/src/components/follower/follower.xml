@@ -12,7 +12,7 @@
                     <button class="btn btn-icon o_Follower_button o_Follower_editButton" title="Edit subscription" t-on-click="_onClickEdit">
                         <i class="fa fa-pencil"/>
                     </button>
-                    <button class="btn btn-icon o_Follower_button o_Follower_removeButton" title="Remove this follower" t-on-click="_onClickRemove">
+                    <button class="btn btn-icon o_Follower_button o_Follower_removeButton" title="Remove this follower" t-on-click="follower.onClickRemove()">
                         <i class="fa fa-remove"/>
                     </button>
                 </t>

@@ -53,14 +53,6 @@ export class Follower extends Component {
         this.follower.showSubtypes();
     }
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickRemove(ev) {
-        this.follower.remove();
-    }
-
 }
 
 Object.assign(Follower, {
