@@ -260,24 +260,23 @@ class SaleOrderLine(models.Model):
     qty_delivered_method = fields.Selection([
         ('manual', 'Manual'),
         ('analytic', 'Analytic From Expenses')
-    ], string="Method to update delivered qty", compute='_compute_qty_delivered_method', compute_sudo=True, store=True,
+    ], string="Method to update delivered qty", compute='_compute_qty_delivered_method', store=True,
         help="According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
              "  - Manual: the quantity is set manually on the line\n"
              "  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
              "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
              "  - Stock Moves: the quantity comes from confirmed pickings\n")
-    qty_delivered = fields.Float('Delivered Quantity', copy=False, compute='_compute_qty_delivered', inverse='_inverse_qty_delivered', compute_sudo=True, store=True, digits='Product Unit of Measure', default=0.0)
+    qty_delivered = fields.Float('Delivered Quantity', copy=False, compute='_compute_qty_delivered', inverse='_inverse_qty_delivered', store=True, digits='Product Unit of Measure', default=0.0)
     qty_delivered_manual = fields.Float('Delivered Manually', copy=False, digits='Product Unit of Measure', default=0.0)
     qty_to_invoice = fields.Float(
         compute='_get_to_invoice_qty', string='To Invoice Quantity', store=True,
         digits='Product Unit of Measure')
     qty_invoiced = fields.Float(
         compute='_compute_qty_invoiced', string='Invoiced Quantity', store=True,
-        compute_sudo=True,
         digits='Product Unit of Measure')
 
-    untaxed_amount_invoiced = fields.Monetary("Untaxed Invoiced Amount", compute='_compute_untaxed_amount_invoiced', compute_sudo=True, store=True)
-    untaxed_amount_to_invoice = fields.Monetary("Untaxed Amount To Invoice", compute='_compute_untaxed_amount_to_invoice', compute_sudo=True, store=True)
+    untaxed_amount_invoiced = fields.Monetary("Untaxed Invoiced Amount", compute='_compute_untaxed_amount_invoiced', store=True)
+    untaxed_amount_to_invoice = fields.Monetary("Untaxed Amount To Invoice", compute='_compute_untaxed_amount_to_invoice', store=True)
 
     salesman_id = fields.Many2one(related='order_id.user_id', store=True, string='Salesperson')
     currency_id = fields.Many2one(related='order_id.currency_id', depends=['order_id.currency_id'], store=True, string='Currency')
