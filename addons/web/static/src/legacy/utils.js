@@ -145,7 +145,7 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
                     // the legacy guardedCatch code
                     reject({ message: reason, event: $.Event(), legacy: true });
                 } else if (reason instanceof ConnectionAbortedError) {
-                    reject({ message: reason.name, event: $.Event("abort") });
+                    reject({ message: reason.message, event: $.Event("abort") });
                 } else {
                     reject(reason);
                 }

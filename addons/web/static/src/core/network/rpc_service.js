@@ -87,7 +87,7 @@ function jsonrpc(env, rpcId, url, params, settings = {}) {
         if (request.abort) {
             request.abort();
         }
-        rejectFn(new ConnectionAbortedError());
+        rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
     };
     return promise;
 }
