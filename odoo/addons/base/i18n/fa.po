@@ -6508,21 +6508,21 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">نشانی</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">نشانی فاکتور</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">نشانی تحویل</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">سایر نشانی‌ها</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">نشانی خصوصی</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">نشانی</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">نشانی</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">نشانی فاکتور</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">نشانی تحویل</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">سایر نشانی‌ها</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">نشانی خصوصی</b>\n"
+"                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">نشانی</b>\n"
 "                            </span>"
 
 #. module: base
@@ -7783,7 +7783,7 @@ msgstr "مدیریتی"
 #: model:ir.model.fields,help:base.field_res_country_state__name
 msgid ""
 "Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
-msgstr ""
+msgstr "واحد اصلی تقسیمات کشوری"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0 code:addons/base/models/ir_model.py:0
@@ -10616,7 +10616,7 @@ msgstr "استان کشور"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_coupon
 msgid "Coupon"
-msgstr ""
+msgstr "کوپن"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_coupon
@@ -12571,8 +12571,8 @@ msgstr "اتیوپی - حسابداری"
 
 #. module: base
 #: model:res.country.group,name:base.europe
-msgid "Europe"
-msgstr "اروپا"
+msgid "European Union"
+msgstr "اتحادیه اروپا"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines__evaluation_type
@@ -12759,7 +12759,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_exports_line__export_id
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Export"
-msgstr "برونش"
+msgstr "دانلود"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -12769,12 +12769,12 @@ msgstr "صدور فایل کامل شد"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_exports__export_fields
 msgid "Export ID"
-msgstr "شناسه برونش"
+msgstr "شناسه دانلود"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_exports__name
 msgid "Export Name"
-msgstr "نام برونش"
+msgstr "نام دانلود"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -20353,7 +20353,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__same_vat_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_vat_partner_id
 msgid "Partner with same Tax ID"
-msgstr "مخاطب با شناسه مالیاتی یکسان "
+msgstr "مخاطب با کد اقتصادی یکسان "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__partner_id
@@ -22063,7 +22063,7 @@ msgstr ""
 #. module: base
 #: model:res.country.group,name:base.sepa_zone
 msgid "SEPA Countries"
-msgstr ""
+msgstr "حوزه پرداخت‌های یکپارچه یورو"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa
@@ -23825,7 +23825,7 @@ msgstr "لاگ وظیفه"
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr "شناسه مالیات"
+msgstr "کد اقتصادی"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
@@ -24075,7 +24075,7 @@ msgid ""
 "The Tax Identification Number. Complete it if the contact is subjected to "
 "government taxes. Used in some legal statements."
 msgstr ""
-"شماره شناسایی مالیات. اگر مخاطب مشمول مالیات دولت است، آن را کامل کنید. در "
+"شماره کد اقتصادی. اگر مخاطب مشمول مالیات دولت است، آن را کامل کنید. در "
 "برخی اظهارات حقوقی استفاده می‌شود."
 
 #. module: base
@@ -27205,12 +27205,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale
 msgid "eCommerce"
-msgstr "تجارت الکترونیکی"
+msgstr "فروشگاه آنلاین"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery
 msgid "eCommerce Delivery"
-msgstr "تحویل تجارت الکترونیکی"
+msgstr "تحویل فروشگاه آنلاین"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_elearning

@@ -379,11 +379,9 @@ msgstr "برال تنظیم سربرگ برروی آن <b>کلیک کنید</b>.
 #. openerp-web
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
-msgid ""
-"<b>Click</b> on this option to change the ${optionTooltipLabel} of the "
-"block."
+msgid "<b>Click</b> on this option to change the %s of the block."
 msgstr ""
-"برروی این گزینه <b>کلیک کنید</b> تا ${optionTooltipLabel} بلوک را تغییر دهید"
+"برروی این گزینه <b>کلیک کنید</b> تا %s بلوک را تغییر دهید"
 
 #. module: website
 #. openerp-web
@@ -444,8 +442,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
-msgid "<b>Select</b> a ${optionTooltipLabel}."
-msgstr "یک ${optionTooltipLabel} <b>انتخاب کنید</b>."
+msgid "<b>Select</b> a %s."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -458,8 +456,8 @@ msgstr "یک پالت رنگ <b>انتخاب کنید</b>."
 #. openerp-web
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
-msgid "<b>Slide</b> this button to change the ${direction} padding"
-msgstr "برای تغییر ${direction} پدینگ، این دکمه را <b>بلغزانید</b>"
+msgid "<b>Slide</b> this button to change the %s padding"
+msgstr "برای تغییر %s پدینگ، این دکمه را <b>بلغزانید</b>"
 
 #. module: website
 #. openerp-web
@@ -731,7 +729,7 @@ msgid ""
 msgstr ""
 "<small class=\"text-muted\">\n"
 "                                            <i class=\"fa fa-info\"/>:  تایپ"
-" یک کاراکتر بعداز 'گوگل' کافیست. مابقیه آن را ما حدس می‌زنیم.\n"
+" یک کاراکتر بعداز 'گوگل' کافیست. مابقی آن را ما حدس می‌زنیم.\n"
 "                                        </small>"
 
 #. module: website
@@ -851,6 +849,15 @@ msgid ""
 msgstr ""
 "<span class=\"o_add_images\" style=\"cursor: pointer;\"><i class=\"fa fa-"
 "plus-circle\"/> افزودن تصاویر</span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.layout
+msgid ""
+"<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; Company "
+"name</span>"
+msgstr ""
+"<span class=\"o_footer_copyright_name mr-2\">'کپی‌رایت' &amp;copy; نام "
+"شرکت</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1166,6 +1173,13 @@ msgstr "مدیریت حساب و فروش"
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Action"
 msgstr "کنش"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/backend/res_config_settings.js:0
+#, python-format
+msgid "Activate anyway"
+msgstr "فعال‌سازی تحت هر شرایطی"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__active
@@ -1545,6 +1559,13 @@ msgid "Auto"
 msgstr "خودکار"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid ""
+"Automatically opens the pop-up if the user stays on a page longer than the "
+"specified time."
+msgstr "اگر کاربر بیشتر از زمان تعیین شده در صفحه بماند، به صورت خودکار پنجره پاپ‌آپ را باز می‌کند."
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website__auto_redirect_lang
 msgid "Autoredirect Language"
 msgstr "تغییر مسیر خودکار زبان"
@@ -1743,6 +1764,13 @@ msgstr "نشان‌گر صفحه"
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "Building blocks system"
 msgstr "اجزای ساخت سیستم"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/new_content.js:0
+#, python-format
+msgid "Building your %s"
+msgstr "در حال ساخت %s شما"
 
 #. module: website
 #. openerp-web
@@ -2442,6 +2470,11 @@ msgid "Create a"
 msgstr "ایجاد یک"
 
 #. module: website
+#: model:ir.model,website_form_label:website.model_res_partner
+msgid "Create a Customer"
+msgstr "ایجاد مشتری"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
@@ -2953,6 +2986,13 @@ msgstr "نمایش این لوگو برروی وب‌سایت  "
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website when users visit this domain"
 msgstr "هنگام بازدید کاربران از این دامنه، این وب‌سایت را نمایش دهید "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/backend/res_config_settings.js:0
+#, python-format
+msgid "Do not activate"
+msgstr "فعال‌سازی نکنید"
 
 #. module: website
 #. openerp-web
@@ -4528,7 +4568,7 @@ msgid ""
 msgstr ""
 "به نظر می‌رسد وب‌سایت شما هنوز در برخی از نقاط از سیستم رنگ قدیمی \n"
 "کنویست 13.0 استفاده می‌کند. ما مطمئن شدیم که هنوز کار می‌کند اما به شما\n"
-" توصیه می‌کنیم سعی کنید از سیستم جدید رنگی که هنوز هم قابل تنظیم اسn  استفاده"
+" توصیه می‌کنیم سعی کنید از سیستم جدید رنگی که هنوز هم قابل تنظیم است استفاده"
 " کنید. "
 
 #. module: website
@@ -5144,7 +5184,7 @@ msgstr "دقیقه"
 #: code:addons/website/static/src/xml/theme_preview.xml:0
 #, python-format
 msgid "Mobile"
-msgstr "مبایل"
+msgstr "موبایل"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__mobile
@@ -6447,6 +6487,11 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_search_box
+msgid "Search..."
+msgstr "جستجو..."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
 msgid "Second Feature"
 msgstr "ویژگی دوم"
@@ -7700,7 +7745,7 @@ msgstr ""
 "         302 به طور موقت منتقل شد: مرورگر آدرس جدید را در حافظه پنهان نگه"
 " نمی‌دارد و دفعه دیگر آدرس اینترنتی جدید را دوباره سوال می‌کند. \n"
 "         404 یافت نشد: اگر می‌خواهید یک صفحه / کنترلر خاص را حذف کنید (به"
-" عنوان مثال تجارت الکترونیکی نصب شده است، اما نمی‌خواهید از یک وب‌سایت خاص"
+" عنوان مثال فروشگاه آنلاین نصب شده است، اما نمی‌خواهید از یک وب‌سایت خاص"
 " خرید کنید) \n"
 "         308 تغییر مسیر / بازنویسی: اگر می‌خواهید یک کنترلر را به یک آدرس"
 " اینترنتی جدید تغییر نام دهید. (به عنوان مثال:  /shop -> /garden- هر دو آدرس"
@@ -8968,7 +9013,7 @@ msgstr "به عنوان مثال، رستم آباد، تهران، ایران"
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_dashboard
 msgid "eCommerce Dashboard"
-msgstr "داشبورد تجارت الکتورنیکی"
+msgstr "داشبورد فروشگاه آنلاین"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -9031,6 +9076,11 @@ msgstr "hero, jumbotron"
 #, python-format
 msgid "https://fonts.google.com/specimen/Roboto"
 msgstr "https://fonts.google.com/specimen/Roboto"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "https://www.odoo.com"
+msgstr "https://www.kenevist.ir"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
