@@ -35,7 +35,7 @@ class AccountPayment(models.Model):
     check_number = fields.Char(
         string="Check Number",
         store=True,
-        readonly=True,
+        readonly=False,
         copy=False,
         compute='_compute_check_number',
         inverse='_inverse_check_number',
