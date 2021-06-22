@@ -83,10 +83,7 @@ export class ThreadNeedactionPreview extends Component {
             // handled in `_onClickMarkAsRead`
             return;
         }
-        this.thread.open();
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.messagingMenu.close();
-        }
+        this.thread.onClickOpen();
     }
 
     /**
