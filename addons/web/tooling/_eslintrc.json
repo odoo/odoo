@@ -11,7 +11,8 @@
   },
   "rules": {
     "prettier/prettier": "error",
-    "no-undef": "error"
+    "no-undef": "error",
+    "no-unused-vars": ["error", {"args": "all", "argsIgnorePattern": "^_"}]
   },
   "globals": {
     "odoo": "writable",
