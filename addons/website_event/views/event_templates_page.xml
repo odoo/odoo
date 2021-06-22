@@ -20,8 +20,8 @@
                                     <i class="fa fa-folder-open text-primary mr-2"/><span t-field="event.event_type_id"/>
                                 </a>
                             </li>
-                            <li class="nav-item mr-3">
-                                <a t-if="event.country_id" t-attf-href="/event?country=#{event.country_id.id}" class="nav-link">
+                            <li t-if="event.country_id" class="nav-item mr-3">
+                                <a t-attf-href="/event?country=#{event.country_id.id}" class="nav-link">
                                     <i class="fa fa-map-marker text-primary mr-2"/><span t-field="event.country_id"/>
                                 </a>
                             </li>
