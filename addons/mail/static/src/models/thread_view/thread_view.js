@@ -63,6 +63,13 @@ function factory(dependencies) {
             }
         }
 
+        /**
+         * Handle onClick on retry load message link.
+         */
+        onClickRetryLoadMessages() {
+            this.threadCache.update({ hasLoadingFailed: false });
+        }
+
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------

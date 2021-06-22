@@ -111,7 +111,7 @@ export class ThreadView extends Component {
         if (!this.threadView.threadCache) {
             return;
         }
-        this.threadView.threadCache.update({ hasLoadingFailed: false });
+        this.threadView.onClickRetryLoadMessages();
     }
 
 }
