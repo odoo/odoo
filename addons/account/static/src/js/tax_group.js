@@ -26,7 +26,7 @@ class TaxGroupComponent extends Component {
     patched() {
         if (this.state.value === 'edit') {
             this.inputTax.el.focus(); // Focus the input
-            this.inputTax.el.value = this.props.taxGroup.taxValue;
+            this.inputTax.el.value = this.props.taxGroup.tax_group_amount;
         }
     }
 
@@ -78,14 +78,14 @@ class TaxGroupComponent extends Component {
             return;
         }
         // The newValue can't be equals to 0
-        if (newValue === this.props.taxGroup.taxValue || newValue === 0) {
+        if (newValue === this.props.taxGroup.tax_group_amount || newValue === 0) {
             this.setState('readonly');
             return;
         }
         this.trigger('change-tax-group', {
-            oldValue: this.props.taxGroup.taxValue,
+            oldValue: this.props.taxGroup.tax_group_amount,
             newValue: newValue,
-            taxGroupId: this.props.taxGroup.id
+            taxGroupId: this.props.taxGroup.tax_group_id
         });
     }
 }
@@ -95,7 +95,7 @@ TaxGroupComponent.template = 'account.TaxGroupComponent';
 class TaxGroupListComponent extends AbstractFieldOwl {
     constructor(...args) {
         super(...args);
-        this.taxGroups = useState({value: this._formatTaxGroups()});
+        this.taxGroups = useState({value: JSON.parse(this.value)});
         this.displayEditWidget = this._displayEditWidget();
     }
 
@@ -106,7 +106,7 @@ class TaxGroupListComponent extends AbstractFieldOwl {
     willUpdateProps(nextProps) {
         // We only reformat tax groups if there are changed
         if (nextProps.fieldName === 'amount_by_group') {
-            this.taxGroups.value = this._formatTaxGroups();
+            this.taxGroups.value = JSON.parse(this.value);
         }
     }
 
@@ -158,23 +158,6 @@ class TaxGroupListComponent extends AbstractFieldOwl {
     }
 
     /**
-     * This method formats a list of list of tax groups into a list of objects.
-     * This job is done to be more understandable in the code.
-     */
-    _formatTaxGroups() {
-        let formatedTaxGroups = [];
-        this.value.forEach(element => {
-            formatedTaxGroups.push({
-                id: element[6],
-                name: element[0],
-                taxValue: element[1],
-                taxDisplay: element[3],
-            });
-        });
-        return formatedTaxGroups;
-    }
-
-    /**
      * This method is the main function of the tax group widget.
      * It is called by an event trigger (from the TaxGroupComponent) and receives
      * a particular payload.
@@ -188,19 +171,15 @@ class TaxGroupListComponent extends AbstractFieldOwl {
      */
     _onChangeTaxValueByTaxGroup(ev) {
         let detail = ev.detail;
-        let deltaAmount = detail.oldValue-detail.newValue;
-        deltaAmount *= this.record.data.move_type === 'in_invoice' ? -1 : 1;
-
-        // Search for the first tax line with the same tax group and modify its value
-        let lineId = this.record.data.line_ids.data.find(elem => elem.data.tax_group_id && elem.data.tax_group_id.data.id === detail.taxGroupId);
-        let amountCurrency = lineId.data.amount_currency + deltaAmount;
-
-        // Trigger the ORM
+        this.taxGroups.value.forEach(taxGroup => {
+           if (taxGroup.tax_group_id === detail.taxGroupId) {
+               taxGroup.tax_group_amount = detail.newValue;
+           }
+        });
         this.trigger('field-changed', {
             dataPointID: this.record.id,
-            changes: { line_ids: { operation: 'UPDATE', id: lineId.id, data: { amount_currency: amountCurrency } } },
-            initialEvent: { dataPointID: lineId.id, changes: { amount_currency: amountCurrency }, },
-        });
+            changes: { amount_by_group: JSON.stringify(this.taxGroups.value) }
+        })
     }
 }
 TaxGroupListComponent.template = 'account.TaxGroupCustomField';
