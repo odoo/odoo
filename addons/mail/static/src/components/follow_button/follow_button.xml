@@ -14,7 +14,7 @@
                 </button>
             </t>
             <t t-else="">
-                <button class="o_FollowButton_follow btn btn-link" t-att-disabled="props.isDisabled" t-on-click="_onClickFollow">
+                <button class="o_FollowButton_follow btn btn-link" t-att-disabled="props.isDisabled" t-on-click="thread.onClickFollow()">
                     Follow
                 </button>
             </t>

@@ -41,14 +41,6 @@ export class FollowButton extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickFollow(ev) {
-        this.thread.follow();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickUnfollow(ev) {
         this.thread.unfollow();
     }
