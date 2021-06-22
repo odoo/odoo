@@ -1447,10 +1447,11 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _onClick: function (ev) {
         // Do not close the colorpalette on colorpicker click
-        if (!ev.originalEvent.__isColorpickerClick) {
-            this._super(...arguments);
+        if (ev.originalEvent.__isColorpickerClick) {
+            ev.stopPropagation();
+            return;
         }
-        ev.stopPropagation();
+        return this._super(...arguments);
     },
 });
 
