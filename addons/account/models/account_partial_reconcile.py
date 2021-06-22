@@ -519,6 +519,8 @@ class AccountPartialReconcile(models.Model):
                     # and well reported in the Tax Report.
                     # ==========================================================================
 
+                    grouping_key = False
+
                     if line.tax_repartition_line_id:
                         # Tax line.
 
@@ -530,32 +532,33 @@ class AccountPartialReconcile(models.Model):
                         cb_line_vals = self._prepare_cash_basis_base_line_vals(line, balance, amount_currency)
                         grouping_key = self._get_cash_basis_base_line_grouping_key_from_vals(cb_line_vals)
 
-                    if grouping_key in partial_lines_to_create:
-                        aggregated_vals = partial_lines_to_create[grouping_key]['vals']
+                    if grouping_key:
+                        if grouping_key in partial_lines_to_create:
+                            aggregated_vals = partial_lines_to_create[grouping_key]['vals']
 
-                        debit = aggregated_vals['debit'] + cb_line_vals['debit']
-                        credit = aggregated_vals['credit'] + cb_line_vals['credit']
-                        balance = debit - credit
+                            debit = aggregated_vals['debit'] + cb_line_vals['debit']
+                            credit = aggregated_vals['credit'] + cb_line_vals['credit']
+                            balance = debit - credit
 
-                        aggregated_vals.update({
-                            'debit': balance if balance > 0 else 0,
-                            'credit': -balance if balance < 0 else 0,
-                            'amount_currency': aggregated_vals['amount_currency'] + cb_line_vals['amount_currency'],
-                        })
-
-                        if line.tax_repartition_line_id:
                             aggregated_vals.update({
-                                'tax_base_amount': aggregated_vals['tax_base_amount'] + cb_line_vals['tax_base_amount'],
+                                'debit': balance if balance > 0 else 0,
+                                'credit': -balance if balance < 0 else 0,
+                                'amount_currency': aggregated_vals['amount_currency'] + cb_line_vals['amount_currency'],
                             })
-                            partial_lines_to_create[grouping_key]['tax_line'] += line
-                    else:
-                        partial_lines_to_create[grouping_key] = {
-                            'vals': cb_line_vals,
-                        }
-                        if line.tax_repartition_line_id:
-                            partial_lines_to_create[grouping_key].update({
-                                'tax_line': line,
-                            })
+
+                            if line.tax_repartition_line_id:
+                                aggregated_vals.update({
+                                    'tax_base_amount': aggregated_vals['tax_base_amount'] + cb_line_vals['tax_base_amount'],
+                                })
+                                partial_lines_to_create[grouping_key]['tax_line'] += line
+                        else:
+                            partial_lines_to_create[grouping_key] = {
+                                'vals': cb_line_vals,
+                            }
+                            if line.tax_repartition_line_id:
+                                partial_lines_to_create[grouping_key].update({
+                                    'tax_line': line,
+                                })
 
                 # ==========================================================================
                 # Create the counterpart journal items.
