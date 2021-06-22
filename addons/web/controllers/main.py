@@ -1849,7 +1849,7 @@ class ExportFormat(object):
     def from_group_data(self, fields, groups):
         raise NotImplementedError()
 
-    def base(self, data, token):
+    def base(self, data):
         params = json.loads(data)
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat')(params)
@@ -1896,8 +1896,8 @@ class CSVExport(ExportFormat, http.Controller):
 
     @http.route('/web/export/csv', type='http', auth="user")
     @serialize_exception
-    def index(self, data, token):
-        return self.base(data, token)
+    def index(self, data):
+        return self.base(data)
 
     @property
     def content_type(self):
@@ -1932,8 +1932,8 @@ class ExcelExport(ExportFormat, http.Controller):
 
     @http.route('/web/export/xlsx', type='http', auth="user")
     @serialize_exception
-    def index(self, data, token):
-        return self.base(data, token)
+    def index(self, data):
+        return self.base(data)
 
     @property
     def content_type(self):
