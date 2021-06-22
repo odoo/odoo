@@ -1015,8 +1015,6 @@ class MailThread(models.AbstractModel):
     @api.model
     def _message_route_process(self, message, message_dict, routes):
         self = self.with_context(attachments_mime_plainxml=True) # import XML attachments as text
-        # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
-        original_partner_ids = message_dict.pop('partner_ids', [])
         thread_id = False
         for model, thread_id, custom_values, user_id, alias in routes or ():
             subtype_id = False
@@ -1041,24 +1039,8 @@ class MailThread(models.AbstractModel):
                 thread_id = thread.id
                 subtype_id = thread._creation_subtype().id
 
-            # replies to internal message are considered as notes, but parent message
-            # author is added in recipients to ensure he is notified of a private answer
-            parent_message = False
-            if message_dict.get('parent_id'):
-                parent_message = self.env['mail.message'].sudo().browse(message_dict['parent_id'])
-            partner_ids = []
-            if not subtype_id:
-                if message_dict.get('is_internal'):
-                    subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
-                    if parent_message and parent_message.author_id:
-                        partner_ids = [parent_message.author_id.id]
-                else:
-                    subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
+            post_params = self._message_route_process_prepare_post(subtype_id=subtype_id, **message_dict)
 
-            post_params = dict(subtype_id=subtype_id, partner_ids=partner_ids, **message_dict)
-            # remove computational values not stored on mail.message and avoid warnings when creating it
-            for x in ('from', 'to', 'cc', 'recipients', 'references', 'in_reply_to', 'bounced_email', 'bounced_message', 'bounced_msg_id', 'bounced_partner'):
-                post_params.pop(x, None)
             new_msg = False
             if thread._name == 'mail.thread':  # message with parent_id not linked to record
                 new_msg = thread.message_notify(**post_params)
@@ -1066,13 +1048,43 @@ class MailThread(models.AbstractModel):
                 # parsing should find an author independently of user running mail gateway, and ensure it is not odoobot
                 partner_from_found = message_dict.get('author_id') and message_dict['author_id'] != self.env['ir.model.data'].xmlid_to_res_id('base.partner_root')
                 thread = thread.with_context(mail_create_nosubscribe=not partner_from_found)
-                new_msg = thread.message_post(**post_params)
+                new_msg = thread.message_post(**message_dict)
 
-            if new_msg and original_partner_ids:
-                # postponed after message_post, because this is an external message and we don't want to create
-                # duplicate emails due to notifications
-                new_msg.write({'partner_ids': original_partner_ids})
+            self._message_route_process_after_post(new_msg, message_dict)
         return thread_id
+
+    def _message_route_process_prepare_post(self, subtype_id, **post_params):
+        # postpone setting post_params.partner_ids after message_post, to avoid double notifications
+        post_params.pop('partner_ids')
+
+        # replies to internal message are considered as notes, but parent message
+        # author is added in recipients to ensure he is notified of a private answer
+        parent_message = False
+        if post_params.get('parent_id'):
+            parent_message = self.env['mail.message'].sudo().browse(post_params['parent_id'])
+        partner_ids = []
+        if not subtype_id:
+            if post_params.get('is_internal'):
+                subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
+                if parent_message and parent_message.author_id:
+                    partner_ids = [parent_message.author_id.id]
+            else:
+                subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
+        post_params['subtype_id'] = subtype_id
+        post_params['partner_ids'] = partner_ids
+
+        # remove computational values not stored on mail.message and avoid warnings when creating it
+        for x in ('from', 'to', 'cc', 'recipients', 'references', 'in_reply_to', 'bounced_email', 'bounced_message', 'bounced_msg_id', 'bounced_partner'):
+            post_params.pop(x, None)
+
+        return post_params
+
+    def _message_route_process_after_post(self, new_message, message_dict):
+        if new_message and message_dict.get('partner_ids'):
+            # postponed after message_post, because this is an external message and we don't want to create
+            # duplicate emails due to notifications
+            new_message.write({'partner_ids': message_dict['partner_ids']})
+        return new_message
 
     @api.model
     def message_process(self, model, message, custom_values=None,
@@ -1118,16 +1130,23 @@ class MailThread(models.AbstractModel):
         if strip_attachments:
             msg_dict.pop('attachments', None)
 
-        existing_msg_ids = self.env['mail.message'].search([('message_id', '=', msg_dict['message_id'])], limit=1)
-        if existing_msg_ids:
-            _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
-                         msg_dict.get('email_from'), msg_dict.get('to'), msg_dict.get('message_id'))
-            return False
+        self._message_process_check(message, msg_dict)
 
         # find possible routes for the message
         routes = self.message_route(message, msg_dict, model, thread_id, custom_values)
         thread_id = self._message_route_process(message, msg_dict, routes)
         return thread_id
+
+    def _message_process_check(self, message, message_dict):
+        """ Check we should effectively process incoming message. Check notably
+        for duplicates to avoid processing multiple times same incoming email
+        (may happen in case of loops). """
+        existing_msg_ids = self.env['mail.message'].search([('message_id', '=', message_dict['message_id'])], limit=1)
+        if existing_msg_ids:
+            _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
+                         message_dict.get('email_from'), message_dict.get('to'), message_dict.get('message_id'))
+            return False
+        return True
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
