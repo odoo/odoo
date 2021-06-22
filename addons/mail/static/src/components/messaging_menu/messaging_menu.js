@@ -133,19 +133,6 @@ export class MessagingMenu extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickNewMessage(ev) {
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.chatWindowManager.openNewMessage();
-            this.messagingMenu.close();
-        } else {
-            this.messagingMenu.toggleMobileNewMessage();
-        }
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickToggler(ev) {
         // avoid following dummy href
         ev.preventDefault();

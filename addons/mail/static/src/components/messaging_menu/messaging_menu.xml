@@ -74,7 +74,7 @@
                 'btn-link': !env.messaging.device.isMobile,
                 'btn-secondary': env.messaging.device.isMobile,
                 'o-mobile': env.messaging.device.isMobile,
-            }" t-on-click="_onClickNewMessage" type="button"
+            }" t-on-click="messagingMenu.onClickNewMessage()" type="button"
         >
             New message
         </button>

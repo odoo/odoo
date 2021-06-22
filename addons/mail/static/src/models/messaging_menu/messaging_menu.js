@@ -28,6 +28,18 @@ function factory(dependencies) {
         }
 
         /**
+         * Handle onClick on new message link.
+         */
+        onClickNewMessage() {
+            if (!this.env.messaging.device.isMobile) {
+                this.env.messaging.chatWindowManager.openNewMessage();
+                this.close();
+            } else {
+                this.toggleMobileNewMessage();
+            }
+        }
+
+        /**
          * Toggle the visibility of the messaging menu "new message" input in
          * mobile.
          */
