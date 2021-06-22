@@ -6,7 +6,6 @@ import { formatDateTime, parseDateTime } from "../core/l10n/dates";
 import { _lt } from "../core/l10n/translation";
 import { registry } from "../core/registry";
 import { formatMany2one } from "../fields/format";
-import { json_node_to_xml } from "../views/view_utils";
 
 const { hooks, tags } = owl;
 const { useState } = hooks;
@@ -403,7 +402,8 @@ export function editView({ accessRights, action, component, env }) {
     if (!accessRights.canEditView) {
         return null;
     }
-    const { viewId, viewType } = component.widget;
+    let { view_id: viewId, type: viewType } = component.props.viewInfo;
+    viewType = viewType === "tree" ? "list" : viewType;
     const displayName = action.views.find((v) => v.type === viewType).name.toString();
     const description = env._t("Edit View: ") + displayName;
     return {

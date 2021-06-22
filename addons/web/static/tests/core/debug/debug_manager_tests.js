@@ -13,8 +13,9 @@ import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv, prepareRegistriesWithCleanup } from "../../helpers/mock_env";
 import { makeFakeDialogService, makeFakeLocalizationService } from "../../helpers/mock_services";
 import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
-import { createWebClient, getActionManagerServerData } from "../../webclient/helpers";
+import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
 import { openViewItem } from "@web/core/debug/debug_menu_items";
+import { editView } from "@web/legacy/debug_manager";
 
 const { Component, hooks, mount, tags } = owl;
 const { useSubEnv } = hooks;
@@ -295,5 +296,48 @@ QUnit.module("DebugMenu", (hooks) => {
         await legacyExtraNextTick();
         assert.containsNone(webClient, ".modal");
         assert.containsOnce(webClient, ".some_view");
+    });
+
+    QUnit.test("can edit a pivot view", async (assert) => {
+        const mockRPC = async (route, args) => {
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+        };
+        prepareRegistriesWithCleanup();
+
+        patchWithCleanup(odoo, {
+            debug: true,
+        });
+
+        registry.category("debug").add("editViewItem", editView);
+        registry.category("services").add("debug", debugService);
+
+        const serverData = getActionManagerServerData();
+        serverData.actions[1234] = {
+            id: 1234,
+            xml_id: "action_1234",
+            name: "Reporting Ponies",
+            res_model: "pony",
+            type: "ir.actions.act_window",
+            views: [[18, "pivot"]],
+        };
+        serverData.views["pony,18,pivot"] = "<pivot></pivot>";
+        serverData.models["ir.ui.view"] = {
+            fields: {},
+            records: [{ id: 18 }],
+        };
+        serverData.views["ir.ui.view,false,form"] = `<form><field name="id"/></form>`;
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1234);
+        await click(webClient.el.querySelector(".o_debug_manager button"));
+        await click(webClient.el.querySelector(".o_debug_manager .o_dropdown_item"));
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".modal .o_form_view");
+        assert.strictEqual(
+            webClient.el.querySelector(".modal .o_form_view .o_field_widget[name=id]").value,
+            "18"
+        );
     });
 });

@@ -126,11 +126,11 @@ export class MockServer {
         if (!arch) {
             const genericViewKey = Object.keys(this.archs).find((fullKey) => {
                 const [_model, _viewID, _viewType] = fullKey.split(",");
-                viewId = parseInt(_viewID, 10);
                 return _model === modelName && _viewType === viewType;
             });
             if (genericViewKey) {
                 arch = this.archs[genericViewKey];
+                viewId = parseInt(genericViewKey.split(",")[1], 10) || false;
             }
         }
         if (!arch) {
