@@ -1,5 +1,6 @@
 /** @odoo-modules */
 
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { errorService } from "@web/core/errors/error_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
@@ -36,14 +37,14 @@ QUnit.module("base_automation", {}, function () {
             // Both of these are unused but required for the error service to call error handlers
             serviceRegistry.add("notification", notificationService);
             serviceRegistry.add("rpc", makeFakeRPCService());
-            const windowAddEventListener = window.addEventListener;
-            window.addEventListener = (type, cb) => {
+            const windowAddEventListener = browser.addEventListener;
+            browser.addEventListener = (type, cb) => {
                 if (type === "unhandledrejection") {
                     unhandledRejectionCb = cb;
                 }
             };
             registerCleanup(() => {
-                window.addEventListener = windowAddEventListener;
+                browser.addEventListener = windowAddEventListener;
             });
         },
     });
