@@ -18,10 +18,12 @@ can setup API keys to replace their main password.
     'category': 'Extra Tools',
     'auto_install': True,
     'data': [
+        'data/ir_action_data.xml',
         'data/mail_templates_data.xml',
         'security/security.xml',
-        'views/user_preferences.xml',
+        'views/res_users_views.xml',
         'views/templates.xml',
+        'wizard/auth_totp_wizard_views.xml',
     ],
     'assets': {
         'web.assets_tests': [
