@@ -4,7 +4,7 @@ import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { strftimeToLuxonFormat } from "./dates";
 import { localization } from "./localization";
-import { translatedTerms } from "./translation";
+import { translatedTerms, _t } from "./translation";
 
 export const localizationService = {
     dependencies: ["user"],
@@ -33,9 +33,6 @@ export const localizationService = {
         }
 
         Object.setPrototypeOf(translatedTerms, terms);
-        function _t(str) {
-            return terms[str] || str;
-        }
         env._t = _t;
         env.qweb.translateFn = _t;
         const dateFormat = strftimeToLuxonFormat(userLocalization.date_format);
