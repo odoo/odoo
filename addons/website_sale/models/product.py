@@ -12,6 +12,7 @@ from odoo.osv import expression
 class ProductRibbon(models.Model):
     _name = "product.ribbon"
     _description = 'Product ribbon'
+    _rec_name = 'id'
 
     def name_get(self):
         return [(ribbon.id, '%s (#%d)' % (tools.html2plaintext(ribbon.html), ribbon.id)) for ribbon in self]
