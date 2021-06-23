@@ -100,7 +100,12 @@
         @include o-caret-right;
         position: absolute;
         right: 6px;
-        top: 9px;
+        top: 8px;
+    }
+
+    .show > .o_pivot_field_selection::after {
+        @include o-caret-down;
+        top: 10px;
     }
 
     .o_pivot_field_menu .dropdown-item.disabled {
