@@ -1365,6 +1365,14 @@ class HttpCase(TransactionCase):
         cls = type(self)
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        ICP = cls.env['ir.config_parameter']
+        ICP.set_param('web.base.url', cls.base_url())
+        ICP.flush()
+
     def setUp(self):
         super().setUp()
         if self.registry_test_mode:
@@ -1482,16 +1490,8 @@ class HttpCase(TransactionCase):
 
         try:
             self.authenticate(login, login)
-            base_url = "http://%s:%s" % (HOST, odoo.tools.config['http_port'])
-            ICP = self.env['ir.config_parameter']
-            ICP.set_param('web.base.url', base_url)
-            # flush updates to the database before launching the client side,
-            # otherwise they simply won't be visible
-            ICP.flush()
-            if re.match('[a-z]*:', url_path or ''): # about:, http:, ...
-                url = url_path
-            else:
-                url = "%s%s" % (base_url, url_path or '/')
+            self.env['base'].flush()
+            url = werkzeug.urls.url_join(self.base_url(), url_path)
             self._logger.info('Open "%s" in browser', url)
 
             if self.browser.screencasts_dir:
@@ -1522,6 +1522,10 @@ class HttpCase(TransactionCase):
             self.browser.delete_cookie('session_id', domain=HOST)
             self.browser.clear()
             self._wait_remaining_requests()
+
+    @classmethod
+    def base_url(cls):
+        return "http://%s:%s" % (HOST, odoo.tools.config['http_port'])
 
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
         """Wrapper for `browser_js` to start the given `tour_name` with the
