@@ -1534,7 +1534,7 @@ class Binary(http.Controller):
                 placeholder_filename = record._get_placeholder_filename(field=field)
                 placeholder_content = Binary.placeholder(image=placeholder_filename)
             else:
-                placeholder_content = Binary.placeholder()
+                placeholder_content = Binary.placeholder(image=placeholder or 'placeholder.png')
             # Since we set a placeholder for any missing image, the status must be 200. In case one
             # wants to configure a specific 404 page (e.g. though nginx), a 404 status will cause
             # troubles.
