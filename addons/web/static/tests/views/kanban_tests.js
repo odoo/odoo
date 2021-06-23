@@ -6761,6 +6761,41 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test("test displaying image from m2o field (m2o field not set)", async function (assert) {
+        assert.expect(2);
+        this.data.foo_partner = {
+            fields: {
+                name: {string: "Foo Name", type: "char"},
+                partner_id: {string: "Partner", type: "many2one", relation: "partner"},
+            },
+            records: [
+                {id: 1, name: 'foo_with_partner_image', partner_id: 1},
+                {id: 2, name: 'foo_no_partner'},
+            ]
+        };
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: "foo_partner",
+            data: this.data,
+            arch: `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <img t-att-src="kanban_image('partner', 'image', record.partner_id.raw_value)"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+        });
+
+        assert.containsOnce(kanban, 'img[data-src*="/web/image"][data-src$="&id=1"]', "image url should contain id of set partner_id");
+        assert.containsOnce(kanban, 'img[data-src*="/web/image"][data-src$="&id="]', "image url should contain an empty id if partner_id is not set");
+
+        kanban.destroy();
+    });
+
     QUnit.test('check if the view destroys all widgets and instances', async function (assert) {
         assert.expect(2);
 
