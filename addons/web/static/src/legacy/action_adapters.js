@@ -13,6 +13,8 @@ import { cleanDomFromBootstrap, wrapSuccessOrFail, mapDoActionOptionAPI } from "
 
 const { Component, tags } = owl;
 
+const warningDialogBodyTemplate = tags.xml`<t t-esc="props.message"/>`;
+
 class ActionAdapter extends ComponentAdapter {
     setup() {
         super.setup();
@@ -95,7 +97,7 @@ class ActionAdapter extends ComponentAdapter {
                         this.title = this.props.title;
                     }
                 }
-                WarningDialog.bodyTemplate = tags.xml`<t t-esc="props.message"/>`;
+                WarningDialog.bodyTemplate = warningDialogBodyTemplate;
                 this.dialogs.add(WarningDialog, {
                     title: payload.title,
                     message: payload.message,

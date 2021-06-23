@@ -20,6 +20,8 @@ const legacySystrayMenuItems = legacySystrayMenu.Items;
 const convertedItems = [];
 let id = 1;
 
+const legacySystrayItemTemplate = tags.xml`<SystrayItemAdapter Component="Widget" />`;
+
 function addSystrayItem(Widget) {
     const name = `_legacy_systray_item_${id++}`;
 
@@ -29,7 +31,7 @@ function addSystrayItem(Widget) {
             this.Widget = Widget;
         }
     }
-    SystrayItem.template = tags.xml`<SystrayItemAdapter Component="Widget" />`;
+    SystrayItem.template = legacySystrayItemTemplate;
     SystrayItem.components = { SystrayItemAdapter };
 
     systrayRegistry.add(name, { Component: SystrayItem }, { sequence: Widget.prototype.sequence });

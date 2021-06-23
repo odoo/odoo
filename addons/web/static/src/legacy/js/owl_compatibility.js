@@ -16,6 +16,8 @@ odoo.define('web.OwlCompatibility', function () {
     const widgetSymbol = odoo.widgetSymbol;
     const children = new WeakMap(); // associates legacy widgets with their Owl children
 
+    const templateForLegacy = tags.xml`<div/>`;
+    const templateForOwl = tags.xml`<t t-component="props.Component" t-props="childProps" />`;
     /**
      * Case 1) An Owl component has to instantiate legacy widgets
      * ----------------------------------------------------------
@@ -85,15 +87,9 @@ odoo.define('web.OwlCompatibility', function () {
             }
             let template;
             if (!(props.Component.prototype instanceof Component)) {
-                template = tags.xml`<div/>`;
+                template = templateForLegacy;
             } else {
-                let propsStr = '';
-                for (let p in props) {
-                    if (p !== 'Component') {
-                        propsStr += ` ${p}="props.${p}"`;
-                    }
-                }
-                template = tags.xml`<t t-component="props.Component"${propsStr}/>`;
+                template = templateForOwl;
             }
             ComponentAdapter.template = template;
             super(...arguments);
@@ -101,6 +97,14 @@ odoo.define('web.OwlCompatibility', function () {
             ComponentAdapter.template = null;
 
             this.widget = null; // widget instance, if Component is a legacy widget
+        }
+
+        get childProps() {
+            if (!this._childProps) {
+                this._childProps = Object.assign({}, this.props);
+                delete this._childProps.Component;
+            }
+            return this._childProps;
         }
 
         /**
