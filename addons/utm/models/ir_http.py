@@ -16,7 +16,7 @@ class IrHttp(models.AbstractModel):
         domain = cls.get_utm_domain_cookies()
         for url_parameter, __, cookie_name in request.env['utm.mixin'].tracking_fields():
             if url_parameter in request.params and request.httprequest.cookies.get(cookie_name) != request.params[url_parameter]:
-                response.set_cookie(cookie_name, request.params[url_parameter], domain=domain)
+                response.set_cookie(cookie_name, request.params[url_parameter], domain=domain, cookie_type='optional')
 
     @classmethod
     def _post_dispatch(cls, response):
