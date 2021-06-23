@@ -369,6 +369,7 @@ class Picking(models.Model):
         help="When validating the transfer, the products will be assigned to this owner.")
     printed = fields.Boolean('Printed', copy=False)
     signature = fields.Image('Signature', help='Signature', copy=False, attachment=True)
+    is_signed = fields.Boolean('Is Signed', compute="_compute_is_signed")
     is_locked = fields.Boolean(default=True, help='When the picking is not done this allows changing the '
                                'initial demand. When the picking is done this allows '
                                'changing the done quantities.')
@@ -410,6 +411,11 @@ class Picking(models.Model):
         delay_alert_date_data = {data['picking_id'][0]: data['delay_alert_date'] for data in delay_alert_date_data}
         for picking in self:
             picking.delay_alert_date = delay_alert_date_data.get(picking.id, False)
+
+    @api.depends('signature')
+    def _compute_is_signed(self):
+        for picking in self:
+            picking.is_signed = picking.signature
 
     @api.depends('move_lines', 'state', 'picking_type_code', 'move_lines.forecast_availability', 'move_lines.forecast_expected_date')
     def _compute_products_availability(self):
