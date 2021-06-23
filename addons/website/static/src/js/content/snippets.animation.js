@@ -965,9 +965,9 @@ registry.ScrollButton = registry.anchorSlide.extend({
      */
     _onAnimateClick: function (ev) {
         ev.preventDefault();
-        const $nextSection = this.$el.closest('section').next('section');
-        if ($nextSection.length) {
-            this._scrollTo($nextSection);
+        const $nextElement = this.$el.closest('section').next();
+        if ($nextElement.length) {
+            this._scrollTo($nextElement);
         }
     },
 });
