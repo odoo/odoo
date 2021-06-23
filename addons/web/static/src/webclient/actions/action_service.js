@@ -458,11 +458,15 @@ function makeActionManager(env) {
                 }
             }
             catchError(error) {
-                // The above component should truely handle the error
                 reject(error);
-                // Re-throw in case it is a programming error
-                if (error && error.name) {
+                cleanDomFromBootstrap();
+                if (action.target === "new") {
+                    // get the dialog service to close the dialog.
                     throw error;
+                } else {
+                    const lastCt = controllerStack[controllerStack.length - 1];
+                    const info = lastCt ? lastCt.__info__ : {};
+                    env.bus.trigger("ACTION_MANAGER:UPDATE", info);
                 }
             }
             mounted() {
@@ -582,11 +586,13 @@ function makeActionManager(env) {
         const nextStack = controllerStack.slice(0, index).concat(controllerArray);
         controller.props.breadcrumbs = _getBreadcrumbs(nextStack.slice(0, nextStack.length - 1));
         const closingProm = _executeCloseAction();
-        env.bus.trigger("ACTION_MANAGER:UPDATE", {
+
+        controller.__info__ = {
             id: ++id,
             Component: ControllerComponent,
             componentProps: controller.props,
-        });
+        };
+        env.bus.trigger("ACTION_MANAGER:UPDATE", controller.__info__);
         return Promise.all([currentActionProm, closingProm]).then((r) => r[0]);
     }
 

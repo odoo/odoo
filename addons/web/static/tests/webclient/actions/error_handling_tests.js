@@ -24,12 +24,13 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         assert.strictEqual(webClient.el.querySelector(".o_action_manager").innerHTML, "");
         await doAction(webClient, "1");
-        assert.ok(webClient.el.querySelector(".o_action_manager").innerHTML !== "");
+        const contents = webClient.el.querySelector(".o_action_manager").innerHTML;
+        assert.ok(contents !== "");
         try {
             await doAction(webClient, "Boom");
         } catch (e) {
             assert.ok(e instanceof TypeError);
         }
-        assert.strictEqual(webClient.el.querySelector(".o_action_manager").innerHTML, "");
+        assert.strictEqual(webClient.el.querySelector(".o_action_manager").innerHTML, contents);
     });
 });
