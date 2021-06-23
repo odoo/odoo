@@ -51,20 +51,6 @@ function factory(dependencies) {
         }
 
         /**
-         * @override
-         */
-        static create(data) {
-            const isMulti = typeof data[Symbol.iterator] === 'function';
-            const dataList = isMulti ? data : [data];
-            for (const data of dataList) {
-                if (!data.id) {
-                    data.id = getAttachmentNextTemporaryId();
-                }
-            }
-            return super.create(...arguments);
-        }
-
-        /**
          * View provided attachment(s), with given attachment initially. Prompts
          * the attachment viewer.
          *
@@ -126,6 +112,17 @@ function factory(dependencies) {
          */
         static _createRecordLocalId(data) {
             return `${this.modelName}_${data.id}`;
+        }
+
+        /**
+         * @private
+         * @override
+         * @param {Object|Object[]} data
+         */
+        static _prepareData(data) {
+            if (!data.id) {
+                data.id = getAttachmentNextUploadingId();
+            }
         }
 
         /**

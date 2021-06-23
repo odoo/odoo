@@ -233,6 +233,19 @@ function factory() {
         }
 
         /**
+         * This function is called during the create cycle
+         *
+         * The main use case is to prepare the record for the assignation of its
+         * values, for example if a computed field relies on the record to have
+         * some purely technical property correctly set.
+         *
+         * @abstract
+         * @private
+         * @param {Object|Object[]} data
+         */
+        static _prepareData(data) {}
+
+        /**
          * This function is called when this record has been explicitly updated
          * with `.update()` or static method `.create()`, at the end of an
          * record update cycle. This is a backward-compatible behaviour that
