@@ -10,8 +10,18 @@ import FormView from "web.FormView";
 import ListController from "web.ListController";
 import testUtils from "web.test_utils";
 import legacyViewRegistry from "web.view_registry";
-import { click, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
+import {
+    click,
+    legacyExtraNextTick,
+    makeDeferred,
+    nextTick,
+    patchWithCleanup,
+} from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData, loadState } from "./../helpers";
+import { errorService } from "../../../src/core/errors/error_service";
+import { RPCError } from "@web/core/network/rpc_service";
+import { registerCleanup } from "../../helpers/cleanup";
+import { WarningDialog } from "@web/core/errors/error_dialogs";
 
 let serverData;
 const serviceRegistry = registry.category("services");
@@ -2294,4 +2304,73 @@ QUnit.module("ActionManager", (hooks) => {
             });
         }
     );
+
+    QUnit.test("window action in target new fails (onchange)", async (assert) => {
+        assert.expect(3);
+
+        /*
+         * By-pass QUnit's and test's error handling because the error service needs to be active
+         */
+        const handler = (ev) => {
+            // need to preventDefault to remove error from console (so python test pass)
+            ev.preventDefault();
+        };
+        window.addEventListener("unhandledrejection", handler);
+        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
+
+        patchWithCleanup(QUnit, {
+            onUnhandledRejection: () => {},
+        });
+
+        const originOnunhandledrejection = window.onunhandledrejection;
+        window.onunhandledrejection = () => {};
+        registerCleanup(() => {
+            window.onunhandledrejection = originOnunhandledrejection;
+        });
+        /*
+         * End By pass error handling
+         */
+
+        const warningOpened = makeDeferred();
+        class WarningDialogWait extends WarningDialog {
+            setup() {
+                super.setup();
+                owl.hooks.onMounted(() => warningOpened.resolve());
+            }
+        }
+
+        serviceRegistry.add("error", errorService);
+        registry
+            .category("error_dialogs")
+            .add("odoo.exceptions.ValidationError", WarningDialogWait);
+
+        const mockRPC = (route, args) => {
+            if (args.method === "onchange" && args.model === "partner") {
+                const error = new RPCError();
+                error.exceptionName = "odoo.exceptions.ValidationError";
+                error.code = 200;
+                return Promise.reject(error);
+            }
+        };
+
+        serverData.views["partner,666,form"] = /*xml*/ `
+            <form>
+                <header>
+                    <button name="5" type="action"/>
+                </header>
+                <field name="display_name"/>
+            </form>`;
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 24);
+        await click(webClient.el, ".o_form_view button");
+
+        await warningOpened;
+        assert.containsOnce(webClient, ".modal");
+        assert.containsOnce(webClient, ".modal .o_dialog_warning");
+        assert.strictEqual(
+            webClient.el.querySelector(".modal .modal-title").textContent,
+            "Validation Error"
+        );
+    });
 });
