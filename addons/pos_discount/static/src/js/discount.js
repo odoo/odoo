@@ -1,98 +1,104 @@
-odoo.define('pos_discount.pos_discount', function (require) {
-"use strict";
+odoo.define('pos_discount.models', function (require) {
+  "use strict";
 
-var core = require('web.core');
-var screens = require('point_of_sale.screens');
-var models = require('point_of_sale.models');
-var field_utils = require('web.field_utils');
+  var models = require('point_of_sale.models');
 
-var _t = core._t;
+  var existing_models = models.PosModel.prototype.models;
+  var product_index = _.findIndex(existing_models, function (model) {
+      return model.model === "product.product";
+  });
+  var product_model = existing_models[product_index];
 
-var existing_models = models.PosModel.prototype.models;
-var product_index = _.findIndex(existing_models, function (model) {
-    return model.model === "product.product";
+  models.load_models([{
+    model:  product_model.model,
+    fields: product_model.fields,
+    order:  product_model.order,
+    domain: function(self) {return [['id', '=', self.config.discount_product_id[0]]];},
+    context: product_model.context,
+    loaded: product_model.loaded,
+  }]);
+
 });
-var product_model = existing_models[product_index];
 
+odoo.define('pos_discount.DiscountButton', function(require) {
+    'use strict';
 
-models.load_models([{
-  model:  product_model.model,
-  fields: product_model.fields,
-  order:  product_model.order,
-  domain: function(self) {return [['id', '=', self.config.discount_product_id[0]]];},
-  context: product_model.context,
-  loaded: product_model.loaded,
-}]);
+    const PosComponent = require('point_of_sale.PosComponent');
+    const ProductScreen = require('point_of_sale.ProductScreen');
+    const { useListener } = require('web.custom_hooks');
+    const Registries = require('point_of_sale.Registries');
 
-
-var DiscountButton = screens.ActionButtonWidget.extend({
-    template: 'DiscountButton',
-    button_click: function(){
-        var self = this;
-        this.gui.show_popup('number',{
-            'title': _t('Discount Percentage'),
-            'value': this.pos.config.discount_pc,
-            'confirm': function(val) {
-                val = Math.round(Math.max(0,Math.min(100,field_utils.parse.float(val))));
-                self.apply_discount(val);
-            },
-        });
-    },
-    apply_discount: function(pc) {
-        var order    = this.pos.get_order();
-        var lines    = order.get_orderlines();
-        var product  = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
-        if (product === undefined) {
-            this.gui.show_popup('error', {
-                title : _t("No discount product found"),
-                body  : _t("The discount product seems misconfigured. Make sure it is flagged as 'Can be Sold' and 'Available in Point of Sale'."),
-            });
-            return;
+    class DiscountButton extends PosComponent {
+        constructor() {
+            super(...arguments);
+            useListener('click', this.onClick);
         }
-
-        // Remove existing discounts
-        var i = 0;
-        while ( i < lines.length ) {
-            if (lines[i].get_product() === product) {
-                order.remove_orderline(lines[i]);
-            } else {
-                i++;
+        async onClick() {
+            var self = this;
+            const { confirmed, payload } = await this.showPopup('NumberPopup',{
+                title: this.env._t('Discount Percentage'),
+                startingValue: this.env.pos.config.discount_pc,
+            });
+            if (confirmed) {
+                const val = Math.round(Math.max(0,Math.min(100,parseFloat(payload))));
+                await self.apply_discount(val);
             }
         }
 
-        // Add discount
-        // We add the price as manually set to avoid recomputation when changing customer.
-        var base_to_discount = order.get_total_without_tax();
-        if (product.taxes_id.length){
-            var first_tax = this.pos.taxes_by_id[product.taxes_id[0]];
-            if (first_tax.price_include) {
-                base_to_discount = order.get_total_with_tax();
+        async apply_discount(pc) {
+            var order    = this.env.pos.get_order();
+            var lines    = order.get_orderlines();
+            var product  = this.env.pos.db.get_product_by_id(this.env.pos.config.discount_product_id[0]);
+            if (product === undefined) {
+                await this.showPopup('ErrorPopup', {
+                    title : this.env._t("No discount product found"),
+                    body  : this.env._t("The discount product seems misconfigured. Make sure it is flagged as 'Can be Sold' and 'Available in Point of Sale'."),
+                });
+                return;
+            }
+
+            // Remove existing discounts
+            var i = 0;
+            while ( i < lines.length ) {
+                if (lines[i].get_product() === product) {
+                    order.remove_orderline(lines[i]);
+                } else {
+                    i++;
+                }
+            }
+
+            // Add discount
+            // We add the price as manually set to avoid recomputation when changing customer.
+            var base_to_discount = order.get_total_without_tax();
+            if (product.taxes_id.length){
+                var first_tax = this.env.pos.taxes_by_id[product.taxes_id[0]];
+                if (first_tax.price_include) {
+                    base_to_discount = order.get_total_with_tax();
+                }
+            }
+            var discount = - pc / 100.0 * base_to_discount;
+
+            if( discount < 0 ){
+                order.add_product(product, {
+                    price: discount,
+                    lst_price: discount,
+                    extras: {
+                        price_manually_set: true,
+                    },
+                });
             }
         }
-        var discount = - pc / 100.0 * base_to_discount;
+    }
+    DiscountButton.template = 'DiscountButton';
 
-        if( discount < 0 ){
-            order.add_product(product, {
-                price: discount,
-                lst_price: discount,
-                extras: {
-                    price_manually_set: true,
-                },
-            });
-        }
-    },
-});
+    ProductScreen.addControlButton({
+        component: DiscountButton,
+        condition: function() {
+            return this.env.pos.config.module_pos_discount && this.env.pos.config.discount_product_id;
+        },
+    });
 
-screens.define_action_button({
-    'name': 'discount',
-    'widget': DiscountButton,
-    'condition': function(){
-        return this.pos.config.module_pos_discount && this.pos.config.discount_product_id;
-    },
-});
+    Registries.Component.add(DiscountButton);
 
-return {
-    DiscountButton: DiscountButton,
-}
-
+    return DiscountButton;
 });
