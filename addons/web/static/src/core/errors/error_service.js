@@ -97,7 +97,7 @@ export const errorService = {
             }
         }
 
-        window.addEventListener("error", async (ev) => {
+        browser.addEventListener("error", async (ev) => {
             const { colno, error: originalError, filename, lineno, message } = ev;
             let uncaughtError;
             if (!filename && !lineno && !colno) {
@@ -119,7 +119,7 @@ export const errorService = {
             handleError(uncaughtError, originalError);
         });
 
-        window.addEventListener("unhandledrejection", async (ev) => {
+        browser.addEventListener("unhandledrejection", async (ev) => {
             const originalError = ev.reason;
             const uncaughtError = new UncaughtPromiseError();
             uncaughtError.unhandledRejectionEvent = ev;
