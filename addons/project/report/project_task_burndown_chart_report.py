@@ -49,204 +49,147 @@ class ReportProjectTaskBurndownChart(models.Model):
 
     def init(self):
         query = """
-            WITH change_stage_tracking AS (
-                SELECT mm.id as id,
-                       pt.id as task_id,
-                       pt.project_id,
-                       pt.display_project_id,
-                       pt.create_date as date_begin,
-                       mm.date as date_end,
-                       current_stage.id as stage_id,
-                       next_stage.id as next_stage_id,
-                       pt.user_id,
-                       pt.date_assign,
-                       pt.date_deadline,
-                       pt.partner_id
-                  FROM mail_message mm
-            INNER JOIN mail_tracking_value mtv
-                    ON mm.id = mtv.mail_message_id
-            INNER JOIN ir_model_fields imf
-                    ON mtv.field = imf.id
-                   AND imf.model = 'project.task'
-                   AND imf.name = 'stage_id'
-            INNER JOIN project_task_type current_stage
-                    ON mtv.old_value_integer = current_stage.id
-            INNER JOIN project_task_type next_stage
-                    ON mtv.new_value_integer = next_stage.id
-            INNER JOIN project_task pt
-                    ON mm.res_id = pt.id
-                 WHERE mm.model = 'project.task'
-                   AND mm.message_type = 'notification'
-                   AND pt.active
-            ),
-            all_stage_changes AS (
-                SELECT current_change.id,
-                        current_change.task_id,
-                        current_change.project_id,
-                        current_change.display_project_id,
-                        CASE WHEN previous_change.id IS NULL THEN current_change.date_begin ELSE previous_change.date_end END as date_begin,
-                        current_change.date_end,
-                        current_change.stage_id,
-                        current_change.next_stage_id,
-                        current_change.user_id,
-                        current_change.date_assign,
-                        current_change.date_deadline,
-                        current_change.partner_id
-                   FROM change_stage_tracking current_change
-              LEFT JOIN change_stage_tracking previous_change
-                     ON previous_change.next_stage_id = current_change.stage_id
-                    AND previous_change.task_id = current_change.task_id
-            ),
-            all_moves_stage_task AS (
-                SELECT pt.id AS task_id,
-                       pt.project_id,
-                       pt.display_project_id,
-                       pt.stage_id,
-                       CASE WHEN last_change.id IS NULL THEN pt.create_date ELSE last_change.date_end END AS date_begin,
-                       (CURRENT_DATE + interval '1 year')::date AS date_end,
-                       pt.user_id,
-                       pt.date_assign,
-                       pt.date_deadline,
-                       pt.partner_id
-                  FROM project_task pt
-             LEFT JOIN all_stage_changes last_change
-                    ON pt.id = last_change.task_id
-                   AND pt.stage_id = last_change.next_stage_id
-                 UNION
-                    SELECT task_id,
-                           project_id,
-                           display_project_id,
-                           stage_id,
-                           date_begin,
-                           date_end,
-                           user_id,
-                           date_assign,
-                           date_deadline,
-                           partner_id
-                      FROM all_stage_changes
-            ),
-            all_moves_by_day AS (
-                SELECT project_id,
-                       display_project_id,
-                       stage_id,
-                       date_begin,
-                       date_end,
-                       d as date,
-                       date_trunc('month', d) AS date_month,
-                       date_trunc('week', d) AS date_week,
-                       date_trunc('year', d) + CAST((extract(quarter from d) - 1) * 3 || ' months' AS interval) AS date_quarter,
-                       date_trunc('year', d) AS date_year,
-                       task_id,
-                       user_id,
-                       date_assign,
-                       date_deadline,
-                       partner_id
-                  FROM all_moves_stage_task
-            CROSS JOIN generate_series(
-                    (
-                        SELECT date_trunc('day', min(create_date))
-                          FROM project_task
-                         WHERE active
-                    ),
-                    (CURRENT_DATE + interval '1 day')::date,
-                    '1 day'
-                ) d
-                WHERE date_begin <= d
-                  AND date_end > d
-            ),
-            burndown_chart AS (
-                SELECT DISTINCT project_id,
-                       display_project_id,
-                       stage_id,
-                       date,
-                       user_id,
-                       date_assign,
-                       date_deadline,
-                       partner_id,
-                       'day' AS group_by,
-                       task_id
-                  FROM all_moves_by_day
-                 WHERE date_begin <= date
-                   AND date_end > date
-             UNION ALL
-                    SELECT DISTINCT project_id,
-                           display_project_id,
-                           stage_id,
-                           date_week AS date,
-                           user_id,
-                           date_assign,
-                           date_deadline,
-                           partner_id,
-                           'week' AS group_by,
-                           task_id
-                      FROM all_moves_by_day
-                     WHERE date_trunc('week', date_begin) <= date_week
-                       AND date_trunc('week', date_end) > date_week
-                 UNION ALL
-                    SELECT DISTINCT project_id,
-                           display_project_id,
-                           stage_id,
-                           date_month AS date,
-                           user_id,
-                           date_assign,
-                           date_deadline,
-                           partner_id,
-                           'month' AS group_by,
-                           task_id
-                      FROM all_moves_by_day
-                     WHERE date_trunc('month', date_begin) <= date_month
-                       AND date_trunc('month', date_end) > date_month
-                 UNION ALL
-                    SELECT DISTINCT project_id,
-                           display_project_id,
-                           stage_id,
-                           date_quarter AS date,
-                           user_id,
-                           date_assign,
-                           date_deadline,
-                           partner_id,
-                           'quarter' AS group_by,
-                           task_id
-                      FROM all_moves_by_day
-                     WHERE date_trunc('month', date_begin) <= date_quarter
-                       AND date_trunc('month', date_end) > date_quarter
-                 UNION ALL
-                    SELECT DISTINCT project_id,
-                           display_project_id,
-                           stage_id,
-                           date_year AS date,
-                           user_id,
-                           date_assign,
-                           date_deadline,
-                           partner_id,
-                           'year' AS group_by,
-                           task_id
-                      FROM all_moves_by_day
-                     WHERE date_trunc('year', date_begin) <= date_year
-                       AND date_trunc('year', date_end) > date_year
-            )
-            SELECT row_number() OVER  (
-                    ORDER BY project_id,
-                             display_project_id,
-                             stage_id,
-                             date,
-                             user_id,
-                             date_assign,
-                             date_deadline,
-                             partner_id,
-                             group_by
-                   ) AS id,
-                   project_id,
-                   display_project_id,
-                   stage_id,
-                   date,
-                   user_id,
-                   date_assign,
-                   date_deadline,
-                   partner_id,
-                   group_by AS date_group_by,
-                   1 AS nb_tasks
-              FROM burndown_chart
+WITH all_moves_stage_task AS (
+    -- Here we compute all previous stage in tracking values
+    -- We're missing the last reached stage
+    -- And the tasks without any stage change (which, by definition, are at the last stage)
+    SELECT pt.project_id,
+           pt.id as task_id,
+           pt.display_project_id,
+           COALESCE(LAG(mm.date) OVER (PARTITION BY mm.res_id ORDER BY mm.id), pt.create_date) as date_begin,
+           mm.date as date_end,
+           mtv.old_value_integer as stage_id,
+           pt.user_id,
+           pt.date_assign,
+           pt.date_deadline,
+           pt.partner_id
+      FROM project_task pt
+      JOIN mail_message mm ON mm.res_id = pt.id
+                          AND mm.message_type = 'notification'
+                          AND mm.model = 'project.task'
+      JOIN mail_tracking_value mtv ON mm.id = mtv.mail_message_id
+      JOIN ir_model_fields imf ON mtv.field = imf.id
+                              AND imf.model = 'project.task'
+                              AND imf.name = 'stage_id'
+     WHERE pt.active
+
+    --We compute the last reached stage
+    UNION ALL
+
+    SELECT pt.project_id,
+           pt.id as task_id,
+           pt.display_project_id,
+           COALESCE(md.date, pt.create_date) as date_begin,
+           (CURRENT_DATE + interval '1 month')::date as date_end,
+           pt.stage_id,
+           pt.user_id,
+           pt.date_assign,
+           pt.date_deadline,
+           pt.partner_id
+      FROM project_task pt
+      LEFT JOIN LATERAL (SELECT mm.date
+                      FROM mail_message mm
+                      JOIN mail_tracking_value mtv ON mm.id = mtv.mail_message_id
+                      JOIN ir_model_fields imf ON mtv.field = imf.id
+                                              AND imf.model = 'project.task'
+                                              AND imf.name = 'stage_id'
+                     WHERE mm.res_id = pt.id
+                       AND mm.message_type = 'notification'
+                       AND mm.model = 'project.task'
+                  ORDER BY mm.id DESC
+                     FETCH FIRST ROW ONLY) md ON TRUE
+     WHERE pt.active
+)
+SELECT (task_id*10^7 + 10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
+       project_id,
+       task_id,
+       display_project_id,
+       stage_id,
+       d as date,
+       user_id,
+       date_assign,
+       date_deadline,
+       partner_id,
+       'day' AS date_group_by,
+       1 AS nb_tasks
+  FROM all_moves_stage_task t
+  JOIN LATERAL generate_series(t.date_begin, t.date_end-interval '1 day', '1 day') d ON TRUE
+
+UNION ALL
+
+SELECT (task_id*10^7 + 2*10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
+       project_id,
+       task_id,
+       display_project_id,
+       stage_id,
+       date_trunc('week', d) as date,
+       user_id,
+       date_assign,
+       date_deadline,
+       partner_id,
+       'week' AS date_group_by,
+       1 AS nb_tasks
+  FROM all_moves_stage_task t
+  JOIN LATERAL generate_series(t.date_begin, t.date_end, '1 week') d ON TRUE
+ WHERE date_trunc('week', t.date_begin) <= date_trunc('week', d)
+   AND date_trunc('week', t.date_end) > date_trunc('week', d)
+
+UNION ALL
+
+SELECT (task_id*10^7 + 3*10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
+       project_id,
+       task_id,
+       display_project_id,
+       stage_id,
+       date_trunc('month', d) as date,
+       user_id,
+       date_assign,
+       date_deadline,
+       partner_id,
+       'month' AS date_group_by,
+       1 AS nb_tasks
+  FROM all_moves_stage_task t
+  JOIN LATERAL generate_series(t.date_begin, t.date_end, '1 month') d ON TRUE
+ WHERE date_trunc('month', t.date_begin) <= date_trunc('month', d)
+   AND date_trunc('month', t.date_end) > date_trunc('month', d)
+
+UNION ALL
+
+SELECT (task_id*10^7 + 4*10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
+       project_id,
+       task_id,
+       display_project_id,
+       stage_id,
+       date_trunc('quarter', d) as date,
+       user_id,
+       date_assign,
+       date_deadline,
+       partner_id,
+       'quarter' AS date_group_by,
+       1 AS nb_tasks
+  FROM all_moves_stage_task t
+  JOIN LATERAL generate_series(t.date_begin, t.date_end, '3 month') d ON TRUE
+ WHERE date_trunc('quarter', t.date_begin) <= date_trunc('quarter', d)
+   AND date_trunc('quarter', t.date_end) > date_trunc('quarter', d)
+
+UNION ALL
+
+SELECT (task_id*10^7 + 5*10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,
+       project_id,
+       task_id,
+       display_project_id,
+       stage_id,
+       date_trunc('year', d) as date,
+       user_id,
+       date_assign,
+       date_deadline,
+       partner_id,
+       'year' AS date_group_by,
+       1 AS nb_tasks
+  FROM all_moves_stage_task t
+  JOIN LATERAL generate_series(t.date_begin, t.date_end, '1 year') d ON TRUE
+ WHERE date_trunc('year', t.date_begin) <= date_trunc('year', d)
+   AND date_trunc('year', t.date_end) > date_trunc('year', d)
         """
 
         tools.drop_view_if_exists(self.env.cr, self._table)
