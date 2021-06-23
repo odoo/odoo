@@ -17,7 +17,7 @@ class PurchaseOrderLine(models.Model):
     def _compute_qty_received(self):
         kit_lines = self.env['purchase.order.line']
         for line in self:
-            if line.qty_received_method == 'stock_moves' and line.move_ids:
+            if line.qty_received_method == 'stock_moves' and line.move_ids.filtered(lambda m: m.bom_line_id):
                 kit_bom = self.env['mrp.bom']._bom_find(product=line.product_id, company_id=line.company_id.id, bom_type='phantom')
                 if kit_bom:
                     moves = line.move_ids.filtered(lambda m: m.state == 'done' and not m.scrapped)
