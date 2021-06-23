@@ -7,25 +7,37 @@
     </t>
     <t t-name="website.cookies_bar.text_primary">
         <p class="o_cookies_bar_text_primary">
-            We use cookies to provide you a better user experience.
+            Allow the use of cookies from this website on this browser?
         </p>
     </t>
     <t t-name="website.cookies_bar.text_secondary">
         <p class="o_cookies_bar_text_secondary">
-            We use them to store info about your habits on our website. It will helps us to provide you the very best experience and customize what you see. <br/>
-            By clicking on this banner, you give us permission to collect data.
+            We use cookies to provide improved experience on this website. You can learn more about our cookies and how we use them in our <a href="/cookie-policy" class="o_cookies_bar_text_policy">Cookie Policy</a>.
         </p>
     </t>
+    <t t-name="website.cookies_bar.text_button_all">
+        <a href="#" id="cookies-consent-all" role="button"
+           class="js_close_popup o_cookies_bar_accept_all o_cookies_bar_text_button btn btn-primary mb-1 px-2 py-1">Allow all cookies</a>
+    </t>
+    <t t-name="website.cookies_bar.text_button_essential">
+        <a href="#" id="cookies-consent-essential" role="button"
+           class="js_close_popup o_cookies_bar_accept_essential o_cookies_bar_text_button_essential btn btn-link mt-1 mb-2 px-2 py-1">Only allow essential cookies</a>
+    </t>
     <t t-name="website.cookies_bar.discrete">
+        <!-- When updating this template, do not forget to also update the
+             backend `website.cookies_bar` template -->
         <section class="o_colored_level o_cc o_cc1">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 pt16">
-                        <p>We use cookies to provide you a better user experience.</p>
+                <div class="row pt16 pb16">
+                    <div class="col-lg-8">
+                        <span class="pe-1">We use cookies to provide you a better user experience on this website.</span>
+                        <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm px-0">Cookie Policy</a>
                     </div>
-                    <div class="col-lg-4 pt16 text-end">
-                        <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm">Cookie Policy</a>
-                        <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary btn-sm">I agree</a>
+                    <div class="col-lg-4 text-end">
+                        <a href="#" id="cookies-consent-essential" role="button"
+                           class="js_close_popup btn btn-link btn-sm px-2">Only essentials</a>
+                        <a href="#" id="cookies-consent-all" role="button"
+                           class="js_close_popup btn btn-primary btn-sm">I agree</a>
                     </div>
                 </div>
             </div>
@@ -40,9 +52,15 @@
                         <t t-call="website.cookies_bar.text_primary"/>
                         <t t-call="website.cookies_bar.text_secondary"/>
                     </div>
-                    <div class="col-lg-3 offset-lg-3">
-                        <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary btn-block">I agree</a>
-                        <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-block">Cookie Policy</a>
+                    <div class="col-lg-3 d-flex align-items-center">
+                        <div class="row">
+                            <div class="col-lg-12 d-flex align-items-center">
+                                <t t-call="website.cookies_bar.text_button_all"/>
+                            </div>
+                            <div class="col-lg-12 d-flex align-items-center">
+                                <t t-call="website.cookies_bar.text_button_essential"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -57,8 +75,8 @@
                         <t t-call="website.cookies_bar.text_title"/>
                         <t t-call="website.cookies_bar.text_primary"/>
                         <t t-call="website.cookies_bar.text_secondary"/>
-                        <a href="/cookie-policy" class=" o_cookies_bar_text_policy btn btn-link me-2">Cookie Policy</a>
-                        <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary">I agree</a>
+                        <t t-call="website.cookies_bar.text_button_all"/>
+                        <t t-call="website.cookies_bar.text_button_essential"/>
                     </div>
                 </div>
             </div>
