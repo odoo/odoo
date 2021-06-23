@@ -29,7 +29,7 @@ from odoo.modules.module import get_resource_from_path, get_resource_path
 from odoo.tools import config, ConstantMapping, get_diff, pycompat, apply_inheritance_specs, locate_node
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.json import scriptsafe as json_scriptsafe
-from odoo.tools import safe_eval
+from odoo.tools import safe_eval, lazy_property, frozendict
 from odoo.tools.view_validation import valid_view, get_variable_names, get_domain_identifiers, get_dict_asts
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 from odoo.tools.image import image_data_uri
@@ -967,7 +967,7 @@ actual arch.
         name_manager = self._postprocess_view(node, model or self.model)
 
         arch = etree.tostring(node, encoding="unicode").replace('\t', '')
-        return arch, name_manager.available_fields
+        return arch, dict(name_manager.available_fields)
 
     def _postprocess_view(self, node, model_name, editable=True):
         """ Process the given architecture, modifying it in-place to add and
@@ -987,7 +987,7 @@ actual arch.
 
         self._postprocess_on_change(root, model)
 
-        name_manager = NameManager(False, model)
+        name_manager = NameManager(model)
 
         # use a stack to recursively traverse the tree
         stack = [(root, editable)]
@@ -1018,7 +1018,7 @@ actual arch.
             for child in reversed(node_info.get('children', node)):
                 stack.append((child, node_info['editable']))
 
-        name_manager.update_view_fields()
+        name_manager.update_available_fields()
         self._postprocess_access_rights(root, model.sudo(False))
 
         return name_manager
@@ -1082,7 +1082,7 @@ actual arch.
     def _postprocess_tag_calendar(self, node, name_manager, node_info):
         for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day'):
             if node.get(additional_field):
-                name_manager.has_field(node.get(additional_field).split('.', 1)[0], {})
+                name_manager.has_field(node.get(additional_field).split('.', 1)[0])
         for f in node:
             if f.tag == 'filter':
                 name_manager.has_field(f.get('name'))
@@ -1090,7 +1090,7 @@ actual arch.
     def _postprocess_tag_field(self, node, name_manager, node_info):
         if node.get('name'):
             attrs = {'id': node.get('id'), 'select': node.get('select')}
-            field = name_manager.Model._fields.get(node.get('name'))
+            field = name_manager.model._fields.get(node.get('name'))
             if field:
                 # apply groups (no tested)
                 if field.groups and not self.user_has_groups(groups=field.groups):
@@ -1102,14 +1102,14 @@ actual arch.
                     if child.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                         node.remove(child)
                         sub_name_manager = self.with_context(
-                            base_model_name=name_manager.Model._name,
+                            base_model_name=name_manager.model._name,
                         )._postprocess_view(
                             child, field.comodel_name, editable=node_info['editable'],
                         )
                         xarch = etree.tostring(child, encoding="unicode").replace('\t', '')
                         views[child.tag] = {
                             'arch': xarch,
-                            'fields': sub_name_manager.available_fields,
+                            'fields': dict(sub_name_manager.available_fields),
                         }
                 attrs['views'] = views
                 if field.type in ('many2one', 'many2many'):
@@ -1121,12 +1121,12 @@ actual arch.
 
             name_manager.has_field(node.get('name'), attrs)
 
-            field = name_manager.fields_get.get(node.get('name'))
-            if field:
-                transfer_field_to_modifiers(field, node_info['modifiers'])
+            field_info = name_manager.field_info.get(node.get('name'))
+            if field_info:
+                transfer_field_to_modifiers(field_info, node_info['modifiers'])
 
     def _postprocess_tag_form(self, node, name_manager, node_info):
-        result = name_manager.Model.view_header_get(False, node.tag)
+        result = name_manager.model.view_header_get(False, node.tag)
         if result:
             node.set('string', result)
 
@@ -1134,26 +1134,26 @@ actual arch.
         # groupby nodes should be considered as nested view because they may
         # contain fields on the comodel
         name = node.get('name')
-        field = name_manager.Model._fields.get(name)
+        field = name_manager.model._fields.get(name)
         if not field or not field.comodel_name:
             return
         # move all children nodes into a new node <groupby>
         groupby_node = E.groupby(*node)
         # post-process the node as a nested view, and associate it to the field
         sub_name_manager = self.with_context(
-            base_model_name=name_manager.Model._name,
+            base_model_name=name_manager.model._name,
         )._postprocess_view(groupby_node, field.comodel_name, editable=False)
         xarch = etree.tostring(groupby_node, encoding="unicode").replace('\t', '')
         name_manager.has_field(name, {'views': {
             'groupby': {
                 'arch': xarch,
-                'fields': sub_name_manager.available_fields,
+                'fields': dict(sub_name_manager.available_fields),
             }
         }})
 
     def _postprocess_tag_label(self, node, name_manager, node_info):
         if node.get('for'):
-            field = name_manager.Model._fields.get(node.get('for'))
+            field = name_manager.model._fields.get(node.get('for'))
             if field and field.groups and not self.user_has_groups(groups=field.groups):
                 node.getparent().remove(node)
 
@@ -1161,9 +1161,9 @@ actual arch.
         searchpanel = [child for child in node if child.tag == 'searchpanel']
         if searchpanel:
             self.with_context(
-                base_model_name=name_manager.Model._name,
+                base_model_name=name_manager.model._name,
             )._postprocess_view(
-                searchpanel[0], name_manager.Model._name, editable=False,
+                searchpanel[0], name_manager.model._name, editable=False,
             )
             node_info['children'] = [child for child in node if child.tag != 'searchpanel']
 
@@ -1190,7 +1190,7 @@ actual arch.
         return node.get('editable')
 
     def _editable_tag_field(self, node, name_manager):
-        field = name_manager.Model._fields.get(node.get('name'))
+        field = name_manager.model._fields.get(node.get('name'))
         return field is None or field.is_editable() and (
             node.get('readonly') not in ('1', 'True')
             or get_dict_asts(node.get('attrs') or "{}")
@@ -1215,8 +1215,9 @@ actual arch.
         if model_name not in self.env:
             self._raise_view_error(_('Model not found: %(model)s', model=model_name), node)
 
-        model = self.env[model_name]
-        name_manager = NameManager(True, model)
+        # fields_get() optimization: validation does not require translations
+        model = self.env[model_name].with_context(lang=None)
+        name_manager = NameManager(model)
 
         # use a stack to recursively traverse the tree
         stack = [(node, editable)]
@@ -1239,7 +1240,7 @@ actual arch.
             for child in reversed(node):
                 stack.append((child, node_info['editable']))
 
-        name_manager.check_view_fields(self)
+        name_manager.check(self)
 
         return name_manager
 
@@ -1270,10 +1271,10 @@ actual arch.
     def _validate_tag_calendar(self, node, name_manager, node_info):
         for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day'):
             if node.get(additional_field):
-                name_manager.has_field(node.get(additional_field).split('.', 1)[0], {})
+                name_manager.has_field(node.get(additional_field).split('.', 1)[0])
         for f in node:
             if f.tag == 'filter':
-                name_manager.has_field(f.get('name'), {})
+                name_manager.has_field(f.get('name'))
 
     def _validate_tag_search(self, node, name_manager, node_info):
         if not list(node.iterdescendants(tag="field")):
@@ -1287,14 +1288,14 @@ actual arch.
             if len(searchpanels) > 1:
                 self._raise_view_error(_('Search tag can only contain one search panel'), node)
             node.remove(searchpanels[0])
-            self._validate_view(searchpanels[0], name_manager.Model._name, editable=False)
+            self._validate_view(searchpanels[0], name_manager.model._name, editable=False)
 
     def _validate_tag_field(self, node, name_manager, node_info):
         name = node.get('name')
         if not name:
             self._raise_view_error(_("Field tag must have a \"name\" attribute defined"), node)
 
-        field = name_manager.Model._fields.get(name)
+        field = name_manager.model._fields.get(name)
         if field:
             if field.relational:
                 domain = (
@@ -1309,7 +1310,7 @@ actual arch.
                     fnames, vnames = self._get_domain_identifiers(node, domain, desc)
                     self._check_field_paths(node, fnames, field.comodel_name, f"{desc} ({domain})")
                     if vnames:
-                        name_manager.must_have_fields(dict.fromkeys(vnames, f"{desc} ({domain})"))
+                        name_manager.must_have_fields(vnames, f"{desc} ({domain})")
 
             elif node.get('domain'):
                 msg = _(
@@ -1323,12 +1324,13 @@ actual arch.
                     continue
                 node.remove(child)
                 sub_manager = self._validate_view(child, field.comodel_name, node_info['editable'])
-                name_manager.must_have_fields(sub_manager.mandatory_parent_fields)
+                for fname, use in sub_manager.mandatory_parent_fields.items():
+                    name_manager.must_have_field(fname, use)
 
-        elif name not in name_manager.fields_get:
+        elif name not in name_manager.field_info:
             msg = _(
                 'Field "%(field_name)s" does not exist in model "%(model_name)s"',
-                field_name=name, model_name=name_manager.Model._name,
+                field_name=name, model_name=name_manager.model._name,
             )
             self._raise_view_error(msg, node)
 
@@ -1351,9 +1353,9 @@ actual arch.
             name = node.get('name')
             desc = f'domain of <filter name="{name}">' if name else 'domain of <filter>'
             fnames, vnames = self._get_domain_identifiers(node, domain, desc)
-            self._check_field_paths(node, fnames, name_manager.Model._name, f"{desc} ({domain})")
+            self._check_field_paths(node, fnames, name_manager.model._name, f"{desc} ({domain})")
             if vnames:
-                name_manager.must_have_fields(dict.fromkeys(vnames, f"{desc} ({domain})"))
+                name_manager.must_have_fields(vnames, f"{desc} ({domain})")
 
     def _validate_tag_button(self, node, name_manager, node_info):
         name = node.get('name')
@@ -1368,11 +1370,11 @@ actual arch.
             elif not name:
                 self._raise_view_error(_("Button must have a name"), node)
             elif type_ == 'object':
-                func = getattr(type(name_manager.Model), name, None)
+                func = getattr(type(name_manager.model), name, None)
                 if not func:
                     msg = _(
                         "%(action_name)s is not a valid action on %(model_name)s",
-                        action_name=name, model_name=name_manager.Model._name,
+                        action_name=name, model_name=name_manager.model._name,
                     )
                     self._raise_view_error(msg, node)
                 try:
@@ -1380,14 +1382,14 @@ actual arch.
                 except AccessError:
                     msg = _(
                         "%(method)s on %(model)s is private and cannot be called from a button",
-                        method=name, model=name_manager.Model._name,
+                        method=name, model=name_manager.model._name,
                     )
                     self._raise_view_error(msg, node)
                 try:
-                    inspect.signature(func).bind(self=name_manager.Model)
+                    inspect.signature(func).bind(self=name_manager.model)
                 except TypeError:
                     msg = "%s on %s has parameters and cannot be called from a button"
-                    self._log_view_warning(msg % (name, name_manager.Model._name), node)
+                    self._log_view_warning(msg % (name, name_manager.model._name), node)
             elif type_ == 'action':
                 # logic mimics /web/action/load behaviour
                 action = False
@@ -1423,7 +1425,7 @@ actual arch.
         name = node.get('name')
         if not name:
             return
-        field = name_manager.Model._fields.get(name)
+        field = name_manager.model._fields.get(name)
         if field:
             if field.type != 'many2one':
                 msg = _(
@@ -1437,18 +1439,19 @@ actual arch.
                 fnames, vnames = self._get_domain_identifiers(node, domain, desc)
                 self._check_field_paths(node, fnames, field.comodel_name, f"{desc} ({domain})")
                 if vnames:
-                    name_manager.must_have_fields(dict.fromkeys(vnames, f"{desc} ({domain})"))
+                    name_manager.must_have_fields(vnames, f"{desc} ({domain})")
 
             # move all children nodes into a new node <groupby>
             groupby_node = E.groupby(*node)
             # validate the node as a nested view
             sub_manager = self._validate_view(groupby_node, field.comodel_name, editable=False)
-            name_manager.has_field(name, {})
-            name_manager.must_have_fields(sub_manager.mandatory_parent_fields)
+            name_manager.has_field(name)
+            for fname, use in sub_manager.mandatory_parent_fields.items():
+                name_manager.must_have_field(fname, use)
         else:
             msg = _(
                 "Field '%(field)s' found in 'groupby' node does not exist in model %(model)s",
-                field=name, model=name_manager.Model._name,
+                field=name, model=name_manager.model._name,
             )
             self._raise_view_error(msg, node)
 
@@ -1466,7 +1469,7 @@ actual arch.
                     'without corresponding field or button, use \'class="o_form_label"\'.')
             self._raise_view_error(msg, node)
         else:
-            name_manager.must_have_name_or_id(for_, '<label for="...">')
+            name_manager.must_have_name(for_, '<label for="...">')
 
     def _validate_tag_page(self, node, name_manager, node_info):
         if node.getparent() is None or node.getparent().tag != 'notebook':
@@ -1528,12 +1531,11 @@ actual arch.
                         # domains in attrs are used for readonly, invisible, ...
                         # and thus are only executed client side
                         fnames, vnames = self._get_domain_identifiers(node, val_ast, attr, expr)
-                        fields = fnames | vnames
-                        name_manager.must_have_fields(dict.fromkeys(fields, f"attrs ({expr})"))
+                        name_manager.must_have_fields(fnames | vnames, f"attrs ({expr})")
                     else:
                         vnames = get_variable_names(val_ast)
                         if vnames:
-                            name_manager.must_have_fields(dict.fromkeys(vnames, f"attrs ({expr})"))
+                            name_manager.must_have_fields(vnames, f"attrs ({expr})")
 
             elif attr == 'context':
                 for key, val_ast in get_dict_asts(expr).items():
@@ -1546,7 +1548,7 @@ actual arch.
                             self._raise_view_error(msg, node)
                         group_by = val_ast.s
                         fname = group_by.split(':')[0]
-                        if fname not in name_manager.Model._fields:
+                        if fname not in name_manager.model._fields:
                             msg = _(
                                 'Unknown field "%(field)s" in "group_by" value in %(attribute)s=%(value)r',
                                 field=fname, attribute=attr, value=expr,
@@ -1555,7 +1557,7 @@ actual arch.
                     else:
                         vnames = get_variable_names(val_ast)
                         if vnames:
-                            name_manager.must_have_fields(dict.fromkeys(vnames, f"context ({expr})"))
+                            name_manager.must_have_fields(vnames, f"context ({expr})")
 
             elif attr == 'groups':
                 for group in expr.replace('!', '').split(','):
@@ -1578,7 +1580,7 @@ actual arch.
             elif attr.startswith('decoration-'):
                 vnames = get_variable_names(expr)
                 if vnames:
-                    name_manager.must_have_fields(dict.fromkeys(vnames, f"{attr}={expr}"))
+                    name_manager.must_have_fields(vnames, f"{attr}={expr}")
 
             elif attr == 'data-toggle' and expr == 'tab':
                 if node.get('role') != 'tab':
@@ -2113,21 +2115,22 @@ class ResetViewArchWizard(models.TransientModel):
 class NameManager:
     """ An object that manages all the named elements in a view. """
 
-    def __init__(self, validate, Model):
-        self.available_fields = dict()
-        self.mandatory_fields = dict()
-        self.mandatory_parent_fields = dict()
+    def __init__(self, model):
+        self.model = model
+        self.available_fields = collections.defaultdict(dict)   # {field_name: field_info}
         self.available_actions = set()
-        self.mandatory_names_or_ids = dict()
-        self.available_names_or_ids = set()
-        self.validate = validate
-        # optimization: post-processing requires translations, but validation does not
-        self.Model = Model.with_context(lang=False) if validate else Model
-        self.fields_get = self.Model.fields_get()
+        self.available_names = set()
+        self.mandatory_fields = dict()          # {field_name: use}
+        self.mandatory_parent_fields = dict()   # {field_name: use}
+        self.mandatory_names = dict()           # {name: use}
 
-    def has_field(self, name, info=()):
-        self.available_fields.setdefault(name, {}).update(info)
-        self.available_names_or_ids.add(info.get('id') or name)
+    @lazy_property
+    def field_info(self):
+        return self.model.fields_get()
+
+    def has_field(self, name, info=frozendict()):
+        self.available_fields[name].update(info)
+        self.available_names.add(info.get('id') or name)
 
     def has_action(self, name):
         self.available_actions.add(name)
@@ -2138,59 +2141,53 @@ class NameManager:
         else:
             self.mandatory_fields[name] = use
 
-    def must_have_fields(self, name_uses):
-        for name, use in name_uses.items():
+    def must_have_fields(self, names, use):
+        for name in names:
             self.must_have_field(name, use)
 
-    def must_have_name_or_id(self, name, use):
-        self.mandatory_names_or_ids[name] = use
+    def must_have_name(self, name, use):
+        self.mandatory_names[name] = use
 
-    def final_check(self):
-        if self.mandatory_fields:
-            msg = []
-            for field in self.mandatory_fields:
-                msg.append(str(field))
-            _logger.error("All parent.field should have been consummed at root level. \n %s", '\n'.join(msg))
+    def check(self, view):
+        # context for translations below
+        context = view.env.context          # pylint: disable=unused-variable
 
-    def check_view_fields(self, view):
-        for action, use in self.mandatory_names_or_ids.items():
-            if action not in self.available_actions and action not in self.available_names_or_ids:
+        for name, use in self.mandatory_names.items():
+            if name not in self.available_actions and name not in self.available_names:
                 msg = _(
                     "Name or id %(name_or_id)r in %(use)s must be present in view but is missing.",
-                    name_or_id=action, use=use,
+                    name_or_id=name, use=use,
                 )
                 view._raise_view_error(msg)
 
-        for field_name in self.available_fields:
-            if field_name not in self.fields_get:
-                message = _("Field `%(name)s` does not exist", name=field_name)
+        for name in self.available_fields:
+            if name not in self.model._fields and name not in self.field_info:
+                message = _("Field `%(name)s` does not exist", name=name)
                 view._raise_view_error(message)
 
-        for field, use in self.mandatory_fields.items():
-            if field == 'id':  # always available
+        for name, use in self.mandatory_fields.items():
+            if name == 'id':  # always available
                 continue
-            if "." in field:
+            if "." in name:
                 msg = _(
                     "Invalid composed field %(definition)s in %(use)s",
-                    definition=field, use=use,
+                    definition=name, use=use,
                 )
                 view._raise_view_error(msg)
-            corresponding_field = self.available_fields.get(str(field))
-            if corresponding_field is None:
+            info = self.available_fields.get(name)
+            if info is None:
                 msg = _(
                     "Field %(name)r used in %(use)s must be present in view but is missing.",
-                    name=field, use=use,
+                    name=name, use=use,
                 )
                 view._raise_view_error(msg)
-            if corresponding_field.get('select') == 'multi':  # mainly for searchpanel, but can be a generic behaviour.
+            if info.get('select') == 'multi':  # mainly for searchpanel, but can be a generic behaviour.
                 msg = _(
                     "Field %(name)r used in %(use)s is present in view but is in select multi.",
-                    name=field, use=use,
+                    name=name, use=use,
                 )
                 view._raise_view_error(msg)
 
-    def update_view_fields(self):
-        for field_name, field_infos in self.available_fields.items():
-            model_field_infos = self.fields_get.get(field_name)
-            if model_field_infos:
-                field_infos.update(model_field_infos)
+    def update_available_fields(self):
+        for name, info in self.available_fields.items():
+            info.update(self.field_info.get(name, ()))
