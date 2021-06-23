@@ -71,6 +71,10 @@ Object.assign(MailTemplate, {
     props: {
         activityLocalId: String,
         mailTemplateLocalId: String,
+        name: {
+            type: String,
+            optional: true,
+        },
     },
     template: 'mail.MailTemplate',
 });

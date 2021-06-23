@@ -72,10 +72,10 @@ QUnit.test('grant course access', async function (assert) {
     });
     await this.createActivityComponent(activity);
 
-    assert.containsOnce(document.body, '.o_Activity', "should have activity component");
-    assert.containsOnce(document.body, '.o_Activity_grantAccessButton', "should have grant access button");
+    assert.containsOnce(document.body, '[name~="o-Activity"]', "should have activity component");
+    assert.containsOnce(document.body, '[name~="o-Activity-grantAccessButton"]', "should have grant access button");
 
-    document.querySelector('.o_Activity_grantAccessButton').click();
+    document.querySelector('[name~="o-Activity-grantAccessButton"]').click();
     assert.verifySteps(['access_grant'], "Grant button should trigger the right rpc call");
 });
 
@@ -112,10 +112,10 @@ QUnit.test('refuse course access', async function (assert) {
     });
     await this.createActivityComponent(activity);
 
-    assert.containsOnce(document.body, '.o_Activity', "should have activity component");
-    assert.containsOnce(document.body, '.o_Activity_refuseAccessButton', "should have refuse access button");
+    assert.containsOnce(document.body, '[name~="o-Activity"]', "should have activity component");
+    assert.containsOnce(document.body, '[name~="o-Activity-refuseAccessButton"]', "should have refuse access button");
 
-    document.querySelector('.o_Activity_refuseAccessButton').click();
+    document.querySelector('[name~="o-Activity-refuseAccessButton"]').click();
     assert.verifySteps(['access_refuse'], "refuse button should trigger the right rpc call");
 });
 

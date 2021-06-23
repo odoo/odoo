@@ -54,62 +54,62 @@ QUnit.test('activity simplest layout', async function (assert) {
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_sidebar').length,
+        document.querySelectorAll('[name~="o-Activity-sidebar"]').length,
         1,
         "should have activity sidebar"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_core').length,
+        document.querySelectorAll('[name~="o-Activity-core"]').length,
         1,
         "should have activity core"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_user').length,
+        document.querySelectorAll('[name~="o-Activity-user"]').length,
         1,
         "should have activity user"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_info').length,
+        document.querySelectorAll('[name~="o-Activity-info"]').length,
         1,
         "should have activity info"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_note').length,
+        document.querySelectorAll('[name~="o-Activity-note"]').length,
         0,
         "should not have activity note"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_details').length,
+        document.querySelectorAll('[name~="o-Activity-details"]').length,
         0,
         "should not have activity details"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_mailTemplates').length,
+        document.querySelectorAll('[name~="o-Activity-mailTemplates"]').length,
         0,
         "should not have activity mail templates"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_editButton').length,
+        document.querySelectorAll('[name~="o-Activity-editButton"]').length,
         0,
         "should not have activity Edit button"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_cancelButton').length,
+        document.querySelectorAll('[name~="o-Activity-cancelButton"]').length,
         0,
         "should not have activity Cancel button"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_markDoneButton').length,
+        document.querySelectorAll('[name~="o-Activity-markDoneButton"]').length,
         0,
         "should not have activity Mark as Done button"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_uploadButton').length,
+        document.querySelectorAll('[name~="o-Activity-uploadButton"]').length,
         0,
         "should not have activity Upload button"
     );
@@ -126,17 +126,17 @@ QUnit.test('activity with note layout', async function (assert) {
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_note').length,
+        document.querySelectorAll('[name~="o-Activity-note"]').length,
         1,
         "should have activity note"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_note').textContent,
+        document.querySelector('[name~="o-Activity-note"]').textContent,
         "There is no good or bad note",
         "activity note should be 'There is no good or bad note'"
     );
@@ -157,21 +157,21 @@ QUnit.test('activity info layout when planned after tomorrow', async function (a
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_dueDateText').length,
+        document.querySelectorAll('[name~="o-Activity-dueDateText"]').length,
         1,
         "should have activity delay"
     );
     assert.ok(
-        document.querySelector('.o_Activity_dueDateText').classList.contains('o-planned'),
+        document.querySelector('[name~="o-Activity-dueDateText"]').classList.contains('o-planned'),
         "activity delay should have the right color modifier class (planned)"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_dueDateText').textContent,
+        document.querySelector('[name~="o-Activity-dueDateText"]').textContent,
         "Due in 5 days:",
         "activity delay should have 'Due in 5 days:' as label"
     );
@@ -192,21 +192,21 @@ QUnit.test('activity info layout when planned tomorrow', async function (assert)
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_dueDateText').length,
+        document.querySelectorAll('[name~="o-Activity-dueDateText"]').length,
         1,
         "should have activity delay"
     );
     assert.ok(
-        document.querySelector('.o_Activity_dueDateText').classList.contains('o-planned'),
+        document.querySelector('[name~="o-Activity-dueDateText"]').classList.contains('o-planned'),
         "activity delay should have the right color modifier class (planned)"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_dueDateText').textContent,
+        document.querySelector('[name~="o-Activity-dueDateText"]').textContent,
         'Tomorrow:',
         "activity delay should have 'Tomorrow:' as label"
     );
@@ -225,21 +225,21 @@ QUnit.test('activity info layout when planned today', async function (assert) {
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_dueDateText').length,
+        document.querySelectorAll('[name~="o-Activity-dueDateText"]').length,
         1,
         "should have activity delay"
     );
     assert.ok(
-        document.querySelector('.o_Activity_dueDateText').classList.contains('o-today'),
+        document.querySelector('[name~="o-Activity-dueDateText"]').classList.contains('o-today'),
         "activity delay should have the right color modifier class (today)"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_dueDateText').textContent,
+        document.querySelector('[name~="o-Activity-dueDateText"]').textContent,
         "Today:",
         "activity delay should have 'Today:' as label"
     );
@@ -260,21 +260,21 @@ QUnit.test('activity info layout when planned yesterday', async function (assert
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_dueDateText').length,
+        document.querySelectorAll('[name~="o-Activity-dueDateText"]').length,
         1,
         "should have activity delay"
     );
     assert.ok(
-        document.querySelector('.o_Activity_dueDateText').classList.contains('o-overdue'),
+        document.querySelector('[name~="o-Activity-dueDateText"]').classList.contains('o-overdue'),
         "activity delay should have the right color modifier class (overdue)"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_dueDateText').textContent,
+        document.querySelector('[name~="o-Activity-dueDateText"]').textContent,
         "Yesterday:",
         "activity delay should have 'Yesterday:' as label"
     );
@@ -295,21 +295,21 @@ QUnit.test('activity info layout when planned before yesterday', async function 
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_dueDateText').length,
+        document.querySelectorAll('[name~="o-Activity-dueDateText"]').length,
         1,
         "should have activity delay"
     );
     assert.ok(
-        document.querySelector('.o_Activity_dueDateText').classList.contains('o-overdue'),
+        document.querySelector('[name~="o-Activity-dueDateText"]').classList.contains('o-overdue'),
         "activity delay should have the right color modifier class (overdue)"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_dueDateText').textContent,
+        document.querySelector('[name~="o-Activity-dueDateText"]').textContent,
         "5 days overdue:",
         "activity delay should have '5 days overdue:' as label"
     );
@@ -326,22 +326,22 @@ QUnit.test('activity with a summary layout', async function (assert) {
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_summary').length,
+        document.querySelectorAll('[name~="o-Activity-summary"]').length,
         1,
         "should have activity summary"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_type').length,
+        document.querySelectorAll('[name~="o-Activity-type"]').length,
         0,
         "should not have the activity type as summary"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_summary').textContent.trim(),
+        document.querySelector('[name~="o-Activity-summary"]').textContent.trim(),
         "“test summary”",
         "should have the specific activity summary in activity summary"
     );
@@ -358,27 +358,27 @@ QUnit.test('activity without summary layout', async function (assert) {
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_type').length,
+        document.querySelectorAll('[name~="o-Activity-type"]').length,
         1,
         "activity details should have an activity type section"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_type').textContent.trim(),
+        document.querySelector('[name~="o-Activity-type"]').textContent.trim(),
         "Fake type",
         "activity details should have the activity type display name in type section"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_summary.o_Activity_type').length,
+        document.querySelectorAll('[name~="o-Activity-type"]').length,
         1,
         "should have activity type as summary"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_summary:not(.o_Activity_type)').length,
+        document.querySelectorAll('[name~="o-Activity-summary"]').length,
         0,
         "should not have a specific summary"
     );
@@ -402,35 +402,35 @@ QUnit.test('activity details toggle', async function (assert) {
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_details').length,
+        document.querySelectorAll('[name~="o-Activity-details"]').length,
         0,
         "activity details should not be visible by default"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_detailsButton').length,
+        document.querySelectorAll('[name~="o-Activity-detailsButton"]').length,
         1,
         "activity should have a details button"
     );
 
     await afterNextRender(() =>
-        document.querySelector('.o_Activity_detailsButton').click()
+        document.querySelector('[name~="o-Activity-detailsButton"]').click()
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_details').length,
+        document.querySelectorAll('[name~="o-Activity-details"]').length,
         1,
         "activity details should be visible after clicking on details button"
     );
 
     await afterNextRender(() =>
-        document.querySelector('.o_Activity_detailsButton').click()
+        document.querySelector('[name~="o-Activity-detailsButton"]').click()
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_details').length,
+        document.querySelectorAll('[name~="o-Activity-details"]').length,
         0,
         "activity details should no longer be visible after clicking again on details button"
     );
@@ -455,61 +455,61 @@ QUnit.test('activity details layout', async function (assert) {
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_userAvatar').length,
+        document.querySelectorAll('[name~="o-Activity-userAvatar"]').length,
         1,
         "should have activity user avatar"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_detailsButton').length,
+        document.querySelectorAll('[name~="o-Activity-detailsButton"]').length,
         1,
         "activity should have a details button"
     );
 
     await afterNextRender(() =>
-        document.querySelector('.o_Activity_detailsButton').click()
+        document.querySelector('[name~="o-Activity-detailsButton"]').click()
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_details').length,
+        document.querySelectorAll('[name~="o-Activity-details"]').length,
         1,
         "activity details should be visible after clicking on details button"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_details .o_Activity_type').length,
+        document.querySelectorAll('[name~="o-Activity-type"]').length,
         1,
         "activity details should have type"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_details .o_Activity_type').textContent,
+        document.querySelector('[name~="o-Activity-detailsType"]').textContent,
         "Fake type",
         "activity details type should be 'Fake type'"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_detailsCreation').length,
+        document.querySelectorAll('[name~="o-Activity-detailsCreation"]').length,
         1,
         "activity details should have creation date "
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_detailsCreator').length,
+        document.querySelectorAll('[name~="o-Activity-detailsCreator"]').length,
         1,
         "activity details should have creator"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_detailsAssignation').length,
+        document.querySelectorAll('[name~="o_Activity_detailsAssignation"]').length,
         1,
         "activity details should have assignation information"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_detailsAssignation').textContent.indexOf('Pauvre pomme'),
+        document.querySelector('[name~="o_Activity_detailsAssignation"]').textContent.indexOf('Pauvre pomme'),
         0,
         "activity details assignation information should contain creator display name"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_detailsAssignationUserAvatar').length,
+        document.querySelectorAll('[name~="o-Activity-detailsAssignationUserAvatar"]').length,
         1,
         "activity details should have user avatar"
     );
@@ -526,22 +526,22 @@ QUnit.test('activity with mail template layout', async function (assert) {
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_sidebar').length,
+        document.querySelectorAll('[name~="o-Activity-sidebar"]').length,
         1,
         "should have activity sidebar"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_mailTemplates').length,
+        document.querySelectorAll('[name~="o-Activity-mailTemplates"]').length,
         1,
         "should have activity mail templates"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_mailTemplate').length,
+        document.querySelectorAll('[name~="o-Activity-mailTemplate"]').length,
         1,
         "should have activity mail template"
     );
@@ -615,7 +615,7 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
@@ -658,7 +658,7 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
@@ -690,12 +690,12 @@ QUnit.test('activity upload document is available', async function (assert) {
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_uploadButton').length,
+        document.querySelectorAll('[name~="o-Activity-uploadButton"]').length,
         1,
         "should have activity upload button"
     );
@@ -722,18 +722,18 @@ QUnit.test('activity click on mark as done', async function (assert) {
     await this.createActivityComponent(activity);
 
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_markDoneButton').length,
+        document.querySelectorAll('[name~="o-Activity-markDoneButton"]').length,
         1,
         "should have activity Mark as Done button"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Activity_markDoneButton').click();
+        document.querySelector('[name~="o-Activity-markDoneButton"]').click();
     });
     assert.strictEqual(
         document.querySelectorAll('.o_ActivityMarkDonePopover').length,
@@ -742,7 +742,7 @@ QUnit.test('activity click on mark as done', async function (assert) {
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Activity_markDoneButton').click();
+        document.querySelector('[name~="o-Activity-markDoneButton"]').click();
     });
     assert.strictEqual(
         document.querySelectorAll('.o_ActivityMarkDonePopover').length,
@@ -768,17 +768,17 @@ QUnit.test('activity mark as done popover should focus feedback input on open [R
 
     assert.containsOnce(
         document.body,
-        '.o_Activity',
+        '[name~="o-Activity"]',
         "should have activity component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Activity_markDoneButton',
+        '[name~="o-Activity-markDoneButton"]',
         "should have activity Mark as Done button"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Activity_markDoneButton').click();
+        document.querySelector('[name~="o-Activity-markDoneButton"]').click();
     });
     assert.strictEqual(
         document.querySelector('.o_ActivityMarkDonePopover_feedback'),
@@ -829,17 +829,17 @@ QUnit.test('activity click on edit', async function (assert) {
     });
     await this.createActivityComponent(activity);
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_editButton').length,
+        document.querySelectorAll('[name~="o-Activity-editButton"]').length,
         1,
         "should have activity edit button"
     );
 
-    document.querySelector('.o_Activity_editButton').click();
+    document.querySelector('[name~="o-Activity-editButton"]').click();
     assert.verifySteps(
         ['do_action'],
         "should have called 'schedule activity' action correctly"
@@ -898,32 +898,32 @@ QUnit.test('activity edition', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_Activity',
+        '[name~="o-Activity"]',
         "should have activity component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Activity_editButton',
+        '[name~="o-Activity-editButton"]',
         "should have activity edit button"
     );
     assert.containsOnce(
         document.body,
-        '.o_Activity_icon',
+        '[name~="o-Activity-icon"]',
         "should have activity icon"
     );
     assert.containsOnce(
         document.body,
-        '.o_Activity_icon.fa-times',
+        '[name~="o-Activity-icon"].fa-times',
         "should have initial activity icon"
     );
     assert.containsNone(
         document.body,
-        '.o_Activity_icon.fa-check',
+        '[name~="o-Activity-icon"].fa-check',
         "should not have new activity icon when not edited yet"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_Activity_editButton').click();
+        document.querySelector('[name~="o-Activity-editButton"]').click();
     });
     assert.verifySteps(
         ['do_action'],
@@ -931,12 +931,12 @@ QUnit.test('activity edition', async function (assert) {
     );
     assert.containsNone(
         document.body,
-        '.o_Activity_icon.fa-times',
+        '[name~="o-Activity-icon"].fa-times',
         "should no more have initial activity icon once edited"
     );
     assert.containsOnce(
         document.body,
-        '.o_Activity_icon.fa-check',
+        '[name~="o-Activity-icon"].fa-check',
         "should now have new activity icon once edited"
     );
 });
@@ -1005,25 +1005,25 @@ QUnit.test('activity click on cancel', async function (assert) {
     });
 
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_cancelButton').length,
+        document.querySelectorAll('[name~="o-Activity-cancelButton"]').length,
         1,
         "should have activity cancel button"
     );
 
     await afterNextRender(() =>
-        document.querySelector('.o_Activity_cancelButton').click()
+        document.querySelector('[name~="o-Activity-cancelButton"]').click()
     );
     assert.verifySteps(
         ['unlink'],
         "should have called unlink rpc after clicking on cancel"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('[name~="o-Activity"]').length,
         0,
         "should no longer display activity after clicking on cancel"
     );
@@ -1044,7 +1044,7 @@ QUnit.test('activity mark done popover close on ESCAPE', async function (assert)
 
     await this.createActivityComponent(activity);
     await afterNextRender(() => {
-        document.querySelector('.o_Activity_markDoneButton').click();
+        document.querySelector('[name~="o-Activity-markDoneButton"]').click();
     });
     assert.containsOnce(
         document.body,
@@ -1077,7 +1077,7 @@ QUnit.test('activity mark done popover click on discard', async function (assert
     });
     await this.createActivityComponent(activity);
     await afterNextRender(() => {
-        document.querySelector('.o_Activity_markDoneButton').click();
+        document.querySelector('[name~="o-Activity-markDoneButton"]').click();
     });
     assert.containsOnce(
         document.body,
@@ -1132,16 +1132,16 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
     await this.createActivityComponent(activity);
     assert.containsOnce(
         document.body,
-        '.o_Activity_note',
+        '[name~="o-Activity-note"]',
         "activity should have a note"
     );
     assert.containsOnce(
-        document.querySelector('.o_Activity_note'),
+        document.querySelector('[name~="o-Activity-note"]'),
         'a',
         "activity note should have a link"
     );
 
-    document.querySelector(`.o_Activity_note a`).click();
+    document.querySelector(`[name~="o-Activity-note"] a`).click();
     assert.verifySteps(
         ['do-action:openFormView_some.model_250'],
         "should have open form view on related record after click on link"

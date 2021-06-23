@@ -193,6 +193,10 @@ Object.assign(Activity, {
     components,
     props: {
         activityLocalId: String,
+        name: {
+            type: String,
+            optional: true,
+        },
     },
     template: 'mail.Activity',
 });
