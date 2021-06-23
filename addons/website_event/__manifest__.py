@@ -3,7 +3,7 @@
 
 {
     'name': 'Events',
-    'version': '1.3',
+    'version': '1.4',
     'category': 'Marketing/Events',
     'sequence': 140,
     'summary': 'Publish events, sell tickets',
