@@ -159,7 +159,7 @@
     </xpath>
 
     <xpath expr="//div[@id='wrapwrap']" position="after">
-        <t t-if="website and website.google_analytics_key and not editable">
+        <t t-if="website and website.google_analytics_key and request.env['ir.http']._is_allowed_cookie('optional') and not editable">
             <script id="tracking_code" async="1" t-attf-src="https://www.googletagmanager.com/gtag/js?id={{ website.google_analytics_key }}"></script>
             <script>
                 window.dataLayer = window.dataLayer || [];
@@ -1894,15 +1894,19 @@
                  role="dialog">
                 <div class="modal-dialog d-flex s_popup_size_full">
                     <div class="modal-content oe_structure">
+                        <!-- Keep this section equivalent to the rendering of the `website.cookies_bar.discrete` client template -->
                         <section class="o_colored_level o_cc o_cc1">
                             <div class="container">
-                                <div class="row">
-                                    <div class="col-lg-8 pt16">
-                                        <p>We use cookies to provide you a better user experience.</p>
+                                <div class="row pt16 pb16">
+                                    <div class="col-lg-8">
+                                        <span class="pe-1">We use cookies to provide you a better user experience on this website.</span>
+                                        <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm px-0">Cookie Policy</a>
                                     </div>
-                                    <div class="col-lg-4 pt16 text-end">
-                                        <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm">Cookie Policy</a>
-                                        <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary btn-sm">I agree</a>
+                                    <div class="col-lg-4 text-end">
+                                        <a href="#" id="cookies-consent-essential" role="button"
+                                           class="js_close_popup btn btn-link btn-sm px-2">Only essentials</a>
+                                        <a href="#" id="cookies-consent-all" role="button"
+                                           class="js_close_popup btn btn-primary btn-sm">I agree</a>
                                     </div>
                                 </div>
                             </div>

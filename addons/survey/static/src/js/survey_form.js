@@ -8,7 +8,7 @@ var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
-var utils = require('web.utils');
+const {getCookie, setCookie, deleteCookie} = require('web.utils.cookies');
 
 var SurveyPreloadImageMixin = require('survey.preload_image_mixin');
 const { SurveyImageZoomer } = require("@survey/js/survey_image_zoomer");
@@ -48,8 +48,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             self.imgZoomer = false;
 
             // Add Survey cookie to retrieve the survey if you quit the page and restart the survey.
-            if (!utils.get_cookie('survey_' + self.options.surveyToken)) {
-                utils.set_cookie('survey_' + self.options.surveyToken, self.options.answerToken, 60*60*24);
+            if (!getCookie('survey_' + self.options.surveyToken)) {
+                setCookie('survey_' + self.options.surveyToken, self.options.answerToken, 60 * 60 * 24, 'optional');
             }
 
             // Init fields
@@ -502,7 +502,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         var selectorsToFadeout = ['.o_survey_form_content'];
         if (options.isFinish) {
             selectorsToFadeout.push('.breadcrumb', '.o_survey_timer');
-            utils.set_cookie('survey_' + self.options.surveyToken, '', -1);  // delete cookie
+            deleteCookie('survey_' + self.options.surveyToken);
         }
         self.$(selectorsToFadeout.join(',')).fadeOut(this.fadeInOutDelay, function () {
             resolveFadeOut();

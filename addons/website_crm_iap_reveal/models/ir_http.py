@@ -37,7 +37,7 @@ class IrHttp(models.AbstractModel):
                                      time.time() - before, new_rules_excluded == rules_excluded, country_code,
                                      ip_address)
                         if new_rules_excluded:
-                            response.set_cookie('rule_ids', ','.join(new_rules_excluded))
+                            response.set_cookie('rule_ids', ','.join(new_rules_excluded), cookie_type='optional')
                     except Exception:
                         # just in case - we never want to crash a page view
                         _logger.exception("Failed to process reveal rules")

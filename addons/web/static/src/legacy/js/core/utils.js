@@ -8,7 +8,6 @@ odoo.define('web.utils', function (require) {
  */
 
 var translation = require('web.translation');
-var cookieUtils = require('web.utils.cookies');
 
 const { Component } = owl;
 
@@ -316,7 +315,7 @@ function Markup(v, ...exprs) {
     return new _Markup(s);
 }
 
-var utils = Object.assign({
+const utils = {
     AlreadyDefinedPatchError,
     UnknownPatchError,
     Markup,
@@ -1129,7 +1128,7 @@ var utils = Object.assign({
         }
         return curr;
     },
-}, cookieUtils);
+};
 
 return utils;
 

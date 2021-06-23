@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import time from 'web.time';
-import utils from 'web.utils';
+import {getCookie} from 'web.utils.cookies';
 import Widget from 'web.Widget';
 
 const LivechatButton = Widget.extend({
@@ -33,7 +33,7 @@ const LivechatButton = Widget.extend({
      * @return {integer} operator_id.partner_id.id if the cookie is set
      */
      _get_previous_operator_id() {
-        const cookie = utils.get_cookie('im_livechat_previous_operator_pid');
+        const cookie = getCookie('im_livechat_previous_operator_pid');
         if (cookie) {
             return cookie;
         }

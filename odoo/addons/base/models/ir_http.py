@@ -242,3 +242,7 @@ class IrHttp(models.AbstractModel):
             'multi_lang': len(self.env['res.lang'].sudo().get_installed()) > 1,
         }
         return hashlib.sha1(json.dumps(translation_cache, sort_keys=True).encode()).hexdigest()
+
+    @classmethod
+    def _is_allowed_cookie(cls, cookie_type):
+        return True

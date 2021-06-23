@@ -3,7 +3,7 @@ odoo.define('website.s_popup', function (require) {
 
 const config = require('web.config');
 const publicWidget = require('web.public.widget');
-const utils = require('web.utils');
+const {getCookie, setCookie} = require('web.utils.cookies');
 
 const PopupWidget = publicWidget.Widget.extend({
     selector: '.s_popup',
@@ -12,12 +12,13 @@ const PopupWidget = publicWidget.Widget.extend({
         'hide.bs.modal': '_onHideModal',
         'show.bs.modal': '_onShowModal',
     },
+    cookieValue: true,
 
     /**
      * @override
      */
     start: function () {
-        this._popupAlreadyShown = !!utils.get_cookie(this.$el.attr('id'));
+        this._popupAlreadyShown = !!getCookie(this.$el.attr('id'));
         if (!this._popupAlreadyShown) {
             this._bindPopup();
         }
@@ -96,7 +97,7 @@ const PopupWidget = publicWidget.Widget.extend({
      */
     _onHideModal: function () {
         const nbDays = this.$el.find('.modal').data('consentsDuration');
-        utils.set_cookie(this.$el.attr('id'), true, nbDays * 24 * 60 * 60);
+        setCookie(this.el.id, this.cookieValue, nbDays * 24 * 60 * 60, 'required');
         this._popupAlreadyShown = true;
 
         this.$target.find('.media_iframe_video iframe').each((i, iframe) => {
@@ -115,6 +116,29 @@ const PopupWidget = publicWidget.Widget.extend({
 });
 
 publicWidget.registry.popup = PopupWidget;
+
+// Extending the popup widget with cookiebar functionality.
+// This allows for refusing optional cookies for now and can be
+// extended to picking which cookies categories are accepted.
+publicWidget.registry.cookies_bar = PopupWidget.extend({
+    selector: '#website_cookies_bar',
+    events: Object.assign({}, PopupWidget.prototype.events, {
+        'click #cookies-consent-essential, #cookies-consent-all': '_onAcceptClick',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param ev
+     */
+    _onAcceptClick(ev) {
+        this.cookieValue = `{"required": true, "optional": ${ev.target.id === 'cookies-consent-all'}}`;
+        this._onHideModal();
+    },
+});
 
 return PopupWidget;
 });

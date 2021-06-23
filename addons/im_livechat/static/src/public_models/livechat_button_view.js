@@ -4,7 +4,8 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
-import { get_cookie, set_cookie, unaccent } from 'web.utils';
+import {unaccent} from 'web.utils';
+import {getCookie, setCookie, deleteCookie} from 'web.utils.cookies';
 
 registerModel({
     name: 'LivechatButtonView',
@@ -106,18 +107,18 @@ registerModel({
         },
         closeChat() {
             this.messaging.publicLivechatGlobal.update({ chatWindow: clear() });
-            set_cookie('im_livechat_session', "", -1); // remove cookie
+            deleteCookie('im_livechat_session');
         },
         /**
          * Called when the visitor leaves the livechat chatter the first time (first click on X button)
          * this will deactivate the mail_channel, notify operator that visitor has left the channel.
          */
         leaveSession() {
-            const cookie = get_cookie('im_livechat_session');
+            const cookie = getCookie('im_livechat_session');
             if (cookie) {
                 const channel = JSON.parse(cookie);
                 this.messaging.rpc({ route: '/im_livechat/visitor_leave_session', params: { uuid: channel.uuid } });
-                set_cookie('im_livechat_session', "", -1); // remove cookie
+                deleteCookie('im_livechat_session');
             }
         },
         openChat() {
@@ -152,7 +153,7 @@ registerModel({
                 }
                 this.openChat();
             } else if (!this.messaging.device.isSmall && this.messaging.publicLivechatGlobal.rule.action === 'auto_popup') {
-                const autoPopupCookie = get_cookie('im_livechat_auto_popup');
+                const autoPopupCookie = getCookie('im_livechat_auto_popup');
                 if (!autoPopupCookie || JSON.parse(autoPopupCookie)) {
                     this.update({
                         autoOpenChatTimeout: setTimeout(
@@ -182,7 +183,7 @@ registerModel({
             if (this.isOpeningChat) {
                 return;
             }
-            const cookie = get_cookie('im_livechat_session');
+            const cookie = getCookie('im_livechat_session');
             let def;
             this.update({ isOpeningChat: true });
             clearTimeout(this.autoOpenChatTimeout);
@@ -224,12 +225,12 @@ registerModel({
                         this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
                         this.messaging.publicLivechatGlobal.update({ notificationHandler: {} });
 
-                        set_cookie('im_livechat_session', unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60);
-                        set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60 * 60);
+                        setCookie('im_livechat_session', unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60, 'required');
+                        setCookie('im_livechat_auto_popup', JSON.stringify(false), 60 * 60, 'optional');
                         if (this.messaging.publicLivechatGlobal.publicLivechat.operator) {
                             const operatorPidId = this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
                             const oneWeek = 7 * 24 * 60 * 60;
-                            set_cookie('im_livechat_previous_operator_pid', operatorPidId, oneWeek);
+                            setCookie('im_livechat_previous_operator_pid', operatorPidId, oneWeek, 'optional');
                         }
                     });
                 }
