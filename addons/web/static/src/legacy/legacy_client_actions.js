@@ -11,6 +11,11 @@ import { breadcrumbsToLegacy } from "./utils";
 const { Component, hooks, tags } = owl;
 const actionRegistry = registry.category("actions");
 
+const legacyClientActionTemplate = tags.xml`
+    <ClientActionAdapter Component="Widget" widgetArgs="widgetArgs" widget="widget"
+                         onReverseBreadcrumb="onReverseBreadcrumb" t-ref="controller"
+                         t-on-scrollTo.stop="onScrollTo"/>`;
+
 // registers an action from the legacy action registry to the wowl one, ensuring
 // that widget actions are actually Components
 function registerClientAction(name, action) {
@@ -44,11 +49,7 @@ function registerClientAction(name, action) {
                 };
             }
         }
-        Action.template = tags.xml`
-      <ClientActionAdapter Component="Widget" widgetArgs="widgetArgs" widget="widget"
-                           onReverseBreadcrumb="onReverseBreadcrumb" t-ref="controller"
-                           t-on-scrollTo.stop="onScrollTo"/>
-    `;
+        Action.template = legacyClientActionTemplate;
         Action.components = { ClientActionAdapter };
         Action.isLegacy = true;
         Action.target = action.prototype.target;

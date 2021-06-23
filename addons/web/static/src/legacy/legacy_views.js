@@ -18,6 +18,11 @@ function getJsClassWidget(fieldsInfo) {
     return legacyViewRegistry.get(key);
 }
 
+const legacyViewTemplate = tags.xml`
+    <ViewAdapter Component="Widget" View="View" viewInfo="viewInfo" viewParams="viewParams"
+                 widget="widget" onReverseBreadcrumb="onReverseBreadcrumb" t-ref="controller"
+                 t-on-scrollTo.stop="onScrollTo"/>`;
+
 // registers a view from the legacy view registry to the wowl one, but wrapped
 // into an Owl Component
 function registerView(name, LegacyView) {
@@ -106,7 +111,7 @@ function registerView(name, LegacyView) {
                 .map(([vid, vtype]) => {
                     const view = this.props.viewSwitcherEntries.find((v) => v.type === vtype);
                     if (view) {
-                        return Object.assign({}, view, {viewID: vid});
+                        return Object.assign({}, view, { viewID: vid });
                     } else {
                         return {
                             viewID: vid,
@@ -122,12 +127,8 @@ function registerView(name, LegacyView) {
             });
         }
     }
+    Controller.template = legacyViewTemplate;
 
-    Controller.template = tags.xml`
-    <ViewAdapter Component="Widget" View="View" viewInfo="viewInfo" viewParams="viewParams"
-                 widget="widget" onReverseBreadcrumb="onReverseBreadcrumb" t-ref="controller"
-                 t-on-scrollTo.stop="onScrollTo"/>
-  `;
     Controller.components = { ViewAdapter };
     Controller.display_name = LegacyView.prototype.display_name;
     Controller.icon = LegacyView.prototype.icon;
