@@ -29,7 +29,7 @@ class Website(models.Model):
             return None
 
     salesteam_id = fields.Many2one('crm.team',
-        string='Sales Team',
+        string='Sales Team', ondelete="set null",
         default=_get_default_website_team)
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
                                     string='Price list available for this Ecommerce/Website')

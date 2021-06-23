@@ -246,6 +246,7 @@ class SaleOrder(models.Model):
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company)
     team_id = fields.Many2one(
         'crm.team', 'Sales Team',
+        ondelete="set null", tracking=True,
         change_default=True, default=_get_default_team, check_company=True,  # Unrequired company
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 

@@ -10,8 +10,7 @@ class LeadScoringFrequency(models.Model):
     value = fields.Char('Value')
     won_count = fields.Float('Won Count', digits=(16, 1))  # Float because we add 0.1 to avoid zero Frequency issue
     lost_count = fields.Float('Lost Count', digits=(16, 1))  # Float because we add 0.1 to avoid zero Frequency issue
-    team_id = fields.Many2one('crm.team', 'Sales Team')
-
+    team_id = fields.Many2one('crm.team', 'Sales Team', ondelete="cascade")
 
 class FrequencyField(models.Model):
     _name = 'crm.lead.scoring.frequency.field'

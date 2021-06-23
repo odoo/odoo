@@ -105,7 +105,9 @@ class EventLeadRule(models.Model):
         ('lead', 'Lead'), ('opportunity', 'Opportunity')], string="Lead Type", required=True,
         default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity',
         help="Default lead type when this rule is applied.")
-    lead_sales_team_id = fields.Many2one('crm.team', string='Sales Team', help="Automatically assign the created leads to this Sales Team.")
+    lead_sales_team_id = fields.Many2one(
+        'crm.team', string='Sales Team', ondelete="set null",
+        help="Automatically assign the created leads to this Sales Team.")
     lead_user_id = fields.Many2one('res.users', string='Salesperson', help="Automatically assign the created leads to this Salesperson.")
     lead_tag_ids = fields.Many2many('crm.tag', string='Tags', help="Automatically add these tags to the created leads.")
 
