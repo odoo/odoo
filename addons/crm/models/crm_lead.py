@@ -88,14 +88,15 @@ class Lead(models.Model):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread.cc',
+    _inherit = ['mail.thread.customer',
+                'mail.thread.cc',
                 'mail.thread.blacklist',
                 'mail.thread.phone',
                 'mail.activity.mixin',
                 'utm.mixin',
                 'format.address.mixin',
                ]
-    _primary_email = 'email_from'
+    _mail_field_email = 'email_from'
     _check_company_auto = True
 
     # Description
@@ -1723,18 +1724,6 @@ class Lead(models.Model):
             'email_cc': False}
             for r in self}
 
-    def _message_get_suggested_recipients(self):
-        recipients = super(Lead, self)._message_get_suggested_recipients()
-        try:
-            for lead in self:
-                if lead.partner_id:
-                    lead._message_add_suggested_recipient(recipients, partner=lead.partner_id, reason=_('Customer'))
-                elif lead.email_from:
-                    lead._message_add_suggested_recipient(recipients, email=lead.email_from, reason=_('Customer Email'))
-        except AccessError:  # no read access rights -> just ignore suggested recipients because this imply modifying followers
-            pass
-        return recipients
-
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
@@ -1750,11 +1739,7 @@ class Lead(models.Model):
 
         defaults = {
             'name':  msg_dict.get('subject') or _("No Subject"),
-            'email_from': msg_dict.get('email_from'),
         }
-        if msg_dict.get('author_id'):
-            defaults['partner_id'] = msg_dict['author_id']
-
         if custom_values:
             defaults.update(custom_values)
 
@@ -1764,18 +1749,11 @@ class Lead(models.Model):
 
         return super(Lead, self).message_new(msg_dict, custom_values=defaults)
 
-    def _message_post_after_hook(self, message, msg_vals):
-        if self.email_from and not self.partner_id:
-            # we consider that posting a message with a specified recipient (not a follower, a specific one)
-            # on a document without customer means that it was created through the chatter using
-            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
-            if new_partner:
-                self.search([
-                    ('partner_id', '=', False),
-                    ('email_from', '=', new_partner.email),
-                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Lead, self)._message_post_after_hook(message, msg_vals)
+    def _message_post_update_customer_filter(self):
+        return expression.AND([
+            super(Lead, self)._message_post_update_customer_filter(),
+            [('stage_id.fold', '=', False)]
+        ])
 
     def _message_partner_info_from_emails(self, emails, link_mail=False):
         result = super(Lead, self)._message_partner_info_from_emails(emails, link_mail=link_mail)
