@@ -3,7 +3,7 @@
 import { memoize } from "../utils/functions";
 import { sprintf } from "../utils/strings";
 import { localization } from "./localization";
-import { _lt } from "./translation";
+import { _t } from "./translation";
 
 const { DateTime } = luxon;
 
@@ -276,7 +276,7 @@ export function parseDateTime(value, options = {}) {
     }
 
     if (!result) {
-        throw new Error(sprintf(_lt("'%s' is not a correct date or datetime").toString(), value));
+        throw new Error(sprintf(_t("'%s' is not a correct date or datetime"), value));
     }
 
     result = result.toUTC();

@@ -2,6 +2,28 @@
 
 export const translatedTerms = {};
 
+class LazyTranslatedString extends String {
+    valueOf() {
+        const str = super.valueOf();
+        return translatedTerms[str] || str;
+    }
+}
+
+/**
+ * Translate a term, or return the term if no translation can be found.
+ *
+ * Note that it translates eagerly, which means that if the translations have
+ * not been loaded yet, it will return the untranslated term. If it cannot be
+ * guaranteed that translations are ready, one should use the _lt function
+ * instead (see below)
+ *
+ * @param {string} term
+ * @returns {string}
+ */
+export function _t(term) {
+    return translatedTerms[term] || term;
+}
+
 /**
  * Lazy translation function, only performs the translation when actually
  * printed (e.g. inserted into a template).
@@ -12,7 +34,7 @@ export const translatedTerms = {};
  * @returns {{toString: () => string}}
  */
 export function _lt(str) {
-    return { toString: () => translatedTerms[str] || str };
+    return new LazyTranslatedString(str);
 }
 
 /*
