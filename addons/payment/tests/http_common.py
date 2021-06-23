@@ -11,7 +11,7 @@ from odoo.tests import HttpCase
 from odoo.addons.payment.tests.utils import PaymentTestUtils
 
 
-class PaymentHttpCommon(HttpCase, PaymentTestUtils):
+class PaymentHttpCommon(PaymentTestUtils, HttpCase):
     """ HttpCase common to build and simulate requests going through payment controllers.
 
     Only use if you effectively want to test controllers.
