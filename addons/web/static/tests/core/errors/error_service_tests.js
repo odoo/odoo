@@ -36,8 +36,8 @@ QUnit.module("Error Service", {
         serviceRegistry.add("notification", notificationService);
         serviceRegistry.add("rpc", makeFakeRPCService());
         serviceRegistry.add("localization", makeFakeLocalizationService());
-        const windowAddEventListener = window.addEventListener;
-        window.addEventListener = (type, cb) => {
+        const windowAddEventListener = browser.addEventListener;
+        browser.addEventListener = (type, cb) => {
             if (type === "unhandledrejection") {
                 unhandledRejectionCb = cb;
             }
@@ -46,7 +46,7 @@ QUnit.module("Error Service", {
             }
         };
         registerCleanup(() => {
-            window.addEventListener = windowAddEventListener;
+            browser.addEventListener = windowAddEventListener;
         });
     },
 });
