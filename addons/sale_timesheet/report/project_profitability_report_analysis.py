@@ -184,8 +184,7 @@ class ProfitabilityAnalysis(models.Model):
                                     AND NOT EXISTS (
                                         SELECT SOL.id
                                         FROM sale_order_line SOL
-                                        JOIN sale_order_line_invoice_rel SOINV ON SOINV.order_line_id = SOL.id
-                                        JOIN account_move_line AML ON SOINV.invoice_line_id = AAL.move_id
+                                        JOIN sale_order_line_invoice_rel SOINV ON SOINV.order_line_id = SOL.id AND SOINV.invoice_line_id = AAL.move_id -- AAL.move_id is an account.move.line id
                                         WHERE SOL.qty_delivered_method IN ('timesheet', 'manual')
                                             OR (SOL.qty_delivered_method = 'analytic' AND SOL.invoice_status != 'no')
                                     )
