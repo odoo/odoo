@@ -1411,8 +1411,8 @@ class Task(models.Model):
                 task._message_add_suggested_recipient(recipients, email=task.email_from, reason=_('Customer Email'))
         return recipients
 
-    def _notify_email_header_dict(self):
-        headers = super(Task, self)._notify_email_header_dict()
+    def _notify_email_headers(self):
+        headers = super(Task, self)._notify_email_headers()
         if self.project_id:
             current_objects = [h for h in headers.get('X-Odoo-Objects', '').split(',') if h]
             current_objects.insert(0, 'project.project-%s, ' % self.project_id.id)

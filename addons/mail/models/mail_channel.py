@@ -541,8 +541,8 @@ class Channel(models.Model):
                 groups[index] = (group_name, lambda partner: False, group_data)
         return groups
 
-    def _notify_email_header_dict(self):
-        headers = super(Channel, self)._notify_email_header_dict()
+    def _notify_email_headers(self):
+        headers = super(Channel, self)._notify_email_headers()
         headers['Precedence'] = 'list'
         # avoid out-of-office replies from MS Exchange
         # http://blogs.technet.com/b/exchange/archive/2006/10/06/3395024.aspx

@@ -19,7 +19,7 @@ import threading
 
 from collections import namedtuple
 from email.message import EmailMessage
-from email import message_from_string, policy
+from email import message_from_string
 from lxml import etree
 from werkzeug import urls
 from xmlrpc import client as xmlrpclib
@@ -27,8 +27,6 @@ from xmlrpc import client as xmlrpclib
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
 from odoo.exceptions import MissingError
 from odoo.osv import expression
-
-from odoo.tools import ustr
 from odoo.tools.misc import clean_context, split_every
 
 _logger = logging.getLogger(__name__)
@@ -1333,7 +1331,7 @@ class MailThread(models.AbstractModel):
         if email_part:
             if email_part.get_content_type() == 'text/rfc822-headers':
                 # Convert the message body into a message itself
-                email_payload = message_from_string(email_part.get_payload(), policy=policy.SMTP)
+                email_payload = message_from_string(email_part.get_payload(), policy=email.policy.SMTP)
             else:
                 email_payload = email_part.get_payload()[0]
             bounced_msg_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email_payload, 'Message-Id'))
@@ -2386,7 +2384,7 @@ class MailThread(models.AbstractModel):
         """
         headers = self._notify_email_headers()
         if headers:
-            base_mail_values['headers'] = headers
+            base_mail_values['headers'] = repr(headers)
         return base_mail_values
 
     def _notify_compute_recipients(self, message, msg_vals):
