@@ -8,7 +8,7 @@ class PosOrder(models.Model):
     _inherit = 'pos.order'
 
     currency_rate = fields.Float(compute='_compute_currency_rate', store=True, digits=0, readonly=True)
-    crm_team_id = fields.Many2one('crm.team', string="Sales Team")
+    crm_team_id = fields.Many2one('crm.team', string="Sales Team", ondelete="set null")
 
     @api.model
     def _complete_values_from_session(self, session, values):

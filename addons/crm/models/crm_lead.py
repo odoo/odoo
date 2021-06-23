@@ -114,7 +114,7 @@ class Lead(models.Model):
     team_id = fields.Many2one(
         'crm.team', string='Sales Team', check_company=True, index=True, tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        compute='_compute_team_id', readonly=False, store=True)
+        compute='_compute_team_id', ondelete="set null", readonly=False, store=True)
     company_id = fields.Many2one(
         'res.company', string='Company', index=True,
         compute='_compute_company_id', readonly=False, store=True)
