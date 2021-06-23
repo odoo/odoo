@@ -57,6 +57,7 @@
         constructor() {
             super(...arguments);
             this.intervalOptions = INTERVAL_OPTIONS;
+            this.openedSubMenus = {};
         }
 
         //---------------------------------------------------------------------
@@ -89,6 +90,11 @@
         */
         _onClickMenuGroupBy(fieldName, interval) {
             this.trigger('groupby-menu-selection', { fieldName, interval });
+        }
+
+        _toggleMenu(groupNumber) {
+            this.openedSubMenus[groupNumber] = !this.openedSubMenus[groupNumber];
+            this.render();
         }
     }
 
