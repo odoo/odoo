@@ -2,7 +2,7 @@
 
 import { registerPatch } from '@mail/model/model_core';
 
-import { set_cookie } from 'web.utils';
+import {setCookie} from 'web.utils.cookies';
 
 registerPatch({
     name: 'PublicLivechatGlobal',
@@ -26,7 +26,7 @@ registerPatch({
                 return this.loadQWebTemplate();
             }
             if (this.options.chat_request_session) {
-                set_cookie('im_livechat_session', JSON.stringify(this.options.chat_request_session), 60 * 60);
+                setCookie('im_livechat_session', JSON.stringify(this.options.chat_request_session), 60 * 60, 'required');
             }
             return this._super();
         },
