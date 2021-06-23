@@ -12,6 +12,7 @@ class CalendarEvent(models.Model):
     def default_get(self, fields):
         if self.env.context.get('default_applicant_id'):
             self = self.with_context(
+                default_res_model='hr.applicant', #res_model seems to be lost without this
                 default_res_model_id=self.env.ref('hr_recruitment.model_hr_applicant').id,
                 default_res_id=self.env.context['default_applicant_id']
             )
@@ -19,9 +20,11 @@ class CalendarEvent(models.Model):
         defaults = super(CalendarEvent, self).default_get(fields)
 
         # sync res_model / res_id to opportunity id (aka creating meeting from lead chatter)
-        if 'applicant_id' not in defaults and defaults.get('res_id') and (defaults.get('res_model') or defaults.get('res_model_id')):
-            if (defaults.get('res_model') and defaults['res_model'] == 'hr.applicant') or (defaults.get('res_model_id') and self.env['ir.model'].sudo().browse(defaults['res_model_id']).model == 'hr.applicant'):
-                defaults['applicant_id'] = defaults['res_id']
+        if 'applicant_id' not in defaults:
+            res_model = defaults.get('res_model', False) or self.env.context.get('default_res_model')
+            res_model_id = defaults.get('res_model_id', False) or self.env.context.get('default_res_model_id')
+            if (res_model and res_model == 'hr.applicant') or (res_model_id and self.env['ir.model'].sudo().browse(res_model_id).model == 'hr.applicant'):
+                defaults['applicant_id'] = defaults.get('res_id', False) or self.env.context.get('default_res_id', False)
 
         return defaults
 
