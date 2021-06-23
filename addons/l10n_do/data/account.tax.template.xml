@@ -1198,12 +1198,12 @@
         <record id="tax_group_nonformal" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">60</field>
-            <field name="name">Retención a Proveedores Informales de Bienes (75%)</field>
+            <field name="name">Retención a Proveedores Informales de Bienes (100%)</field>
             <field name="amount_type">group</field>
             <field eval="18" name="amount"/>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="group_ret"/>
-            <field eval="[(6, 0, [ref('tax_18_purch'), ref('ret_75_tax_nonformal')])]" name="children_tax_ids"/>
+            <field eval="[(6, 0, [ref('tax_18_purch'), ref('ret_100_tax_nonformal')])]" name="children_tax_ids"/>
         </record>
 
         <record id="tax_group_person_construction" model="account.tax.template">
