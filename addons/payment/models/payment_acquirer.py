@@ -491,3 +491,19 @@ class PaymentAcquirer(models.Model):
         """
         self.ensure_one()
         return self.journal_id.currency_id or self.company_id.currency_id
+
+    def _get_redirect_form_view(self, is_validation=False):
+        """ Return the view of the template used to render the redirect form.
+
+        For an acquirer to return a different view depending on whether the operation is a
+        validation, it must override this method and return the appropriate view.
+
+        Note: self.ensure_one()
+
+        :param bool is_validation: Whether the operation is a validation
+        :return: The redirect form template
+        :rtype: record of `ir.ui.view`
+        """
+        self.ensure_one()
+        return self.redirect_form_view_id
+
