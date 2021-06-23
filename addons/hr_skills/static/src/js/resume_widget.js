@@ -146,6 +146,18 @@ var AbstractGroupedOne2ManyRenderer = ListRenderer.extend({
         return $body;
     },
 
+    /**
+     * This function enables the top right menu on list views to hide/show fields or, when studio is installed,
+     *  edit the view's content.
+     * For this widget we do not want it at all.
+     *
+     * @override
+     * @private
+     * @returns {boolean}
+     */
+     _shouldRenderOptionalColumnsDropdown: function () {
+         return false;
+     }
 });
 
 var ResumeLineRenderer = AbstractGroupedOne2ManyRenderer.extend({
