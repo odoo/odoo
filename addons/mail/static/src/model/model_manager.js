@@ -553,14 +553,21 @@ class ModelManager {
         const records = [];
         for (const data of dataList) {
             /**
-             * 1. Ensure the record can be created: localId must be unique.
+             * 1. Prepare record data.
+             *
+             * '_prepareData' hook can be used to prepare some needed data and
+             * to avoid the override of model methods such as create.
+             */
+            Model._prepareData(data);
+            /**
+             * 2. Ensure the record can be created: localId must be unique.
              */
             const localId = Model._createRecordLocalId(data);
             if (Model.get(localId)) {
                 throw Error(`A record already exists for model "${Model.modelName}" with localId "${localId}".`);
             }
             /**
-             * 2. Prepare record state. Assign various keys and values that are
+             * 3. Prepare record state. Assign various keys and values that are
              * expected to be found on every record.
              */
             const record = new Model({ valid: true });
@@ -583,14 +590,14 @@ class ModelManager {
                 }
             }
             /**
-             * 3. Register record and invoke the life-cycle hook `_willCreate.`
+             * 4. Register record and invoke the life-cycle hook `_willCreate.`
              * After this step the record is in a functioning state and it is
              * considered existing.
              */
             Model.__records[record.localId] = record;
             record._willCreate();
             /**
-             * 4. Write provided data, default data, and register computes.
+             * 5. Write provided data, default data, and register computes.
              */
             const data2 = {};
             for (const field of Model.__fieldList) {
@@ -607,7 +614,7 @@ class ModelManager {
             }
             this._update(record, data2);
             /**
-             * 5. Register post processing operation that are to be delayed at
+             * 6. Register post processing operation that are to be delayed at
              * the end of the update cycle.
              */
             this._createdRecords.add(record);
