@@ -625,6 +625,7 @@ QUnit.module('Views', {
             "should not have the non_stored_m2o field as proposition");
 
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"]:first'));
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"][role="menuitem"]:contains(Month)'));
 
         assert.containsN(pivot, 'tbody tr', 4,
             "should have 4 rows: one for header, 3 for data");
@@ -1848,6 +1849,7 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(pivot.el.querySelector('thead .o_pivot_header_cell_closed'));
         await testUtils.dom.click(pivot.el.querySelectorAll('.o_pivot_field_menu .dropdown-item[data-field="date"]')[0]);
+        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_field_menu .dropdown-item[data-field="date"][role="menuitem"]:nth-of-type(3)'));
 
         // close and reopen row groupings after changing value
         this.data.partner.records.find(r => r.product_id === 37).date = '2016-10-27';
