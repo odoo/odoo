@@ -1059,6 +1059,14 @@ class Response(werkzeug.wrappers.Response):
             self.response.append(self.render())
             self.template = None
 
+    def set_cookie(self, *args, **kwargs):
+        cookie_type = kwargs.pop('cookie_type', None)
+        if request.db:
+            if not request.env['ir.http']._is_allowed_cookie(cookie_type):
+                kwargs['expires'] = 0
+                kwargs['max_age'] = 0
+        super().set_cookie(*args, **kwargs)
+
 
 class FutureResponse:
     """
@@ -1074,6 +1082,11 @@ class FutureResponse:
 
     @functools.wraps(werkzeug.Response.set_cookie)
     def set_cookie(self, *args, **kwargs):
+        if 'cookie_type' in kwargs and request.db:
+            cookie_type = kwargs.pop('cookie_type', 'required')
+            if not request.env['ir.http']._is_allowed_cookie(cookie_type):
+                kwargs['expires'] = 0
+                kwargs['max_age'] = 0
         werkzeug.Response.set_cookie(self, *args, **kwargs)
 
 
