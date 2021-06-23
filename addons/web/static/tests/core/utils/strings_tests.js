@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
 import { escapeRegExp, intersperse, sprintf } from "@web/core/utils/strings";
+import { _lt, translatedTerms } from "@web/core/l10n/translation";
+import { patchWithCleanup } from "../../helpers/utils";
 
 QUnit.module("utils", () => {
     QUnit.module("strings");
@@ -61,5 +63,38 @@ QUnit.module("utils", () => {
         assert.deepEqual(sprintf("Hello!"), "Hello!");
         assert.deepEqual(sprintf("Hello %s!"), "Hello %s!");
         assert.deepEqual(sprintf("Hello %(value)s!"), "Hello %(value)s!");
+    });
+
+    QUnit.test("sprintf properly formats numbers", (assert) => {
+        assert.deepEqual(sprintf("Hello %s!", 5), "Hello 5!");
+        assert.deepEqual(sprintf("Hello %s and %s!", 9, 10), "Hello 9 and 10!");
+        assert.deepEqual(sprintf("Hello %(x)s!", { x: 11 }), "Hello 11!");
+        assert.deepEqual(sprintf("Hello %(x)s and %(y)s!", { x: 12, y: 13 }), "Hello 12 and 13!");
+    });
+
+    QUnit.test("sprintf set behavior when value is an Array", (assert) => {
+        assert.deepEqual(sprintf("Hello %s!", ["inarray"]), "Hello inarray!");
+        assert.deepEqual(sprintf("Hello %s and %s!", [9, "10"], [11]), "Hello 9,10 and 11!");
+        assert.deepEqual(sprintf("Hello %(x)s!", { x: [11] }), "Hello 11!");
+        assert.deepEqual(
+            sprintf("Hello %(x)s and %(y)s!", { x: [12], y: ["13"] }),
+            "Hello 12 and 13!"
+        );
+    });
+
+    QUnit.test("sprintf supports lazy translated string", (assert) => {
+        patchWithCleanup(translatedTerms, {
+            one: "en",
+            two: "två",
+        });
+
+        assert.deepEqual(sprintf("Hello %s", _lt("one")), "Hello en");
+        assert.deepEqual(sprintf("Hello %s %s", _lt("one"), _lt("two")), "Hello en två");
+
+        const vals = {
+            one: _lt("one"),
+            two: _lt("two"),
+        };
+        assert.deepEqual(sprintf("Hello %(two)s %(one)s", vals), "Hello två en");
     });
 });

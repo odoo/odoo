@@ -70,7 +70,7 @@ export function intersperse(str, indices, separator = "") {
  * @returns {string}
  */
 export function sprintf(s, ...values) {
-    if (values.length === 1 && typeof values[0] === "object") {
+    if (values.length === 1 && Object.prototype.toString.call(values[0]) === "[object Object]") {
         const valuesDict = values[0];
         s = s.replace(/\%\(?([^\)]+)\)s/g, (match, value) => valuesDict[value]);
     } else if (values.length > 0) {
