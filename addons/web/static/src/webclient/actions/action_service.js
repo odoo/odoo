@@ -69,6 +69,13 @@ export class InvalidButtonParamsError extends Error {}
 // regex that matches context keys not to forward from an action to another
 const CTX_KEY_REGEX = /^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|group_by_no_leaf|active_id|active_ids|orderedBy)$/;
 
+// only register this template once for all dynamic classes ControllerComponent
+const ControllerComponentTemplate = tags.xml`<t t-component="Component" t-props="props"
+    registerCallback="registerCallback"
+    t-ref="component"
+    t-on-history-back="onHistoryBack"
+    t-on-controller-title-updated.stop="onTitleUpdated"/>`;
+
 function makeActionManager(env) {
     const keepLast = new KeepLast();
     let id = 0;
@@ -525,13 +532,7 @@ function makeActionManager(env) {
                 controller.title = ev.detail;
             }
         }
-
-        ControllerComponent.template = tags.xml`<t t-component="Component" t-props="props"
-          registerCallback="registerCallback"
-          t-ref="component"
-          t-on-history-back="onHistoryBack"
-          t-on-controller-title-updated.stop="onTitleUpdated"/>`;
-
+        ControllerComponent.template = ControllerComponentTemplate;
         ControllerComponent.Component = controller.Component;
 
         let nextDialog = {};
