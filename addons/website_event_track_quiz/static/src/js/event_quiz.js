@@ -6,6 +6,7 @@ var publicWidget = require('web.public.widget');
 var core = require('web.core');
 var session = require('web.session');
 var utils = require('web.utils');
+var wUtils = require('website.utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -236,7 +237,7 @@ var Quiz = publicWidget.Widget.extend({
                 self._renderAnswersHighlightingAndComments();
                 self._renderValidationInfo();
                 if (data.visitor_uuid) {
-                    utils.set_cookie('visitor_uuid', data.visitor_uuid);
+                    wUtils.setVisitor(data.visitor_uuid);
                 }
             }
 

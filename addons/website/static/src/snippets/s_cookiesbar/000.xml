@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <div t-name="website.cookies_consent_config_modal">
+        <form id="cookies_form">
+            <div class='h5'>You can filter here your consent for cookies...</div>
+            <div class="card-body">
+                <div class="custom-control custom-checkbox">
+                    <input id="cookie_consent_required" type="checkbox" class="custom-control-input" disabled="" checked="" />
+                    <label for="cookie_consent_required" class="custom-control-label">
+                        Strictly Necessary Cookies
+                    </label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input id="cookie_consent_preference" type="checkbox" class="custom-control-input" t-att-checked="actual_consent['preference'] || undefined"/>
+                    <label for="cookie_consent_preference" class="custom-control-label">
+                        Preference Cookies
+                    </label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input id="cookie_consent_statistic" type="checkbox" class="custom-control-input" t-att-checked="actual_consent['statistic'] || undefined"/>
+                    <label for="cookie_consent_statistic" class="custom-control-label">
+                        Statistic Cookies
+                    </label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input id="cookie_consent_marketing" type="checkbox" class="custom-control-input" t-att-checked="actual_consent['marketing'] || undefined"/>
+                    <label for="cookie_consent_marketing" class="custom-control-label">
+                        Marketing Cookies
+                    </label>
+                </div>
+            </div>
+    </form>
+    </div>
+
+</templates>

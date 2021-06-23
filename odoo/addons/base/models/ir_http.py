@@ -435,3 +435,7 @@ class IrHttp(models.AbstractModel):
             return request.redirect(content, code=301, local=False)
         elif status != 200:
             raise request.not_found()
+
+    @classmethod
+    def _is_allowed_cookie(cls, cookie_type, cookie_name):
+        return True

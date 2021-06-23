@@ -1251,6 +1251,14 @@ class Website(models.Model):
             (_('Homepage'), url_for('/'), 'website'),
             (_('Contact Us'), url_for('/contactus'), 'website_crm'),
         ]
+
+        if self.cookies_bar:
+            suggested_controllers.append((
+                _('Cookies Consent'),
+                url_for('#cookies-consent'),
+                '/web_editor/font_to_img/61746/rgb(233,233,233)/25'
+            ),)
+
         return suggested_controllers
 
     @api.model

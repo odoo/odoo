@@ -836,6 +836,35 @@ var utils = Object.assign({
         return str + new Array(size - str.length + 1).join('0');
     },
     /**
+     * Check if cookie can be write
+     * @param {String} type the type of the cookie
+     * @param {String} name the name of the cookie
+     *
+     * @returns boolean
+     */
+    checkCookie: function(type, name) {
+        return true;
+    },
+
+    /**
+     * Create a cookie
+     * @param {String} name the name of the cookie
+     * @param {String} value the value stored in the cookie
+     * @param {Integer} ttl time to live of the cookie in millis. -1 to erase the cookie.
+     * @param {String} type the type of the cookies ('required' as default value)
+     */
+    set_cookie: function (name, value, ttl, type='required') {
+        ttl = ttl || 24*60*60*365;
+        if (this.checkCookie(type, name)) {
+            document.cookie = [
+                name + '=' + value,
+                'path=/',
+                'max-age=' + ttl,
+                'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
+            ].join(';');
+        }
+    },
+    /**
      * Return a shallow copy of a given array sorted by a given criterion or a default one.
      * The given criterion can either be:
      * - a string: a property name on the array elements returning the sortable primitive

@@ -3,6 +3,7 @@ odoo.define('website.utils', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
+var utils = require('web.utils');
 
 const { qweb, _t } = core;
 
@@ -275,6 +276,10 @@ function sendRequest(route, params) {
     form.submit();
 }
 
+function setVisitor(value) {
+    return utils.set_cookie('visitor_uuid', value, 'statistic')
+}
+
 /**
  * Converts a base64 SVG into a base64 PNG.
  *
@@ -358,6 +363,7 @@ return {
     prompt: prompt,
     sendRequest: sendRequest,
     websiteDomain: websiteDomain,
+    setVisitor: setVisitor,
     svgToPNG: svgToPNG,
 };
 });

@@ -2,6 +2,7 @@ odoo.define('website_sale.recently_viewed', function (require) {
 
 var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
+var wUtils = require('website.utils');
 
 publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend({
     selector: '#product_detail',
@@ -46,7 +47,7 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
             }
         }).then(function (res) {
             if (res && res.visitor_uuid) {
-                utils.set_cookie('visitor_uuid', res.visitor_uuid);
+                wUtils.setVisitor(res.visitor_uuid);
             }
             utils.set_cookie(cookieName, productId, 30 * 60);
         });

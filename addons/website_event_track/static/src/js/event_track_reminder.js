@@ -4,6 +4,7 @@ odoo.define('website_event_track.website_event_track_reminder', function (requir
 var core = require('web.core');
 var _t = core._t;
 var utils = require('web.utils');
+var wUtils = require('website.utils');
 var publicWidget = require('web.public.widget');
 
 publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
@@ -72,7 +73,7 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
                 }
             }
             if (result.visitor_uuid) {
-                utils.set_cookie('visitor_uuid', result.visitor_uuid);
+                wUtils.setVisitor(result.visitor_uuid);
             }
         });
     },

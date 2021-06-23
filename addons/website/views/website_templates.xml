@@ -1826,7 +1826,7 @@
 <!-- Cookie Bar -->
 <template id="cookies_bar" inherit_id="website.layout" name="Cookies Bar">
     <xpath expr="//footer" position="after">
-        <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible o_no_save" data-name="Cookies Bar" data-vcss="001" data-invisible="1">
+        <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_cookiesbar s_popup o_snippet_invisible o_no_save" data-name="Cookies Bar" data-vcss="001" data-invisible="1">
             <div class="modal s_popup_bottom s_popup_no_backdrop o_cookies_discrete"
                  data-show-after="500"
                  data-display="afterDelay"
@@ -1842,11 +1842,11 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-8 pt16">
-                                        <p>We use cookies to provide you a better user experience.</p>
+                                        <p>We use cookies to provide you a better user experience. See our <a href="/cookie-policy">Cookie Policy</a></p>
                                     </div>
                                     <div class="col-lg-4 pt16 text-right">
-                                        <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm">Cookie Policy</a>
-                                        <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary btn-sm">I agree</a>
+                                        <a href="#" class="js_cookie_consent_config o_cookies_bar_text_config btn btn-link btn-sm">Configure</a>
+                                        <a href="#" role="button" class="js_cookie_consent_all o_cookies_bar_text_button btn btn-primary btn-sm">I agree</a>
                                     </div>
                                 </div>
                             </div>

@@ -4,6 +4,7 @@ odoo.define('website_forum.website_forum', function (require) {
 const dom = require('web.dom');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var utils = require('web.utils');
 var wysiwygLoader = require('web_editor.loader');
 var publicWidget = require('web.public.widget');
 const { Markup } = require('web.utils');
@@ -503,7 +504,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      */
     _onCloseIntroClick: function (ev) {
         ev.preventDefault();
-        document.cookie = 'forum_welcome_message = false';
+        utils.set_cookie('forum_welcome_message', false);
         $('.forum_intro').slideUp();
         return true;
     },

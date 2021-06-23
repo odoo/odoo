@@ -7,7 +7,7 @@ const publicWidget = require('web.public.widget');
 const utils = require('web.utils');
 
 const PopupWidget = publicWidget.Widget.extend({
-    selector: '.s_popup',
+    selector: '.s_popup:not(.s_cookiesbar)',
     events: {
         'click .js_close_popup': '_onCloseClick',
         'hide.bs.modal': '_onHideModal',

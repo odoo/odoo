@@ -222,7 +222,7 @@ class WebsiteVisitor(models.Model):
         visitor_sudo = self._get_visitor_from_request(force_create=True)
         if request.httprequest.cookies.get('visitor_uuid', '') != visitor_sudo.access_token:
             expiration_date = datetime.now() + timedelta(days=365)
-            response.set_cookie('visitor_uuid', visitor_sudo.access_token, expires=expiration_date)
+            response.set_cookie('visitor_uuid', visitor_sudo.access_token, expires=expiration_date, cookie_type='statistic')
         self._handle_website_page_visit(website_page, visitor_sudo)
 
     def _handle_website_page_visit(self, website_page, visitor_sudo):

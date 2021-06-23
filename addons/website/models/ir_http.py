@@ -19,6 +19,7 @@ from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.osv.expression import FALSE_DOMAIN
 from odoo.addons.http_routing.models import ir_http
 from odoo.addons.http_routing.models.ir_http import _guess_mimetype
@@ -442,6 +443,7 @@ class Http(models.AbstractModel):
             'is_website_user': request.env.user.id == request.website.user_id.id,
             'geoip_country_code': geoip_country_code,
             'geoip_phone_code': geoip_phone_code,
+            'has_cookies_bar': request.website.cookies_bar,
         })
         if request.env.user.has_group('website.group_website_publisher'):
             session_info.update({
@@ -450,6 +452,27 @@ class Http(models.AbstractModel):
             })
         return session_info
 
+    @classmethod
+    def _is_allowed_cookie(cls, cookie_type, cookie_name):
+        result = super()._is_allowed_cookie(cookie_type, cookie_name)
+
+        if cookie_type not in ["required", "preference", "marketing", "statistic"]:
+            logger.warning("Cookie %s of type %s is unknown." % (cookie_name, cookie_type))
+            cookie_type = 'required'
+
+        if cookie_type == 'required':
+            return True and result
+
+        website = request.env['website'].get_current_website()
+        consents = json_scriptsafe.loads(request.httprequest.cookies.get('cookies_consent', '{}'))
+        if not consents:
+            return not website.cookies_bar and result
+
+        if cookie_type in consents:
+            return consents[cookie_type] and result
+
+        logger.warning("Cookie %s of type %s not found in consents." % (cookie_name, cookie_type))
+        return True and result
 
 class ModelConverter(ir_http.ModelConverter):
 

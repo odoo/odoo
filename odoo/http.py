@@ -921,7 +921,25 @@ class Response(werkzeug.wrappers.Response):
         if self.template:
             self.response.append(self.render())
             self.template = None
+    
 
+    def set_cookie(self, key, value='', max_age=None, expires=None, path='/', domain=None, secure=False, httponly=False, samesite=None, cookie_type='required'):
+        if request.db:
+            if not request.env["ir.http"]._is_allowed_cookie(cookie_type, key):
+                expires = 0
+                max_age = 0
+
+        super().set_cookie(
+            key,
+            value=value,
+            max_age=max_age,
+            expires=expires,
+            path=path,
+            domain=domain,
+            secure=secure,
+            httponly=httponly,
+            samesite=samesite
+        )
 
 class FutureResponse:
     """
