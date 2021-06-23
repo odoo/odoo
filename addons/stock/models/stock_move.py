@@ -327,12 +327,12 @@ class StockMove(models.Model):
                 move.quantity_done = quantity_done
         else:
             # compute
-            move_lines = self.env['stock.move.line']
+            move_lines_ids = set()
             for move in self:
-                move_lines |= move._get_move_lines()
+                move_lines_ids |= set(move._get_move_lines().ids)
 
             data = self.env['stock.move.line'].read_group(
-                [('id', 'in', move_lines.ids)],
+                [('id', 'in', list(move_lines_ids))],
                 ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
                 lazy=False
             )

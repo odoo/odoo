@@ -1220,7 +1220,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             exc_vals = dict(base, record=record, field=field_names[field])
             record = dict(base, type=type, record=record, field=field,
                           message=str(exception.args[0]) % exc_vals)
-            if len(exception.args) > 1 and exception.args[1]:
+            if len(exception.args) > 1 and isinstance(exception.args[1], dict):
                 record.update(exception.args[1])
             log(record)
 
