@@ -13,7 +13,9 @@
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
         Dear ${object.partner_id.name}<br/><br/>
         ${user.name} requested you activate two-factor authentication to protect your account.<br/><br/>
-        Two-factor Authentication ("2FA") is a system of double authentication. The first one is done with your password and the second one with a code you get from a dedicated mobile app. Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.
+        Two-factor Authentication ("2FA") is a system of double authentication.
+        The first one is done with your password and the second one with a code you get from a dedicated mobile app.
+        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.
 
         <p style="margin: 16px 0px 16px 0px; text-align: center;">
             <a href="${object.get_totp_invite_url()}"
