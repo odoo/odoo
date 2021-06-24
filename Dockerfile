@@ -2,6 +2,7 @@
 # -----------------------------------------------------------------------------
 # BUILDING IMAGE
 FROM		python:3.9.4-alpine as builder
+MAINTAINER	Manuel F Martinez <manuel@wishpond.com>
 
 		# Set working directory
 WORKDIR		/odoo
@@ -26,14 +27,11 @@ RUN		apk add --no-cache postgresql-libs wkhtmltopdf
 		# Copy the built dependencies
 COPY		--from=builder /build /usr/local
 
-		# Configuration file
-ADD		./deployment/docker/odoo.conf /etc/odoo/
-
 		# Do not run as root!
 RUN 		addgroup -S odoo && \
 		adduser -S -D -G odoo odoo && \
-		mkdir -p /mnt/extra-addons /var/lib/odoo && \
-		chown -R odoo:odoo /mnt/extra-addons /var/lib/odoo /home/odoo /etc/odoo/odoo.conf
+		mkdir -p /mnt/extra-addons /var/lib/odoo /etc/odoo && \
+		chown -R odoo:odoo /mnt/extra-addons /var/lib/odoo /home/odoo /etc/odoo
 
 		# User volumes
 VOLUME		["/var/lib/odoo", "/mnt/extra-addons"]

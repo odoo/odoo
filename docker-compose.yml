@@ -6,8 +6,6 @@ services:
     build: ./
     depends_on:
       - postgres
-    ports:
-      - "80:8069"
     environment:
       - PGHOST=postgres
       - PGUSER=crm
@@ -15,6 +13,14 @@ services:
     volumes:
       - wishpond_crm:/var/lib/odoo
       - ./deployment/docker/odoo.conf:/etc/odoo/odoo.conf
+
+  proxy:
+    container_name: wishpond_proxy_crm
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./deployment/docker/default.conf:/etc/nginx/conf.d/default.conf
 
   postgres:
     container_name: wishpond_postgres
