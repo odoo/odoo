@@ -584,3 +584,42 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(len(other_customer_invoice_receivable_counterpart), 1, msg='there should one aggregated invoice receivable counterpart for self.other_customer')
         self.assertEqual(bool(other_customer_invoice_receivable_counterpart.full_reconcile_id), True, msg='the aggregated receivable for self.other_customer should be reconciled')
         self.assertEqual(other_customer_invoice_receivable_counterpart.balance, -200, msg='aggregated balance should be -200')
+
+    def test_cash_register_if_no_order(self):
+        # Process one order with product3
+        self.open_new_session()
+        session = self.pos_session
+        order_data = self.create_ui_order_data([(self.product3, 1)])
+        amount_paid = order_data['data']['amount_paid']
+        self.env['pos.order'].create_from_ui([order_data])
+        session.action_pos_session_closing_control()
+
+        cash_register = session.cash_register_id
+        self.assertEqual(cash_register.balance_start, 0)
+        self.assertEqual(cash_register.balance_end_real, amount_paid)
+
+        # Open/Close session without any order
+        self.open_new_session()
+        session = self.pos_session
+        session.action_pos_session_closing_control()
+        cash_register = session.cash_register_id
+        self.assertEqual(cash_register.balance_start, amount_paid)
+        self.assertEqual(cash_register.balance_end_real, amount_paid)
+        self.assertEqual(self.config.last_session_closing_cash, amount_paid)
+
+        # Open/Close session with cash control and without any order
+        self.config.cash_control = True
+        self.open_new_session()
+        session = self.pos_session
+        session.set_cashbox_pos(amount_paid, False)
+        session.action_pos_session_closing_control()
+        self.env['account.bank.statement.cashbox'].create([{
+            'start_bank_stmt_ids': [],
+            'end_bank_stmt_ids': [(4, session.cash_register_id.id,)],
+            'cashbox_lines_ids': [(0, 0, {'number': 1, 'coin_value': amount_paid})],
+            'is_a_template': False
+        }])
+        session.action_pos_session_validate()
+        self.assertEqual(cash_register.balance_start, amount_paid)
+        self.assertEqual(cash_register.balance_end_real, amount_paid)
+        self.assertEqual(self.config.last_session_closing_cash, amount_paid)
