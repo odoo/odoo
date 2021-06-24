@@ -6363,6 +6363,75 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
     },
 });
 
+/**
+ * Allows to handle snippets with a list of items.
+ */
+registry.MultipleItems = SnippetOptionWidget.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    async addItem(previewMode, widgetValue, params) {
+        const $target = this.$(params.item);
+        const addBeforeItem = params.addBefore === 'true';
+        if ($target.length) {
+            await new Promise(resolve => {
+                this.trigger_up('clone_snippet', {
+                    $snippet: $target,
+                    onSuccess: resolve,
+                });
+            });
+            if (addBeforeItem) {
+                $target.before($target.next());
+            }
+            if (params.selectItem !== 'false') {
+                this.trigger_up('activate_snippet', {
+                    $snippet: addBeforeItem ? $target.prev() : $target.next(),
+                });
+            }
+            this._addItemCallback($target);
+        }
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    async removeItem(previewMode, widgetValue, params) {
+        const $target = this.$(params.item);
+        if ($target.length) {
+            await new Promise(resolve => {
+                this.trigger_up('remove_snippet', {
+                    $snippet: $target,
+                    onSuccess: resolve,
+                });
+            });
+            this._removeItemCallback($target);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Allows to add behaviour when item added.
+     *
+     * @private
+     * @abstract
+     * @param {jQueryElement} $target
+     */
+    _addItemCallback($target) {},
+    /**
+     * @private
+     * @abstract
+     * @param {jQueryElement} $target
+     */
+    _removeItemCallback($target) {},
+});
+
 return {
     SnippetOptionWidget: SnippetOptionWidget,
     snippetOptionRegistry: registry,

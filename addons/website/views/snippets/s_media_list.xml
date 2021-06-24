@@ -46,6 +46,15 @@
 </template>
 
 <template id="s_media_list_options" inherit_id="website.snippet_options">
+    <xpath expr="//t[@t-call='web_editor.snippet_options_background_options']" position="before">
+        <div data-js="MultipleItems" data-selector=".s_media_list">
+            <we-row string="Media">
+                <we-button data-add-item="" data-item=".s_media_list_item:last" data-select-item="" data-no-preview="true" class="o_we_bg_brand_primary">
+                    Add Media
+                </we-button>
+            </we-row>
+        </div>
+    </xpath>
     <xpath expr="." position="inside">
         <t t-call="web_editor.snippet_options_background_options">
             <t t-set="selector" t-value="'.s_media_list_item'"/>

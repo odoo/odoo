@@ -3,7 +3,7 @@ odoo.define('website.s_tabs_options', function (require) {
 
 const options = require('web_editor.snippets.options');
 
-options.registry.NavTabs = options.Class.extend({
+options.registry.NavTabs = options.registry.MultipleItems.extend({
     isTopOption: true,
 
     /**
@@ -24,53 +24,6 @@ options.registry.NavTabs = options.Class.extend({
      */
     onClone: function () {
         this._generateUniqueIDs();
-    },
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Creates a new tab and tab-pane.
-     *
-     * @see this.selectClass for parameters
-     */
-    addTab: function (previewMode, widgetValue, params) {
-        var $activeItem = this.$navLinks.filter('.active').parent();
-        var $activePane = this.$tabPanes.filter('.active');
-
-        var $navItem = $activeItem.clone();
-        var $navLink = $navItem.find('.nav-link').removeClass('active show');
-        var $tabPane = $activePane.clone().removeClass('active show');
-        $navItem.insertAfter($activeItem);
-        $tabPane.insertAfter($activePane);
-        this._findLinksAndPanes();
-        this._generateUniqueIDs();
-
-        $navLink.tab('show');
-    },
-    /**
-     * Removes the current active tab and its content.
-     *
-     * @see this.selectClass for parameters
-     */
-    removeTab: function (previewMode, widgetValue, params) {
-        var self = this;
-
-        var $activeLink = this.$navLinks.filter('.active');
-        var $activePane = this.$tabPanes.filter('.active');
-
-        var $next = this.$navLinks.eq((this.$navLinks.index($activeLink) + 1) % this.$navLinks.length);
-
-        return new Promise(resolve => {
-            $next.one('shown.bs.tab', function () {
-                $activeLink.parent().remove();
-                $activePane.remove();
-                self._findLinksAndPanes();
-                resolve();
-            });
-            $next.tab('show');
-        });
     },
 
     //--------------------------------------------------------------------------
@@ -111,6 +64,29 @@ options.registry.NavTabs = options.Class.extend({
                 'aria-labelledby': idLink,
             });
         }
+    },
+    /**
+     * @override
+     */
+    _addItemCallback($target) {
+        $target.removeClass('active show');
+        const $targetNavItem = this.$(`.nav-item a[href="#${$target.attr('id')}"]`)
+            .removeClass('active show').parent();
+        const $navLink = $targetNavItem.clone().insertAfter($targetNavItem)
+            .find('.nav-link');
+        this._findLinksAndPanes();
+        this._generateUniqueIDs();
+        $navLink.tab('show');
+    },
+    /**
+     * @override
+     */
+    _removeItemCallback($target) {
+        const $targetNavLink = this.$(`.nav-item a[href="#${$target.attr('id')}"]`);
+        const $navLinkToShow = this.$navLinks.eq((this.$navLinks.index($targetNavLink) + 1) % this.$navLinks.length);
+        $targetNavLink.parent().remove();
+        this._findLinksAndPanes();
+        $navLinkToShow.tab('show');
     },
 });
 options.registry.NavTabsStyle = options.Class.extend({
