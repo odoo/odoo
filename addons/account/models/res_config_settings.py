@@ -40,29 +40,36 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', readonly=False)
     account_journal_suspense_account_id = fields.Many2one(
         comodel_name='account.account',
-        string='Suspense Account',
+        string='Bank Suspense Account',
         readonly=False,
         related='company_id.account_journal_suspense_account_id',
         domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_liabilities').id,
-        help='Account used as automatic counterpart to bank/cash transactions')
+        help='Bank Transactions are posted immediately after import or synchronization. '
+             'Their counterparty is the bank suspense account.\n'
+             'Reconciliation replaces the latter by the definitive account(s).')
     account_journal_payment_debit_account_id = fields.Many2one(
         comodel_name='account.account',
         string='Outstanding Receipts Account',
         readonly=False,
         related='company_id.account_journal_payment_debit_account_id',
         domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_assets').id,
-        help='Account used as automatic counterpart account to payments received')
+        help='Incoming payments are posted on an Outstanding Receipts Account. '
+             'In the bank reconciliation widget, they appear as blue lines.\n'
+             'Bank transactions are then reconciled on the Outstanding Receipts Accounts rather than the Receivable '
+             'Account.')
     account_journal_payment_credit_account_id = fields.Many2one(
         comodel_name='account.account',
         string='Outstanding Payments Account',
         readonly=False,
         related='company_id.account_journal_payment_credit_account_id',
         domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_assets').id,
-        help='Account used as automatic counterpart account to payments sent')
+        help='Outgoing Payments are posted on an Outstanding Payments Account. '
+             'In the bank reconciliation widget, they appear as blue lines.\n'
+             'Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account.')
     transfer_account_id = fields.Many2one('account.account', string="Internal Transfer Account",
         related='company_id.transfer_account_id', readonly=False,
         domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
-        help="Intermediary account used to transfer money from one bank/cash account to another bank/cash account")
+        help="Intermediary account used when moving from a liquidity account to another.")
     module_account_accountant = fields.Boolean(string='Accounting')
     group_analytic_accounting = fields.Boolean(string='Analytic Accounting',
         implied_group='analytic.group_analytic_accounting')
