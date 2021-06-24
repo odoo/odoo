@@ -232,7 +232,9 @@ odoo.define('web.OwlDialog', function (require) {
             // Activate last dialog and update body class
             const lastDialog = this.displayed[this.displayed.length - 1];
             if (lastDialog) {
-                lastDialog.el.focus();
+                if (lastDialog.el) { // sometime dialog xml is not loaded so el is false
+                    lastDialog.el.focus();
+                }
                 const modalEl = lastDialog instanceof this ?
                     // Owl dialog
                     lastDialog.modalRef.el :
