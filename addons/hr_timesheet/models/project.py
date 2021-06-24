@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import re
-from lxml import etree
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
@@ -243,19 +241,9 @@ class Task(models.Model):
         result['arch'] = self.env['account.analytic.line']._apply_timesheet_label(result['arch'])
 
         if view_type in ['tree', 'pivot', 'graph'] and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
-            result['arch'] = self._apply_time_label(result['arch'])
+            result['arch'] = self.env['account.analytic.line']._apply_time_label(result['arch'], related_model=self._name)
+
         return result
-
-    @api.model
-    def _apply_time_label(self, view_arch, related_model=None):
-        doc = etree.XML(view_arch)
-        Model = self.env[related_model or self._name]
-        encoding_uom = self.env.company.timesheet_encode_uom_id
-        for node in doc.xpath("//field[@widget='timesheet_uom'][not(@string)] | //field[@widget='timesheet_uom_no_toggle'][not(@string)]"):
-            name_with_uom = re.sub(_('Hours') + "|Hours", encoding_uom.name or '', Model._fields[node.get('name')]._description_string(self.env), flags=re.IGNORECASE)
-            node.set('string', name_with_uom)
-
-        return etree.tostring(doc, encoding='unicode')
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_contains_entries(self):

@@ -30,5 +30,5 @@ class ReportProjectTaskUser(models.Model):
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         result = super(ReportProjectTaskUser, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         if view_type in ['pivot', 'graph'] and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
-            result['arch'] = self.env['project.task']._apply_time_label(result['arch'], related_model=self._name)
+            result['arch'] = self.env['account.analytic.line']._apply_time_label(result['arch'], related_model=self._name)
         return result
