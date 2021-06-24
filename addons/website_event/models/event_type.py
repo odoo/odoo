@@ -14,7 +14,7 @@ class EventType(models.Model):
         readonly=False, store=True,
         help="Display community tab on website")
     menu_register_cta = fields.Boolean(
-        'Add Register Button', compute='_compute_menu_register_cta',
+        'Extra Register Button', compute='_compute_menu_register_cta',
         readonly=False, store=True)
 
     @api.depends('website_menu')
