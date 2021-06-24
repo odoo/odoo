@@ -2750,7 +2750,8 @@ options.registry.SnippetMove = options.Class.extend({
                 }
                 break;
         }
-        if (params.name === 'move_up_opt' || params.name === 'move_down_opt') {
+        if (!this.$target.is(this.data.noScroll)
+                && (params.name === 'move_up_opt' || params.name === 'move_down_opt')) {
             dom.scrollTo(this.$target[0], {
                 extraOffset: 50,
                 easing: 'linear',
