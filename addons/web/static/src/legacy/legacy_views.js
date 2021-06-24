@@ -80,17 +80,18 @@ function registerView(name, LegacyView) {
 
         async willStart() {
             const params = {
-                model: this.props.resModel,
+                resModel: this.props.resModel,
                 views: this.props.views,
                 context: this.props.context,
             };
             const options = {
                 actionId: this.props.actionId,
                 context: this.props.context,
-                withActionMenus: this.props.withActionMenus,
-                withFilters: this.props.withFilters,
+                loadActionMenus: this.props.loadActionMenus,
+                loadIrFilters: this.props.loadIrFilters,
             };
-            const result = await this.vm.loadViews(params, options);
+            const viewDescriptions = await this.vm.loadViews(params, options);
+            const result = viewDescriptions.__legacy__;
             const fieldsInfo = result.fields_views[this.props.type];
             const jsClass = getJsClassWidget(fieldsInfo);
             this.View = jsClass || this.View;

@@ -38,14 +38,14 @@ QUnit.module("View service", (hooks) => {
 
         await env.services.views.loadViews(
             {
-                model: "take.five",
+                resModel: "take.five",
                 views: [[99, "list"]],
             },
             {}
         );
         await env.services.views.loadViews(
             {
-                model: "take.five",
+                resModel: "take.five",
                 views: [[99, "list"]],
             },
             {}
@@ -70,7 +70,7 @@ QUnit.module("View service", (hooks) => {
         try {
             await env.services.views.loadViews(
                 {
-                    model: "take.five",
+                    resModel: "take.five",
                     views: [[99, "list"]],
                 },
                 {}
@@ -82,7 +82,7 @@ QUnit.module("View service", (hooks) => {
         try {
             await env.services.views.loadViews(
                 {
-                    model: "take.five",
+                    resModel: "take.five",
                     views: [[99, "list"]],
                 },
                 {}
