@@ -305,7 +305,8 @@ class Http(models.AbstractModel):
         req_page = request.httprequest.path
         domain = [
             ('redirect_type', 'in', ('301', '302')),
-            ('url_from', '=', req_page)
+            # trailing / could have been removed by server_page
+            '|', ('url_from', '=', req_page.rstrip('/')), ('url_from', '=', req_page + '/')
         ]
         domain += request.website.website_domain()
         return request.env['website.rewrite'].sudo().search(domain, limit=1)
