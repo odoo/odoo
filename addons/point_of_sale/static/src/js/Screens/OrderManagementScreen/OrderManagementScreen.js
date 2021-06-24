@@ -79,15 +79,6 @@ odoo.define('point_of_sale.OrderManagementScreen', function (require) {
             let currentPOSOrder = this.env.pos.get_order();
             if (currentPOSOrder && (!clickedOrder || clickedOrder.locked)) {
                 this.orderManagementContext.selectedOrder = clickedOrder;
-                if (clickedOrder.attributes.client){
-                    currentPOSOrder.set_client(clickedOrder.attributes.client);
-                }
-                if (clickedOrder.fiscal_position){
-                    currentPOSOrder.fiscal_position = clickedOrder.fiscal_position;
-                }
-                if (clickedOrder.pricelist){
-                    currentPOSOrder.set_pricelist(clickedOrder.pricelist);
-                }
             } else {
                 this._setOrder(clickedOrder);
             }
@@ -102,12 +93,6 @@ odoo.define('point_of_sale.OrderManagementScreen', function (require) {
             }
         }
         _close() {
-            let currentOrder = this.env.pos.get_order();
-            if (currentOrder){
-                currentOrder.set_client(false);
-                currentOrder.fiscal_position = false;
-                currentOrder.set_pricelist(this.env.pos.default_pricelist);
-            }
             this.close();
         }
     }
