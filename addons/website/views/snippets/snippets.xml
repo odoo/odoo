@@ -375,6 +375,9 @@
     <div data-js="Carousel"
          data-selector="section"
          data-target="> .carousel">
+        <we-row string="Slide">
+            <we-button data-add-slide="true" data-no-preview="true" class="o_we_bg_brand_primary">Add Slide</we-button>
+        </we-row>
         <we-select string="Style">
             <we-button data-select-class="s_carousel_default">Default</we-button>
             <we-button data-select-class="s_carousel_bordered">Bordered</we-button>
@@ -394,16 +397,16 @@
 
     <div data-js="CarouselItem"
          data-selector=".s_carousel .carousel-item, .s_quotes_carousel .carousel-item">
-        <we-button data-slide="left" data-no-preview="true">
+        <we-button data-slide="left" data-no-preview="true" data-tooltip="true" title="Move Backward">
             <i class="fa fa-fw fa-angle-left"/>
         </we-button>
-        <we-button data-slide="right" data-no-preview="true" class="mr-2">
+        <we-button data-slide="right" data-no-preview="true" class="mr-2" data-tooltip="true" title="Move Forward">
             <i class="fa fa-fw fa-angle-right"/>
         </we-button>
-        <we-button data-add-slide="true" data-no-preview="true" class="o_we_text_success">
+        <we-button data-add-slide-item="true" data-no-preview="true" class="o_we_bg_success" data-tooltip="true" title="Add Slide">
             <i class="fa fa-fw fa-plus"/>
         </we-button>
-        <we-button data-remove-slide="true" data-no-preview="true" class="o_we_text_danger">
+        <we-button data-remove-slide="true" data-no-preview="true" class="o_we_bg_danger" data-tooltip="true" title="Remove Slide">
             <i class="fa fa-fw fa-minus"/>
         </we-button>
     </div>
