@@ -134,6 +134,17 @@ class AccountAnalyticLine(models.Model):
             node.set('string', _('Duration (%s)') % (re.sub(r'[\(\)]', '', encoding_uom.name or '')))
         return etree.tostring(doc, encoding='unicode')
 
+    @api.model
+    def _apply_time_label(self, view_arch, related_model):
+        doc = etree.XML(view_arch)
+        Model = self.env[related_model]
+        encoding_uom = self.env.company.timesheet_encode_uom_id
+        for node in doc.xpath("//field[@widget='timesheet_uom'][not(@string)] | //field[@widget='timesheet_uom_no_toggle'][not(@string)]"):
+            name_with_uom = re.sub(_('Hours') + "|Hours", encoding_uom.name or '', Model._fields[node.get('name')]._description_string(self.env), flags=re.IGNORECASE)
+            node.set('string', name_with_uom)
+
+        return etree.tostring(doc, encoding='unicode')
+
     def _timesheet_get_portal_domain(self):
         if self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
             # Then, he is internal user, and we take the domain for this current user
