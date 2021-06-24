@@ -47,6 +47,15 @@
 </template>
 
 <template id="s_table_of_content_options" inherit_id="website.snippet_options">
+    <xpath expr="//t[@t-call='web_editor.snippet_options_background_options']" position="before">
+        <div data-js="MultipleItems" data-selector=".s_table_of_content">
+            <we-row string="Content">
+                <we-button data-add-item="" data-item=".s_table_of_content_main > section:last" data-select-item="" data-no-preview="true" class="o_we_bg_brand_primary">
+                    Add Item
+                </we-button>
+            </we-row>
+        </div>
+    </xpath>
     <xpath expr="." position="inside">
         <div data-js="TableOfContent" data-selector=".s_table_of_content"/>
         <div data-js="TableOfContentNavbar" data-selector=".s_table_of_content_navbar_wrap">
