@@ -416,6 +416,14 @@
          data-selector='.accordion > .card'
          data-drop-in='.accordion:has(> .card)'/>
 
+    <div data-js="MultipleItems" data-selector=".s_faq_collapse">
+        <we-row string="Item">
+            <we-button data-add-item="" data-item=".accordion > .card:last" data-select-item="" data-no-preview="true" class="o_we_bg_brand_primary">
+                Add Item
+            </we-button>
+        </we-row>
+    </div>
+
     <div data-js="layout_column"
         data-selector="section"
         data-target="> *:has(> .row:not(.s_nb_column_fixed)), > .s_allow_columns">
@@ -431,8 +439,7 @@
     </div>
 
     <!-- Move snippets around -->
-    <div data-js="SnippetMove"
-         data-selector="section, .accordion > .card, .s_showcase .row:not(.s_col_no_resize) > div">
+    <div data-js="SnippetMove" data-selector="section, .accordion > .card, .s_showcase .row:not(.s_col_no_resize) > div" data-no-scroll=".accordion > .card">
         <we-button class="fa fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true" data-name="move_up_opt"/>
         <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true" data-name="move_down_opt"/>
     </div>
