@@ -539,7 +539,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Post Payments and Money Transfers in:</span>"
+msgid ""
+"<span class=\"o_form_label\">The following default accounts are used with "
+"certain features.</span>"
 msgstr ""
 
 #. module: account
@@ -1376,17 +1378,23 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_payment_debit_account_id
-msgid "Account used as automatic counterpart account to payments received"
+msgid ""
+"Incoming payments are posted on an Outstanding Receipts Account. In the bank reconciliation widget, they appear as blue lines.\n"
+"Bank transactions are then reconciled on the Outstanding Receipts Accounts rather than the Receivable Account."
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_payment_credit_account_id
-msgid "Account used as automatic counterpart account to payments sent"
+msgid ""
+"Outgoing Payments are posted on an Outstanding Payments Account. In the bank reconciliation widget, they appear as blue lines.\n"
+"Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account."
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_suspense_account_id
-msgid "Account used as automatic counterpart to bank/cash transactions"
+msgid ""
+"Bank Transactions are posted immediately after import or synchronization. Their counterparty is the bank suspense account.\n"
+"Reconciliation replaces the latter by the definitive account(s)."
 msgstr ""
 
 #. module: account
@@ -2595,6 +2603,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
+#: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
 #, python-format
 msgid "Bank Suspense Account"
 msgstr ""
@@ -6393,8 +6402,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__transfer_account_id
 msgid ""
-"Intermediary account used to transfer money from one bank/cash account to "
-"another bank/cash account"
+"Intermediary account used when moving from a liquidity account to another."
 msgstr ""
 
 #. module: account
@@ -11297,7 +11305,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
-#: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
 msgid "Suspense Account"
 msgstr ""
 
