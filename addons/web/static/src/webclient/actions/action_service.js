@@ -387,8 +387,8 @@ function makeActionManager(env) {
             type: view.type,
             views: action.views,
             viewSwitcherEntries,
-            withActionMenus: target !== "new" && target !== "inline",
-            withFilters: action.views.some((v) => v[1] === "search"),
+            loadActionMenus: target !== "new" && target !== "inline",
+            loadIrFilters: action.views.some((v) => v[1] === "search"),
         });
         if (action.res_id) {
             viewProps.resId = action.res_id;
