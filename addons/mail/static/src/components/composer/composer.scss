@@ -16,11 +16,11 @@
         padding: map-get($spacers, 3) map-get($spacers, 3) map-get($spacers, 4) map-get($spacers, 1);
 
         &:not(.o-has-footer) {
-            padding-bottom: 20px;
+            padding-bottom: map-get($spacers, 4);
         }
 
         &:not(.o-has-header) {
-            padding-top: 20px;
+            padding-top: map-get($spacers, 4);
         }
     }
 }
@@ -30,7 +30,7 @@
         display: flex;
     }
     &:not(.o-composer-is-compact) {
-        margin-top: 10px;
+        margin-top: map-get($spacers, 2);
     }
 }
 
@@ -202,7 +202,7 @@
 }
 
 .o_Composer_buttonDiscard {
-    border: 1px solid lighten(gray('400'), 5%);
+    border: $border-width solid lighten(gray('400'), 5%);
 }
 
 .o_Composer_buttons {
@@ -210,7 +210,7 @@
 }
 
 .o_Composer_coreMain:not(.o-composer-is-compact) {
-    background: white;
+    background: $white;
     border: $border-width solid $border-color;
 
     // textarea should be all rounded but only when there is no subject field above
@@ -226,7 +226,7 @@
 .o_Composer_textInput {
     appearance: none;
     outline: none;
-    background-color: white;
+    background-color: $white;
     border: $border-width solid $border-color;
     border-right: 0;
 
@@ -242,7 +242,7 @@
 
 .o_Composer_toolButton {
     border: 0; // overrides bootstrap btn
-    background-color: white; // overrides bootstrap btn-light
+    background-color: $white; // overrides bootstrap btn-light
     color: gray('600'); // overrides bootstrap btn-light
     border-radius: 50%;
 
@@ -252,7 +252,7 @@
 }
 
 .o_Composer_toolButtons {
-    background-color: white;
+    background-color: $white;
     border-top: $border-width solid $border-color;
     border-bottom: $border-width solid $border-color;
 
@@ -262,7 +262,7 @@
     }
 
     &:last-child:not(.o-composer-has-current-partner-avatar) {
-        border-right: 1px solid lighten(gray('400'), 5%);
+        border-right: $border-width solid lighten(gray('400'), 5%);
     }
 }
 

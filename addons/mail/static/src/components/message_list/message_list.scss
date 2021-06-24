@@ -13,20 +13,20 @@
     }
 
     &:not(.o-empty) {
-        padding-bottom: 15px;
+        padding-bottom: map-get($spacers, 4);
     }
 }
 
 .o_MessageList_empty {
     flex: 1 1 auto;
-    height: 100%;
-    width: 100%;
+    height: map-get($sizes, 100);
+    width: map-get($sizes, 100);
     align-self: center;
     display: flex;
     flex-flow: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: map-get($spacers, 4);
     line-height: 2.5rem;
 }
 
@@ -35,7 +35,7 @@
 }
 
 .o_MessageList_isLoadingMoreIcon {
-    margin-right: 3px;
+    margin-right: map-get($spacers, 1);
 }
 
 .o_MessageList_loadMore {
@@ -45,12 +45,12 @@
 .o_MessageList_separator {
     display: flex;
     align-items: center;
-    padding: 0 0;
+    padding: map-get($spacers, 0) map-get($spacers, 0);
     flex: 0 0 auto;
 }
 
 .o_MessageList_separatorDate {
-    padding: 15px 0;
+    padding: map-get($spacers, 4) map-get($spacers, 0);
 }
 
 .o_MessageList_separatorLine {
@@ -60,12 +60,12 @@
 
 .o_MessageList_separatorNewMessages {
     // bug with safari: container does not auto-grow from child size
-    padding: 0 0;
-    margin-right: 15px;
+    padding: map-get($spacers, 0) map-get($spacers, 0);
+    margin-right: map-get($spacers, 4);
 }
 
 .o_MessageList_separatorLabel {
-    padding: 0 10px;
+    padding: map-get($spacers, 0) map-get($spacers, 3);
 }
 
 // ------------------------------------------------------------------
@@ -73,7 +73,7 @@
 // ------------------------------------------------------------------
 
 .o_MessageList {
-    background-color: white;
+    background-color: $white;
 }
 
 .o_MessageList_empty {
@@ -119,7 +119,7 @@
 }
 
 .o_MessageList_separatorLabel {
-    background-color: white;
+    background-color: $white;
 }
 
 // ------------------------------------------------------------------

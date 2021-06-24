@@ -67,7 +67,7 @@
 
 .o_Attachment_image {
     flex-shrink: 0;
-    margin: 3px;
+    margin: map-get($spacers, 1);
 
     &.o-details-overlay {
         position: relative;
@@ -100,7 +100,7 @@
     flex-direction: row;
     justify-content: flex-end;
     left: 0;
-    padding: 10px;
+    padding: map-get($spacers, 2);
     position: absolute;
     right: 0;
     top: 0;
@@ -110,7 +110,7 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    margin: 3px;
+    margin: map-get($spacers, 1);
     width: 200px;
 }
 
@@ -156,7 +156,7 @@
     }
 
     &.o-pretty {
-        color: white;
+        color: $white;
         background-color: $o-brand-primary;
 
         &:hover {
@@ -187,7 +187,7 @@
 .o_Attachment_imageOverlay {
     background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.9));
     border-radius: 5px;
-    color: white;
+    color: $white;
     opacity: 0;
 }
 
