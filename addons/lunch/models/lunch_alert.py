@@ -110,10 +110,11 @@ class LunchAlert(models.Model):
                 sendat_tz += timedelta(days=1)
             sendat_utc = sendat_tz.astimezone(pytz.UTC).replace(tzinfo=None)
 
-            alert.cron_id.name = f"Lunch: alert chat notification ({alert.name})"
-            alert.cron_id.active = cron_required
-            alert.cron_id.nextcall = sendat_utc
-            alert.cron_id.code = dedent(f"""\
+            cron = alert.cron_id.sudo()
+            cron.name = f"Lunch: alert chat notification ({alert.name})"
+            cron.active = cron_required
+            cron.nextcall = sendat_utc
+            cron.code = dedent(f"""\
                 # This cron is dynamically controlled by {self._description}.
                 # Do NOT modify this cron, modify the related record instead.
                 env['{self._name}'].browse([{alert.id}])._notify_chat()""")
@@ -148,7 +149,7 @@ class LunchAlert(models.Model):
             self._sync_cron()
 
     def unlink(self):
-        crons = self.cron_id
+        crons = self.cron_id.sudo()
         super().unlink()
         crons.unlink()
 

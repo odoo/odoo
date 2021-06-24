@@ -6,6 +6,7 @@ from datetime import datetime, time, timedelta
 from unittest.mock import patch
 
 from odoo import fields
+from odoo.tests import common
 
 from odoo.addons.lunch.tests.common import TestsCommon
 
@@ -24,6 +25,7 @@ class TestSupplier(TestsCommon):
         self.saturday_1pm = datetime(2018, 11, 3, 13, 0, 0)
         self.saturday_8pm = datetime(2018, 11, 3, 20, 0, 0)
 
+    @common.users('cle-lunch-manager')
     def test_send_email_cron(self):
         self.supplier_kothai.cron_id.ensure_one()
         self.assertEqual(self.supplier_kothai.cron_id.nextcall.time(), time(15, 0))
@@ -34,8 +36,9 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
 
         cron_id = self.supplier_kothai.cron_id.id
         self.supplier_kothai.unlink()
-        self.assertFalse(self.env['ir.cron'].search([('id', '=', cron_id)]))
+        self.assertFalse(self.env['ir.cron'].sudo().search([('id', '=', cron_id)]))
 
+    @common.users('cle-lunch-manager')
     def test_compute_available_today(self):
         tests = [(self.monday_1am, True), (self.monday_10am, True),
                  (self.monday_1pm, True), (self.monday_8pm, True),
@@ -49,6 +52,7 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
 
             self.env['lunch.supplier'].invalidate_cache(['available_today'], [self.supplier_pizza_inn.id])
 
+    @common.users('cle-lunch-manager')
     def test_search_available_today(self):
         '''
             This test checks that _search_available_today returns a valid domain
@@ -75,6 +79,7 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
         with patch.object(fields.Datetime, 'now', return_value=self.monday_10am) as _:
             assert self.supplier_pizza_inn in Supplier.search([('available_today', '=', True)])
 
+    @common.users('cle-lunch-manager')
     def test_auto_email_send(self):
         with patch.object(fields.Datetime, 'now', return_value=self.monday_1pm) as _:
             with patch.object(fields.Date, 'today', return_value=self.monday_1pm.date()) as _:
@@ -134,6 +139,7 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
 
                     self.supplier_pizza_inn._send_auto_email()
 
+    @common.users('cle-lunch-manager')
     def test_cron_sync_create(self):
         cron_ny = self.supplier_kothai.cron_id  # I am at New-York
         self.assertTrue(cron_ny.active)
@@ -143,6 +149,7 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
             ["env['lunch.supplier'].browse([%i])._send_auto_email()" % self.supplier_kothai.id])
         self.assertEqual(cron_ny.nextcall, datetime(2021, 1, 29, 15, 0))  # New-york is UTC-5
 
+    @common.users('cle-lunch-manager')
     def test_cron_sync_active(self):
         cron_ny = self.supplier_kothai.cron_id
 
@@ -156,6 +163,7 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
         self.supplier_kothai.send_by = 'mail'
         self.assertTrue(cron_ny.active)
 
+    @common.users('cle-lunch-manager')
     def test_cron_sync_nextcall(self):
         cron_ny = self.supplier_kothai.cron_id
         old_nextcall = cron_ny.nextcall
@@ -164,8 +172,8 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
         self.assertEqual(cron_ny.nextcall, old_nextcall - timedelta(hours=5) + timedelta(days=1))
 
         # Simulate cron execution
-        cron_ny.lastcall = old_nextcall - timedelta(hours=5)
-        cron_ny.nextcall += timedelta(days=1)
+        cron_ny.sudo().lastcall = old_nextcall - timedelta(hours=5)
+        cron_ny.sudo().nextcall += timedelta(days=1)
 
         self.supplier_kothai.automatic_email_time += 7
         self.assertEqual(cron_ny.nextcall, old_nextcall + timedelta(days=1, hours=2))
