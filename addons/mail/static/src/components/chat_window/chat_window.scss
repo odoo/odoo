@@ -37,8 +37,8 @@
 }
 
 .o_ChatWindow_newMessageForm {
-    padding: 3px;
-    margin-top: 3px;
+    padding: map-get($spacers, 1);
+    margin-top: map-get($spacers, 1);
     display: flex;
     align-items: center;
 }
@@ -48,7 +48,7 @@
 }
 
 .o_ChatWindow_newMessageFormLabel {
-    margin-right: 5px;
+    margin-right: map-get($spacers, 2);
     flex: 0 0 auto;
 }
 
@@ -63,16 +63,15 @@
 .o_ChatWindow {
     background-color: $o-mail-thread-window-bg;
     border-radius: 6px 6px 0 0;
-    box-shadow: -5px -5px 10px rgba(black, 0.09);
+    box-shadow: -5px -5px 10px rgba($black, 0.09);
     outline: none;
 
     &:not(.o-mobile) {
 
         &.o-focused {
-            box-shadow: -5px -5px 10px rgba(black, 0.18);
+            box-shadow: -5px -5px 10px rgba($black, 0.18);
         }
     }
-
 
     .o_Composer {
         border: 0;
@@ -85,7 +84,7 @@
 
 .o_ChatWindow_newMessageFormInput {
     outline: none;
-    border: 1px solid gray('300'); // cancel firefox border on input focus
+    border: $border-width solid gray('300'); // cancel firefox border on input focus
 }
 
 .o_ChatWindow_thread .o_ThreadView_messageList {

@@ -12,7 +12,7 @@
     // avoid shrinking part 1 because it is more important than part 2
     // because no shrink, ensure it cannot overflow with a max-width
     flex: 0 0 auto;
-    max-width: 100%;
+    max-width: map-get($sizes, 100);
     overflow: hidden;
     padding-inline-end: map-get($spacers, 2);
     text-overflow: ellipsis;

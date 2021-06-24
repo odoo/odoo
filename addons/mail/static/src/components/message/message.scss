@@ -12,8 +12,8 @@
 }
 
 .o_Message_authorAvatar {
-    height: 100%;
-    width: 100%;
+    height: map-get($sizes, 100);
+    width: map-get($sizes, 100);
     object-fit: cover;
 }
 
@@ -56,12 +56,12 @@
         // It's acceptable not to manage overflow of these tags for the moment.
         // It also excludes all div in li because 1st leaf and div child of list overflow
         // may impact the bullet point (at least it does on Safari).
-        max-width: 100%;
+        max-width: map-get($sizes, 100);
         overflow-x: auto;
     }
 
     img {
-        max-width: 100%;
+        max-width: map-get($sizes, 100);
         height: auto;
     }
 }
@@ -199,7 +199,7 @@
 // ------------------------------------------------------------------
 
 .o_Message {
-    background-color: white;
+    background-color: $white;
 
     &:hover, &.o-clicked {
 
@@ -217,7 +217,7 @@
     }
 
     .o_Message_partnerImStatusIcon {
-        color: white;
+        color: $white;
     }
 
     &.o-not-discussion {

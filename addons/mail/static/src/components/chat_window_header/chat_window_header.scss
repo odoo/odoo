@@ -13,42 +13,42 @@
 }
 
 .o_ChatWindowHeader_command {
-    padding: 0 8px;
+    padding: map-get($spacers, 0) map-get($spacers, 3);
     display: flex;
-    height: 100%;
+    height: map-get($sizes, 100);
     align-items: center;
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: rgba($black, 0.1);
     }
 }
 
 .o_ChatWindowHeader_commandBack {
-    margin-right: 5px;
+    margin-right: map-get($spacers, 2);
 }
 
 .o_ChatWindowHeader_item {
-    margin: 0 3px;
+    margin: map-get($spacers, 0) map-get($spacers, 1);
 
     &.o_ChatWindowHeader_rightArea {
-        margin-right: 0;
+        margin-right: map-get($spacers, 0);
     }
 
     &:first-child {
-        margin-left: 10px;
+        margin-left: map-get($spacers, 3);
 
         &.o_ChatWindowHeader_command {
-            margin-left: 0px; // no margin for commands
+            margin-left: map-get($spacers, 0); // no margin for commands
         }
     }
 
     &.o_ChatWindowHeader_rightArea:last-child .o_ChatWindowHeader_command {
-        margin-right: 0px; // no margin for commands
+        margin-right: map-get($spacers, 0); // no margin for commands
     }
 }
 
 .o_ChatWindowHeader_name {
-    max-height: 100%;
+    max-height: map-get($sizes, 100);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -56,7 +56,7 @@
 
 .o_ChatWindowHeader_rightArea {
     display: flex;
-    height: 100%;
+    height: map-get($sizes, 100);
     align-items: center;
 }
 
@@ -66,7 +66,7 @@
 
 .o_ChatWindowHeader {
     background-color: $o-brand-odoo;
-    color: white;
+    color: $white;
     cursor: pointer;
 
     &:not(.o-mobile) {

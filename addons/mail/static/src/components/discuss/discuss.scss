@@ -13,7 +13,7 @@
 
 .o_Discuss {
     display: flex;
-    height: 100%;
+    height: map-get($sizes, 100);
     min-height: 0;
 
     &.o-mobile {
@@ -23,12 +23,12 @@
 }
 
 .o_Discuss_chatWindowHeader {
-    width: 100%;
+    width: map-get($sizes, 100);
     flex: 0 0 auto;
 }
 
 .o_Discuss_content {
-    height: 100%;
+    height: map-get($sizes, 100);
     overflow: auto;
     flex: 1 1 auto;
     display: flex;
@@ -43,46 +43,46 @@
 }
 
 .o_Discuss_messagingNotInitializedIcon {
-    margin-right: 3px;
+    margin-right: map-get($spacers, 1);
 }
 
 .o_Discuss_mobileAddItemHeader {
     display: flex;
     justify-content: center;
-    width: 100%;
-    padding: 0 10px;
+    width: map-get($sizes, 100);
+    padding: map-get($spacers, 0) map-get($spacers, 3);
 }
 
 .o_Discuss_mobileAddItemHeaderInput {
     flex: 1 1 auto;
-    margin-bottom: 8px;
-    padding: 8px;
+    margin-bottom: map-get($spacers, 3);
+    padding: map-get($spacers, 2);
 }
 
 .o_Discuss_mobileMailboxSelection {
-    width: 100%;
+    width: map-get($sizes, 100);
 }
 
 .o_Discuss_mobileNavbar {
-    width: 100%;
+    width: map-get($sizes, 100);
 }
 
 .o_Discuss_noThread {
     display: flex;
     flex: 1 1 auto;
-    width: 100%;
+    width: map-get($sizes, 100);
     align-items: center;
     justify-content: center;
 }
 
 .o_Discuss_replyingToMessageComposer {
-    width: 100%;
+    width: map-get($sizes, 100);
 }
 
 .o_Discuss_sidebar {
-    height: 100%;
+    height: map-get($sizes, 100);
     overflow: auto;
-    padding-top: 10px;
+    padding-top: map-get($spacers, 3);
     flex: 0 0 auto;
 }
 
@@ -90,12 +90,12 @@
     flex: 1 1 auto;
 
     &.o-mobile {
-        width: 100%;
+        width: map-get($sizes, 100);
     }
 }
 
 .o_Discuss_notificationList {
-    width: 100%;
+    width: map-get($sizes, 100);
     flex: 1 1 auto;
 }
 // ------------------------------------------------------------------
@@ -103,12 +103,12 @@
 // ------------------------------------------------------------------
 
 .o_Discuss.o-mobile {
-    background-color: white;
+    background-color: $white;
 }
 
 .o_Discuss_mobileAddItemHeaderInput {
     appearance: none;
-    border: 1px solid gray('400');
+    border: $border-width solid gray('400');
     border-radius: 5px;
     outline: none;
 }

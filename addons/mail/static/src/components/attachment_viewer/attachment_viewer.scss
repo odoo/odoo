@@ -4,8 +4,8 @@
 
 .o_AttachmentViewer {
     display: flex;
-    width: 100%;
-    height: 100%;
+    width: map-get($sizes, 100);
+    height: map-get($sizes, 100);
     flex-flow: column;
     align-items: center;
     z-index: -1;
@@ -149,18 +149,18 @@
 
 .o_AttachmentViewer_buttonNavigation {
     color: gray('400');
-    background-color: lighten(black, 15%);
+    background-color: lighten($black, 15%);
     border-radius: 100%;
     cursor: pointer;
 
     &:hover {
         color: lighten(gray('400'), 15%);
-        background-color: black;
+        background-color: $black;
     }
 }
 
 .o_AttachmentViewer_header {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba($black, 0.7);
     color: gray('400');
 }
 
@@ -183,7 +183,7 @@
 }
 
 .o_AttachmentViewer_toolbarButton {
-    background-color: lighten(black, 15%);
+    background-color: lighten($black, 15%);
 
     &.o_disabled {
         cursor: not-allowed;
@@ -195,20 +195,20 @@
         cursor: pointer;
 
         &:hover {
-            background-color: black;
+            background-color: $black;
             color: lighten(gray('400'), 15%);
         }
     }
 }
 
 .o_AttachmentViewer_view {
-    background-color: black;
-    box-shadow: 0 0 40px black;
+    background-color: $black;
+    box-shadow: 0 0 40px $black;
     outline: none;
     border: none;
 
     &.o_text {
-        background-color: white;
+        background-color: $white;
     }
 }
 
@@ -219,4 +219,3 @@
 .o_AttachmentViewer_viewImage {
     transition: transform 0.3s ease;
 }
-
