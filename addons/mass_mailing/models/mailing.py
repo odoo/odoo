@@ -47,20 +47,20 @@ class MassMailing(models.Model):
     _rec_name = "subject"
 
     @api.model
-    def default_get(self, fields):
-        vals = super(MassMailing, self).default_get(fields)
+    def default_get(self, fields_list):
+        vals = super(MassMailing, self).default_get(fields_list)
 
         # field sent by the calendar view when clicking on a date block
         # we use it to setup the scheduled date of the created mailing.mailing
         default_calendar_date = self.env.context.get('default_calendar_date')
-        if default_calendar_date and ('schedule_type' in fields and 'schedule_date' in fields) \
+        if default_calendar_date and ('schedule_type' in fields_list and 'schedule_date' in fields_list) \
            and fields.Datetime.from_string(default_calendar_date) > fields.Datetime.now():
             vals.update({
                 'schedule_type': 'scheduled',
                 'schedule_date': default_calendar_date
             })
 
-        if 'contact_list_ids' in fields and not vals.get('contact_list_ids') and vals.get('mailing_model_id'):
+        if 'contact_list_ids' in fields_list and not vals.get('contact_list_ids') and vals.get('mailing_model_id'):
             if vals.get('mailing_model_id') == self.env['ir.model']._get('mailing.list').id:
                 mailing_list = self.env['mailing.list'].search([], limit=2)
                 if len(mailing_list) == 1:
