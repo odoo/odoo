@@ -2834,6 +2834,7 @@ exports.Order = Backbone.Model.extend({
                 minute: date.getMinutes() ,
                 isostring: date.toISOString(),
                 localestring: this.formatted_validation_date,
+                validation_date: this.validation_date,
             },
             company:{
                 email: company.email,

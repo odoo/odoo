@@ -148,9 +148,13 @@
             <br/>
             <div class="pos-receipt-order-data">
                 <div><t t-esc="receipt.name" /></div>
-                <div><t t-esc="receipt.date.localestring" /></div>
+                <t t-if="receipt.date.localestring">
+                    <div><t t-esc="receipt.date.localestring" /></div>
+                </t>
+                <t t-else="">
+                    <div><t t-esc="receipt.date.validation_date" /></div>
+                </t>
             </div>
-
         </div>
     </t>
     <t t-name="OrderLinesReceipt" owl="1">
