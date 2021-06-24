@@ -24,7 +24,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
         },
     }, function () {
 
-        QUnit.module('CustomFilterItem');
+        QUnit.module('CustomFilterItem (legacy)');
 
         QUnit.test('basic rendering', async function (assert) {
             assert.expect(17);
