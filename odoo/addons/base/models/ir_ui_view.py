@@ -41,6 +41,20 @@ _logger = logging.getLogger(__name__)
 MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath', 'data-oe-source-id']
 
 
+def quick_eval(expr, globals_dict):
+    """ Functionally identical to safe_eval(), but optimized with special-casing. """
+    # most (~95%) elements are 1/True/0/False
+    if expr == '1':
+        return 1
+    if expr == 'True':
+        return True
+    if expr == '0':
+        return 0
+    if expr == 'False':
+        return False
+    return safe_eval.safe_eval(expr, globals_dict)
+
+
 def transfer_field_to_modifiers(field, modifiers):
     default_values = {}
     state_exceptions = {}
@@ -77,13 +91,7 @@ def transfer_node_to_modifiers(node, modifiers, context=None, current_node_path=
     for attr in ('invisible', 'readonly', 'required'):
         value_str = node.get(attr)
         if value_str:
-            # most (~95%) elements are 0/1/True/False
-            if value_str == '1' or value_str == 'True':
-                value = True
-            elif value_str == '0' or value_str == 'False':
-                value = False
-            else:
-                value = bool(safe_eval.safe_eval(value_str, {'context': context or {}}))
+            value = bool(quick_eval(value_str, {'context': context or {}}))
             node_path = current_node_path or ()
             if 'tree' in node_path and 'header' not in node_path and attr == 'invisible':
                 # Invisible in a tree view has a specific meaning, make it a
@@ -1199,7 +1207,7 @@ actual arch.
         for attribute in ('invisible', 'readonly', 'required'):
             val = node.get(attribute)
             if val:
-                res = safe_eval.safe_eval(val, {'context': self._context})
+                res = quick_eval(val, {'context': self._context})
                 if res not in (1, 0, True, False, None):
                     msg = _(
                         'Attribute %(attribute)s evaluation expects a boolean, got %(value)s',
