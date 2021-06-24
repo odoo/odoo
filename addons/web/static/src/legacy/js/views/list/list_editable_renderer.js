@@ -725,6 +725,9 @@ ListRenderer.include({
             }
         });
 
+        // set max-width before setting table-layout fixed
+        this.$el.css({ 'max-width': this.$el.width() });
+
         // Set the table layout to fixed
         table.style.tableLayout = 'fixed';
     },
