@@ -3,7 +3,11 @@
 
 {
     'name': 'EU One Stop Shop (OSS)',
+<<<<<<< HEAD
     'category': 'Accounting/Localizations',
+=======
+    'category': 'Localization',
+>>>>>>> 64abde8dc6f... temp
     'description': """
 EU One Stop Shop (OSS) VAT
 ==========================
