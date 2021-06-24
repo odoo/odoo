@@ -168,6 +168,9 @@
             ('remove', 'web/static/src/core/errors/error_handlers.js'),
             ('remove', 'web/static/src/legacy/legacy_rpc_error_handler.js'),
         ],
+        'point_of_sale.pos_assets_backend_style': [
+            "web/static/src/core/ui/**/*.scss",
+        ],
         'point_of_sale.tests_assets': [
             'web/static/lib/daterangepicker/daterangepicker.css',
             'web/static/lib/qunit/qunit-2.9.1.css',
