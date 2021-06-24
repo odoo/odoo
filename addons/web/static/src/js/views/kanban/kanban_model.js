@@ -193,6 +193,8 @@ var KanbanModel = BasicModel.extend({
                     });
                     loadMoreCount = filteredRecordsTotal - filteredRecords.length;
                     loadMoreOffset = filteredRecords.length;
+                    // Always keep activeFilter
+                    result.activeFilter = dp.activeFilter;
                 }
             }
             result.loadMoreCount = loadMoreCount;
@@ -291,13 +293,6 @@ var KanbanModel = BasicModel.extend({
         // the limit if the current element is a group (and thus, has a parent).
         if (element.parentID) {
             element.limit = this.loadParams.limit;
-        }
-        // if list datapoint is reloaded then remove activeFilter from all child datapoint
-        if (element.type === 'list' && !element.parentID && !options || options && !('activeFilter' in options)) {
-            _.each(element.data, (elemId) => {
-                const elem = this.localData[elemId];
-                elem.activeFilter = { domain: [], value: false };
-            });
         }
         // Register the domain extension in the element.
         if (options && options.activeFilter) {
