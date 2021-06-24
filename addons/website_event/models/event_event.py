@@ -40,7 +40,7 @@ class Event(models.Model):
              "of the event on the website.")
     menu_id = fields.Many2one('website.menu', 'Event Menu', copy=False)
     menu_register_cta = fields.Boolean(
-        'Add Register Button', compute='_compute_menu_register_cta',
+        'Extra Register Button', compute='_compute_menu_register_cta',
         readonly=False, store=True)
     community_menu = fields.Boolean(
         "Community Menu", compute="_compute_community_menu",
