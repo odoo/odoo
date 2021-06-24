@@ -1396,15 +1396,13 @@ class TestViews(ViewCase):
     def test_modifiers(self):
         def _test_modifiers(what, expected):
             modifiers = {}
-            if isinstance(what, str):
-                node = etree.fromstring(what)
-                transfer_node_to_modifiers(node, modifiers)
-                simplify_modifiers(modifiers)
-                assert modifiers == expected, "%s != %s" % (modifiers, expected)
-            elif isinstance(what, dict):
+            if isinstance(what, dict):
                 transfer_field_to_modifiers(what, modifiers)
-                simplify_modifiers(modifiers)
-                assert modifiers == expected, "%s != %s" % (modifiers, expected)
+            else:
+                node = etree.fromstring(what) if isinstance(what, str) else what
+                transfer_node_to_modifiers(node, modifiers)
+            simplify_modifiers(modifiers)
+            assert modifiers == expected, "%s != %s" % (modifiers, expected)
 
         _test_modifiers('<field name="a"/>', {})
         _test_modifiers('<field name="a" invisible="1"/>', {"invisible": True})
@@ -1430,6 +1428,24 @@ class TestViews(ViewCase):
             """<field name="a" attrs="{'invisible': [['b', '=', 'c']]}"/>""",
             {"invisible": [["b", "=", "c"]]},
         )
+
+        # fields in a tree view
+        tree = etree.fromstring('''
+            <tree>
+                <header>
+                    <button name="a" invisible="1"/>
+                </header>
+                <field name="a"/>
+                <field name="a" invisible="0"/>
+                <field name="a" invisible="1"/>
+                <field name="a" attrs="{'invisible': [['b', '=', 'c']]}"/>
+            </tree>
+        ''')
+        _test_modifiers(tree[0][0], {"invisible": True})
+        _test_modifiers(tree[1], {})
+        _test_modifiers(tree[2], {"column_invisible": False})
+        _test_modifiers(tree[3], {"column_invisible": True})
+        _test_modifiers(tree[4], {"invisible": [['b', '=', 'c']]})
 
         # The dictionary is supposed to be the result of fields_get().
         _test_modifiers({}, {})

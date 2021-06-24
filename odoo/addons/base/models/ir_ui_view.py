@@ -73,7 +73,7 @@ def transfer_field_to_modifiers(field, modifiers):
             modifiers[attr] = default_value
 
 
-def transfer_node_to_modifiers(node, modifiers, context=None, current_node_path=None):
+def transfer_node_to_modifiers(node, modifiers, context=None):
     # Don't deal with groups, it is done by check_group().
     # Need the context to evaluate the invisible attribute on tree views.
     # For non-tree views, the context shouldn't be given.
@@ -92,8 +92,9 @@ def transfer_node_to_modifiers(node, modifiers, context=None, current_node_path=
         value_str = node.get(attr)
         if value_str:
             value = bool(quick_eval(value_str, {'context': context or {}}))
-            node_path = current_node_path or ()
-            if 'tree' in node_path and 'header' not in node_path and attr == 'invisible':
+            if (attr == 'invisible'
+                    and any(parent.tag == 'tree' for parent in node.iterancestors())
+                    and not any(parent.tag == 'header' for parent in node.iterancestors())):
                 # Invisible in a tree view has a specific meaning, make it a
                 # new key in the modifiers attribute.
                 modifiers['column_invisible'] = value
@@ -950,43 +951,94 @@ actual arch.
 
         :param self: the view to postprocess
         :param node: the architecture as an etree
-        :param model: the view's reference model
+        :param model: the view's reference model name
         :param validate: whether the view must be validated
         :return: a tuple (arch, fields) where arch is the given node as a
             string and fields is the description of all the fields.
 
         """
+        self and self.ensure_one()      # self is at most one view
 
-        if self:
-            self.ensure_one()
-        model = model or self.model
+        name_manager = self._postprocess_view(node, model or self.model, validate=validate)
 
-        arch, name_manager = self._postprocess_view(node, model, validate=validate)
-        # name_manager.final_check()
+        arch = etree.tostring(node, encoding="unicode").replace('\t', '')
         return arch, name_manager.available_fields
 
-    def _postprocess_view(self, node, model, validate=True, editable=True):
+    def _postprocess_view(self, node, model_name, validate=True, editable=True):
+        """ Process the given architecture, modifying it in-place to add and
+        remove stuff.
 
-        if model not in self.env:
-            self._raise_view_error(_('Model not found: %(model)s', model=model), node)
+        :param self: the optional view to postprocess
+        :param node: the combined architecture as an etree
+        :param model_name: the view's reference model name
+        :param validate: whether the view must be validated
+        :param editable: whether the view is considered editable
+        :return: the processed architecture's NameManager
+        """
+        root = node
+
+        if model_name not in self.env:
+            self._raise_view_error(_('Model not found: %(model)s', model=model_name), root)
+        model = self.env[model_name]
 
         if not validate:
             # validation mode does not care about on_change
-            self._postprocess_on_change(model, node)
+            self._postprocess_on_change(root, model)
 
-        name_manager = NameManager(validate, self.env[model])
-        self.postprocess(node, [], editable, name_manager)
+        name_manager = NameManager(validate, model)
 
-        name_manager.check_view_fields(self)
-        name_manager.update_view_fields()
+        # tree, form, graph, etc.
+        VIEW_TAGS = {item[0] for item in type(self).type.selection}
 
-        if not validate:
-            # validation mode does not care about access rights
-            self._postprocess_access_rights(model, node)
+        # use a stack to recursively traverse the tree
+        stack = [(root, editable)]
+        while stack:
+            node, editable = stack.pop()
 
-        return etree.tostring(node, encoding="unicode").replace('\t', ''), name_manager
+            # compute default
+            tag = node.tag
+            parent = node.getparent()
+            node_info = {
+                'modifiers': {},
+                'attr_model': name_manager.Model,
+                'editable': editable,
+            }
 
-    def _postprocess_on_change(self, model_name, arch):
+            # tag-specific postprocessing
+            postprocessor = getattr(self, f"_postprocess_tag_{tag}", None)
+            if postprocessor is not None:
+                postprocessor(node, name_manager, node_info)
+                if node.getparent() is not parent:
+                    # the node has been removed, stop processing here
+                    continue
+            elif node.tag in VIEW_TAGS:
+                node_info['editable'] = False
+
+            if name_manager.validate:
+                # tag-specific validation
+                validator = getattr(self, f"_validate_tag_{tag}", None)
+                if validator is not None:
+                    validator(node, name_manager, node_info)
+                self._validate_attrs(node, name_manager, node_info)
+
+            self._apply_groups(node, name_manager, node_info)
+            transfer_node_to_modifiers(node, node_info['modifiers'], self._context)
+            transfer_modifiers_to_node(node_info['modifiers'], node)
+
+            # if present, iterate on node_info['children'] instead of node
+            for child in reversed(node_info.get('children', node)):
+                stack.append((child, node_info['editable']))
+
+        if validate:
+            name_manager.check_view_fields(self)
+        else:
+            # validation does not care about fields_get and access rights
+            name_manager.update_view_fields()
+            self._postprocess_access_rights(root, model.sudo(False))
+
+        return name_manager
+
+    def _postprocess_on_change(self, arch, model):
         """ Add attribute on_change="1" on fields that are dependencies of
             computed fields on the same view.
         """
@@ -1003,7 +1055,7 @@ actual arch.
             for child in node:
                 collect(child, model)
 
-        collect(arch, self.env[model_name])
+        collect(arch, model)
 
         for field, nodes in field_nodes.items():
             # if field should trigger an onchange, add on_change="1" on the
@@ -1014,74 +1066,30 @@ actual arch.
                     if not node.get('on_change'):
                         node.set('on_change', '1')
 
-    def _postprocess_access_rights(self, model, node):
+    def _postprocess_access_rights(self, node, model):
         """ Compute and set on node access rights based on view type. Specific
         views can add additional specific rights like creating columns for
         many2one-based grouping views. """
         # testing ACL as real user
-        Model = self.env[model].sudo(False)
-        is_base_model = self.env.context.get('base_model_name', model) == model
+        is_base_model = self.env.context.get('base_model_name', model._name) == model._name
 
         if node.tag in ('kanban', 'tree', 'form', 'activity'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
                 if (not node.get(action) and
-                        not Model.check_access_rights(operation, raise_exception=False) or
+                        not model.check_access_rights(operation, raise_exception=False) or
                         not self._context.get(action, True) and is_base_model):
                     node.set(action, 'false')
 
         if node.tag == 'kanban':
             group_by_name = node.get('default_group_by')
-            group_by_field = Model._fields.get(group_by_name)
+            group_by_field = model._fields.get(group_by_name)
             if group_by_field and group_by_field.type == 'many2one':
-                group_by_model = Model.env[group_by_field.comodel_name]
+                group_by_model = model.env[group_by_field.comodel_name]
                 for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
                     if (not node.get(action) and
                             not group_by_model.check_access_rights(operation, raise_exception=False) or
                             not self._context.get(action, True) and is_base_model):
                         node.set(action, 'false')
-
-    def postprocess(self, node, current_node_path, editable, name_manager):
-        """ Process the given arch node, which may be the complete arch or some
-        subnode, and fill in the name manager with field information.
-        """
-        stack = [(node, current_node_path, editable)]
-        while stack:
-            node, current_node_path, editable = stack.pop()
-
-            # compute default
-            tag = node.tag
-            parent = node.getparent()
-            node_info = dict(
-                modifiers={},
-                attr_model=name_manager.Model,
-                editable=editable,
-            )
-            current_node_path = current_node_path + [tag]
-
-            postprocessor = getattr(self, '_postprocess_tag_%s' % tag, False)
-            if postprocessor:
-                postprocessor(node, name_manager, node_info)
-                if node.getparent() is not parent:
-                    # the node has been removed, stop processing here
-                    continue
-
-            elif tag in {item[0] for item in type(self.env['ir.ui.view']).type.selection}:
-                node_info['editable'] = False
-
-            if name_manager.validate:
-                # structure validation
-                validator = getattr(self, '_validate_tag_%s' % tag, False)
-                if validator:
-                    validator(node, name_manager, node_info)
-                self._validate_attrs(node, name_manager, node_info)
-
-            self._apply_groups(node, name_manager, node_info)
-            transfer_node_to_modifiers(node, node_info['modifiers'], self._context, current_node_path)
-            transfer_modifiers_to_node(node_info['modifiers'], node)
-
-            # if present, iterate on node_info['children'] instead of node
-            for child in reversed(node_info.get('children', node)):
-                stack.append((child, current_node_path, node_info['editable']))
 
     #------------------------------------------------------
     # Specific node postprocessors
@@ -1117,24 +1125,25 @@ actual arch.
                 for child in node:
                     if child.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                         node.remove(child)
-                        xarch, sub_name_manager = self.with_context(
+                        sub_name_manager = self.with_context(
                             base_model_name=name_manager.Model._name,
                         )._postprocess_view(
                             child, field.comodel_name, name_manager.validate,
                             editable=node_info['editable'],
                         )
                         name_manager.must_have_fields(sub_name_manager.mandatory_parent_fields)
+                        xarch = etree.tostring(child, encoding="unicode").replace('\t', '')
                         views[child.tag] = {
                             'arch': xarch,
                             'fields': sub_name_manager.available_fields,
                         }
                 attrs['views'] = views
                 if field.comodel_name in self.env:
-                    Comodel = self.env[field.comodel_name].sudo(False)
-                    node_info['attr_model'] = Comodel
+                    comodel = self.env[field.comodel_name].sudo(False)
+                    node_info['attr_model'] = comodel
                     if field.type in ('many2one', 'many2many'):
-                        can_create = Comodel.check_access_rights('create', raise_exception=False)
-                        can_write = Comodel.check_access_rights('write', raise_exception=False)
+                        can_create = comodel.check_access_rights('create', raise_exception=False)
+                        can_write = comodel.check_access_rights('write', raise_exception=False)
                         node.set('can_create', 'true' if can_create else 'false')
                         node.set('can_write', 'true' if can_write else 'false')
 
@@ -1161,9 +1170,10 @@ actual arch.
             node.remove(child)
             groupby_node.append(child)
         # validate the new node as a nested view, and associate it to the field
-        xarch, sub_name_manager = self.with_context(
+        sub_name_manager = self.with_context(
             base_model_name=name_manager.Model._name,
         )._postprocess_view(groupby_node, field.comodel_name, name_manager.validate, editable=False)
+        xarch = etree.tostring(groupby_node, encoding="unicode").replace('\t', '')
         name_manager.has_field(name, {'views': {
             'groupby': {
                 'arch': xarch,
@@ -2074,9 +2084,6 @@ class NameManager:
             _logger.error("All parent.field should have been consummed at root level. \n %s", '\n'.join(msg))
 
     def check_view_fields(self, view):
-        if not self.validate:
-            return
-
         for action, use in self.mandatory_names_or_ids.items():
             if action not in self.available_actions and action not in self.available_names_or_ids:
                 msg = _(
