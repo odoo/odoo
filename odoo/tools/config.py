@@ -140,6 +140,8 @@ class configmanager(object):
         group.add_option("--proxy-mode", dest="proxy_mode", action="store_true", my_default=False,
                          help="Activate reverse proxy WSGI wrappers (headers rewriting) "
                               "Only enable this when running behind a trusted web proxy!")
+        group.add_option("--session-max-age", dest="session_max_age", my_default=7776000,
+                         help="Default 90 days in seconds", type="int")
         # HTTP: hidden backwards-compatibility for "*xmlrpc*" options
         hidden = optparse.SUPPRESS_HELP
         group.add_option("--xmlrpc-interface", dest="http_interface", help=hidden)
