@@ -481,6 +481,12 @@ class Team(models.Model):
             population.append(team)
             weights.append(team.assignment_max)
 
+        # Start a new transaction, since data fetching take times
+        # and the first commit occur at the end of the bundle,
+        # the first transaction can be long which we want to avoid
+        if auto_commit:
+            self._cr.commit()
+
         # assignment process data
         global_data = dict(assigned=set(), merged=set(), duplicates=set())
         leads_done_ids, lead_unlink_ids, counter = set(), set(), 0
@@ -489,7 +495,7 @@ class Team(models.Model):
             team = random.choices(population, weights=weights, k=1)[0]
 
             # filter remaining leads, remove team if no more leads for it
-            teams_data[team]["leads"] = teams_data[team]["leads"].filtered(lambda l: l.id not in leads_done_ids)
+            teams_data[team]["leads"] = teams_data[team]["leads"].filtered(lambda l: l.id not in leads_done_ids).exists()
             if not teams_data[team]["leads"]:
                 population_index = population.index(team)
                 population.pop(population_index)
@@ -553,7 +559,7 @@ class Team(models.Model):
                 # fill cache if not already done
                 if lead not in duplicates_cache:
                     duplicates_cache[lead] = lead._get_lead_duplicates(email=lead.email_from)
-                lead_duplicates = duplicates_cache[lead]
+                lead_duplicates = duplicates_cache[lead].exists()
 
                 if len(lead_duplicates) > 1:
                     leads_dups_dict[lead] = lead_duplicates
