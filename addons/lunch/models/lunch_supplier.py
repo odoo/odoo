@@ -121,10 +121,11 @@ class LunchSupplier(models.Model):
                 sendat_tz += timedelta(days=1)
             sendat_utc = sendat_tz.astimezone(pytz.UTC).replace(tzinfo=None)
 
-            supplier.cron_id.active = supplier.active and supplier.send_by == 'mail'
-            supplier.cron_id.name = f"Lunch: send automatic email to {supplier.name}"
-            supplier.cron_id.nextcall = sendat_utc
-            supplier.cron_id.code = dedent(f"""\
+            cron = supplier.cron_id.sudo()
+            cron.active = supplier.active and supplier.send_by == 'mail'
+            cron.name = f"Lunch: send automatic email to {supplier.name}"
+            cron.nextcall = sendat_utc
+            cron.code = dedent(f"""\
                 # This cron is dynamically controlled by {self._description}.
                 # Do NOT modify this cron, modify the related record instead.
                 env['{self._name}'].browse([{supplier.id}])._send_auto_email()""")
@@ -159,7 +160,7 @@ class LunchSupplier(models.Model):
             self._sync_cron()
 
     def unlink(self):
-        crons = self.cron_id
+        crons = self.cron_id.sudo()
         super().unlink()
         crons.unlink()
 
