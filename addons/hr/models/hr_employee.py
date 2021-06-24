@@ -118,6 +118,8 @@ class HrEmployeePrivate(models.Model):
     departure_description = fields.Text(string="Additional Information", groups="hr.group_hr_user", copy=False, tracking=True)
     departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
     message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
+    id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_user")
+    driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_user")
 
     _sql_constraints = [
         ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),
