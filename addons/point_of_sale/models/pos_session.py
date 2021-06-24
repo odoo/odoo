@@ -178,6 +178,13 @@ class PosSession(models.Model):
             if (company.period_lock_date and start_date <= company.period_lock_date) or (company.fiscalyear_lock_date and start_date <= company.fiscalyear_lock_date):
                 raise ValidationError(_("You cannot create a session before the accounting lock date."))
 
+    def _check_bank_statement_state(self):
+        for session in self:
+            closed_statement_ids = session.statement_ids.filtered(lambda x: x.state != "open")
+            if closed_statement_ids:
+                raise UserError(_("Some Cash Registers are already posted. Please reset them to new in order to close the session.\n"
+                                  "Cash Registers: %r", list(statement.name for statement in closed_statement_ids)))
+
     @api.model
     def create(self, values):
         config_id = values.get('config_id') or self.env.context.get('default_config_id')
@@ -270,7 +277,7 @@ class PosSession(models.Model):
     def _check_pos_session_balance(self):
         for session in self:
             for statement in session.statement_ids:
-                if (statement == session.cash_register_id) and (statement.balance_end != statement.balance_end_real):
+                if (statement != session.cash_register_id) and (statement.balance_end != statement.balance_end_real):
                     statement.write({'balance_end_real': statement.balance_end})
 
     def action_pos_session_validate(self):
@@ -281,6 +288,7 @@ class PosSession(models.Model):
         # Session without cash payment method will not have a cash register.
         # However, there could be other payment methods, thus, session still
         # needs to be validated.
+        self._check_bank_statement_state()
         if not self.cash_register_id:
             return self._validate_session()
 
@@ -324,6 +332,8 @@ class PosSession(models.Model):
                 self.move_id.unlink()
         else:
             statement = self.cash_register_id
+            if not self.config_id.cash_control:
+                statement.write({'balance_end_real': statement.balance_end})
             statement.button_post()
             statement.button_validate()
         self.write({'state': 'closed'})
