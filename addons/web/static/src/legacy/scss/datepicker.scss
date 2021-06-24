@@ -22,7 +22,7 @@
         @include o-position-absolute(2px, 4px);
         pointer-events: none; // let click events go through the underlying input
         &:after {
-            @include o-caret-down;
+            @include o-caret-down($caret-width: 4px);
         }
     }
 

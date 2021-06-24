@@ -29,7 +29,7 @@
 
 .o_input {
     border:$input-border-width solid var(--o-input-border-color);
-    padding: 2px 4px;
+    padding: $o-input-padding-y $o-input-padding-x;
 
     // -- Nested o_input(s)
     .o_input {
@@ -66,6 +66,22 @@
         text-align: inherit;
     }
 
+    // Dropdowns inputs
+    .o_input_dropdown, &.o_datepicker {
+        > input {
+            padding-right: ($caret-width * 2.5) + $o-input-padding-x;
+        }
+
+        .o_dropdown_button, .o_datepicker_button {
+            @include o-position-absolute($o-input-padding-y, $o-input-padding-x, $input-border-width);
+            pointer-events: none;
+
+            &:after {
+                @include o-caret-down;
+            }
+        }
+    }
+
     // Block fields
     &.note-editor, &.oe_form_field_html, &.oe_form_field_text, &.o_field_domain, &.o_graph_linechart, &.o_graph_barchart {
         display: block;
@@ -86,19 +102,10 @@
         width: 100%;
 
         > input {
-            padding-right: 15px;
             cursor: pointer;
 
             &::-ms-clear {
                 display: none;
-            }
-        }
-
-        .o_dropdown_button {
-            @include o-position-absolute(0, 0);
-            pointer-events: none;
-            &:after {
-                @include o-caret-down;
             }
         }
     }
