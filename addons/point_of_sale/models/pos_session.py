@@ -270,7 +270,7 @@ class PosSession(models.Model):
     def _check_pos_session_balance(self):
         for session in self:
             for statement in session.statement_ids:
-                if (statement == session.cash_register_id) and (statement.balance_end != statement.balance_end_real):
+                if (statement != session.cash_register_id) and (statement.balance_end != statement.balance_end_real):
                     statement.write({'balance_end_real': statement.balance_end})
 
     def action_pos_session_validate(self):
@@ -324,6 +324,8 @@ class PosSession(models.Model):
                 self.move_id.unlink()
         else:
             statement = self.cash_register_id
+            if not self.config_id.cash_control:
+                statement.write({'balance_end_real': statement.balance_end})
             statement.button_post()
             statement.button_validate()
         self.write({'state': 'closed'})
