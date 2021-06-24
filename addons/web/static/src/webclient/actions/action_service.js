@@ -370,8 +370,8 @@ function makeActionManager(env) {
             type: view.type,
             views: action.views,
             viewSwitcherEntries,
-            withActionMenus: target !== "new" && target !== "inline",
-            withFilters: action.views.some((v) => v[1] === "search"),
+            loadActionMenus: target !== "new" && target !== "inline",
+            loadIrFilters: action.views.some((v) => v[1] === "search"),
         });
         if (action.res_id) {
             viewProps.resId = action.res_id;
@@ -1103,12 +1103,7 @@ function makeActionManager(env) {
         }
         // END LEGACY CODE COMPATIBILITY
 
-        newController.props = _getViewProps(
-            view,
-            controller.action,
-            controller.views,
-            props
-        );
+        newController.props = _getViewProps(view, controller.action, controller.views, props);
         controller.action.controllers[viewType] = newController;
         let index;
         if (view.multiRecord) {

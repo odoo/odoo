@@ -313,8 +313,8 @@ export class ViewAdapter extends ActionAdapter {
         return Object.assign({}, state, widgetState);
     }
 
-    async loadViews(model, context, views) {
-        return (await this.vm.loadViews({ model, views, context }, {})).fields_views;
+    async loadViews(resModel, context, views) {
+        return (await this.vm.loadViews({ resModel, views, context }, {})).fields_views;
     }
 
     /**
