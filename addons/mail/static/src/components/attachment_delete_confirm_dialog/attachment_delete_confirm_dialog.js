@@ -19,7 +19,7 @@ export class AttachmentDeleteConfirmDialog extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const attachment = this.env.models['mail.attachment'].get(props.attachmentLocalId);
+            const attachment = this.env.services.messaging.models['mail.attachment'].get(props.attachmentLocalId);
             return {
                 attachment: attachment ? attachment.__state : undefined,
             };
@@ -36,7 +36,7 @@ export class AttachmentDeleteConfirmDialog extends Component {
      * @returns {mail.attachment}
      */
     get attachment() {
-        return this.env.models['mail.attachment'].get(this.props.attachmentLocalId);
+        return this.env.services.messaging.models['mail.attachment'].get(this.props.attachmentLocalId);
     }
 
     /**

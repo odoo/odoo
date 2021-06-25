@@ -59,7 +59,7 @@ QUnit.test('mark as read', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });

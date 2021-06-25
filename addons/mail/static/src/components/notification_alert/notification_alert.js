@@ -3,6 +3,8 @@
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
 import { useStore } from '@mail/component_hooks/use_store/use_store';
 
+import { browser } from '@web/core/browser/browser';
+
 const { Component } = owl;
 
 export class NotificationAlert extends Component {
@@ -14,7 +16,7 @@ export class NotificationAlert extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const isMessagingInitialized = this.env.isMessagingInitialized();
+            const isMessagingInitialized = this.env.services.messaging.isMessagingInitialized();
             return {
                 isMessagingInitialized,
                 isNotificationBlocked: this.isNotificationBlocked,
@@ -30,14 +32,13 @@ export class NotificationAlert extends Component {
      * @returns {boolean}
      */
     get isNotificationBlocked() {
-        if (!this.env.isMessagingInitialized()) {
+        if (!this.env.services.messaging.isMessagingInitialized()) {
             return false;
         }
-        const windowNotification = this.env.browser.Notification;
         return (
-            windowNotification &&
-            windowNotification.permission !== "granted" &&
-            !this.env.messaging.isNotificationPermissionDefault
+            browser.Notification &&
+            browser.Notification.permission !== "granted" &&
+            !this.env.services.messaging.messaging.isNotificationPermissionDefault
         );
     }
 

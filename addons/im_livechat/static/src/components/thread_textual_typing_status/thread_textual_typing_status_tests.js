@@ -49,7 +49,7 @@ QUnit.test('receive visitor typing status "is typing"', async function (assert) 
         members: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -66,8 +66,8 @@ QUnit.test('receive visitor typing status "is typing"', async function (assert) 
         const typingData = {
             info: 'typing_status',
             is_typing: true,
-            partner_id: this.env.messaging.publicPartners[0].id,
-            partner_name: this.env.messaging.publicPartners[0].name,
+            partner_id: this.env.services.messaging.messaging.publicPartners[0].id,
+            partner_name: this.env.services.messaging.messaging.publicPartners[0].name,
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);

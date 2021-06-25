@@ -37,7 +37,7 @@ odoo.define('hr.employee_chat', function (require) {
             ev.preventDefault();
             ev.stopImmediatePropagation();
             const env = Component.env;
-            env.messaging.openChat({ employeeId: this.state.data.id });
+            env.services.messaging.messaging.openChat({ employeeId: this.state.data.id });
             return true;
         },
     };

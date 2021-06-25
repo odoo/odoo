@@ -125,7 +125,7 @@ function factory(dependencies) {
          * @param {mail.thread} [thread] the concerned thread
          */
         static computeLastCurrentPartnerMessageSeenByEveryone(thread = undefined) {
-            const threads = thread ? [thread] : this.env.models['mail.thread'].all();
+            const threads = thread ? [thread] : this.env.services.messaging.models['mail.thread'].all();
             threads.map(localThread => {
                 localThread.update({
                     lastCurrentPartnerMessageSeenByEveryone: localThread._computeLastCurrentPartnerMessageSeenByEveryone(),
@@ -169,7 +169,7 @@ function factory(dependencies) {
                 data2.isServerPinned = data.is_pinned;
             }
             if ('last_message' in data && data.last_message) {
-                const messageData = this.env.models['mail.message'].convertData({
+                const messageData = this.env.services.messaging.models['mail.message'].convertData({
                     id: data.last_message.id,
                     model: data2.model,
                     res_id: data2.id,
@@ -177,7 +177,7 @@ function factory(dependencies) {
                 data2.serverLastMessage = insert(messageData);
             }
             if ('last_message_id' in data && data.last_message_id) {
-                const messageData = this.env.models['mail.message'].convertData({
+                const messageData = this.env.services.messaging.models['mail.message'].convertData({
                     id: data.last_message_id,
                     model: data2.model,
                     res_id: data2.id,
@@ -210,7 +210,7 @@ function factory(dependencies) {
                     data2.members = [unlinkAll()];
                 } else {
                     data2.members = [insertAndReplace(data.members.map(memberData =>
-                        this.env.models['mail.partner'].convertData(memberData)
+                        this.env.services.messaging.models['mail.partner'].convertData(memberData)
                     ))];
                 }
             }
@@ -278,18 +278,16 @@ function factory(dependencies) {
          *  result in the context of given thread
          */
         static async fetchSuggestions(searchTerm, { thread } = {}) {
-            const channelsData = await this.env.services.rpc(
-                {
-                    model: 'mail.channel',
-                    method: 'get_mention_suggestions',
-                    kwargs: { search: searchTerm },
-                },
-                { shadow: true },
+            const channelsData = await this.env.services.orm.silent.call(
+                'mail.channel',
+                'get_mention_suggestions',
+                undefined,
+                { search: searchTerm },
             );
-            this.env.models['mail.thread'].insert(channelsData.map(channelData =>
+            this.env.services.messaging.models['mail.thread'].insert(channelsData.map(channelData =>
                 Object.assign(
                     { model: 'mail.channel' },
-                    this.env.models['mail.thread'].convertData(channelData),
+                    this.env.services.messaging.models['mail.thread'].convertData(channelData),
                 )
             ));
         }
@@ -316,8 +314,8 @@ function factory(dependencies) {
                 if (!isAPublic && isBPublic) {
                     return 1;
                 }
-                const isMemberOfA = a.model === 'mail.channel' && a.members.includes(this.env.messaging.currentPartner);
-                const isMemberOfB = b.model === 'mail.channel' && b.members.includes(this.env.messaging.currentPartner);
+                const isMemberOfA = a.model === 'mail.channel' && a.members.includes(this.env.services.messaging.messaging.currentPartner);
+                const isMemberOfB = b.model === 'mail.channel' && b.members.includes(this.env.services.messaging.messaging.currentPartner);
                 if (isMemberOfA && !isMemberOfB) {
                     return -1;
                 }
@@ -359,13 +357,13 @@ function factory(dependencies) {
             if (channelIds.length === 0) {
                 return;
             }
-            const channelPreviews = await this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_fetch_preview',
-                args: [channelIds],
-            }, { shadow: true });
-            this.env.models['mail.message'].insert(channelPreviews.filter(p => p.last_message).map(
-                channelPreview => this.env.models['mail.message'].convertData(channelPreview.last_message)
+            const channelPreviews = await this.env.services.orm.silent.call(
+                'mail.channel',
+                'channel_fetch_preview',
+                [channelIds],
+            );
+            this.env.services.messaging.models['mail.message'].insert(channelPreviews.filter(p => p.last_message).map(
+                channelPreview => this.env.services.messaging.models['mail.message'].convertData(channelPreview.last_message)
             ));
         }
 
@@ -378,14 +376,15 @@ function factory(dependencies) {
          * @param {string} state
          */
         static async performRpcChannelFold(uuid, state) {
-            return this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_fold',
-                kwargs: {
+            return this.env.services.orm.silent.call(
+                'mail.channel',
+                'channel_fold',
+                undefined,
+                {
                     state,
                     uuid,
-                }
-            }, { shadow: true });
+                },
+            );
         }
 
         /**
@@ -397,13 +396,13 @@ function factory(dependencies) {
          * @returns {mail.thread[]}
          */
         static async performRpcChannelInfo({ ids }) {
-            const channelInfos = await this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_info',
-                args: [ids],
-            }, { shadow: true });
-            const channels = this.env.models['mail.thread'].insert(
-                channelInfos.map(channelInfo => this.env.models['mail.thread'].convertData(channelInfo))
+            const channelInfos = await this.env.services.orm.silent.call(
+                'mail.channel',
+                'channel_info',
+                [ids],
+            );
+            const channels = this.env.services.messaging.models['mail.thread'].insert(
+                channelInfos.map(channelInfo => this.env.services.messaging.models['mail.thread'].convertData(channelInfo))
             );
             return channels;
         }
@@ -417,14 +416,14 @@ function factory(dependencies) {
          * @param {integer[]} param0.lastMessageId
          */
         static async performRpcChannelSeen({ ids, lastMessageId }) {
-            return this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_seen',
-                args: [ids],
-                kwargs: {
+            return this.env.services.orm.silent.call(
+                'mail.channel',
+                'channel_seen',
+                [ids],
+                {
                     last_message_id: lastMessageId,
                 },
-            }, { shadow: true });
+            );
         }
 
         /**
@@ -436,14 +435,15 @@ function factory(dependencies) {
          * @param {string} param0.uuid
          */
         static async performRpcChannelPin({ pinned = false, uuid }) {
-            return this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_pin',
-                kwargs: {
+            return this.env.services.orm.silent.call(
+                'mail.channel',
+                'channel_pin',
+                undefined,
+                {
                     uuid,
                     pinned,
                 },
-            }, { shadow: true });
+            );
         }
 
         /**
@@ -456,21 +456,21 @@ function factory(dependencies) {
          * @returns {mail.thread} the created channel
          */
         static async performRpcCreateChannel({ name, privacy }) {
-            const device = this.env.messaging.device;
-            const data = await this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_create',
-                args: [name, privacy],
-                kwargs: {
+            const device = this.env.services.messaging.messaging.device;
+            const data = await this.env.services.orm.call(
+                'mail.channel',
+                'channel_create',
+                [name, privacy],
+                {
                     context: Object.assign({}, this.env.session.user_content, {
                         // optimize the return value by avoiding useless queries
                         // in non-mobile devices
-                        isMobile: device.isMobile,
+                        isMobile: device.isSmall,
                     }),
                 },
-            });
-            return this.env.models['mail.thread'].insert(
-                this.env.models['mail.thread'].convertData(data)
+            );
+            return this.env.services.messaging.models['mail.thread'].insert(
+                this.env.services.messaging.models['mail.thread'].convertData(data)
             );
         }
 
@@ -487,26 +487,27 @@ function factory(dependencies) {
          * @returns {mail.thread|undefined} the created or existing chat
          */
         static async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
-            const device = this.env.messaging.device;
+            const device = this.env.services.messaging.messaging.device;
             // TODO FIX: potential duplicate chat task-2276490
-            const data = await this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_get',
-                kwargs: {
+            const data = await this.env.services.orm.call(
+                'mail.channel',
+                'channel_get',
+                undefined,
+                {
                     context: Object.assign({}, this.env.session.user_content, {
                         // optimize the return value by avoiding useless queries
                         // in non-mobile devices
-                        isMobile: device.isMobile,
+                        isMobile: device.isSmall,
                     }),
                     partners_to: partnerIds,
                     pin: pinForCurrentPartner,
                 },
-            });
+            );
             if (!data) {
                 return;
             }
-            return this.env.models['mail.thread'].insert(
-                this.env.models['mail.thread'].convertData(data)
+            return this.env.services.messaging.models['mail.thread'].insert(
+                this.env.services.messaging.models['mail.thread'].convertData(data)
             );
         }
 
@@ -519,21 +520,21 @@ function factory(dependencies) {
          * @returns {mail.thread} the channel that was joined
          */
         static async performRpcJoinChannel({ channelId }) {
-            const device = this.env.messaging.device;
-            const data = await this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_join_and_get_info',
-                args: [[channelId]],
-                kwargs: {
+            const device = this.env.services.messaging.messaging.device;
+            const data = await this.env.services.orm.call(
+                'mail.channel',
+                'channel_join_and_get_info',
+                [[channelId]],
+                {
                     context: Object.assign({}, this.env.session.user_content, {
                         // optimize the return value by avoiding useless queries
                         // in non-mobile devices
-                        isMobile: device.isMobile,
+                        isMobile: device.isSmall,
                     }),
                 },
-            });
-            return this.env.models['mail.thread'].insert(
-                this.env.models['mail.thread'].convertData(data)
+            );
+            return this.env.services.messaging.models['mail.thread'].insert(
+                this.env.services.messaging.models['mail.thread'].convertData(data)
             );
         }
 
@@ -547,12 +548,12 @@ function factory(dependencies) {
          * @param {Object} [param0.postData={}]
          */
         static async performRpcExecuteCommand({ channelId, command, postData = {} }) {
-            return this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'execute_command',
-                args: [[channelId]],
-                kwargs: Object.assign({ command }, postData),
-            });
+            return this.env.services.orm.call(
+                'mail.channel',
+                'execute_command',
+                [[channelId]],
+                Object.assign({ command }, postData),
+            );
         }
 
         /**
@@ -566,12 +567,12 @@ function factory(dependencies) {
          * @return {integer} the posted message id
          */
         static async performRpcMessagePost({ postData, threadId, threadModel }) {
-            return this.env.services.rpc({
-                model: threadModel,
-                method: 'message_post',
-                args: [threadId],
-                kwargs: postData,
-            });
+            return this.env.services.orm.call(
+                threadModel,
+                'message_post',
+                [[threadId]],
+                postData,
+            );
         }
 
         /**
@@ -583,13 +584,14 @@ function factory(dependencies) {
          * @param {integer[]} param0.res_id
          */
         static async performRpcMailGetSuggestedRecipients({ model, res_ids }) {
-            const data = await this.env.services.rpc({
-                route: '/mail/get_suggested_recipients',
-                params: {
+            const data = await this.env.services.rpc(
+                '/mail/get_suggested_recipients',
+                {
                     model,
                     res_ids,
                 },
-            }, { shadow: true });
+                { silent: true },
+            );
             for (const id in data) {
                 const recipientInfoList = data[id].map(recipientInfoData => {
                     const [partner_id, emailInfo, reason] = recipientInfoData;
@@ -632,7 +634,7 @@ function factory(dependencies) {
                 // channel.
                 threads = [thread];
             } else {
-                threads = this.env.models['mail.thread'].all();
+                threads = this.env.services.messaging.models['mail.thread'].all();
             }
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
             return [threads.filter(thread =>
@@ -649,19 +651,18 @@ function factory(dependencies) {
          * with these attachments, which are used by attachment box in the chatter.
          */
         async fetchAttachments() {
-            const attachmentsData = await this.async(() => this.env.services.rpc({
-                model: 'ir.attachment',
-                method: 'search_read',
-                domain: [
+            const attachmentsData = await this.async(() => this.env.services.orm.silent.searchRead(
+                'ir.attachment',
+                [
                     ['res_id', '=', this.id],
                     ['res_model', '=', this.model],
                 ],
-                fields: ['id', 'name', 'mimetype'],
-                orderBy: [{ name: 'id', asc: false }],
-            }, { shadow: true }));
+                ['id', 'name', 'mimetype'],
+                { orderBy: [{ name: 'id', asc: false }] },
+            ));
             this.update({
                 originThreadAttachments: insertAndReplace(attachmentsData.map(data =>
-                    this.env.models['mail.attachment'].convertData(data)
+                    this.env.services.messaging.models['mail.attachment'].convertData(data)
                 )),
             });
             this.update({ areAttachmentsLoaded: true });
@@ -674,7 +675,7 @@ function factory(dependencies) {
             if (this.isTemporary) {
                 return;
             }
-            return this.env.models['mail.thread'].performRpcMailGetSuggestedRecipients({
+            return this.env.services.messaging.models['mail.thread'].performRpcMailGetSuggestedRecipients({
                 model: this.model,
                 res_ids: [this.id],
             });
@@ -684,14 +685,14 @@ function factory(dependencies) {
          * Add current user to provided thread's followers.
          */
         async follow() {
-            await this.async(() => this.env.services.rpc({
-                model: this.model,
-                method: 'message_subscribe',
-                args: [[this.id]],
-                kwargs: {
-                    partner_ids: [this.env.messaging.currentPartner.id],
+            await this.async(() => this.env.services.orm.call(
+                this.model,
+                'message_subscribe',
+                [[this.id]],
+                {
+                    partner_ids: [this.env.services.messaging.messaging.currentPartner.id],
                 },
-            }));
+            ));
             this.refreshFollowers();
             this.fetchAndUpdateSuggestedRecipients();
         }
@@ -716,11 +717,11 @@ function factory(dependencies) {
          * Mark the specified conversation as fetched.
          */
         async markAsFetched() {
-            await this.async(() => this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_fetched',
-                args: [[this.id]],
-            }, { shadow: true }));
+            await this.async(() => this.env.services.orm.silent.call(
+                'mail.channel',
+                'channel_fetched',
+                [[this.id]],
+            ));
         }
 
         /**
@@ -742,7 +743,7 @@ function factory(dependencies) {
                 return;
             }
             this.update({ pendingSeenMessageId: message.id });
-            return this.env.models['mail.thread'].performRpcChannelSeen({
+            return this.env.services.messaging.models['mail.thread'].performRpcChannelSeen({
                 ids: [this.id],
                 lastMessageId: message.id,
             });
@@ -753,7 +754,7 @@ function factory(dependencies) {
          */
         async markNeedactionMessagesAsOriginThreadAsRead() {
             await this.async(() =>
-                this.env.models['mail.message'].markAsRead(this.needactionMessagesAsOriginThread)
+                this.env.services.messaging.models['mail.message'].markAsRead(this.needactionMessagesAsOriginThread)
             );
         }
 
@@ -771,7 +772,7 @@ function factory(dependencies) {
             if (!this.uuid) {
                 return;
             }
-            return this.env.models['mail.thread'].performRpcChannelFold(this.uuid, state);
+            return this.env.services.messaging.models['mail.thread'].performRpcChannelFold(this.uuid, state);
         }
 
         /**
@@ -782,12 +783,12 @@ function factory(dependencies) {
          */
         async notifyPinStateToServer() {
             if (this.isPendingPinned) {
-                await this.env.models['mail.thread'].performRpcChannelPin({
+                await this.env.services.messaging.models['mail.thread'].performRpcChannelPin({
                     pinned: true,
                     uuid: this.uuid,
                 });
             } else {
-                this.env.models['mail.thread'].performRpcExecuteCommand({
+                this.env.services.messaging.models['mail.thread'].performRpcExecuteCommand({
                     channelId: this.id,
                     command: 'leave',
                 });
@@ -803,30 +804,30 @@ function factory(dependencies) {
          * @param {boolean} [param0.expanded=false]
          */
         async open({ expanded = false } = {}) {
-            const discuss = this.env.messaging.discuss;
+            const discuss = this.env.services.messaging.messaging.discuss;
             // check if thread must be opened in form view
             if (!['mail.box', 'mail.channel'].includes(this.model)) {
                 if (expanded || discuss.isOpen) {
                     // Close chat window because having the same thread opened
                     // both in chat window and as main document does not look
                     // good.
-                    this.env.messaging.chatWindowManager.closeThread(this);
-                    return this.env.messaging.openDocument({
+                    this.env.services.messaging.messaging.chatWindowManager.closeThread(this);
+                    return this.env.services.messaging.messaging.openDocument({
                         id: this.id,
                         model: this.model,
                     });
                 }
             }
             // check if thread must be opened in discuss
-            const device = this.env.messaging.device;
+            const device = this.env.services.messaging.messaging.device;
             if (
-                (!device.isMobile && (discuss.isOpen || expanded)) ||
+                (!device.isSmall && (discuss.isOpen || expanded)) ||
                 this.model === 'mail.box'
             ) {
                 return discuss.openThread(this);
             }
             // thread must be opened in chat window
-            return this.env.messaging.chatWindowManager.openThread(this, {
+            return this.env.services.messaging.messaging.chatWindowManager.openThread(this, {
                 makeActive: true,
             });
         }
@@ -835,7 +836,7 @@ function factory(dependencies) {
          * Opens the most appropriate view that is a profile for this thread.
          */
         async openProfile() {
-            return this.env.messaging.openDocument({
+            return this.env.services.messaging.messaging.openDocument({
                 id: this.id,
                 model: this.model,
             });
@@ -874,18 +875,18 @@ function factory(dependencies) {
                 return;
             }
             // A bit "extreme", may be improved
-            const [{ activity_ids: newActivityIds }] = await this.async(() => this.env.services.rpc({
-                model: this.model,
-                method: 'read',
-                args: [this.id, ['activity_ids']]
-            }, { shadow: true }));
-            const activitiesData = await this.async(() => this.env.services.rpc({
-                model: 'mail.activity',
-                method: 'activity_format',
-                args: [newActivityIds]
-            }, { shadow: true }));
-            const activities = this.env.models['mail.activity'].insert(activitiesData.map(
-                activityData => this.env.models['mail.activity'].convertData(activityData)
+            const [{ activity_ids: newActivityIds }] = await this.async(() => this.env.services.orm.silent.read(
+                this.model,
+                [this.id],
+                ['activity_ids'],
+            ));
+            const activitiesData = await this.async(() => this.env.services.orm.silent.call(
+                'mail.activity',
+                'activity_format',
+                [newActivityIds]
+            ));
+            const activities = this.env.services.messaging.models['mail.activity'].insert(activitiesData.map(
+                activityData => this.env.services.messaging.models['mail.activity'].convertData(activityData)
             ));
             this.update({ activities: replace(activities) });
         }
@@ -898,18 +899,19 @@ function factory(dependencies) {
                 this.update({ followers: unlinkAll() });
                 return;
             }
-            const { followers } = await this.async(() => this.env.services.rpc({
-                route: '/mail/read_followers',
-                params: {
+            const { followers } = await this.async(() => this.env.services.rpc(
+                '/mail/read_followers',
+                {
                     res_id: this.id,
                     res_model: this.model,
                 },
-            }, { shadow: true }));
+                { silent: true },
+            ));
             this.update({ areFollowersLoaded: true });
             if (followers.length > 0) {
                 this.update({
                     followers: insertAndReplace(followers.map(data =>
-                        this.env.models['mail.follower'].convertData(data))
+                        this.env.services.messaging.models['mail.follower'].convertData(data))
                     ),
                 });
             } else {
@@ -946,7 +948,7 @@ function factory(dependencies) {
             this._currentPartnerInactiveTypingTimer.start();
             this._currentPartnerLongTypingTimer.start();
             // Manage typing member relation.
-            const currentPartner = this.env.messaging.currentPartner;
+            const currentPartner = this.env.services.messaging.messaging.currentPartner;
             const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
                 .filter(localId => localId !== currentPartner.localId);
             newOrderedTypingMemberLocalIds.push(currentPartner.localId);
@@ -988,12 +990,12 @@ function factory(dependencies) {
          * @param {string} newName
          */
         async rename(newName) {
-            return this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_rename',
-                args: [this.id],
-                kwargs: { name: newName },
-            });
+            return this.env.services.orm.call(
+                'mail.channel',
+                'channel_rename',
+                [this.id],
+                { name: newName },
+            );
         }
 
         /**
@@ -1004,12 +1006,12 @@ function factory(dependencies) {
          * @param {string} newName
          */
         async setCustomName(newName) {
-            return this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_set_custom_name',
-                args: [this.id],
-                kwargs: { name: newName },
-            });
+            return this.env.services.orm.call(
+                'mail.channel',
+                'channel_set_custom_name',
+                [this.id],
+                { name: newName },
+            );
         }
 
         /**
@@ -1017,7 +1019,7 @@ function factory(dependencies) {
          */
         async unfollow() {
             const currentPartnerFollower = this.followers.find(
-                follower => follower.partner === this.env.messaging.currentPartner
+                follower => follower.partner === this.env.services.messaging.messaging.currentPartner
             );
             await this.async(() => currentPartnerFollower.remove());
         }
@@ -1046,7 +1048,7 @@ function factory(dependencies) {
             this._currentPartnerInactiveTypingTimer.clear();
             this._currentPartnerLongTypingTimer.clear();
             // Manage typing member relation.
-            const currentPartner = this.env.messaging.currentPartner;
+            const currentPartner = this.env.services.messaging.messaging.currentPartner;
             const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
                 .filter(localId => localId !== currentPartner.localId);
             this.update({
@@ -1083,7 +1085,7 @@ function factory(dependencies) {
          * Unsubscribe current user from provided channel.
          */
         unsubscribe() {
-            this.env.messaging.chatWindowManager.closeThread(this);
+            this.env.services.messaging.messaging.chatWindowManager.closeThread(this);
             this.unpin();
         }
 
@@ -1132,7 +1134,7 @@ function factory(dependencies) {
                 return unlink();
             }
             const correspondents = this.members.filter(partner =>
-                partner !== this.env.messaging.currentPartner
+                partner !== this.env.services.messaging.messaging.currentPartner
             );
             if (correspondents.length === 1) {
                 // 2 members chat
@@ -1200,7 +1202,7 @@ function factory(dependencies) {
          */
         _computeIsCurrentPartnerFollowing() {
             return this.followers.some(follower =>
-                follower.partner && follower.partner === this.env.messaging.currentPartner
+                follower.partner && follower.partner === this.env.services.messaging.messaging.currentPartner
             );
         }
 
@@ -1302,7 +1304,7 @@ function factory(dependencies) {
                     continue;
                 }
                 if (
-                    message.author === this.env.messaging.currentPartner ||
+                    message.author === this.env.services.messaging.messaging.currentPartner ||
                     message.isTransient
                 ) {
                     lastSeenByCurrentPartnerMessageId = message.id;
@@ -1372,7 +1374,7 @@ function factory(dependencies) {
          * @returns {mail.messaging}
          */
         _computeMessaging() {
-            return link(this.env.messaging);
+            return link(this.env.services.messaging.messaging);
         }
 
         /**
@@ -1429,7 +1431,7 @@ function factory(dependencies) {
          */
         _computeOrderedOtherTypingMembers() {
             return replace(this.orderedTypingMembers.filter(
-                member => member !== this.env.messaging.currentPartner
+                member => member !== this.env.services.messaging.messaging.currentPartner
             ));
         }
 
@@ -1441,7 +1443,7 @@ function factory(dependencies) {
             return [[
                 'replace',
                 this.orderedTypingMemberLocalIds
-                    .map(localId => this.env.models['mail.partner'].get(localId))
+                    .map(localId => this.env.services.messaging.models['mail.partner'].get(localId))
                     .filter(member => !!member),
             ]];
         }
@@ -1497,11 +1499,10 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeUrl() {
-            const baseHref = this.env.session.url('/web');
             if (this.model === 'mail.channel') {
-                return `${baseHref}#action=mail.action_discuss&active_id=${this.model}_${this.id}`;
+                return `/web#action=mail.discuss&active_id=${this.model}_${this.id}`;
             }
-            return `${baseHref}#model=${this.model}&id=${this.id}`;
+            return `/web#model=${this.model}&id=${this.id}`;
         }
 
         /**
@@ -1515,12 +1516,12 @@ function factory(dependencies) {
                 isTyping !== this._currentPartnerLastNotifiedIsTyping
             ) {
                 if (this.model === 'mail.channel') {
-                    await this.async(() => this.env.services.rpc({
-                        model: 'mail.channel',
-                        method: 'notify_typing',
-                        args: [this.id],
-                        kwargs: { is_typing: isTyping },
-                    }, { shadow: true }));
+                    await this.async(() => this.env.services.orm.silent.call(
+                        'mail.channel',
+                        'notify_typing',
+                        [this.id],
+                        { is_typing: isTyping },
+                    ));
                 }
                 if (isTyping && this._currentPartnerLongTypingTimer.isRunning) {
                     this._currentPartnerLongTypingTimer.reset();
@@ -1553,7 +1554,7 @@ function factory(dependencies) {
          * @private
          */
         _onChangeLastSeenByCurrentPartnerMessageId() {
-            this.env.messagingBus.trigger('o-thread-last-seen-by-current-partner-message-id-changed', {
+            this.env.services.messaging.messagingBus.trigger('o-thread-last-seen-by-current-partner-message-id-changed', {
                 thread: this,
             });
         }
@@ -1595,19 +1596,19 @@ function factory(dependencies) {
          * @private
          */
         _onServerFoldStateChanged() {
-            if (!this.env.messaging.chatWindowManager) {
+            if (!this.env.services.messaging.messaging.chatWindowManager) {
                 // avoid crash during destroy
                 return;
             }
-            if (this.env.messaging.device.isMobile) {
+            if (this.env.services.messaging.messaging.device.isSmall) {
                 return;
             }
             if (this.serverFoldState === 'closed') {
-                this.env.messaging.chatWindowManager.closeThread(this, {
+                this.env.services.messaging.messaging.chatWindowManager.closeThread(this, {
                     notifyServer: false,
                 });
             } else {
-                this.env.messaging.chatWindowManager.openThread(this, {
+                this.env.services.messaging.messaging.chatWindowManager.openThread(this, {
                     isFolded: this.serverFoldState === 'folded',
                     notifyServer: false,
                 });
@@ -1630,15 +1631,15 @@ function factory(dependencies) {
                     default_res_id: this.id,
                 },
             };
-            this.env.bus.trigger('do-action', {
+            this.env.services.action.doAction(
                 action,
-                options: {
+                {
                     on_close: async () => {
                        await this.async(() => this.refreshFollowers());
-                       this.env.bus.trigger('mail.thread:promptAddFollower-closed');
+                       this.env.services.messaging.messagingBus.trigger('mail.thread:promptAddFollower-closed');
                     },
                 },
-            });
+            );
         }
 
         //----------------------------------------------------------------------

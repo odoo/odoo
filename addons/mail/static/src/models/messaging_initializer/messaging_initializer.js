@@ -42,19 +42,20 @@ function factory(dependencies) {
             const device = this.messaging.device;
             device.start();
             const context = Object.assign({
-                isMobile: device.isMobile,
-            }, this.env.session.user_context);
+                isMobile: device.isSmall,
+            }, this.env.services.user.context);
             const discuss = this.messaging.discuss;
-            const data = await this.async(() => this.env.services.rpc({
-                route: '/mail/init_messaging',
-                params: { context: context }
-            }, { shadow: true }));
+            const data = await this.async(() => this.env.services.rpc(
+                '/mail/init_messaging',
+                { context: context },
+                { silent: true },
+            ));
             await this.async(() => this._init(data));
             if (discuss.isOpen) {
                 discuss.openInitThread();
             }
-            if (this.env.autofetchPartnerImStatus) {
-                this.env.models['mail.partner'].startLoopFetchImStatus();
+            if (this.env.services.messaging.autofetchPartnerImStatus) {
+                this.env.services.messaging.models['mail.partner'].startLoopFetchImStatus();
             }
         }
 
@@ -137,7 +138,7 @@ function factory(dependencies) {
         } = {}) {
             const channelsData = channel_channel.concat(channel_direct_message, channel_private_group);
             return executeGracefully(channelsData.map(channelData => () => {
-                const convertedData = this.env.models['mail.thread'].convertData(channelData);
+                const convertedData = this.env.services.messaging.models['mail.thread'].convertData(channelData);
                 if (!convertedData.members) {
                     // channel_info does not return all members of channel for
                     // performance reasons, but code is expecting to know at
@@ -145,9 +146,9 @@ function factory(dependencies) {
                     // (e.g. to know when to display "invited" notification)
                     // Current partner can always be assumed to be a member of
                     // channels received at init.
-                    convertedData.members = link(this.env.messaging.currentPartner);
+                    convertedData.members = link(this.env.services.messaging.messaging.currentPartner);
                 }
-                const channel = this.env.models['mail.thread'].insert(
+                const channel = this.env.services.messaging.models['mail.thread'].insert(
                     Object.assign({ model: 'mail.channel' }, convertedData)
                 );
                 // flux specific: channels received at init have to be
@@ -178,8 +179,8 @@ function factory(dependencies) {
             needaction_inbox_counter,
             starred_counter,
         }) {
-            this.env.messaging.inbox.update({ counter: needaction_inbox_counter });
-            this.env.messaging.starred.update({ counter: starred_counter });
+            this.env.services.messaging.messaging.inbox.update({ counter: needaction_inbox_counter });
+            this.env.services.messaging.messaging.starred.update({ counter: starred_counter });
         }
 
         /**
@@ -188,8 +189,8 @@ function factory(dependencies) {
          */
         async _initMailFailures(mailFailuresData) {
             await executeGracefully(mailFailuresData.map(messageData => () => {
-                const message = this.env.models['mail.message'].insert(
-                    this.env.models['mail.message'].convertData(messageData)
+                const message = this.env.services.messaging.models['mail.message'].insert(
+                    this.env.services.messaging.models['mail.message'].convertData(messageData)
                 );
                 // implicit: failures are sent by the server at initialization
                 // only if the current partner is author of the message
@@ -215,15 +216,15 @@ function factory(dependencies) {
         }) {
             this.messaging.update({
                 currentPartner: insert(Object.assign(
-                    this.env.models['mail.partner'].convertData(current_partner),
+                    this.env.services.messaging.models['mail.partner'].convertData(current_partner),
                     {
                         user: insert({ id: currentUserId }),
                     }
                 )),
                 currentUser: insert({ id: currentUserId }),
-                partnerRoot: insert(this.env.models['mail.partner'].convertData(partner_root)),
+                partnerRoot: insert(this.env.services.messaging.models['mail.partner'].convertData(partner_root)),
                 publicPartners: insert(public_partners.map(
-                    publicPartner => this.env.models['mail.partner'].convertData(publicPartner)
+                    publicPartner => this.env.services.messaging.models['mail.partner'].convertData(publicPartner)
                 ))
             });
         }

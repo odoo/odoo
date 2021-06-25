@@ -580,8 +580,8 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationCreate(record, data, options) {
-        const OtherModel = this.env.models[this.to];
-        const other = this.env.modelManager._create(OtherModel, data);
+        const OtherModel = this.env.services.messaging.models[this.to];
+        const other = this.env.services.messaging.modelManager._create(OtherModel, data);
         return this._setRelationLink(record, other, options);
     }
 
@@ -598,8 +598,8 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationInsert(record, data, options) {
-        const OtherModel = this.env.models[this.to];
-        const other = this.env.modelManager._insert(OtherModel, data);
+        const OtherModel = this.env.services.messaging.models[this.to];
+        const other = this.env.services.messaging.modelManager._insert(OtherModel, data);
         return this._setRelationLink(record, other, options);
     }
 
@@ -615,8 +615,8 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationInsertAndReplace(record, data, options) {
-        const OtherModel = this.env.models[this.to];
-        const newValue = this.env.modelManager._insert(OtherModel, data);
+        const OtherModel = this.env.services.messaging.models[this.to];
+        const newValue = this.env.services.messaging.modelManager._insert(OtherModel, data);
         return this._setRelationReplace(record, newValue, options);
     }
 
@@ -667,7 +667,7 @@ export class ModelField {
             otherRecords.add(recordToLink);
             // link current record to other records
             if (hasToUpdateInverse) {
-                this.env.modelManager._update(
+                this.env.services.messaging.modelManager._update(
                     recordToLink,
                     { [this.inverse]: link(record) },
                     { allowWriteReadonly: true, hasToUpdateInverse: false }
@@ -703,7 +703,7 @@ export class ModelField {
         record.__values[this.fieldName] = recordToLink;
         // link current record to other record
         if (hasToUpdateInverse) {
-            this.env.modelManager._update(
+            this.env.services.messaging.modelManager._update(
                 recordToLink,
                 { [this.inverse]: link(record) },
                 { allowWriteReadonly: true, hasToUpdateInverse: false }
@@ -811,7 +811,7 @@ export class ModelField {
         if (!otherRecord) {
             throw Error(`Record ${record.localId} cannot update undefined relational field ${this.fieldName}.`);
         }
-        this.env.modelManager._update(otherRecord, data);
+        this.env.services.messaging.modelManager._update(otherRecord, data);
         return false;
     }
 
@@ -854,9 +854,9 @@ export class ModelField {
                 }
                 // apply causality
                 if (this.isCausal) {
-                    this.env.modelManager._delete(recordToUnlink);
+                    this.env.services.messaging.modelManager._delete(recordToUnlink);
                 } else {
-                    this.env.modelManager._update(
+                    this.env.services.messaging.modelManager._update(
                         recordToUnlink,
                         { [this.inverse]: unlink(record) },
                         { allowWriteReadonly: true, hasToUpdateInverse: false }
@@ -898,9 +898,9 @@ export class ModelField {
             }
             // apply causality
             if (this.isCausal) {
-                this.env.modelManager._delete(otherRecord);
+                this.env.services.messaging.modelManager._delete(otherRecord);
             } else {
-                this.env.modelManager._update(
+                this.env.services.messaging.modelManager._update(
                     otherRecord,
                     { [this.inverse]: unlink(record) },
                     { allowWriteReadonly: true, hasToUpdateInverse: false }
@@ -920,7 +920,7 @@ export class ModelField {
      * @throws {Error} if record does not satisfy related model
      */
     _verifyRelationalValue(record) {
-        const OtherModel = this.env.models[this.to];
+        const OtherModel = this.env.services.messaging.models[this.to];
         if (!OtherModel.get(record.localId, { isCheckingInheritance: true })) {
             throw Error(`Record ${record.localId} is not valid for relational field ${this.fieldName}.`);
         }

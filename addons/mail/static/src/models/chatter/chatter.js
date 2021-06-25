@@ -4,6 +4,8 @@ import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
 import { create, insert, link, unlink, update } from '@mail/model/model_field_command';
 
+import { browser } from '@web/core/browser/browser';
+
 function factory(dependencies) {
 
     const getThreadNextTemporaryId = (function () {
@@ -133,8 +135,8 @@ function factory(dependencies) {
                     this.thread.refresh();
                 }
             } else if (!this.thread || !this.thread.isTemporary) {
-                const currentPartner = this.env.messaging.currentPartner;
-                const message = this.env.models['mail.message'].create({
+                const currentPartner = this.env.services.messaging.messaging.currentPartner;
+                const message = this.env.services.messaging.models['mail.message'].create({
                     author: link(currentPartner),
                     body: this.env._t("Creating a new record..."),
                     id: getMessageNextTemporaryId(),
@@ -173,17 +175,17 @@ function factory(dependencies) {
          */
         _prepareAttachmentsLoading() {
             this._isPreparingAttachmentsLoading = true;
-            this._attachmentsLoaderTimeout = this.env.browser.setTimeout(() => {
+            this._attachmentsLoaderTimeout = browser.setTimeout(() => {
                 this.update({ isShowingAttachmentsLoading: true });
                 this._isPreparingAttachmentsLoading = false;
-            }, this.env.loadingBaseDelayDuration);
+            }, this.env.services.messaging.loadingBaseDelayDuration);
         }
 
         /**
          * @private
          */
         _stopAttachmentsLoading() {
-            this.env.browser.clearTimeout(this._attachmentsLoaderTimeout);
+            browser.clearTimeout(this._attachmentsLoaderTimeout);
             this._attachmentsLoaderTimeout = null;
             this.update({ isShowingAttachmentsLoading: false });
             this._isPreparingAttachmentsLoading = false;

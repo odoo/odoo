@@ -2,6 +2,8 @@
 
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 
+import { browser } from '@web/core/browser/browser';
+
 //------------------------------------------------------------------------------
 // Errors
 //------------------------------------------------------------------------------
@@ -90,7 +92,7 @@ class Timer {
      * when this timer is running.
      */
     clear() {
-        this.env.browser.clearTimeout(this._timeoutId);
+        browser.clearTimeout(this._timeoutId);
         this.isRunning = false;
         if (!this._timeoutDeferred) {
             return;
@@ -121,7 +123,7 @@ class Timer {
         this.isRunning = true;
         const timeoutDeferred = makeDeferred();
         this._timeoutDeferred = timeoutDeferred;
-        const timeoutId = this.env.browser.setTimeout(
+        const timeoutId = browser.setTimeout(
             () => {
                 this.isRunning = false;
                 timeoutDeferred.resolve(this._onTimeout());
@@ -143,7 +145,7 @@ class Timer {
                 throw error;
             }
         } finally {
-            this.env.browser.clearTimeout(timeoutId);
+            browser.clearTimeout(timeoutId);
             this._timeoutDeferred = undefined;
             this.isRunning = false;
         }

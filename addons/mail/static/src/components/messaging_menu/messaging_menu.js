@@ -30,10 +30,19 @@ export class MessagingMenu extends Component {
         useShouldUpdateBasedOnProps();
         useStore(props => {
             return {
-                isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
-                isDiscussOpen: this.env.messaging && this.env.messaging.discuss.isOpen,
-                isMessagingInitialized: this.env.isMessagingInitialized(),
-                messagingMenu: this.env.messaging && this.env.messaging.messagingMenu.__state,
+                isDeviceMobile: (
+                    this.env.services.messaging.messaging &&
+                    this.env.services.messaging.messaging.device.isSmall
+                ),
+                isDiscussOpen: (
+                    this.env.services.messaging.messaging &&
+                    this.env.services.messaging.messaging.discuss.isOpen
+                ),
+                isMessagingInitialized: this.env.services.messaging.isMessagingInitialized(),
+                messagingMenu: (
+                    this.env.services.messaging.messaging &&
+                    this.env.services.messaging.messaging.messagingMenu.__state
+                ),
             };
         });
 
@@ -65,14 +74,20 @@ export class MessagingMenu extends Component {
      * @returns {mail.discuss}
      */
     get discuss() {
-        return this.env.messaging && this.env.messaging.discuss;
+        return (
+            this.env.services.messaging.messaging &&
+            this.env.services.messaging.messaging.discuss
+        );
     }
 
     /**
      * @returns {mail.messaging_menu}
      */
     get messagingMenu() {
-        return this.env.messaging && this.env.messaging.messagingMenu;
+        return (
+            this.env.services.messaging.messaging &&
+            this.env.services.messaging.messaging.messagingMenu
+        );
     }
 
     /**
@@ -112,7 +127,7 @@ export class MessagingMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickCaptureGlobal(ev) {
-        if (!this.env.messaging) {
+        if (!this.env.services.messaging.messaging) {
             /**
              * Messaging not created, which means essential models like
              * messaging menu are not ready, so user interactions are omitted
@@ -141,8 +156,8 @@ export class MessagingMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickNewMessage(ev) {
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.chatWindowManager.openNewMessage();
+        if (!this.env.services.messaging.messaging.device.isSmall) {
+            this.env.services.messaging.messaging.chatWindowManager.openNewMessage();
             this.messagingMenu.close();
         } else {
             this.messagingMenu.toggleMobileNewMessage();
@@ -156,7 +171,7 @@ export class MessagingMenu extends Component {
     _onClickToggler(ev) {
         // avoid following dummy href
         ev.preventDefault();
-        if (!this.env.messaging) {
+        if (!this.env.services.messaging.messaging) {
             /**
              * Messaging not created, which means essential models like
              * messaging menu are not ready, so user interactions are omitted
@@ -184,7 +199,7 @@ export class MessagingMenu extends Component {
      * @param {integer} ui.item.id
      */
     _onMobileNewMessageInputSelect(ev, ui) {
-        this.env.messaging.openChat({ partnerId: ui.item.id });
+        this.env.services.messaging.messaging.openChat({ partnerId: ui.item.id });
     }
 
     /**
@@ -195,7 +210,7 @@ export class MessagingMenu extends Component {
      */
     _onMobileNewMessageInputSource(req, res) {
         const value = _.escape(req.term);
-        this.env.models['mail.partner'].imSearch({
+        this.env.services.messaging.models['mail.partner'].imSearch({
             callback: partners => {
                 const suggestions = partners.map(partner => {
                     return {

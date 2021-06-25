@@ -92,16 +92,14 @@ function factory(dependencies) {
             if (isNonPublicChannel) {
                 kwargs.channel_id = thread.id;
             }
-            const suggestedPartners = await this.env.services.rpc(
-                {
-                    model: 'res.partner',
-                    method: 'get_mention_suggestions',
-                    kwargs,
-                },
-                { shadow: true },
+            const suggestedPartners = await this.env.services.orm.silent.call(
+                'res.partner',
+                'get_mention_suggestions',
+                undefined,
+                kwargs,
             );
-            const partners = this.env.models['mail.partner'].insert(suggestedPartners.map(data =>
-                this.env.models['mail.partner'].convertData(data)
+            const partners = this.env.services.messaging.models['mail.partner'].insert(suggestedPartners.map(data =>
+                this.env.services.messaging.models['mail.partner'].convertData(data)
             ));
             if (isNonPublicChannel) {
                 thread.update({ members: link(partners) });
@@ -121,7 +119,7 @@ function factory(dependencies) {
             // prefetched partners
             let partners = [];
             const cleanedSearchTerm = cleanSearchTerm(keyword);
-            const currentPartner = this.env.messaging.currentPartner;
+            const currentPartner = this.env.services.messaging.messaging.currentPartner;
             for (const partner of this.all(partner => partner.active)) {
                 if (partners.length < limit) {
                     if (
@@ -135,13 +133,10 @@ function factory(dependencies) {
                 }
             }
             if (!partners.length) {
-                const partnersData = await this.env.services.rpc(
-                    {
-                        model: 'res.partner',
-                        method: 'im_search',
-                        args: [keyword, limit]
-                    },
-                    { shadow: true }
+                const partnersData = await this.env.services.orm.silent.call(
+                    'res.partner',
+                    'im_search',
+                    [keyword, limit],
                 );
                 const newPartners = this.insert(partnersData.map(
                     partnerData => this.convertData(partnerData)
@@ -172,16 +167,16 @@ function factory(dependencies) {
                 // mentioned partner.
                 partners = thread.members;
             } else {
-                partners = this.env.models['mail.partner'].all();
+                partners = this.env.services.messaging.models['mail.partner'].all();
             }
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
             const mainSuggestionList = [];
             const extraSuggestionList = [];
             for (const partner of partners) {
                 if (
-                    (!partner.active && partner !== this.env.messaging.partnerRoot) ||
+                    (!partner.active && partner !== this.env.services.messaging.messaging.partnerRoot) ||
                     partner.id <= 0 ||
-                    this.env.messaging.publicPartners.includes(partner)
+                    this.env.services.messaging.messaging.publicPartners.includes(partner)
                 ) {
                     // ignore archived partners (except OdooBot), temporary
                     // partners (livechat guests), public partners (technical)
@@ -214,14 +209,13 @@ function factory(dependencies) {
          * applicable.
          */
         async checkIsUser() {
-            const userIds = await this.async(() => this.env.services.rpc({
-                model: 'res.users',
-                method: 'search',
-                args: [[['partner_id', '=', this.id]]],
-                kwargs: {
+            const userIds = await this.async(() => this.env.services.orm.silent.search(
+                'res.users',
+                [[['partner_id', '=', this.id]]],
+                {
                     context: { active_test: false },
                 },
-            }, { shadow: true }));
+            ));
             this.update({ hasCheckedUser: true });
             if (userIds.length > 0) {
                 this.update({ user: insert({ id: userIds[0] }) });
@@ -355,7 +349,7 @@ function factory(dependencies) {
          * Opens the most appropriate view that is a profile for this partner.
          */
         async openProfile() {
-            return this.env.messaging.openDocument({
+            return this.env.services.messaging.messaging.openDocument({
                 id: this.id,
                 model: 'res.partner',
             });
@@ -370,7 +364,7 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeAvatarUrl() {
-            if (this === this.env.messaging.partnerRoot) {
+            if (this === this.env.services.messaging.messaging.partnerRoot) {
                 return '/mail/static/src/img/odoobot.png';
             }
             return `/web/image/res.partner/${this.id}/avatar_128`;
@@ -397,12 +391,11 @@ function factory(dependencies) {
             if (partnerIds.length === 0) {
                 return;
             }
-            const dataList = await this.env.services.rpc({
-                route: '/longpolling/im_status',
-                params: {
-                    partner_ids: partnerIds,
-                },
-            }, { shadow: true });
+            const dataList = await this.env.services.rpc(
+                '/longpolling/im_status',
+                { partner_ids: partnerIds },
+                { silent: true },
+            );
             this.insert(dataList);
         }
 
@@ -430,7 +423,7 @@ function factory(dependencies) {
          * @returns {mail.messaging}
          */
         _computeMessaging() {
-            return link(this.env.messaging);
+            return link(this.env.services.messaging.messaging);
         }
 
         /**

@@ -21,11 +21,11 @@ export class MessageList extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
+            const threadView = this.env.services.messaging.models['mail.thread_view'].get(props.threadViewLocalId);
             const thread = threadView ? threadView.thread : undefined;
             const threadCache = threadView ? threadView.threadCache : undefined;
             return {
-                isDeviceMobile: this.env.messaging.device.isMobile,
+                isDeviceSmall: this.env.services.messaging.messaging.device.isSmall,
                 thread,
                 threadCache,
                 threadCacheHasLoadingFailed: threadCache && threadCache.hasLoadingFailed,
@@ -252,7 +252,7 @@ export class MessageList extends Component {
             .filter(([refId, ref]) => (
                     // Message refs have message local id as ref id, and message
                     // local ids contain name of model 'mail.message'.
-                    refId.includes(this.env.models['mail.message'].modelName) &&
+                    refId.includes(this.env.services.messaging.models['mail.message'].modelName) &&
                     // Component that should be destroyed but haven't just yet.
                     ref.message
                 )
@@ -339,7 +339,7 @@ export class MessageList extends Component {
      * @returns {mail.thread_view}
      */
     get threadView() {
-        return this.env.models['mail.thread_view'].get(this.props.threadViewLocalId);
+        return this.env.services.messaging.models['mail.thread_view'].get(this.props.threadViewLocalId);
     }
 
     //--------------------------------------------------------------------------
@@ -536,7 +536,7 @@ export class MessageList extends Component {
             return;
         }
         const scrollTop = this._getScrollableElement().scrollTop;
-        this.env.messagingBus.trigger('o-component-message-list-scrolled', {
+        this.env.services.messaging.messagingBus.trigger('o-component-message-list-scrolled', {
             orderedMessages,
             scrollTop,
             thread,

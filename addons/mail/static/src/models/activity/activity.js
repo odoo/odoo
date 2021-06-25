@@ -17,11 +17,10 @@ function factory(dependencies) {
          * Delete the record from database and locally.
          */
         async deleteServerRecord() {
-            await this.async(() => this.env.services.rpc({
-                model: 'mail.activity',
-                method: 'unlink',
-                args: [[this.id]],
-            }));
+            await this.async(() => this.env.services.orm.unlink(
+                'mail.activity',
+                [this.id],
+            ));
             this.delete();
         }
 
@@ -139,18 +138,18 @@ function factory(dependencies) {
                 },
                 res_id: this.id,
             };
-            this.env.bus.trigger('do-action', {
+            this.env.services.action.doAction(
                 action,
-                options: { on_close: () => this.fetchAndUpdate() },
-            });
+                { on_close: () => this.fetchAndUpdate() },
+            );
         }
 
         async fetchAndUpdate() {
-            const [data] = await this.async(() => this.env.services.rpc({
-                model: 'mail.activity',
-                method: 'activity_format',
-                args: [this.id],
-            }, { shadow: true }));
+            const [data] = await this.async(() => this.env.services.orm.silent.call(
+                'mail.activity',
+                'activity_format',
+                [this.id],
+            ));
             let shouldDelete = false;
             if (data) {
                 this.update(this.constructor.convertData(data));
@@ -171,15 +170,15 @@ function factory(dependencies) {
          */
         async markAsDone({ attachments = [], feedback = false }) {
             const attachmentIds = attachments.map(attachment => attachment.id);
-            await this.async(() => this.env.services.rpc({
-                model: 'mail.activity',
-                method: 'action_feedback',
-                args: [[this.id]],
-                kwargs: {
+            await this.async(() => this.env.services.orm.call(
+                'mail.activity',
+                'action_feedback',
+                [[this.id]],
+                {
                     attachment_ids: attachmentIds,
                     feedback,
                 },
-            }));
+            ));
             this.thread.refresh();
             this.delete();
         }
@@ -190,12 +189,12 @@ function factory(dependencies) {
          * @returns {Object}
          */
         async markAsDoneAndScheduleNext({ feedback }) {
-            const action = await this.async(() => this.env.services.rpc({
-                model: 'mail.activity',
-                method: 'action_feedback_schedule_next',
-                args: [[this.id]],
-                kwargs: { feedback },
-            }));
+            const action = await this.async(() => this.env.services.orm.call(
+                'mail.activity',
+                'action_feedback_schedule_next',
+                [[this.id]],
+                { feedback },
+            ));
             this.thread.refresh();
             const thread = this.thread;
             this.delete();
@@ -203,14 +202,14 @@ function factory(dependencies) {
                 thread.refreshActivities();
                 return;
             }
-            this.env.bus.trigger('do-action', {
+            this.env.services.action.doAction(
                 action,
-                options: {
+                {
                     on_close: () => {
                         thread.refreshActivities();
                     },
                 },
-            });
+            );
         }
 
         //----------------------------------------------------------------------
@@ -240,7 +239,7 @@ function factory(dependencies) {
          * @returns {mail.messaging}
          */
         _computeMessaging() {
-            return link(this.env.messaging);
+            return link(this.env.services.messaging.messaging);
         }
 
         /**

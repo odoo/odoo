@@ -12,7 +12,7 @@ class SnailmailNotificationPopover extends Component {
     constructor(...args) {
         super(...args);
         useStore(props => {
-            const message = this.env.models['mail.message'].get(props.messageLocalId);
+            const message = this.env.services.messaging.models['mail.message'].get(props.messageLocalId);
             const notifications = message ? message.notifications : [];
             return {
                 message: message ? message.__state : undefined,
@@ -61,7 +61,7 @@ class SnailmailNotificationPopover extends Component {
      * @returns {mail.message}
      */
     get message() {
-        return this.env.models['mail.message'].get(this.props.messageLocalId);
+        return this.env.services.messaging.models['mail.message'].get(this.props.messageLocalId);
     }
 
     /**

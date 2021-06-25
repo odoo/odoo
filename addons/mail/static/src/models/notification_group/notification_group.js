@@ -19,15 +19,15 @@ function factory(dependencies) {
             if (this.notification_type !== 'email') {
                 return;
             }
-            this.env.bus.trigger('do-action', {
-                action: 'mail.mail_resend_cancel_action',
-                options: {
+            this.env.services.action.doAction(
+                'mail.mail_resend_cancel_action',
+                {
                     additional_context: {
                         default_model: this.res_model,
                         unread_counter: this.notifications.length,
                     },
                 },
-            });
+            );
         }
 
         /**
@@ -106,21 +106,19 @@ function factory(dependencies) {
             if (this.notification_type !== 'email') {
                 return;
             }
-            this.env.bus.trigger('do-action', {
-                action: {
-                    name: this.env._t("Mail Failures"),
-                    type: 'ir.actions.act_window',
-                    view_mode: 'kanban,list,form',
-                    views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
-                    target: 'current',
-                    res_model: this.res_model,
-                    domain: [['message_has_error', '=', true]],
-                },
+            this.env.services.action.doAction({
+                name: this.env._t("Mail Failures"),
+                type: 'ir.actions.act_window',
+                view_mode: 'kanban,list,form',
+                views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
+                target: 'current',
+                res_model: this.res_model,
+                domain: [['message_has_error', '=', true]],
             });
-            if (this.env.messaging.device.isMobile) {
+            if (this.env.services.messaging.messaging.device.isSmall) {
                 // messaging menu has a higher z-index than views so it must
                 // be closed to ensure the visibility of the view
-                this.env.messaging.messagingMenu.close();
+                this.env.services.messaging.messaging.messagingMenu.close();
             }
         }
 

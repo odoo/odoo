@@ -15,7 +15,7 @@ export class NotificationGroup extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const group = this.env.models['mail.notification_group'].get(props.notificationGroupLocalId);
+            const group = this.env.services.messaging.models['mail.notification_group'].get(props.notificationGroupLocalId);
             return {
                 group: group ? group.__state : undefined,
             };
@@ -35,7 +35,7 @@ export class NotificationGroup extends Component {
      * @returns {mail.notification_group}
      */
     get group() {
-        return this.env.models['mail.notification_group'].get(this.props.notificationGroupLocalId);
+        return this.env.services.messaging.models['mail.notification_group'].get(this.props.notificationGroupLocalId);
     }
 
     /**
@@ -62,8 +62,8 @@ export class NotificationGroup extends Component {
             return;
         }
         this.group.openDocuments();
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.messagingMenu.close();
+        if (!this.env.services.messaging.messaging.device.isSmall) {
+            this.env.services.messaging.messaging.messagingMenu.close();
         }
     }
 
@@ -73,8 +73,8 @@ export class NotificationGroup extends Component {
      */
     _onClickMarkAsRead(ev) {
         this.group.openCancelAction();
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.messagingMenu.close();
+        if (!this.env.services.messaging.messaging.device.isSmall) {
+            this.env.services.messaging.messaging.messagingMenu.close();
         }
     }
 

@@ -18,7 +18,10 @@ export class ChatWindowManager extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const chatWindowManager = this.env.messaging && this.env.messaging.chatWindowManager;
+            const chatWindowManager = (
+                this.env.services.messaging.messaging &&
+                this.env.services.messaging.messaging.chatWindowManager
+            );
             const allOrderedVisible = chatWindowManager
                 ? chatWindowManager.allOrderedVisible
                 : [];
@@ -27,7 +30,7 @@ export class ChatWindowManager extends Component {
                 allOrderedVisibleThread: allOrderedVisible.map(chatWindow => chatWindow.thread),
                 chatWindowManager,
                 chatWindowManagerHasHiddenChatWindows: chatWindowManager && chatWindowManager.hasHiddenChatWindows,
-                isMessagingInitialized: this.env.isMessagingInitialized(),
+                isMessagingInitialized: this.env.services.messaging.isMessagingInitialized(),
             };
         }, {
             compareDepth: {

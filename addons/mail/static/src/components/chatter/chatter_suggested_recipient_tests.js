@@ -54,7 +54,7 @@ QUnit.test("suggest recipient on 'Send message' composer", async function (asser
         partner_ids: [100],
     });
     await this.start ();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.env.services.messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -83,7 +83,7 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async f
         partner_ids: [100],
     });
     await this.start ();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.env.services.messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -111,7 +111,7 @@ QUnit.test("display reason for suggested recipient on mouse over", async functio
         partner_ids: [100],
     });
     await this.start();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.env.services.messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -135,7 +135,7 @@ QUnit.test("suggested recipient without partner are unchecked by default", async
         email_cc: "john@test.be",
     });
     await this.start();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.env.services.messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -163,7 +163,7 @@ QUnit.test("suggested recipient with partner are checked by default", async func
         partner_ids: [100],
     });
     await this.start();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.env.services.messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -206,7 +206,7 @@ QUnit.test("more than 3 suggested recipients: display only 3 and 'show more' but
         partner_ids: [100, 1000, 1001, 1002],
     });
     await this.start ();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.env.services.messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -250,7 +250,7 @@ QUnit.test("more than 3 suggested recipients: show all of them on click 'show mo
         partner_ids: [100, 1000, 1001, 1002],
     });
     await this.start ();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.env.services.messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -298,7 +298,7 @@ QUnit.test("more than 3 suggested recipients -> click 'show more' -> 'show less'
         partner_ids: [100, 1000, 1001, 1002],
     });
     await this.start ();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.env.services.messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -345,7 +345,7 @@ QUnit.test("suggested recipients list display 3 suggested recipient and 'show mo
         partner_ids: [100, 1000, 1001, 1002],
     });
     await this.start ();
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.env.services.messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -397,7 +397,7 @@ QUnit.test("suggested recipients should not be notified when posting an internal
             return this._super(...arguments);
         },
     });
-    const chatter = this.env.models['mail.chatter'].create({
+    const chatter = this.env.services.messaging.models['mail.chatter'].create({
         threadId: 10,
         threadModel: 'res.fake',
     });

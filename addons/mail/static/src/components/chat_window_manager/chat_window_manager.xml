@@ -3,17 +3,17 @@
 
     <t t-name="mail.ChatWindowManager" owl="1">
         <div class="o_ChatWindowManager">
-            <t t-if="env.isMessagingInitialized()">
+            <t t-if="env.services.messaging.isMessagingInitialized()">
                 <!-- Note: DOM elements are ordered from left to right -->
-                <t t-if="env.messaging.chatWindowManager.hasHiddenChatWindows">
+                <t t-if="env.services.messaging.messaging.chatWindowManager.hasHiddenChatWindows">
                     <ChatWindowHiddenMenu class="o_ChatWindowManager_hiddenMenu"/>
                 </t>
-                <t t-foreach="env.messaging.chatWindowManager.allOrderedVisible" t-as="chatWindow" t-key="chatWindow.localId">
+                <t t-foreach="env.services.messaging.messaging.chatWindowManager.allOrderedVisible" t-as="chatWindow" t-key="chatWindow.localId">
                     <ChatWindow
                         chatWindowLocalId="chatWindow.localId"
-                        hasCloseAsBackButton="env.messaging.device.isMobile"
-                        isExpandable="!env.messaging.device.isMobile and !!chatWindow.thread"
-                        isFullscreen="env.messaging.device.isMobile"
+                        hasCloseAsBackButton="env.services.messaging.messaging.device.isSmall"
+                        isExpandable="!env.services.messaging.messaging.device.isSmall and !!chatWindow.thread"
+                        isFullscreen="env.services.messaging.messaging.device.isSmall"
                     />
                 </t>
             </t>

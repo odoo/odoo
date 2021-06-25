@@ -9,7 +9,8 @@ import { DiscussSidebar } from '@mail/components/discuss_sidebar/discuss_sidebar
 import { MobileMessagingNavbar } from '@mail/components/mobile_messaging_navbar/mobile_messaging_navbar';
 import { NotificationList } from '@mail/components/notification_list/notification_list';
 import { ThreadView } from '@mail/components/thread_view/thread_view';
-import { link, unlink } from '@mail/model/model_field_command';
+
+import { registry } from '@web/core/registry';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -46,11 +47,26 @@ export class Discuss extends Component {
         this._onMobileAddItemHeaderInputSource = this._onMobileAddItemHeaderInputSource.bind(this);
     }
 
+    async willStart() {
+        await this.env.services.messaging.messagingCreatedPromise;
+    }
+
     mounted() {
+        this.env.services.messaging.messagingBus.trigger(
+            'o-discuss-component-mounted',
+        );
+        if (this.props.action.activeId) {
+            this.discuss.update({
+                initActiveId: this.props.action.activeId,
+            });
+        }
         this.discuss.update({ isOpen: true });
         if (this.discuss.thread) {
-            this.trigger('o-push-state-action-manager');
-        } else if (this.env.isMessagingInitialized()) {
+            this.env.services.router.pushState({
+                action: this.props.action.id,
+                active_id: this.discuss.activeId,
+            });
+        } else if (this.env.services.messaging.isMessagingInitialized()) {
             this.discuss.openInitThread();
         }
         this._updateLocalStoreProps();
@@ -58,16 +74,21 @@ export class Discuss extends Component {
 
     patched() {
         if (this.discuss.thread) {
-            this.trigger('o-push-state-action-manager');
+            this.env.services.router.pushState({
+                action: this.props.action.id,
+                active_id: this.discuss.activeId,
+            });
         }
         if (
             this.discuss.thread &&
-            this.discuss.thread === this.env.messaging.inbox &&
+            this.discuss.thread === this.env.services.messaging.messaging.inbox &&
             this.discuss.threadView &&
             this._lastThreadCache === this.discuss.threadView.threadCache.localId &&
             this._lastThreadCounter > 0 && this.discuss.thread.counter === 0
         ) {
-            this.trigger('o-show-rainbow-man');
+            this.env.services.effect.rainbowMan({
+                message: this.env._t("Congratulations, your inbox is empty!"),
+            });
         }
         this._activeThreadCache = this.discuss.threadView && this.discuss.threadView.threadCache;
         this._updateLocalStoreProps();
@@ -101,7 +122,10 @@ export class Discuss extends Component {
      * @returns {mail.discuss}
      */
     get discuss() {
-        return this.env.messaging && this.env.messaging.discuss;
+        return (
+            this.env.services.messaging.messaging &&
+            this.env.services.messaging.messaging.discuss
+        );
     }
 
     /**
@@ -159,22 +183,28 @@ export class Discuss extends Component {
      * @returns {Object}
      */
     _useStoreSelector(props) {
-        const discuss = this.env.messaging && this.env.messaging.discuss;
+        const discuss = (
+            this.env.services.messaging.messaging &&
+            this.env.services.messaging.messaging.discuss
+        );
         const thread = discuss && discuss.thread;
         const threadView = discuss && discuss.threadView;
         const replyingToMessage = discuss && discuss.replyingToMessage;
         const replyingToMessageOriginThread = replyingToMessage && replyingToMessage.originThread;
         return {
             discuss,
-            discussActiveId: discuss && discuss.activeId, // for widget
+            discussActiveId: discuss && discuss.activeId,
             discussActiveMobileNavbarTabId: discuss && discuss.activeMobileNavbarTabId,
             discussIsAddingChannel: discuss && discuss.isAddingChannel,
             discussIsAddingChat: discuss && discuss.isAddingChat,
             discussIsDoFocus: discuss && discuss.isDoFocus,
             discussReplyingToMessageOriginThreadComposer: replyingToMessageOriginThread && replyingToMessageOriginThread.composer,
-            inbox: this.env.messaging.inbox,
-            isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
-            isMessagingInitialized: this.env.isMessagingInitialized(),
+            inbox: this.env.services.messaging.messaging.inbox,
+            isDeviceSmall: (
+                this.env.services.messaging.messaging &&
+                this.env.services.messaging.messaging.device.isSmall
+            ),
+            isMessagingInitialized: this.env.services.messaging.isMessagingInitialized(),
             replyingToMessage,
             thread,
             threadCache: threadView && threadView.threadCache,
@@ -262,27 +292,13 @@ export class Discuss extends Component {
         }
         this.discuss.clearReplyingToMessage();
         this.discuss.update({ activeMobileNavbarTabId: ev.detail.tabId });
-        if (
-            this.discuss.activeMobileNavbarTabId === 'mailbox' &&
-            (!this.discuss.thread || this.discuss.thread.model !== 'mailbox')
-        ) {
-            this.discuss.update({ thread: link(this.env.messaging.inbox) });
-        }
-        if (this.discuss.activeMobileNavbarTabId !== 'mailbox') {
-            this.discuss.update({ thread: unlink() });
-        }
-        if (this.discuss.activeMobileNavbarTabId !== 'chat') {
-            this.discuss.update({ isAddingChat: false });
-        }
-        if (this.discuss.activeMobileNavbarTabId !== 'channel') {
-            this.discuss.update({ isAddingChannel: false });
-        }
     }
 
 }
 
 Object.assign(Discuss, {
     components,
-    props: {},
     template: 'mail.Discuss',
 });
+
+registry.category('actions').add('mail.discuss', Discuss);

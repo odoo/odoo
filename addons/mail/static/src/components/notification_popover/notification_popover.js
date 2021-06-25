@@ -19,7 +19,7 @@ export class NotificationPopover extends Component {
         });
         useStore(props => {
             const notifications = props.notificationLocalIds.map(
-                notificationLocalId => this.env.models['mail.notification'].get(notificationLocalId)
+                notificationLocalId => this.env.services.messaging.models['mail.notification'].get(notificationLocalId)
             );
             return {
                 notifications: notifications.map(notification => notification ? notification.__state : undefined),
@@ -74,7 +74,7 @@ export class NotificationPopover extends Component {
      */
     get notifications() {
         return this.props.notificationLocalIds.map(
-            notificationLocalId => this.env.models['mail.notification'].get(notificationLocalId)
+            notificationLocalId => this.env.services.messaging.models['mail.notification'].get(notificationLocalId)
         );
     }
 

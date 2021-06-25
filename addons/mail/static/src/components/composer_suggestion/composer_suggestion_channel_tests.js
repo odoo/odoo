@@ -42,7 +42,7 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -68,7 +68,7 @@ QUnit.test('channel mention suggestion correct data', async function (assert) {
         name: "General",
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -101,7 +101,7 @@ QUnit.test('channel mention suggestion active', async function (assert) {
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });

@@ -26,7 +26,7 @@ function addMessagingToEnv(providedEnv = {}) {
     /**
      * Registry of models.
      */
-    env.models = {};
+    env.services.messaging.models = {};
     /**
      * Environment keys used in messaging.
      */
@@ -43,17 +43,17 @@ function addMessagingToEnv(providedEnv = {}) {
             }, (env.browser && env.browser.Notification) || {}),
         }, env.browser),
         destroyMessaging() {
-            if (env.modelManager) {
-                env.modelManager.deleteAll();
-                env.messaging = undefined;
+            if (env.services.messaging.modelManager) {
+                env.services.messaging.modelManager.deleteAll();
+                env.services.messaging.messaging = undefined;
             }
         },
         disableAnimation: true,
         isMessagingInitialized() {
-            if (!this.messaging) {
+            if (!this.services.messaging.messaging) {
                 return false;
             }
-            return this.messaging.isInitialized;
+            return this.services.messaging.messaging.isInitialized;
         },
         /**
          * States whether the environment is in QUnit test or not.

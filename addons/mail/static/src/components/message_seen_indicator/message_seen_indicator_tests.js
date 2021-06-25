@@ -46,7 +46,7 @@ QUnit.test('rendering when just one has received the message', async function (a
     assert.expect(3);
 
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         id: 1000,
         model: 'mail.channel',
         partnerSeenInfos: create([
@@ -65,8 +65,8 @@ QUnit.test('rendering when just one has received the message', async function (a
             messageId: 100,
         }),
     });
-    const message = this.env.models['mail.message'].insert({
-        author: insert({ id: this.env.messaging.currentPartner.id, display_name: "Demo User" }),
+    const message = this.env.services.messaging.models['mail.message'].insert({
+        author: insert({ id: this.env.services.messaging.messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         originThread: link(thread),
@@ -93,7 +93,7 @@ QUnit.test('rendering when everyone have received the message', async function (
     assert.expect(3);
 
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         id: 1000,
         model: 'mail.channel',
         partnerSeenInfos: create([
@@ -113,8 +113,8 @@ QUnit.test('rendering when everyone have received the message', async function (
             messageId: 100,
         }),
     });
-    const message = this.env.models['mail.message'].insert({
-        author: insert({ id: this.env.messaging.currentPartner.id, display_name: "Demo User" }),
+    const message = this.env.services.messaging.models['mail.message'].insert({
+        author: insert({ id: this.env.services.messaging.messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         originThread: link(thread),
@@ -141,7 +141,7 @@ QUnit.test('rendering when just one has seen the message', async function (asser
     assert.expect(3);
 
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         id: 1000,
         model: 'mail.channel',
         partnerSeenInfos: create([
@@ -162,8 +162,8 @@ QUnit.test('rendering when just one has seen the message', async function (asser
             messageId: 100,
         }),
     });
-    const message = this.env.models['mail.message'].insert({
-        author: insert({ id: this.env.messaging.currentPartner.id, display_name: "Demo User" }),
+    const message = this.env.services.messaging.models['mail.message'].insert({
+        author: insert({ id: this.env.services.messaging.messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         originThread: link(thread),
@@ -191,7 +191,7 @@ QUnit.test('rendering when just one has seen & received the message', async func
     assert.expect(3);
 
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         id: 1000,
         model: 'mail.channel',
         partnerSeenInfos: create([
@@ -211,8 +211,8 @@ QUnit.test('rendering when just one has seen & received the message', async func
             messageId: 100,
         }),
     });
-    const message = this.env.models['mail.message'].insert({
-        author: insert({ id: this.env.messaging.currentPartner.id, display_name: "Demo User" }),
+    const message = this.env.services.messaging.models['mail.message'].insert({
+        author: insert({ id: this.env.services.messaging.messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         originThread: link(thread),
@@ -240,7 +240,7 @@ QUnit.test('rendering when just everyone has seen the message', async function (
     assert.expect(3);
 
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         id: 1000,
         model: 'mail.channel',
         partnerSeenInfos: create([
@@ -262,8 +262,8 @@ QUnit.test('rendering when just everyone has seen the message', async function (
             messageId: 100,
         }),
     });
-    const message = this.env.models['mail.message'].insert({
-        author: insert({ id: this.env.messaging.currentPartner.id, display_name: "Demo User" }),
+    const message = this.env.services.messaging.models['mail.message'].insert({
+        author: insert({ id: this.env.services.messaging.messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         originThread: link(thread),

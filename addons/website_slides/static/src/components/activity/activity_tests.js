@@ -54,7 +54,7 @@ QUnit.test('grant course access', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const activity = this.env.models['mail.activity'].create({
+    const activity = this.env.services.messaging.models['mail.activity'].create({
         id: 100,
         canWrite: true,
         thread: insert({
@@ -94,7 +94,7 @@ QUnit.test('refuse course access', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const activity = this.env.models['mail.activity'].create({
+    const activity = this.env.services.messaging.models['mail.activity'].create({
         id: 100,
         canWrite: true,
         thread: insert({

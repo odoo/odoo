@@ -17,7 +17,7 @@ export class FollowerSubtypeList extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const followerSubtypeList = this.env.models['mail.follower_subtype_list'].get(props.localId);
+            const followerSubtypeList = this.env.services.messaging.models['mail.follower_subtype_list'].get(props.localId);
             const follower = followerSubtypeList
                 ? followerSubtypeList.follower
                 : undefined;
@@ -44,7 +44,7 @@ export class FollowerSubtypeList extends Component {
      * @returns {mail.follower_subtype_list}
      */
     get followerSubtypeList() {
-        return this.env.models['mail.follower_subtype_list'].get(this.props.localId);
+        return this.env.services.messaging.models['mail.follower_subtype_list'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------

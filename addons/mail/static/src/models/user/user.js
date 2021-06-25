@@ -12,9 +12,9 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
-            if (this.env.messaging) {
-                if (this === this.env.messaging.currentUser) {
-                    this.env.messaging.update({ currentUser: unlink() });
+            if (this.env.services.messaging.messaging) {
+                if (this === this.env.services.messaging.messaging.currentUser) {
+                    this.env.services.messaging.messaging.update({ currentUser: unlink() });
                 }
             }
             return super._willDelete(...arguments);
@@ -59,17 +59,14 @@ function factory(dependencies) {
          * @param {integer[]} param0.ids
          */
         static async performRpcRead({ context, fields, ids }) {
-            const usersData = await this.env.services.rpc({
-                model: 'res.users',
-                method: 'read',
-                args: [ids],
-                kwargs: {
-                    context,
-                    fields,
-                },
-            }, { shadow: true });
-            return this.env.models['mail.user'].insert(usersData.map(userData =>
-                this.env.models['mail.user'].convertData(userData)
+            const usersData = await this.env.services.orm.silent.read(
+                'res.users',
+                ids,
+                fields,
+                context,
+            );
+            return this.env.services.messaging.models['mail.user'].insert(usersData.map(userData =>
+                this.env.services.messaging.models['mail.user'].convertData(userData)
             ));
         }
 
@@ -77,7 +74,7 @@ function factory(dependencies) {
          * Fetches the partner of this user.
          */
         async fetchPartner() {
-            return this.env.models['mail.user'].performRpcRead({
+            return this.env.services.messaging.models['mail.user'].performRpcRead({
                 ids: [this.id],
                 fields: ['partner_id'],
                 context: { active_test: false },
@@ -107,7 +104,7 @@ function factory(dependencies) {
                 return;
             }
             // in other cases a chat would be valid, find it or try to create it
-            let chat = this.env.models['mail.thread'].find(thread =>
+            let chat = this.env.services.messaging.models['mail.thread'].find(thread =>
                 thread.channel_type === 'chat' &&
                 thread.correspondent === this.partner &&
                 thread.model === 'mail.channel' &&
@@ -117,7 +114,7 @@ function factory(dependencies) {
                 // if chat is not pinned then it has to be pinned client-side
                 // and server-side, which is a side effect of following rpc
                 chat = await this.async(() =>
-                    this.env.models['mail.thread'].performRpcCreateChat({
+                    this.env.services.messaging.models['mail.thread'].performRpcCreateChat({
                         partnerIds: [this.partner.id],
                     })
                 );

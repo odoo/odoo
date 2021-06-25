@@ -21,6 +21,7 @@
     ],
     'assets': {
         'web.assets_backend': [
+            'mail_bot/static/src/models/messaging/messaging.js',
             'mail_bot/static/src/models/messaging_initializer/messaging_initializer.js',
             'mail_bot/static/src/scss/odoobot_style.scss',
         ],

@@ -20,7 +20,7 @@ export class FollowButton extends Component {
             isUnfollowButtonHighlighted: false,
         });
         useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
+            const thread = this.env.services.messaging.models['mail.thread'].get(props.threadLocalId);
             return {
                 threadIsCurrentPartnerFollowing: thread && thread.isCurrentPartnerFollowing,
             };
@@ -35,7 +35,7 @@ export class FollowButton extends Component {
      * @return {mail.thread}
      */
     get thread() {
-        return this.env.models['mail.thread'].get(this.props.threadLocalId);
+        return this.env.services.messaging.models['mail.thread'].get(this.props.threadLocalId);
     }
 
     //--------------------------------------------------------------------------

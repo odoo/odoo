@@ -53,7 +53,7 @@ function factory(dependencies) {
             this.clearIsAddingItem();
             if (ui.item.special) {
                 const channel = await this.async(() =>
-                    this.env.models['mail.thread'].performRpcCreateChannel({
+                    this.env.services.messaging.models['mail.thread'].performRpcCreateChannel({
                         name,
                         privacy: ui.item.special,
                     })
@@ -61,7 +61,7 @@ function factory(dependencies) {
                 channel.open();
             } else {
                 const channel = await this.async(() =>
-                    this.env.models['mail.thread'].performRpcJoinChannel({
+                    this.env.services.messaging.models['mail.thread'].performRpcJoinChannel({
                         channelId: ui.item.id,
                     })
                 );
@@ -83,14 +83,11 @@ function factory(dependencies) {
                 ['name', 'ilike', value],
             ];
             const fields = ['channel_type', 'name', 'public', 'uuid'];
-            const result = await this.async(() => this.env.services.rpc({
-                model: "mail.channel",
-                method: "search_read",
-                kwargs: {
-                    domain,
-                    fields,
-                },
-            }));
+            const result = await this.async(() => this.env.services.orm.searchRead(
+                'mail.channel',
+                domain,
+                fields,
+            ));
             const items = result.map(data => {
                 let escapedName = owl.utils.escape(data.name);
                 return Object.assign(data, {
@@ -125,7 +122,7 @@ function factory(dependencies) {
          * @param {integer} ui.item.id
          */
         handleAddChatAutocompleteSelect(ev, ui) {
-            this.env.messaging.openChat({ partnerId: ui.item.id });
+            this.env.services.messaging.messaging.openChat({ partnerId: ui.item.id });
             this.clearIsAddingItem();
         }
 
@@ -136,7 +133,7 @@ function factory(dependencies) {
          */
         handleAddChatAutocompleteSource(req, res) {
             const value = owl.utils.escape(req.term);
-            this.env.models['mail.partner'].imSearch({
+            this.env.services.messaging.models['mail.partner'].imSearch({
                 callback: partners => {
                     const suggestions = partners.map(partner => {
                         return {
@@ -188,7 +185,7 @@ function factory(dependencies) {
             const [model, id] = typeof this.initActiveId === 'number'
                 ? ['mail.channel', this.initActiveId]
                 : this.initActiveId.split('_');
-            const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+            const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
                 id: model !== 'mail.box' ? Number(id) : id,
                 model,
             });
@@ -196,7 +193,7 @@ function factory(dependencies) {
                 return;
             }
             thread.open();
-            if (this.env.messaging.device.isMobile && thread.channel_type) {
+            if (this.env.services.messaging.messaging.device.isSmall && thread.channel_type) {
                 this.update({ activeMobileNavbarTabId: thread.channel_type });
             }
         }
@@ -213,14 +210,14 @@ function factory(dependencies) {
             });
             this.focus();
             if (!this.isOpen) {
-                this.env.bus.trigger('do-action', {
-                    action: 'mail.action_discuss',
-                    options: {
+                this.env.services.action.doAction(
+                    'mail.discuss',
+                    {
                         active_id: this.threadToActiveId(this),
                         clear_breadcrumbs: false,
                         on_reverse_breadcrumb: () => this.close(), // this is useless, close is called by destroy anyway
-                    },
-                });
+                    }
+                );
             }
         }
 
@@ -290,7 +287,7 @@ function factory(dependencies) {
                 return false;
             }
             if (
-                this.env.messaging.device.isMobile &&
+                this.env.services.messaging.messaging.device.isSmall &&
                 (
                     this.activeMobileNavbarTabId !== 'mailbox' ||
                     this.thread.model !== 'mail.box'
@@ -353,9 +350,9 @@ function factory(dependencies) {
          */
         _computeThread() {
             let thread = this.thread;
-            if (this.env.messaging &&
-                this.env.messaging.inbox &&
-                this.env.messaging.device.isMobile &&
+            if (this.env.services.messaging.messaging &&
+                this.env.services.messaging.messaging.inbox &&
+                this.env.services.messaging.messaging.device.isSmall &&
                 this.activeMobileNavbarTabId === 'mailbox' &&
                 this.initActiveId !== 'mail.box_inbox' &&
                 !thread
@@ -363,7 +360,7 @@ function factory(dependencies) {
                 // After loading Discuss from an arbitrary tab other then 'mailbox',
                 // switching to 'mailbox' requires to also set its inner-tab ;
                 // by default the 'inbox'.
-                return replace(this.env.messaging.inbox);
+                return replace(this.env.services.messaging.messaging.inbox);
             }
             if (!thread || !thread.isPinned) {
                 return unlink();
@@ -421,8 +418,8 @@ function factory(dependencies) {
         /**
          * Serves as compute dependency.
          */
-        deviceIsMobile: attr({
-            related: 'device.isMobile',
+        deviceIsSmall: attr({
+            related: 'device.isSmall',
         }),
         /**
          * Determines whether `this.thread` should be displayed.
@@ -431,7 +428,7 @@ function factory(dependencies) {
             compute: '_computeHasThreadView',
             dependencies: [
                 'activeMobileNavbarTabId',
-                'deviceIsMobile',
+                'deviceIsSmall',
                 'isOpen',
                 'thread',
                 'threadModel',
@@ -543,7 +540,7 @@ function factory(dependencies) {
             compute: '_computeThread',
             dependencies: [
                 'activeMobileNavbarTabId',
-                'deviceIsMobile',
+                'deviceIsSmall',
                 'isThreadPinned',
                 'messaging',
                 'messagingInbox',

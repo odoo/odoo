@@ -29,7 +29,7 @@ export class ChatterContainer extends Component {
         this._wasMessagingInitialized = false;
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const isMessagingInitialized = this.env.isMessagingInitialized();
+            const isMessagingInitialized = this.env.services.messaging.isMessagingInitialized();
             // Delay creation of chatter record until messaging is initialized.
             // Ideally should observe models directly to detect change instead
             // of using `useStore`.
@@ -46,7 +46,7 @@ export class ChatterContainer extends Component {
      * @override
      */
     willUpdateProps(nextProps) {
-        if (this.env.isMessagingInitialized()) {
+        if (this.env.services.messaging.isMessagingInitialized()) {
             this._insertFromProps(nextProps);
         }
         return super.willUpdateProps(...arguments);
@@ -75,7 +75,7 @@ export class ChatterContainer extends Component {
             values.threadId = clear();
         }
         if (!this.chatter) {
-            this.chatter = this.env.models['mail.chatter'].create(values);
+            this.chatter = this.env.services.messaging.models['mail.chatter'].create(values);
         } else {
             this.chatter.update(values);
         }

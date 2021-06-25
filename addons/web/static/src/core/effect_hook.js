@@ -43,5 +43,9 @@ export function useEffect(effect, computeDependencies = () => [NaN]) {
         }
     });
 
-    onWillUnmount(() => cleanup());
+    onWillUnmount(() => {
+        if (cleanup) {
+            cleanup();
+        }
+    });
 }

@@ -65,11 +65,11 @@ function factory(dependencies) {
         async remove() {
             const partner_ids = [];
             partner_ids.push(this.partner.id);
-            await this.async(() => this.env.services.rpc({
-                model: this.followedThread.model,
-                method: 'message_unsubscribe',
-                args: [[this.followedThread.id], partner_ids]
-            }));
+            await this.async(() => this.env.services.orm.call(
+                this.followedThread.model,
+                'message_unsubscribe',
+                [[this.followedThread.id], partner_ids],
+            ));
             const followedThread = this.followedThread;
             this.delete();
             followedThread.fetchAndUpdateSuggestedRecipients();
@@ -88,14 +88,14 @@ function factory(dependencies) {
          * Show (editable) list of subtypes of this follower.
          */
         async showSubtypes() {
-            const subtypesData = await this.async(() => this.env.services.rpc({
-                route: '/mail/read_subscription_data',
-                params: { follower_id: this.id },
-            }));
+            const subtypesData = await this.async(() => this.env.services.rpc(
+                '/mail/read_subscription_data',
+                { follower_id: this.id },
+            ));
             this.update({ subtypes: unlinkAll() });
             for (const data of subtypesData) {
-                const subtype = this.env.models['mail.follower_subtype'].insert(
-                    this.env.models['mail.follower_subtype'].convertData(data)
+                const subtype = this.env.services.messaging.models['mail.follower_subtype'].insert(
+                    this.env.services.messaging.models['mail.follower_subtype'].convertData(data)
                 );
                 this.update({ subtypes: link(subtype) });
                 if (data.followed) {
@@ -104,7 +104,7 @@ function factory(dependencies) {
                     this.update({ selectedSubtypes: unlink(subtype) });
                 }
             }
-            this._subtypesListDialog = this.env.messaging.dialogManager.open('mail.follower_subtype_list', {
+            this._subtypesListDialog = this.env.services.messaging.messaging.dialogManager.open('mail.follower_subtype_list', {
                 follower: link(this),
             });
         }
@@ -131,12 +131,12 @@ function factory(dependencies) {
                 if (this.partner) {
                     kwargs.partner_ids = [this.partner.id];
                 }
-                await this.async(() => this.env.services.rpc({
-                    model: this.followedThread.model,
-                    method: 'message_subscribe',
-                    args: [[this.followedThread.id]],
+                await this.async(() => this.env.services.orm.call(
+                    this.followedThread.model,
+                    'message_subscribe',
+                    [[this.followedThread.id]],
                     kwargs,
-                }));
+                ));
                 this.env.services['notification'].notify({
                     type: 'success',
                     message: this.env._t("The subscription preferences were successfully applied."),

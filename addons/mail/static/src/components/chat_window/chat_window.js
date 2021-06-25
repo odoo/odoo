@@ -22,7 +22,7 @@ export class ChatWindow extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const chatWindow = this.env.models['mail.chat_window'].get(props.chatWindowLocalId);
+            const chatWindow = this.env.services.messaging.models['mail.chat_window'].get(props.chatWindowLocalId);
             const thread = chatWindow ? chatWindow.thread : undefined;
             return {
                 chatWindow,
@@ -33,8 +33,8 @@ export class ChatWindow extends Component {
                 chatWindowThreadView: chatWindow && chatWindow.threadView,
                 chatWindowVisibleIndex: chatWindow && chatWindow.visibleIndex,
                 chatWindowVisibleOffset: chatWindow && chatWindow.visibleOffset,
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                localeTextDirection: this.env.messaging.locale.textDirection,
+                isDeviceSmall: this.env.services.messaging.messaging.device.isSmall,
+                localeTextDirection: this.env.services.messaging.messaging.locale.textDirection,
                 thread,
                 threadModel: thread && thread.model,
             };
@@ -72,13 +72,13 @@ export class ChatWindow extends Component {
     _constructor() {}
 
     mounted() {
-        this.env.messagingBus.on('will_hide_home_menu', this, this._onWillHideHomeMenu);
-        this.env.messagingBus.on('will_show_home_menu', this, this._onWillShowHomeMenu);
+        this.env.services.messaging.messagingBus.on('will_hide_home_menu', this, this._onWillHideHomeMenu);
+        this.env.services.messaging.messagingBus.on('will_show_home_menu', this, this._onWillShowHomeMenu);
     }
 
     willUnmount() {
-        this.env.messagingBus.off('will_hide_home_menu', this, this._onWillHideHomeMenu);
-        this.env.messagingBus.off('will_show_home_menu', this, this._onWillShowHomeMenu);
+        this.env.services.messaging.messagingBus.off('will_hide_home_menu', this, this._onWillHideHomeMenu);
+        this.env.services.messaging.messagingBus.off('will_show_home_menu', this, this._onWillShowHomeMenu);
     }
 
     //--------------------------------------------------------------------------
@@ -89,7 +89,7 @@ export class ChatWindow extends Component {
      * @returns {mail.chat_window}
      */
     get chatWindow() {
-        return this.env.models['mail.chat_window'].get(this.props.chatWindowLocalId);
+        return this.env.services.messaging.models['mail.chat_window'].get(this.props.chatWindowLocalId);
     }
 
     /**
@@ -112,7 +112,7 @@ export class ChatWindow extends Component {
      * @private
      */
     _applyVisibleOffset() {
-        const textDirection = this.env.messaging.locale.textDirection;
+        const textDirection = this.env.services.messaging.messaging.locale.textDirection;
         const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
         const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
         this.el.style[offsetFrom] = this.chatWindow.visibleOffset + 'px';
@@ -195,11 +195,11 @@ export class ChatWindow extends Component {
      * @param {integer} ui.item.id
      */
     async _onAutocompleteSelect(ev, ui) {
-        const chat = await this.env.messaging.getChat({ partnerId: ui.item.id });
+        const chat = await this.env.services.messaging.messaging.getChat({ partnerId: ui.item.id });
         if (!chat) {
             return;
         }
-        this.env.messaging.chatWindowManager.openThread(chat, {
+        this.env.services.messaging.messaging.chatWindowManager.openThread(chat, {
             makeActive: true,
             replaceNewMessage: true,
         });
@@ -215,7 +215,7 @@ export class ChatWindow extends Component {
      * @param {function} res
      */
     _onAutocompleteSource(req, res) {
-        this.env.models['mail.partner'].imSearch({
+        this.env.services.messaging.models['mail.partner'].imSearch({
             callback: (partners) => {
                 const suggestions = partners.map(partner => {
                     return {
@@ -240,7 +240,7 @@ export class ChatWindow extends Component {
      */
     _onClickedHeader(ev) {
         ev.stopPropagation();
-        if (this.env.messaging.device.isMobile) {
+        if (this.env.services.messaging.messaging.device.isSmall) {
             return;
         }
         if (this.chatWindow.isFolded) {

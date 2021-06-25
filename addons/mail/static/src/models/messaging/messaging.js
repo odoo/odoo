@@ -4,6 +4,8 @@ import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { create, replace } from '@mail/model/model_field_command';
 
+import { browser } from '@web/core/browser/browser';
+
 function factory(dependencies) {
 
     class Messaging extends dependencies['mail.model'] {
@@ -12,8 +14,9 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
-            if (this.env.services['bus_service']) {
-                this.env.services['bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
+            const legacyEnv = owl.Component.env;
+            if (legacyEnv.services.bus_service) {
+                legacyEnv.services.bus_service.off('window_focus', null, this._handleGlobalWindowFocus);
             }
             return super._willDelete(...arguments);
         }
@@ -22,8 +25,9 @@ function factory(dependencies) {
          * Starts messaging and related records.
          */
         async start() {
+            const legacyEnv = owl.Component.env;
             this._handleGlobalWindowFocus = this._handleGlobalWindowFocus.bind(this);
-            this.env.services['bus_service'].on('window_focus', null, this._handleGlobalWindowFocus);
+            legacyEnv.services.bus_service.on('window_focus', null, this._handleGlobalWindowFocus);
             await this.async(() => this.initializer.start());
             this.notificationHandler.start();
             this.update({ isInitialized: true });
@@ -47,11 +51,11 @@ function factory(dependencies) {
          */
         async getChat({ partnerId, userId }) {
             if (userId) {
-                const user = this.env.models['mail.user'].insert({ id: userId });
+                const user = this.env.services.messaging.models['mail.user'].insert({ id: userId });
                 return user.getChat();
             }
             if (partnerId) {
-                const partner = this.env.models['mail.partner'].insert({ id: partnerId });
+                const partner = this.env.services.messaging.models['mail.partner'].insert({ id: partnerId });
                 return partner.getChat();
             }
         }
@@ -82,18 +86,16 @@ function factory(dependencies) {
          * @param {string} param0.model
          */
         async openDocument({ id, model }) {
-            this.env.bus.trigger('do-action', {
-                action: {
-                    type: 'ir.actions.act_window',
-                    res_model: model,
-                    views: [[false, 'form']],
-                    res_id: id,
-                },
+            this.env.services.action.doAction({
+                type: 'ir.actions.act_window',
+                res_model: model,
+                views: [[false, 'form']],
+                res_id: id,
             });
-            if (this.env.messaging.device.isMobile) {
+            if (this.env.services.messaging.messaging.device.isSmall) {
                 // messaging menu has a higher z-index than views so it must
                 // be closed to ensure the visibility of the view
-                this.env.messaging.messagingMenu.close();
+                this.env.services.messaging.messaging.messagingMenu.close();
             }
         }
 
@@ -107,18 +109,18 @@ function factory(dependencies) {
          */
         async openProfile({ id, model }) {
             if (model === 'res.partner') {
-                const partner = this.env.models['mail.partner'].insert({ id });
+                const partner = this.env.services.messaging.models['mail.partner'].insert({ id });
                 return partner.openProfile();
             }
             if (model === 'res.users') {
-                const user = this.env.models['mail.user'].insert({ id });
+                const user = this.env.services.messaging.models['mail.user'].insert({ id });
                 return user.openProfile();
             }
             if (model === 'mail.channel') {
-                let channel = this.env.models['mail.thread'].findFromIdentifyingData({ id, model: 'mail.channel' });
+                let channel = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({ id, model: 'mail.channel' });
                 if (!channel) {
                     channel = (await this.async(() =>
-                        this.env.models['mail.thread'].performRpcChannelInfo({ ids: [id] })
+                        this.env.services.messaging.models['mail.thread'].performRpcChannelInfo({ ids: [id] })
                     ))[0];
                 }
                 if (!channel) {
@@ -130,7 +132,7 @@ function factory(dependencies) {
                 }
                 return channel.openProfile();
             }
-            return this.env.messaging.openDocument({ id, model });
+            return this.env.services.messaging.messaging.openDocument({ id, model });
         }
 
         /**
@@ -166,8 +168,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsNotificationPermissionDefault() {
-            const browserNotification = this.env.browser.Notification;
-            return browserNotification ? browserNotification.permission === 'default' : false;
+            return browser.Notification ? browser.Notification.permission === 'default' : false;
         }
 
         /**

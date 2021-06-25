@@ -56,7 +56,7 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
     );
     const livechat = groupLivechat.querySelector(`
         .o_DiscussSidebarItem[data-thread-local-id="${
-            this.env.models['mail.thread'].findFromIdentifyingData({
+            this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -129,15 +129,15 @@ QUnit.test('do not add livechat in the sidebar on visitor opening his chat', asy
     );
 
     // simulate livechat visitor opening his chat
-    await this.env.services.rpc({
-        route: '/im_livechat/get_session',
-        params: {
+    await this.env.services.rpc(
+        '/im_livechat/get_session',
+        {
             context: {
                 mockedUserId: false,
             },
             channel_id: 10,
         },
-    });
+    );
     await nextAnimationFrame();
     assert.containsNone(
         document.body,
@@ -174,16 +174,16 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
 
     // simulate livechat visitor typing
     const channel = this.data['mail.channel'].records.find(channel => channel.id === 10);
-    await this.env.services.rpc({
-        route: '/im_livechat/notify_typing',
-        params: {
+    await this.env.services.rpc(
+        '/im_livechat/notify_typing',
+        {
             context: {
                 mockedPartnerId: this.publicPartnerId,
             },
             is_typing: true,
             uuid: channel.uuid,
         },
-    });
+    );
     await nextAnimationFrame();
     assert.containsNone(
         document.body,
@@ -227,16 +227,16 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
 
     // simulate livechat visitor sending a message
     const channel = this.data['mail.channel'].records.find(channel => channel.id === 10);
-    await afterNextRender(async () => this.env.services.rpc({
-        route: '/mail/chat_post',
-        params: {
+    await afterNextRender(async () => this.env.services.rpc(
+        '/mail/chat_post',
+        {
             context: {
                 mockedUserId: false,
             },
             uuid: channel.uuid,
             message_content: "new message",
         },
-    }));
+    ));
     assert.containsOnce(
         document.body,
         '.o_DiscussSidebar_groupLivechat',
@@ -283,11 +283,11 @@ QUnit.test('livechats are sorted by last message date in the sidebar: most recen
         },
     );
     await this.start();
-    const livechat11 = this.env.models['mail.thread'].findFromIdentifyingData({
+    const livechat11 = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const livechat12 = this.env.models['mail.thread'].findFromIdentifyingData({
+    const livechat12 = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 12,
         model: 'mail.channel',
     });
@@ -370,15 +370,15 @@ QUnit.test('livechats with no messages are sorted by creation date in the sideba
         },
     );
     await this.start();
-    const livechat11 = this.env.models['mail.thread'].findFromIdentifyingData({
+    const livechat11 = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const livechat12 = this.env.models['mail.thread'].findFromIdentifyingData({
+    const livechat12 = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 12,
         model: 'mail.channel',
     });
-    const livechat13 = this.env.models['mail.thread'].findFromIdentifyingData({
+    const livechat13 = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 13,
         model: 'mail.channel',
     });

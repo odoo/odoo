@@ -53,7 +53,7 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
         members: [this.data.currentPartnerId, 17],
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });

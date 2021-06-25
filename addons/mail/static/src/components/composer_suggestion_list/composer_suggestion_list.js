@@ -17,7 +17,7 @@ export class ComposerSuggestionList extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const composer = this.env.models['mail.composer'].get(props.composerLocalId);
+            const composer = this.env.services.messaging.models['mail.composer'].get(props.composerLocalId);
             const activeSuggestedRecord = composer
                 ? composer.activeSuggestedRecord
                 : undefined;
@@ -50,7 +50,7 @@ export class ComposerSuggestionList extends Component {
      * @returns {mail.composer}
      */
     get composer() {
-        return this.env.models['mail.composer'].get(this.props.composerLocalId);
+        return this.env.services.messaging.models['mail.composer'].get(this.props.composerLocalId);
     }
 
 }

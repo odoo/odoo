@@ -30,7 +30,7 @@ export class ComposerSuggestedRecipient extends Component {
         this.id = _.uniqueId('o_ComposerSuggestedRecipient_');
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const suggestedRecipientInfo = this.env.models['mail.suggested_recipient_info'].get(props.suggestedRecipientLocalId);
+            const suggestedRecipientInfo = this.env.services.messaging.models['mail.suggested_recipient_info'].get(props.suggestedRecipientLocalId);
             const partner = suggestedRecipientInfo && suggestedRecipientInfo.partner;
             return {
                 partner: partner && partner.__state,
@@ -90,7 +90,7 @@ export class ComposerSuggestedRecipient extends Component {
      * @returns {mail.suggested_recipient_info}
      */
     get suggestedRecipientInfo() {
-        return this.env.models['mail.suggested_recipient_info'].get(this.props.suggestedRecipientInfoLocalId);
+        return this.env.services.messaging.models['mail.suggested_recipient_info'].get(this.props.suggestedRecipientInfoLocalId);
     }
 
     //--------------------------------------------------------------------------

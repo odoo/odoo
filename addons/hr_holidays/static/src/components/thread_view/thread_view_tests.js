@@ -60,11 +60,11 @@ QUnit.test('out of office message on direct chat with out of office partner', as
         members: [this.data.currentPartnerId, 11],
     }];
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.env.services.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
@@ -75,7 +75,7 @@ QUnit.test('out of office message on direct chat with out of office partner', as
         "should have an out of office alert on thread view"
     );
     const formattedDate = returningDate.toDate().toLocaleDateString(
-        this.env.messaging.locale.language.replace(/_/g, '-'),
+        this.env.services.messaging.messaging.locale.language.replace(/_/g, '-'),
         { day: 'numeric', month: 'short' }
     );
     assert.ok(

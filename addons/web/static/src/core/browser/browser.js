@@ -31,6 +31,7 @@ export const browser = Object.assign({}, owl.browser, {
     XMLHttpRequest: window.XMLHttpRequest,
     localStorage,
     sessionStorage,
+    Notification: window.Notification,
 });
 
 // -----------------------------------------------------------------------------

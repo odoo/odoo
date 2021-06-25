@@ -21,14 +21,14 @@ export class DiscussSidebarItem extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const discuss = this.env.messaging.discuss;
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
+            const discuss = this.env.services.messaging.messaging.discuss;
+            const thread = this.env.services.messaging.models['mail.thread'].get(props.threadLocalId);
             const correspondent = thread ? thread.correspondent : undefined;
             return {
                 correspondentName: correspondent && correspondent.name,
                 discussIsRenamingThread: discuss && discuss.renamingThreads.includes(thread),
                 isDiscussThread: discuss && discuss.thread === thread,
-                starred: this.env.messaging.starred,
+                starred: this.env.services.messaging.messaging.starred,
                 thread,
                 threadChannelType: thread && thread.channel_type,
                 threadCounter: thread && thread.counter,
@@ -65,7 +65,10 @@ export class DiscussSidebarItem extends Component {
      * @returns {mail.discuss}
      */
     get discuss() {
-        return this.env.messaging && this.env.messaging.discuss;
+        return (
+            this.env.services.messaging.messaging &&
+            this.env.services.messaging.messaging.discuss
+        );
     }
 
     /**
@@ -79,7 +82,7 @@ export class DiscussSidebarItem extends Component {
      * @returns {mail.thread}
      */
     get thread() {
-        return this.env.models['mail.thread'].get(this.props.threadLocalId);
+        return this.env.services.messaging.models['mail.thread'].get(this.props.threadLocalId);
     }
 
     //--------------------------------------------------------------------------
@@ -151,7 +154,7 @@ export class DiscussSidebarItem extends Component {
      */
     async _onClickLeave(ev) {
         ev.stopPropagation();
-        if (this.thread.creator === this.env.messaging.currentUser) {
+        if (this.thread.creator === this.env.services.messaging.messaging.currentUser) {
             await this._askAdminConfirmation();
         }
         this.thread.unsubscribe();
@@ -172,14 +175,12 @@ export class DiscussSidebarItem extends Component {
      */
     _onClickSettings(ev) {
         ev.stopPropagation();
-        return this.env.bus.trigger('do-action', {
-            action: {
-                type: 'ir.actions.act_window',
-                res_model: this.thread.model,
-                res_id: this.thread.id,
-                views: [[false, 'form']],
-                target: 'current'
-            },
+        return this.env.services.action.doAction({
+            type: 'ir.actions.act_window',
+            res_model: this.thread.model,
+            res_id: this.thread.id,
+            views: [[false, 'form']],
+            target: 'current'
         });
     }
 

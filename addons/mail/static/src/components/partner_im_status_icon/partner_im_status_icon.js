@@ -14,11 +14,11 @@ export class PartnerImStatusIcon extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const partner = this.env.models['mail.partner'].get(props.partnerLocalId);
+            const partner = this.env.services.messaging.models['mail.partner'].get(props.partnerLocalId);
             return {
                 partner,
                 partnerImStatus: partner && partner.im_status,
-                partnerRoot: this.env.messaging.partnerRoot,
+                partnerRoot: this.env.services.messaging.messaging.partnerRoot,
             };
         });
     }
@@ -31,7 +31,7 @@ export class PartnerImStatusIcon extends Component {
      * @returns {mail.partner}
      */
     get partner() {
-        return this.env.models['mail.partner'].get(this.props.partnerLocalId);
+        return this.env.services.messaging.models['mail.partner'].get(this.props.partnerLocalId);
     }
 
     //--------------------------------------------------------------------------

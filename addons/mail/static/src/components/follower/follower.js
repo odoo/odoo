@@ -17,7 +17,7 @@ export class Follower extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const follower = this.env.models['mail.follower'].get(props.followerLocalId);
+            const follower = this.env.services.messaging.models['mail.follower'].get(props.followerLocalId);
             return [follower ? follower.__state : undefined];
         });
     }
@@ -30,7 +30,7 @@ export class Follower extends Component {
      * @returns {mail.follower}
      */
     get follower() {
-        return this.env.models['mail.follower'].get(this.props.followerLocalId);
+        return this.env.services.messaging.models['mail.follower'].get(this.props.followerLocalId);
     }
 
     //--------------------------------------------------------------------------

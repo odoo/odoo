@@ -28,7 +28,7 @@ function factory(dependencies) {
                     data2.attachments = unlinkAll();
                 } else {
                     data2.attachments = insertAndReplace(data.attachment_ids.map(attachmentData =>
-                        this.env.models['mail.attachment'].convertData(attachmentData)
+                        this.env.services.messaging.models['mail.attachment'].convertData(attachmentData)
                     ));
                 }
             }
@@ -55,7 +55,7 @@ function factory(dependencies) {
                 data2.email_from = data.email_from;
             }
             if ('history_partner_ids' in data) {
-                data2.isHistory = data.history_partner_ids.includes(this.env.messaging.currentPartner.id);
+                data2.isHistory = data.history_partner_ids.includes(this.env.services.messaging.messaging.currentPartner.id);
             }
             if ('id' in data) {
                 data2.id = data.id;
@@ -89,18 +89,18 @@ function factory(dependencies) {
                 data2.originThread = insert(originThreadData);
             }
             if ('needaction_partner_ids' in data) {
-                data2.isNeedaction = data.needaction_partner_ids.includes(this.env.messaging.currentPartner.id);
+                data2.isNeedaction = data.needaction_partner_ids.includes(this.env.services.messaging.messaging.currentPartner.id);
             }
             if ('notifications' in data) {
                 data2.notifications = insert(data.notifications.map(notificationData =>
-                    this.env.models['mail.notification'].convertData(notificationData)
+                    this.env.services.messaging.models['mail.notification'].convertData(notificationData)
                 ));
             }
             if ('partner_ids' in data) {
-                data2.isCurrentPartnerMentioned = data.partner_ids.includes(this.env.messaging.currentPartner.id);
+                data2.isCurrentPartnerMentioned = data.partner_ids.includes(this.env.services.messaging.messaging.currentPartner.id);
             }
             if ('starred_partner_ids' in data) {
-                data2.isStarred = data.starred_partner_ids.includes(this.env.messaging.currentPartner.id);
+                data2.isStarred = data.starred_partner_ids.includes(this.env.services.messaging.messaging.currentPartner.id);
             }
             if ('subject' in data) {
                 data2.subject = data.subject;
@@ -125,11 +125,12 @@ function factory(dependencies) {
          * @param {Array[]} domain
          */
         static async markAllAsRead(domain) {
-            await this.env.services.rpc({
-                model: 'mail.message',
-                method: 'mark_all_as_read',
-                kwargs: { domain },
-            });
+            await this.env.services.orm.call(
+                'mail.message',
+                'mark_all_as_read',
+                undefined,
+                { domain },
+            );
         }
 
         /**
@@ -145,11 +146,11 @@ function factory(dependencies) {
          * @param {mail.message[]} messages
          */
         static async markAsRead(messages) {
-            await this.env.services.rpc({
-                model: 'mail.message',
-                method: 'set_message_done',
-                args: [messages.map(message => message.id)]
-            });
+            await this.env.services.orm.call(
+                'mail.message',
+                'set_message_done',
+                [messages.map(message => message.id)]
+            );
         }
 
         /**
@@ -162,17 +163,18 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         static async performRpcMessageFetch(domain, limit, context) {
-            const messagesData = await this.env.services.rpc({
-                model: 'mail.message',
-                method: 'message_fetch',
-                kwargs: {
+            const messagesData = await this.env.services.orm.silent.call(
+                'mail.message',
+                'message_fetch',
+                undefined,
+                {
                     context,
                     domain,
                     limit,
                 },
-            }, { shadow: true });
-            const messages = this.env.models['mail.message'].insert(messagesData.map(
-                messageData => this.env.models['mail.message'].convertData(messageData)
+            );
+            const messages = this.env.services.messaging.models['mail.message'].insert(messagesData.map(
+                messageData => this.env.services.messaging.models['mail.message'].convertData(messageData)
             ));
             // compute seen indicators (if applicable)
             for (const message of messages) {
@@ -182,7 +184,7 @@ function factory(dependencies) {
                         // on `channel` channels for performance reasons
                         continue;
                     }
-                    this.env.models['mail.message_seen_indicator'].insert({
+                    this.env.services.messaging.models['mail.message_seen_indicator'].insert({
                         channelId: thread.id,
                         messageId: message.id,
                     });
@@ -195,10 +197,10 @@ function factory(dependencies) {
          * Unstar all starred messages of current user.
          */
         static async unstarAll() {
-            await this.env.services.rpc({
-                model: 'mail.message',
-                method: 'unstar_all',
-            });
+            await this.env.services.orm.call(
+                'mail.message',
+                'unstar_all',
+            );
         }
 
         /**
@@ -206,25 +208,25 @@ function factory(dependencies) {
          * partner Inbox.
          */
         async markAsRead() {
-            await this.async(() => this.env.services.rpc({
-                model: 'mail.message',
-                method: 'set_message_done',
-                args: [[this.id]]
-            }));
+            await this.async(() => this.env.services.orm.call(
+                'mail.message',
+                'set_message_done',
+                [[this.id]]
+            ));
         }
 
         /**
          * Opens the view that allows to resend the message in case of failure.
          */
         openResendAction() {
-            this.env.bus.trigger('do-action', {
-                action: 'mail.mail_resend_message_action',
-                options: {
+            this.env.services.action.doAction(
+                'mail.mail_resend_message_action',
+                {
                     additional_context: {
                         mail_message_to_resend: this.id,
                     },
                 },
-            });
+            );
         }
 
         /**
@@ -239,18 +241,18 @@ function factory(dependencies) {
          * that Discuss and Inbox are already opened.
          */
         replyTo() {
-            this.env.messaging.discuss.replyToMessage(this);
+            this.env.services.messaging.messaging.discuss.replyToMessage(this);
         }
 
         /**
          * Toggle the starred status of the provided message.
          */
         async toggleStar() {
-            await this.async(() => this.env.services.rpc({
-                model: 'mail.message',
-                method: 'toggle_message_starred',
-                args: [[this.id]]
-            }));
+            await this.async(() => this.env.services.orm.call(
+                'mail.message',
+                'toggle_message_starred',
+                [[this.id]]
+            ));
         }
 
         //----------------------------------------------------------------------
@@ -391,7 +393,7 @@ function factory(dependencies) {
          * @returns {mail.messaging}
          */
         _computeMessaging() {
-            return link(this.env.messaging);
+            return link(this.env.services.messaging.messaging);
         }
 
         /**
@@ -436,13 +438,13 @@ function factory(dependencies) {
         _computeThreads() {
             const threads = [];
             if (this.isHistory) {
-                threads.push(this.env.messaging.history);
+                threads.push(this.env.services.messaging.messaging.history);
             }
             if (this.isNeedaction) {
-                threads.push(this.env.messaging.inbox);
+                threads.push(this.env.services.messaging.messaging.inbox);
             }
             if (this.isStarred) {
-                threads.push(this.env.messaging.starred);
+                threads.push(this.env.services.messaging.messaging.starred);
             }
             if (this.originThread) {
                 threads.push(this.originThread);

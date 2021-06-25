@@ -46,7 +46,7 @@ QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -83,7 +83,7 @@ QUnit.test('base rendering editable', async function (assert) {
     assert.expect(5);
 
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -165,7 +165,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
     await this.start({
         env: { bus },
     });
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -243,25 +243,25 @@ QUnit.test('click on remove follower', async function (assert) {
                 assert.step('message_unsubscribe');
                 assert.deepEqual(
                     args.args,
-                    [[100], [self.env.messaging.currentPartner.id]],
+                    [[100], [self.env.services.messaging.messaging.currentPartner.id]],
                     "message_unsubscribe should be called with right argument"
                 );
             }
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
-    await this.env.models['mail.follower'].create({
+    await this.env.services.messaging.models['mail.follower'].create({
         followedThread: link(thread),
         id: 2,
         isActive: true,
         isEditable: true,
         partner: insert({
             email: "bla@bla.bla",
-            id: this.env.messaging.currentPartner.id,
+            id: this.env.services.messaging.messaging.currentPartner.id,
             name: "François Perusse",
         }),
     });

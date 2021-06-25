@@ -45,7 +45,10 @@ export class DiscussSidebar extends Component {
      * @returns {mail.discuss}
      */
     get discuss() {
-        return this.env.messaging && this.env.messaging.discuss;
+        return (
+            this.env.services.messaging.messaging &&
+            this.env.services.messaging.messaging.discuss
+        );
     }
 
     /**
@@ -59,19 +62,19 @@ export class DiscussSidebar extends Component {
      * @returns {mail.thread[]}
      */
     get orderedMailboxes() {
-        return this.env.models['mail.thread']
+        return this.env.services.messaging.models['mail.thread']
             .all(thread => thread.isPinned && thread.model === 'mail.box')
             .sort((mailbox1, mailbox2) => {
-                if (mailbox1 === this.env.messaging.inbox) {
+                if (mailbox1 === this.env.services.messaging.messaging.inbox) {
                     return -1;
                 }
-                if (mailbox2 === this.env.messaging.inbox) {
+                if (mailbox2 === this.env.services.messaging.messaging.inbox) {
                     return 1;
                 }
-                if (mailbox1 === this.env.messaging.starred) {
+                if (mailbox1 === this.env.services.messaging.messaging.starred) {
                     return -1;
                 }
-                if (mailbox2 === this.env.messaging.starred) {
+                if (mailbox2 === this.env.services.messaging.messaging.starred) {
                     return 1;
                 }
                 const mailbox1Name = mailbox1.displayName;
@@ -86,7 +89,7 @@ export class DiscussSidebar extends Component {
      * @returns {mail.thread[]}
      */
     get quickSearchPinnedAndOrderedChats() {
-        const allOrderedAndPinnedChats = this.env.models['mail.thread']
+        const allOrderedAndPinnedChats = this.env.services.messaging.models['mail.thread']
             .all(thread =>
                 thread.channel_type === 'chat' &&
                 thread.isPinned &&
@@ -109,7 +112,7 @@ export class DiscussSidebar extends Component {
      * @returns {mail.thread[]}
      */
     get quickSearchOrderedAndPinnedMultiUserChannels() {
-        const allOrderedAndPinnedMultiUserChannels = this.env.models['mail.thread']
+        const allOrderedAndPinnedMultiUserChannels = this.env.services.messaging.models['mail.thread']
             .all(thread =>
                 thread.channel_type === 'channel' &&
                 thread.isPinned &&
@@ -170,13 +173,13 @@ export class DiscussSidebar extends Component {
      * @returns {Object}
      */
     _useStoreSelector(props) {
-        const discuss = this.env.messaging.discuss;
+        const discuss = this.env.services.messaging.messaging.discuss;
         return {
             allOrderedAndPinnedChats: this.quickSearchPinnedAndOrderedChats,
             allOrderedAndPinnedMailboxes: this.orderedMailboxes,
             allOrderedAndPinnedMultiUserChannels: this.quickSearchOrderedAndPinnedMultiUserChannels,
             allPinnedChannelAmount:
-                this.env.models['mail.thread']
+                this.env.services.messaging.models['mail.thread']
                 .all(thread =>
                     thread.isPinned &&
                     thread.model === 'mail.channel'
@@ -252,14 +255,12 @@ export class DiscussSidebar extends Component {
      */
     _onClickChannelTitle(ev) {
         ev.stopPropagation();
-        return this.env.bus.trigger('do-action', {
-            action: {
-                name: this.env._t("Public Channels"),
-                type: 'ir.actions.act_window',
-                res_model: 'mail.channel',
-                views: [[false, 'kanban'], [false, 'form']],
-                domain: [['public', '!=', 'private']]
-            },
+        return this.env.services.action.doAction({
+            name: this.env._t("Public Channels"),
+            type: 'ir.actions.act_window',
+            res_model: 'mail.channel',
+            views: [[false, 'kanban'], [false, 'form']],
+            domain: [['public', '!=', 'private']]
         });
     }
 

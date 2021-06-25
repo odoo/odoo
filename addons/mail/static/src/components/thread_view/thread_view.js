@@ -98,7 +98,7 @@ export class ThreadView extends Component {
      * @returns {mail.thread_view}
      */
     get threadView() {
-        return this.env.models['mail.thread_view'].get(this.props.threadViewLocalId);
+        return this.env.services.messaging.models['mail.thread_view'].get(this.props.threadViewLocalId);
     }
 
     //--------------------------------------------------------------------------
@@ -113,14 +113,14 @@ export class ThreadView extends Component {
      * @returns {Object}
      */
     _useStoreSelector(props) {
-        const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
+        const threadView = this.env.services.messaging.models['mail.thread_view'].get(props.threadViewLocalId);
         const thread = threadView ? threadView.thread : undefined;
         const threadCache = threadView ? threadView.threadCache : undefined;
         const correspondent = thread && thread.correspondent;
         return {
             composer: thread && thread.composer,
             correspondentId: correspondent && correspondent.id,
-            isDeviceMobile: this.env.messaging.device.isMobile,
+            isDeviceSmall: this.env.services.messaging.messaging.device.isSmall,
             thread,
             threadCacheIsLoaded: threadCache && threadCache.isLoaded,
             threadCacheHasLoadingFailed: threadCache && threadCache.hasLoadingFailed,

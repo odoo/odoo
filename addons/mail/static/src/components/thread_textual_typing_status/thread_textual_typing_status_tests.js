@@ -48,7 +48,7 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
         members: [this.data.currentPartnerId, 17],
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -87,7 +87,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
         members: [this.data.currentPartnerId, 17],
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -145,7 +145,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
     await this.start({
         hasTimeControl: true,
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -193,7 +193,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
     await this.start({
         hasTimeControl: true,
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -261,7 +261,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
         members: [this.data.currentPartnerId, 10, 11, 12],
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });

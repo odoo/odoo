@@ -17,8 +17,8 @@ registerInstancePatchModel('mail.messaging_initializer', 'im_livechat/static/src
         await this.async(() => this._super(initMessagingData));
         const { channel_livechat = [] } = initMessagingData;
         return executeGracefully(channel_livechat.map(data => () => {
-            const channel = this.env.models['mail.thread'].insert(
-                this.env.models['mail.thread'].convertData(data),
+            const channel = this.env.services.messaging.models['mail.thread'].insert(
+                this.env.services.messaging.models['mail.thread'].convertData(data),
             );
             // flux specific: channels received at init have to be
             // considered pinned. task-2284357

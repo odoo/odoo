@@ -29,7 +29,7 @@ export class Chatter extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const chatter = this.env.models['mail.chatter'].get(props.chatterLocalId);
+            const chatter = this.env.services.messaging.models['mail.chatter'].get(props.chatterLocalId);
             const thread = chatter ? chatter.thread : undefined;
             let attachments = [];
             if (thread) {
@@ -72,7 +72,7 @@ export class Chatter extends Component {
      * @returns {mail.chatter}
      */
     get chatter() {
-        return this.env.models['mail.chatter'].get(this.props.chatterLocalId);
+        return this.env.services.messaging.models['mail.chatter'].get(this.props.chatterLocalId);
     }
 
     /**

@@ -16,15 +16,15 @@ class SnailmailErrorDialog extends Component {
     constructor(...args) {
         super(...args);
         useStore(props => {
-            const message = this.env.models['mail.message'].get(props.messageLocalId);
+            const message = this.env.services.messaging.models['mail.message'].get(props.messageLocalId);
             const notifications = message ? message.notifications : [];
             return {
                 message: message ? message.__state : undefined,
                 notifications: notifications.map(notification =>
                     notification ? notification.__state : undefined
                 ),
-                snailmail_credits_url: this.env.messaging.snailmail_credits_url,
-                snailmail_credits_url_trial: this.env.messaging.snailmail_credits_url_trial,
+                snailmail_credits_url: this.env.services.messaging.messaging.snailmail_credits_url,
+                snailmail_credits_url_trial: this.env.services.messaging.messaging.snailmail_credits_url_trial,
             };
         }, {
             compareDepth: {
@@ -53,7 +53,7 @@ class SnailmailErrorDialog extends Component {
      * @returns {mail.message}
      */
     get message() {
-        return this.env.models['mail.message'].get(this.props.messageLocalId);
+        return this.env.services.messaging.models['mail.message'].get(this.props.messageLocalId);
     }
 
     /**

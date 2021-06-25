@@ -53,7 +53,7 @@ QUnit.test('thread icon of a chat when correspondent is on leave & online', asyn
         members: [this.data.currentPartnerId, 7],
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -85,7 +85,7 @@ QUnit.test('thread icon of a chat when correspondent is on leave & away', async 
         members: [this.data.currentPartnerId, 7],
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -117,7 +117,7 @@ QUnit.test('thread icon of a chat when correspondent is on leave & offline', asy
         members: [this.data.currentPartnerId, 7],
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });

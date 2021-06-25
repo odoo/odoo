@@ -18,7 +18,7 @@ export class ChatterTopbar extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const chatter = this.env.models['mail.chatter'].get(props.chatterLocalId);
+            const chatter = this.env.services.messaging.models['mail.chatter'].get(props.chatterLocalId);
             const thread = chatter ? chatter.thread : undefined;
             const threadAttachments = thread ? thread.allAttachments : [];
             return {
@@ -38,7 +38,7 @@ export class ChatterTopbar extends Component {
      * @returns {mail.chatter}
      */
     get chatter() {
-        return this.env.models['mail.chatter'].get(this.props.chatterLocalId);
+        return this.env.services.messaging.models['mail.chatter'].get(this.props.chatterLocalId);
     }
 
     //--------------------------------------------------------------------------
@@ -96,14 +96,14 @@ export class ChatterTopbar extends Component {
             },
             res_id: false,
         };
-        return this.env.bus.trigger('do-action', {
+        return this.env.services.action.doAction(
             action,
-            options: {
+            {
                 on_close: () => {
                     this.trigger('reload', { keepChanges: true });
                 },
             },
-        });
+        );
     }
 
     /**

@@ -15,7 +15,7 @@ export class ActivityMarkDonePopover extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const activity = this.env.models['mail.activity'].get(props.activityLocalId);
+            const activity = this.env.services.messaging.models['mail.activity'].get(props.activityLocalId);
             return {
                 activity: activity ? activity.__state : undefined,
             };
@@ -38,7 +38,7 @@ export class ActivityMarkDonePopover extends Component {
      * @returns {mail.activity}
      */
     get activity() {
-        return this.env.models['mail.activity'].get(this.props.activityLocalId);
+        return this.env.services.messaging.models['mail.activity'].get(this.props.activityLocalId);
     }
 
     /**

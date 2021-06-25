@@ -21,7 +21,7 @@ export class ThreadNeedactionPreview extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
+            const thread = this.env.services.messaging.models['mail.thread'].get(props.threadLocalId);
             let lastNeedactionMessageAsOriginThreadAuthor;
             let lastNeedactionMessageAsOriginThread;
             let threadCorrespondent;
@@ -33,7 +33,7 @@ export class ThreadNeedactionPreview extends Component {
                 lastNeedactionMessageAsOriginThreadAuthor = lastNeedactionMessageAsOriginThread.author;
             }
             return {
-                isDeviceMobile: this.env.messaging.device.isMobile,
+                isDeviceMobile: this.env.services.messaging.messaging.device.isSmall,
                 lastNeedactionMessageAsOriginThread: lastNeedactionMessageAsOriginThread ? lastNeedactionMessageAsOriginThread.__state : undefined,
                 lastNeedactionMessageAsOriginThreadAuthor: lastNeedactionMessageAsOriginThreadAuthor
                     ? lastNeedactionMessageAsOriginThreadAuthor.__state
@@ -89,7 +89,7 @@ export class ThreadNeedactionPreview extends Component {
      * @returns {mail.thread}
      */
     get thread() {
-        return this.env.models['mail.thread'].get(this.props.threadLocalId);
+        return this.env.services.messaging.models['mail.thread'].get(this.props.threadLocalId);
     }
 
     //--------------------------------------------------------------------------
@@ -107,8 +107,8 @@ export class ThreadNeedactionPreview extends Component {
             return;
         }
         this.thread.open();
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.messagingMenu.close();
+        if (!this.env.services.messaging.messaging.device.isSmall) {
+            this.env.services.messaging.messaging.messagingMenu.close();
         }
     }
 
@@ -117,7 +117,7 @@ export class ThreadNeedactionPreview extends Component {
      * @param {MouseEvent} ev
      */
     _onClickMarkAsRead(ev) {
-        this.env.models['mail.message'].markAllAsRead([
+        this.env.services.messaging.models['mail.message'].markAllAsRead([
             ['model', '=', this.thread.model],
             ['res_id', '=', this.thread.id],
         ]);

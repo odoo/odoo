@@ -29,25 +29,25 @@ function factory(dependencies) {
                     force_email: true,
                 },
             };
-            this.env.bus.trigger('do-action', {
+            this.env.services.action.doAction(
                 action,
-                options: {
+                {
                     on_close: () => {
                         activity.thread.refresh();
                     },
                 },
-            });
+            );
         }
 
         /**
          * @param {mail.activity} activity
          */
         async send(activity) {
-            await this.async(() => this.env.services.rpc({
-                model: activity.thread.model,
-                method: 'activity_send_mail',
-                args: [[activity.thread.id], this.id],
-            }));
+            await this.async(() => this.env.services.orm.call(
+                activity.thread.model,
+                'activity_send_mail',
+                [[activity.thread.id], this.id],
+            ));
             activity.thread.refresh();
         }
 

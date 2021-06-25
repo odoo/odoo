@@ -98,7 +98,7 @@ export class ModelManager {
         /**
          * Generate the models.
          */
-        Object.assign(this.env.models, this._generateModels());
+        Object.assign(this.env.services.messaging.models, this._generateModels());
     }
 
     //--------------------------------------------------------------------------
@@ -151,7 +151,7 @@ export class ModelManager {
      * Delete all records.
      */
     deleteAll() {
-        for (const Model of Object.values(this.env.models)) {
+        for (const Model of Object.values(this.env.services.messaging.models)) {
             for (const record of Object.values(Model.__records)) {
                 this._delete(record);
             }
@@ -222,7 +222,7 @@ export class ModelManager {
             return;
         }
         // support for inherited models (eg. relation targeting `mail.model`)
-        for (const SubModel of Object.values(this.env.models)) {
+        for (const SubModel of Object.values(this.env.services.messaging.models)) {
             if (!(SubModel.prototype instanceof Model)) {
                 continue;
             }
@@ -765,7 +765,7 @@ export class ModelManager {
         }
         // Trigger at most one useStore call per update cycle
         if (this._hasAnyChangeDuringCycle) {
-            this.env.store.state.messagingRevNumber++;
+            this.env.services.messaging.store.state.messagingRevNumber++;
             this._hasAnyChangeDuringCycle = false;
         }
     }

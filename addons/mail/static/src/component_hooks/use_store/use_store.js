@@ -15,7 +15,7 @@
  * @returns {Proxy} @see owl.hooks.useStore
  */
 export function useStore(selector, options = {}) {
-    const store = options.store || owl.Component.current.env.store;
+    const store = options.store || owl.Component.current.env.services.messaging.store;
     const hashFn = store.observer.revNumber.bind(store.observer);
     const isEqual = options.isEqual || ((a, b) => a === b);
 
@@ -115,7 +115,11 @@ export function useStore(selector, options = {}) {
     }
 
     const extendedSelector = (state, props) => selector(props);
-    return owl.hooks.useStore(extendedSelector, Object.assign({}, options, {
-        isEqual: proxyComparatorDeep(options.compareDepth),
-    }));
+    return owl.hooks.useStore(
+        extendedSelector,
+        Object.assign({}, options, {
+            isEqual: proxyComparatorDeep(options.compareDepth),
+            store,
+        }),
+    );
 }

@@ -43,7 +43,7 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClickInboxMarkAllAsRead(ev) {
-            this.env.models['mail.message'].markAllAsRead();
+            this.env.services.messaging.models['mail.message'].markAllAsRead();
         }
 
         /**
@@ -73,7 +73,7 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClickUnstarAll(ev) {
-            this.env.models['mail.message'].unstarAll();
+            this.env.services.messaging.models['mail.message'].unstarAll();
         }
 
         /**

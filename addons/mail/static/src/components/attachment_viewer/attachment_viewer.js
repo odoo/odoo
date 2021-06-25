@@ -6,6 +6,7 @@ import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { link } from '@mail/model/model_field_command';
 
 import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
+import { device } from 'web.config';
 
 const { Component, QWeb } = owl;
 const { useRef } = owl.hooks;
@@ -24,8 +25,11 @@ export class AttachmentViewer extends Component {
         this.MIN_SCALE = MIN_SCALE;
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const attachmentViewer = this.env.models['mail.attachment_viewer'].get(props.localId);
-            const device = this.env.messaging && this.env.messaging.device;
+            const attachmentViewer = this.env.services.messaging.models['mail.attachment_viewer'].get(props.localId);
+            const device = (
+                this.env.services.messaging.messaging &&
+                this.env.services.messaging.messaging.device
+            );
             return {
                 attachment: attachmentViewer && attachmentViewer.attachment
                     ? attachmentViewer.attachment.__state
@@ -34,8 +38,7 @@ export class AttachmentViewer extends Component {
                     ? attachmentViewer.attachments.map(attachment => attachment.__state)
                     : [],
                 attachmentViewer: attachmentViewer ? attachmentViewer.__state : undefined,
-                deviceIsMobile: device && device.isMobile,
-                deviceSizeClass: device && device.sizeClass,
+                deviceIsSmall: device && device.isSmall,
             };
         });
         /**
@@ -97,7 +100,7 @@ export class AttachmentViewer extends Component {
      * @returns {mail.attachment_viewer}
      */
     get attachmentViewer() {
-        return this.env.models['mail.attachment_viewer'].get(this.props.localId);
+        return this.env.services.messaging.models['mail.attachment_viewer'].get(this.props.localId);
     }
 
     /**

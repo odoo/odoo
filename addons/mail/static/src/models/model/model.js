@@ -80,7 +80,7 @@ function factory() {
          * @returns {mail.model[]}
          */
         static all(filterFunc) {
-            return this.env.modelManager.all(this, filterFunc);
+            return this.env.services.messaging.modelManager.all(this, filterFunc);
         }
 
         /**
@@ -95,7 +95,7 @@ function factory() {
          * @returns {mail.model|mail.model[]} newly created record(s)
          */
         static create(data) {
-            return this.env.modelManager.create(this, data);
+            return this.env.services.messaging.modelManager.create(this, data);
         }
 
         /**
@@ -106,7 +106,7 @@ function factory() {
          * @returns {mail.model|undefined}
          */
         static find(findFunc) {
-            return this.env.modelManager.find(this, findFunc);
+            return this.env.services.messaging.modelManager.find(this, findFunc);
         }
 
         /**
@@ -119,7 +119,7 @@ function factory() {
          * @returns {mail.model|undefined}
          */
         static findFromIdentifyingData(data) {
-            return this.env.modelManager.findFromIdentifyingData(this, data);
+            return this.env.services.messaging.modelManager.findFromIdentifyingData(this, data);
         }
 
         /**
@@ -136,7 +136,7 @@ function factory() {
          * @returns {mail.model|undefined}
          */
         static get(localId, { isCheckingInheritance } = {}) {
-            return this.env.modelManager.get(this, localId, { isCheckingInheritance });
+            return this.env.services.messaging.modelManager.get(this, localId, { isCheckingInheritance });
         }
 
         /**
@@ -149,7 +149,7 @@ function factory() {
          * @returns {mail.model|mail.model[]} created or updated record(s).
          */
         static insert(data) {
-            return this.env.modelManager.insert(this, data);
+            return this.env.services.messaging.modelManager.insert(this, data);
         }
 
         /**
@@ -186,7 +186,7 @@ function factory() {
          * This method deletes this record.
          */
         delete() {
-            this.env.modelManager.delete(this);
+            this.env.services.messaging.modelManager.delete(this);
         }
 
         /**
@@ -195,7 +195,7 @@ function factory() {
          * @returns {boolean}
          */
         exists() {
-            return this.env.modelManager.exists(this.constructor, this);
+            return this.env.services.messaging.modelManager.exists(this.constructor, this);
         }
 
         /**
@@ -204,7 +204,7 @@ function factory() {
          * @param {Object} [data={}]
          */
         update(data = {}) {
-            this.env.modelManager.update(this, data);
+            this.env.services.messaging.modelManager.update(this, data);
         }
 
         //----------------------------------------------------------------------

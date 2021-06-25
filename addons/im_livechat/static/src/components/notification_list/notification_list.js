@@ -20,7 +20,7 @@ patch(components.NotificationList.prototype, 'im_livechat/static/src/components/
      */
     _useStoreSelectorThreads(props) {
         if (props.filter === 'livechat') {
-            return this.env.models['mail.thread'].all(thread =>
+            return this.env.services.messaging.models['mail.thread'].all(thread =>
                 thread.channel_type === 'livechat' &&
                 thread.isPinned &&
                 thread.model === 'mail.channel'

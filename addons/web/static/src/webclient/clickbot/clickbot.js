@@ -56,20 +56,9 @@
 
         // This test file is not respecting Odoo module dependencies.
         // The following module might not be loaded (eg. if mail is not installed).
-        const DiscussWidgetModule = odoo.__DEBUG__.services["@mail/widgets/discuss/discuss"];
-        const DiscussWidget = DiscussWidgetModule && DiscussWidgetModule[Symbol.for("default")];
-        if (DiscussWidget) {
-            DiscussWidget.include({
-                /**
-                 * Overriding a method that is called every time the discuss
-                 * component is updated.
-                 */
-                _updateControlPanel: async function () {
-                    await this._super(...arguments);
-                    viewUpdateCount++;
-                },
-            });
-        }
+        odoo.__WOWL_DEBUG__.root.env.services.messaging.messaginBus.on('o-discuss-component-mounted', null, () => {
+            viewUpdateCount++;
+        });
     }
 
     /**

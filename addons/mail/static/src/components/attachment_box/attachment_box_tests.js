@@ -49,7 +49,7 @@ QUnit.test('base empty rendering', async function (assert) {
     assert.expect(4);
 
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -101,7 +101,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -137,7 +137,7 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
     assert.expect(5);
 
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -213,7 +213,7 @@ QUnit.test('view attachments', async function (assert) {
     await this.start({
         hasDialog: true,
     });
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         attachments: [
             insert({
                 id: 143,
@@ -229,7 +229,7 @@ QUnit.test('view attachments', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    const firstAttachment = this.env.models['mail.attachment'].findFromIdentifyingData({ id: 143 });
+    const firstAttachment = this.env.services.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 143 });
     await this.createAttachmentBoxComponent(thread);
 
     await afterNextRender(() =>
@@ -287,7 +287,7 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
     assert.expect(5);
 
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         attachments: insert({
             id: 143,
             mimetype: 'text/plain',

@@ -53,7 +53,7 @@ QUnit.test('basic rendering', async function (assert) {
     assert.expect(12);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         author: insert({ id: 7, display_name: "Demo User" }),
         body: "<p>Test</p>",
         date: moment(),
@@ -68,7 +68,7 @@ QUnit.test('basic rendering', async function (assert) {
     const messageEl = document.querySelector('.o_Message');
     assert.strictEqual(
         messageEl.dataset.messageLocalId,
-        this.env.models['mail.message'].findFromIdentifyingData({ id: 100 }).localId,
+        this.env.services.messaging.models['mail.message'].findFromIdentifyingData({ id: 100 }).localId,
         "message component should be linked to message store model"
     );
     assert.strictEqual(
@@ -128,15 +128,15 @@ QUnit.test('Notification Sent', async function (assert) {
 
     this.data['mail.channel'].records.push({ id: 11 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.env.services.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 10,
         message_type: 'email',
         notifications: insert({
@@ -224,15 +224,15 @@ QUnit.test('Notification Error', async function (assert) {
 
     this.data['mail.channel'].records.push({ id: 11 });
     await this.start({ env: { bus } });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.env.services.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 10,
         message_type: 'email',
         notifications: insert({
@@ -287,19 +287,19 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
         members: [this.data.currentPartnerId, 11],
     });
     await this.start();
-    const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.messaging.currentPartner.id,
+    const currentPartner = this.env.services.messaging.models['mail.partner'].insert({
+        id: this.env.services.messaging.messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.env.services.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
@@ -353,19 +353,19 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
         members: [this.data.currentPartnerId, 11],
     });
     await this.start();
-    const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.messaging.currentPartner.id,
+    const currentPartner = this.env.services.messaging.models['mail.partner'].insert({
+        id: this.env.services.messaging.messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.env.services.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
@@ -418,19 +418,19 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
         members: [this.data.currentPartnerId, 11],
     });
     await this.start();
-    const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.messaging.currentPartner.id,
+    const currentPartner = this.env.services.messaging.models['mail.partner'].insert({
+        id: this.env.services.messaging.messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.env.services.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
@@ -491,18 +491,18 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
     assert.expect(2);
 
     await this.start();
-    const author = this.env.models['mail.partner'].create({
+    const author = this.env.services.messaging.models['mail.partner'].create({
         id: 100,
         display_name: "Demo User"
     });
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         channel_type: 'chat',
         id: 11,
         partnerSeenInfos: create([
             {
                 channelId: 11,
                 lastFetchedMessage: insert({ id: 100 }),
-                partnerId: this.env.messaging.currentPartner.id,
+                partnerId: this.env.services.messaging.messaging.currentPartner.id,
             },
             {
                 channelId: 11,
@@ -512,11 +512,11 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
         ]),
         model: 'mail.channel',
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.env.services.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const message = this.env.models['mail.message'].insert({
+    const message = this.env.services.messaging.models['mail.message'].insert({
         author: link(author),
         body: "<p>Test</p>",
         id: 100,
@@ -540,11 +540,11 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
     assert.expect(3);
 
     await this.start();
-    const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.messaging.currentPartner.id,
+    const currentPartner = this.env.services.messaging.models['mail.partner'].insert({
+        id: this.env.services.messaging.messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         channel_type: 'chat',
         id: 11,
         messageSeenIndicators: insert({
@@ -553,27 +553,27 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         }),
         model: 'mail.channel',
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.env.services.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const lastSeenMessage = this.env.models['mail.message'].create({
+    const lastSeenMessage = this.env.services.messaging.models['mail.message'].create({
         author: link(currentPartner),
         body: "<p>You already saw me</p>",
         id: 100,
         originThread: link(thread),
     });
-    const message = this.env.models['mail.message'].insert({
+    const message = this.env.services.messaging.models['mail.message'].insert({
         author: link(currentPartner),
         body: "<p>Test</p>",
         id: 99,
         originThread: link(thread),
     });
-    this.env.models['mail.thread_partner_seen_info'].insert([
+    this.env.services.messaging.models['mail.thread_partner_seen_info'].insert([
         {
             channelId: 11,
             lastSeenMessage: link(lastSeenMessage),
-            partnerId: this.env.messaging.currentPartner.id,
+            partnerId: this.env.services.messaging.messaging.currentPartner.id,
         },
         {
             channelId: 11,
@@ -606,18 +606,18 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
     assert.expect(3);
 
     await this.start();
-    const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.messaging.currentPartner.id,
+    const currentPartner = this.env.services.messaging.models['mail.partner'].insert({
+        id: this.env.services.messaging.messaging.currentPartner.id,
         display_name: "Demo User"
     });
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.services.messaging.models['mail.thread'].create({
         channel_type: 'chat',
         id: 11,
         partnerSeenInfos: create([
             {
                 channelId: 11,
                 lastSeenMessage: insert({ id: 100 }),
-                partnerId: this.env.messaging.currentPartner.id,
+                partnerId: this.env.services.messaging.messaging.currentPartner.id,
             },
             {
                 channelId: 11,
@@ -632,11 +632,11 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
         }),
         model: 'mail.channel',
     });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.env.services.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
-    const message = this.env.models['mail.message'].insert({
+    const message = this.env.services.messaging.models['mail.message'].insert({
         author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
@@ -668,13 +668,13 @@ QUnit.test('allow attachment delete on authored message', async function (assert
     assert.expect(5);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         attachments: insertAndReplace({
             filename: "BLAH.jpg",
             id: 10,
             name: "BLAH",
         }),
-        author: link(this.env.messaging.currentPartner),
+        author: link(this.env.services.messaging.messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -717,7 +717,7 @@ QUnit.test('prevent attachment delete on non-authored message', async function (
     assert.expect(2);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         attachments: insertAndReplace({
             filename: "BLAH.jpg",
             id: 10,
@@ -745,7 +745,7 @@ QUnit.test('subtype description should be displayed if it is different than body
     assert.expect(2);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         body: "<p>Hello</p>",
         id: 100,
         subtype_description: 'Bonjour',
@@ -767,7 +767,7 @@ QUnit.test('subtype description should not be displayed if it is similar to body
     assert.expect(2);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         body: "<p>Hello</p>",
         id: 100,
         subtype_description: 'hello',
@@ -808,7 +808,7 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
         assert.step('do-action:openFormView_some.model_250');
     });
     await this.start({ env: { bus } });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         body: `<p><a href="#" data-oe-id="250" data-oe-model="some.model">some.model_250</a></p>`,
         id: 100,
     });
@@ -839,7 +839,7 @@ QUnit.test('chat with author should be opened after clicking on his avatar', asy
     await this.start({
         hasChatWindow: true,
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         author: insert({ id: 10 }),
         id: 10,
     });
@@ -878,7 +878,7 @@ QUnit.test('chat with author should be opened after clicking on his im status ic
     await this.start({
         hasChatWindow: true,
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         author: insert({ id: 10, im_status: 'online' }),
         id: 10,
     });
@@ -922,13 +922,13 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
     await this.start({
         hasChatWindow: true,
     });
-    const correspondent = this.env.models['mail.partner'].insert({ id: 10 });
-    const message = this.env.models['mail.message'].create({
+    const correspondent = this.env.services.messaging.models['mail.partner'].insert({ id: 10 });
+    const message = this.env.services.messaging.models['mail.message'].create({
         author: link(correspondent),
         id: 10,
     });
     const thread = await correspondent.getChat();
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.env.services.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: link(thread),
     });
@@ -959,7 +959,7 @@ QUnit.test('basic rendering of tracking value (float type)', async function (ass
     assert.expect(8);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Total",
@@ -1016,7 +1016,7 @@ QUnit.test('rendering of tracked field of type integer: from non-0 to 0', async 
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Total",
@@ -1038,7 +1038,7 @@ QUnit.test('rendering of tracked field of type integer: from 0 to non-0', async 
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Total",
@@ -1060,7 +1060,7 @@ QUnit.test('rendering of tracked field of type float: from non-0 to 0', async fu
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Total",
@@ -1082,7 +1082,7 @@ QUnit.test('rendering of tracked field of type float: from 0 to non-0', async fu
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Total",
@@ -1104,7 +1104,7 @@ QUnit.test('rendering of tracked field of type monetary: from non-0 to 0', async
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Total",
@@ -1126,7 +1126,7 @@ QUnit.test('rendering of tracked field of type monetary: from 0 to non-0', async
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Total",
@@ -1148,7 +1148,7 @@ QUnit.test('rendering of tracked field of type boolean: from true to false', asy
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Is Ready",
@@ -1170,7 +1170,7 @@ QUnit.test('rendering of tracked field of type boolean: from false to true', asy
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Is Ready",
@@ -1192,7 +1192,7 @@ QUnit.test('rendering of tracked field of type char: from a string to empty stri
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Name",
@@ -1214,7 +1214,7 @@ QUnit.test('rendering of tracked field of type char: from empty string to a stri
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Name",
@@ -1236,7 +1236,7 @@ QUnit.test('rendering of tracked field of type date: from no date to a set date'
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Deadline",
@@ -1258,7 +1258,7 @@ QUnit.test('rendering of tracked field of type date: from a set date to no date'
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Deadline",
@@ -1280,7 +1280,7 @@ QUnit.test('rendering of tracked field of type datetime: from no date and time t
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Deadline",
@@ -1302,7 +1302,7 @@ QUnit.test('rendering of tracked field of type datetime: from a set date and tim
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Deadline",
@@ -1324,7 +1324,7 @@ QUnit.test('rendering of tracked field of type text: from some text to empty', a
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Name",
@@ -1346,7 +1346,7 @@ QUnit.test('rendering of tracked field of type text: from empty to some text', a
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Name",
@@ -1368,7 +1368,7 @@ QUnit.test('rendering of tracked field of type selection: from a selection to no
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "State",
@@ -1390,7 +1390,7 @@ QUnit.test('rendering of tracked field of type selection: from no selection to a
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "State",
@@ -1412,7 +1412,7 @@ QUnit.test('rendering of tracked field of type many2one: from having a related r
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Author",
@@ -1434,7 +1434,7 @@ QUnit.test('rendering of tracked field of type many2one: from no related record 
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Author",
@@ -1462,7 +1462,7 @@ QUnit.test('basic rendering of tracking value (monetary type)', async function (
             },
         },
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 11,
         tracking_value_ids: [{
             changed_field: "Revenue",
@@ -1521,7 +1521,7 @@ QUnit.test('message should not be considered as "clicked" after clicking on its 
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         author: [['insert', { id: 7, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
@@ -1540,7 +1540,7 @@ QUnit.test('message should not be considered as "clicked" after clicking on its 
     assert.expect(1);
 
     await this.start();
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         author: [['insert', { id: 7, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
@@ -1559,14 +1559,14 @@ QUnit.test('message should not be considered as "clicked" after clicking on noti
     assert.expect(1);
 
     await this.start();
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.env.services.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: [['create', {
             id: 11,
             model: 'mail.channel',
         }]],
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 10,
         message_type: 'email',
         notifications: [['insert', {

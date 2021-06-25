@@ -31,7 +31,7 @@ function factory(dependencies) {
          */
         toggleOpen() {
             this.update({ isOpen: !this.isOpen });
-            this.env.messaging.refreshIsNotificationPermissionDefault();
+            this.env.services.messaging.messaging.refreshIsNotificationPermissionDefault();
         }
 
         //----------------------------------------------------------------------
@@ -45,7 +45,7 @@ function factory(dependencies) {
             if (!this.isOpen) {
                 return;
             }
-            const inbox = this.env.messaging.inbox;
+            const inbox = this.env.services.messaging.messaging.inbox;
             if (!inbox || !inbox.cache) {
                 return;
             }
@@ -58,11 +58,11 @@ function factory(dependencies) {
          * @returns {integer}
          */
         _computeCounter() {
-            if (!this.env.messaging) {
+            if (!this.env.services.messaging.messaging) {
                 return 0;
             }
-            const inboxCounter = this.env.messaging.inbox ? this.env.messaging.inbox.counter : 0;
-            const unreadChannelsCounter = this.env.messaging.allPinnedChannels.filter(
+            const inboxCounter = this.env.services.messaging.messaging.inbox ? this.env.services.messaging.messaging.inbox.counter : 0;
+            const unreadChannelsCounter = this.env.services.messaging.messaging.allPinnedChannels.filter(
                 channel => channel.localMessageUnreadCounter > 0
             ).length;
             const notificationGroupsCounter = this.messaging.notificationGroupManager

@@ -21,7 +21,7 @@ export class AttachmentList extends Component {
             },
         });
         useStore(props => {
-            const attachments = this.env.models['mail.attachment'].all().filter(attachment =>
+            const attachments = this.env.services.messaging.models['mail.attachment'].all().filter(attachment =>
                 props.attachmentLocalIds.includes(attachment.localId)
             );
             return {
@@ -44,7 +44,7 @@ export class AttachmentList extends Component {
      * @returns {mail.attachment[]}
      */
     get attachments() {
-        return this.env.models['mail.attachment'].all().filter(attachment =>
+        return this.env.services.messaging.models['mail.attachment'].all().filter(attachment =>
             this.props.attachmentLocalIds.includes(attachment.localId)
         );
     }

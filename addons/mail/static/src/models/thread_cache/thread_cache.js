@@ -216,13 +216,13 @@ function factory(dependencies) {
          */
         _extendMessageDomain(domain) {
             const thread = this.thread;
-            if (thread === this.env.messaging.inbox) {
+            if (thread === this.env.services.messaging.messaging.inbox) {
                 return domain.concat([['needaction', '=', true]]);
-            } else if (thread === this.env.messaging.starred) {
+            } else if (thread === this.env.services.messaging.messaging.starred) {
                 return domain.concat([
-                    ['starred_partner_ids', 'in', [this.env.messaging.currentPartner.id]],
+                    ['starred_partner_ids', 'in', [this.env.services.messaging.messaging.currentPartner.id]],
                 ]);
-            } else if (thread === this.env.messaging.history) {
+            } else if (thread === this.env.services.messaging.messaging.history) {
                 return domain.concat([['needaction', '=', false]]);
             } else {
                 // Avoid to load user_notification as these messages are not
@@ -250,11 +250,11 @@ function factory(dependencies) {
             if (extraDomain) {
                 domain = extraDomain.concat(domain);
             }
-            const context = this.env.session.user_context;
+            const context = this.env.services.user.context;
             let messages;
             try {
                 messages = await this.async(() =>
-                    this.env.models['mail.message'].performRpcMessageFetch(
+                    this.env.services.messaging.models['mail.message'].performRpcMessageFetch(
                         domain,
                         limit,
                         context,
@@ -276,7 +276,7 @@ function factory(dependencies) {
             if (!extraDomain && messages.length < limit) {
                 this.update({ isAllHistoryLoaded: true });
             }
-            this.env.messagingBus.trigger('o-thread-cache-loaded-messages', {
+            this.env.services.messaging.messagingBus.trigger('o-thread-cache-loaded-messages', {
                 fetchedMessages: messages,
                 threadCache: this,
             });
@@ -323,7 +323,7 @@ function factory(dependencies) {
                 // ignore the request
                 return;
             }
-            this.env.models['mail.message'].markAllAsRead([
+            this.env.services.messaging.models['mail.message'].markAllAsRead([
                 ['model', '=', this.thread.model],
                 ['res_id', '=', this.thread.id],
             ]);

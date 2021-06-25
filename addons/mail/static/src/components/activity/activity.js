@@ -33,7 +33,7 @@ export class Activity extends Component {
             areDetailsVisible: false,
         });
         useStore(props => {
-            const activity = this.env.models['mail.activity'].get(props.activityLocalId);
+            const activity = this.env.services.messaging.models['mail.activity'].get(props.activityLocalId);
             return {
                 activity: activity ? activity.__state : undefined,
                 assigneeNameOrDisplayName: (
@@ -58,7 +58,7 @@ export class Activity extends Component {
      * @returns {mail.activity}
      */
     get activity() {
-        return this.env.models['mail.activity'].get(this.props.activityLocalId);
+        return this.env.services.messaging.models['mail.activity'].get(this.props.activityLocalId);
     }
 
     /**
@@ -145,7 +145,7 @@ export class Activity extends Component {
             ev.target.dataset.oeId &&
             ev.target.dataset.oeModel
         ) {
-            this.env.messaging.openProfile({
+            this.env.services.messaging.messaging.openProfile({
                 id: Number(ev.target.dataset.oeId),
                 model: ev.target.dataset.oeModel,
             });

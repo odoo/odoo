@@ -19,6 +19,7 @@ FormRenderer.include({
      */
     init(parent, state, params) {
         this._super(...arguments);
+        this.env = undefined;
         this.chatterFields = params.chatterFields;
         this.mailFields = params.mailFields;
         this._chatterContainerComponent = undefined;
@@ -30,6 +31,11 @@ FormRenderer.include({
         // Do not load chatter in form view dialogs
         this._isFromFormViewDialog = params.isFromFormViewDialog;
     },
+    async willStart(...args) {
+        const res = await this._super(...args);
+        this.env = this.getParent().getParent().wowlEnv;
+        return res;
+    },
     /**
      * @override
      */
@@ -39,7 +45,7 @@ FormRenderer.include({
         this.off('o_attachments_changed', this);
         this.off('o_chatter_rendered', this);
         this.off('o_message_posted', this);
-        owl.Component.env.bus.off('mail.thread:promptAddFollower-closed', this);
+        this.env.services.messaging.messagingBus.off('mail.thread:promptAddFollower-closed', this);
     },
 
     //--------------------------------------------------------------------------
@@ -61,6 +67,7 @@ FormRenderer.include({
      */
     _makeChatterContainerComponent() {
         const props = this._makeChatterContainerProps();
+        ChatterContainerWrapperComponent.env = this.env;
         this._chatterContainerComponent = new ChatterContainerWrapperComponent(
             this,
             components.ChatterContainer,
@@ -78,7 +85,7 @@ FormRenderer.include({
             this.on('o_attachments_changed', this, ev => this.trigger_up('reload', { keepChanges: true }));
         }
         if (this.chatterFields.hasRecordReloadOnFollowersUpdate) {
-            owl.Component.env.bus.on('mail.thread:promptAddFollower-closed', this, ev => this.trigger_up('reload', { keepChanges: true }));
+            this.env.services.messaging.messagingBus.on('mail.thread:promptAddFollower-closed', this, ev => this.trigger_up('reload', { keepChanges: true }));
         }
     },
     /**

@@ -14,15 +14,15 @@ export class MessageAuthorPrefix extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const message = this.env.models['mail.message'].get(props.messageLocalId);
+            const message = this.env.services.messaging.models['mail.message'].get(props.messageLocalId);
             const author = message ? message.author : undefined;
             const thread = props.threadLocalId
-                ? this.env.models['mail.thread'].get(props.threadLocalId)
+                ? this.env.services.messaging.models['mail.thread'].get(props.threadLocalId)
                 : undefined;
             return {
                 author: author ? author.__state : undefined,
-                currentPartner: this.env.messaging.currentPartner
-                    ? this.env.messaging.currentPartner.__state
+                currentPartner: this.env.services.messaging.messaging.currentPartner
+                    ? this.env.services.messaging.messaging.currentPartner.__state
                     : undefined,
                 message: message ? message.__state : undefined,
                 thread: thread ? thread.__state : undefined,
@@ -38,14 +38,14 @@ export class MessageAuthorPrefix extends Component {
      * @returns {mail.message}
      */
     get message() {
-        return this.env.models['mail.message'].get(this.props.messageLocalId);
+        return this.env.services.messaging.models['mail.message'].get(this.props.messageLocalId);
     }
 
     /**
      * @returns {mail.thread|undefined}
      */
     get thread() {
-        return this.env.models['mail.thread'].get(this.props.threadLocalId);
+        return this.env.services.messaging.models['mail.thread'].get(this.props.threadLocalId);
     }
 
 }

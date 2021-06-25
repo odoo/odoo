@@ -44,7 +44,7 @@ export class Composer extends Component {
             },
         });
         useStore(props => {
-            const composer = this.env.models['mail.composer'].get(props.composerLocalId);
+            const composer = this.env.services.messaging.models['mail.composer'].get(props.composerLocalId);
             const thread = composer && composer.thread;
             return {
                 composer,
@@ -52,7 +52,7 @@ export class Composer extends Component {
                 composerCanPostMessage: composer && composer.canPostMessage,
                 composerHasFocus: composer && composer.hasFocus,
                 composerIsLog: composer && composer.isLog,
-                isDeviceMobile: this.env.messaging.device.isMobile,
+                isDeviceSmall: this.env.services.messaging.messaging.device.isSmall,
                 thread,
                 threadChannelType: thread && thread.channel_type, // for livechat override
                 threadDisplayName: thread && thread.displayName,
@@ -98,7 +98,7 @@ export class Composer extends Component {
      * @returns {mail.composer}
      */
     get composer() {
-        return this.env.models['mail.composer'].get(this.props.composerLocalId);
+        return this.env.services.messaging.models['mail.composer'].get(this.props.composerLocalId);
     }
 
     /**
@@ -123,12 +123,8 @@ export class Composer extends Component {
      * @returns {string}
      */
     get currentPartnerAvatar() {
-        const avatar = this.env.messaging.currentUser
-            ? this.env.session.url('/web/image', {
-                    field: 'avatar_128',
-                    id: this.env.messaging.currentUser.id,
-                    model: 'res.users',
-                })
+        const avatar = this.env.services.messaging.messaging.currentUser
+            ? `/web/image?model=res.users&field=avatar_128&id=${this.env.services.messaging.messaging.currentUser.id}`
             : '/web/static/img/user_menu_avatar.png';
         return avatar;
     }
@@ -137,7 +133,7 @@ export class Composer extends Component {
      * Focus the composer.
      */
     focus() {
-        if (this.env.messaging.device.isMobile) {
+        if (this.env.services.messaging.messaging.device.isSmall) {
             this.el.scrollIntoView();
         }
         this._textInputRef.comp.focus();
@@ -238,7 +234,7 @@ export class Composer extends Component {
      */
     _onClickAddAttachment() {
         this._fileUploaderRef.comp.openBrowserFileUploader();
-        if (!this.env.device.isMobile) {
+        if (!this.env.services.messaging.messaging.device.isSmall) {
             this.focus();
         }
     }
@@ -326,7 +322,7 @@ export class Composer extends Component {
         ev.stopPropagation();
         this._textInputRef.comp.saveStateInStore();
         this.composer.insertIntoTextInput(ev.detail.unicode);
-        if (!this.env.device.isMobile) {
+        if (!this.env.services.messaging.messaging.device.isSmall) {
             this.focus();
         }
     }

@@ -21,7 +21,7 @@ export class Attachment extends Component {
             },
         });
         useStore(props => {
-            const attachment = this.env.models['mail.attachment'].get(props.attachmentLocalId);
+            const attachment = this.env.services.messaging.models['mail.attachment'].get(props.attachmentLocalId);
             return {
                 attachment: attachment ? attachment.__state : undefined,
             };
@@ -39,7 +39,7 @@ export class Attachment extends Component {
      * @returns {mail.attachment}
      */
     get attachment() {
-        return this.env.models['mail.attachment'].get(this.props.attachmentLocalId);
+        return this.env.services.messaging.models['mail.attachment'].get(this.props.attachmentLocalId);
     }
 
     /**
@@ -51,10 +51,7 @@ export class Attachment extends Component {
         if (this.attachment.isUploading) {
             return '';
         }
-        return this.env.session.url('/web/content', {
-            id: this.attachment.id,
-            download: true,
-        });
+        return `/web/image?id=${this.attachment.id}&download=true`;
     }
 
     /**
@@ -81,7 +78,7 @@ export class Attachment extends Component {
         if (this.attachment.fileType !== 'image') {
             return '';
         }
-        if (this.env.isQUnitTest) {
+        if (this.env.services.messaging.isQUnitTest) {
             // background-image:url is hardly mockable, and attachments in
             // QUnit tests do not actually exist in DB, so style should not
             // be fetched at all.
@@ -130,10 +127,10 @@ export class Attachment extends Component {
         if (!this.attachment.isViewable) {
             return;
         }
-        this.env.models['mail.attachment'].view({
+        this.env.services.messaging.models['mail.attachment'].view({
             attachment: this.attachment,
             attachments: this.props.attachmentLocalIds.map(
-                attachmentLocalId => this.env.models['mail.attachment'].get(attachmentLocalId)
+                attachmentLocalId => this.env.services.messaging.models['mail.attachment'].get(attachmentLocalId)
             ),
         });
     }

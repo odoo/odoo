@@ -4,6 +4,8 @@ import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_up
 import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { PartnerImStatusIcon } from '@mail/components/partner_im_status_icon/partner_im_status_icon';
 
+import { browser } from '@web/core/browser/browser';
+
 const { Component } = owl;
 
 const components = { PartnerImStatusIcon };
@@ -18,9 +20,9 @@ export class NotificationRequest extends Component {
         useShouldUpdateBasedOnProps();
         useStore(props => {
             return {
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                partnerRoot: this.env.messaging.partnerRoot
-                    ? this.env.messaging.partnerRoot.__state
+                isDeviceSmall: this.env.services.messaging.messaging.device.isSmall,
+                partnerRoot: this.env.services.messaging.messaging.partnerRoot
+                    ? this.env.services.messaging.messaging.partnerRoot.__state
                     : undefined,
             };
         });
@@ -36,7 +38,7 @@ export class NotificationRequest extends Component {
     getHeaderText() {
         return _.str.sprintf(
             this.env._t("%s has a request"),
-            this.env.messaging.partnerRoot.nameOrDisplayName
+            this.env.services.messaging.messaging.partnerRoot.nameOrDisplayName
         );
     }
 
@@ -52,7 +54,7 @@ export class NotificationRequest extends Component {
      * @param {string} value
      */
     _handleResponseNotificationPermission(value) {
-        this.env.messaging.refreshIsNotificationPermissionDefault();
+        this.env.services.messaging.messaging.refreshIsNotificationPermissionDefault();
         if (value !== 'granted') {
             this.env.services['bus_service'].sendNotification({
                 message: this.env._t("Odoo will not have the permission to send native notifications on this device."),
@@ -69,13 +71,12 @@ export class NotificationRequest extends Component {
      * @private
      */
     _onClick() {
-        const windowNotification = this.env.browser.Notification;
-        const def = windowNotification && windowNotification.requestPermission();
+        const def = browser.Notification && browser.Notification.requestPermission();
         if (def) {
             def.then(this._handleResponseNotificationPermission.bind(this));
         }
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.messagingMenu.close();
+        if (!this.env.services.messaging.messaging.device.isSmall) {
+            this.env.services.messaging.messaging.messagingMenu.close();
         }
     }
 

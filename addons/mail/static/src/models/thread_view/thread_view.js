@@ -5,6 +5,8 @@ import { RecordDeletedError } from '@mail/model/model_errors';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
 import { clear, create, link, unlink } from '@mail/model/model_field_command';
 
+import { browser } from '@web/core/browser/browser';
+
 function factory(dependencies) {
 
     class ThreadView extends dependencies['mail.model'] {
@@ -13,7 +15,7 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
-            this.env.browser.clearTimeout(this._loaderTimeout);
+            browser.clearTimeout(this._loaderTimeout);
             return super._willDelete(...arguments);
         }
 
@@ -47,7 +49,7 @@ function factory(dependencies) {
             this.update({
                 componentHintList: this.componentHintList.filter(h => h !== hint),
             });
-            this.env.messagingBus.trigger('o-thread-view-hint-processed', {
+            this.env.services.messaging.messagingBus.trigger('o-thread-view-hint-processed', {
                 hint,
                 threadViewer: this.threadViewer,
             });
@@ -71,7 +73,7 @@ function factory(dependencies) {
          * @returns {mail.messaging}
          */
         _computeMessaging() {
-            return link(this.env.messaging);
+            return link(this.env.services.messaging.messaging);
         }
 
         /**
@@ -86,7 +88,7 @@ function factory(dependencies) {
             // Hence, we want to use a different shortcut 'ctrl/meta enter' to send for small screen
             // size with a non-mailing channel.
             // here send will be done on clicking the button or using the 'ctrl/meta enter' shortcut.
-            if (this.env.messaging.device.isMobile) {
+            if (this.env.services.messaging.messaging.device.isSmall) {
                 return ['ctrl-enter', 'meta-enter'];
             }
             return ['enter'];
@@ -192,7 +194,7 @@ function factory(dependencies) {
                     this.update({ isPreparingLoading: true });
                     this.async(() =>
                         new Promise(resolve => {
-                            this._loaderTimeout = this.env.browser.setTimeout(resolve, 400);
+                            this._loaderTimeout = browser.setTimeout(resolve, 400);
                         }
                     )).then(() => {
                         const isLoading = this.threadCache
@@ -203,7 +205,7 @@ function factory(dependencies) {
                 }
                 return;
             }
-            this.env.browser.clearTimeout(this._loaderTimeout);
+            browser.clearTimeout(this._loaderTimeout);
             this.update({ isLoading: false, isPreparingLoading: false });
         }
     }
@@ -242,8 +244,8 @@ function factory(dependencies) {
         /**
          * Serves as compute dependency.
          */
-        deviceIsMobile: attr({
-            related: 'device.isMobile',
+        deviceIsSmall: attr({
+            related: 'device.isSmall',
         }),
         hasComposerFocus: attr({
             related: 'composer.hasFocus',
@@ -349,7 +351,7 @@ function factory(dependencies) {
             compute: '_computeTextInputSendShortcuts',
             dependencies: [
                 'device',
-                'deviceIsMobile',
+                'deviceIsSmall',
                 'thread',
                 'threadModel',
             ],

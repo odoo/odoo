@@ -21,14 +21,14 @@ export class ChatWindowHeader extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const chatWindow = this.env.models['mail.chat_window'].get(props.chatWindowLocalId);
+            const chatWindow = this.env.services.messaging.models['mail.chat_window'].get(props.chatWindowLocalId);
             const thread = chatWindow && chatWindow.thread;
             return {
                 chatWindow,
                 chatWindowHasShiftNext: chatWindow && chatWindow.hasShiftNext,
                 chatWindowHasShiftPrev: chatWindow && chatWindow.hasShiftPrev,
                 chatWindowName: chatWindow && chatWindow.name,
-                isDeviceMobile: this.env.messaging.device.isMobile,
+                isDeviceSmall: this.env.services.messaging.messaging.device.isSmall,
                 thread,
                 threadLocalMessageUnreadCounter: thread && thread.localMessageUnreadCounter,
                 threadModel: thread && thread.model,
@@ -44,14 +44,14 @@ export class ChatWindowHeader extends Component {
      * @returns {mail.chat_window}
      */
     get chatWindow() {
-        return this.env.models['mail.chat_window'].get(this.props.chatWindowLocalId);
+        return this.env.services.messaging.models['mail.chat_window'].get(this.props.chatWindowLocalId);
     }
 
     /**
      * @returns {string}
      */
     get shiftNextText() {
-        if (this.env.messaging.locale.textDirection === 'rtl') {
+        if (this.env.services.messaging.messaging.locale.textDirection === 'rtl') {
             return this.env._t("Shift left");
         }
         return this.env._t("Shift right");
@@ -61,7 +61,7 @@ export class ChatWindowHeader extends Component {
      * @returns {string}
      */
     get shiftPrevText() {
-        if (this.env.messaging.locale.textDirection === 'rtl') {
+        if (this.env.services.messaging.messaging.locale.textDirection === 'rtl') {
             return this.env._t("Shift right");
         }
         return this.env._t("Shift left");

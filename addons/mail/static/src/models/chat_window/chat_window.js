@@ -16,8 +16,8 @@ function factory(dependencies) {
             this._onShowHomeMenu.bind(this);
             this._onHideHomeMenu.bind(this);
 
-            this.env.messagingBus.on('hide_home_menu', this, this._onHideHomeMenu);
-            this.env.messagingBus.on('show_home_menu', this, this._onShowHomeMenu);
+            this.env.services.messaging.messagingBus.on('hide_home_menu', this, this._onHideHomeMenu);
+            this.env.services.messaging.messagingBus.on('show_home_menu', this, this._onShowHomeMenu);
             return res;
         }
 
@@ -25,8 +25,8 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
-            this.env.messagingBus.off('hide_home_menu', this, this._onHideHomeMenu);
-            this.env.messagingBus.off('show_home_menu', this, this._onShowHomeMenu);
+            this.env.services.messaging.messagingBus.off('hide_home_menu', this, this._onHideHomeMenu);
+            this.env.services.messaging.messagingBus.off('show_home_menu', this, this._onShowHomeMenu);
             return super._willDelete(...arguments);
         }
 
@@ -42,7 +42,7 @@ function factory(dependencies) {
          */
         close({ notifyServer } = {}) {
             if (notifyServer === undefined) {
-                notifyServer = !this.env.messaging.device.isMobile;
+                notifyServer = !this.env.services.messaging.messaging.device.isSmall;
             }
             const thread = this.thread;
             this.delete();
@@ -52,12 +52,15 @@ function factory(dependencies) {
             if (thread && notifyServer) {
                 thread.notifyFoldStateToServer('closed');
             }
-            if (this.env.device.isMobile && !this.env.messaging.discuss.isOpen) {
+            if (
+                this.env.services.messaging.messaging.device.isSmall &&
+                !this.env.services.messaging.messaging.discuss.isOpen
+            ) {
                 // If we are in mobile and discuss is not open, it means the
                 // chat window was opened from the messaging menu. In that
                 // case it should be re-opened to simulate it was always
                 // there in the background.
-                this.env.messaging.messagingMenu.update({ isOpen: true });
+                this.env.services.messaging.messaging.messagingMenu.update({ isOpen: true });
             }
         }
 
@@ -95,7 +98,7 @@ function factory(dependencies) {
          */
         fold({ notifyServer } = {}) {
             if (notifyServer === undefined) {
-                notifyServer = !this.env.messaging.device.isMobile;
+                notifyServer = !this.env.services.messaging.messaging.device.isSmall;
             }
             this.update({ isFolded: true });
             // Flux specific: manually folding the chat window should save the
@@ -149,7 +152,7 @@ function factory(dependencies) {
          */
         unfold({ notifyServer } = {}) {
             if (notifyServer === undefined) {
-                notifyServer = !this.env.messaging.device.isMobile;
+                notifyServer = !this.env.services.messaging.messaging.device.isSmall;
             }
             this.update({ isFolded: false });
             // Flux specific: manually opening the chat window should save the

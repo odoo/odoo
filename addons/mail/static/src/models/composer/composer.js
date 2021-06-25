@@ -69,7 +69,7 @@ function factory(dependencies) {
          * same time.
          */
         focus() {
-            const allComposers = this.env.models['mail.composer'].all();
+            const allComposers = this.env.services.messaging.models['mail.composer'].all();
             for (const otherComposer of allComposers) {
                 if (otherComposer !== this && otherComposer.hasFocus) {
                     otherComposer.update({ hasFocus: false });
@@ -195,7 +195,10 @@ function factory(dependencies) {
                     this.thread.loadNewMessages();
                 },
             };
-            await this.env.bus.trigger('do-action', { action, options });
+            await this.env.services.action.doAction(
+                action,
+                options,
+            );
         }
 
         /**
@@ -230,14 +233,14 @@ function factory(dependencies) {
                         subtype_xmlid: 'mail.mt_comment',
                     });
                     if (command) {
-                        messageId = await this.async(() => this.env.models['mail.thread'].performRpcExecuteCommand({
+                        messageId = await this.async(() => this.env.services.messaging.models['mail.thread'].performRpcExecuteCommand({
                             channelId: thread.id,
                             command: command.name,
                             postData,
                         }));
                     } else {
                         messageId = await this.async(() =>
-                            this.env.models['mail.thread'].performRpcMessagePost({
+                            this.env.services.messaging.models['mail.thread'].performRpcMessagePost({
                                 postData,
                                 threadId: thread.id,
                                 threadModel: thread.model,
@@ -254,20 +257,20 @@ function factory(dependencies) {
                         };
                     }
                     messageId = await this.async(() =>
-                        this.env.models['mail.thread'].performRpcMessagePost({
+                        this.env.services.messaging.models['mail.thread'].performRpcMessagePost({
                             postData,
                             threadId: thread.id,
                             threadModel: thread.model,
                         })
                     );
-                    const [messageData] = await this.async(() => this.env.services.rpc({
-                        model: 'mail.message',
-                        method: 'message_format',
-                        args: [[messageId]],
-                    }, { shadow: true }));
-                    this.env.models['mail.message'].insert(Object.assign(
+                    const [messageData] = await this.async(() => this.env.services.orm.silent.call(
+                        'mail.message',
+                        'message_format',
+                        [[messageId]],
+                    ));
+                    this.env.services.messaging.models['mail.message'].insert(Object.assign(
                         {},
-                        this.env.models['mail.message'].convertData(messageData),
+                        this.env.services.messaging.models['mail.message'].convertData(messageData),
                         {
                             originThread: insert({
                                 id: thread.id,
@@ -304,7 +307,7 @@ function factory(dependencies) {
             ) {
                 return;
             }
-            if (this.thread.typingMembers.includes(this.env.messaging.currentPartner)) {
+            if (this.thread.typingMembers.includes(this.env.services.messaging.messaging.currentPartner)) {
                 this.thread.refreshCurrentPartnerIsTyping();
             } else {
                 this.thread.registerCurrentPartnerIsTyping();
@@ -679,9 +682,8 @@ function factory(dependencies) {
                 });
                 body = body.replace(text, placeholder);
             }
-            const baseHREF = this.env.session.url('/web');
             for (const mention of mentions) {
-                const href = `href='${baseHREF}#model=${mention.model}&id=${mention.id}'`;
+                const href = `href='/web#model=${mention.model}&id=${mention.id}'`;
                 const attClass = `class='${mention.class}'`;
                 const dataOeId = `data-oe-id='${mention.id}'`;
                 const dataOeModel = `data-oe-model='${mention.model}'`;
@@ -700,7 +702,7 @@ function factory(dependencies) {
         _getCommandFromText(content) {
             if (content.startsWith('/')) {
                 const firstWord = content.substring(1).split(/\s/)[0];
-                return this.env.messaging.commands.find(command => {
+                return this.env.services.messaging.messaging.commands.find(command => {
                     if (command.name !== firstWord) {
                         return false;
                     }
@@ -732,7 +734,7 @@ function factory(dependencies) {
                     // ignore obsolete call
                     return;
                 }
-                const Model = this.env.models[this.suggestionModelName];
+                const Model = this.env.services.messaging.models[this.suggestionModelName];
                 const searchTerm = this.suggestionSearchTerm;
                 await this.async(() => Model.fetchSuggestions(searchTerm, { thread: this.thread }));
                 this._updateSuggestionList();
@@ -740,7 +742,7 @@ function factory(dependencies) {
                     this.suggestionSearchTerm &&
                     this.suggestionSearchTerm === searchTerm &&
                     this.suggestionModelName &&
-                    this.env.models[this.suggestionModelName] === Model &&
+                    this.env.services.messaging.models[this.suggestionModelName] === Model &&
                     !this.hasSuggestions
                 ) {
                     this.closeSuggestions();
@@ -781,7 +783,7 @@ function factory(dependencies) {
             ) {
                 return;
             }
-            const Model = this.env.models[this.suggestionModelName];
+            const Model = this.env.services.messaging.models[this.suggestionModelName];
             const [
                 mainSuggestedRecords,
                 extraSuggestedRecords = [],

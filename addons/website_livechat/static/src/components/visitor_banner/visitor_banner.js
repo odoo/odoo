@@ -13,7 +13,7 @@ class VisitorBanner extends Component {
     constructor(...args) {
         super(...args);
         useStore(props => {
-            const visitor = this.env.models['website_livechat.visitor'].get(props.visitorLocalId);
+            const visitor = this.env.services.messaging.models['website_livechat.visitor'].get(props.visitorLocalId);
             const country = visitor && visitor.country;
             return {
                 country: country && country.__state,
@@ -30,7 +30,7 @@ class VisitorBanner extends Component {
      * @returns {website_livechat.visitor}
      */
     get visitor() {
-        return this.env.models['website_livechat.visitor'].get(this.props.visitorLocalId);
+        return this.env.services.messaging.models['website_livechat.visitor'].get(this.props.visitorLocalId);
     }
 
 }

@@ -3,6 +3,8 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 
+import { localization } from '@web/core/l10n/localization';
+
 function factory(dependencies) {
 
     class Locale extends dependencies['mail.model'] {
@@ -16,7 +18,7 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeLanguage() {
-            return this.env._t.database.parameters.code;
+            return this.env.services.user.lang;
         }
 
         /**
@@ -24,7 +26,7 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeTextDirection() {
-            return this.env._t.database.parameters.direction;
+            return localization.direction;
         }
 
     }

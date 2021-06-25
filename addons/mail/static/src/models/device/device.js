@@ -3,6 +3,8 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 
+import { browser } from '@web/core/browser/browser';
+
 function factory(dependencies) {
 
     class Device extends dependencies['mail.model'] {
@@ -47,10 +49,9 @@ function factory(dependencies) {
          */
         _refresh() {
             this.update({
-                globalWindowInnerHeight: this.env.browser.innerHeight,
-                globalWindowInnerWidth: this.env.browser.innerWidth,
-                isMobile: this.env.device.isMobile,
-                sizeClass: this.env.device.size_class,
+                globalWindowInnerHeight: browser.innerHeight,
+                globalWindowInnerWidth: browser.innerWidth,
+                isSmall: this.env.services.ui.isSmall,
             });
         }
     }
@@ -58,16 +59,7 @@ function factory(dependencies) {
     Device.fields = {
         globalWindowInnerHeight: attr(),
         globalWindowInnerWidth: attr(),
-        isMobile: attr(),
-        /**
-         * Size class of the device.
-         *
-         * This is an integer representation of the size.
-         * Useful for conditional based on a device size, including
-         * lower/higher. Device size classes are defined in sizeClasses
-         * attribute.
-         */
-        sizeClass: attr(),
+        isSmall: attr(),
     };
 
     Device.modelName = 'mail.device';

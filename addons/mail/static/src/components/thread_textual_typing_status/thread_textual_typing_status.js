@@ -17,7 +17,7 @@ export class ThreadTextualTypingStatus extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
+            const thread = this.env.services.messaging.models['mail.thread'].get(props.threadLocalId);
             return {
                 threadOrderedOtherTypingMembersLength: thread && thread.orderedOtherTypingMembersLength,
                 threadTypingStatusText: thread && thread.typingStatusText,
@@ -33,7 +33,7 @@ export class ThreadTextualTypingStatus extends Component {
      * @returns {mail.thread}
      */
     get thread() {
-        return this.env.models['mail.thread'].get(this.props.threadLocalId);
+        return this.env.services.messaging.models['mail.thread'].get(this.props.threadLocalId);
     }
 
 }

@@ -16,8 +16,8 @@ export class DiscussMobileMailboxSelection extends Component {
         useStore(props => {
             return {
                 allOrderedAndPinnedMailboxes: this.orderedMailboxes.map(mailbox => mailbox.__state),
-                discussThread: this.env.messaging.discuss.thread
-                    ? this.env.messaging.discuss.thread.__state
+                discussThread: this.env.services.messaging.messaging.discuss.thread
+                    ? this.env.services.messaging.messaging.discuss.thread.__state
                     : undefined,
             };
         }, {
@@ -35,19 +35,19 @@ export class DiscussMobileMailboxSelection extends Component {
      * @returns {mail.thread[]}
      */
     get orderedMailboxes() {
-        return this.env.models['mail.thread']
+        return this.env.services.messaging.models['mail.thread']
             .all(thread => thread.isPinned && thread.model === 'mail.box')
             .sort((mailbox1, mailbox2) => {
-                if (mailbox1 === this.env.messaging.inbox) {
+                if (mailbox1 === this.env.services.messaging.messaging.inbox) {
                     return -1;
                 }
-                if (mailbox2 === this.env.messaging.inbox) {
+                if (mailbox2 === this.env.services.messaging.messaging.inbox) {
                     return 1;
                 }
-                if (mailbox1 === this.env.messaging.starred) {
+                if (mailbox1 === this.env.services.messaging.messaging.starred) {
                     return -1;
                 }
-                if (mailbox2 === this.env.messaging.starred) {
+                if (mailbox2 === this.env.services.messaging.messaging.starred) {
                     return 1;
                 }
                 const mailbox1Name = mailbox1.displayName;
@@ -60,7 +60,10 @@ export class DiscussMobileMailboxSelection extends Component {
      * @returns {mail.discuss}
      */
     get discuss() {
-        return this.env.messaging && this.env.messaging.discuss;
+        return (
+            this.env.services.messaging.messaging &&
+            this.env.services.messaging.messaging.discuss
+        );
     }
 
     //--------------------------------------------------------------------------
@@ -75,7 +78,7 @@ export class DiscussMobileMailboxSelection extends Component {
      */
     _onClick(ev) {
         const { mailboxLocalId } = ev.currentTarget.dataset;
-        const mailbox = this.env.models['mail.thread'].get(mailboxLocalId);
+        const mailbox = this.env.services.messaging.models['mail.thread'].get(mailboxLocalId);
         if (!mailbox) {
             return;
         }

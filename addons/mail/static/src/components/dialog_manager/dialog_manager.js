@@ -17,7 +17,10 @@ export class DialogManager extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const dialogManager = this.env.messaging && this.env.messaging.dialogManager;
+            const dialogManager = (
+                this.env.services.messaging.messaging &&
+                this.env.services.messaging.messaging.dialogManager
+            );
             return {
                 dialogManager: dialogManager ? dialogManager.__state : undefined,
             };
@@ -40,7 +43,7 @@ export class DialogManager extends Component {
      * @private
      */
     _checkDialogOpen() {
-        if (!this.env.messaging) {
+        if (!this.env.services.messaging.messaging) {
             /**
              * Messaging not created, which means essential models like
              * dialog manager are not ready, so open status of dialog in DOM
@@ -48,7 +51,7 @@ export class DialogManager extends Component {
              */
             return;
         }
-        if (this.env.messaging.dialogManager.dialogs.length > 0) {
+        if (this.env.services.messaging.messaging.dialogManager.dialogs.length > 0) {
             document.body.classList.add('modal-open');
         } else {
             document.body.classList.remove('modal-open');

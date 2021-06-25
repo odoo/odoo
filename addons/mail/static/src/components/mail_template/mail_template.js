@@ -14,8 +14,8 @@ export class MailTemplate extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const activity = this.env.models['mail.activity'].get(props.activityLocalId);
-            const mailTemplate = this.env.models['mail.mail_template'].get(props.mailTemplateLocalId);
+            const activity = this.env.services.messaging.models['mail.activity'].get(props.activityLocalId);
+            const mailTemplate = this.env.services.messaging.models['mail.mail_template'].get(props.mailTemplateLocalId);
             return {
                 activity: activity ? activity.__state : undefined,
                 mailTemplate: mailTemplate ? mailTemplate.__state : undefined,
@@ -31,14 +31,14 @@ export class MailTemplate extends Component {
      * @returns {mail.activity}
      */
     get activity() {
-        return this.env.models['mail.activity'].get(this.props.activityLocalId);
+        return this.env.services.messaging.models['mail.activity'].get(this.props.activityLocalId);
     }
 
     /**
      * @returns {mail.mail_template}
      */
     get mailTemplate() {
-        return this.env.models['mail.mail_template'].get(this.props.mailTemplateLocalId);
+        return this.env.services.messaging.models['mail.mail_template'].get(this.props.mailTemplateLocalId);
     }
 
     //--------------------------------------------------------------------------

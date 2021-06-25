@@ -48,14 +48,14 @@ QUnit.test('Notification Sent', async function (assert) {
     assert.expect(9);
 
     await this.start();
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.env.services.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: create({
             id: 11,
             model: 'mail.channel',
         }),
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 10,
         message_type: 'sms',
         notifications: insert({
@@ -142,14 +142,14 @@ QUnit.test('Notification Error', async function (assert) {
     });
 
     await this.start({ env: { bus } });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
+    const threadViewer = this.env.services.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: create({
             id: 11,
             model: 'mail.channel',
         }),
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.services.messaging.models['mail.message'].create({
         id: 10,
         message_type: 'sms',
         notifications: insert({

@@ -7,10 +7,7 @@ import {
     addTimeControlToEnv,
 } from '@mail/env/test_env';
 import { ModelManager } from '@mail/model/model_manager';
-import ChatWindowService from '@mail/services/chat_window_service/chat_window_service';
-import DialogService from '@mail/services/dialog_service/dialog_service';
 import { nextTick } from '@mail/utils/utils';
-import DiscussWidget from '@mail/widgets/discuss/discuss';
 import MessagingMenuWidget from '@mail/widgets/messaging_menu/messaging_menu';
 import { MockModels } from '@mail/../tests/helpers/mock_models';
 
@@ -543,7 +540,7 @@ async function start(param0 = {}) {
                 this._super(...arguments);
                 legacyUnpatch(widget);
                 if (testEnv) {
-                    testEnv.destroyMessaging();
+                    testEnv.services.messaging.destroyMessaging();
                 }
             }
         });
@@ -594,7 +591,7 @@ async function start(param0 = {}) {
                 this._super(...arguments);
                 legacyUnpatch(widget);
                 if (testEnv) {
-                    testEnv.destroyMessaging();
+                    testEnv.services.messaging.destroyMessaging();
                 }
             }
         });
@@ -610,7 +607,7 @@ async function start(param0 = {}) {
                 destroyCallbacks.forEach(callback => callback({ widget }));
                 parent.destroy();
                 if (testEnv) {
-                    testEnv.destroyMessaging();
+                    testEnv.services.messaging.destroyMessaging();
                 }
             },
         });
@@ -629,22 +626,22 @@ async function start(param0 = {}) {
     testEnv.bus.on(
         'hide_home_menu',
         null,
-        () => testEnv.messagingBus.trigger('hide_home_menu')
+        () => testEnv.services.messaging.messagingBus.trigger('hide_home_menu')
     );
     testEnv.bus.on(
         'show_home_menu',
         null,
-        () => testEnv.messagingBus.trigger('show_home_menu')
+        () => testEnv.services.messaging.messagingBus.trigger('show_home_menu')
     );
     testEnv.bus.on(
         'will_hide_home_menu',
         null,
-        () => testEnv.messagingBus.trigger('will_hide_home_menu')
+        () => testEnv.services.messaging.messagingBus.trigger('will_hide_home_menu')
     );
     testEnv.bus.on(
         'will_show_home_menu',
         null,
-        () => testEnv.messagingBus.trigger('will_show_home_menu')
+        () => testEnv.services.messaging.messagingBus.trigger('will_show_home_menu')
     );
 
     /**
@@ -674,7 +671,7 @@ async function start(param0 = {}) {
         });
         // Set up the promise to resolve if the event is triggered.
         const eventProm = new Promise(resolve => {
-            testEnv.messagingBus.on(eventName, null, data => {
+            testEnv.services.messaging.messagingBus.on(eventName, null, data => {
                 if (!predicate || predicate(data)) {
                     resolve();
                 }
@@ -706,22 +703,22 @@ async function start(param0 = {}) {
              */
             await env.session.is_bound;
 
-            testEnv.modelManager = new ModelManager(testEnv);
-            testEnv.modelManager.start();
+            testEnv.services.messaging.modelManager = new ModelManager(testEnv);
+            testEnv.services.messaging.modelManager.start();
             /**
              * Create the messaging singleton record.
              */
-            testEnv.messaging = testEnv.models['mail.messaging'].create();
-            testEnv.messaging.start().then(() =>
-                testEnv.messagingInitializedDeferred.resolve()
+            testEnv.services.messaging.messaging = testEnv.services.messaging.models['mail.messaging'].create();
+            testEnv.services.messaging.messaging.start().then(() =>
+                testEnv.services.messaging.messagingInitializedDeferred.resolve()
             );
-            testEnv.messagingCreatedPromise.resolve();
+            testEnv.services.messaging.messagingCreatedPromise.resolve();
         });
         if (waitUntilMessagingCondition === 'created') {
-            await testEnv.messagingCreatedPromise;
+            await testEnv.services.messaging.messagingCreatedPromise;
         }
         if (waitUntilMessagingCondition === 'initialized') {
-            await testEnv.messagingInitializedDeferred;
+            await testEnv.services.messaging.messagingInitializedDeferred;
         }
 
         if (mountCallbacks.length > 0) {

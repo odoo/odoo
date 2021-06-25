@@ -62,7 +62,7 @@ export class NotificationList extends Component {
         const threads = this.notifications
             .filter(notification => notification.thread && notification.thread.exists())
             .map(notification => notification.thread);
-        this.env.models['mail.thread'].loadPreviews(threads);
+        this.env.services.messaging.models['mail.thread'].loadPreviews(threads);
     }
 
     /**
@@ -74,7 +74,7 @@ export class NotificationList extends Component {
         let threadNeedactionNotifications = [];
         if (props.filter === 'all') {
             // threads with needactions
-            threadNeedactionNotifications = this.env.models['mail.thread']
+            threadNeedactionNotifications = this.env.services.messaging.models['mail.thread']
                 .all(t => t.model !== 'mail.box' && t.needactionMessagesAsOriginThread.length > 0)
                 .sort((t1, t2) => {
                     if (t1.needactionMessagesAsOriginThread.length > 0 && t2.needactionMessagesAsOriginThread.length === 0) {
@@ -131,7 +131,7 @@ export class NotificationList extends Component {
             });
         let notifications = threadNeedactionNotifications.concat(threadNotifications);
         if (props.filter === 'all') {
-            const notificationGroups = this.env.messaging.notificationGroupManager.groups;
+            const notificationGroups = this.env.services.messaging.messaging.notificationGroupManager.groups;
             notifications = Object.values(notificationGroups)
                 .sort((group1, group2) => group1.sequence - group2.sequence)
                 .map(notificationGroup => {
@@ -142,14 +142,14 @@ export class NotificationList extends Component {
                 }).concat(notifications);
         }
         // native notification request
-        if (props.filter === 'all' && this.env.messaging.isNotificationPermissionDefault) {
+        if (props.filter === 'all' && this.env.services.messaging.messaging.isNotificationPermissionDefault) {
             notifications.unshift({
                 type: 'odoobotRequest',
                 uniqueId: 'odoobotRequest',
             });
         }
         return {
-            isDeviceMobile: this.env.messaging.device.isMobile,
+            isDeviceSmall: this.env.services.messaging.messaging.device.isSmall,
             notifications,
         };
     }
@@ -162,19 +162,19 @@ export class NotificationList extends Component {
      */
     _useStoreSelectorThreads(props) {
         if (props.filter === 'mailbox') {
-            return this.env.models['mail.thread']
+            return this.env.services.messaging.models['mail.thread']
                 .all(thread => thread.isPinned && thread.model === 'mail.box')
                 .sort((mailbox1, mailbox2) => {
-                    if (mailbox1 === this.env.messaging.inbox) {
+                    if (mailbox1 === this.env.services.messaging.messaging.inbox) {
                         return -1;
                     }
-                    if (mailbox2 === this.env.messaging.inbox) {
+                    if (mailbox2 === this.env.services.messaging.messaging.inbox) {
                         return 1;
                     }
-                    if (mailbox1 === this.env.messaging.starred) {
+                    if (mailbox1 === this.env.services.messaging.messaging.starred) {
                         return -1;
                     }
-                    if (mailbox2 === this.env.messaging.starred) {
+                    if (mailbox2 === this.env.services.messaging.messaging.starred) {
                         return 1;
                     }
                     const mailbox1Name = mailbox1.displayName;
@@ -182,7 +182,7 @@ export class NotificationList extends Component {
                     mailbox1Name < mailbox2Name ? -1 : 1;
                 });
         } else if (props.filter === 'channel') {
-            return this.env.models['mail.thread']
+            return this.env.services.messaging.models['mail.thread']
                 .all(thread =>
                     thread.channel_type === 'channel' &&
                     thread.isPinned &&
@@ -190,7 +190,7 @@ export class NotificationList extends Component {
                 )
                 .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
         } else if (props.filter === 'chat') {
-            return this.env.models['mail.thread']
+            return this.env.services.messaging.models['mail.thread']
                 .all(thread =>
                     thread.isChatChannel &&
                     thread.isPinned &&
@@ -199,7 +199,7 @@ export class NotificationList extends Component {
                 .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
         } else if (props.filter === 'all') {
             // "All" filter is for channels and chats
-            return this.env.models['mail.thread']
+            return this.env.services.messaging.models['mail.thread']
                 .all(thread => thread.isPinned && thread.model === 'mail.channel')
                 .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
         } else {

@@ -24,7 +24,7 @@ export class ComposerTextInput extends Component {
             },
         });
         useStore(props => {
-            const composer = this.env.models['mail.composer'].get(props.composerLocalId);
+            const composer = this.env.services.messaging.models['mail.composer'].get(props.composerLocalId);
             const thread = composer && composer.thread;
             const correspondent = thread ? thread.correspondent : undefined;
             return {
@@ -38,7 +38,7 @@ export class ComposerTextInput extends Component {
                 composerTextInputSelectionDirection: composer && composer.textInputSelectionDirection,
                 correspondent,
                 correspondentNameOrDisplayName: correspondent && correspondent.nameOrDisplayName,
-                isDeviceMobile: this.env.messaging.device.isMobile,
+                isDeviceSmall: this.env.services.messaging.messaging.device.isSmall,
                 threadDisplayName: thread && thread.displayName,
                 threadModel: thread && thread.model,
             };
@@ -73,7 +73,7 @@ export class ComposerTextInput extends Component {
      * @returns {mail.composer}
      */
     get composer() {
-        return this.env.models['mail.composer'].get(this.props.composerLocalId);
+        return this.env.services.messaging.models['mail.composer'].get(this.props.composerLocalId);
     }
 
     /**

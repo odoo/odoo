@@ -91,7 +91,7 @@ function factory(dependencies) {
         openNewMessage() {
             let newMessageChatWindow = this.newMessageChatWindow;
             if (!newMessageChatWindow) {
-                newMessageChatWindow = this.env.models['mail.chat_window'].create({
+                newMessageChatWindow = this.env.services.messaging.models['mail.chat_window'].create({
                     manager: link(this),
                 });
             }
@@ -113,13 +113,13 @@ function factory(dependencies) {
             replaceNewMessage = false
         } = {}) {
             if (notifyServer === undefined) {
-                notifyServer = !this.env.messaging.device.isMobile;
+                notifyServer = !this.env.services.messaging.messaging.device.isSmall;
             }
             let chatWindow = this.chatWindows.find(chatWindow =>
                 chatWindow.thread === thread
             );
             if (!chatWindow) {
-                chatWindow = this.env.models['mail.chat_window'].create({
+                chatWindow = this.env.services.messaging.models['mail.chat_window'].create({
                     isFolded,
                     manager: link(this),
                     thread: link(thread),
@@ -213,7 +213,7 @@ function factory(dependencies) {
         _compute_ordered() {
             // remove unlinked chatWindows
             const _ordered = this._ordered.filter(chatWindowLocalId =>
-                this.chatWindows.includes(this.env.models['mail.chat_window'].get(chatWindowLocalId))
+                this.chatWindows.includes(this.env.services.messaging.models['mail.chat_window'].get(chatWindowLocalId))
             );
             // add linked chatWindows
             for (const chatWindow of this.chatWindows) {
@@ -232,7 +232,7 @@ function factory(dependencies) {
          */
         _computeAllOrdered() {
             return replace(this._ordered.map(chatWindowLocalId =>
-                this.env.models['mail.chat_window'].get(chatWindowLocalId)
+                this.env.services.messaging.models['mail.chat_window'].get(chatWindowLocalId)
             ));
         }
 
@@ -242,7 +242,7 @@ function factory(dependencies) {
          */
         _computeAllOrderedHidden() {
             return replace(this.visual.hidden.chatWindowLocalIds.map(chatWindowLocalId =>
-                this.env.models['mail.chat_window'].get(chatWindowLocalId)
+                this.env.services.messaging.models['mail.chat_window'].get(chatWindowLocalId)
             ));
         }
 
@@ -252,7 +252,7 @@ function factory(dependencies) {
          */
         _computeAllOrderedVisible() {
             return replace(this.visual.visible.map(({ chatWindowLocalId }) =>
-                this.env.models['mail.chat_window'].get(chatWindowLocalId)
+                this.env.services.messaging.models['mail.chat_window'].get(chatWindowLocalId)
             ));
         }
 
@@ -319,19 +319,19 @@ function factory(dependencies) {
          */
         _computeVisual() {
             let visual = JSON.parse(JSON.stringify(BASE_VISUAL));
-            if (!this.env.messaging) {
+            if (!this.env.services.messaging.messaging) {
                 return visual;
             }
-            const device = this.env.messaging.device;
-            const discuss = this.env.messaging.discuss;
+            const device = this.env.services.messaging.messaging.device;
+            const discuss = this.env.services.messaging.messaging.discuss;
             const BETWEEN_GAP_WIDTH = 5;
             const CHAT_WINDOW_WIDTH = 325;
-            const END_GAP_WIDTH = device.isMobile ? 0 : 10;
+            const END_GAP_WIDTH = device.isSmall ? 0 : 10;
             const GLOBAL_WINDOW_WIDTH = device.globalWindowInnerWidth;
             const HIDDEN_MENU_WIDTH = 200; // max width, including width of dropup list items
-            const START_GAP_WIDTH = device.isMobile ? 0 : 10;
+            const START_GAP_WIDTH = device.isSmall ? 0 : 10;
             const chatWindows = this.allOrdered;
-            if (!device.isMobile && discuss.isOpen) {
+            if (!device.isSmall && discuss.isOpen) {
                 return visual;
             }
             if (!chatWindows.length) {
@@ -343,7 +343,7 @@ function factory(dependencies) {
             let maxAmountWithHidden = Math.floor(
                 (relativeGlobalWindowWidth - HIDDEN_MENU_WIDTH - BETWEEN_GAP_WIDTH) /
                 (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH));
-            if (device.isMobile) {
+            if (device.isSmall) {
                 maxAmountWithoutHidden = 1;
                 maxAmountWithHidden = 1;
             }
@@ -363,7 +363,7 @@ function factory(dependencies) {
                     visual.visible.push({ chatWindowLocalId, offset });
                 }
                 if (chatWindows.length > maxAmountWithHidden) {
-                    visual.hidden.isVisible = !device.isMobile;
+                    visual.hidden.isVisible = !device.isSmall;
                     visual.hidden.offset = visual.visible[maxAmountWithHidden - 1].offset
                         + CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH;
                 }
@@ -373,7 +373,7 @@ function factory(dependencies) {
                 visual.availableVisibleSlots = maxAmountWithHidden;
             } else {
                 // all hidden
-                visual.hidden.isVisible = !device.isMobile;
+                visual.hidden.isVisible = !device.isSmall;
                 visual.hidden.offset = START_GAP_WIDTH;
                 visual.hidden.chatWindowLocalIds.concat(chatWindows.map(chatWindow => chatWindow.localId));
                 console.warn('cannot display any visible chat windows (screen is too small)');
@@ -429,8 +429,8 @@ function factory(dependencies) {
         deviceGlobalWindowInnerWidth: attr({
             related: 'device.globalWindowInnerWidth',
         }),
-        deviceIsMobile: attr({
-            related: 'device.isMobile',
+        deviceIsSmall: attr({
+            related: 'device.isSmall',
         }),
         discuss: one2one('mail.discuss', {
             related: 'messaging.discuss',
@@ -473,7 +473,7 @@ function factory(dependencies) {
             dependencies: [
                 'allOrdered',
                 'deviceGlobalWindowInnerWidth',
-                'deviceIsMobile',
+                'deviceIsSmall',
                 'discussIsOpen',
             ],
         }),

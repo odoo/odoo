@@ -18,7 +18,7 @@ function factory(dependencies) {
             }
             const groups = [];
             // TODO batch insert, better logic task-2258605
-            this.env.messaging.currentPartner.failureNotifications.forEach(notification => {
+            this.env.services.messaging.messaging.currentPartner.failureNotifications.forEach(notification => {
                 const thread = notification.message.originThread;
                 // Notifications are grouped by model and notification_type.
                 // Except for channel where they are also grouped by id because
@@ -26,7 +26,7 @@ function factory(dependencies) {
                 // and not its kanban/list/form view.
                 const channelId = thread.model === 'mail.channel' ? thread.id : null;
                 const id = `${thread.model}/${channelId}/${notification.notification_type}`;
-                const group = this.env.models['mail.notification_group'].insert({
+                const group = this.env.services.messaging.models['mail.notification_group'].insert({
                     id,
                     notification_type: notification.notification_type,
                     res_model: thread.model,

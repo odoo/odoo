@@ -55,18 +55,19 @@ function factory(dependencies) {
          * @param {integer[]} param0.ids
          */
         static async performRpcRead({ context, fields, ids }) {
-            const employeesData = await this.env.services.rpc({
-                model: 'hr.employee.public',
-                method: 'read',
-                args: [ids],
-                kwargs: {
+            const employeesData = await this.env.services.orm.read(
+                'hr.employee.public',
+                [ids],
+                {
                     context,
                     fields,
                 },
-            });
-            this.env.models['hr.employee'].insert(employeesData.map(employeeData =>
-                this.env.models['hr.employee'].convertData(employeeData)
-            ));
+            );
+            this.env.services.messaging.models['hr.employee'].insert(
+                employeesData.map(
+                    employeeData => this.env.services.messaging.models['hr.employee'].convertData(employeeData),
+                ),
+            );
         }
 
         /**
@@ -79,18 +80,18 @@ function factory(dependencies) {
          * @param {string[]} param0.fields
          */
         static async performRpcSearchRead({ context, domain, fields }) {
-            const employeesData = await this.env.services.rpc({
-                model: 'hr.employee.public',
-                method: 'search_read',
-                kwargs: {
-                    context,
-                    domain,
-                    fields,
-                },
-            });
-            this.env.models['hr.employee'].insert(employeesData.map(employeeData =>
-                this.env.models['hr.employee'].convertData(employeeData)
-            ));
+            const employeesData = await this.env.services.orm.searchRead(
+                'hr.employee.public',
+                domain,
+                fields,
+                undefined,
+                context,
+            );
+            this.env.services.messaging.models['hr.employee'].insert(
+                employeesData.map(
+                    employeeData => this.env.services.messaging.models['hr.employee'].convertData(employeeData)
+                ),
+            );
         }
 
         /**
@@ -98,7 +99,7 @@ function factory(dependencies) {
          * them if applicable.
          */
         async checkIsUser() {
-            return this.env.models['hr.employee'].performRpcRead({
+            return this.env.services.messaging.models['hr.employee'].performRpcRead({
                 ids: [this.id],
                 fields: ['user_id', 'user_partner_id'],
                 context: { active_test: false },
@@ -149,7 +150,7 @@ function factory(dependencies) {
          * Opens the most appropriate view that is a profile for this employee.
          */
         async openProfile() {
-            return this.env.messaging.openDocument({
+            return this.env.services.messaging.messaging.openDocument({
                 id: this.id,
                 model: 'hr.employee.public',
             });

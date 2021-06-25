@@ -18,12 +18,12 @@ export class ThreadViewTopbar extends Component {
     setup() {
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const threadViewTopBar = this.env.models['mail.thread_view_topbar'].get(props.localId);
+            const threadViewTopBar = this.env.services.messaging.models['mail.thread_view_topbar'].get(props.localId);
             const thread = threadViewTopBar && threadViewTopBar.thread;
             const threadView = threadViewTopBar && threadViewTopBar.threadView;
             return {
-                inbox: this.env.messaging.inbox,
-                starred: this.env.messaging.starred,
+                inbox: this.env.services.messaging.messaging.inbox,
+                starred: this.env.services.messaging.messaging.starred,
                 thread,
                 threadChannelType: thread && thread.channel_type,
                 threadDescription: thread && thread.description,
@@ -48,7 +48,7 @@ export class ThreadViewTopbar extends Component {
      * @returns {mail.thread_view_topbar}
      */
     get threadViewTopBar() {
-        return this.env.models['mail.thread_view_topbar'].get(this.props.localId);
+        return this.env.services.messaging.models['mail.thread_view_topbar'].get(this.props.localId);
     }
 
 }

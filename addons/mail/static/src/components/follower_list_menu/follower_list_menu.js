@@ -23,7 +23,7 @@ export class FollowerListMenu extends Component {
             isDropdownOpen: false,
         });
         useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
+            const thread = this.env.services.messaging.models['mail.thread'].get(props.threadLocalId);
             const followers = thread ? thread.followers : [];
             return {
                 followers,
@@ -54,7 +54,7 @@ export class FollowerListMenu extends Component {
      * @return {mail.thread}
      */
     get thread() {
-        return this.env.models['mail.thread'].get(this.props.threadLocalId);
+        return this.env.services.messaging.models['mail.thread'].get(this.props.threadLocalId);
     }
 
     //--------------------------------------------------------------------------

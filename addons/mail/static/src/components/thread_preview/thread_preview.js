@@ -21,7 +21,7 @@ export class ThreadPreview extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
+            const thread = this.env.services.messaging.models['mail.thread'].get(props.threadLocalId);
             let lastMessageAuthor;
             let lastMessage;
             if (thread) {
@@ -32,7 +32,7 @@ export class ThreadPreview extends Component {
                 lastMessageAuthor = lastMessage.author;
             }
             return {
-                isDeviceMobile: this.env.messaging.device.isMobile,
+                isDeviceSmall: this.env.services.messaging.messaging.device.isSmall,
                 lastMessage: lastMessage ? lastMessage.__state : undefined,
                 lastMessageAuthor: lastMessageAuthor
                     ? lastMessageAuthor.__state
@@ -82,7 +82,7 @@ export class ThreadPreview extends Component {
      * @returns {mail.thread}
      */
     get thread() {
-        return this.env.models['mail.thread'].get(this.props.threadLocalId);
+        return this.env.services.messaging.models['mail.thread'].get(this.props.threadLocalId);
     }
 
     //--------------------------------------------------------------------------
@@ -100,8 +100,8 @@ export class ThreadPreview extends Component {
             return;
         }
         this.thread.open();
-        if (!this.env.messaging.device.isMobile) {
-            this.env.messaging.messagingMenu.close();
+        if (!this.env.services.messaging.messaging.device.isSmall) {
+            this.env.services.messaging.messaging.messagingMenu.close();
         }
     }
 

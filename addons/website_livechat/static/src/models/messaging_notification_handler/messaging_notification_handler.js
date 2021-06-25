@@ -16,11 +16,11 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'website_livec
         const { info } = data;
         if (info === 'send_chat_request') {
             this._handleNotificationPartnerChannel(data);
-            const channel = this.env.models['mail.thread'].findFromIdentifyingData({
+            const channel = this.env.services.messaging.models['mail.thread'].findFromIdentifyingData({
                 id: data.id,
                 model: 'mail.channel',
             });
-            this.env.messaging.chatWindowManager.openThread(channel, {
+            this.env.services.messaging.messaging.chatWindowManager.openThread(channel, {
                 makeActive: true,
             });
             return;

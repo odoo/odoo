@@ -2,6 +2,7 @@
 
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
 
+import { browser } from '@web/core/browser/browser';
 import core from 'web.core';
 
 const { Component } = owl;
@@ -63,7 +64,7 @@ export class FileUploader extends Component {
      * @returns {mail.attachment}
      */
     _createAttachment(fileData) {
-        return this.env.models['mail.attachment'].create(Object.assign(
+        return this.env.services.messaging.models['mail.attachment'].create(Object.assign(
             {},
             fileData,
             this.props.newAttachmentExtraData
@@ -91,7 +92,7 @@ export class FileUploader extends Component {
      */
     _createUploadingAttachments(files) {
         for (const file of files) {
-            this.env.models['mail.attachment'].create(
+            this.env.services.messaging.models['mail.attachment'].create(
                 Object.assign(
                     {
                         filename: file.name,
@@ -110,7 +111,7 @@ export class FileUploader extends Component {
      */
     async _performUpload(files) {
         for (const file of files) {
-            const uploadingAttachment = this.env.models['mail.attachment'].find(attachment =>
+            const uploadingAttachment = this.env.services.messaging.models['mail.attachment'].find(attachment =>
                 attachment.isUploading &&
                 attachment.filename === file.name
             );
@@ -120,7 +121,7 @@ export class FileUploader extends Component {
                 continue;
             }
             try {
-                const response = await this.env.browser.fetch('/web/binary/upload_attachment', {
+                const response = await browser.fetch('/web/binary/upload_attachment', {
                     method: 'POST',
                     body: this._createFormData(file),
                     signal: uploadingAttachment.uploadingAbortController.signal,
@@ -145,7 +146,7 @@ export class FileUploader extends Component {
     async _unlinkExistingAttachments(files) {
         for (const file of files) {
             const attachment = this.props.attachmentLocalIds
-                .map(attachmentLocalId => this.env.models['mail.attachment'].get(attachmentLocalId))
+                .map(attachmentLocalId => this.env.services.messaging.models['mail.attachment'].get(attachmentLocalId))
                 .find(attachment => attachment.name === file.name && attachment.size === file.size);
             // if the files already exits, delete the file before upload
             if (attachment) {
@@ -171,7 +172,7 @@ export class FileUploader extends Component {
                     type: 'danger',
                     message: error,
                 });
-                const relatedUploadingAttachments = this.env.models['mail.attachment']
+                const relatedUploadingAttachments = this.env.services.messaging.models['mail.attachment']
                     .find(attachment =>
                         attachment.filename === filename &&
                         attachment.isUploading
@@ -185,7 +186,7 @@ export class FileUploader extends Component {
             // Without this the useStore selector of component could be not called
             // E.g. in attachment_box_tests.js
             await new Promise(resolve => setTimeout(resolve));
-            const attachment = this.env.models['mail.attachment'].insert(
+            const attachment = this.env.services.messaging.models['mail.attachment'].insert(
                 Object.assign(
                     {
                         filename,

@@ -19,8 +19,8 @@ export class ComposerSuggestion extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const composer = this.env.models['mail.composer'].get(this.props.composerLocalId);
-            const record = this.env.models[props.modelName].get(props.recordLocalId);
+            const composer = this.env.services.messaging.models['mail.composer'].get(this.props.composerLocalId);
+            const record = this.env.services.messaging.models[props.modelName].get(props.recordLocalId);
             return {
                 composerHasToScrollToActiveSuggestion: composer && composer.hasToScrollToActiveSuggestion,
                 record: record ? record.__state : undefined,
@@ -37,7 +37,7 @@ export class ComposerSuggestion extends Component {
      * @returns {mail.composer}
      */
     get composer() {
-        return this.env.models['mail.composer'].get(this.props.composerLocalId);
+        return this.env.services.messaging.models['mail.composer'].get(this.props.composerLocalId);
     }
 
     get isCannedResponse() {
@@ -57,7 +57,7 @@ export class ComposerSuggestion extends Component {
     }
 
     get record() {
-        return this.env.models[this.props.modelName].get(this.props.recordLocalId);
+        return this.env.services.messaging.models[this.props.modelName].get(this.props.recordLocalId);
     }
 
     /**

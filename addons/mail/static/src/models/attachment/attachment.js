@@ -86,7 +86,7 @@ function factory(dependencies) {
             if (!attachments.includes(attachment)) {
                 return;
             }
-            this.env.messaging.dialogManager.open('mail.attachment_viewer', {
+            this.env.services.messaging.messaging.dialogManager.open('mail.attachment_viewer', {
                 attachment: link(attachment),
                 attachments: replace(attachments),
             });
@@ -102,11 +102,10 @@ function factory(dependencies) {
             if (!this.isUploading) {
                 this.update({ isUnlinkPending: true });
                 try {
-                    await this.async(() => this.env.services.rpc({
-                        model: 'ir.attachment',
-                        method: 'unlink',
-                        args: [this.id],
-                    }, { shadow: true }));
+                    await this.async(() => this.env.services.orm.silent.unlink(
+                        'ir.attachment',
+                        [this.id],
+                    ));
                 } finally {
                     this.update({ isUnlinkPending: false });
                 }
@@ -136,7 +135,7 @@ function factory(dependencies) {
             if (this.isUploading) {
                 return;
             }
-            const relatedUploadingAttachment = this.env.models['mail.attachment']
+            const relatedUploadingAttachment = this.env.services.messaging.models['mail.attachment']
                 .find(attachment =>
                     attachment.filename === this.filename &&
                     attachment.isUploading
@@ -315,7 +314,7 @@ function factory(dependencies) {
                 if (!this.uploadingAbortController) {
                     const abortController = new AbortController();
                     abortController.signal.onabort = () => {
-                        this.env.messagingBus.trigger('o-attachment-upload-abort', {
+                        this.env.services.messaging.messagingBus.trigger('o-attachment-upload-abort', {
                             attachment: this
                         });
                     };

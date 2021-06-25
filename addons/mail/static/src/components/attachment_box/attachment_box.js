@@ -23,7 +23,7 @@ export class AttachmentBox extends Component {
         this.isDropZoneVisible = useDragVisibleDropZone();
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
+            const thread = this.env.services.messaging.models['mail.thread'].get(props.threadLocalId);
             return {
                 thread,
                 threadAllAttachments: thread ? thread.allAttachments : [],
@@ -62,7 +62,7 @@ export class AttachmentBox extends Component {
      * @returns {mail.thread|undefined}
      */
     get thread() {
-        return this.env.models['mail.thread'].get(this.props.threadLocalId);
+        return this.env.services.messaging.models['mail.thread'].get(this.props.threadLocalId);
     }
 
     //--------------------------------------------------------------------------

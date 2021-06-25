@@ -41,11 +41,11 @@ export class Message extends Component {
         });
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const message = this.env.models['mail.message'].get(props.messageLocalId);
+            const message = this.env.services.messaging.models['mail.message'].get(props.messageLocalId);
             const author = message ? message.author : undefined;
-            const partnerRoot = this.env.messaging.partnerRoot;
+            const partnerRoot = this.env.services.messaging.messaging.partnerRoot;
             const originThread = message ? message.originThread : undefined;
-            const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
+            const threadView = this.env.services.messaging.models['mail.thread_view'].get(props.threadViewLocalId);
             const thread = threadView ? threadView.thread : undefined;
             return {
                 attachments: message
@@ -56,7 +56,7 @@ export class Message extends Component {
                 authorImStatus: author && author.im_status,
                 authorNameOrDisplayName: author && author.nameOrDisplayName,
                 correspondent: thread && thread.correspondent,
-                isDeviceMobile: this.env.messaging.device.isMobile,
+                isDeviceSmall: this.env.services.messaging.messaging.device.isSmall,
                 isMessageSelected: message && threadView && threadView.threadViewer
                     ? threadView.threadViewer.selectedMessage === message
                     : false,
@@ -221,7 +221,7 @@ export class Message extends Component {
      * @returns {mail.message}
      */
     get message() {
-        return this.env.models['mail.message'].get(this.props.messageLocalId);
+        return this.env.services.messaging.models['mail.message'].get(this.props.messageLocalId);
     }
     /**
      * @returns {string}
@@ -265,7 +265,7 @@ export class Message extends Component {
      * @returns {mail.thread_view}
      */
     get threadView() {
-        return this.env.models['mail.thread_view'].get(this.props.threadViewLocalId);
+        return this.env.services.messaging.models['mail.thread_view'].get(this.props.threadViewLocalId);
     }
 
     /**
@@ -454,7 +454,7 @@ export class Message extends Component {
                 el.remove();
             }
             this._insertReadMoreLess($(this._contentRef.el));
-            this.env.messagingBus.trigger('o-component-message-read-more-less-inserted', {
+            this.env.services.messaging.messagingBus.trigger('o-component-message-read-more-less-inserted', {
                 message: this.message,
             });
         }
@@ -476,7 +476,7 @@ export class Message extends Component {
      */
     _onClick(ev) {
         if (ev.target.closest('.o_channel_redirect')) {
-            this.env.messaging.openProfile({
+            this.env.services.messaging.messaging.openProfile({
                 id: Number(ev.target.dataset.oeId),
                 model: 'mail.channel',
             });
@@ -486,7 +486,7 @@ export class Message extends Component {
         }
         if (ev.target.tagName === 'A') {
             if (ev.target.dataset.oeId && ev.target.dataset.oeModel) {
-                this.env.messaging.openProfile({
+                this.env.services.messaging.messaging.openProfile({
                     id: Number(ev.target.dataset.oeId),
                     model: ev.target.dataset.oeModel,
                 });
@@ -575,7 +575,7 @@ export class Message extends Component {
         // before the current handler is executed. Indeed because it does a
         // toggle it needs to take into account the value before the click.
         if (this._wasSelected) {
-            this.env.messaging.discuss.clearReplyingToMessage();
+            this.env.services.messaging.messaging.discuss.clearReplyingToMessage();
         } else {
             this.message.replyTo();
         }

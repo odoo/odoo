@@ -17,15 +17,15 @@ export class ThreadIcon extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
+            const thread = this.env.services.messaging.models['mail.thread'].get(props.threadLocalId);
             const correspondent = thread ? thread.correspondent : undefined;
             return {
                 correspondent,
                 correspondentImStatus: correspondent && correspondent.im_status,
-                history: this.env.messaging.history,
-                inbox: this.env.messaging.inbox,
-                partnerRoot: this.env.messaging.partnerRoot,
-                starred: this.env.messaging.starred,
+                history: this.env.services.messaging.messaging.history,
+                inbox: this.env.services.messaging.messaging.inbox,
+                partnerRoot: this.env.services.messaging.messaging.partnerRoot,
+                starred: this.env.services.messaging.messaging.starred,
                 thread,
                 threadChannelType: thread && thread.channel_type,
                 threadModel: thread && thread.model,
@@ -44,7 +44,7 @@ export class ThreadIcon extends Component {
      * @returns {mail.thread}
      */
     get thread() {
-        return this.env.models['mail.thread'].get(this.props.threadLocalId);
+        return this.env.services.messaging.models['mail.thread'].get(this.props.threadLocalId);
     }
 
 }
