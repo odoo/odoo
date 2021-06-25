@@ -24,6 +24,7 @@ class EventMeetingRoom(models.Model):
     event_id = fields.Many2one("event.event", string="Event", required=True, ondelete="cascade")
     is_pinned = fields.Boolean("Is Pinned")
     chat_room_id = fields.Many2one("chat.room", required=True, ondelete="restrict")
+    room_max_capacity = fields.Selection(default="8", copy=True)
     summary = fields.Char("Summary", translate=True)
     target_audience = fields.Char("Audience", translate=True)
 
