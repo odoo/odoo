@@ -264,6 +264,24 @@ Wysiwyg.include({
     },
 });
 
+// Use the high quality image for the carousel's zoom option
+options.snippetOptionRegistry.ImageOptimize.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeMaxDisplayWidth() {
+        if (this.$target.closest('#product_detail #o-carousel-product').length) {
+            return this._getImg().naturalWidth;
+        }
+        return this._super.apply(this, arguments);
+    },
+});
+
 publicWidget.registry.websiteSaleCurrency = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
     disabledInEditableMode: false,
