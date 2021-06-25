@@ -63,6 +63,7 @@ const IS_KEYBOARD_EVENT_REDO = ev => ev.key === 'y' && (ev.ctrlKey || ev.metaKey
 const IS_KEYBOARD_EVENT_BOLD = ev => ev.key === 'b' && (ev.ctrlKey || ev.metaKey);
 
 const FIRST_STEP_PREVIOUS_ID = 'FIRST_STEP_PREVIOUS_ID';
+const FIRST_STEP_USER_ID = 'FIRST_STEP_USER_ID';
 
 const peek = arr => arr[arr.length - 1];
 
@@ -189,9 +190,6 @@ export class OdooEditor extends EventTarget {
 
         this._onKeyupResetContenteditableNodes = [];
 
-        this._isCollaborativeActive = false;
-        this._collaborativeLastSynchronisedId = null;
-
         // Track if we need to rollback mutations in case unbreakable or unremovable are being added or removed.
         this._toRollback = false;
 
@@ -213,17 +211,19 @@ export class OdooEditor extends EventTarget {
 
         // Set contenteditable before clone as FF updates the content at this point.
         this._activateContenteditable();
+
         // User id is only useful in collaborative mode, but to have effective
         // tests, the editor should work in the same manner as much as possible
         // in both mode.
-        this._userId = this.options.collaborative.userId || uuidV4();
-        // TODO: remove initCollaboration so that the editor is always
-        // initialised the same way, so that tests are more reliable
-        if (this.options.collaborative) {
-            this.initCollaboration();
-        } else {
-            this.idSet(editable);
-        }
+        this._isCollaborativeActive = false;
+        this._userId =
+            (this.options.collaborative && this.options.collaborative.userId) || uuidV4();
+
+        // Create a first step containing all of the document, with a different
+        // userId so that it can not be undone.
+        this.idSet(editable);
+        this._historySteps = this.historyGetSnapshot();
+        this._isCollaborativeActive = options.collaborative;
 
         this._createCommandBar();
 
@@ -294,15 +294,6 @@ export class OdooEditor extends EventTarget {
                 this.editable.before(this.toolbar);
             }
         }
-    }
-    initCollaboration() {
-        // Create a first step containing all of the document
-        const editableContent = this.editable.innerHTML;
-        [...this.editable.childNodes].forEach(n => n.remove() || n);
-        this.observerActive();
-        this.document.getSelection().setPosition(this.editable);
-        this.execCommand('insertHTML', editableContent);
-        this._isCollaborativeActive = true;
     }
 
     historySynchronise(masterHistory) {
@@ -437,12 +428,13 @@ export class OdooEditor extends EventTarget {
         const mutatedNodes = new Set();
         for (const record of records) {
             if (record.type === 'childList') {
-                record.removedNodes.forEach(node => {
-                    mutatedNodes.add(node.oid);
-                });
                 record.addedNodes.forEach(node => {
                     this.idSet(node, this._checkStepUnbreakable);
                     mutatedNodes.add(node.oid);
+                });
+                record.removedNodes.forEach(node => {
+                    this.idSet(node, this._checkStepUnbreakable);
+                    mutatedNodes.delete(node.oid);
                 });
             }
         }
@@ -577,8 +569,8 @@ export class OdooEditor extends EventTarget {
         }
 
         current.id = uuidV4();
-        current.userId = this._userId;
         const latest = peek(this._historySteps);
+        current.userId = latest ? this._userId : FIRST_STEP_USER_ID;
         current.previousStepId = (latest && latest.id) || FIRST_STEP_PREVIOUS_ID;
         this._historySteps.push(current);
         this._historySend(current);
@@ -688,7 +680,9 @@ export class OdooEditor extends EventTarget {
                 stepsToReapply.unshift(newStep);
             } else {
                 stepsToReapply.shift();
-                stepsToReapply[0].previousStepId = newStep.id;
+                if (stepsToReapply[0]) {
+                    stepsToReapply[0].previousStepId = newStep.id;
+                }
                 stepsToReapply.unshift(newStep);
                 newStep.previousStepId = localStep.id;
                 stepsToReapply.unshift(localStep);
@@ -705,8 +699,24 @@ export class OdooEditor extends EventTarget {
         } else {
             this.options.collaborative.requestSynchronization();
         }
-
         this.observerActive();
+    }
+
+    historyGetSnapshot() {
+        const latestStep = peek(this._historySteps);
+        const snapshot = {
+            cursor: { 'anchorNode': 1, 'anchorOffset': 2, 'focusNode': 1, 'focusOffset': 2 },
+            mutations: Array.from(this.editable.childNodes).map(n => ({
+                type: 'add',
+                append: 1,
+                id: n.oid,
+                node: this.serialize(n),
+            })),
+            id: latestStep ? latestStep.id : uuidV4(),
+            userId: FIRST_STEP_USER_ID,
+            previousStepId: FIRST_STEP_PREVIOUS_ID,
+        };
+        return [snapshot];
     }
 
     getHistorySteps() {
