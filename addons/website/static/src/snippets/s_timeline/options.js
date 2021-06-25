@@ -8,7 +8,7 @@ options.registry.Timeline = options.Class.extend({
      * @override
      */
     start: function () {
-        var $buttons = this.$el.find('we-button');
+        var $buttons = this.$el.find('we-button.o_we_overlay_opt');
         var $overlayArea = this.$overlay.find('.o_overlay_options_wrap');
         $overlayArea.append($('<div/>').append($buttons));
 
