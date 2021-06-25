@@ -35,6 +35,9 @@
             <div name="button_box" position="inside">
                 <field name="is_published" widget="website_redirect_button"/>
             </div>
+            <xpath expr="//field[@name='no_of_recruitment']" position="after">
+                <field name="website_published" string="Is Published"/>
+            </xpath>
         </field>
     </record>
 
@@ -57,6 +60,9 @@
             <field name="department_id" position="after">
                 <field name="website_id" groups="website.group_multi_website"/>
             </field>
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="website_published" string="Published"/>
+            </xpath>
         </field>
     </record>
 </odoo>

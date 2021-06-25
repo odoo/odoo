@@ -8,7 +8,7 @@ from odoo import api, fields, models, _
 class Job(models.Model):
     _name = "hr.job"
     _inherit = ["mail.alias.mixin", "hr.job"]
-    _order = "state desc, name asc"
+    _order = "sequence, state desc, name asc"
 
     @api.model
     def _default_address_id(self):
