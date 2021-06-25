@@ -93,7 +93,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @returns {Promise}
      */
     async function toggleAddCustomFilter(el) {
-        await click(getNode(el).querySelector(`span.o_add_custom_filter`));
+        await click(getNode(el).querySelector(`button.o_add_custom_filter`));
     }
 
     /**

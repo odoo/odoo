@@ -329,7 +329,7 @@
 
 <t t-name="web.CustomFilterItem" owl="1">
     <div class="o_generator_menu">
-        <span class="o_add_custom_filter dropdown-item"
+        <button class="btn o_add_custom_filter dropdown-item"
             aria-expanded="false"
             t-ref="fallback-focus"
             t-on-click="state.open = !state.open"
@@ -337,7 +337,7 @@
             t-att-class="{ 'active': state.open, 'o_dropdown_item_active_noarrow' : state.open}"
             >
             <t>Add Custom Filter</t>
-        </span>
+        </button>
         <t t-if="state.open">
             <t t-set="showRemoveIcons" t-value="state.conditions.length gt 1"/>
 
