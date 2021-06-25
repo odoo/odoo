@@ -6,6 +6,7 @@ from random import randint
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Normal'),
@@ -106,7 +107,13 @@ class Applicant(models.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = [
+        'mail.thread.customer',
+        'mail.thread.cc',
+        'mail.activity.mixin',
+        'utm.mixin'
+    ]
+    _mail_field_email = 'email_from'
     _mailing_enabled = True
 
     name = fields.Char("Subject / Application Name", required=True, help="Email subject for applications sent via email")
@@ -299,16 +306,12 @@ class Applicant(models.Model):
             self = self.with_context(default_department_id=vals.get('department_id'))
         if vals.get('user_id'):
             vals['date_open'] = fields.Datetime.now()
-        if vals.get('email_from'):
-            vals['email_from'] = vals['email_from'].strip()
         return super(Applicant, self).create(vals)
 
     def write(self, vals):
         # user_id change: update date_open
         if vals.get('user_id'):
             vals['date_open'] = fields.Datetime.now()
-        if vals.get('email_from'):
-            vals['email_from'] = vals['email_from'].strip()
         # stage_id: track last stage before update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
@@ -409,38 +412,18 @@ class Applicant(models.Model):
             res.update(super(Applicant, leftover)._notify_get_reply_to(default=default, records=None, company=company, doc_names=doc_names))
         return res
 
-    def _message_get_suggested_recipients(self):
-        recipients = super(Applicant, self)._message_get_suggested_recipients()
-        for applicant in self:
-            if applicant.partner_id:
-                applicant._message_add_suggested_recipient(recipients, partner=applicant.partner_id, reason=_('Contact'))
-            elif applicant.email_from:
-                email_from = applicant.email_from
-                if applicant.partner_name:
-                    email_from = tools.formataddr((applicant.partner_name, email_from))
-                applicant._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
-        return recipients
-
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
             This override updates the document according to the email.
         """
-        # remove default author when going through the mail gateway. Indeed we
-        # do not want to explicitly set user_id to False; however we do not
-        # want the gateway user to be responsible if no other responsible is
-        # found.
-        self = self.with_context(default_user_id=False)
-
         defaults = {
             'name': msg_dict.get('subject') or _("No Subject"),
-            'email_from': msg_dict.get('from'),
         }
         if msg_dict.get('author_id'):
             partner = self.env['res.partner'].browse(msg_dict['author_id'])
             defaults.update({
-                'partner_id': partner.id,
                 'partner_name': partner.name,
             })
         else:
@@ -453,24 +436,11 @@ class Applicant(models.Model):
 
         return super(Applicant, self).message_new(msg_dict, custom_values=defaults)
 
-    def _message_post_after_hook(self, message, msg_vals):
-        if self.email_from and not self.partner_id:
-            # we consider that posting a message with a specified recipient (not a follower, a specific one)
-            # on a document without customer means that it was created through the chatter using
-            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
-            if new_partner:
-                if new_partner.create_date.date() == fields.Date.today():
-                    new_partner.write({
-                        'type': 'private',
-                        'phone': self.partner_phone,
-                        'mobile': self.partner_mobile,
-                    })
-                self.search([
-                    ('partner_id', '=', False),
-                    ('email_from', '=', new_partner.email),
-                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Applicant, self)._message_post_after_hook(message, msg_vals)
+    def _message_post_update_customer_filter(self):
+        return expression.AND([
+            super(Applicant, self)._message_post_update_customer_filter(),
+            [('stage_id.fold', '=', False)]
+        ])
 
     def create_employee_from_applicant(self):
         """ Create an hr.employee from the hr.applicants """
