@@ -244,7 +244,7 @@
                     <span id="oe_imported_file_extension" class="font-italic"></span>
                 </div>
 
-                <div class="oe_import_has_multiple_sheets js_import_options flex-column mt-2">
+                <div class="oe_import_has_multiple_sheets flex-column mt-2">
                     <label for="oe_import_sheet">Sheet:</label>
                     <input class="oe_import_sheet oe_import_dropdown" id="oe_import_sheet"/>
                 </div>
@@ -274,11 +274,11 @@
                         The file will be imported by batches
                     </div>
                     <div class="d-flex">
-                        <div class="js_import_options oe_import_options oe_import_batch_limit w-50 pr-1">
+                        <div class="oe_import_options oe_import_batch_limit w-50 pr-1">
                             <label class="mb-1" for="oe_import_batch_limit">Batch limit</label>
                             <input class="w-100" id="oe_import_batch_limit" value="2000"/>
                         </div>
-                        <div class="js_import_options oe_import_options w-50 pl-1" title="Warning: ignores the labels line, empty lines and
+                        <div class="oe_import_options w-50 pl-1" title="Warning: ignores the labels line, empty lines and
 lines composed only of empty cells">
                             <label class="mb-1" for="oe_import_row_start">Start at line</label>
                             <input class="w-100" id="oe_import_row_start" value="1"/>
@@ -339,6 +339,9 @@ lines composed only of empty cells">
                 </div>
                 <a class="o_progress_stop_import ml-2" role="button"><i class="fa fa-close" aria-label="Stop Import"/></a>
             </div>
+        </div>
+        <div t-else="">
+            <span t-esc="task"/>...
         </div>
     </div>
 </templates>
