@@ -495,7 +495,7 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(self.test_record.message_bounce, 0, 'The bounced thread should have no bounced messages by default')
         with self.mock_mail_gateway():
             new_groups = self.format_and_process(
-                MAIL_TEMPLATE,
+                test_mail_data.MAIL_BOUNCE,
                 email_from='Valid Lelitre <valid.lelitre@agrolait.com>',
                 to='valid.other@gmail.com, oops+{msg_id}-{model}-{res_id}@example.com'.format(
                     msg_id=self.fake_email.id,
@@ -503,9 +503,11 @@ class TestMailgateway(TestMailCommon):
                     res_id=self.fake_email.res_id,
                 ),
                 subject='Your email bounced, be more careful next time plea se',
+                extra=self.fake_email.message_id,
             )
         self.assertFalse(new_groups)
         self.assertNotSentEmail()  # message_process: incoming bounce produces no mails
+        self.assertEqual(self.partner_1.message_bounce, 1, 'The bounced partner should have 1 bounced message')
         self.assertEqual(self.test_record.message_bounce, 1, 'The bounced thread should have 1 bounced message')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
@@ -531,7 +533,7 @@ class TestMailgateway(TestMailCommon):
                 to=alien_bounce_partner.email + ', groups@example.com',
             )
         self.assertEqual(new_groups.message_ids[0].author_id, self.partner_1, 'message_process: recognized email -> author_id')
-        self.assertIn('Valid Lelitre <valid.lelitre@agrolait.com>', new_groups.message_ids[0].email_from, 'message_process: recognized email -> email_from')
+        self.assertIn('"Valid Lelitre" <valid.lelitre@agrolait.com>', new_groups.message_ids[0].email_from, 'message_process: recognized email -> email_from')
         self.assertEqual(new_groups.message_ids.partner_ids, alien_bounce_partner, 'message_process: alien bounce-like address should be subscribed as a normal partner')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
