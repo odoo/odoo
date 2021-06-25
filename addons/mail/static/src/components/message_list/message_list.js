@@ -1,18 +1,18 @@
 /** @odoo-module **/
 
-import useRefs from '@mail/component_hooks/use_refs/use_refs';
-import useRenderedValues from '@mail/component_hooks/use_rendered_values/use_rendered_values';
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import useUpdate from '@mail/component_hooks/use_update/use_update';
-import Message from '@mail/components/message/message';
+import { useRefs } from '@mail/component_hooks/use_refs/use_refs';
+import { useRenderedValues } from '@mail/component_hooks/use_rendered_values/use_rendered_values';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { Message } from '@mail/components/message/message';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
 const components = { Message };
 
-class MessageList extends Component {
+export class MessageList extends Component {
 
     /**
      * @override
@@ -612,5 +612,3 @@ Object.assign(MessageList, {
     },
     template: 'mail.MessageList',
 });
-
-export default MessageList;

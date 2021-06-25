@@ -1,17 +1,17 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import useUpdate from '@mail/component_hooks/use_update/use_update';
-import Composer from '@mail/components/composer/composer';
-import MessageList from '@mail/components/message_list/message_list';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { Composer } from '@mail/components/composer/composer';
+import { MessageList } from '@mail/components/message_list/message_list';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
 const components = { Composer, MessageList };
 
-class ThreadView extends Component {
+export class ThreadView extends Component {
 
     /**
      * @param {...any} args
@@ -229,5 +229,3 @@ Object.assign(ThreadView, {
     },
     template: 'mail.ThreadView',
 });
-
-export default ThreadView;

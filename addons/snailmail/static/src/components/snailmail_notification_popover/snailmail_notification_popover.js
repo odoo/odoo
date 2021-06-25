@@ -2,7 +2,7 @@ odoo.define('snailmail/static/src/components/snailmail_notification_popover/snai
 'use strict';
 
 const { Component } = owl;
-const useStore = require('@mail/component_hooks/use_store/use_store')[Symbol.for("default")];
+const { useStore } = require('@mail/component_hooks/use_store/use_store');
 
 class SnailmailNotificationPopover extends Component {
 

@@ -1,10 +1,10 @@
 /** @odoo-module **/;
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
 
 const { Component } = owl;
 
-class AutocompleteInput extends Component {
+export class AutocompleteInput extends Component {
 
     constructor(...args) {
         super(...args);
@@ -167,5 +167,3 @@ Object.assign(AutocompleteInput, {
     },
     template: 'mail.AutocompleteInput',
 });
-
-export default AutocompleteInput;

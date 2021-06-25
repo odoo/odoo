@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import useUpdate from '@mail/component_hooks/use_update/use_update';
-import Chatter from '@mail/components/chatter/chatter';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { Chatter } from '@mail/components/chatter/chatter';
 import { clear } from '@mail/model/model_field_command';
 
 const { Component } = owl;
@@ -18,7 +18,7 @@ const components = { Chatter };
  * may attempt to create a chatter before messaging has been initialized, so
  * this component delays the mounting of chatter until it becomes initialized.
  */
-class ChatterContainer extends Component {
+export class ChatterContainer extends Component {
 
     /**
      * @override
@@ -131,6 +131,3 @@ Object.assign(ChatterContainer, {
     },
     template: 'mail.ChatterContainer',
 });
-
-
-export default ChatterContainer;

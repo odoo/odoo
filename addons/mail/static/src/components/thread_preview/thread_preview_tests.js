@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import ThreadPreview from '@mail/components/thread_preview/thread_preview';
+import { ThreadPreview } from '@mail/components/thread_preview/thread_preview';
 import {
     afterEach,
     afterNextRender,

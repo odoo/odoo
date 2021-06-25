@@ -6,7 +6,7 @@
  * data object is generated every time to ensure any test can modify it without
  * impacting other tests.
  */
-class MockModels {
+export class MockModels {
 
     //--------------------------------------------------------------------------
     // Public
@@ -249,5 +249,3 @@ class MockModels {
     }
 
 }
-
-export default MockModels;

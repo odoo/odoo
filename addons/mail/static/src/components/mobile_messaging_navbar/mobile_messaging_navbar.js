@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
 
 const { Component } = owl;
 
-class MobileMessagingNavbar extends Component {
+export class MobileMessagingNavbar extends Component {
 
     constructor(...args) {
         super(...args);
@@ -54,5 +54,3 @@ Object.assign(MobileMessagingNavbar, {
     },
     template: 'mail.MobileMessagingNavbar',
 });
-
-export default MobileMessagingNavbar;

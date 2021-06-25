@@ -1,8 +1,7 @@
-odoo.define('snailmail/static/tests/helpers/mock_models.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const MockModels = require('@mail/../tests/helpers/mock_models')[Symbol.for("default")];
-const { patch } = require('web.utils');
+import { MockModels } from '@mail/../tests/helpers/mock_models';
+import { patch } from 'web.utils';
 
 patch(MockModels, 'snailmail/static/tests/helpers/mock_models.js', {
 
@@ -25,7 +24,5 @@ patch(MockModels, 'snailmail/static/tests/helpers/mock_models.js', {
         });
         return data;
     },
-
-});
 
 });

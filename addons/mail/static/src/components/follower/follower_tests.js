@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import Follower from '@mail/components/follower/follower';
+import { Follower } from '@mail/components/follower/follower';
 import { insert, link } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import {

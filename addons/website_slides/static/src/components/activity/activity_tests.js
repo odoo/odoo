@@ -1,9 +1,7 @@
 odoo.define('website_slides/static/src/tests/activity_tests.js', function (require) {
 'use strict';
 
-const components = {
-    Activity: require('@mail/components/activity/activity')[Symbol.for("default")],
-};
+const { Activity } = require('@mail/components/activity/activity');
 const { insert } = require('@mail/model/model_field_command');
 const {
     afterEach,
@@ -11,6 +9,8 @@ const {
     createRootComponent,
     start,
 } = require('@mail/utils/test_utils');
+
+const components = { Activity };
 
 QUnit.module('website_slides', {}, function () {
 QUnit.module('components', {}, function () {

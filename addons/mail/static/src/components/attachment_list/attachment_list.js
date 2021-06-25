@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import Attachment from '@mail/components/attachment/attachment';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { Attachment } from '@mail/components/attachment/attachment';
 
 const { Component } = owl;
 
 const components = { Attachment };
 
-class AttachmentList extends Component {
+export class AttachmentList extends Component {
 
     /**
      * @override
@@ -111,5 +111,3 @@ Object.assign(AttachmentList, {
     },
     template: 'mail.AttachmentList',
 });
-
-export default AttachmentList;

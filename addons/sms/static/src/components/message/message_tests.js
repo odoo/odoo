@@ -1,9 +1,7 @@
 odoo.define('sms/static/src/components/message/message_tests.js', function (require) {
 'use strict';
 
-const components = {
-    Message: require('@mail/components/message/message')[Symbol.for("default")],
-};
+const { Message } = require('@mail/components/message/message');
 const { create, insert, link } = require('@mail/model/model_field_command');
 const { makeDeferred } = require('@mail/utils/deferred/deferred');
 const {
@@ -15,6 +13,8 @@ const {
 } = require('@mail/utils/test_utils');
 
 const Bus = require('web.Bus');
+
+const components = { Message };
 
 QUnit.module('sms', {}, function () {
 QUnit.module('components', {}, function () {

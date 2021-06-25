@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import FollowerSubtypeList from '@mail/components/follower_subtype_list/follower_subtype_list';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { FollowerSubtypeList } from '@mail/components/follower_subtype_list/follower_subtype_list';
 
 const { Component } = owl;
 
 const components = { FollowerSubtypeList };
 
-class Follower extends Component {
+export class Follower extends Component {
 
     /**
      * @override
@@ -73,5 +73,3 @@ Object.assign(Follower, {
     },
     template: 'mail.Follower',
 });
-
-export default Follower;

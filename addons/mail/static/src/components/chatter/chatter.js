@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import useUpdate from '@mail/component_hooks/use_update/use_update';
-import ActivityBox from '@mail/components/activity_box/activity_box';
-import AttachmentBox from '@mail/components/attachment_box/attachment_box';
-import ChatterTopbar from '@mail/components/chatter_topbar/chatter_topbar';
-import Composer from '@mail/components/composer/composer';
-import ThreadView from '@mail/components/thread_view/thread_view';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { ActivityBox } from '@mail/components/activity_box/activity_box';
+import { AttachmentBox } from '@mail/components/attachment_box/attachment_box';
+import { ChatterTopbar } from '@mail/components/chatter_topbar/chatter_topbar';
+import { Composer } from '@mail/components/composer/composer';
+import { ThreadView } from '@mail/components/thread_view/thread_view';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -20,7 +20,7 @@ const components = {
     ThreadView,
 };
 
-class Chatter extends Component {
+export class Chatter extends Component {
 
     /**
      * @override
@@ -149,5 +149,3 @@ Object.assign(Chatter, {
     },
     template: 'mail.Chatter',
 });
-
-export default Chatter;

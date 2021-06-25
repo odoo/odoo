@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
-class ActivityMarkDonePopover extends Component {
+export class ActivityMarkDonePopover extends Component {
 
     /**
      * @override
@@ -115,5 +115,3 @@ Object.assign(ActivityMarkDonePopover, {
     },
     template: 'mail.ActivityMarkDonePopover',
 });
-
-export default ActivityMarkDonePopover;

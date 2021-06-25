@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import Discuss from '@mail/components/discuss/discuss';
+import { Discuss } from '@mail/components/discuss/discuss';
 import InvitePartnerDialog from '@mail/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog';
 
 import AbstractAction from 'web.AbstractAction';

@@ -1,10 +1,7 @@
 odoo.define('sms/static/src/components/notification_list/notification_list_notification_group_tests.js', function (require) {
 'use strict';
 
-const components = {
-    NotificationList: require('@mail/components/notification_list/notification_list')[Symbol.for("default")],
-};
-
+const { NotificationList } = require('@mail/components/notification_list/notification_list');
 const {
     afterEach,
     beforeEach,
@@ -13,6 +10,8 @@ const {
 } = require('@mail/utils/test_utils');
 
 const Bus = require('web.Bus');
+
+const components = { NotificationList };
 
 QUnit.module('sms', {}, function () {
 QUnit.module('components', {}, function () {

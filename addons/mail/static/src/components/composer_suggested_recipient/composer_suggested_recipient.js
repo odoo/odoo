@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import useUpdate from '@mail/component_hooks/use_update/use_update';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 
 import { FormViewDialog } from 'web.view_dialogs';
 import { ComponentAdapter } from 'web.OwlCompatibility';
@@ -21,11 +21,9 @@ class FormViewDialogComponentAdapter extends ComponentAdapter {
 
 }
 
-const components = {
-    FormViewDialogComponentAdapter,
-};
+const components = { FormViewDialogComponentAdapter };
 
-class ComposerSuggestedRecipient extends Component {
+export class ComposerSuggestedRecipient extends Component {
 
     constructor(...args) {
         super(...args);
@@ -151,5 +149,3 @@ Object.assign(ComposerSuggestedRecipient, {
     },
     template: 'mail.ComposerSuggestedRecipient',
 });
-
-export default ComposerSuggestedRecipient;

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import ChatWindowManager from '@mail/components/chat_window_manager/chat_window_manager';
+import { ChatWindowManager } from '@mail/components/chat_window_manager/chat_window_manager';
 
 import AbstractService from 'web.AbstractService';
 import { bus, serviceRegistry } from 'web.core';
