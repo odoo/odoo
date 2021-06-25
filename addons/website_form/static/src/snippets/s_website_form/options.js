@@ -821,8 +821,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         if (!value) {
             return;
         }
-        const name = this.el.querySelector(`[data-custom-field="${value}"]`).textContent;
-        const field = this._getCustomField(value, `Custom ${name}`);
+        const oldLabelText = this.$target[0].querySelector('.s_website_form_label_content').textContent;
+        const field = this._getCustomField(value, oldLabelText);
         this._setActiveProperties(field);
         await this._replaceField(field);
         this.rerender = true;
