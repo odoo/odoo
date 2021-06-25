@@ -187,6 +187,7 @@ class EventEvent(models.Model):
     date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
     is_ongoing = fields.Boolean('Is Ongoing', compute='_compute_is_ongoing', search='_search_is_ongoing')
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
+    is_finished = fields.Boolean(compute='_compute_is_finished', search='_search_is_finished')
     # Location and communication
     address_id = fields.Many2one(
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
@@ -341,6 +342,30 @@ class EventEvent(models.Model):
             begin_tz = fields.Datetime.context_timestamp(event, event.date_begin)
             end_tz = fields.Datetime.context_timestamp(event, event.date_end)
             event.is_one_day = (begin_tz.date() == end_tz.date())
+
+    @api.depends('date_end')
+    def _compute_is_finished(self):
+        for event in self:
+            if not event.date_end:
+                event.is_finished = False
+                continue
+            event = event._set_tz_context()
+            current_datetime = fields.Datetime.context_timestamp(event, fields.Datetime.now())
+            datetime_end = fields.Datetime.context_timestamp(event, event.date_end)
+            event.is_finished = datetime_end <= current_datetime
+
+    def _search_is_finished(self, operator, value):
+        if operator not in ['=', '!=']:
+            raise ValueError(_('This operator is not supported'))
+        if not isinstance(value, bool):
+            raise ValueError(_('Value should be True or False (not %s)'), value)
+        now = fields.Datetime.now()
+        if (operator == '=' and value) or (operator == '!=' and not value):
+            domain = [('date_end', '<=', now)]
+        else:
+            domain = [('date_end', '>', now)]
+        event_ids = self.env['event.event']._search(domain)
+        return [('id', 'in', event_ids)]
 
     @api.depends('event_type_id')
     def _compute_date_tz(self):
