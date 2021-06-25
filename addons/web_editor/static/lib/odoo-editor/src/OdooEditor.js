@@ -11,7 +11,7 @@ import './commands/toggleList.js';
 import './commands/align.js';
 
 import { sanitize } from './utils/sanitize.js';
-import { nodeToObject, objectToNode } from './utils/serialize.js';
+import { nodeToObject, objectToNode, objectToRange, selectionToObject } from './utils/serialize.js';
 import {
     closestBlock,
     commonParentGet,
@@ -41,6 +41,7 @@ import {
     isEmptyBlock,
     getUrlsInfosInString,
     URL_REGEX,
+    throttle,
     isBold,
     YOUTUBE_URL_GET_VIDEO_ID,
     unwrapContents,
@@ -218,6 +219,24 @@ export class OdooEditor extends EventTarget {
         this._isCollaborativeActive = false;
         this._userId =
             (this.options.collaborative && this.options.collaborative.userId) || uuidV4();
+
+        // Colaborator selection and caret display.
+        this._collaborators = new Map();
+        this._color =
+            (this.options.collaborative && this.options.collaborative.color) ||
+            `hsl(${(Math.random() * 360).toFixed(0)},75%,50%)`;
+        this._collaboratorIndicatorContainer = this.document.createElement('div');
+        this._collaboratorIndicatorContainer.style = 'height: 0; width: 0;';
+        this.editable.before(this._collaboratorIndicatorContainer);
+        this._sendSelection = throttle(selection => {
+            if (this.options.collaborative && this.options.collaborative.sendSelection) {
+                this.options.collaborative.sendSelection({
+                    ...selectionToObject(selection),
+                    userId: this._userId,
+                    color: this._color,
+                });
+            }
+        }, 16);
 
         // Create a first step containing all of the document, with a different
         // userId so that it can not be undone.
@@ -581,6 +600,7 @@ export class OdooEditor extends EventTarget {
         this._checkStepUnbreakable = true;
         this._recordHistoryCursor();
         this.dispatchEvent(new Event('historyStep'));
+        this._refreshCollaboratorSelections();
     }
 
     historyGetCurrentStep() {
@@ -700,6 +720,87 @@ export class OdooEditor extends EventTarget {
             this.options.collaborative.requestSynchronization();
         }
         this.observerActive();
+        this._refreshCollaboratorSelections();
+    }
+
+    receiveCollaboratorSelection(selection) {
+        this._displayCollaboratorSelection(selection);
+        const { userId } = selection;
+        if (this._collaborators.has(userId)) {
+            this._collaborators.get(userId).selection = selection;
+        } else {
+            this._collaborators.set(userId, { selection });
+        }
+    }
+
+    _refreshCollaboratorSelections() {
+        Array.from(this._collaborators.values()).forEach(({ selection }) =>
+            this._displayCollaboratorSelection(selection),
+        );
+    }
+
+    _displayCollaboratorSelection({ range, color, direction, userId }) {
+        const className = `collaborator-selection-displayer collaborator-selection-user-${userId}`;
+        let clientRects;
+        try {
+            clientRects = Array.from(
+                objectToRange(range, id => this.idFind(id), this.document).getClientRects(),
+            );
+        } catch (e) {
+            // changes in the dom might prevent the range to be instantiated
+            // (because of a removed node for example), in which case we ignore
+            // the range
+            clientRects = [];
+        }
+        if (!clientRects.length) {
+            return;
+        }
+        const indicators = clientRects.map(({ x, y, width, height }) => {
+            const el = this.document.createElement('div');
+            const top = this.document.documentElement.scrollTop + y;
+            el.style = `
+                position: absolute;
+                top: ${top}px;
+                left: ${x}px;
+                width: ${width}px;
+                height: ${height}px;
+                background-color: ${color};
+                opacity: 0.25;
+                pointer-events: none;`;
+
+            el.className = className;
+            return el;
+        });
+        const caret = this.document.createElement('div');
+        caret.style = `border-left: 2px solid ${color}; position: absolute;`;
+        caret.className = className;
+        // Unrelated to the comedian.
+        const caretTop = this.document.createElement('div');
+        caretTop.style = `height: 5px; width: 5px; background-color: ${color}; position: absolute; top: -5px; left: -4px`;
+        caret.append(caretTop);
+        if (clientRects.length) {
+            if (direction === DIRECTIONS.LEFT) {
+                const rect = clientRects[0];
+                caret.style.height = `${rect.height * 1.2}px`;
+                caret.style.top = `${this.document.documentElement.scrollTop + rect.y}px`;
+                caret.style.left = `${rect.x}px`;
+            } else {
+                const rect = peek(clientRects);
+                caret.style.height = `${rect.height * 1.2}px`;
+                caret.style.top = `${this.document.documentElement.scrollTop + rect.y}px`;
+                caret.style.left = `${rect.x + rect.width}px`;
+            }
+        }
+        this.removeCollaboratorSelection(userId);
+        this._collaboratorIndicatorContainer.append(caret, ...indicators);
+    }
+
+    removeCollaboratorSelection(userId) {
+        Array.from(
+            this._collaboratorIndicatorContainer.querySelectorAll(
+                `.collaborator-selection-displayer.collaborator-selection-user-${userId}`,
+            ),
+        ).forEach(el => el.remove());
     }
 
     historyGetSnapshot() {
@@ -1853,6 +1954,9 @@ export class OdooEditor extends EventTarget {
 
         if (this._currentMouseState === 'mouseup') {
             this._fixFontAwesomeSelection();
+        }
+        if (this._isCollaborativeActive && selection.getRangeAt(0)) {
+            this._sendSelection(selection);
         }
     }
 

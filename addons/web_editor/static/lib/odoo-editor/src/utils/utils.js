@@ -1855,3 +1855,36 @@ export const rightDeepOnlyInlineInScopePath = createDOMPathGenerator(
     true,
     true,
 );
+
+//------------------------------------------------------------------------------
+// Miscelaneous
+//------------------------------------------------------------------------------
+/**
+ * HOF that prevents a function from firing to often,
+ * with a time of {wait} milliseconds between each call. First calls fires
+ * immediately, last call is always called, at most after {wait} milliseconds
+ *
+ * @param func A function that needs to be throttled
+ * @param wait How long in seconds to wait between calls
+ *
+ * @returns a throttled function
+ */
+export function throttle(func, wait) {
+    let ref = null;
+    let shouldWait = false;
+    return (...args) => {
+        if (shouldWait) {
+            ref = args;
+        } else {
+            func(...args);
+            shouldWait = true;
+            setTimeout(() => {
+                if (ref) {
+                    func(...ref);
+                }
+                ref = null;
+                shouldWait = false;
+            }, wait);
+        }
+    };
+}
