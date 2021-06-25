@@ -1273,23 +1273,24 @@ var FieldFloatTime = FieldFloat.extend({
         }
     },
 
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     /**
-     * Ensure the widget is re-rendered after being edited s.t. the value is
-     * directly formatted (without waiting for the record to be saved, as we do
-     * by default).
-     *
-     * See InputField@reset: we skip the call to _render if this widget initiated
-     * the change.
-     *
-     * Note: the default behavior could be changed s.t. all fields are formatted
-     * directly on blur.
-     *
+     * Formats the value on field blur
      * @override
+     * @private
      */
-    async reset() {
-        await this._super(...arguments);
-        if (!this.isDirty) {
-            await this._render();
+    _onBlur() {
+        let parsedValue;
+        let isValid = false;
+        try {
+            parsedValue = this._parseValue(this.$input.val());
+            isValid = true;
+        } catch { }
+        if (isValid) {
+            this.$input.val(this._formatValue(parsedValue));
         }
     },
 });

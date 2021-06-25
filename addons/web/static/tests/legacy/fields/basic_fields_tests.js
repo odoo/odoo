@@ -5809,7 +5809,7 @@ QUnit.module('basic_fields', {
             'The formatted time value should be displayed properly.');
 
         await testUtils.form.clickEdit(form);
-        await testUtils.fields.editAndTrigger(form.$('input[name=qux]'), '9.5', ['change']);
+        await testUtils.fields.editAndTrigger(form.$('input[name=qux]'), '9.5', ['blur', 'change']);
         assert.strictEqual(form.$('input[name=qux]').val(), '09:30',
             'The new value should be displayed properly in the input.');
 
@@ -5821,7 +5821,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('float_time field with invalid value', async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         const form = await createView({
             View: FormView,
@@ -5833,11 +5833,16 @@ QUnit.module('basic_fields', {
                 </form>`,
         });
 
-        await testUtils.fields.editAndTrigger(form.$('input[name=qux]'), 'blabla', ['change']);
+        await testUtils.fields.editAndTrigger(form.$('input[name=qux]'), 'blabla', ['blur']);
         assert.strictEqual(form.$('input[name=qux]').val(), "00:00",
             "invalid value should reset value");
 
-        await testUtils.fields.editAndTrigger(form.$('input[name=qux]'), '6.5', ['change']);
+        await testUtils.fields.editAndTrigger(form.$('input[name=qux]'), '6.5', ['blur']);
+        assert.strictEqual(form.$('input[name=qux]').val(), "06:30",
+            "valid value should set value");
+
+        // again add same value and blur the input
+        await testUtils.fields.editAndTrigger(form.$('input[name=qux]'), '6.5', ['blur']);
         assert.strictEqual(form.$('input[name=qux]').val(), "06:30",
             "valid value should set value");
 
