@@ -19,6 +19,18 @@ html {
         height: 100%;
         display: flex;
         flex-flow: column nowrap;
+
+        @include media-breakpoint-up(lg) {
+          overflow: auto;
+
+          -ms-overflow-style: none; // IE and Edge
+          scrollbar-width: none;    // Firefox
+
+          &::-webkit-scrollbar {    // Chrome, Safari and Opera
+            display: none;
+          }
+        }
+
         > .o_control_panel {
           flex: 0 0 auto;
         }
