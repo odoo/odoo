@@ -67,6 +67,15 @@ class OgoneController(http.Controller):
 
         # Process the payment through the token
         tree = tx_sudo._ogone_send_order_request(request_3ds_authentication=True)
+        feedback_data = {
+            'FEEDBACK_TYPE': 'directlink',
+            'ORDERID': tree.get('orderID'),
+            'tree': tree,
+        }
+        _logger.info(
+            "entering _handle_feedback_data with data:\n%s", pprint.pformat(feedback_data)
+        )
+        request.env['payment.transaction'].sudo()._handle_feedback_data('ogone', feedback_data)
 
         # Handle the response
         redirect_html_element = tree.find('HTML_ANSWER')
@@ -84,15 +93,6 @@ class OgoneController(http.Controller):
                 'payment_ogone.directlink_feedback', {'redirect_html': redirect_html}
             )
         else:
-            feedback_data = {
-                'FEEDBACK_TYPE': 'directlink',
-                'ORDERID': tree.get('orderID'),
-                'tree': tree,
-            }
-            _logger.info(
-                "entering _handle_feedback_data with data:\n%s", pprint.pformat(feedback_data)
-            )
-            request.env['payment.transaction'].sudo()._handle_feedback_data('ogone', feedback_data)
             if tx_sudo.state in ('cancel', 'error'):
                 tx_sudo.token_id.active = False  # The initial payment failed, archive the token
             return werkzeug.utils.redirect('/payment/status')
