@@ -308,16 +308,16 @@
                             <field name="company_id" invisible="1"/>
 
                             <!-- Displayed fields -->
-                            <field name="statement_id"/>
-                            <field name="date"/>
-                            <field name="payment_ref"/>
-                            <field name="ref"/>
-                            <field name="partner_id"/>
-                            <field name="amount"/>
-                            <field name="sequence"/>
-                            <field name="narration" string="Notes"/>
-                            <field name="transaction_type"/>
-                            <field name="move_id"/>
+                            <field name="statement_id" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="date" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="payment_ref" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="ref" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="partner_id" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="amount" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="sequence" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="narration" string="Notes" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="transaction_type" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="move_id" attrs="{'readonly': [('state', '!=', 'open')]}"/>
                         </group>
                     </sheet>
                 </form>
