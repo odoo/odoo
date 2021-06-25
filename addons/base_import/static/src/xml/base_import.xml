@@ -320,17 +320,16 @@ lines composed only of empty cells">
         <div class="oe_blockui_spin" style="height: 50px">
             <img src="/web/static/img/spin.png" style="animation: fa-spin 1s infinite steps(12);" alt="Loading..."/>
         </div>
-        <span t-esc="title"/>
         <div t-if="isBatch">
             <div class="o_progress_dialog_batch">
-                Importing batch <span class="o_progress_dialog_batch_txt">1</span> out of <span t-esc="totalBatch"/>...
+                <span t-esc="task"/> batch <span class="o_progress_dialog_batch_txt">1</span> out of <span t-esc="totalBatch"/>...
             </div>
             <span class="o_progress_dialog_stop d-none">
                 Finalizing current batch before interrupting...
             </span>
-            <div class="w-100 text-right">
-                <span class="o_progress_dialog_txt">0</span>/<span t-esc="totalRows"/> rows
-            </div>
+            <!--<div class="w-100 text-right">-->
+                <!--<span class="o_progress_dialog_txt">0</span>/<span t-esc="totalRows"/> rows-->
+            <!--</div>-->
             <div class="d-flex align-items-center">
                 <div class="progress flex-grow-1">
                     <div class="progress-bar progress-bar-striped" role="progressbar"

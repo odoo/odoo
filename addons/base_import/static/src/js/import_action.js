@@ -804,16 +804,16 @@ var DataImport = AbstractAction.extend({
         this.stopImport = false;
         this.totalToImport = this.fileLength - parseInt(this.$('#oe_import_row_start').val());
         this.batchSize = parseInt(this.$('#oe_import_batch_limit').val() || 0);
-        var isBatch = this.totalToImport > this.batchSize;
+        var isBatch = this.batchSize != 0 && this.totalToImport > this.batchSize;
         var totalBatch = isBatch ? Math.floor(this.totalToImport / this.batchSize) + 1 : 1;
         this.currentBatchNumber = 1;
 
         $.blockUI({
             message: QWeb.render(
                 'base_import.progressDialog', {
-                    title: kwargs.dryrun ? _t("Testing import...") : _t('Importing...'),
+                    task: kwargs.dryrun ? _t('Testing') : _t('Importing'),
                     isBatch: isBatch,
-                    totalRows: this.totalToImport,
+//                    totalRows: this.totalToImport,
                     totalBatch: totalBatch,
                 }
             )});
@@ -834,7 +834,7 @@ var DataImport = AbstractAction.extend({
                 .text(percentage + "%")
                 .attr('aria-valuenow', percentage)
                 .css('width', percentage + '%');
-            $('.o_progress_dialog').find('.o_progress_dialog_txt').text(recordsDone);
+//            $('.o_progress_dialog').find('.o_progress_dialog_txt').text(recordsDone);
             $('.o_progress_dialog').find('.o_progress_dialog_batch_txt').text(self.currentBatchNumber);
         };
 
@@ -892,23 +892,22 @@ var DataImport = AbstractAction.extend({
         this.currentBatchNumber += 1;
 
         if (this.stopImport) {
-            if (!kwargs.dryrun) {
-                self.$('#oe_import_row_start').val(parseInt(opts.skip) + 1);
-            }
-            var results = {
-                'messages': [{
-                    type: 'info',
-                    priority: true,
-                    message: _.str.sprintf(
-                        _t("This file has been %s up to line %d."),
-                        kwargs.dryrun ? _t('tested') : _t('successfully imported'),
-                        opts.skip
-                    )
-                }]
-            }
             $(document.body).removeClass('o_ui_blocked');
             $.unblockUI();
-            return Promise.resolve(results);
+            if (!kwargs.dryrun) {
+                return Promise.resolve({
+                    'messages': [{
+                        type: 'info',
+                        priority: true,
+                        message: _.str.sprintf(
+                            _t("This file has been successfully imported up to line %d."),
+                            opts.skip
+                        )
+                    }]
+                });
+            } else {
+                return Promise.resolve({});
+            }
         }
 
         return this._rpc({
@@ -953,7 +952,7 @@ var DataImport = AbstractAction.extend({
                         return names[0] || names[1];
                     }),
                     ids: (results.ids || []).concat(r2.ids || []),
-                    messages: results.messages.concat(r2.messages),
+                    messages: r2.messages ? results.messages.concat(r2.messages) : results.messages,
                     skip: r2.skip || results.nextrow,
                     nextrow: r2.nextrow
                 }
@@ -969,8 +968,15 @@ var DataImport = AbstractAction.extend({
         var self = this;
         var prom = this.call_import({ dryrun: false });
         prom.then(function (results) {
-            var message = results.messages;
-            if (!_.any(message, function (message) {
+            if (self.stopImport) {
+                var recordsImported = results.ids.length;
+                self.$('#oe_import_row_start').val(parseInt(self.$('#oe_import_row_start').val()) + recordsImported);
+                self.displayNotification({ message: _.str.sprintf(
+                    _t("%d records successfully imported"),
+                    recordsImported
+                )});
+                self['import_interrupted'](results);
+            } else if (!_.any(results.messages, function (message) {
                     return message.type === 'error'; })) {
                 self['import_succeeded'](results);
                 return;
@@ -1209,6 +1215,7 @@ StateMachine.create({
         { name: 'validated', from: 'validating', to: 'results' },
         { name: 'import', from: ['preview_success', 'results'], to: 'importing' },
         { name: 'import_succeeded', from: 'importing', to: 'imported'},
+        { name: 'import_interrupted', from: 'importing', to: 'results' },
         { name: 'import_failed', from: 'importing', to: 'results' }
     ],
 });
