@@ -545,6 +545,7 @@ class SurveyQuestionAnswer(models.Model):
     _description = 'Survey Label'
 
     question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade')
+    survey_id = fields.Many2one('survey.survey', related='question_id.survey_id')
     matrix_question_id = fields.Many2one('survey.question', string='Question (as matrix row)', ondelete='cascade')
     sequence = fields.Integer('Label Sequence order', default=10)
     value = fields.Char('Suggested value', translate=True, required=True)
