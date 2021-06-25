@@ -10,7 +10,7 @@ QUnit.module("View service", (hooks) => {
 
     hooks.beforeEach(() => {
         const views = {
-            "take.five,99,list": `<list><field name="display_name" /><list>`,
+            "take.five,99,list": `<list><field name="display_name" /></list>`,
         };
 
         const models = {
