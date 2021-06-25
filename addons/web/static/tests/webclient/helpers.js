@@ -85,7 +85,7 @@ export function setupWebClientServiceRegistry() {
 /**
  * Remove this as soon as we drop the legacy support
  */
-function addLegacyMockEnvironment(env, legacyParams = {}) {
+export function addLegacyMockEnvironment(env, legacyParams = {}) {
     // setup a legacy env
     const dataManager = Object.assign(
         {
