@@ -269,23 +269,6 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 wizard.partner_bank_id = False
 
-    @api.depends('journal_id')
-    def _compute_payment_method_id(self):
-        for wizard in self:
-            batches = wizard._get_batches()
-            payment_type = batches[0]['key_values']['payment_type']
-
-            if payment_type == 'inbound':
-                available_payment_methods = wizard.journal_id.inbound_payment_method_ids
-            else:
-                available_payment_methods = wizard.journal_id.outbound_payment_method_ids
-
-            # Select the first available one by default.
-            if available_payment_methods:
-                wizard.payment_method_id = available_payment_methods[0]._origin
-            else:
-                wizard.payment_method_id = False
-
     @api.depends('payment_type',
                  'journal_id.inbound_payment_method_ids',
                  'journal_id.outbound_payment_method_ids')
