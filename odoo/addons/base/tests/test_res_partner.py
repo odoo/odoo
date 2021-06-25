@@ -49,3 +49,80 @@ class TestPartner(TransactionCase):
         partner_merge_wizard = self.env['base.partner.merge.automatic.wizard'].with_context(
             {'partner_show_db_id': True, 'default_dst_partner_id': test_partner}).new()
         self.assertEqual(partner_merge_wizard.dst_partner_id.display_name, expected_partner_name, "'Destination Contact' name should contain db ID in brackets")
+
+    def test_public_customer_status(self):
+        """ Test customer / share / public computation on partner, depending
+        on its users and including active flag test. """
+        partner = self.env['res.partner'].create({
+            'name': 'Brigitte Boitaclous',
+            'email': '"Brigitte, Boitaclous" <brigitte@boitaclous.example.com>',
+        })
+        self.assertTrue(partner.partner_share, "Partner wo user is considered as share")
+        self.assertFalse(partner.partner_public, "Partner has no public user linked")
+
+        user_portal = self.env['res.users'].create({
+            'partner_id': partner.id,
+            'groups_id': [(4, self.env.ref('base.group_portal').id)],
+            'active': True,
+            'login': 'test.portal',
+        })
+        self.assertTrue(user_portal.share, "Portal users are considered as share")
+        self.assertTrue(partner.partner_share, "Partner with portal user is considered as share")
+        self.assertFalse(partner.partner_public, "Partner has other users than public users")
+
+        user_public = self.env['res.users'].create({
+            'partner_id': partner.id,
+            'groups_id': [(4, self.env.ref('base.group_public').id)],
+            'active': True,
+            'login': 'test.public',
+        })
+        self.assertTrue(user_public.share, "Public users are considered as share")
+        self.assertEqual(partner.user_ids, user_portal | user_public)
+        self.assertTrue(partner.partner_share, "Partner with portal and public users is considered as share")
+        self.assertFalse(partner.partner_public, "Partner has other users than public users")
+
+        user_portal.toggle_active()
+        self.assertEqual(partner.user_ids, user_public)
+        self.assertEqual(partner.with_context(active_test=False).user_ids, user_portal | user_public)
+        self.assertTrue(partner.partner_share, "Partner with portal (even archived) and public users is considered as share")
+        self.assertFalse(partner.partner_public, "Partner has other users (even archived) than public users")
+
+        user_public.toggle_active()
+        self.assertFalse(partner.user_ids)
+        self.assertEqual(partner.with_context(active_test=False).user_ids, user_portal | user_public)
+        self.assertTrue(partner.partner_share, "Partner with portal and public users (even archived) is considered as share")
+        self.assertFalse(partner.partner_public, "Partner has other users (even archived) than public users")
+
+        user_portal.unlink()
+        self.assertFalse(partner.user_ids)
+        self.assertEqual(partner.with_context(active_test=False).user_ids, user_public)
+        self.assertTrue(partner.partner_share, "Partner public user (even archived) is considered as share")
+        self.assertTrue(partner.partner_public, "Partner has only (archived) public users")
+
+        user_public.toggle_active()
+        self.assertEqual(partner.user_ids, user_public)
+        self.assertTrue(partner.partner_share, "Partner with portal (even archived) and public users (even archived) is considered as share")
+        self.assertTrue(partner.partner_public, "Partner has only public users")
+
+        user_public2 = self.env['res.users'].create({
+            'partner_id': partner.id,
+            'groups_id': [(4, self.env.ref('base.group_public').id)],
+            'active': True,
+            'login': 'test.public.2',
+        })
+        self.assertEqual(partner.user_ids, user_public | user_public2)
+        self.assertTrue(partner.partner_share, "Partner with several share users is considered as share")
+        self.assertTrue(partner.partner_public, "Partner has only public users")
+
+        user_internal = self.env['res.users'].create({
+            'partner_id': partner.id,
+            'groups_id': [(4, self.env.ref('base.group_user').id)],
+            'active': True,
+            'login': 'test.internal',
+        })
+        self.assertEqual(partner.user_ids, user_public | user_public2 | user_internal)
+        self.assertFalse(partner.partner_share, "Partner has internal users")
+        self.assertFalse(partner.partner_public, "Partner has internal users")
+
+        # check famous example: public partner
+        self.assertTrue(self.env.ref('base.public_partner').partner_public)
