@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import DialogManager from '@mail/components/dialog_manager/dialog_manager';
+import { DialogManager } from '@mail/components/dialog_manager/dialog_manager';
 
 import AbstractService from 'web.AbstractService';
 import { bus, serviceRegistry } from 'web.core';

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import ChatterContainer from '@mail/components/chatter_container/chatter_container';
+import { ChatterContainer } from '@mail/components/chatter_container/chatter_container';
 
 import FormRenderer from 'web.FormRenderer';
 import { ComponentWrapper } from 'web.OwlCompatibility';

@@ -1,17 +1,17 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import useUpdate from '@mail/component_hooks/use_update/use_update';
-import AutocompleteInput from '@mail/components/autocomplete_input/autocomplete_input';
-import DiscussSidebarItem from '@mail/components/discuss_sidebar_item/discuss_sidebar_item';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { AutocompleteInput } from '@mail/components/autocomplete_input/autocomplete_input';
+import { DiscussSidebarItem } from '@mail/components/discuss_sidebar_item/discuss_sidebar_item';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
 const components = { AutocompleteInput, DiscussSidebarItem };
 
-class DiscussSidebar extends Component {
+export class DiscussSidebar extends Component {
 
     /**
      * @override
@@ -301,5 +301,3 @@ Object.assign(DiscussSidebar, {
     props: {},
     template: 'mail.DiscussSidebar',
 });
-
-export default DiscussSidebar;

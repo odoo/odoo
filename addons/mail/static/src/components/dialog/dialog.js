@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
-class Dialog extends Component {
+export class Dialog extends Component {
 
     /**
      * @param {...any} args
@@ -110,5 +110,3 @@ Object.assign(Dialog, {
     },
     template: 'mail.Dialog',
 });
-
-export default Dialog;

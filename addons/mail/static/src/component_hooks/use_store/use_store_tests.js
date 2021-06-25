@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import useStore from '@mail/component_hooks/use_store/use_store';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
 import {
     afterNextRender,
     nextAnimationFrame,

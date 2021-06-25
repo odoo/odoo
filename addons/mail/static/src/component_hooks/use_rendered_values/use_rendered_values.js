@@ -12,7 +12,7 @@ const { onMounted, onPatched } = owl.hooks;
  *  render and of which the result will be stored for future reference.
  * @returns {function} function to call to retrieve the last rendered values.
  */
-function useRenderedValues(selector) {
+export function useRenderedValues(selector) {
     const component = Component.current;
     let renderedValues;
     let patchedValues;
@@ -29,5 +29,3 @@ function useRenderedValues(selector) {
     }
     return () => patchedValues;
 }
-
-export default useRenderedValues;

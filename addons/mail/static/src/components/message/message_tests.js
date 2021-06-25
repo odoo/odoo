@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import Message from '@mail/components/message/message';
+import { Message } from '@mail/components/message/message';
 import {
     create,
     insert,

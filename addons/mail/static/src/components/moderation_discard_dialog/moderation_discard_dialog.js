@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+
 import Dialog from 'web.OwlDialog';
 
 const { Component } = owl;
@@ -9,7 +10,7 @@ const { useRef } = owl.hooks;
 
 const components = { Dialog };
 
-class ModerationDiscardDialog extends Component {
+export class ModerationDiscardDialog extends Component {
 
     /**
      * @override
@@ -101,5 +102,3 @@ Object.assign(ModerationDiscardDialog, {
     },
     template: 'mail.ModerationDiscardDialog',
 });
-
-export default ModerationDiscardDialog;

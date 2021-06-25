@@ -1,16 +1,16 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import AutocompleteInput from '@mail/components/autocomplete_input/autocomplete_input';
-import Composer from '@mail/components/composer/composer';
-import DiscussMobileMailboxSelection from '@mail/components/discuss_mobile_mailbox_selection/discuss_mobile_mailbox_selection';
-import DiscussSidebar from '@mail/components/discuss_sidebar/discuss_sidebar';
-import MobileMessagingNavbar from '@mail/components/mobile_messaging_navbar/mobile_messaging_navbar';
-import ModerationDiscardDialog from '@mail/components/moderation_discard_dialog/moderation_discard_dialog';
-import ModerationRejectDialog from '@mail/components/moderation_reject_dialog/moderation_reject_dialog';
-import NotificationList from '@mail/components/notification_list/notification_list';
-import ThreadView from '@mail/components/thread_view/thread_view';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { AutocompleteInput } from '@mail/components/autocomplete_input/autocomplete_input';
+import { Composer } from '@mail/components/composer/composer';
+import { DiscussMobileMailboxSelection } from '@mail/components/discuss_mobile_mailbox_selection/discuss_mobile_mailbox_selection';
+import { DiscussSidebar } from '@mail/components/discuss_sidebar/discuss_sidebar';
+import { MobileMessagingNavbar } from '@mail/components/mobile_messaging_navbar/mobile_messaging_navbar';
+import { ModerationDiscardDialog } from '@mail/components/moderation_discard_dialog/moderation_discard_dialog';
+import { ModerationRejectDialog } from '@mail/components/moderation_reject_dialog/moderation_reject_dialog';
+import { NotificationList } from '@mail/components/notification_list/notification_list';
+import { ThreadView } from '@mail/components/thread_view/thread_view';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -27,7 +27,7 @@ const components = {
     ThreadView,
 };
 
-class Discuss extends Component {
+export class Discuss extends Component {
     /**
      * @override
      */
@@ -313,5 +313,3 @@ Object.assign(Discuss, {
     props: {},
     template: 'mail.Discuss',
 });
-
-export default Discuss;

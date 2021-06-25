@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
 
 const { Component } = owl;
 
-class MailTemplate extends Component {
+export class MailTemplate extends Component {
 
     /**
      * @override
@@ -74,5 +74,3 @@ Object.assign(MailTemplate, {
     },
     template: 'mail.MailTemplate',
 });
-
-export default MailTemplate;

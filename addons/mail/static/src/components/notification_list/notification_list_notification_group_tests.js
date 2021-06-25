@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import NotificationList from '@mail/components/notification_list/notification_list';
+import { NotificationList } from '@mail/components/notification_list/notification_list';
 import {
     afterEach,
     afterNextRender,

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import FileUploader from '@mail/components/file_uploader/file_uploader';
+import { FileUploader } from '@mail/components/file_uploader/file_uploader';
 import {
     afterEach,
     beforeEach,

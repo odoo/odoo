@@ -1,16 +1,16 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
 
-import Dialog from 'web.OwlDialog'
+import Dialog from 'web.OwlDialog';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
 const components = { Dialog };
 
-class AttachmentDeleteConfirmDialog extends Component {
+export class AttachmentDeleteConfirmDialog extends Component {
 
     /**
      * @override
@@ -85,5 +85,3 @@ Object.assign(AttachmentDeleteConfirmDialog, {
     },
     template: 'mail.AttachmentDeleteConfirmDialog',
 });
-
-export default AttachmentDeleteConfirmDialog;

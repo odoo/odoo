@@ -1,15 +1,15 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import FollowButton from '@mail/components/follow_button/follow_button';
-import FollowerListMenu from '@mail/components/follower_list_menu/follower_list_menu';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { FollowButton } from '@mail/components/follow_button/follow_button';
+import { FollowerListMenu } from '@mail/components/follower_list_menu/follower_list_menu';
 
 const { Component } = owl;
 
 const components = { FollowButton, FollowerListMenu };
 
-class ChatterTopbar extends Component {
+export class ChatterTopbar extends Component {
 
     /**
      * @override
@@ -130,5 +130,3 @@ Object.assign(ChatterTopbar, {
     },
     template: 'mail.ChatterTopbar',
 });
-
-export default ChatterTopbar;

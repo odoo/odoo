@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import useUpdate from '@mail/component_hooks/use_update/use_update';
-import ComposerSuggestionList from '@mail/components/composer_suggestion_list/composer_suggestion_list';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { ComposerSuggestionList } from '@mail/components/composer_suggestion_list/composer_suggestion_list';
 import { markEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
@@ -11,7 +11,7 @@ const { useRef } = owl.hooks;
 
 const components = { ComposerSuggestionList };
 
-class ComposerTextInput extends Component {
+export class ComposerTextInput extends Component {
 
     /**
      * @override
@@ -422,5 +422,3 @@ Object.assign(ComposerTextInput, {
     },
     template: 'mail.ComposerTextInput',
 });
-
-export default ComposerTextInput;

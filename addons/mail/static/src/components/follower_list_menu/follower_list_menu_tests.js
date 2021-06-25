@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import FollowerListMenu from '@mail/components/follower_list_menu/follower_list_menu';
+import { FollowerListMenu } from '@mail/components/follower_list_menu/follower_list_menu';
 import { insert, link } from '@mail/model/model_field_command';
 import {
     afterEach,

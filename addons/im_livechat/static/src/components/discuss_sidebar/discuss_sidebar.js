@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import DiscussSidebar from '@mail/components/discuss_sidebar/discuss_sidebar';
+import { DiscussSidebar } from '@mail/components/discuss_sidebar/discuss_sidebar';
 
 import { patch } from 'web.utils';
 

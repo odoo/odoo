@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import NotificationGroup from '@mail/components/notification_group/notification_group';
-import NotificationRequest from '@mail/components/notification_request/notification_request';
-import ThreadNeedactionPreview from '@mail/components/thread_needaction_preview/thread_needaction_preview';
-import ThreadPreview from '@mail/components/thread_preview/thread_preview';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { NotificationGroup } from '@mail/components/notification_group/notification_group';
+import { NotificationRequest } from '@mail/components/notification_request/notification_request';
+import { ThreadNeedactionPreview } from '@mail/components/thread_needaction_preview/thread_needaction_preview';
+import { ThreadPreview } from '@mail/components/thread_preview/thread_preview';
 
 const { Component } = owl;
 
@@ -16,7 +16,7 @@ const components = {
     ThreadPreview,
 };
 
-class NotificationList extends Component {
+export class NotificationList extends Component {
 
     /**
      * @override
@@ -223,5 +223,3 @@ Object.assign(NotificationList, {
     },
     template: 'mail.NotificationList',
 });
-
-export default NotificationList;

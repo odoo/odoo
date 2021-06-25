@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
 
 const { Component } = owl;
 const { useState } = owl.hooks;
 
-class FollowButton extends Component {
+export class FollowButton extends Component {
     /**
      * @override
      */
@@ -86,5 +86,3 @@ Object.assign(FollowButton, {
     },
     template: 'mail.FollowButton',
 });
-
-export default FollowButton;

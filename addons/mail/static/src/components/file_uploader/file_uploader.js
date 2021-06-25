@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
 
 import core from 'web.core';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
-class FileUploader extends Component {
+export class FileUploader extends Component {
 
     /**
      * @override
@@ -234,5 +234,3 @@ Object.assign(FileUploader, {
     },
     template: 'mail.FileUploader',
 });
-
-export default FileUploader;

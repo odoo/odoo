@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import ActivityMarkDonePopover from '@mail/components/activity_mark_done_popover/activity_mark_done_popover';
-
+import { ActivityMarkDonePopover } from '@mail/components/activity_mark_done_popover/activity_mark_done_popover';
 import { insert } from '@mail/model/model_field_command';
 import {
     afterEach,

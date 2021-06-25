@@ -1,15 +1,15 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import Follower from '@mail/components/follower/follower';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { Follower } from '@mail/components/follower/follower';
 
 const { Component } = owl;
 const { useRef, useState } = owl.hooks;
 
 const components = { Follower };
 
-class FollowerListMenu extends Component {
+export class FollowerListMenu extends Component {
     /**
      * @override
      */
@@ -137,5 +137,3 @@ Object.assign(FollowerListMenu, {
     },
     template: 'mail.FollowerListMenu',
 });
-
-export default FollowerListMenu;

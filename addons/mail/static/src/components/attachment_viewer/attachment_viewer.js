@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import useRefs from '@mail/component_hooks/use_refs/use_refs';
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
+import { useRefs } from '@mail/component_hooks/use_refs/use_refs';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { link } from '@mail/model/model_field_command';
 
 import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
@@ -14,7 +14,7 @@ const MIN_SCALE = 0.5;
 const SCROLL_ZOOM_STEP = 0.1;
 const ZOOM_STEP = 0.5;
 
-class AttachmentViewer extends Component {
+export class AttachmentViewer extends Component {
 
     /**
      * @override
@@ -614,5 +614,3 @@ Object.assign(AttachmentViewer, {
 });
 
 QWeb.registerComponent('AttachmentViewer', AttachmentViewer);
-
-export default AttachmentViewer;

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import Discuss from '@mail/components/discuss/discuss';
+import { Discuss } from '@mail/components/discuss/discuss';
 
 import { patch } from 'web.utils';
 

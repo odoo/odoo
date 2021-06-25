@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from '@mail/model/model_core';
-import ModelField from '@mail/model/model_field';
+import { ModelField } from '@mail/model/model_field';
 import { patchClassMethods, patchInstanceMethods } from '@mail/utils/utils';
 import { unlinkAll } from '@mail/model/model_field_command';
 
@@ -18,7 +18,7 @@ const DEPENDENT_INNER_SEPARATOR = "--//--//--";
  * `create()` or record method `update()`), this object processes them with
  * direct field & and computed field updates.
  */
-class ModelManager {
+export class ModelManager {
 
     //--------------------------------------------------------------------------
     // Public
@@ -1166,5 +1166,3 @@ class ModelManager {
     }
 
 }
-
-export default ModelManager;

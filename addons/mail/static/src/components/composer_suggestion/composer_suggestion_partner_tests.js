@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import ComposerSuggestion from '@mail/components/composer_suggestion/composer_suggestion';
+import { ComposerSuggestion } from '@mail/components/composer_suggestion/composer_suggestion';
 import {
     afterEach,
     beforeEach,
