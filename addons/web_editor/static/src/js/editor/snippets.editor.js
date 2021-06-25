@@ -1213,7 +1213,7 @@ var SnippetsMenu = Widget.extend({
 
         // Active snippet editor on click in the page
         var lastElement;
-        this.$document.on('click.snippets_menu', '*', ev => {
+        const onClick = ev => {
             var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;
             if (!srcElement || lastElement === srcElement) {
                 return;
@@ -1238,7 +1238,11 @@ var SnippetsMenu = Widget.extend({
                 return;
             }
             this._activateSnippet($target);
-        });
+        };
+
+        this.$document.on('click.snippets_menu', '*', onClick);
+        // Needed as bootstrap stop the propagation of click events for dropdowns
+        this.$document.on('mouseup.snippets_menu', '.dropdown-toggle', onClick);
 
         core.bus.on('deactivate_snippet', this, this._onDeactivateSnippet);
 
@@ -1283,7 +1287,7 @@ var SnippetsMenu = Widget.extend({
                     editor.cover();
                 }
             }, 250);
-        }, 50)
+        }, 50);
         // We use addEventListener instead of jQuery because we need 'capture'.
         // Setting capture to true allows to take advantage of event bubbling
         // for events that otherwise don’t support it. (e.g. useful when
