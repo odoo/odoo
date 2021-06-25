@@ -49,14 +49,14 @@
                                     <h3 class="text-secondary mt0 mb4">
                                         <span t-field="job.name"/>
                                     </h3>
-                                    <h5 t-if="job.no_of_recruitment &gt; 1">
+                                    <h5 t-if="job.no_of_recruitment &gt;= 1">
                                         <t t-esc="job.no_of_recruitment"/> open positions
                                     </h5>
                                     <div t-if="editable"
                                        t-field="job.description"
                                        class="mt16 mb0 css_non_editable_mode_hidden"/>
-                                    <div t-esc="len((job.description or '').split(' ')) > 35 and '%s ...' % ' '.join(job.description.split(' ')[:35]) or job.description"
-                                        class="mt16 mb0 css_editable_mode_hidden"
+                                    <div t-esc="job.description or ''"
+                                        class="mt16 mb0 css_editable_mode_hidden o_website_hr_recruitment_job_description"
                                     />
                                     <div class="o_job_infos mt16">
                                         <span t-field="job.address_id" t-options='{

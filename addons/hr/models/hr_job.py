@@ -9,8 +9,10 @@ class Job(models.Model):
     _name = "hr.job"
     _description = "Job Position"
     _inherit = ['mail.thread']
+    _order = 'sequence'
 
     name = fields.Char(string='Job Position', required=True, index=True, translate=True)
+    sequence = fields.Integer(default=10)
     expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees', store=True,
         help='Expected number of employees for this job position after new recruitment.')
     no_of_employee = fields.Integer(compute='_compute_employees', string="Current Number of Employees", store=True,
@@ -31,6 +33,7 @@ class Job(models.Model):
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),
+        ('no_of_recruitment_positive', 'CHECK(no_of_recruitment >= 0)', 'The expected number of new employees must be positive.')
     ]
 
     @api.depends('no_of_recruitment', 'employee_ids.job_id', 'employee_ids.active')
