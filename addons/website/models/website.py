@@ -9,7 +9,7 @@ import requests
 import re
 
 
-from lxml import html
+from lxml import etree
 from werkzeug import urls
 from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
@@ -24,7 +24,7 @@ from odoo.http import request
 from odoo.modules.module import get_resource_path
 from odoo.osv.expression import FALSE_DOMAIN
 from odoo.tools.translate import _
-from odoo.tools import pycompat
+from odoo.tests import HttpCase
 
 logger = logging.getLogger(__name__)
 
@@ -316,55 +316,56 @@ class Website(models.Model):
 
         def set_features(selected_features):
             feature_ids = self.env['website.configurator.feature'].browse(selected_features)
-            pages_views = {}
+            pages_data = {}
             modules = self.env['ir.module.module']
             for feature_id in feature_ids:
                 if feature_id.type == 'app' and feature_id.module_id and feature_id.module_id.state != 'installed':
                     modules += feature_id.module_id
                 if feature_id.type == 'page' and feature_id.page_view_id:
                     result = self.env['website'].new_page(name=feature_id.name, add_menu=True, template=feature_id.page_view_id.key)
-                    pages_views[feature_id.iap_page_code] = result['view_id']
+                    pages_data[feature_id.iap_page_code] = result
 
             modules._button_immediate_function(lambda self: self.button_install())
-            return pages_views
+            return pages_data
 
-        def configure_page(page_code, snippet_list, pages_views):
+        def configure_page(page_code, snippet_list, pages_data):
+            url = None
+            page_view = None
             if page_code == 'homepage':
-                page_view_id = website.homepage_id.view_id
+                url = '/'
+                page_view = website.homepage_id.view_id
             else:
-                page_view_id = self.env['ir.ui.view'].browse(pages_views[page_code])
-            rendered_snippets = []
-            nb_snippets = len(snippet_list)
-            for i, snippet in enumerate(snippet_list, start=1):
-                try:
-                    view_id = self.env['website'].with_context(website_id=website.id).viewref(snippet)
-                    if view_id:
-                        rendered_snippet = pycompat.to_text(view_id._render())
-                        el = html.fragment_fromstring(rendered_snippet)
+                page_data = pages_data[page_code]
+                url = page_data.url
+                page_view = self.env['ir.ui.view'].browse(page_data.view_id)
 
-                        # Add the data-snippet attribute to identify the snippet
-                        # for compatibility code
-                        el.attrib['data-snippet'] = snippet.split('.', 1)[-1]
+            # Start a tour to build the page using all the editor logic (as if
+            # an user made the page itself), this allows to keep all behaviors
+            # (onBuilt, data-snippet, etc) + some extra behavior made just for
+            # this system like "applying a shape on an image on addition in the
+            # page" (which the python side does not know how to do).
+            HttpCase.setUpClass()
+            httpCase = HttpCase()  # FIXME obviously crappy and does not work anyway, to check
+            url = f"{url}?fw={website.id}&website_configurator_snippets={','.join(snippet_list)}"
+            httpCase.start_tour(url, 'website_configurator_page_builder_tour', login=self.env.user.name)
 
-                        # Tweak the shape of the first snippet to connect it
-                        # properly with the header color in some themes
-                        if i == 1:
-                            shape_el = el.xpath("//*[hasclass('o_we_shape')]")
-                            if shape_el:
-                                shape_el[0].attrib['class'] += ' o_header_extra_shape_mapping'
+            # Do some post-processing on the built page
+            parser = etree.XMLParser()
+            tree = etree.fromstring(f"<wrap>{page_view.arch}</wrap>", parser=parser)
+            wrap = tree.xpath("//*[@id='wrap']")
 
-                        # Tweak the shape of the last snippet to connect it
-                        # properly with the footer color in some themes
-                        if i == nb_snippets:
-                            shape_el = el.xpath("//*[hasclass('o_we_shape')]")
-                            if shape_el:
-                                shape_el[0].attrib['class'] += ' o_footer_extra_shape_mapping'
+            # Tweak the shape of the first snippet to connect it
+            # properly with the header color in some themes
+            shape_el = wrap[0].xpath("//*[hasclass('o_we_shape')]")
+            if shape_el:
+                shape_el[0].attrib['class'] += ' o_header_extra_shape_mapping'
 
-                        rendered_snippet = pycompat.to_text(html.tostring(el))
-                        rendered_snippets.append(rendered_snippet)
-                except ValueError as e:
-                    logger.warning(e)
-            page_view_id.save(value=''.join(rendered_snippets), xpath="(//div[hasclass('oe_structure')])[last()]")
+            # Tweak the shape of the last snippet to connect it
+            # properly with the footer color in some themes
+            shape_el = wrap[-1].xpath("//*[hasclass('o_we_shape')]")
+            if shape_el:
+                shape_el[0].attrib['class'] += ' o_footer_extra_shape_mapping'
+
 
         def set_images(images):
             for image in images:
@@ -409,10 +410,10 @@ class Website(models.Model):
             set_colors(palette)
 
         # modules
-        pages_views = set_features(kwargs.get('selected_features'))
+        pages_data = set_features(kwargs.get('selected_features'))
 
         # Load suggestion from iap for selected pages
-        requested_pages = list(pages_views.keys())
+        requested_pages = list(pages_data.keys())
         requested_pages.append('homepage')
         params = {
             'theme': kwargs.get('theme_name'),
@@ -423,7 +424,7 @@ class Website(models.Model):
         # Update pages
         pages = custom_resources.get('pages', {})
         for page_code, snippet_list in pages.items():
-            configure_page(page_code, snippet_list, pages_views)
+            configure_page(page_code, snippet_list, pages_data)
 
         images = custom_resources.get('images', [])
         set_images(images)

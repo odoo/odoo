@@ -1,9 +1,9 @@
 odoo.define("website.configurator_tour", function (require) {
 "use strict";
 
-const wTourUtils = require("website.tour_utils");
-const core = require("web.core");
-const _t = core._t;
+const {_t} = require('web.core');
+const tour = require('web_tour.tour');
+const wTourUtils = require('website.tour_utils');
 
 let titleSelector = '#wrap > section:first-child';
 let title = $(titleSelector).find('h1, h2').first();
@@ -43,5 +43,14 @@ const steps = [
 ];
 
 wTourUtils.registerThemeHomepageTour('configurator_tour', steps);
+
+// Now the tour that is used for auto-building pages from the configurator
+const urlParams = new URLSearchParams(window.location.search);
+const snippets = urlParams.get('website_configurator_snippets');
+if (snippets) {
+    tour.register('website_configurator_page_builder_tour', {
+        test: true,
+    }, snippets.split(',').map(key => wTourUtils.dragNDrop({id: key})));
+}
 
 });
