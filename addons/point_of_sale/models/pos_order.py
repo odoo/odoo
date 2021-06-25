@@ -65,6 +65,7 @@ class PosOrder(models.Model):
             'cardholder_name': ui_paymentline.get('cardholder_name'),
             'transaction_id': ui_paymentline.get('transaction_id'),
             'payment_status': ui_paymentline.get('payment_status'),
+            'ticket': ui_paymentline.get('ticket'),
             'pos_order_id': order.id,
         }
 
