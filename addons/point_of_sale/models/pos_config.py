@@ -162,6 +162,7 @@ class PosConfig(models.Model):
     session_ids = fields.One2many('pos.session', 'config_id', string='Sessions')
     current_session_id = fields.Many2one('pos.session', compute='_compute_current_session', string="Current Session")
     current_session_state = fields.Char(compute='_compute_current_session')
+    number_of_opened_session = fields.Integer(string="Number of Opened Session", compute='_compute_current_session')
     last_session_closing_cash = fields.Float(compute='_compute_last_session')
     last_session_closing_date = fields.Date(compute='_compute_last_session')
     last_session_closing_cashbox = fields.Many2one('account.bank.statement.cashbox', compute='_compute_last_session')
@@ -268,6 +269,7 @@ class PosConfig(models.Model):
             opened_sessions = pos_config.session_ids.filtered(lambda s: not s.state == 'closed')
             session = pos_config.session_ids.filtered(lambda s: not s.state == 'closed' and not s.rescue)
             # sessions ordered by id desc
+            pos_config.number_of_opened_session = len(opened_sessions)
             pos_config.has_active_session = opened_sessions and True or False
             pos_config.current_session_id = session and session[0].id or False
             pos_config.current_session_state = session and session[0].state or False
@@ -663,6 +665,15 @@ class PosConfig(models.Model):
             'res_id': session_id,
             'view_id': False,
             'type': 'ir.actions.act_window',
+        }
+
+    def open_opened_session_list(self):
+        return {
+            'name': _('Opened Sessions'),
+            'res_model': 'pos.session',
+            'view_mode': 'tree,kanban,form',
+            'type': 'ir.actions.act_window',
+            'domain': [('state', '!=', 'closed'), ('config_id', '=', self.id)]
         }
 
     # All following methods are made to create data needed in POS, when a localisation

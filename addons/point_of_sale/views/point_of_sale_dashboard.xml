@@ -60,6 +60,7 @@
                 <field name="pos_session_state"/>
                 <field name="pos_session_duration"/>
                 <field name="currency_id"/>
+                <field name="number_of_opened_session"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div>
@@ -119,11 +120,16 @@
                                                 <span><field name="last_session_closing_cash" widget="monetary"/></span>
                                             </div>
                                         </div>
+
+                                        <button t-if="record.number_of_opened_session.value &gt; 1" class="btn btn-link" style="padding-left:0; text-decoration: underline" name="open_opened_session_list" type="object">
+                                            There are <t t-esc="record.number_of_opened_session.value"/> open sessions
+                                        </button>
                                     </div>
                                 </div>
                                 <div style="text-align:right;">
                                     <field name="current_user_id" widget="many2one_avatar_user"/>
                                 </div>
+
                             </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                 <div class="row">
                                     <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
