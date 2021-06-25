@@ -32,16 +32,16 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
             async onSendEmail() {
                 if (!is_email(this.orderUiState.inputEmail)) {
                     this.orderUiState.emailSuccessful = false;
-                    this.orderUiState.emailNotice = 'Invalid email.';
+                    this.orderUiState.emailNotice = this.env._t('Invalid email.');
                     return;
                 }
                 try {
                     await this._sendReceiptToCustomer();
                     this.orderUiState.emailSuccessful = true;
-                    this.orderUiState.emailNotice = 'Email sent.'
+                    this.orderUiState.emailNotice = this.env._t('Email sent.');
                 } catch (error) {
                     this.orderUiState.emailSuccessful = false;
-                    this.orderUiState.emailNotice = 'Sending email failed. Please try again.'
+                    this.orderUiState.emailNotice = this.env._t('Sending email failed. Please try again.');
                 }
             }
             get orderAmountPlusTip() {
