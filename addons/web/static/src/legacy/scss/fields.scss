@@ -277,28 +277,22 @@
         }
         // Many2many tags avatar
         &.avatar {
-            align-items: center;
             .badge {
-                padding: 0 0.6em 0 0;
+                align-items: center;
+
                 img {
-                    height: 17px;
-                    width: 17px;
+                    height: 1.2em;
+                    width: 1.2em;
                     object-fit: cover;
-                    margin-top: 1px;
-                    margin-left: 1px;
                 }
-                .o_badge_text {
-                    display: flex;
-                    align-items:center;
+
+                .o_badge_text, .o_delete {
                     padding-top: 0.25em;
                     padding-bottom: 0.25em;
                 }
+
                 .o_tag_badge_text {
                     padding-left:2px;
-                }
-                .o_delete {
-                    padding-top: 0.25em;
-                    padding-bottom: 0.25em;
                 }
             }
         }
