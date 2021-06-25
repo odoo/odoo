@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import AttachmentBox from '@mail/components/attachment_box/attachment_box';
+import { AttachmentBox } from '@mail/components/attachment_box/attachment_box';
 import { insert } from '@mail/model/model_field_command';
 import {
     afterEach,

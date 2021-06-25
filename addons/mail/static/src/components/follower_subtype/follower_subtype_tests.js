@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import FollowerSubtype from '@mail/components/follower_subtype/follower_subtype';
+import { FollowerSubtype } from '@mail/components/follower_subtype/follower_subtype';
 import { insert, link } from '@mail/model/model_field_command';
 import {
     afterEach,

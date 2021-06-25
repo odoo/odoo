@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useUpdate from '@mail/component_hooks/use_update/use_update';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import emojis from '@mail/js/emojis';
 
 const { Component } = owl;
 
-class EmojisPopover extends Component {
+export class EmojisPopover extends Component {
 
     /**
      * @param {...any} args
@@ -71,5 +71,3 @@ Object.assign(EmojisPopover, {
     props: {},
     template: 'mail.EmojisPopover',
 });
-
-export default EmojisPopover;

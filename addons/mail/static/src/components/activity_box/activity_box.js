@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import Activity from '@mail/components/activity/activity';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { Activity } from '@mail/components/activity/activity';
 
 const { Component } = owl;
 
 const components = { Activity };
 
-class ActivityBox extends Component {
+export class ActivityBox extends Component {
 
     /**
      * @override
@@ -57,5 +57,3 @@ Object.assign(ActivityBox, {
     },
     template: 'mail.ActivityBox',
 });
-
-export default ActivityBox;

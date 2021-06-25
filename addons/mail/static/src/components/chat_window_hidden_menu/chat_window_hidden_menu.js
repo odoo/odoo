@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
-import useStore from '@mail/component_hooks/use_store/use_store';
-import ChatWindowHeader from '@mail/components/chat_window_header/chat_window_header';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { ChatWindowHeader } from '@mail/components/chat_window_header/chat_window_header';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
 const components = { ChatWindowHeader };
 
-class ChatWindowHiddenMenu extends Component {
+export class ChatWindowHiddenMenu extends Component {
 
     /**
      * @override
@@ -133,5 +133,3 @@ Object.assign(ChatWindowHiddenMenu, {
     props: {},
     template: 'mail.ChatWindowHiddenMenu',
 });
-
-export default ChatWindowHiddenMenu;

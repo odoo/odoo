@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import ThreadView from '@mail/components/thread_view/thread_view';
+import { ThreadView } from '@mail/components/thread_view/thread_view';
 import { insert, link } from '@mail/model/model_field_command';
 import {
     afterEach,

@@ -1,18 +1,18 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import EditableText from '@mail/components/editable_text/editable_text';
-import ThreadIcon from '@mail/components/thread_icon/thread_icon';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { EditableText } from '@mail/components/editable_text/editable_text';
+import { ThreadIcon } from '@mail/components/thread_icon/thread_icon';
 import { isEventHandled } from '@mail/utils/utils';
 
 import Dialog from 'web.Dialog';
 
 const { Component } = owl;
 
-const components = { EditableText, ThreadIcon }
+const components = { EditableText, ThreadIcon };
 
-class DiscussSidebarItem extends Component {
+export class DiscussSidebarItem extends Component {
 
     /**
      * @override
@@ -213,5 +213,3 @@ Object.assign(DiscussSidebarItem, {
     },
     template: 'mail.DiscussSidebarItem',
 });
-
-export default DiscussSidebarItem;

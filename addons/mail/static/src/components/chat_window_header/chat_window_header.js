@@ -1,18 +1,18 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
 import {
     isEventHandled,
     markEventHandled,
 } from '@mail/utils/utils';
-import ThreadIcon from '@mail/components/thread_icon/thread_icon';
+import { ThreadIcon } from '@mail/components/thread_icon/thread_icon';
 
 const { Component } = owl;
 
 const components = { ThreadIcon };
 
-class ChatWindowHeader extends Component {
+export class ChatWindowHeader extends Component {
 
     /**
      * @override
@@ -141,5 +141,3 @@ Object.assign(ChatWindowHeader, {
     },
     template: 'mail.ChatWindowHeader',
 });
-
-export default ChatWindowHeader;

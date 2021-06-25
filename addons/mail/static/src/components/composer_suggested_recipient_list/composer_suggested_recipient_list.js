@@ -1,15 +1,15 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import ComposerSuggestedRecipient from '@mail/components/composer_suggested_recipient/composer_suggested_recipient';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { ComposerSuggestedRecipient } from '@mail/components/composer_suggested_recipient/composer_suggested_recipient';
 
 const { Component } = owl;
 const { useState } = owl.hooks;
 
 const components = { ComposerSuggestedRecipient };
 
-class ComposerSuggestedRecipientList extends Component {
+export class ComposerSuggestedRecipientList extends Component {
 
     /**
      * @override
@@ -70,5 +70,3 @@ Object.assign(ComposerSuggestedRecipientList, {
     },
     template: 'mail.ComposerSuggestedRecipientList',
 });
-
-export default ComposerSuggestedRecipientList;

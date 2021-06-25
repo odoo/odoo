@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import ThreadIcon from '@mail/components/thread_icon/thread_icon';
+import { ThreadIcon } from '@mail/components/thread_icon/thread_icon';
 import {
     afterEach,
     afterNextRender,

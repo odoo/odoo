@@ -1,11 +1,11 @@
 odoo.define('sms/static/src/components/notification_group/notification_group.js', function (require) {
 'use strict';
 
-const components = {
-    NotificationGroup: require('@mail/components/notification_group/notification_group')[Symbol.for("default")],
-};
+const { NotificationGroup } = require('@mail/components/notification_group/notification_group');
 
 const { patch } = require('web.utils');
+
+const components = { NotificationGroup };
 
 patch(components.NotificationGroup.prototype, 'sms/static/src/components/notification_group/notification_group.js', {
 

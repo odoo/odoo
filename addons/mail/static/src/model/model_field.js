@@ -7,7 +7,7 @@ import { FieldCommand, link, replace, unlink, unlinkAll } from '@mail/model/mode
  * These field definitions are generated from declared fields in static prop
  * `fields` on the model.
  */
-class ModelField {
+export class ModelField {
 
     //--------------------------------------------------------------------------
     // Public
@@ -931,7 +931,6 @@ class ModelField {
 
 }
 
-export default ModelField;
 export const attr = ModelField.attr;
 export const many2many = ModelField.many2many;
 export const many2one = ModelField.many2one;

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import ModelManager from '@mail/model/model_manager';
+import { ModelManager } from '@mail/model/model_manager';
 import MessagingService from '@mail/services/messaging/messaging';
 
 import env from 'web.commonEnv';

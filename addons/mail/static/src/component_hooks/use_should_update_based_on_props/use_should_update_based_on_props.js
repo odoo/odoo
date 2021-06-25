@@ -53,7 +53,7 @@ function isEqual(a, b, compareDepth) {
  * @param {Object} [param0.compareDepth={}] allows to specify the comparison
  *  depth to use for each prop. Default is shallow compare (depth = 0).
  */
-function useShouldUpdateBasedOnProps({ compareDepth = {} } = {}) {
+export function useShouldUpdateBasedOnProps({ compareDepth = {} } = {}) {
     const component = Component.current;
     component.shouldUpdate = nextProps => {
         const allNewProps = Object.assign({}, nextProps);
@@ -66,5 +66,3 @@ function useShouldUpdateBasedOnProps({ compareDepth = {} } = {}) {
         return !isEqual(component.props, allNewProps, compareDepth);
     };
 }
-
-export default useShouldUpdateBasedOnProps;

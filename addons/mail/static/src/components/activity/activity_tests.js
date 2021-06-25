@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import useStore from '@mail/component_hooks/use_store/use_store';
-import Activity from '@mail/components/activity/activity';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { Activity } from '@mail/components/activity/activity';
 import { insert } from '@mail/model/model_field_command';
 import {
     afterEach,
@@ -15,6 +15,7 @@ import Bus from 'web.Bus';
 import { date_to_str } from 'web.time';
 
 const { Component, tags: { xml } } = owl;
+
 const components = { Activity };
 
 QUnit.module('mail', {}, function () {

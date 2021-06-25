@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
 
 const { Component, useState } = owl;
 
-class DropZone extends Component {
+export class DropZone extends Component {
 
     /**
      * @override
@@ -132,5 +132,3 @@ Object.assign(DropZone, {
     props: {},
     template: 'mail.DropZone',
 });
-
-export default DropZone;

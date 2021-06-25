@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import FollowButton from '@mail/components/follow_button/follow_button';
+import { FollowButton } from '@mail/components/follow_button/follow_button';
 import {
     afterEach,
     afterNextRender,

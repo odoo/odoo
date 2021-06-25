@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import Discuss from '@mail/widgets/discuss/discuss';
+import DiscussWidget from '@mail/widgets/discuss/discuss';
 
-Discuss.include({
+DiscussWidget.include({
     //----------------------------------------------------------------------
     // Private
     //----------------------------------------------------------------------

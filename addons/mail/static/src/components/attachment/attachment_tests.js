@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import Attachment from '@mail/components/attachment/attachment';
+import { Attachment } from '@mail/components/attachment/attachment';
 import {
     afterEach,
     afterNextRender,

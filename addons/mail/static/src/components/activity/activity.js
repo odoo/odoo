@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import ActivityMarkDonePopover from '@mail/components/activity_mark_done_popover/activity_mark_done_popover';
-import FileUploader from '@mail/components/file_uploader/file_uploader';
-import MailTemplate from '@mail/components/mail_template/mail_template';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { ActivityMarkDonePopover } from '@mail/components/activity_mark_done_popover/activity_mark_done_popover';
+import { FileUploader } from '@mail/components/file_uploader/file_uploader';
+import { MailTemplate } from '@mail/components/mail_template/mail_template';
 
 import {
     auto_str_to_date,
@@ -21,7 +21,7 @@ const components = {
     MailTemplate,
 };
 
-class Activity extends Component {
+export class Activity extends Component {
 
     /**
      * @override
@@ -196,5 +196,3 @@ Object.assign(Activity, {
     },
     template: 'mail.Activity',
 });
-
-export default Activity;

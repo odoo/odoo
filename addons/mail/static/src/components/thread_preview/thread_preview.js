@@ -1,17 +1,18 @@
 /** @odoo-module **/
 
 import * as mailUtils from '@mail/js/utils';
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import MessageAuthorPrefix from '@mail/components/message_author_prefix/message_author_prefix';
-import PartnerImStatusIcon from '@mail/components/partner_im_status_icon/partner_im_status_icon';
+
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { MessageAuthorPrefix } from '@mail/components/message_author_prefix/message_author_prefix';
+import { PartnerImStatusIcon } from '@mail/components/partner_im_status_icon/partner_im_status_icon';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
 const components = { MessageAuthorPrefix, PartnerImStatusIcon };
 
-class ThreadPreview extends Component {
+export class ThreadPreview extends Component {
 
     /**
      * @override
@@ -123,5 +124,3 @@ Object.assign(ThreadPreview, {
     },
     template: 'mail.ThreadPreview',
 });
-
-export default ThreadPreview;

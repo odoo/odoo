@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import MessageSendIndicator from '@mail/components/message_seen_indicator/message_seen_indicator';
+import { MessageSeenIndicator } from '@mail/components/message_seen_indicator/message_seen_indicator';
 import { create, insert, link } from '@mail/model/model_field_command';
 import {
     afterEach,
@@ -9,7 +9,7 @@ import {
     start,
 } from '@mail/utils/test_utils';
 
-const components = { MessageSendIndicator };
+const components = { MessageSeenIndicator };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -23,7 +23,7 @@ QUnit.module('message_seen_indicator_tests.js', {
                 { messageLocalId: message.localId, threadLocalId: thread.localId },
                 otherProps
             );
-            await createRootComponent(this, components.MessageSendIndicator, {
+            await createRootComponent(this, components.MessageSeenIndicator, {
                 props,
                 target: this.widget.el,
             });

@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
-import ComposerSuggestion from '@mail/components/composer_suggestion/composer_suggestion';
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
+import { ComposerSuggestion } from '@mail/components/composer_suggestion/composer_suggestion';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
 
 const { Component } = owl;
 
 const components = { ComposerSuggestion };
 
-class ComposerSuggestionList extends Component {
+export class ComposerSuggestionList extends Component {
 
     /**
      * @override
@@ -66,5 +66,3 @@ Object.assign(ComposerSuggestionList, {
     },
     template: 'mail.ComposerSuggestionList',
 });
-
-export default ComposerSuggestionList;

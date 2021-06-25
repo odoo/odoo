@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import Chatter from '@mail/components/chatter/chatter';
-import Composer from '@mail/components/composer/composer';
+import { Chatter } from '@mail/components/chatter/chatter';
+import { Composer } from '@mail/components/composer/composer';
 import {
     afterEach,
     afterNextRender,

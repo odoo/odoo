@@ -1,16 +1,16 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import useUpdate from '@mail/component_hooks/use_update/use_update';
-import PartnerImStatusIcon from '@mail/components/partner_im_status_icon/partner_im_status_icon';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { PartnerImStatusIcon } from '@mail/components/partner_im_status_icon/partner_im_status_icon';
 import { link } from '@mail/model/model_field_command';
 
 const { Component } = owl;
 
 const components = { PartnerImStatusIcon };
 
-class ComposerSuggestion extends Component {
+export class ComposerSuggestion extends Component {
 
     /**
      * @override
@@ -136,5 +136,3 @@ Object.assign(ComposerSuggestion, {
     },
     template: 'mail.ComposerSuggestion',
 });
-
-export default ComposerSuggestion;

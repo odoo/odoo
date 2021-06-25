@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import PartnerImStatusIcon from '@mail/components/partner_im_status_icon/partner_im_status_icon';
+import { PartnerImStatusIcon } from '@mail/components/partner_im_status_icon/partner_im_status_icon';
 import {
     afterEach,
     afterNextRender,

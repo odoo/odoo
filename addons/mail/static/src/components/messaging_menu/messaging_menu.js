@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import AutocompleteInput from '@mail/components/autocomplete_input/autocomplete_input';
-import MobileMessagingNavbar from '@mail/components/mobile_messaging_navbar/mobile_messaging_navbar';
-import NotificationList from '@mail/components/notification_list/notification_list';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { AutocompleteInput } from '@mail/components/autocomplete_input/autocomplete_input';
+import { MobileMessagingNavbar } from '@mail/components/mobile_messaging_navbar/mobile_messaging_navbar';
+import { NotificationList } from '@mail/components/notification_list/notification_list';
 
 const { Component } = owl;
 
@@ -14,7 +14,7 @@ const components = {
     NotificationList,
 };
 
-class MessagingMenu extends Component {
+export class MessagingMenu extends Component {
 
     /**
      * @override
@@ -229,5 +229,3 @@ Object.assign(MessagingMenu, {
     props: {},
     template: 'mail.MessagingMenu',
 });
-
-export default MessagingMenu;

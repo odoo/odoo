@@ -14,7 +14,7 @@
  *  as number (applies to all keys) or as an object (depth for specific keys)
  * @returns {Proxy} @see owl.hooks.useStore
  */
-function useStore(selector, options = {}) {
+export function useStore(selector, options = {}) {
     const store = options.store || owl.Component.current.env.store;
     const hashFn = store.observer.revNumber.bind(store.observer);
     const isEqual = options.isEqual || ((a, b) => a === b);
@@ -119,5 +119,3 @@ function useStore(selector, options = {}) {
         isEqual: proxyComparatorDeep(options.compareDepth),
     }));
 }
-
-export default useStore;

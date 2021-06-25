@@ -1,16 +1,16 @@
 /** @odoo-module **/
 
-import useDragVisibleDropZone from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import useUpdate from '@mail/component_hooks/use_update/use_update';
-import AttachmentList from '@mail/components/attachment_list/attachment_list';
-import ComposerSuggestedRecipientList from '@mail/components/composer_suggested_recipient_list/composer_suggested_recipient_list';
-import DropZone from '@mail/components/drop_zone/drop_zone';
-import EmojisPopover from '@mail/components/emojis_popover/emojis_popover';
-import FileUploader from '@mail/components/file_uploader/file_uploader';
-import TextInput from '@mail/components/composer_text_input/composer_text_input';
-import ThreadTextualTypingStatus from '@mail/components/thread_textual_typing_status/thread_textual_typing_status';
+import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { AttachmentList } from '@mail/components/attachment_list/attachment_list';
+import { ComposerSuggestedRecipientList } from '@mail/components/composer_suggested_recipient_list/composer_suggested_recipient_list';
+import { ComposerTextInput } from '@mail/components/composer_text_input/composer_text_input';
+import { DropZone } from '@mail/components/drop_zone/drop_zone';
+import { EmojisPopover } from '@mail/components/emojis_popover/emojis_popover';
+import { FileUploader } from '@mail/components/file_uploader/file_uploader';
+import { ThreadTextualTypingStatus } from '@mail/components/thread_textual_typing_status/thread_textual_typing_status';
 import { replace } from '@mail/model/model_field_command';
 import {
     isEventHandled,
@@ -23,14 +23,14 @@ const { useRef } = owl.hooks;
 const components = {
     AttachmentList,
     ComposerSuggestedRecipientList,
+    ComposerTextInput,
     DropZone,
     EmojisPopover,
     FileUploader,
-    TextInput,
     ThreadTextualTypingStatus,
 };
 
-class Composer extends Component {
+export class Composer extends Component {
 
     /**
      * @override
@@ -446,5 +446,3 @@ Object.assign(Composer, {
     },
     template: 'mail.Composer',
 });
-
-export default Composer;

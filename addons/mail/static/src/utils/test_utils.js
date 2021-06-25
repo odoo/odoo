@@ -6,13 +6,13 @@ import {
     addMessagingToEnv,
     addTimeControlToEnv,
 } from '@mail/env/test_env';
-import ModelManager from '@mail/model/model_manager';
+import { ModelManager } from '@mail/model/model_manager';
 import ChatWindowService from '@mail/services/chat_window_service/chat_window_service';
 import DialogService from '@mail/services/dialog_service/dialog_service';
 import { nextTick } from '@mail/utils/utils';
 import DiscussWidget from '@mail/widgets/discuss/discuss';
 import MessagingMenuWidget from '@mail/widgets/messaging_menu/messaging_menu';
-import MockModels from '@mail/../tests/helpers/mock_models';
+import { MockModels } from '@mail/../tests/helpers/mock_models';
 
 import AbstractStorageService from 'web.AbstractStorageService';
 import NotificationService from 'web.NotificationService';

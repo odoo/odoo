@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import FollowerSubtype from '@mail/components/follower_subtype/follower_subtype';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { FollowerSubtype } from '@mail/components/follower_subtype/follower_subtype';
 
 const { Component, QWeb } = owl;
 
 const components = { FollowerSubtype };
 
-class FollowerSubtypeList extends Component {
+export class FollowerSubtypeList extends Component {
 
     /**
      * @override
@@ -82,5 +82,3 @@ Object.assign(FollowerSubtypeList, {
 });
 
 QWeb.registerComponent('FollowerSubtypeList', FollowerSubtypeList);
-
-export default FollowerSubtypeList;

@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
-import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import useStore from '@mail/component_hooks/use_store/use_store';
-import PartnerImStatusIcon from '@mail/components/partner_im_status_icon/partner_im_status_icon';
+import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { PartnerImStatusIcon } from '@mail/components/partner_im_status_icon/partner_im_status_icon';
 
 const { Component } = owl;
 
 const components = { PartnerImStatusIcon };
 
-class NotificationRequest extends Component {
+export class NotificationRequest extends Component {
 
     /**
      * @override
@@ -86,5 +86,3 @@ Object.assign(NotificationRequest, {
     props: {},
     template: 'mail.NotificationRequest',
 });
-
-export default NotificationRequest;

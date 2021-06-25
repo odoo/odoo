@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import Composer from '@mail/components/composer/composer';
+import { Composer } from '@mail/components/composer/composer';
 import {
     afterEach,
     afterNextRender,

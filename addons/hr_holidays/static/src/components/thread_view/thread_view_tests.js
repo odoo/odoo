@@ -1,9 +1,7 @@
 odoo.define('hr_holidays/static/src/components/thread_view/thread_view_tests.js', function (require) {
 'use strict';
 
-const components = {
-    ThreadView: require('@mail/components/thread_view/thread_view')[Symbol.for("default")],
-};
+const { ThreadView } = require('@mail/components/thread_view/thread_view');
 const { link } = require('@mail/model/model_field_command');
 const {
     afterEach,
@@ -11,6 +9,8 @@ const {
     createRootComponent,
     start,
 } = require('@mail/utils/test_utils');
+
+const components = { ThreadView };
 
 QUnit.module('hr_holidays', {}, function () {
 QUnit.module('components', {}, function () {

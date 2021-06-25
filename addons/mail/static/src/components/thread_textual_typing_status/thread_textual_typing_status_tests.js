@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import ThreadTextualTypingStatus from '@mail/components/thread_textual_typing_status/thread_textual_typing_status';
+import { ThreadTextualTypingStatus } from '@mail/components/thread_textual_typing_status/thread_textual_typing_status';
 import {
     afterEach,
     afterNextRender,

@@ -1,7 +1,7 @@
 odoo.define('website_livechat/static/tests/helpers/mock_models.js', function (require) {
 'use strict';
 
-const MockModels = require('@mail/../tests/helpers/mock_models')[Symbol.for("default")];
+const { MockModels } = require('@mail/../tests/helpers/mock_models');
 const { patch } = require('web.utils');
 
 patch(MockModels, 'website_livechat/static/tests/helpers/mock_models.js', {
