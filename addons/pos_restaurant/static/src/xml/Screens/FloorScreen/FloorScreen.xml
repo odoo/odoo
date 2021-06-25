@@ -25,10 +25,11 @@
                             <EditableTable t-else="" table="table" />
                         </t>
                     </div>
-                    <span t-if="env.pos.user.role == 'manager'" class="edit-button editing" t-att-class="{ active: state.isEditMode }" t-on-click.stop="toggleEditMode">
+                    <span t-if="env.pos.user.role == 'manager'" class="edit-button editing" t-att-class="{ active: state.isEditMode }" t-on-click.stop="toggleEditMode"
+                          t-attf-style="top:{{state.floorMapScrollTop}}px;">
                         <i class="fa fa-pencil" role="img" aria-label="Edit" title="Edit"></i>
                     </span>
-                    <EditBar t-if="state.isEditMode" selectedTable="selectedTable" />
+                    <EditBar t-if="state.isEditMode" selectedTable="selectedTable" floorMapScrollTop="state.floorMapScrollTop"/>
                 </div>
             </div>
         </div>
