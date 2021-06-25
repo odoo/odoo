@@ -312,7 +312,7 @@ class StockRule(models.Model):
             procurement_date = fields.Date.to_date(values['date_planned']) - relativedelta(days=int(values['supplier'].delay) + company_id.po_lead)
             domain += (
                 ('date_order', '<=', datetime.combine(procurement_date, datetime.max.time())),
-                ('date_order', '>=', datetime.combine(procurement_date, datetime.min.time()))
+                # ('date_order', '>=', datetime.combine(procurement_date, datetime.min.time()))
             )
         if group:
             domain += (('group_id', '=', group.id),)
