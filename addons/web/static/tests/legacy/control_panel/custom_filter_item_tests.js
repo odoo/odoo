@@ -228,7 +228,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
             // The only thing visible should be the button 'Add Custome Filter';
             assert.strictEqual(cfi.el.children.length, 1);
-            assert.containsOnce(cfi, 'span.o_add_custom_filter');
+            assert.containsOnce(cfi, 'button.o_add_custom_filter');
 
             cfi.destroy();
         });
