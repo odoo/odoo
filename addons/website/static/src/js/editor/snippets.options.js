@@ -1245,7 +1245,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
         for (let i = 1; i <= 5; i++) {
             const collapseEl = document.createElement('we-collapse');
             const ccPreviewEl = $(qweb.render('web_editor.color.combination.preview'))[0];
-            ccPreviewEl.classList.add('text-center', `o_cc${i}`);
+            ccPreviewEl.classList.add('text-center', `o_cc${i}`, 'o_we_collapse_toggler');
             collapseEl.appendChild(ccPreviewEl);
             const editionEls = $(qweb.render('website.color_combination_edition', {number: i}));
             for (const el of editionEls) {
