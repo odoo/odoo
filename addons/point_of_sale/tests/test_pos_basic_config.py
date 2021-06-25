@@ -624,3 +624,39 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(cash_register.balance_start, amount_paid)
         self.assertEqual(cash_register.balance_end_real, amount_paid)
         self.assertEqual(self.config.last_session_closing_cash, amount_paid)
+
+    def test_start_balance_with_two_pos(self):
+        """ When having several POS with cash control, this tests ensures that each POS has its correct opening amount """
+
+        def open_and_check(pos_data):
+            self.config = pos_data['config']
+            self.open_new_session()
+            session = self.pos_session
+            self.assertEqual(session.cash_register_id.balance_start, pos_data['amount_paid'])
+            session.set_cashbox_pos(pos_data['amount_paid'], False)
+
+        self.config.cash_control = True
+        pos01_config = self.config
+        pos02_config = pos01_config.copy()
+        pos01_data = {'config': pos01_config, 'p_qty': 1, 'amount_paid': 0}
+        pos02_data = {'config': pos02_config, 'p_qty': 3, 'amount_paid': 0}
+
+        for pos_data in [pos01_data, pos02_data]:
+            open_and_check(pos_data)
+            session = self.pos_session
+
+            order_data = self.create_ui_order_data([(self.product3, pos_data['p_qty'])])
+            pos_data['amount_paid'] += order_data['data']['amount_paid']
+            self.env['pos.order'].create_from_ui([order_data])
+
+            session.action_pos_session_closing_control()
+            self.env['account.bank.statement.cashbox'].create([{
+                'start_bank_stmt_ids': [],
+                'end_bank_stmt_ids': [(4, session.cash_register_id.id,)],
+                'cashbox_lines_ids': [(0, 0, {'number': 1, 'coin_value': pos_data['amount_paid']})],
+                'is_a_template': False
+            }])
+            session.action_pos_session_validate()
+
+        open_and_check(pos01_data)
+        open_and_check(pos02_data)
