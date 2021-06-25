@@ -53,14 +53,8 @@ class SaleReport(models.Model):
             partner.country_id AS country_id,
             partner.industry_id AS industry_id,
             partner.commercial_partner_id AS commercial_partner_id,
-            (select sum(t.weight*l.qty/u.factor) from pos_order_line l
-               join product_product p on (l.product_id=p.id)
-               left join product_template t on (p.product_tmpl_id=t.id)
-               left join uom_uom u on (u.id=t.uom_id)) AS weight,
-            (select sum(t.volume*l.qty/u.factor) from pos_order_line l
-               join product_product p on (l.product_id=p.id)
-               left join product_template t on (p.product_tmpl_id=t.id)
-               left join uom_uom u on (u.id=t.uom_id)) AS volume,
+            (sum(t.weight) * l.qty / u.factor) AS weight,
+            (sum(t.volume) * l.qty / u.factor) AS volume,
             l.discount as discount,
             sum((l.price_unit * l.discount * l.qty / 100.0 / CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END)) as discount_amount,
             NULL as order_id
