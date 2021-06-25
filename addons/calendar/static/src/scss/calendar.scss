@@ -1,9 +1,5 @@
 .o_calendar_invitation {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 5px;
-    vertical-align: middle;
+    @extend .o_status;
 
     &.accepted {
         background-color: theme-color('success');
