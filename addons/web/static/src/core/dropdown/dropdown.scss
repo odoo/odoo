@@ -77,6 +77,77 @@
   }
 }
 
+// = Owl Nested Dropdowns
+// ----------------------------------------------------------------------------
+
+.o_dropdown .o_dropdown {
+
+  // Define submenus 'inline' design (nested into the parent menu)
+  @mixin -o-inline-dropdown-menu {
+    .o_dropdown_toggler.o_dropdown_active:after {
+      content: "\f0d7";
+    }
+
+    .o_dropdown_menu {
+      left: 0;
+      position: relative;
+      max-height: none;
+      box-shadow: none;
+      margin-top: 0;
+      margin-bottom: $dropdown-padding-y;
+      padding-top: 0;
+      background: rgba(#000, .01);
+      border-width: 0 0 1px 0;
+
+      &:last-child {
+        border-bottom-width: 0;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // The toggler looks like a regular menu entry
+  .o_dropdown_toggler {
+    @extend .dropdown-item;
+
+    &:after {
+      @include o-position-absolute($right: 0);
+      transform: translate(-.6em, .3em);
+      font: .9em/1em FontAwesome;
+      content: "\f0da";
+    }
+  }
+
+  // Small screen: all submenus are inline
+  @include media-breakpoint-down('lg') {
+    @include -o-inline-dropdown-menu ;
+  }
+
+  // Large screen: submenus floats...
+  @include media-breakpoint-up('lg') {
+    .o_dropdown_menu {
+      top: 0;
+      left: 100%;
+    }
+
+    //... except when specified otherwise
+    &.o_dropdown_inline {
+      @include -o-inline-dropdown-menu ;
+    }
+  }
+}
+
+// Unfortunately is not possible to set the parent menu's overflow to be 'visible'
+// horizontally (to show floating submenus) and 'auto/scroll' vertically (to hide
+// menu entries when the menu is very long).
+// We will set it 'visible' letting 'o_view_controller' handling scrollbars.
+@include media-breakpoint-up('lg') {
+  .o_dropdown_menu {
+    overflow: visible;
+    max-height: none;
+  }
+}
+
 // = Owl components specific rules
 // -----------------------------------------------------------------------------
 .o_dropdown_item:not(.disabled):not(:disabled) {
