@@ -200,7 +200,7 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
                 }
                 self._registerWidget(recordID, field.name, fieldWidget);
                 // Only display the fields whose attributes does not make them invisible
-                let fieldClass = "list-group-item flex-shrink-0 d-flex flex-wrap";
+                let fieldClass = "list-group-item flex-shrink-0 d-flex flex-wrap align-items-center";
                 if (fieldWidget.attrs && fieldWidget.attrs.modifiers) {
                     const fieldModifier = record.evalModifiers(_.pick(fieldWidget.attrs.modifiers, 'invisible'));
                     fieldClass += fieldModifier.invisible ? ' o_invisible_modifier' : '';
