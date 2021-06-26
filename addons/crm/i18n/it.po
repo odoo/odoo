@@ -188,6 +188,14 @@ msgid "<span class=\"o_stat_text\"> Leads</span>"
 msgstr "<span class=\"o_stat_text\"> Contatti</span>"
 
 #. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
@@ -2324,6 +2332,12 @@ msgstr ""
 "con i canali del flusso di vendita."
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr "Numero opportunità"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr "Entrate delle opportunità"
@@ -2433,6 +2447,7 @@ msgstr "quinquennale"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "Opportunità in ritardo"
 
@@ -2987,6 +3002,12 @@ msgid "Teams"
 msgstr "Team"
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr "Campo tecnico usato per il pulsante statistiche"
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
@@ -3013,7 +3034,7 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "Nome dell’alias e-mail, es. “lavori” per intercettare le e-mail a "
-"<lavori@esempio.odoo.com>"
+"<lavori@example.odoo.com>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name
