@@ -14,7 +14,7 @@
 # oihane <oihanecruce@gmail.com>, 2020
 # Esther Martín Menéndez <esthermartin001@gmail.com>, 2020
 # Mikel Lizarralde <mikellizarralde@gmail.com>, 2020
-# Naomi Hidalgo <naomihid96@gmail.com>, 2020
+# 61590936fa9bf290362ee306eeabf363_944dd10 <a8bfd5a0b49b9c8455f33fc521764cc3_680674>, 2020
 # Victor Laskurain <blaskurain@binovo.es>, 2020
 # Gorka Toledo <gorka.toledo@gmail.com>, 2020
 # 
@@ -172,6 +172,14 @@ msgstr ""
 "<p><b>Mezuak bidali</b> zure salmenta-aukerari eta erantzunak hemen atxikiko"
 " dira automatikoki.</p><p class=\"mb0\">Idatzi <i>'@'</i> jendea aipatzeko -"
 " e-posta mezuetan CC moduan jartzea bezalakoa da.</p>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1848,6 +1856,12 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr ""
@@ -1940,6 +1954,7 @@ msgstr "Beste"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "Atzeratutako Aukerak"
 
@@ -2391,6 +2406,12 @@ msgid "Team Pipelines"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
@@ -2485,6 +2506,14 @@ msgstr "Helburu hau ez da existitzen."
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Title"
 msgstr "Titulua"
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"To prevent data loss, Leads and Opportunities can only be merged by groups "
+"of 5."
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
