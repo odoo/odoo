@@ -1179,7 +1179,7 @@ QUnit.test('delete all attachments of a message with tracking fields should stil
 QUnit.test('Post a message containing an email address followed by a mention on another line', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['mail.channel'].records.push({ id: 11, public: 'public' });
     this.data['res.partner'].records.push({
         id: 25,
         email: "testpartner@odoo.com",
@@ -1222,7 +1222,7 @@ QUnit.test('Post a message containing an email address followed by a mention on 
 QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['mail.channel'].records.push({ id: 11, public: 'public' });
     this.data['res.partner'].records.push({
         id: 1952,
         email: "usatyi@example.com",
@@ -1264,7 +1264,7 @@ QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async
 QUnit.test('mention 2 different partners that have the same name', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['mail.channel'].records.push({ id: 11, public: 'public' });
     this.data['res.partner'].records.push(
         {
             id: 25,

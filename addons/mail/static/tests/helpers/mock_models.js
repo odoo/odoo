@@ -69,6 +69,7 @@ export class MockModels {
                     channel_type: { string: "Channel Type", type: "selection", default: 'channel' },
                     // Equivalent to members but required due to some RPC giving this field in domain.
                     channel_partner_ids: { string: "Channel Partner Ids", type: 'many2many', relation: 'res.partner' },
+                    channel_last_seen_partner_ids: { string: "Members", type: 'one2many', relation: 'mail.channel.partner' },
                     // In python this belongs to mail.channel.partner. Here for simplicity.
                     custom_channel_name: { string: "Custom channel name", type: 'char' },
                     fetched_message_id: { string: "Last Fetched", type: 'many2one', relation: 'mail.message' },
@@ -82,7 +83,7 @@ export class MockModels {
                     is_pinned: { string: "isPinned", type: "boolean", default: true },
                     // In python: email_send.
                     mass_mailing: { string: "Send messages by email", type: "boolean", default: false },
-                    members: { string: "Members", type: 'many2many', relation: 'res.partner', default() { return [this.currentPartnerId]; } },
+                    members: { string: "Members", type: 'one2many', relation: 'mail.channel.partner', default() { return [this.currentPartnerId]; }  },
                     message_unread_counter: { string: "# unread messages", type: 'integer' },
                     moderation: { string: "Moderation", type: 'boolean', default: false },
                     name: { string: "Name", type: "char", required: true },
@@ -102,6 +103,14 @@ export class MockModels {
                     channel_types: { type: 'binary' }, // array is expected
                     help: { type: 'char' },
                     name: { type: 'char' },
+                },
+                records: [],
+            },
+            'mail.channel.partner': {
+                fields: {
+                    channel_id: { string: "Channel", type: 'many2one', relation: 'mail.channel' },
+                    id: { type: 'integer' },
+                    partner_id: { string: "Partner", type: 'many2one', relation: 'res.partner', default() { return this.currentPartnerId; } },
                 },
                 records: [],
             },

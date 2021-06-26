@@ -90,22 +90,10 @@ function factory(dependencies) {
             const kwargs = { search: searchTerm };
             const isNonPublicChannel = thread && thread.model === 'mail.channel' && thread.public !== 'public';
             if (isNonPublicChannel) {
-                kwargs.channel_id = thread.id;
+                await this._fetchChannelSuggestions(kwargs, { channel: thread });
+                return;
             }
-            const suggestedPartners = await this.env.services.rpc(
-                {
-                    model: 'res.partner',
-                    method: 'get_mention_suggestions',
-                    kwargs,
-                },
-                { shadow: true },
-            );
-            const partners = this.env.models['mail.partner'].insert(suggestedPartners.map(data =>
-                this.env.models['mail.partner'].convertData(data)
-            ));
-            if (isNonPublicChannel) {
-                thread.update({ members: link(partners) });
-            }
+            await this._fetchSuggestions(kwargs);
         }
 
         /**
@@ -170,7 +158,7 @@ function factory(dependencies) {
                 // would be notified to the mentioned partner, so this prevents
                 // from inadvertently leaking the private message to the
                 // mentioned partner.
-                partners = thread.members;
+                partners = thread.members.map(member => member.partner);
             } else {
                 partners = this.env.models['mail.partner'].all();
             }
@@ -282,8 +270,8 @@ function factory(dependencies) {
                     return 1;
                 }
                 if (thread && thread.model === 'mail.channel') {
-                    const isAMember = thread.members.includes(a);
-                    const isBMember = thread.members.includes(b);
+                    const isAMember = thread.members.some(member => member.partner === a);
+                    const isBMember = thread.members.some(member => member.partner === b);
                     if (isAMember && !isBMember) {
                         return -1;
                     }
@@ -386,6 +374,30 @@ function factory(dependencies) {
         /**
          * @static
          * @private
+         * @param {Object} kwargs arguments of the method
+         * @param {Object} param1
+         * @param {mail.thread} param1.channel
+         */
+        static async _fetchChannelSuggestions(kwargs, { channel }) {
+            const suggestedMembers = await this.env.services.rpc(
+                {
+                    model: 'res.partner',
+                    method: 'get_channel_mention_suggestions',
+                    args: [channel.id],
+                    kwargs,
+                },
+                { shadow: true },
+            );
+            channel.update({
+                members: insert(
+                    suggestedMembers.map(member => this.env.models['mail.channel_member'].convertData(member))
+                ),
+            });
+        }
+
+        /**
+         * @static
+         * @private
          */
         static async _fetchImStatus() {
             const partnerIds = [];
@@ -404,6 +416,24 @@ function factory(dependencies) {
                 },
             }, { shadow: true });
             this.insert(dataList);
+        }
+
+        /**
+         * @static
+         * @private
+         */
+        static async _fetchSuggestions(kwargs) {
+            const suggestedPartners = await this.env.services.rpc(
+                {
+                    model: 'res.partner',
+                    method: 'get_mention_suggestions',
+                    kwargs,
+                },
+                { shadow: true },
+            );
+            const partners = this.env.models['mail.partner'].insert(
+                suggestedPartners.map(data => this.env.models['mail.partner'].convertData(data))
+            );
         }
 
         /**
@@ -482,9 +512,6 @@ function factory(dependencies) {
             required: true,
         }),
         im_status: attr(),
-        memberThreads: many2many('mail.thread', {
-            inverse: 'members',
-        }),
         messagesAsAuthor: one2many('mail.message', {
             inverse: 'author',
         }),

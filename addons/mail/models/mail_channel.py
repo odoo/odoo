@@ -775,6 +775,7 @@ class Channel(models.Model):
             :returns: a list of {'id', 'name', 'email'} for each partner and adds {im_status} for direct_partners.
             :rtype : list(dict)
         """
+        # TODO
         partner_infos = {partner['id']: partner for partner in all_partners.sudo().read(['id', 'name', 'email'])}
         # add im _status for direct_partners
         direct_partners_im_status = {partner['id']: partner for partner in direct_partners.sudo().read(['im_status'])}
@@ -836,6 +837,7 @@ class Channel(models.Model):
                 partner_channel = channel_partners.filtered(lambda pc: pc.partner_id.id == self.env.user.partner_id.id)
                 if partner_channel:
                     partner_channel = partner_channel[0]
+                    info['current_member'] = partner_channel.mail_channel_partner_format()[0]
                     info['state'] = partner_channel.fold_state or 'open'
                     info['is_minimized'] = partner_channel.is_minimized
                     info['seen_message_id'] = partner_channel.seen_message_id.id
@@ -847,8 +849,7 @@ class Channel(models.Model):
                 # avoid sending potentially a lot of members for big channels
                 # exclude chat and other small channels from this optimization because they are
                 # assumed to be smaller and it's important to know the member list for them
-                partner_ids = channel_partners.mapped('partner_id').ids
-                info['members'] = [partner_infos[partner] for partner in partner_ids]
+                info['members'] = channel_partners.mail_channel_partner_format(custom_partner_info=partner_infos)
             if channel.channel_type != 'channel':
                 info['seen_partners_info'] = [{
                     'id': cp.id,

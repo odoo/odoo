@@ -216,9 +216,13 @@ function factory(dependencies) {
                     data2.members = [unlinkAll()];
                 } else {
                     data2.members = [insertAndReplace(data.members.map(memberData =>
-                        this.env.models['mail.partner'].convertData(memberData)
+                        this.env.models['mail.channel_member'].convertData(memberData)
                     ))];
                 }
+            } else if ('current_member' in data) {
+                data2.members = insertAndReplace(
+                    this.env.models['mail.channel_member'].convertData(data.current_member)
+                );
             }
             if ('seen_partners_info' in data) {
                 if (!data.seen_partners_info) {
@@ -322,8 +326,8 @@ function factory(dependencies) {
                 if (!isAPublic && isBPublic) {
                     return 1;
                 }
-                const isMemberOfA = a.model === 'mail.channel' && a.members.includes(this.env.messaging.currentPartner);
-                const isMemberOfB = b.model === 'mail.channel' && b.members.includes(this.env.messaging.currentPartner);
+                const isMemberOfA = a.model === 'mail.channel' && a.members.some(member => member.partner === this.env.messaging.currentPartner);
+                const isMemberOfB = b.model === 'mail.channel' && b.members.some(member => member.partner === this.env.messaging.currentPartner);
                 if (isMemberOfA && !isMemberOfB) {
                     return -1;
                 }
@@ -1136,7 +1140,8 @@ function factory(dependencies) {
             if (this.channel_type === 'channel') {
                 return unlink();
             }
-            const correspondents = this.members.filter(partner =>
+            const partners = this.members.map(member => member.partner);
+            const correspondents = partners.filter(partner =>
                 partner !== this.env.messaging.currentPartner
             );
             if (correspondents.length === 1) {
@@ -1145,7 +1150,7 @@ function factory(dependencies) {
             }
             if (this.members.length === 1) {
                 // chat with oneself
-                return link(this.members[0]);
+                return link(partners[0]);
             }
             return unlink();
         }
@@ -1968,8 +1973,13 @@ function factory(dependencies) {
         mass_mailing: attr({
             default: false,
         }),
-        members: many2many('mail.partner', {
-            inverse: 'memberThreads',
+        /**
+         *  Members of the channel, contains channel specific information for each member.
+         *  This field only makes sense for channels.
+         */
+        members: one2many('mail.channel_member', {
+            inverse: 'thread',
+            isCausal: true,
         }),
         /**
          * Determines the message before which the "new message" separator must

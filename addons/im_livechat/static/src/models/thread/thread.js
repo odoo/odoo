@@ -4,7 +4,7 @@ import {
     registerClassPatchModel,
     registerInstancePatchModel,
 } from '@mail/model/model_core';
-import { insert, link, unlink } from '@mail/model/model_field_command';
+import { insert } from '@mail/model/model_field_command';
 
 registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thread.js', {
 
@@ -16,45 +16,42 @@ registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thr
      * @override
      */
     convertData(data) {
-        const data2 = this._super(data);
-        if ('livechat_visitor' in data && data.livechat_visitor) {
-            if (!data2.members) {
-                data2.members = [];
-            }
-            // `livechat_visitor` without `id` is the anonymous visitor.
-            if (!data.livechat_visitor.id) {
-                /**
-                 * Create partner derived from public partner and replace the
-                 * public partner.
-                 *
-                 * Indeed the anonymous visitor is registered as a member of the
-                 * channel as the public partner in the database to avoid
-                 * polluting the contact list with many temporary partners.
-                 *
-                 * But the issue with public partner is that it is the same
-                 * record for every livechat, whereas every correspondent should
-                 * actually have its own visitor name, typing status, etc.
-                 *
-                 * Due to JS being temporary by nature there is no such notion
-                 * of polluting the database, it is therefore acceptable and
-                 * easier to handle one temporary partner per channel.
-                 */
-                data2.members.push(unlink(this.env.messaging.publicPartners));
-                const partner = this.env.models['mail.partner'].create(
-                    Object.assign(
-                        this.env.models['mail.partner'].convertData(data.livechat_visitor),
-                        { id: this.env.models['mail.partner'].getNextPublicId() }
-                    )
-                );
-                data2.members.push(link(partner));
-                data2.correspondent = link(partner);
-            } else {
-                const partnerData = this.env.models['mail.partner'].convertData(data.livechat_visitor);
-                data2.members.push(insert(partnerData));
-                data2.correspondent = insert(partnerData);
-            }
+        const additionalData2 = {};
+        if ('livechat_visitor' in data && data.livechat_visitor && data.members) {
+            const publicPartnerIds = new Set(this.env.messaging.publicPartners.map(partner => partner.id));
+            data.members = data.members.map(memberData => {
+                // `livechat_visitor` without `id` is the anonymous visitor.
+                if (!data.livechat_visitor.id && publicPartnerIds.has(memberData.partner.id)) {
+                    /**
+                     * Create partner derived from public partner and replace the
+                     * public partner.
+                     *
+                     * Indeed the anonymous visitor is registered as a member of the
+                     * channel as the public partner in the database to avoid
+                     * polluting the contact list with many temporary partners.
+                     *
+                     * But the issue with public partner is that it is the same
+                     * record for every livechat, whereas every correspondent should
+                     * actually have its own visitor name, typing status, etc.
+                     *
+                     * Due to JS being temporary by nature there is no such notion
+                     * of polluting the database, it is therefore acceptable and
+                     * easier to handle one temporary partner per channel.
+                     */
+                    const partnerData = Object.assign(
+                        data.livechat_visitor,
+                        { id: this.env.models['mail.partner'].getNextPublicId() },
+                    );
+                    memberData.partner = partnerData;
+                    additionalData2.correspondent = insert(this.env.models['mail.partner'].convertData(partnerData));
+                } else if (data.livechat_visitor.id === memberData.partner.id) {
+                    memberData.partner = data.livechat_visitor;
+                    additionalData2.correspondent = insert(this.env.models['mail.partner'].convertData(data.livechat_visitor));
+                }
+                return memberData;
+            });
         }
-        return data2;
+        return Object.assign({}, this._super(data), additionalData2);
     },
 });
 

@@ -1084,6 +1084,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
 
     this.data['mail.channel'].records.push({
         id: 20,
+        public: 'public',
     });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
@@ -1126,6 +1127,7 @@ QUnit.test('mention a partner', async function (assert) {
     });
     this.data['mail.channel'].records.push({
         id: 20,
+        public: 'public',
     });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
@@ -1186,6 +1188,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
     });
     this.data['mail.channel'].records.push({
         id: 20,
+        public: 'public',
     });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
@@ -1255,6 +1258,7 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
     });
     this.data['mail.channel'].records.push({
         id: 20,
+        public: 'public',
     });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({

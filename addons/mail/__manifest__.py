@@ -165,6 +165,7 @@
             'mail/static/src/models/attachment_viewer/attachment_viewer.js',
             'mail/static/src/models/canned_response/canned_response.js',
             'mail/static/src/models/channel_command/channel_command.js',
+            'mail/static/src/models/channel_member/channel_member.js',
             'mail/static/src/models/chat_window/chat_window.js',
             'mail/static/src/models/chat_window_manager/chat_window_manager.js',
             'mail/static/src/models/chatter/chatter.js',

@@ -126,12 +126,22 @@ class Partner(models.Model):
         return [partner.mail_partner_format() for partner in partners]
 
     @api.model
-    def get_mention_suggestions(self, search, limit=8, channel_id=None):
+    def get_mention_suggestions(self, search, limit=8):
         """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
             Prioritize partners that are also users, and then extend the research to all partners.
-            If channel_id is given, only members of this channel are returned.
             The return format is a list of partner data (as per returned by `mail_partner_format()`).
         """
+        partners = self._get_mention_suggestions(search, limit)
+        return [partner.mail_partner_format() for partner in partners]
+
+    @api.model
+    def get_channel_mention_suggestions(self, channel_id, search, limit=8):
+        partners = self._get_mention_suggestions(search, limit, channel_id)
+        members = self.env['mail.channel.partner'].search([('channel_id', '=', channel_id), ('partner_id', 'in', partners.ids)])
+        return members.mail_channel_partner_format()
+
+    @api.model
+    def _get_mention_suggestions(self, search, limit, channel_id=None):
         search_dom = expression.OR([[('name', 'ilike', search)], [('email', 'ilike', search)]])
         search_dom = expression.AND([[('active', '=', True), ('type', '!=', 'private')], search_dom])
         if channel_id:
@@ -145,8 +155,8 @@ class Partner(models.Model):
         remaining_limit = limit - len(partners)
         if remaining_limit > 0:
             partners |= self.search(expression.AND([[('id', 'not in', partners.ids)], search_dom]), limit=remaining_limit)
+        return partners
 
-        return [partner.mail_partner_format() for partner in partners]
 
     @api.model
     def im_search(self, name, limit=20):

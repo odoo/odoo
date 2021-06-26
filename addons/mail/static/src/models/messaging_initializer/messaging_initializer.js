@@ -153,15 +153,6 @@ function factory(dependencies) {
             const channelsData = channel_channel.concat(channel_direct_message, channel_private_group);
             return executeGracefully(channelsData.map(channelData => () => {
                 const convertedData = this.env.models['mail.thread'].convertData(channelData);
-                if (!convertedData.members) {
-                    // channel_info does not return all members of channel for
-                    // performance reasons, but code is expecting to know at
-                    // least if the current partner is member of it.
-                    // (e.g. to know when to display "invited" notification)
-                    // Current partner can always be assumed to be a member of
-                    // channels received at init.
-                    convertedData.members = link(this.env.messaging.currentPartner);
-                }
                 const channel = this.env.models['mail.thread'].insert(
                     Object.assign({ model: 'mail.channel' }, convertedData)
                 );

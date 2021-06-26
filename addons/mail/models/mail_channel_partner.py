@@ -45,3 +45,13 @@ class ChannelPartner(models.Model):
             if {'channel_id', 'partner_id', 'partner_email'} & set(vals):
                 raise AccessError(_('You can not write on this field'))
         return super(ChannelPartner, self).write(vals)
+
+    def mail_channel_partner_format(self, custom_partner_info=None):
+        formatted_members = []
+        for record in self:
+            custom_partner_data = custom_partner_info[record.partner_id.id] if custom_partner_info else None
+            formatted_members.append({
+                'id': record.id,
+                'partner': custom_partner_data if custom_partner_data else record.partner_id.mail_partner_format(),
+            })
+        return formatted_members

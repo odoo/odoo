@@ -454,19 +454,10 @@ function factory(dependencies) {
             const convertedData = this.env.models['mail.thread'].convertData(
                 Object.assign({ model: 'mail.channel' }, data)
             );
-            if (!convertedData.members) {
-                // channel_info does not return all members of channel for
-                // performance reasons, but code is expecting to know at
-                // least if the current partner is member of it.
-                // (e.g. to know when to display "invited" notification)
-                // Current partner can always be assumed to be a member of
-                // channels received through this notification.
-                convertedData.members = link(this.env.messaging.currentPartner);
-            }
             let channel = this.env.models['mail.thread'].findFromIdentifyingData(convertedData);
             const wasCurrentPartnerMember = (
                 channel &&
-                channel.members.includes(this.env.messaging.currentPartner)
+                channel.members.some(member => member.partner === this.env.messaging.currentPartner)
             );
 
             channel = this.env.models['mail.thread'].insert(convertedData);
