@@ -27,11 +27,12 @@
     'data': [
         # 'security/ir.model.access.csv',
         'data/aumet.scientific_name.csv',
-        # 'views/aumet.xml',
+        'views/assets.xml',
         'views/views.xml',
         # 'views/templates.xml',
     ],
-    # only loaded in demonstration mode
+
+    'css': ["static/src/css/aumet.css"],
 
     'installable': True,
     'application': True,

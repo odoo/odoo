@@ -9,5 +9,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def create(self, vals_list):
-        vals_list["company_id"] = self.env.company.id
+        if not vals_list["company_id"]:
+            vals_list["company_id"] = self.env.company.id
+
         return super(ProductTemplate, self).create(vals_list)
