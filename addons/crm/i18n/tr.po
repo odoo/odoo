@@ -20,7 +20,6 @@
 # Yedigen, 2019
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2020
 # Ediz Duman <neps1192@gmail.com>, 2020
-# Murat Durmuş <muratd@projetgrup.com>, 2020
 # Martin Trigaux, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
@@ -28,6 +27,7 @@
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
 # Tugay Hatıl <tugayh@projetgrup.com>, 2021
+# Murat Durmuş <muratd@projetgrup.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-11 09:25+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2021\n"
+"Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -216,6 +216,14 @@ msgstr ""
 "    Satış takımının üyesi değil gibi görünüyorsunuz.\n"
 " Kendinizi bir satış takımı üyesi olarak eklemelisiniz.\n"
 "</p>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -2451,6 +2459,12 @@ msgid ""
 msgstr "UNTRANSLATED"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr "Fırsat Sayısı"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr "Fırsat Gelirleri"
@@ -3159,6 +3173,12 @@ msgstr "Ekipler"
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_member_config
 msgid "Teams Members"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
 msgstr ""
 
 #. module: crm

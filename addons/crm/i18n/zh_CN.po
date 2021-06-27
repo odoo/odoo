@@ -28,9 +28,8 @@
 # Jeanphy <hzh0292@qq.com>, 2019
 # Shiping Lv <lvshiping@sina.com>, 2020
 # Felix Yuen <fyu@odoo.com>, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# Felix Yang <felixyangsh@aliyun.com>, 2020
 # as co02 <asco02@163.com>, 2020
 # GritLuo <dooms21day@163.com>, 2020
 # Lei Xu <xulei8@qq.com>, 2020
@@ -39,6 +38,7 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # Mandy Choy <mnc@odoo.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -46,7 +46,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-11 09:25+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -224,6 +224,14 @@ msgstr ""
 "你还不是当前销售团队的成员\n"
 "请先将自己添加到当前销售团队中\n"
 "</p>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -2397,6 +2405,12 @@ msgstr ""
 "机会分析让您立即有机会获取预计收入、计划成本、错过的期限或每次机会的交流次数等信息。此报告主要由销售经理使用，以便对销售漏斗的渠道进行周期性评估。"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr "商机个数"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr "商机收入"
@@ -3097,6 +3111,12 @@ msgstr "团队"
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_member_config
 msgid "Teams Members"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
 msgstr ""
 
 #. module: crm
