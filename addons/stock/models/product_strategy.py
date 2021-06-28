@@ -110,7 +110,7 @@ class StockPutawayRule(models.Model):
                     return location_out
                 continue
 
-            child_locations = self.env['stock.location'].search([('id', 'child_of', location_out.id), ('usage', '=', 'internal')])
+            child_locations = location_out.child_internal_location_ids
             # check if already have the product/package type stored
             for location in child_locations:
                 if location in checked_locations:
