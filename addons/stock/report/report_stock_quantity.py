@@ -34,7 +34,12 @@ SELECT
     sum(product_qty) as product_qty,
     company_id,
     warehouse_id
+<<<<<<< HEAD
 FROM (SELECT
+=======
+FROM (
+    SELECT
+>>>>>>> 7b4e971dbf9... temp
         m.id,
         m.product_id,
         CASE
@@ -121,7 +126,11 @@ FROM (SELECT
         product_qty != 0 AND
         (whs.id IS NOT NULL OR whd.id IS NOT NULL) AND
         (whs.id IS NULL or whd.id IS NULL OR whs.id != whd.id) AND
+<<<<<<< HEAD
         m.state NOT IN ('cancel', 'draft')) AS forecast_qty
+=======
+        m.state NOT IN ('cancel', 'draft')) as forecast_qty
+>>>>>>> 7b4e971dbf9... temp
 GROUP BY product_id, state, date, company_id, warehouse_id
 );
 """
