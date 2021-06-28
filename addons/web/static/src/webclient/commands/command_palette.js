@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { useAutofocus } from "../../core/autofocus_hook";
+import { isMacOS } from "../../core/browser/feature_detection";
 import { useEffect } from "../../core/effect_hook";
 import { useHotkey } from "../../core/hotkey_hook";
 import { scrollTo } from "../../core/utils/scrolling";
@@ -87,6 +88,18 @@ export class CommandPalette extends Component {
             },
             { altIsOptional: true, allowRepeat: true }
         );
+
+        for (const command of this.initialCommands) {
+            if (command.hotkey) {
+                useHotkey(
+                    command.hotkey,
+                    () => {
+                        command.action();
+                        this.props.closeMe();
+                    },
+                );
+            }
+        }
     }
 
     get categories() {
@@ -101,6 +114,19 @@ export class CommandPalette extends Component {
             }
         }
         return categories;
+    }
+
+    getKeysToPress(command) {
+        const { hotkey, hotkeyOptions } = command;
+        const altIsOptional = hotkeyOptions ? hotkeyOptions.altIsOptional : false;
+        let result = hotkey.split("+");
+        if (isMacOS()) {
+            result = result.map((x) => x.replace("control", "command"));
+        }
+        if (altIsOptional) {
+            result = isMacOS() ? ["control", ...result] : ["alt", ...result];
+        }
+        return result.map((key) => key.toUpperCase());
     }
 
     selectCommand(index) {

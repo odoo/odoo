@@ -181,6 +181,70 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
     assert.verifySteps(["Hodor"]);
 });
 
+QUnit.test("access to hotkeys from the command palette", async (assert) => {
+    assert.expect(9);
+
+    const hotkey = "a";
+    env.services.command.add("A", () => assert.step("A"), {
+        hotkey,
+        hotkeyOptions: { altIsOptional: true },
+    });
+    await nextTick();
+
+    class MyComponent extends Component {
+        onClickB() {
+            assert.step("B");
+        }
+        onClickC() {
+            assert.step("C");
+        }
+    }
+    MyComponent.components = { TestComponent };
+    MyComponent.template = xml`
+    <div>
+      <button title="B" data-hotkey="b" t-on-click="onClickB" />
+      <button title="C" data-hotkey="c" t-on-click="onClickC" />
+      <TestComponent />
+    </div>
+  `;
+    testComponent = await mount(MyComponent, { env, target });
+
+    // Open palette
+    triggerHotkey("control+k", true);
+    await nextTick();
+
+    assert.containsN(target, ".o_command", 3);
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command span:first-child")].map((el) => el.textContent),
+        ["A", "B", "C"]
+    );
+
+    // Trigger the command a
+    triggerHotkey("a");
+    await nextTick();
+    assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
+
+    // Reopen palette
+    triggerHotkey("control+k", true);
+    await nextTick();
+
+     // Trigger the command b
+    triggerHotkey("b");
+    await nextTick();
+    assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
+
+    // Reopen palette
+    triggerHotkey("control+k", true);
+    await nextTick();
+
+    // Trigger the command c
+    triggerHotkey("c");
+    await nextTick();
+    assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
+
+    assert.verifySteps(["A", "B", "C"]);
+});
+
 QUnit.test("can be searched", async (assert) => {
     assert.expect(4);
 
