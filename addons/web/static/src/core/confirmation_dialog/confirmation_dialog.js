@@ -38,6 +38,7 @@ ConfirmationDialog.props = {
 
 ConfirmationDialog.bodyTemplate = "web.ConfirmationDialogBody";
 ConfirmationDialog.footerTemplate = "web.ConfirmationDialogFooter";
+ConfirmationDialog.size = "modal-md";
 
 export class AlertDialog extends ConfirmationDialog {
     setup() {
