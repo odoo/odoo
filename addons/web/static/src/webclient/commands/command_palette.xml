@@ -21,7 +21,7 @@
               <span t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="onCommandClicked(commandIndex)" t-on-mouseenter="onCommandMouseEnter(commandIndex)">
                 <span t-esc="command.name" />
                 <span t-if="command.hotkey">
-                  <t t-foreach="command.hotkey.toUpperCase().split('+')" t-as="key">
+                  <t t-foreach="getKeysToPress(command)" t-as="key">
                     <kbd t-esc="key" />
                     <span t-if="!key_last"> + </span>
                   </t>

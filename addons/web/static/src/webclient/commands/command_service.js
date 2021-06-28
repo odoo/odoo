@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registry } from "../../core/registry";
-import { getHotkeyToPress } from "../../core/hotkeys/hotkey_service";
 import { CommandPaletteDialog } from "./command_palette_dialog";
 
 /**
@@ -55,7 +54,7 @@ export const commandService = {
 
                 commands.push({
                     name: description,
-                    hotkey: getHotkeyToPress(el.dataset.hotkey),
+                    hotkey: el.dataset.hotkey,
                     action: () => {
                         // AAB: not sure it is enough, we might need to trigger all events that occur when you actually click
                         el.focus();
@@ -95,8 +94,6 @@ export const commandService = {
                     command.action,
                     command.hotkeyOptions
                 );
-                const altIsOptional = command.hotkeyOptions && command.hotkeyOptions.altIsOptional;
-                registration.hotkey = getHotkeyToPress(command.hotkey, altIsOptional);
             }
 
             const token = nextToken++;
