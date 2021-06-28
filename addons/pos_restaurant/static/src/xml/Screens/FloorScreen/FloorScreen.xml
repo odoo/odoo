@@ -13,7 +13,33 @@
                         </t>
                     </div>
                 </t>
-                <div class="floor-map" t-on-click="trigger('deselect-table')" t-ref="floor-map-ref">
+                <div t-if="env.isMobile and !isFloorEmpty" class="buttons" t-attf-style="background: {{state.floorBackground}};">
+                    <span class="button" t-on-click="state.view='list'">
+                        <i class="fa fa-list-ul" role="img" aria-label="Floor list" title="Floor list" />
+                    </span>
+                    <span class="button" t-on-click="state.view='floor-map'">
+                        <i class="fa fa-map" role="img" aria-label="Floor map" title="Floor map" />
+                    </span>
+                </div>
+                <div t-if="state.view === 'list'" class="floor-list" t-attf-style="background: {{state.floorBackground}};">
+                    <t t-foreach="activeTables" t-as="table" t-key="table.id">
+                        <div class="floor-list-item" t-on-click="trigger('select-table', table)">
+                            <div class="order-row">
+                                <div class="col">Table</div>
+                                <div class="col end"><t t-esc="table.name"/></div>
+                            </div>
+                            <div class="order-row">
+                                <div class="col">Order count</div>
+                                <div class="col end"><t t-esc="orderCount(table)"/></div>
+                            </div>
+                            <div class="order-row">
+                                <div class="col">Number of customer</div>
+                                <div class="col end"><t t-esc="env.pos.get_customer_count(table)"/>/<t t-esc="table.seats"/></div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+                <div t-if="state.view === 'floor-map'" class="floor-map" t-on-click="trigger('deselect-table')" t-ref="floor-map-ref">
                     <div t-if="isFloorEmpty" class="empty-floor">
                         <span>This floor has no tables yet, use the </span>
                         <i class="fa fa-plus" role="img" aria-label="Add button" title="Add button"></i>

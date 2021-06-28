@@ -34,6 +34,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                 isEditMode: false,
                 floorBackground: floor.background_color,
                 floorMapScrollTop: 0,
+                view: 'floor-map'
             });
             this.floorMapRef = useRef('floor-map-ref');
         }
@@ -67,6 +68,14 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             return this.state.selectedTableId !== null
                 ? this.env.pos.tables_by_id[this.state.selectedTableId]
                 : false;
+        }
+        orderCount(table) {
+            if (table.order_count !== undefined) {
+                return table.order_count;
+            }
+            return this.env.pos
+                .get_table_orders(table)
+                .filter(o => o.orderlines.length !== 0 || o.paymentlines.length !== 0).length;
         }
         selectFloor(floor) {
             this.state.selectedFloorId = floor.id;

@@ -574,3 +574,45 @@
     display: flex;
     justify-content: space-between;
 }
+
+@media screen and (max-width: 768px) {
+    .floor-map {
+        box-shadow: initial;
+    }
+}
+.floor-list {
+    height: inherit;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.floor-list-item {
+    border: 1px solid black;
+    margin: 5px;
+}
+.floor-list-item .order-row:nth-child(even) {
+    background: white;
+}
+.floor-list-item .order-row:nth-child(odd) {
+    background: rgb(230, 230, 230)
+}
+.floor-list-item .order-row .col {
+    display: flex;
+    flex: 1;
+    padding: 10px;
+}
+.floor-list-item .order-row .col.end {
+    text-align: end;
+}
+.buttons {
+    text-align: end;
+    padding: 5px;
+}
+.buttons .button {
+    padding: 5px;
+    margin-right: 5px;
+    font-size: 20px;
+    line-height: 32px;
+    width: 32px;
+}
