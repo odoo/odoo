@@ -4,16 +4,6 @@ import { isMacOS } from "../browser/feature_detection";
 import { registry } from "../registry";
 import { browser } from "../browser/browser";
 
-export function getHotkeyToPress(hotkey, altIsOptional = false) {
-    let result = hotkey.split("+");
-    if (isMacOS()) {
-        result = result.map((x) => x.replace("control", "command"));
-    }
-    if (!altIsOptional) {
-        result = isMacOS() ? ["control", ...result] : ["alt", ...result];
-    }
-    return result.join("+");
-}
 
 const ALPHANUM_KEYS = "abcdefghijklmnopqrstuvwxyz0123456789".split("");
 const NAV_KEYS = [
