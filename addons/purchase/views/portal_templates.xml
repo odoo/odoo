@@ -144,9 +144,9 @@
                   <thead class="bg-100">
                     <tr>
                       <th>Products</th>
-                      <th class="text-right d-none d-sm-table-cell">Unit Price</th>
+                      <th class="text-right d-none d-sm-table-cell" t-if="order.state in ['purchase', 'done']">Unit Price</th>
                       <th class="text-right">Quantity</th>
-                      <th class="text-right">Subtotal</th>
+                      <th class="text-right" t-if="order.state in ['purchase', 'done']">Subtotal</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -157,13 +157,13 @@
                             <img t-att-src="image_data_uri(resize_to_48(ol.product_id.image_1024))" alt="Product" class="d-none d-lg-inline"/>
                             <span t-esc="ol.name"/>
                           </td>
-                          <td class="text-right d-none d-sm-table-cell">
+                          <td class="text-right d-none d-sm-table-cell" t-if="order.state in ['purchase', 'done']">
                             <span t-field="ol.price_unit" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
                           </td>
                           <td class="text-right">
                             <span t-esc="ol.product_qty"/>
                           </td>
-                          <td class="text-right">
+                          <td class="text-right" t-if="order.state in ['purchase', 'done']">
                             <span t-field="ol.price_subtotal" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
                           </td>
                         </t>
@@ -183,7 +183,7 @@
                     </t>
                   </tbody>
                 </table>
-                <div class="row">
+                <div class="row" t-if="order.state in ['purchase', 'done']">
                   <div class="col-sm-7 col-md-5 ml-auto">
                     <table class="table table-sm">
                       <tbody>
