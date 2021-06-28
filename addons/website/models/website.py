@@ -911,6 +911,9 @@ class Website(models.Model):
         # if the current URL is indeed canonical or not.
         return current_url == canonical_url
 
+    def _get_relative_url(self, url):
+        return urls.url_parse(url).replace(scheme='', netloc='').to_url()
+
 
 class BaseModel(models.AbstractModel):
     _inherit = 'base'
