@@ -9,22 +9,24 @@ class report_product_pricelist(models.AbstractModel):
     _description = 'Pricelist Report'
 
     def _get_report_values(self, docids, data):
+        is_visible_title = data['is_visible_title'] and bool(data['is_visible_title']) or False
         product_ids = [int(i) for i in data['active_ids'].split(',')]
         pricelist_id = data['pricelist_id'] and int(data['pricelist_id']) or None
         quantities = [int(i) for i in data['quantities'].split(',')] or [1]
-        return self._get_report_data(data['active_model'], product_ids, pricelist_id, quantities, 'pdf')
+        return self._get_report_data(data['active_model'], product_ids, is_visible_title, pricelist_id, quantities, 'pdf')
 
     @api.model
     def get_html(self):
         render_values = self._get_report_data(
             self.env.context.get('active_model'),
             self.env.context.get('active_ids'),
+            self.env.context.get('is_visible_title'),
             self.env.context.get('pricelist_id'),
             self.env.context.get('quantities') or [1]
         )
         return self.env.ref('product.report_pricelist_page')._render(render_values)
 
-    def _get_report_data(self, active_model, active_ids, pricelist_id, quantities, report_type='html'):
+    def _get_report_data(self, active_model, active_ids, is_visible_title, pricelist_id, quantities, report_type='html'):
         products = []
         is_product_tmpl = active_model == 'product.template'
 
@@ -55,6 +57,7 @@ class report_product_pricelist(models.AbstractModel):
             'quantities': quantities,
             'is_product_tmpl': is_product_tmpl,
             'is_html_type': report_type == 'html',
+            'is_visible_title': is_visible_title,
         }
 
     def _get_product_data(self, is_product_tmpl, product, pricelist, quantities):
@@ -62,6 +65,7 @@ class report_product_pricelist(models.AbstractModel):
             'id': product.id,
             'name': is_product_tmpl and product.name or product.display_name,
             'price': dict.fromkeys(quantities, 0.0),
+            'uom': product.uom_id.name,
         }
         for qty in quantities:
             data['price'][qty] = pricelist.get_product_price(product, qty, False)
