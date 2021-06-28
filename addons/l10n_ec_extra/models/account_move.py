@@ -75,7 +75,7 @@ class AccountMove(models.Model):
         help='Edit Tax amounts if you encounter rounding issues.')
 
     l10n_ec_sri_payment_id = fields.Many2one('l10n.ec.sri.payment', _("Payment Method (SRI)"))
-    l10n_ec_access_key = fields.Char(_("Authorization"))
+    l10n_ec_access_key = fields.Char(_("Authorization"), copy=False)
     l10n_ec_auth_type = fields.Selection(related="l10n_latam_document_type_id.l10n_ec_authorization")
     l10n_ec_is_electronic = fields.Boolean(default=False, compute="_l10n_ec_is_electronic")
 
@@ -128,3 +128,12 @@ class AccountMove(models.Model):
             if self.l10n_latam_document_type_id:
                 return self._get_formatted_sequence()
         return super()._get_starting_sequence()
+
+    def _get_last_sequence_domain(self, relaxed=False):
+        where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
+        if self.company_id.country_id.code == "EC":
+                        
+            where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s"
+            param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
+
+        return where_string, param
