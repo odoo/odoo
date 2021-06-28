@@ -318,9 +318,9 @@
             <t t-raw="0"/>
         </div>
 
-        <div class="footer o_standard_footer">
+        <div name="page_footer" class="footer o_standard_footer">
             <div class="text-center" style="border-top: 1px solid black;">
-                <ul class="list-inline mb4">
+                <ul id="company_footer" class="list-inline mb4">
                     <li t-if="company.phone" class="list-inline-item">Phone: <span t-field="company.phone"/></li>
                     <li t-if="company.email" class="list-inline-item">Email: <span t-field="company.email"/></li>
                     <li t-if="company.website" class="list-inline-item">Web: <span t-field="company.website"/></li>
@@ -331,7 +331,7 @@
                     <span t-field="company.report_footer"/>
                 </div>
 
-                <div t-if="report_type == 'pdf'" class="text-muted">
+                <div name="number_page_footer" t-if="report_type == 'pdf'" class="text-muted">
                     Page: <span class="page"/> / <span class="topage"/>
                 </div>
             </div>
