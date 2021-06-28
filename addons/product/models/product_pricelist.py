@@ -346,6 +346,20 @@ class Pricelist(models.Model):
             'template': '/product/static/xls/product_pricelist.xls'
         }]
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_used_as_rule_base(self):
+        linked_items = self.env['product.pricelist.item'].sudo().with_context(active_test=False).search([
+            ('base', '=', 'pricelist'),
+            ('base_pricelist_id', 'in', self.ids),
+            ('pricelist_id', 'not in', self.ids),
+        ])
+        if linked_items:
+            raise UserError(_(
+                'You cannot delete those pricelist(s):\n(%s)\n, they are used in other pricelist(s):\n%s',
+                '\n'.join(linked_items.base_pricelist_id.mapped('display_name')),
+                '\n'.join(linked_items.pricelist_id.mapped('display_name'))
+            ))
+
 
 class ResCountryGroup(models.Model):
     _inherit = 'res.country.group'
