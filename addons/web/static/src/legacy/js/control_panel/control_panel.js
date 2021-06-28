@@ -216,7 +216,7 @@ odoo.define('web.ControlPanel', function (require) {
         withBreadcrumbs: Boolean,
         withSearchBar: Boolean,
     };
-    ControlPanel.template = 'web.ControlPanel';
+    ControlPanel.template = 'web.Legacy.ControlPanel';
 
     return ControlPanel;
 });

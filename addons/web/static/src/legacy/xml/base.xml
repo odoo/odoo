@@ -3,7 +3,7 @@
 
 <!-- Owl Templates -->
 
-<t t-name="web.ControlPanel" owl="1">
+<t t-name="web.Legacy.ControlPanel" owl="1">
     <div class="o_control_panel">
         <div class="o_cp_top">
             <div class="o_cp_top_left">
@@ -83,7 +83,7 @@
     </div>
 </t>
 
-<t t-name="web.ControlPanelX2Many" owl="1">
+<t t-name="web.Legacy.ControlPanelX2Many" owl="1">
     <div class="o_x2m_control_panel">
         <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
             <t t-slot="buttons"/>
@@ -179,7 +179,7 @@
     </div>
 </t>
 
-<t t-name="web.FavoriteMenu" t-inherit="web.DropdownMenu" t-inherit-mode="primary" owl="1">
+<t t-name="web.Legacy.FavoriteMenu" t-inherit="web.DropdownMenu" t-inherit-mode="primary" owl="1">
     <xpath expr="//DropdownMenuItem" position="attributes">
         <attribute name="t-on-remove-item.stop">_onItemRemoved</attribute>
     </xpath>
@@ -203,14 +203,14 @@
     </xpath>
 </t>
 
-<t t-name="web.FilterMenu" t-inherit="web.DropdownMenu" t-inherit-mode="primary" owl="1">
+<t t-name="web.Legacy.FilterMenu" t-inherit="web.DropdownMenu" t-inherit-mode="primary" owl="1">
     <xpath expr="//ul[@role='menu']" position="inside">
         <li t-if="items.length" class="dropdown-divider" role="separator"/>
         <CustomFilterItem fields="props.fields"/>
     </xpath>
 </t>
 
-<t t-name="web.GroupByMenu" t-inherit="web.DropdownMenu" t-inherit-mode="primary" owl="1">
+<t t-name="web.Legacy.GroupByMenu" t-inherit="web.DropdownMenu" t-inherit-mode="primary" owl="1">
     <xpath expr="//ul[@role='menu']" position="inside">
         <t t-if="fields.length">
             <li t-if="items.length" class="dropdown-divider" role="separator"/>
@@ -277,7 +277,7 @@
     </li>
 </t>
 
-<t t-name="web.CustomFavoriteItem" owl="1">
+<t t-name="web.Legacy.CustomFavoriteItem" owl="1">
     <li class="o_menu_item o_add_favorite" role="menuitem">
         <span type="button"
             class="dropdown-item"
@@ -327,7 +327,7 @@
     </li>
 </t>
 
-<t t-name="web.CustomFilterItem" owl="1">
+<t t-name="web.Legacy.CustomFilterItem" owl="1">
     <div class="o_generator_menu">
         <button class="btn o_add_custom_filter dropdown-item"
             aria-expanded="false"
@@ -440,7 +440,7 @@
     </div>
 </t>
 
-<t t-name="web.CustomGroupByItem" owl="1">
+<t t-name="web.Legacy.CustomGroupByItem" owl="1">
     <div class="o_generator_menu">
         <span type="button"
             class="o_add_custom_group_by dropdown-item"
@@ -563,7 +563,7 @@
     </nav>
 </t>
 
-<t t-name="web.SearchBar" owl="1">
+<t t-name="web.Legacy.SearchBar" owl="1">
     <div class="o_searchview_input_container">
         <div t-foreach="model.get('facets')" t-as="facet" t-key="facet_index"
             tabindex="0"

@@ -487,7 +487,7 @@ odoo.define('web.SearchBar', function (require) {
     SearchBar.props = {
         fields: Object,
     };
-    SearchBar.template = 'web.SearchBar';
+    SearchBar.template = 'web.Legacy.SearchBar';
 
     return SearchBar;
 });

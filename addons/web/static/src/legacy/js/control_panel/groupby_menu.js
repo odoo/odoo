@@ -92,7 +92,7 @@ odoo.define('web.GroupByMenu', function (require) {
     GroupByMenu.props = Object.assign({}, DropdownMenu.props, {
         fields: Object,
     });
-    GroupByMenu.template = 'web.GroupByMenu';
+    GroupByMenu.template = 'web.Legacy.GroupByMenu';
 
     return GroupByMenu;
 });
