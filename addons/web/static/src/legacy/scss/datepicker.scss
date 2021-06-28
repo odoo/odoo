@@ -38,13 +38,8 @@
 div.dropdown-menu.bootstrap-datetimepicker-widget {
     min-width: 0;
     padding: 0;
-    border-top: 0;
-
-    &.bottom {
-        &:before, &:after {
-            transform: translateY(1px);
-        }
-    }
+    border: 1px solid $dropdown-border-color;
+    overflow: visible; // Needed until dropdown-menu will be 'hoverflow:hidden'
 
     // Need to put datetimepicker widget above everything else
     z-index: $zindex-modal + 1;
@@ -65,6 +60,10 @@ div.dropdown-menu.bootstrap-datetimepicker-widget {
         &.prev, &.next, &.old, &.new {
             @include o-hover-opacity(.5);
         }
+    }
+
+    thead tr:nth-child(1) th {
+        border-top: 0;
     }
 
     thead tr:nth-child(2) th {
