@@ -164,6 +164,14 @@ class LunchSupplier(models.Model):
         super().unlink()
         crons.unlink()
 
+    def toggle_active(self):
+        """ Archiving related lunch product """
+        res = super().toggle_active()
+        Product = self.env['lunch.product'].with_context(active_test=False)
+        all_products = Product.search([('supplier_id', 'in', self.ids)])
+        all_products._sync_active_from_related()
+        return res
+
     def _send_auto_email(self):
         """ Send an email to the supplier with the order of the day """
         # Called daily by cron

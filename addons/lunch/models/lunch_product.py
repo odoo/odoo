@@ -74,10 +74,7 @@ class LunchProductCategory(models.Model):
         res = super().toggle_active()
         Product = self.env['lunch.product'].with_context(active_test=False)
         all_products = Product.search([('category_id', 'in', self.ids)])
-        for category in self:
-            all_products.filtered(
-                lambda p: p.category_id == category and p.active != category.active
-            ).toggle_active()
+        all_products._sync_active_from_related()
         return res
 
 class LunchTopping(models.Model):
@@ -122,7 +119,13 @@ class LunchProduct(models.Model):
     new_until = fields.Date('New Until')
     favorite_user_ids = fields.Many2many('res.users', 'lunch_product_favorite_user_rel', 'product_id', 'user_id', check_company=True)
 
+    def _sync_active_from_related(self):
+        """ Archive/unarchive product after related field is archived/unarchived """
+        return self.filtered(lambda p: (p.category_id.active and p.supplier_id.active) != p.active).toggle_active()
+
     def toggle_active(self):
         if self.filtered(lambda product: not product.active and not product.category_id.active):
             raise UserError(_("The product category is archived. The user have to unarchive the category or change the category of the product."))
+        if self.filtered(lambda product: not product.active and not product.supplier_id.active):
+            raise UserError(_("The product supplier is archived. The user have to unarchive the supplier or change the supplier of the product."))
         return super().toggle_active()
