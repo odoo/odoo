@@ -58,7 +58,7 @@ function forceLocaleAndTimezoneWithCleanup() {
     });
 }
 
-function makeMockLocation() {
+function makeMockLocation(hasListeners = () => true) {
     const locationLink = Object.assign(document.createElement("a"), {
         href: window.location.origin + window.location.pathname,
         assign(url) {
@@ -71,10 +71,22 @@ function makeMockLocation() {
             return target[p];
         },
         set(target, p, value) {
-            target[p] = value;
             if (p === "hash") {
-                window.dispatchEvent(new HashChangeEvent("hashchange"));
+                const oldURL = new URL(locationLink.href).toString();
+                target[p] = value;
+                const newURL = new URL(locationLink.href).toString();
+
+                if (!hasListeners()) {
+                    return true;
+                }
+                // the event hashchange must be triggered in a nonBlocking stack
+                // https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid
+                window.setTimeout(() => {
+                    window.dispatchEvent(new HashChangeEvent("hashchange", { oldURL, newURL }));
+                });
+                return true;
             }
+            target[p] = value;
             return true;
         },
     });
@@ -83,13 +95,18 @@ function makeMockLocation() {
 function patchBrowserWithCleanup() {
     const originalAddEventListener = browser.addEventListener;
     const originalRemoveEventListener = browser.removeEventListener;
-    const mockLocation = makeMockLocation();
+
+    let hasHashChangeListeners = false;
+    const mockLocation = makeMockLocation(() => hasHashChangeListeners);
     patchWithCleanup(
         browser,
         {
             // patch addEventListner to automatically remove listeners bound (via
             // browser.addEventListener) during a test (e.g. during the deployment of a service)
-            addEventListener() {
+            addEventListener(evName) {
+                if (evName === "hashchange") {
+                    hasHashChangeListeners = true;
+                }
                 originalAddEventListener(...arguments);
                 registerCleanup(() => {
                     originalRemoveEventListener(...arguments);
