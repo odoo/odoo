@@ -51,6 +51,13 @@ class Location(models.Model):
         'stock.location', 'Parent Location', index=True, ondelete='cascade', check_company=True,
         help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.")
     child_ids = fields.One2many('stock.location', 'location_id', 'Contains')
+    child_internal_location_ids = fields.Many2many(
+        'stock.location',
+        string='Internal locations amoung descendants',
+        compute='_compute_child_internal_location_ids',
+        recursive=True,
+        help='This location (if it\'s internal) and all its descendants filtered by type=Internal.'
+    )
     comment = fields.Html('Additional Information')
     posx = fields.Integer('Corridor (X)', default=0, help="Optional localization details, for information purpose only")
     posy = fields.Integer('Shelves (Y)', default=0, help="Optional localization details, for information purpose only")
@@ -135,6 +142,12 @@ class Location(models.Model):
                 if view_location_id in path:
                     loc.warehouse_id = view_by_wh[view_location_id]
                     break
+
+    @api.depends('child_ids.usage', 'child_ids.child_internal_location_ids')
+    def _compute_child_internal_location_ids(self):
+        # batch reading optimization is not possible because the field has recursive=True
+        for loc in self:
+            loc.child_internal_location_ids = self.search([('id', 'child_of', loc.id), ('usage', '=', 'internal')])
 
     @api.onchange('usage')
     def _onchange_usage(self):
@@ -221,7 +234,7 @@ class Location(models.Model):
 
         # get current product qty (qty in current quants and future qty on assigned ml) of all child locations
         qty_by_location = defaultdict(lambda: 0)
-        locations = self.env['stock.location'].search([('id', 'child_of', self.id), ('usage', '=', 'internal')])
+        locations = self.child_internal_location_ids
         if locations.storage_category_id:
             move_line_data = self.env['stock.move.line'].read_group([
                 ('product_id', '=', product.id),
