@@ -8,7 +8,7 @@ import core from "web.core";
 import AbstractAction from "web.AbstractAction";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
+import { click, getFixture, legacyExtraNextTick, patchWithCleanup, nextTick } from "../../helpers/utils";
 import {
     createWebClient,
     doAction,
@@ -961,6 +961,64 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsNone(webClient, ".o_menu_brand");
         assert.containsOnce(webClient, ".o_dialog_error");
         assert.strictEqual(webClient.el.querySelector(".o_action_manager").innerHTML, "");
+        assert.deepEqual(webClient.env.services.router.current.hash, {
+            action: "__test__client__action__",
+            menu_id: 1,
+        });
+    });
+
+    QUnit.test("concurrent hashchange during action mounting -- 1", async (assert) => {
+        assert.expect(5);
+
+        class MyAction extends Component {
+            mounted() {
+                browser.location.hash = "#action=__test__client__action__&menu_id=1";
+            }
+        }
+        MyAction.template = tags.xml`<div class="not-here" />`;
+        registry.category("actions").add("myAction", MyAction);
+
+        browser.location.hash = "#action=myAction";
+
+        const webClient = await createWebClient({ serverData });
+        assert.containsOnce(webClient, ".not-here");
+        assert.containsNone(webClient, ".test_client_action");
+
+        await nextTick();
+        assert.containsNone(webClient, ".not-here");
+        assert.containsOnce(webClient, ".test_client_action");
+
+        assert.deepEqual(webClient.env.services.router.current.hash, {
+            action: "__test__client__action__",
+            menu_id: 1,
+        });
+    });
+
+    QUnit.test("concurrent hashchange during action mounting -- 2", async (assert) => {
+        assert.expect(5);
+
+        const baseURL = new URL(browser.location.href).toString();
+
+        class MyAction extends Component {
+            mounted() {
+                const newURL = baseURL + "#action=__test__client__action__&menu_id=1";
+                // immediate triggering
+                window.dispatchEvent(new HashChangeEvent("hashchange", { newURL }));
+            }
+        }
+        MyAction.template = tags.xml`<div class="not-here" />`;
+        registry.category("actions").add("myAction", MyAction);
+
+        browser.location.hash = "#action=myAction";
+        const webClient = await createWebClient({ serverData });
+
+        assert.containsOnce(webClient, ".not-here");
+        assert.containsNone(webClient, ".test_client_action");
+
+        await nextTick();
+        assert.containsNone(webClient, ".not-here");
+        assert.containsOnce(webClient, ".test_client_action");
+
         assert.deepEqual(webClient.env.services.router.current.hash, {
             action: "__test__client__action__",
             menu_id: 1,

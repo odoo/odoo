@@ -110,8 +110,8 @@ async function redirect(env, url, wait = false) {
     browser.location.assign(url);
 }
 
-function getRoute() {
-    const { pathname, search, hash } = browser.location;
+function getRoute(urlObj) {
+    const { pathname, search, hash } = urlObj;
     const searchQuery = parseSearchQuery(search);
     const hashQuery = parseHash(hash);
     return { pathname, search: searchQuery, hash: hashQuery };
@@ -120,10 +120,12 @@ function getRoute() {
 function makeRouter(env) {
     const bus = env.bus;
     const lockedKeys = new Set();
-    let current = getRoute();
+    let current = getRoute(browser.location);
     let pushTimeout;
-    browser.addEventListener("hashchange", () => {
-        current = getRoute();
+    browser.addEventListener("hashchange", (ev) => {
+        browser.clearTimeout(pushTimeout);
+        const loc = new URL(ev.newURL);
+        current = getRoute(loc);
         bus.trigger("ROUTE_CHANGE");
     });
 
@@ -155,7 +157,7 @@ function makeRouter(env) {
             } else {
                 browser.history.replaceState({}, "", url);
             }
-            current = getRoute();
+            current = getRoute(browser.location);
         }
         return function pushOrReplaceState(hash, options) {
             allPushArgs.push([hash, options]);
