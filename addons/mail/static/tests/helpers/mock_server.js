@@ -804,21 +804,18 @@ MockServer.include({
                 const channelPartnerData = Object.assign({}, partnerChannel, {
                     partner: partnerInfos[partnerChannel.partner_id],
                 });
-                delete channelPartnerData.partner_id;
                 res.members = [channelPartnerData];
             } else {
                 res.members = channelPartners.map(channelPartner => {
                     const channelPartnerData = Object.assign({}, channelPartner, {
                         partner: partnerInfos[channelPartner.partner_id],
                     });
-                    delete channelPartnerData.partner_id;
+                    if (channelPartner.partner_id === this.currentPartnerId) {
+                        channelPartnerData.seen_message_id = channel.seen_message_id;
+                        channelPartnerData.fetched_message_id = channel.fetched_message_id;
+                    }
                     return channelPartnerData;
                 });
-                res['seen_partners_info'] = [{
-                    partner_id: this.currentPartnerId,
-                    seen_message_id: channel.seen_message_id,
-                    fetched_message_id: channel.fetched_message_id,
-                }];
             }
             return res;
         });

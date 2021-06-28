@@ -224,8 +224,8 @@ function factory(dependencies) {
                     this.env.models['mail.channel_member'].convertData(data.current_member)
                 );
             }
-            if ('seen_partners_info' in data) {
-                if (!data.seen_partners_info) {
+            if ('members' in data) {
+                if (!data.members) {
                     data2.partnerSeenInfos = unlinkAll();
                 } else {
                     /*
@@ -235,18 +235,18 @@ function factory(dependencies) {
                      * task-2336946
                      */
                     data2.partnerSeenInfos = insertAndReplace(
-                        data.seen_partners_info.map(
-                            ({ fetched_message_id, partner_id, seen_message_id }) => {
+                        data.members.map(
+                            ({ fetched_message_id, partner, seen_message_id }) => {
                                 return {
                                     channelId: data2.id,
                                     lastFetchedMessage: fetched_message_id ? insert({ id: fetched_message_id }) : unlinkAll(),
                                     lastSeenMessage: seen_message_id ? insert({ id: seen_message_id }) : unlinkAll(),
-                                    partnerId: partner_id,
+                                    partnerId: partner.id,
                             };
                         })
                     );
                     if (data.id || this.id) {
-                        const messageIds = data.seen_partners_info.reduce((currentSet, { fetched_message_id, seen_message_id }) => {
+                        const messageIds = data.members.reduce((currentSet, { fetched_message_id, seen_message_id }) => {
                             if (fetched_message_id) {
                                 currentSet.add(fetched_message_id);
                             }
