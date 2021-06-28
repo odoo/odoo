@@ -34,7 +34,7 @@ odoo.define('web.ControlPanelX2Many', function (require) {
         cp_content: { type: Object, optional: 1 },
         pager: Object,
     };
-    ControlPanelX2Many.template = 'web.ControlPanelX2Many';
+    ControlPanelX2Many.template = 'web.Legacy.ControlPanelX2Many';
 
     return ControlPanelX2Many;
 });

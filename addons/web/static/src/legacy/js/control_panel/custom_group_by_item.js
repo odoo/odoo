@@ -37,7 +37,7 @@ odoo.define('web.CustomGroupByItem', function (require) {
         }
     }
 
-    CustomGroupByItem.template = 'web.CustomGroupByItem';
+    CustomGroupByItem.template = 'web.Legacy.CustomGroupByItem';
     CustomGroupByItem.props = {
         fields: Array,
     };
