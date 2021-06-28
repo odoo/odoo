@@ -4,7 +4,7 @@
     <template id="report_pricelist_page">
         <div class="container bg-white p-4 my-4">
             <div class="row my-3">
-                <div class="col-12">
+                <div class="col-12" t-if="is_visible_title">
                     <h2 t-if="is_html_type">
                         Pricelist:
                         <a href="#" class="o_action" data-model="product.pricelist" t-att-data-res-id="pricelist.id">
@@ -17,13 +17,19 @@
                 </div>
             </div>
             <div class="row">
+                <div t-att-class="'text-center' + (' offset-8' if is_html_type else ' offset-7')">
+                    <strong>Sales Order Line Quantities (price per unit)</strong>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-12">
                     <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th>Products</th>
+                                <th groups="uom.group_uom">UoM</th>
                                 <t t-foreach="quantities" t-as="qty">
-                                    <th class="text-right"><t t-esc="qty"/> Units</th>
+                                    <th class="text-right"><t t-esc="qty"/></th>
                                 </t>
                             </tr>
                         </thead>
@@ -38,6 +44,9 @@
                                             <t t-esc="product['name']"/>
                                         </t>
                                     </td>
+                                    <td groups="uom.group_uom">
+                                        <t t-esc="product['uom']"/>
+                                    </td>
                                     <t t-foreach="quantities" t-as="qty">
                                         <td class="text-right">
                                             <t t-esc="product['price'][qty]" t-options='{"widget": "monetary", "display_currency": pricelist.currency_id}'/>
@@ -51,6 +60,9 @@
                                                 <t t-esc="variant['name']"/>
                                             </a>
                                             <span t-else="" class="ml-4" t-esc="variant['name']"/>
+                                        </td>
+                                        <td groups="uom.group_uom">
+                                            <t t-esc="product['uom']"/>
                                         </td>
                                         <t t-foreach="quantities" t-as="qty">
                                             <td class="text-right">

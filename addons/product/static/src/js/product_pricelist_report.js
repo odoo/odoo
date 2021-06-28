@@ -147,6 +147,8 @@ var GeneratePriceList = AbstractAction.extend(StandaloneFieldManagerMixin, {
      */
     start: function () {
         this.controlPanelProps.cp_content = this._renderComponent();
+        const $content = this.controlPanelProps.cp_content;
+        $content["$searchview"][0].querySelector('.o_is_visible_title').addEventListener('click', this._onClickVisibleTitle.bind(this));
         return this._super.apply(this, arguments).then(() => {
             this.$('.o_content').html(this.reportHtml);
         });
@@ -219,6 +221,17 @@ var GeneratePriceList = AbstractAction.extend(StandaloneFieldManagerMixin, {
     //--------------------------------------------------------------------------
 
     /**
+     * Checkbox is checked, the report title will show.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onClickVisibleTitle(ev) {
+        this.context.is_visible_title = ev.currentTarget.checked;
+        this._reload();
+    },
+
+    /**
      * Open form view of particular record when link clicked.
      *
      * @private
@@ -240,9 +253,10 @@ var GeneratePriceList = AbstractAction.extend(StandaloneFieldManagerMixin, {
      * @private
      */
     _onClickPrint: function () {
-        const reportName = _.str.sprintf('product.report_pricelist?active_model=%s&active_ids=%s&pricelist_id=%s&quantities=%s',
+        const reportName = _.str.sprintf('product.report_pricelist?active_model=%s&active_ids=%s&is_visible_title=%s&pricelist_id=%s&quantities=%s',
             this.context.active_model,
             this.context.active_ids,
+            this.context.is_visible_title || '',
             this.context.pricelist_id || '',
             this.context.quantities.toString() || '1',
         );
