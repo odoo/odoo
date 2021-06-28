@@ -209,7 +209,14 @@ var ListRenderer = BasicRenderer.extend({
         const decorations = {};
         for (const [key, expr] of Object.entries(node.attrs)) {
             if (DECORATIONS.includes(key)) {
-                const cssClass = key.replace('decoration', 'text');
+                let cssClass;
+                if (key === 'decoration-bf') {
+                    cssClass = 'font-weight-bold';
+                } else if (key === 'decoration-it') {
+                    cssClass = 'font-italic';
+                } else {
+                    cssClass = key.replace('decoration', 'text');
+                }
                 decorations[cssClass] = py.parse(py.tokenize(expr));
             }
         }
