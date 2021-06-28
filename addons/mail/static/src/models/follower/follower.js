@@ -52,20 +52,6 @@ function factory(dependencies) {
             this._subtypesListDialog = undefined;
         }
 
-        /**
-         * Called when clicking on apply button.
-         */
-        onClickApply() {
-            this.updateSubtypes();
-        }
-
-        /**
-         * Called when clicking on cancel button.
-         */
-        onClickCancel() {
-            this.closeSubtypes();
-        }
-
         onClickRemove() {
             this.remove();
         }

@@ -52,9 +52,7 @@ function factory(dependencies) {
          * Handle click on attachement.
          */
         onClickAttachment() {
-            this.update({
-                isAttachmentBoxVisible: !this.isAttachmentBoxVisible,
-            });
+            this.update({ isAttachmentBoxVisible: !this.isAttachmentBoxVisible });
         }
 
 
@@ -65,6 +63,9 @@ function factory(dependencies) {
             this.update({ isComposerVisible: false });
         }
 
+        /**
+         * Handle onClick on log note button.
+         */
         onClickLogNote() {
             if (!this.composer) {
                 return;
@@ -76,6 +77,9 @@ function factory(dependencies) {
             }
         }
 
+        /**
+         * Handle onCLick on Send message button.
+         */
         onClickSendMessage() {
             if (!this.composer) {
                 return;
