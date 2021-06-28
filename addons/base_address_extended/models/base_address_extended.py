@@ -33,9 +33,9 @@ class Partner(models.Model):
     street_number2 = fields.Char('Door', compute='_split_street', help="Door Number",
                                  inverse='_set_street', store=True)
 
-    def _formatting_address_fields(self):
-        """Returns the list of address fields usable to format addresses."""
-        return super(Partner, self)._formatting_address_fields() + self.get_street_fields()
+    def _address_fields(self):
+        """Returns the list of address fields that are synced from the parent."""
+        return super(Partner, self)._address_fields() + self.get_street_fields()
 
     def get_street_fields(self):
         """Returns the fields that can be used in a street format.
@@ -78,7 +78,8 @@ class Partner(models.Model):
 
             # add trailing chars in street_format
             street_value += street_format[previous_pos:]
-            partner.street = street_value
+            if partner.street != street_value:
+                partner.street = street_value
 
     def _split_street_with_params(self, street_raw, street_format):
         street_fields = self.get_street_fields()
@@ -98,10 +99,18 @@ class Partner(models.Model):
             if separator and field_name:
                 #maxsplit set to 1 to unpack only the first element and let the rest untouched
                 tmp = street_raw.split(separator, 1)
+                if previous_greedy in vals:
+                    # attach part before space to preceding greedy field
+                    append_previous, sep, tmp[0] = tmp[0].rpartition(' ')
+                    street_raw = separator.join(tmp)
+                    vals[previous_greedy] += sep + append_previous
                 if len(tmp) == 2:
                     field_value, street_raw = tmp
                     vals[field_name] = field_value
             if field_value or not field_name:
+                previous_greedy = None
+                if field_name == 'street_name' and separator == ' ':
+                    previous_greedy = field_name
                 # select next field to find (first pass OR field found)
                 # [2:-2] is used to remove the extra chars '%(' and ')s'
                 field_name = re_match.group()[2:-2]

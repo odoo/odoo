@@ -747,9 +747,9 @@ class Warehouse(models.Model):
             'in_type_id': {'default_location_dest_id': input_loc.id},
             'out_type_id': {'default_location_src_id': output_loc.id},
             'pick_type_id': {
-                'active': self.delivery_steps != 'ship_only',
+                'active': self.delivery_steps != 'ship_only' and self.active,
                 'default_location_dest_id': output_loc.id if self.delivery_steps == 'pick_ship' else self.wh_pack_stock_loc_id.id},
-            'pack_type_id': {'active': self.delivery_steps == 'pick_pack_ship'},
+            'pack_type_id': {'active': self.delivery_steps == 'pick_pack_ship' and self.active},
             'int_type_id': {},
         }
 

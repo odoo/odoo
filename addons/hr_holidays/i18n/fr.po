@@ -11,7 +11,8 @@
 # Martin Trigaux, 2019
 # Jonathan Quique <jqu@odoo.com>, 2020
 # Nicolas Martinelli, 2020
-# Cécile Collart <cco@odoo.com>, 2020
+# Cécile Collart <cco@odoo.com>, 2021
+# Yann Papouin <y.papouin@dec-industrie.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2020\n"
+"Last-Translator: Yann Papouin <y.papouin@dec-industrie.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +37,7 @@ msgid ""
 "users can freely request leaves;"
 msgstr ""
 "\tFixé par le RH: Les jours sont alloués par le RH et ne peuvent pas être "
-"modifié: L'utilisateur peut demander des congés;\tFixé par le RH + demande "
+"modifiés: L'utilisateur peut demander des congés;\tFixé par le RH + demande "
 "d'allocation: alloué par le RH et l'utilisateur peut demander des congés "
 "ainsi que des allocations;\tPas d'allocation: Pas d'allocation par défaut, "
 "l'utilisateur peut demander des congés sans limite;"
@@ -45,13 +46,13 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_type.py:265
 #, python-format
 msgid " days"
-msgstr "jours"
+msgstr " jours"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_type.py:265
 #, python-format
 msgid " hours"
-msgstr "heures"
+msgstr " heures"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -94,7 +95,7 @@ msgstr "%s : %.2f jour(s)"
 #: code:addons/hr_holidays/models/hr_leave.py:466
 #, python-format
 msgid "%s : %.2f hour(s)"
-msgstr ""
+msgstr "%s : %.2f heure(s)"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:440
@@ -106,7 +107,19 @@ msgstr "%s sur %s : %.2f jour(s)"
 #: code:addons/hr_holidays/models/hr_leave.py:481
 #, python-format
 msgid "%s on %s : %.2f hour(s)"
-msgstr ""
+msgstr "%s sur %s : %.2f heure(s)"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:643
+#, python-format
+msgid "%s on Time Off : %.2f day(s)"
+msgstr "%s en congé : %.2f jour(s)"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:643
+#, python-format
+msgid "%s on Time Off : %.2f hour(s)"
+msgstr "%s en congé : %.2f heure(s)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -409,7 +422,7 @@ msgstr "<span class=\"ml8\">Heures</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "<span class=\"ml8\">of leaves every</span>"
-msgstr "<span class=\"ml8\">de congé chaque</span>"
+msgstr "<span class=\"ml8\">de congés chaque</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -420,6 +433,21 @@ msgstr "<span class=\"o_stat_text\">Jours Alloués</span>"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Group Leaves</span>"
 msgstr "<span class=\"o_stat_text\">Congés de groupe</span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid ""
+"<span attrs=\"{'invisible': [('holiday_type', '!=', 'employee')]}\">\n"
+"                        The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'department')]}\">\n"
+"                        The department's company has a different timezone than yours! Here dates and times are displayed in the company's timezone\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'company')]}\">\n"
+"                        The company has a different timezone than yours! Here dates and times are displayed in the company's timezone\n"
+"                    </span>\n"
+"                    ("
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -435,12 +463,12 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\">from</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">de</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\">to</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">à</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -1079,7 +1107,7 @@ msgstr "Corriger l'allocation"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "Edit Leave"
-msgstr ""
+msgstr "Éditer le congé"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_employee
@@ -1620,7 +1648,7 @@ msgstr "Congés."
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2019"
-msgstr ""
+msgstr "Congés légaux 2019"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,color_name:0
@@ -1794,6 +1822,12 @@ msgstr "Congés de mon équipe"
 #: selection:hr.employee,current_leave_state:0
 msgid "New"
 msgstr "Nouveau"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "New %s Request created by %s from %s to %s"
+msgstr "Nouvelle demande de %s crée par %s du %s au %s"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_new_request
@@ -1979,7 +2013,7 @@ msgstr "Retard"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_hl
 msgid "Overtime Compensation"
-msgstr ""
+msgstr "Rémunération des heures supplémentaires"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
@@ -1989,7 +2023,7 @@ msgstr "Vue d'ensemble"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cla
 msgid "Paid Time Off 2019"
-msgstr ""
+msgstr "Congés payés 2019"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__parent_id
@@ -2133,7 +2167,7 @@ msgstr "Remettre en brouillon"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Resource Leaves Detail"
-msgstr ""
+msgstr "Détail des congés de la ressource"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id

@@ -100,11 +100,6 @@ class SaleOrderLine(models.Model):
 
     def _get_display_price(self, product):
         if self.event_ticket_id and self.event_id:
-            company = self.event_id.company_id or self.env.user.company_id
-            currency = company.currency_id or self.env.user.company_id.currency_id
-            return currency._convert(
-                self.event_ticket_id.price, self.order_id.currency_id,
-                self.order_id.company_id or self.env.user.company_id,
-                self.order_id.date_order or fields.Date.today())
+            return self.event_ticket_id.with_context(pricelist=self.order_id.pricelist_id.id, uom=self.product_uom.id).price_reduce
         else:
             return super()._get_display_price(product)

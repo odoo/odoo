@@ -50,6 +50,9 @@ msgid ""
 "\n"
 "Blocking: %s"
 msgstr ""
+"\n"
+"\n"
+"Blokování: %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:329
@@ -421,7 +424,7 @@ msgstr "Sada"
 #: code:addons/stock/models/stock_move_line.py:88
 #, python-format
 msgid "A done move line should never have a reserved quantity."
-msgstr ""
+msgstr "Řádek provedeného pohybu by nikdy neměl mít rezervované množství."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:80
@@ -966,7 +969,7 @@ msgstr "Zkontrolujte existenci cílových balíčků na trasách pohybu"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_line_exist
 msgid "Check the existence of pack operation on the picking"
-msgstr ""
+msgstr "Kontrola existence operace balení při vychystávání"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
@@ -3140,7 +3143,7 @@ msgstr "Produktová a seriová čísla"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Lots &amp; Serial numbers will appear on the delivery slip"
-msgstr ""
+msgstr "Na dodacím listu budou uvedena čísla šarží a sériová čísla."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -3208,7 +3211,7 @@ msgstr "Spravuj balíky"
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
 msgid "Manage Push and Pull inventory flows"
-msgstr ""
+msgstr "Správa skladových toků Push a Pull"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5767,6 +5770,8 @@ msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
 msgstr ""
+"Technické pole sloužící k zobrazení omezení vlastnictví kvantifikátorů, "
+"které je třeba vzít v úvahu při označování tohoto kroku jako \"hotový\"."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__price_unit
@@ -6126,6 +6131,10 @@ msgid ""
 "returned picking in order to avoid logistic rules to be applied again (which"
 " would create duplicated operations)"
 msgstr ""
+"Zdá se, že tento výběr je zřetězený s jinou operací. Pokud později obdržíte "
+"zboží, které nyní vracíte, ujistěte se, že jste vrácenou vychystávku "
+"<b>obrátili</b>, abyste se vyhnuli opětovnému použití logistických pravidel "
+"(což by vytvořilo duplicitní operace)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -7251,4 +7260,4 @@ msgstr "=> Nastav množství na 0"
 #: code:addons/stock/models/stock_move_line.py:223
 #, python-format
 msgid "Changing the product is only allowed in 'Draft' state."
-msgstr ""
+msgstr "Změna produktu je povolena pouze ve stavu \"Návrh\"."

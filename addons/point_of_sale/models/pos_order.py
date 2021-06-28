@@ -960,7 +960,7 @@ class PosOrder(models.Model):
                             if stock_production_lot.product_id.tracking == 'lot':
                                 qty = abs(pos_pack_lot.pos_order_line_id.qty)
                             qty_done += qty
-                            quant = stock_production_lot.quant_ids.filtered(lambda q: q.quantity > 0.0 or q.location_id.parent_path.startswith(move.location_id.parent_path))[-1:]
+                            quant = stock_production_lot.quant_ids.filtered(lambda q: q.quantity > 0.0 and q.location_id.parent_path.startswith(move.location_id.parent_path))[-1:]
                             pack_lots.append({'lot_id': stock_production_lot.id, 'quant_location_id': quant.location_id.id, 'qty': qty})
                         else:
                             has_wrong_lots = True
