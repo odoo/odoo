@@ -33,7 +33,7 @@
                     <t t-raw="receipt.header_html" />
                 </t>
                 <t t-if="!receipt.header_html and receipt.header">
-                    <div><t t-esc="receipt.header" /></div>
+                    <div style="white-space:pre-line"><t t-esc="receipt.header" /></div>
                 </t>
                 <t t-if="receipt.cashier">
                     <div class="cashier">
@@ -93,7 +93,7 @@
                     <t t-if="line.pack_lot_lines">
                         <div class="pos-receipt-left-padding">
                             <ul>
-                                <t t-foreach="line.pack_lot_lines" t-as="lot">
+                                <t t-foreach="line.pack_lot_lines" t-as="lot" t-key="lot.cid">
                                     <li>
                                         SN <t t-esc="lot.attributes['lot_name']"/>
                                     </li>

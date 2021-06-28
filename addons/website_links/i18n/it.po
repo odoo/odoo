@@ -7,7 +7,6 @@
 # Martin Trigaux, 2020
 # Simone Bernini <simone@aperturelabs.it>, 2020
 # Paolo Valier, 2020
-# Léonie Bouchat <lbo@odoo.com>, 2020
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
@@ -50,6 +49,8 @@ msgstr "n. di clic"
 #: model_terms:ir.ui.view,arch_db:website_links.share_page_menu
 msgid "<span title=\"Track this page to count clicks\">Link Tracker</span>"
 msgstr ""
+"<span title=\"Monitora la pagina per contare i clic\">Monitoraggio "
+"link</span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -59,7 +60,7 @@ msgstr "<strong>Campagna</strong>"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Medium</strong>"
-msgstr "<strong>Medio</strong>"
+msgstr "<strong>Mezzo</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -79,7 +80,7 @@ msgstr "<strong>Origine</strong>"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Tracked Link</strong>"
-msgstr "<strong>Link tracciato</strong>"
+msgstr "<strong>Link monitorato</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -95,9 +96,9 @@ msgid ""
 "special promotion.\"/>"
 msgstr ""
 "Campagna <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the context of your link. It might be an event you want to promote or a "
-"special promotion.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Definisce"
+" il contesto del link. Può essere un evento da promuovere o una promozione "
+"speciale.\"/>"
 
 #. module: website_links
 #. openerp-web
@@ -138,7 +139,7 @@ msgstr "Generazione link..."
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Get tracked link"
-msgstr "Ottieni link tracciato"
+msgstr "Ottieni link monitorato"
 
 #. module: website_links
 #: model:ir.model.fields,field_description:website_links.field_link_tracker__id
@@ -182,6 +183,10 @@ msgid ""
 "the medium used to share your link. It might be an email, or a Facebook Ads "
 "for instance.\"/>"
 msgstr ""
+"Mezzo <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Definisce"
+" il mezzo utilizzato per condividere il link. Ad esempio può essere una "
+"e-mail o un'inserzione di Facebook.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -222,6 +227,9 @@ msgid ""
 "the source from which your traffic will come from, Facebook or Twitter for "
 "instance.\"/>"
 msgstr ""
+"Origine <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Definisce"
+" la fonte di provenienza del traffico, ad esempio Facebook o Twitter.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -242,7 +250,7 @@ msgstr "Statistiche"
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 #, python-format
 msgid "The code cannot be left empty"
-msgstr ""
+msgstr "Il codice non può essere lasciato vuoto"
 
 #. module: website_links
 #. openerp-web
@@ -251,7 +259,7 @@ msgstr ""
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "There is no data to show"
-msgstr "Non ci sono dati da visualizzare"
+msgstr "Nessun dato da visualizzare"
 
 #. module: website_links
 #. openerp-web
@@ -288,25 +296,25 @@ msgstr "Impossibile ottenere link recenti"
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "Undefined"
-msgstr "Non definito"
+msgstr "Non definita"
 
 #. module: website_links
 #: code:addons/website_links/models/link_tracker.py:0
 #, python-format
 msgid "Visit Webpage Statistics"
-msgstr ""
+msgstr "Vedi statistiche pagina web"
 
 #. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "You don't have any recent links."
-msgstr "Non ci sono link recenti."
+msgstr "Nessun link recente."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Your tracked links"
-msgstr "I tuoi link tracciati"
+msgstr "Link monitorati"
 
 #. module: website_links
 #. openerp-web
@@ -352,7 +360,7 @@ msgstr "es. Motore di ricerca, pagina sito web..."
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "e.g. https://www.odoo.com/contactus"
-msgstr ""
+msgstr "es. https://www.odoo.com/contactus"
 
 #. module: website_links
 #. openerp-web
@@ -368,4 +376,4 @@ msgstr "ok"
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "or"
-msgstr "o"
+msgstr "oppure"

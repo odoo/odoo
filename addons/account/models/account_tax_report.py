@@ -31,12 +31,11 @@ class AccountTaxReport(models.Model):
                         new_tags = tags_cache[cache_key]
 
                         if new_tags:
-                            tags_to_unlink = line.tag_ids.filtered(lambda x: record == x.mapped('tax_report_line_ids.report_id'))
-                            # == instead of in, as we only want tags_to_unlink to contain the tags that are not linked to any other report than the one we're considering
+                            line._remove_tags_used_only_by_self()
                             line.write({'tag_ids': [(6, 0, new_tags.ids)]})
-                            self.env['account.tax.report.line']._delete_tags_from_taxes(tags_to_unlink.ids)
 
                         elif line.mapped('tag_ids.tax_report_line_ids.report_id').filtered(lambda x: x not in self):
+                            line._remove_tags_used_only_by_self()
                             line.write({'tag_ids': [(5, 0, 0)] + line._get_tags_create_vals(line.tag_name, vals['country_id'])})
                             tags_cache[cache_key] = line.tag_ids
 
@@ -203,7 +202,7 @@ class AccountTaxReportLine(models.Model):
                         # All the lines sharing their tags must always be synchronized,
                         tags_to_remove += records_to_link.mapped('tag_ids')
                         records_to_link = tags_to_remove.mapped('tax_report_line_ids')
-                        self._delete_tags_from_taxes(tags_to_remove.ids)
+                        tags_to_remove.mapped('tax_report_line_ids')._remove_tags_used_only_by_self()
                         records_to_link.write({'tag_name': tag_name_postponed, 'tag_ids': [(2, tag.id) for tag in tags_to_remove] + [(6, 0, existing_tags.ids)]})
 
                 else:
@@ -220,17 +219,27 @@ class AccountTaxReportLine(models.Model):
         return rslt
 
     def unlink(self):
-        self._delete_tags_from_taxes(self.mapped('tag_ids.id'))
+        self._remove_tags_used_only_by_self()
         children = self.mapped('children_line_ids')
         if children:
             children.unlink()
         return super(AccountTaxReportLine, self).unlink()
 
+    def _remove_tags_used_only_by_self(self):
+        """ Deletes and removes from taxes and move lines all the
+        tags from the provided tax report lines that are not linked
+        to any other tax report lines.
+        """
+        all_tags = self.mapped('tag_ids')
+        tags_to_unlink = all_tags.filtered(lambda x: not (x.tax_report_line_ids - self))
+        self.write({'tag_ids': [(3, tag.id, 0) for tag in tags_to_unlink]})
+        self._delete_tags_from_taxes(tags_to_unlink.ids)
+
     @api.model
     def _delete_tags_from_taxes(self, tag_ids_to_delete):
         """ Based on a list of tag ids, removes them first from the
         repartition lines they are linked to, then deletes them
-        from the account move lines.
+        from the account move lines, and finally unlink them.
         """
         if not tag_ids_to_delete:
             # Nothing to do, then!
@@ -246,6 +255,8 @@ class AccountTaxReportLine(models.Model):
 
         self.env['account.move.line'].invalidate_cache(fnames=['tax_tag_ids'])
         self.env['account.tax.repartition.line'].invalidate_cache(fnames=['tag_ids'])
+
+        self.env['account.account.tag'].browse(tag_ids_to_delete).unlink()
 
     @api.constrains('formula', 'tag_name')
     def _validate_formula(self):

@@ -21,8 +21,8 @@
 # abc Def <hdogan1974@gmail.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
-# Ediz Duman <neps1192@gmail.com>, 2020
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
+# Ediz Duman <neps1192@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -130,7 +130,7 @@ msgstr ""
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
-msgstr ""
+msgstr "%(warehouse)s:  Tedarik Ürünü %(supplier)s"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
@@ -145,6 +145,8 @@ msgid ""
 "%s use default source or destination locations from warehouse %s that will "
 "be archived."
 msgstr ""
+"%s  depodan varsayılan kaynak veya hedef konumları kullanın%s yani "
+"arşivlenecek."
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
@@ -237,7 +239,7 @@ msgstr "1 Gün"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__month
 msgid "1 Month"
-msgstr "1 ay"
+msgstr "1 Ay"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__week
@@ -331,8 +333,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on the \"Check Availability\" button to try to reserve products."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/>Tüm ürünler rezerve edilemedi. "
-"Ürünleri rezerv etmeyi denemek için \"Uygunluk Kontrolü\" butonuna tıklayın."
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                Tüm ürünler rezerve edilemedi. Ürünleri rezerve etmeyi denemek için \"Kullanılabilirliği Kontrol Et\" düğmesine tıklayın. "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -656,7 +658,7 @@ msgstr "Aktivite Durumu"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_icon
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Aktivite Tipi Simgesi"
+msgstr "Aktivite Simge Tipi "
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
@@ -939,12 +941,12 @@ msgstr "Ön Teslimat Onayı"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation_line
 msgid "Backorder Confirmation Line"
-msgstr "Backorder Confirmation Line"
+msgstr "Ön Teslimatlar Onay Satırı "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__backorder_confirmation_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr "Backorder Confirmation Lines"
+msgstr "Ön Teslimatlar Onay Satırları"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1277,7 +1279,7 @@ msgstr "Şirket"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs"
-msgstr "Nakliye maliyetlerini hesapla"
+msgstr "Teslimat maliyetlerini hesapla"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1287,7 +1289,7 @@ msgstr "Teslimat maliyetlerini hesaplayın ve DHL ile taşıyın"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr "Sevkiyat maliyetlerini hesaplayın ve Easypost ile gönderin"
+msgstr "Teslimat maliyetlerini hesaplayın ve Easypost ile gönderin"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1465,7 +1467,7 @@ msgstr "Ön Teslimat Oluştur?"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__use_create_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__use_create_lots
 msgid "Create New Lots/Serial Numbers"
-msgstr "Yeni Lot / Seri Numarası Oluştur"
+msgstr "Yeni Lot/ Seri Numarası Oluştur"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -2287,19 +2289,20 @@ msgstr "İstisnalar:"
 msgid ""
 "Existing Serial Numbers (%s). Please correct the serial numbers encoded."
 msgstr ""
+"Mevcut Seri Numaraları (%s). Lütfen kodlanmış seri numaralarını düzeltin."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "Existing Serial number (%s). Please correct the serial number encoded."
-msgstr ""
+msgstr "Mevcut Seri numarası (%s). Lütfen kodlanmış seri numarasını düzeltin."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
 "Existing Serial numbers (%s). Please correct the serial numbers encoded."
-msgstr ""
+msgstr "Mevcut Seri numarası (%s). Lütfen kodlanmış seri numarasını düzeltin."
 
 #. module: stock
 #. openerp-web
@@ -3029,7 +3032,7 @@ msgstr "Giriş Konumu"
 #: code:addons/stock/models/res_company.py:0
 #, python-format
 msgid "Inter-warehouse transit"
-msgstr ""
+msgstr "Depolar arası transit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -3176,7 +3179,7 @@ msgstr "Envanter Zararı"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Inventory On Hand"
-msgstr ""
+msgstr "Eldeki Stok"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
@@ -3257,12 +3260,13 @@ msgstr "İlk talep düzenlenebilir"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_deadline_issue
 msgid "Is late"
-msgstr ""
+msgstr "Geciken"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_deadline_issue
 msgid "Is late or will be late depending on the deadline and scheduled date"
 msgstr ""
+"Son teslim tarihine ve planlanan tarihe bağlı olarak geç veya gecikme olacak"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
@@ -3672,6 +3676,8 @@ msgid ""
 "Lots/Serial numbers help you tracking the path followed by your products.\n"
 "            From their traceability report you will see the full history of their use, as well as their composition."
 msgstr ""
+"Lot/Seri numaraları, ürünlerinizin izlediği yolu izlemenize yardımcı olur.\n"
+"            İzlenebilirlik raporlarından, kullanımlarının tam tarihini ve kompozisyonlarını göreceksiniz."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
@@ -3701,7 +3707,7 @@ msgstr "Farklı Ürün Müdürleri Yönetimi"
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
 msgid "Manage Lots / Serial Numbers"
-msgstr "Lot / Seri Numaralarını Yönetin"
+msgstr "Lot/Seri Numaralarını Yönetin"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
@@ -4051,7 +4057,7 @@ msgstr "Normal"
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #, python-format
 msgid "Not Available"
-msgstr ""
+msgstr "Mevcut Değil"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -6061,7 +6067,7 @@ msgstr "İkmalleri Göster"
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__show_transfers
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__show_transfers
 msgid "Show Transfers"
-msgstr ""
+msgstr "Transferleri Göster"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_validate
@@ -6108,7 +6114,7 @@ msgstr "Erteleme"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__snoozed_until
 msgid "Snooze Date"
-msgstr ""
+msgstr "Erteleme Tarihi"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_orderpoint_snooze
@@ -7100,7 +7106,7 @@ msgstr "Transfer Hedef Adresi"
 #: model_terms:ir.ui.view,arch_db:stock.procurement_group_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Transfers"
-msgstr "Yansıtmalar"
+msgstr "Transferler"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -7309,6 +7315,13 @@ msgstr "Okunmamış Mesaj Sayacı"
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Unreserve"
 msgstr "Rezervasyonu Kaldır"
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action

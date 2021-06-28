@@ -4,7 +4,7 @@
 import random
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessDenied, AccessError
+from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.tools import html_escape
 
 
@@ -236,6 +236,14 @@ class CrmLead(models.Model):
                         'date_deadline': values['activity_date_deadline'],
                     })
             lead.write(lead_values)
+
+    def update_contact_details_from_portal(self, values):
+        self.check_access_rights('write')
+        fields = ['partner_name', 'phone', 'mobile', 'email_from', 'street', 'street2',
+            'city', 'zip', 'state_id', 'country_id']
+        if any([key not in fields for key in values]):
+            raise UserError(_("Not allowed to update the following field(s) : %s.") % ", ".join([key for key in values if not key in fields]))
+        return self.sudo().write(values)
 
     @api.model
     def create_opp_portal(self, values):

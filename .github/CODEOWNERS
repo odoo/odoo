@@ -31,13 +31,14 @@
 # Generic fallback rules
 
 /addons/account*/ @odoo/rd-accounting
+/addons/auth_*/ @odoo/rd-security
 /addons/crm*/ @odoo/rd-sm
 /addons/event*/ @odoo/rd-sm
 /addons/l10n_*/ @odoo/rd-accounting
 /addons/*/data/mail_template_data.xml @odoo/rd-sm
-/addons/*/models/ir_http.py @odoo/rd-website
-/addons/*/models/ir_qweb.py @odoo/rd-website
-/addons/*/models/ir_qweb_fields.py @odoo/rd-website
+/addons/*/models/ir_http.py @odoo/rd-website @odoo/rd-security
+/addons/*/models/ir_qweb.py @odoo/rd-website @odoo/rd-security
+/addons/*/models/ir_qweb_fields.py @odoo/rd-website @odoo/rd-security
 /addons/website*/ @odoo/rd-website
 /addons/website_event*/ @odoo/rd-notif-muted @odoo/rd-sm
 /addons/website_slides*/ @odoo/rd-notif-muted @odoo/rd-sm
@@ -48,6 +49,8 @@
 /.github/CODEOWNERS @odoo/rd-code-owners
 
 /addons/account/tests/test_portal_attachment.py @odoo/rd-accounting @odoo/rd-images
+
+/addons/bus/ @odoo/rd-framework-js
 
 /addons/http_routing/ @odoo/rd-website
 
@@ -109,11 +112,15 @@
 /addons/test_mass_mailing/ @odoo/rd-sm
 /addons/test_website/ @odoo/rd-website
 
-/addons/web/controllers/main.py @odoo/rd-images @odoo/rd-security
-/addons/web/models/ir_qweb.py @odoo/rd-images @odoo/rd-website
+/addons/web/ @odoo/rd-framework-js
+/addons/web/controllers/main.py @odoo/rd-framework-js @odoo/rd-images @odoo/rd-security 
+/addons/web/models/ir_qweb.py @odoo/rd-framework-js @odoo/rd-images @odoo/rd-website
 /addons/web/tests/test_image.py @odoo/rd-images
 
 /addons/web_editor/models/ir_qweb.py @odoo/rd-website
+
+/addons/web_kanban_gauge/ @odoo/rd-framework-js
+
 /addons/web_unsplash/models/ir_qweb.py @odoo/rd-website
 
 /addons/website/models/ir_qweb.py @odoo/rd-website
@@ -123,6 +130,7 @@
 
 /addons/website_sale/tests/test_website_sale_image.py @odoo/rd-images @odoo/rd-website
 
+/odoo/addons/base/models/assetsbundle.py @odoo/rd-framework-js
 /odoo/addons/base/models/ir_attachment.py @odoo/rd-images
 /odoo/addons/base/models/ir_qweb.py @odoo/rd-website
 /odoo/addons/base/models/ir_qweb_fields.py @odoo/rd-website
@@ -130,6 +138,8 @@
 
 /odoo/addons/base/tests/test_image.py @odoo/rd-images
 /odoo/addons/base/tests/test_ir_http.py @odoo/rd-website
+
+/odoo/cli/ts_config.py @odoo/rd-framework-js
 
 /odoo/modules/migration.py @odoo/upgrade
 
@@ -139,7 +149,9 @@
 # safe_eval, mimetypes, float_utils, mail sanitizer, image utils, ..
 /odoo/tools/ @odoo/rd-security
 /odoo/tools/image.py @odoo/rd-images @odoo/rd-security
+/odoo/tools/js_transpiler.py @odoo/rd-framework-js @odoo/rd-security
 /odoo/tools/mimetypes.py @odoo/rd-images @odoo/rd-security
+/odoo/tools/sourcemap_generator.py @odoo/rd-framework-js @odoo/rd-security
 
 /odoo/http.py @odoo/rd-security @odoo/rd-website
 /odoo/sql_db.py @odoo/rd-security

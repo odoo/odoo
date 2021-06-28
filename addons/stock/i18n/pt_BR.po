@@ -3,7 +3,7 @@
 # 	* stock
 # 
 # Translators:
-# rogeriojlle <rogerio.s.machado@gmail.com>, 2020
+# Rogerio Scholz Machado <rogerio.s.machado@gmail.com>, 2020
 # PopSolutions Cooperativa Digital <popsolutions.co@gmail.com>, 2020
 # Danilo Rodrigues, 2020
 # Fernanda Marques <fem@odoo.com>, 2020
@@ -64,7 +64,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"%s --> UdM do produto é %s (%s) - UdM do movimento é %s (%s)"
+"%s --> A UdM do produto é %s (%s) - A UdM do movimento é %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -3152,8 +3152,8 @@ msgid ""
 "Internal reference number in case it differs from the manufacturer's "
 "lot/serial number"
 msgstr ""
-"Número de referência interno, caso seja diferente do número de série / lote "
-"do fabricante"
+"Número de referência interno, caso seja diferente do número de série/lote do"
+" fabricante"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -7443,6 +7443,13 @@ msgid "Unreserve"
 msgstr "Cancelar Reserva"
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree
@@ -8329,7 +8336,7 @@ msgstr "abaixo do estoque mínimo de"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr "conector bpost"
+msgstr "Conector bpost"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -8416,6 +8423,8 @@ msgid ""
 "You can't desactivate the multi-location if you have more than once "
 "warehouse by company"
 msgstr ""
+"Você não pode desativar o multi-local se tiver mais de um depósito por "
+"empresa"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -8424,3 +8433,5 @@ msgid ""
 "Creating a new warehouse will automatically activate the Storage Locations "
 "setting"
 msgstr ""
+"A criação de um novo armazém ativará automaticamente as definições de Locais"
+" de Armazenamento"

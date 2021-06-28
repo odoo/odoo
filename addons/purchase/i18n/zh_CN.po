@@ -28,7 +28,7 @@
 # Jerry Pan <panjianyu@inspur.com>, 2020
 # Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
 # as co02 <asco02@163.com>, 2020
-# mao luo <dooms21day@163.com>, 2020
+# GritLuo <dooms21day@163.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # ljsrzc007 <ljsrzc007@gmail.com>, 2020
 # Melvin Liu <betien@msn.cn>, 2020
@@ -59,9 +59,6 @@ msgid ""
 "                (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or\n"
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
-"\n"
-"                (object.state in ('draft', 'sent') 与 'Request for Quotation - %s' % (object.name) 或者\n"
-"                'Purchase Order - %s' % (object.name))"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
@@ -80,6 +77,12 @@ msgstr "明细行数"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 msgstr "${object.company_id.name} 订单 (编号 ${object.name or 'n/a' })"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "%(name)s confirmed the receipt will take place on %(date)s."
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -2570,6 +2573,12 @@ msgstr "UX用途的技术领域。"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__notes
 msgid "Terms and Conditions"
 msgstr "条款和条件"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "The order receipt has been acknowledged by %(name)s."
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order

@@ -178,6 +178,13 @@ class PosSession(models.Model):
             if (company.period_lock_date and start_date <= company.period_lock_date) or (company.fiscalyear_lock_date and start_date <= company.fiscalyear_lock_date):
                 raise ValidationError(_("You cannot create a session before the accounting lock date."))
 
+    def _check_bank_statement_state(self):
+        for session in self:
+            closed_statement_ids = session.statement_ids.filtered(lambda x: x.state != "open")
+            if closed_statement_ids:
+                raise UserError(_("Some Cash Registers are already posted. Please reset them to new in order to close the session.\n"
+                                  "Cash Registers: %r", list(statement.name for statement in closed_statement_ids)))
+
     @api.model
     def create(self, values):
         config_id = values.get('config_id') or self.env.context.get('default_config_id')
@@ -248,8 +255,7 @@ class PosSession(models.Model):
             if session.config_id.cash_control and not session.rescue:
                 last_sessions = self.env['pos.session'].search([('config_id', '=', self.config_id.id)]).ids
                 # last session includes the new one already.
-                if len(last_sessions) > 1:
-                    self.cash_register_id.balance_start = self.env['pos.session'].browse(last_sessions[1]).cash_register_id.balance_end_real
+                self.cash_register_id.balance_start = self.env['pos.session'].browse(last_sessions[1]).cash_register_id.balance_end_real if len(last_sessions) > 1 else 0
                 values['state'] = 'opening_control'
             else:
                 values['state'] = 'opened'
@@ -259,6 +265,8 @@ class PosSession(models.Model):
     def action_pos_session_closing_control(self):
         self._check_pos_session_balance()
         for session in self:
+            if any(order.state == 'draft' for order in session.order_ids):
+                raise UserError(_("You cannot close the POS when orders are still in draft"))
             if session.state == 'closed':
                 raise UserError(_('This session is already closed.'))
             session.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
@@ -279,6 +287,7 @@ class PosSession(models.Model):
         # Session without cash payment method will not have a cash register.
         # However, there could be other payment methods, thus, session still
         # needs to be validated.
+        self._check_bank_statement_state()
         if not self.cash_register_id:
             return self._validate_session()
 
@@ -296,6 +305,7 @@ class PosSession(models.Model):
 
     def _validate_session(self):
         self.ensure_one()
+        sudo = self.user_has_groups('point_of_sale.group_pos_user')
         if self.order_ids or self.statement_ids.line_ids:
             self.cash_real_transaction = self.cash_register_total_entry_encoding
             self.cash_real_expected = self.cash_register_balance_end
@@ -310,7 +320,7 @@ class PosSession(models.Model):
             try:
                 self.with_company(self.company_id)._create_account_move()
             except AccessError as e:
-                if self.user_has_groups('point_of_sale.group_pos_user'):
+                if sudo:
                     self.sudo().with_company(self.company_id)._create_account_move()
                 else:
                     raise e
@@ -319,6 +329,12 @@ class PosSession(models.Model):
                 self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
             else:
                 self.move_id.unlink()
+        else:
+            statement = self.cash_register_id
+            if not self.config_id.cash_control:
+                statement.write({'balance_end_real': statement.balance_end})
+            statement.button_post()
+            statement.button_validate()
         self.write({'state': 'closed'})
         return {
             'type': 'ir.actions.client',
@@ -338,7 +354,7 @@ class PosSession(models.Model):
             session_destination_id = picking_type.default_location_dest_id.id
 
         for order in self.order_ids:
-            if order.company_id.anglo_saxon_accounting and order.to_invoice:
+            if order.company_id.anglo_saxon_accounting and order.is_invoiced:
                 continue
             destination_id = order.partner_id.property_stock_customer.id or session_destination_id
             if destination_id in lines_grouped_by_dest_location:
@@ -657,12 +673,13 @@ class PosSession(models.Model):
             invoice_receivable_vals[commercial_partner].append(self._get_invoice_receivable_vals(account_id, amounts['amount'], amounts['amount_converted'], partner=commercial_partner))
         for commercial_partner, vals in invoice_receivable_vals.items():
             account_id = commercial_partner.property_account_receivable_id.id
-            receivable_line = MoveLine.create(vals)
-            if (not receivable_line.reconciled):
-                if account_id not in invoice_receivable_lines:
-                    invoice_receivable_lines[account_id] = receivable_line
-                else:
-                    invoice_receivable_lines[account_id] |= receivable_line
+            receivable_lines = MoveLine.create(vals)
+            for receivable_line in receivable_lines:
+                if (not receivable_line.reconciled):
+                    if account_id not in invoice_receivable_lines:
+                        invoice_receivable_lines[account_id] = receivable_line
+                    else:
+                        invoice_receivable_lines[account_id] |= receivable_line
 
         data.update({'invoice_receivable_lines': invoice_receivable_lines})
         return data

@@ -52,7 +52,7 @@
                     <DatiTrasmissione>
                         <IdTrasmittente>
                             <IdPaese t-esc="get_vat_country(record.company_id.vat)"/>
-                            <IdCodice t-esc="record.company_id.l10n_it_codice_fiscale"/>
+                            <IdCodice t-esc="get_vat_number(record.company_id.vat)"/>
                         </IdTrasmittente>
                         <ProgressivoInvio t-esc="record.name.replace('/','')[-10:]"/>
                         <FormatoTrasmissione t-esc="formato_trasmissione"/>
@@ -72,7 +72,7 @@
                                 <IdPaese t-esc="get_vat_country(record.company_id.vat)"/>
                                 <IdCodice t-esc="get_vat_number(record.company_id.vat)"/>
                             </IdFiscaleIVA>
-                            <CodiceFiscale t-if="record.company_id.l10n_it_codice_fiscale" t-esc="record.company_id.l10n_it_codice_fiscale"/>
+                            <CodiceFiscale t-if="record.company_id.l10n_it_codice_fiscale and not test_mode" t-esc="record.company_id.l10n_it_codice_fiscale"/>
                             <Anagrafica>
                                 <Denominazione t-esc="record.company_id.partner_id.display_name"/>
                             </Anagrafica>

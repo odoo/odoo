@@ -22,8 +22,8 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2020
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2020
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2020
-# Ediz Duman <neps1192@gmail.com>, 2020
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
+# Ediz Duman <neps1192@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -455,7 +455,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "<p><em>Number of tasks: %(tasks_count)s</em></p>"
-msgstr "<p><em>Number of tasks: %(tasks_count)s</em></p>"
+msgstr "<p><em> Görev sayısı:%(tasks_count)s</em></p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -474,7 +474,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"fa fa-check-circle\"/> Next Occurrences:"
-msgstr "<span class=\"fa fa-check-circle\"/> Sonraki Durumlar:"
+msgstr "<span class=\"fa fa-check-circle\"/> Sonraki Görevleri:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -514,7 +514,7 @@ msgstr "<span class=\"o_stat_text\">Yinelemede</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "<span>Are you sure you want to delete this project ?</span>"
-msgstr "<span>Are you sure you want to delete this project ?</span>"
+msgstr "<span>Bu projeyi silmek istediğinizden emin misiniz?</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -522,8 +522,8 @@ msgid ""
 "<span>You cannot delete a project containing tasks. You can either archive "
 "it or first delete all of its tasks.</span>"
 msgstr ""
-"<span>You cannot delete a project containing tasks. You can either archive "
-"it or first delete all of its tasks.</span>"
+"<span>Görevler içeren bir projeyi silemezsiniz. Arşivleyebilir veya önce tüm"
+" görevlerini silebilirsiniz. </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -638,15 +638,15 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
-"Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
-"Progress - Done</i>."
+" Görevlerinizi düzenlemek için sütunlar ekleyin<b>aşama</b> <i>ör. Yeni - "
+"Devam Ediyor - Bitti</i>."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Add your task once it is ready."
-msgstr "Add your task once it is ready."
+msgstr "Göreviniz hazır olduğunda ekleyin."
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -689,7 +689,7 @@ msgstr "Rumuzlanan Model"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "All"
-msgstr "Belirlenmedi"
+msgstr "Hepsi"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
@@ -704,7 +704,7 @@ msgstr "Tüm Görevler"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
 msgid "Allow Sub-tasks"
-msgstr ""
+msgstr "Alt Görevlere İzin Ver"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_internal_user_ids
@@ -770,19 +770,19 @@ msgstr "Arşivlendi"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 msgid "Are you sure you want to continue?"
-msgstr "Are you sure you want to continue?"
+msgstr "Devam etmek istediğine emin misin?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete those stages ?"
-msgstr "Are you sure you want to delete those stages ?"
+msgstr "Bu aşamaları silmek istediğinizden emin misiniz?"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Assembling"
-msgstr "Assembling"
+msgstr "Birleştirme"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -994,7 +994,7 @@ msgstr "Semt/İlçe"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Client Review"
-msgstr "Client Review"
+msgstr "Müşteri İncelemesi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
@@ -1074,7 +1074,7 @@ msgstr "Danışmanlık"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Contact"
-msgstr "Temas"
+msgstr "Kontak"
 
 #. module: project
 #. openerp-web
@@ -1168,7 +1168,7 @@ msgstr "Bu görevin mevcut aşaması"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Custom Bounced Message"
+msgstr "Özel Geri Dönme Mesajı"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1214,12 +1214,12 @@ msgstr "Müşteri Memnuniyeti"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
 msgid "Customer Ratings Status"
-msgstr "Customer Ratings Status"
+msgstr "Müşteri Puanları Durumu"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_task
 msgid "Customer Ratings on Task"
-msgstr "Customer Ratings on Task"
+msgstr "Görevdeki Müşteri Puanları"
 
 #. module: project
 #. openerp-web
@@ -1313,10 +1313,10 @@ msgid ""
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
 msgstr ""
-"Projede kullanılacak adımları,\n"
-"                Görevin veya olay kayıtlarının kapatılmasına kadar, görevin yaratılması.\n"
-"                Gelişmeleri takip etmek için bu aşamaları kullanacaksın.\n"
-"                Bir görevi veya bir olay kaydını çözmek için."
+"Projede kullanılacak adımları\n"
+"                Görevin veya sorun kapanmasına kadar görevin oluşturulması.\n"
+"                İlerlemeyi takip etmek için bu aşamaları kullanacaksınız.\n"
+"                bir görevi veya sorunu çözmede."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -1365,7 +1365,7 @@ msgstr "Teslim Edilen"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Describe your project..."
-msgstr "Projenizi anlatın ..."
+msgstr "Projenizi tanımlayın..."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
@@ -1442,7 +1442,7 @@ msgstr "Erişiminiz yok, kullanıcı e-mail özeti için bu veriyi atlayın"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Documentation"
-msgstr "Dokümantasyon"
+msgstr "Belgeleme"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2124,14 +2124,14 @@ msgstr "Son Değerlendirme: Memnun"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
-msgstr "Let's create your first <b>project</b>."
+msgstr " İlk <b>projemizi</b> oluşturalım."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>task</b>."
-msgstr "Let's create your first <b>task</b>."
+msgstr "İlk <b>görevimizi</b> oluşturalım."
 
 #. module: project
 #. openerp-web
@@ -2149,13 +2149,13 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's start working on your task."
-msgstr "Let's start working on your task."
+msgstr "Göreviniz üzerinde çalışmaya başlayalım."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "Let's wait for your customers to manifest themselves."
-msgstr "Let's wait for your customers to manifest themselves."
+msgstr "Müşterilerinizin kendilerini göstermesini bekleyelim."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -2454,7 +2454,7 @@ msgstr "Eylemlerin Sayısı"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__after
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_type__after
 msgid "Number of Repetitions"
-msgstr "Number of Repetitions"
+msgstr "Tekrar Sayısı"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_open
@@ -2779,7 +2779,7 @@ msgstr "Proje Adı"
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Stage Delete Wizard"
-msgstr "Project Stage Delete Wizard"
+msgstr "Proje Aşaması Silme Sihirbazı"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
@@ -2818,7 +2818,7 @@ msgstr "Proje görevleri"
 #: model:ir.cron,cron_name:project.ir_cron_recurring_tasks
 #: model:ir.cron,name:project.ir_cron_recurring_tasks
 msgid "Project: Create Recurring Tasks"
-msgstr "Project: Create Recurring Tasks"
+msgstr "Proje: Yinelenen Görevler Oluşturun"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
@@ -2852,7 +2852,7 @@ msgstr "Projeler & Görevleri"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__projects_archived
 msgid "Projects Archived"
-msgstr "Projects Archived"
+msgstr "Arşivlenen Projeler"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -2860,7 +2860,8 @@ msgstr "Projects Archived"
 msgid ""
 "Projects regroup tasks on the same topic and each have their own dashboard."
 msgstr ""
-"Projects regroup tasks on the same topic and each have their own dashboard."
+"Projeler, aynı konudaki görevleri yeniden gruplandırır ve her birinin kendi "
+"panosu vardır."
 
 #. module: project
 #. openerp-web
@@ -3025,7 +3026,7 @@ msgstr "Periyot"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_update
 msgid "Recurrence Update"
-msgstr "Recurrence Update"
+msgstr "Yineleme Güncellemesi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_task
@@ -3326,7 +3327,7 @@ msgstr "Yazılım Geliştirme"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Sorry. You can't set a task as its parent task."
-msgstr "Sorry. You can't set a task as its parent task."
+msgstr "Afedersiniz. Bir görevi üst görev olarak ayarlayamazsınız. "
 
 #. module: project
 #. openerp-web
@@ -3404,12 +3405,12 @@ msgstr "Aşamalar"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stages_active
 msgid "Stages Active"
-msgstr "Stages Active"
+msgstr "Aşamalar Aktif "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stage_ids
 msgid "Stages To Delete"
-msgstr "Stages To Delete"
+msgstr "Silinecek Aşamalar"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -3502,7 +3503,7 @@ msgstr "Etiketler"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Tags are perfect to categorize your tasks."
-msgstr "Tags are perfect to categorize your tasks."
+msgstr "Etiketler, görevlerinizi kategorize etmek için mükemmeldir."
 
 #. module: project
 #. openerp-web
@@ -3562,7 +3563,7 @@ msgstr "Görev Hazır"
 #. module: project
 #: model:ir.model,name:project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr "Task Recurrence"
+msgstr "Görev Tekrarı"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -3645,7 +3646,7 @@ msgstr "Görev Analizi"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Tasks In Progress"
-msgstr "Tasks In Progress"
+msgstr "Devam Eden Görevler"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3661,7 +3662,7 @@ msgstr "Görev Aşamaları"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
 msgid "Tasks in Recurrence"
-msgstr "Tasks in Recurrence"
+msgstr "Yinelemedeki Görevler"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__is_closed
@@ -3972,7 +3973,7 @@ msgstr "Projede Değerlendirmeyi Kullan"
 #. module: project
 #: model:res.groups,name:project.group_project_recurring_tasks
 msgid "Use Recurring Tasks"
-msgstr "Use Recurring Tasks"
+msgstr "Yinelenen Görevleri Kullan"
 
 #. module: project
 #: model:res.groups,name:project.group_subtask_project

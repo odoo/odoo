@@ -76,9 +76,9 @@ odoo.define('point_of_sale.OrderManagementScreen', function (require) {
             OrderFetcher.fetch();
         }
         _onClickOrder({ detail: clickedOrder }) {
-            if (!clickedOrder || clickedOrder.locked) {
+            let currentPOSOrder = this.env.pos.get_order();
+            if (currentPOSOrder && (!clickedOrder || clickedOrder.locked)) {
                 this.orderManagementContext.selectedOrder = clickedOrder;
-                let currentPOSOrder = this.env.pos.get_order();
                 if (clickedOrder.attributes.client){
                     currentPOSOrder.set_client(clickedOrder.attributes.client);
                 }

@@ -6,20 +6,20 @@
 # Martin Trigaux, 2020
 # Matus Krnac <matus.krnac@gmail.com>, 2020
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2020
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
 # gebri <gebri@inmail.sk>, 2020
 # Michal Matus <misko.matus@gmail.com>, 2020
 # Jan Prokop, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -260,6 +260,7 @@ msgstr "Popis"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__display_name
@@ -331,6 +332,7 @@ msgstr "Zoskupiť podľa"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__id
@@ -449,6 +451,7 @@ msgstr "Potvrdenie nákladu dodania"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template____last_update
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost____last_update
@@ -604,6 +607,11 @@ msgstr "Šablóna produktu"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__product_type
 msgid "Product Type"
 msgstr "Typ produktu"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Riadok nákupnej objednávky"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__quantity
@@ -768,4 +776,12 @@ msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with automated inventory valuation and FIFO or average "
 "costing method."
+msgstr ""
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/product.py:0
+#, python-format
+msgid ""
+"You cannot change the product type or disable landed cost option because the"
+" product is used in an account move line."
 msgstr ""

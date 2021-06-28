@@ -1489,6 +1489,61 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.move_finished_ids.quantity_done, 1)
         self.assertEqual(component.qty_available, 13)
 
+    def test_immediate_validate_uom_2(self):
+        """The rounding precision of a component should be based on the UoM used in the MO for this component,
+        not on the produced product's UoM nor the default UoM of the component"""
+        uom_units = self.env['ir.model.data'].xmlid_to_object('uom.product_uom_unit')
+        uom_L = self.env['ir.model.data'].xmlid_to_object('uom.product_uom_litre')
+        uom_cL = self.env['uom.uom'].create({
+            'name': 'cL',
+            'category_id': uom_L.category_id.id,
+            'uom_type': 'smaller',
+            'factor': 100,
+            'rounding': 1,
+        })
+        uom_units.rounding = 1
+        uom_L.rounding = 0.01
+
+        product = self.env['product.product'].create({
+            'name': 'SuperProduct',
+            'uom_id': uom_units.id,
+        })
+        consumable_component = self.env['product.product'].create({
+            'name': 'Consumable Component',
+            'type': 'consu',
+            'uom_id': uom_cL.id,
+            'uom_po_id': uom_cL.id,
+        })
+        storable_component = self.env['product.product'].create({
+            'name': 'Storable Component',
+            'type': 'product',
+            'uom_id': uom_cL.id,
+            'uom_po_id': uom_cL.id,
+        })
+        self.env['stock.quant']._update_available_quantity(storable_component, self.env.ref('stock.stock_location_stock'), 100)
+
+        for component in [consumable_component, storable_component]:
+            bom = self.env['mrp.bom'].create({
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'bom_line_ids': [(0, 0, {
+                    'product_id': component.id,
+                    'product_qty': 0.2,
+                    'product_uom_id': uom_L.id,
+                })],
+            })
+
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.bom_id = bom
+            mo = mo_form.save()
+            mo.action_confirm()
+            action = mo.button_mark_done()
+            self.assertEqual(action.get('res_model'), 'mrp.immediate.production')
+            wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+            action = wizard.process()
+
+            self.assertEqual(mo.move_raw_ids.product_uom_qty, 0.2)
+            self.assertEqual(mo.move_raw_ids.quantity_done, 0.2)
+
     def test_copy(self):
         """ Check that copying a done production, create all the stock moves"""
         mo, bom, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
@@ -1653,3 +1708,45 @@ class TestMrpOrder(TestMrpCommon):
         wizard.process()
         self.assertEqual(mo_1.state, 'done')
         self.assertEqual(mo_2.state, 'done')
+
+    def test_workcenter_timezone(self):
+        # Workcenter is based in Bangkok
+        # Possible working hours are Monday to Friday, from 8:00 to 12:00 and from 13:00 to 17:00 (UTC+7)
+        workcenter = self.workcenter_1
+        workcenter.resource_calendar_id.tz = 'Asia/Bangkok'
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'bom_line_ids': [(0, 0, {
+                'product_id': self.product_2.id,
+            })],
+            'operation_ids': [(0, 0, {
+                'name': 'SuperOperation01',
+                'workcenter_id': workcenter.id,
+            }), (0, 0, {
+                'name': 'SuperOperation01',
+                'workcenter_id': workcenter.id,
+            })],
+        })
+
+        # Next Monday at 6:00 am UTC
+        date_planned = (Dt.now() + timedelta(days=7 - Dt.now().weekday())).replace(hour=6, minute=0, second=0)
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_form.date_planned_start = date_planned
+        mo = mo_form.save()
+
+        mo.workorder_ids[0].duration_expected = 240
+        mo.workorder_ids[1].duration_expected = 60
+
+        mo.action_confirm()
+        mo.button_plan()
+
+        # Asia/Bangkok is UTC+7 and the start date is on Monday at 06:00 UTC (i.e., 13:00 UTC+7).
+        # So, in Bangkok, the first workorder uses the entire Monday afternoon slot 13:00 - 17:00 UTC+7 (i.e., 06:00 - 10:00 UTC)
+        # The second job uses the beginning of the Tuesday morning slot: 08:00 - 09:00 UTC+7 (i.e., 01:00 - 02:00 UTC)
+        self.assertEqual(mo.workorder_ids[0].date_planned_start, date_planned)
+        self.assertEqual(mo.workorder_ids[0].date_planned_finished, date_planned + timedelta(hours=4))
+        tuesday = date_planned + timedelta(days=1)
+        self.assertEqual(mo.workorder_ids[1].date_planned_start, tuesday.replace(hour=1))
+        self.assertEqual(mo.workorder_ids[1].date_planned_finished, tuesday.replace(hour=2))

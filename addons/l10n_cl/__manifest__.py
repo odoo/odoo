@@ -10,7 +10,7 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
     """,
     'author': 'Blanco Martín & Asociados',
     'website': 'https://www.odoo.com/documentation/14.0/applications/finance/accounting/fiscal_localizations/localizations/chile.html',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'contacts',
         'base_address_city',

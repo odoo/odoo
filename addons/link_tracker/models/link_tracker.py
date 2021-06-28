@@ -85,8 +85,11 @@ class LinkTracker(models.Model):
         for tracker in self:
             parsed = urls.url_parse(tracker.url)
             utms = {}
-            for key, field, cook in self.env['utm.mixin'].tracking_fields():
-                attr = getattr(tracker, field).name
+            for key, field_name, cook in self.env['utm.mixin'].tracking_fields():
+                field = self._fields[field_name]
+                attr = getattr(tracker, field_name)
+                if field.type == 'many2one':
+                    attr = attr.name
                 if attr:
                     utms[key] = attr
             utms.update(parsed.decode_query())
@@ -196,6 +199,7 @@ class LinkTracker(models.Model):
 class LinkTrackerCode(models.Model):
     _name = "link.tracker.code"
     _description = "Link Tracker Code"
+    _rec_name = 'code'
 
     code = fields.Char(string='Short URL Code', required=True, store=True)
     link_id = fields.Many2one('link.tracker', 'Link', required=True, ondelete='cascade')

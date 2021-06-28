@@ -43,7 +43,7 @@ class TestMassMailing(TestMailFullCommon):
         mailing.write({'mailing_domain': [('id', 'in', recipients_all.ids)]})
         mailing.action_put_in_queue()
         with self.mock_mail_gateway(mail_unlink_sent=False):
-            mailing._process_mass_mailing_queue()
+            mailing.action_send_mail()
 
         for recipient in recipients_all:
             recipient_info = {

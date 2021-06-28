@@ -716,7 +716,7 @@ class MailThread(models.AbstractModel):
             for model in [bl_model for bl_model in bl_models if bl_model.model in self.env]:  # transient test mode
                 rec_bounce_w_email = self.env[model.model].sudo().search([('email_normalized', '=', bounced_email)])
                 rec_bounce_w_email._message_receive_bounce(bounced_email, bounced_partner)
-                bounced_record_done = bool(bounced_record and model.model == bounced_model and bounced_record in rec_bounce_w_email)
+                bounced_record_done = bounced_record_done or (bounced_record and model.model == bounced_model and bounced_record in rec_bounce_w_email)
 
             # set record as bounced unless already done due to blacklist mixin
             if bounced_record and not bounced_record_done and issubclass(type(bounced_record), self.pool['mail.thread']):
@@ -889,6 +889,7 @@ class MailThread(models.AbstractModel):
             raise TypeError('message must be an email.message.EmailMessage at this point')
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
+        bounce_alias_static = tools.str2bool(self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias.static", "False"))
         fallback_model = model
 
         # get email.message.Message variables for future processing
@@ -936,6 +937,9 @@ class MailThread(models.AbstractModel):
             if bounce_match:
                 self._routing_handle_bounce(message, message_dict)
                 return []
+        if bounce_alias and bounce_alias_static and any(email == bounce_alias for email in email_to_localparts):
+            self._routing_handle_bounce(message, message_dict)
+            return []
         if message.get_content_type() == 'multipart/report' or email_from_localpart == 'mailer-daemon':
             self._routing_handle_bounce(message, message_dict)
             return []
@@ -2176,14 +2180,6 @@ class MailThread(models.AbstractModel):
             if channel_ids:
                 channels = self.env['mail.channel'].sudo().browse(channel_ids)
                 bus_notifications += channels._channel_message_notifications(message, message_format_values)
-                # Message from mailing channel should not make a notification in Odoo for users
-                # with notification "Handled by Email", but web client should receive the message.
-                # To do so, message is still sent from longpolling, but channel is marked as read
-                # in order to remove notification.
-                for channel in channels.filtered(lambda c: c.email_send):
-                    users = channel.channel_partner_ids.mapped('user_ids')
-                    for user in users.filtered(lambda u: u.notification_type == 'email'):
-                        channel.with_user(user).channel_seen(message.id)
 
         if bus_notifications:
             self.env['bus.bus'].sudo().sendmany(bus_notifications)
@@ -2464,6 +2460,7 @@ class MailThread(models.AbstractModel):
             exept_partner = [r['id'] for r in recipient_data['partners']]
             if author_id:
                 exept_partner.append(author_id)
+
             sql_query = """ select distinct on (p.id) p.id from res_partner p
                             left join mail_channel_partner mcp on p.id = mcp.partner_id
                             left join mail_channel c on c.id = mcp.channel_id

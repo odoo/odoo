@@ -3,13 +3,13 @@
 # 	* digest
 # 
 # Translators:
-# Максим Дронь <dronmax@gmail.com>, 2020
 # Martin Trigaux, 2020
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2020
 # Vasiliy Korobatov <korobatov@gmail.com>, 2020
 # ILMIR <karamov@it-projects.info>, 2020
 # Vitalius Sharkhun <al070572sva@gmail.com>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
+# Сергей Шебанин <sergey@shebanin.ru>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,19 +43,19 @@ msgstr ""
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Activate"
-msgstr "Активный"
+msgstr "Включить"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__state__activated
 msgid "Activated"
-msgstr "включен"
+msgstr "Включена"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Add new users as recipient of a periodic email with key metrics"
 msgstr ""
-"Добавьте новых пользователей в качестве получателей периодической "
-"электронной почты с ключевыми показателями"
+"Настройте пользователей, кто будет получать периодическую рассылку по email "
+"с ключевыми показателями"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__group_id
@@ -65,7 +65,7 @@ msgstr "Авторизованная группа"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__available_fields
 msgid "Available Fields"
-msgstr "доступные поля"
+msgstr "Доступные поля"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
@@ -86,18 +86,18 @@ msgstr "Конфигурационные настройки"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Configure Digest Emails"
-msgstr "Настройте электронные письма дайджеста"
+msgstr "Настройте дайджест"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Connect"
-msgstr ""
+msgstr "Подключить"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected
 msgid "Connected Users"
-msgstr "подключены пользователи"
+msgstr "Подключенные пользователи"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -105,8 +105,8 @@ msgid ""
 "Create or edit the mail template: you may get computed KPI's value using "
 "these fields:"
 msgstr ""
-"Создайте или измените шаблон почты: вы можете получить вычислено значение "
-"KPI с помощью этих полей:"
+"Создайте или измените шаблон почты: в нем вы можете получить вычисленные "
+"значения KPI из текущих доступных полей:"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__create_uid
@@ -133,23 +133,23 @@ msgstr "Ежедневно"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Deactivate for everyone"
-msgstr "Деактивировать для каждого"
+msgstr "Выключить для всех"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__state__deactivated
 msgid "Deactivated"
-msgstr "деактивировано"
+msgstr "Отключена"
 
 #. module: digest
 #: model:ir.model,name:digest.model_digest_digest
 msgid "Digest"
-msgstr "Обзор"
+msgstr "Сводка"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_id
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Digest Email"
-msgstr "Электронная почта дайджеста"
+msgstr "Рассылать дайджест"
 
 #. module: digest
 #: model:ir.actions.act_window,name:digest.digest_digest_action
@@ -159,7 +159,7 @@ msgstr "Электронная почта дайджеста"
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_emails
 #: model:ir.ui.menu,name:digest.digest_menu
 msgid "Digest Emails"
-msgstr "Электронные почты дайджеста"
+msgstr "Макеты рассылок"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
@@ -214,7 +214,7 @@ msgstr "Идентификатор"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "In order to build your customized digest, follow these steps:"
-msgstr "Чтобы создать настроен дайджест, выполните следующие действия."
+msgstr "Чтобы создать ваш собственный дайджест, выполните следующие шаги:"
 
 #. module: digest
 #: code:addons/digest/controllers/portal.py:0
@@ -231,7 +231,7 @@ msgstr "Подписан этот пользователь"
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_tree
 msgid "KPI Digest"
-msgstr "дайджест KPI"
+msgstr "Сводка KPI"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_tip_view_form
@@ -246,7 +246,7 @@ msgstr ""
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "KPIs"
-msgstr "КПЭ"
+msgstr "Включенные KPI"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total_value
@@ -318,7 +318,7 @@ msgstr ""
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__next_run_date
 msgid "Next Send Date"
-msgstr "Следующая дата отправления"
+msgstr "Дата следующей рассылки"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_section_mobile
@@ -472,7 +472,7 @@ msgstr ""
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Unsubscribe me"
-msgstr "Удалить мою подписку"
+msgstr "Отписать меня"
 
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__sequence
@@ -539,12 +539,12 @@ msgstr "Вы успешно отменили подписку"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "You may want to add new computed fields with Odoo Studio:"
-msgstr "Вы можете добавить новые вычисленные поля из Студии Odoo:"
+msgstr "Вы можете добавить новые вычислимые поля с помощью Студии Odoo:"
 
 #. module: digest
 #: model:digest.digest,name:digest.digest_digest_default
 msgid "Your Odoo Periodic Digest"
-msgstr ""
+msgstr "Периодическая сводка Odoo"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -553,8 +553,8 @@ msgid ""
 "                                                <code>kpi_myfield</code>\n"
 "                                                and display it in the KPI's tab;"
 msgstr ""
-"сначала создайте булево поле, под назвоню <code>kpi_myfield</code> и "
-"отразите его во вкладке KPI;"
+"первое - создайте булево поле, с названием <code>kpi_myfield</code> и "
+"отобразите его во вкладке Включенные KPI;"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -563,8 +563,9 @@ msgid ""
 "                                                <code>kpi_myfield_value</code>\n"
 "                                                that will compute your customized KPI."
 msgstr ""
-"создайте вычислено поле под названием <code>kpi_myfield_value</code> которое"
-" будет вычислять ваши настроены KPI."
+"второе - создайте вычислимое поле с названием "
+"<code>kpi_myfield_value</code>, которое будет вычислять ваши дополнительные "
+"KPI."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -572,4 +573,4 @@ msgid ""
 "you must create 2 fields on the\n"
 "                                                <code>digest</code>\n"
 "                                                object:"
-msgstr "вам нужно создать два поля на <code>дайджесті</code> объект:"
+msgstr "нужно создать два поля в объекте <code>digest</code>:"

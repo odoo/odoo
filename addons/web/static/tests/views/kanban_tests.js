@@ -936,7 +936,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create record: cancel and validate without using the buttons', async function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         var nbRecords = 4;
         var kanban = await createView({
@@ -971,6 +971,14 @@ QUnit.module('Views', {
         await testUtils.dom.click(kanban.$('.o_kanban_group .o_kanban_record:first'));
         assert.containsNone(kanban, '.o_kanban_quick_create',
             "the quick create should be destroyed when the user clicks outside");
+
+        // click to input and drag the mouse outside, should not cancel the quick creation
+        await testUtils.dom.click(kanban.$('.o_kanban_header .o_kanban_quick_add i').first());
+        $quickCreate = kanban.$('.o_kanban_quick_create');
+        await testUtils.dom.triggerMouseEvent($quickCreate.find('input'), 'mousedown');
+        await testUtils.dom.click(kanban.$('.o_kanban_group .o_kanban_record:first').first());
+        assert.containsOnce(kanban, '.o_kanban_quick_create',
+            "the quick create should not have been destroyed after clicking outside");
 
         // click to really add an element
         await testUtils.dom.click(kanban.$('.o_kanban_header .o_kanban_quick_add i').first());
@@ -6380,6 +6388,41 @@ QUnit.module('Views', {
         var imageOnRecord = kanban.$('img[data-src*="/web/image"][data-src*="&id=1"]');
         assert.strictEqual(imageOnRecord.length, this.data.partner.records.length - 1,
             "display image by url when requested for another record");
+
+        kanban.destroy();
+    });
+
+    QUnit.test("test displaying image from m2o field (m2o field not set)", async function (assert) {
+        assert.expect(2);
+        this.data.foo_partner = {
+            fields: {
+                name: {string: "Foo Name", type: "char"},
+                partner_id: {string: "Partner", type: "many2one", relation: "partner"},
+            },
+            records: [
+                {id: 1, name: 'foo_with_partner_image', partner_id: 1},
+                {id: 2, name: 'foo_no_partner'},
+            ]
+        };
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: "foo_partner",
+            data: this.data,
+            arch: `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <img t-att-src="kanban_image('partner', 'image', record.partner_id.raw_value)"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+        });
+
+        assert.containsOnce(kanban, 'img[data-src*="/web/image"][data-src$="&id=1"]', "image url should contain id of set partner_id");
+        assert.containsOnce(kanban, 'img[data-src*="/web/image"][data-src$="&id="]', "image url should contain an empty id if partner_id is not set");
 
         kanban.destroy();
     });

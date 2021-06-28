@@ -11,8 +11,8 @@
 # Oleg Kuryan <oleg@ventor.tech>, 2020
 # Константин Коровин <korovin74@gmail.com>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
-# Сергей Шебанин <sergey@shebanin.ru>, 2020
-# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
+# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2020
+# Сергей Шебанин <sergey@shebanin.ru>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@itpp.dev>, 2020\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,7 +63,7 @@ msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
-msgstr ""
+msgstr "Изменить параметры доступа"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -275,7 +275,7 @@ msgstr "Предупреждение доступа"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "Account Security"
-msgstr ""
+msgstr "Параметры доступа"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -297,7 +297,7 @@ msgstr "Добавьте контакты, чтобы поделиться до�
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_share__note
 msgid "Add extra content to display in the email"
-msgstr "Добавьте еще содержимое для отображения в электронной письме"
+msgstr "Добавьте еще содержимое для отображения в электронном письме"
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
@@ -338,8 +338,8 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"Изменение номера НДС не допускается после того, как документ (ы) выдано для "
-"вашей учетной записи. Свяжитесь с нами непосредственно для этой операции."
+"Невозможно изменить ИНН, так как уже созданы документы для вашей учетной "
+"записи. Свяжитесь с нами напрямую, чтобы это сделать."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -347,8 +347,8 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"Изменение названия компании запрещается, как только документы выдаются для "
-"вашей учетной записи. Свяжитесь с нами по этой операции."
+"Невозможно изменить название компании, так как уже созданы документы для "
+"вашей учетной записи. Свяжитесь с нами напрямую, чтобы сделать это."
 
 #. module: portal
 #. openerp-web
@@ -519,7 +519,7 @@ msgstr "Оплатить сегодня"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Email"
-msgstr "Эл. адрес"
+msgstr "Email"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
@@ -821,8 +821,8 @@ msgid ""
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
 "Выберите, какие контакты должны принадлежать порталу в списке ниже.\n"
-"                        Адрес эл. почты каждого выбранного контакта должен быть действующим и уникальным.\n"
-"                        Если необходимо, вы можете исправить некоторые адреса эл. почты прямо в этом списке."
+"                        Адрес email каждого выбранного контакта должен быть действующим и уникальным.\n"
+"                        Если необходимо, вы можете исправить адреса email прямо в этом списке."
 
 #. module: portal
 #. openerp-web
@@ -836,7 +836,7 @@ msgstr "Отправить"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr "У некоторых контактов одинаковый адрес эл. почты: "
+msgstr "У некоторых контактов одинаковый адрес email: "
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.portal_share_action
@@ -858,15 +858,15 @@ msgstr "Войти"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr "У некоторых контактов некорректный адрес эл. почты: "
+msgstr "У некоторых контактов некорректный адрес email: "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
-"У некоторых контактов такой же адрес эл. почты, как у существующих "
-"пользователей портала:"
+"У некоторых контактов такой же адрес email, как у существующих пользователей"
+" портала:"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -877,12 +877,12 @@ msgstr "Некоторые обязательные поля не заполне
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "State / Province"
-msgstr "Штат / Провинция"
+msgstr "Регион"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Street"
-msgstr "Улица"
+msgstr "Адрес"
 
 #. module: portal
 #. openerp-web
@@ -970,14 +970,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
-"Этот текст включается в эл. письмо, отправляемое новым пользователям "
-"портала."
+"Этот текст будет включен в электронное письмо, отправляемое новым "
+"пользователям портала."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
-"Этот текст включается в письмо, отправляемое новым пользователям портала."
+"Этот текст будет включен в электронное письмо, отправляемое новым "
+"пользователям портала."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -988,7 +989,7 @@ msgid ""
 "- Grant access only to contacts with unique emails"
 msgstr ""
 "Для устранения этой ошибки вы можете:\n"
-"- Изменить эл. адреса соответствующих контактов\n"
+"- Изменить email соответствующих контактов\n"
 "- Предоставить доступ только контактам с уникальными адресами"
 
 #. module: portal
@@ -1004,7 +1005,7 @@ msgstr "Пользователи"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "VAT Number"
-msgstr "Номер НДС"
+msgstr "ИНН"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1134,8 +1135,7 @@ msgstr "Вы должны быть"
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
-"Чтобы отправлять письма, вам нужно указать эл. почту в настройках "
-"пользователя."
+"Чтобы отправлять письма, вам нужно указать email в настройках пользователя."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome

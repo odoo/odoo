@@ -6,7 +6,7 @@
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2020
 # danimaribeiro <danimaribeiro@gmail.com>, 2020
 # Clemilton Clementino <clemylton@hotmail.com>, 2020
-# rogeriojlle <rogerio.s.machado@gmail.com>, 2020
+# Rogerio Scholz Machado <rogerio.s.machado@gmail.com>, 2020
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
 # Lucas Rabelo <lucas.rabelo@nextsolucoes.net.br>, 2020
 # Emanuel Martins <emanuel.breno@gmail.com>, 2020
@@ -781,7 +781,7 @@ msgstr "Despesas para Processar"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_refused
 msgid "Explicitly Refused by manager or accountant"
-msgstr ""
+msgstr "Recusado Explicitamente pelo gerente ou contador"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_follower_ids
@@ -1270,6 +1270,8 @@ msgid ""
 "Post the journal entries of the new expense reports approved by the "
 "employees' manager."
 msgstr ""
+"Lance as entradas de diário dos novos relatórios de despesas aprovados pelo "
+"gerente de funcionários."
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__post
@@ -1325,7 +1327,7 @@ msgstr "Produto:"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Product: not found"
-msgstr ""
+msgstr "Produto: não encontrado"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_public
@@ -1370,7 +1372,7 @@ msgstr "Ref."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_ref_editable
 msgid "Reference Is Editable By Current User"
-msgstr ""
+msgstr "Referência É Editável pelo Usuário Atual"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -1409,17 +1411,17 @@ msgstr "Registrar Pagamento"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
 msgid "Reimburse Expenses in Payslip"
-msgstr "Reembolsar despesas no Contracheque"
+msgstr "Reembolsar despesas na Folha de Pagamento"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Reimburse expenses in payslips"
-msgstr "Reembolsar despesas em contracheques"
+msgstr "Reembolsar despesas em Folha de Pagamento"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Reimburse in Payslip"
-msgstr "Reembolsar no Contracheque"
+msgstr "Reembolsar na Folha de Pagamento"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
@@ -1427,6 +1429,8 @@ msgid ""
 "Reimburse the employees who incurred these costs or simply register the "
 "corresponding payments."
 msgstr ""
+"Reembolsar os funcionários que incorreram nesses custos ou simplesmente "
+"registrar os pagamentos correspondentes."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -1478,14 +1482,14 @@ msgstr "Erro no envio de SMS"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sample
 msgid "Sample"
-msgstr ""
+msgstr "Exemplo"
 
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/xml/expense_qr_modal_template.xml:0
 #, python-format
 msgid "Scan this QR code to get the Odoo app:"
-msgstr ""
+msgstr "Escaneie este QR Code para obter o app Odoo:"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -1516,11 +1520,16 @@ msgid ""
 "will automatically be set. Type the expense amount in the mail subject to "
 "set it on the expense too."
 msgstr ""
+"Envie um e-mail para este endereço com um recibo em anexo para criar uma "
+"despesa em um clique. Se a primeira palavra do assunto do e-mail conter a "
+"referência interna do produto ou o nome do produto, então o produto "
+"correspondente será definido. Defina o valor da despesa no assunto do e-mail"
+" para defini-lo no cadastro de despesas também."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
 msgid "Send bills to OCR to generate expenses"
-msgstr ""
+msgstr "Envie faturas em OCR para gerar despesas"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
@@ -1547,6 +1556,8 @@ msgid ""
 "Snap pictures of your receipts and let Odoo<br> automatically create "
 "expenses for you."
 msgstr ""
+"Tire fotos de seus recibos e deixe o Odoo <br> criar automaticamente as "
+"despesas para você."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -1606,7 +1617,7 @@ msgstr "Impostos"
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
 msgid "Team Approver"
-msgstr ""
+msgstr "Aprovador da Equipe"
 
 #. module: hr_expense
 #. openerp-web
@@ -1623,6 +1634,7 @@ msgstr ""
 #, python-format
 msgid "The current user has no related employee. Please, create one."
 msgstr ""
+"O usuário atual não possui funcionário relacionado. Por favor, crie um."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -1630,11 +1642,13 @@ msgid ""
 "The first word of the email subject did not correspond to any product code. "
 "You'll have to set the product manually on the expense."
 msgstr ""
+"A primeira palavra do assunto do e-mail não corresponde a nenhum código de "
+"produto. Você terá que definir o produto manualmente na despesa."
 
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
 msgid "The journal must be set on posted expense"
-msgstr ""
+msgstr "O diário deve ser definido na despesa lançada"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__journal_id
@@ -1650,7 +1664,7 @@ msgstr "O método de pagamento utilizado quando a despesa é paga pela empresa."
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
 #: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
 msgid "Tip: Snap pictures of your receipts with the remote app"
-msgstr ""
+msgstr "Dica: tire fotos de seus recibos com o app remoto"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1670,7 +1684,7 @@ msgstr "Para Lançar"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To Report"
-msgstr ""
+msgstr "Para Relatar"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__draft
@@ -1749,7 +1763,7 @@ msgstr "Enviar"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Uploaded Attachment"
-msgstr ""
+msgstr "Anexo Carregado"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_users
@@ -1764,7 +1778,7 @@ msgstr "Visualizar Anexos"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "View Expense"
-msgstr ""
+msgstr "Ver Despesa"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1796,23 +1810,24 @@ msgstr "Histórico de comunicação do site"
 #, python-format
 msgid "You are not authorized to edit the reference of this expense report."
 msgstr ""
+"Você não está autorizado a editar a referência deste relatório de despesa."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense report."
-msgstr ""
+msgstr "Você não está autorizado a editar este relatório de despesa."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can not create report without product."
-msgstr ""
+msgstr "Você não pode criar um relatório sem produto."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "You can now submit it to the manager from the following link."
-msgstr ""
+msgstr "Você pode enviá-lo agora ao gerente a partir do seguinte link."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1836,7 +1851,7 @@ msgstr "Você só pode recusar despesas do seu departamento"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can't mix sample expenses and regular ones"
-msgstr ""
+msgstr "Você não pode misturar despesas de exemplo com despesas normais"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -1889,6 +1904,8 @@ msgid ""
 "You need to have at least one product that can be expensed in your database "
 "to proceed!"
 msgstr ""
+"Você precisa ter ao menos um produto que pode ser uma despesa em seu banco "
+"de dados para continuar!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -1898,7 +1915,7 @@ msgstr "Sua Despesa"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Your expense has been successfully registered."
-msgstr ""
+msgstr "Sua despesa foi registrada com sucesso."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1930,21 +1947,21 @@ msgstr "km"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to be reimbursed"
-msgstr ""
+msgstr "para ser reembolsado"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to report"
-msgstr ""
+msgstr "para relatar"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "under validation"
-msgstr ""
+msgstr "em avaliação"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
-msgstr ""
+msgstr "use o OCR para preencher os dados a partir de uma foto da conta"

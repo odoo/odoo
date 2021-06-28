@@ -28,9 +28,9 @@
 # Umur Akın <umura@projetgrup.com>, 2020
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
-# Ediz Duman <neps1192@gmail.com>, 2020
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
+# Ediz Duman <neps1192@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -38,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8551,7 +8551,7 @@ msgstr "# Kayıt Kuralları"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "%(action_name)s is not a valid action on %(model_name)s"
-msgstr "%(action_name)s is not a valid action on %(model_name)s"
+msgstr "%(action_name)s geçerli bir işlem değil%(model_name)s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -9031,21 +9031,21 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Şirket Adresi</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Fatura Adresi</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Teslim Adresi</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Diğer Adres</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Özel Adres</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Adres</b>\n"
+"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Şirket Adresi</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Fatura Adresi </b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Teslimat Adresi </b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Diğer Adres</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Özel Adres</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Adres</b>\n"
 "                            </span>"
 
 #. module: base
@@ -9975,7 +9975,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__help
 #: model:ir.model.fields,field_description:base.field_ir_cron__help
 msgid "Action Description"
-msgstr "Eylem Açıklama"
+msgstr "Aksiyon Açıklama"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__name
@@ -12375,7 +12375,7 @@ msgstr "Checksum/SHA1"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__child_ids
 #: model:ir.model.fields,field_description:base.field_ir_cron__child_ids
 msgid "Child Actions"
-msgstr "Çocuk Esirleri"
+msgstr "Alt Aksiyon"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__child_ids
@@ -16278,7 +16278,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 msgid "Forgot password?"
-msgstr "Forgot password?"
+msgstr "Parolanızı mı unuttunuz?"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__form
@@ -16297,7 +16297,7 @@ msgstr "Biçim"
 #: model:ir.model.fields,help:base.field_res_partner__email_formatted
 #: model:ir.model.fields,help:base.field_res_users__email_formatted
 msgid "Format email address \"Name <email@domain>\""
-msgstr "E-posta adresini \"Ad <email @ alan adı>\" şeklinde biçimlendirin"
+msgstr "E-posta adresini biçimlendir \"Adı\""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__email_formatted
@@ -20655,11 +20655,11 @@ msgid ""
 "                            the uninstallation procedure on a duplicate database to guarantee that\n"
 "                            it works and then doing it on your production database."
 msgstr ""
-"Module uninstallation is not always consistent and can sometimes lead to issues,\n"
-"                            some data may be deleted, the database could be left in an unstable state,\n"
-"                            the server could crash, etc. While this is rare, we recommend testing\n"
-"                            the uninstallation procedure on a duplicate database to guarantee that\n"
-"                            it works and then doing it on your production database."
+"Modül kaldırma işlemi her zaman tutarlı değildir ve bazen sorunlara yol açabilir,\n"
+"                            bazı veriler silinebilir, veritabanı kararsız bir durumda kalabilir,\n"
+"                            sunucu çökebilir, vb. Bu nadir olmakla birlikte, test etmenizi öneririz\n"
+"                            Bunu garanti etmek için yinelenen (test) bir veritabanında kaldırma prosedürü\n"
+"                            çalışırın ve ardından üretim(Test Olamayan) veritabanınızda uygulayınız."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__module_ids
@@ -27269,7 +27269,7 @@ msgstr "Swedish - Accounting"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
 msgid "Switch to"
-msgstr "Switch to"
+msgstr "Değiştir"
 
 #. module: base
 #: model:res.country,name:base.ch
@@ -30986,8 +30986,8 @@ msgid ""
 "has been successfully installed.\n"
 "Users can choose his favorite language in their preferences."
 msgstr ""
-"has been successfully installed.\n"
-"Users can choose his favorite language in their preferences."
+"başarıyla kuruldu.\n"
+"Kullanıcılar tercihlerine göre favori dilini seçebilirler."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0

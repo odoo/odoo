@@ -660,7 +660,7 @@
                                 <field name="payment_reference"
                                        attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="partner_bank_id"
-                                       context="{'default_partner_id': commercial_partner_id}"
+                                       context="{'default_partner_id': bank_partner_id}"
                                        domain="[('partner_id', '=', bank_partner_id)]"
                                        attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <label name="invoice_vendor_bill_id_label" for="invoice_vendor_bill_id" string="Auto-Complete" class="oe_edit_only"
@@ -1060,7 +1060,7 @@
                                         <field name="invoice_user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                                         <field name="invoice_origin" string="Source Document" force_save="1" invisible="1"/>
                                         <field name="partner_bank_id"
-                                               context="{'default_partner_id': commercial_partner_id}"
+                                               context="{'default_partner_id': bank_partner_id}"
                                                domain="[('partner_id', '=', bank_partner_id)]"
                                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                         <field name="qr_code_method"
@@ -1186,12 +1186,12 @@
                     <filter name="due_date" string="Due Date" date="invoice_date_due"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'invoice_user_id'}"/>
                         <filter name="status" string="Status" context="{'group_by':'state'}"/>

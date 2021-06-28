@@ -52,9 +52,13 @@ class ProductProduct(models.Model):
         value = 0
         for move in stock_moves:
             bom_line = move.bom_line_id
-            bom_line_data = bom_lines[bom_line]
-            bom_line_qty = bom_line_data['qty']
-            value += move.product_id._compute_average_price(qty_invoiced * bom_line_qty, qty_to_invoice * bom_line_qty, move)
+            if bom_line:
+                bom_line_data = bom_lines[bom_line]
+                line_qty = bom_line_data['qty']
+            else:
+                # bom was altered (i.e. bom line removed) after being used
+                line_qty = move.product_qty
+            value += line_qty * move.product_id._compute_average_price(qty_invoiced * line_qty, qty_to_invoice * line_qty, move)
         return value
 
     def _compute_bom_price(self, bom, boms_to_recompute=False):

@@ -467,6 +467,12 @@ class SaleOrder(models.Model):
             return self.env['sale.order.line'].browse()
         return invoiceable_lines
 
+    def update_prices(self):
+        """Recompute coupons/promotions after pricelist prices reset."""
+        super().update_prices()
+        if any(line.is_reward_line for line in self.order_line):
+            self.recompute_coupon_lines()
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"

@@ -3,20 +3,21 @@
 # 	* website_customer
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Arminas Grigonis <arminas@versada.lt>, 2019
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Anatolij, 2019
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Martin Trigaux, 2021
+# Arminas Grigonis <arminas@versada.lt>, 2021
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2021
+# Anatolij, 2021
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2021
+# Linas Versada <linaskrisiukenas@gmail.com>, 2021
+# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:20+0000\n"
+"Last-Translator: grupoda2 <dmitrijus.ivanovas@gmail.com>, 2021\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,8 +51,8 @@ msgstr "Visos šalys"
 #. module: website_customer
 #: code:addons/website_customer/controllers/main.py:0
 #, python-format
-msgid "All Sectors of Activity"
-msgstr "Visi veiklos sektoriai"
+msgid "All Industries"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
@@ -86,7 +87,7 @@ msgstr "Uždaryti"
 #. module: website_customer
 #: model:ir.model,name:website_customer.model_res_partner
 msgid "Contact"
-msgstr "Kontaktai"
+msgstr "Kontaktas"
 
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
@@ -104,12 +105,16 @@ msgid "Created on"
 msgstr "Sukurta"
 
 #. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
+#: model:ir.model.fields,field_description:website_customer.field_website__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
 #. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__id
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__id
+#: model:ir.model.fields,field_description:website_customer.field_website__id
 msgid "ID"
 msgstr "ID"
 
@@ -124,7 +129,9 @@ msgid "Is Published"
 msgstr ""
 
 #. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner____last_update
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
+#: model:ir.model.fields,field_description:website_customer.field_website____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
@@ -178,8 +185,9 @@ msgid "Partners"
 msgstr "Partneriai"
 
 #. module: website_customer
+#: code:addons/website_customer/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
-#: model:website.menu,name:website_customer.menu_customers
+#, python-format
 msgid "References"
 msgstr "Rekomendacijos"
 
@@ -190,8 +198,8 @@ msgstr "Rekomendacijos pagal šalį"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
-msgid "References by Sectors of Activity"
-msgstr "Rekomendacijos pagal veiklos sektorius"
+msgid "References by Industries"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
@@ -222,6 +230,11 @@ msgstr "Milijonai žmonių visame pasaulyje pasitiki mumis"
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
 msgid "Visible on current website"
 msgstr "Matomas dabartinėje svetainėje"
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_website
+msgid "Website"
+msgstr "Svetainė"
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form

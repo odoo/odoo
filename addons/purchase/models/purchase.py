@@ -248,7 +248,9 @@ class PurchaseOrder(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'purchase':
-            return self.env.ref('purchase.mt_rfq_approved')
+            if init_values['state'] == 'to approve':
+                return self.env.ref('purchase.mt_rfq_approved')
+            return self.env.ref('purchase.mt_rfq_confirmed')
         elif 'state' in init_values and self.state == 'to approve':
             return self.env.ref('purchase.mt_rfq_confirmed')
         elif 'state' in init_values and self.state == 'done':
@@ -1045,8 +1047,9 @@ class PurchaseOrderLine(models.Model):
 
         # If not seller, use the standard price. It needs a proper currency conversion.
         if not seller:
+            po_line_uom = self.product_uom or self.product_id.uom_po_id
             price_unit = self.env['account.tax']._fix_tax_included_price_company(
-                self.product_id.uom_id._compute_price(self.product_id.standard_price, self.product_id.uom_po_id),
+                self.product_id.uom_id._compute_price(self.product_id.standard_price, po_line_uom),
                 self.product_id.supplier_taxes_id,
                 self.taxes_id,
                 self.company_id,
@@ -1058,9 +1061,6 @@ class PurchaseOrderLine(models.Model):
                     self.order_id.company_id,
                     self.date_order or fields.Date.today(),
                 )
-
-            if self.product_uom:
-                price_unit = self.product_id.uom_id._compute_price(price_unit, self.product_uom)
 
             self.price_unit = price_unit
             return

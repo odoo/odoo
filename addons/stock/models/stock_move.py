@@ -176,8 +176,8 @@ class StockMove(models.Model):
     next_serial = fields.Char('First SN')
     next_serial_count = fields.Integer('Number of SN')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', check_company=True)
-    forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit of Measure')
-    forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information')
+    forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit of Measure', compute_sudo=True)
+    forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information', compute_sudo=True)
     lot_ids = fields.Many2many('stock.production.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
 
     @api.onchange('product_id', 'picking_type_id')
@@ -327,12 +327,12 @@ class StockMove(models.Model):
                 move.quantity_done = quantity_done
         else:
             # compute
-            move_lines = self.env['stock.move.line']
+            move_lines_ids = set()
             for move in self:
-                move_lines |= move._get_move_lines()
+                move_lines_ids |= set(move._get_move_lines().ids)
 
             data = self.env['stock.move.line'].read_group(
-                [('id', 'in', move_lines.ids)],
+                [('id', 'in', list(move_lines_ids))],
                 ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
                 lazy=False
             )
@@ -552,7 +552,9 @@ class StockMove(models.Model):
         # Handle the write on the initial demand by updating the reserved quantity and logging
         # messages according to the state of the stock.move records.
         receipt_moves_to_reassign = self.env['stock.move']
+        move_to_recompute_state = self.env['stock.move']
         if 'product_uom_qty' in vals:
+            move_to_unreserve = self.env['stock.move']
             for move in self.filtered(lambda m: m.state not in ('done', 'draft') and m.picking_id):
                 if float_compare(vals['product_uom_qty'], move.product_uom_qty, precision_rounding=move.product_uom.rounding):
                     self.env['stock.move.line']._log_message(move.picking_id, move, 'stock.track_move_template', vals)
@@ -565,9 +567,12 @@ class StockMove(models.Model):
                 # When editing the initial demand, directly run again action assign on receipt moves.
                 receipt_moves_to_reassign |= move_to_unreserve.filtered(lambda m: m.location_id.usage == 'supplier')
                 receipt_moves_to_reassign |= (self - move_to_unreserve).filtered(lambda m: m.location_id.usage == 'supplier' and m.state in ('partially_available', 'assigned'))
+                move_to_recompute_state |= self - move_to_unreserve - receipt_moves_to_reassign
         if 'date_deadline' in vals:
             self._set_date_deadline(vals.get('date_deadline'))
         res = super(StockMove, self).write(vals)
+        if move_to_recompute_state:
+            move_to_recompute_state._recompute_state()
         if receipt_moves_to_reassign:
             receipt_moves_to_reassign._action_assign()
         return res
@@ -649,6 +654,19 @@ class StockMove(models.Model):
         if not self.next_serial:
             raise UserError(_("You need to set a Serial Number before generating more."))
         self._generate_serial_numbers()
+        return self.action_show_details()
+
+    def action_clear_lines_show_details(self):
+        """ Unlink `self.move_line_ids` before returning `self.action_show_details`.
+        Useful for if a user creates too many SNs by accident via action_assign_serial_show_details
+        since there's no way to undo the action.
+        """
+        self.ensure_one()
+        if self.picking_type_id.show_reserved:
+            move_lines = self.move_line_ids
+        else:
+            move_lines = self.move_line_nosuggest_ids
+        move_lines.unlink()
         return self.action_show_details()
 
     def action_assign_serial(self):

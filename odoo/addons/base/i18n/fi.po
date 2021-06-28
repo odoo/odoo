@@ -28,10 +28,10 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # Timo Koukkari <ti.ko@netikka.fi>, 2020
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2020
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Miika Nissi <miika.nissi@tawasta.fi>, 2021
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Miika Nissi <miika.nissi@tawasta.fi>, 2021\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3387,6 +3387,25 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Includes the following data for the Chinese localization\n"
+"========================================================\n"
+"\n"
+"Account Type/科目类型\n"
+"\n"
+"State Data/省份数据\n"
+"\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"\n"
+"    添加中文省份数据\n"
+"\n"
+"    增加小企业会计科目表\n"
+"\n"
+"    修改小企业会计科目表\n"
+"\n"
+"    修改小企业会计税率\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -6799,22 +6818,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
-"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Yrityksen Osoite</b>\n"
-"<b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Laskutus Osoite</b>\n"
-"<b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Toimitus Osoite</b>\n"
-"<b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Muu Osoite</b>\n"
-"<b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Yksityinen Osoite</b>\n"
-"<b attrs=\"{'invisible': [('type', '!=', False)]}\">Osoite</b>\n"
-"</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update

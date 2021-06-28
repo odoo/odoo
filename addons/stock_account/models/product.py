@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_is_zero, float_repr
 from odoo.exceptions import ValidationError
+from collections import defaultdict
 
 
 class ProductTemplate(models.Model):
@@ -244,7 +245,7 @@ class ProductProduct(models.Model):
             product = stock_valuation_layer.product_id
             value = stock_valuation_layer.value
 
-            if product.valuation != 'real_time':
+            if product.type != 'product' or product.valuation != 'real_time':
                 continue
 
             # Sanity check.
@@ -659,17 +660,21 @@ class ProductProduct(models.Model):
         if not qty_to_invoice:
             return 0.0
 
-        if not qty_to_invoice:
-            return 0
-
+        returned_quantities = defaultdict(float)
+        for move in stock_moves:
+            if move.origin_returned_move_id:
+                returned_quantities[move.origin_returned_move_id.id] += abs(sum(move.stock_valuation_layer_ids.mapped('quantity')))
         candidates = stock_moves\
             .sudo()\
+            .filtered(lambda m: not (m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
             .mapped('stock_valuation_layer_ids')\
             .sorted()
         qty_to_take_on_candidates = qty_to_invoice
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
             candidate_quantity = abs(candidate.quantity)
+            if candidate.stock_move_id.id in returned_quantities:
+                candidate_quantity -= returned_quantities[candidate.stock_move_id.id]
             if float_is_zero(candidate_quantity, precision_rounding=candidate.uom_id.rounding):
                 continue  # correction entries
             if not float_is_zero(qty_invoiced, precision_rounding=candidate.uom_id.rounding):

@@ -7,8 +7,9 @@
 # Martin Trigaux, 2020
 # sejun huang <sejun.huang@gmail.com>, 2020
 # zhengwei wu <wzw15199@gmail.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # Mandy Choy <mnc@odoo.com>, 2021
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# JustinC <dev@dottdot.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Mandy Choy <mnc@odoo.com>, 2021\n"
+"Last-Translator: JustinC <dev@dottdot.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2580,6 +2581,10 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"現金收付會計報告\n"
+"=================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_survey
@@ -2878,6 +2883,9 @@ msgid ""
 "Create Sales order with timesheets and products from tasks\n"
 "    "
 msgstr ""
+"\n"
+"透過任務的工時表和產品項目建立銷售訂單\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey
@@ -8302,22 +8310,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
-"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">公司地址</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">發票地址</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">收貨地址</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">其他地址</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">家庭地址</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">地址</b>\n"
-"                            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -9375,7 +9375,7 @@ msgstr "增加"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
 msgid "Add Language"
-msgstr ""
+msgstr "新增語系"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
@@ -11348,7 +11348,7 @@ msgstr ""
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used by contacts."
-msgstr ""
+msgstr "無法停用目前被聯絡人所使用的語系。"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -19604,7 +19604,7 @@ msgstr "蒙特塞拉特"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "More languages"
-msgstr ""
+msgstr "更多語系"
 
 #. module: base
 #: model:res.country,name:base.ma
@@ -25582,17 +25582,17 @@ msgstr "開始配置"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "狀態"
+msgstr "縣市"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
 msgid "State Code"
-msgstr "州/省代碼"
+msgstr "縣市代碼"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__name
 msgid "State Name"
-msgstr "州/省名稱"
+msgstr "縣市名稱"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_required
@@ -25612,7 +25612,7 @@ msgstr "公司狀態"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_ids
 msgid "States"
-msgstr "州/省/縣"
+msgstr "縣市"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_install__state
@@ -26325,7 +26325,7 @@ msgstr "稅號。 如果聯繫人需繳納稅款，請填寫。 用於某些法�
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq
 msgid "The URL code of the language must be unique !"
-msgstr ""
+msgstr "語系的 URL 代碼必須唯一！"
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -26704,7 +26704,7 @@ msgstr "伺服器拒絕測試收件人 (%(email_to)s)，錯誤 (%(repl)s)"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_state__code
 msgid "The state code."
-msgstr "州/省代碼。"
+msgstr "縣市代碼。"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -28897,7 +28897,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
 msgid "Work Entries"
-msgstr ""
+msgstr "工時記錄"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract
@@ -28907,7 +28907,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
 msgid "Work Orders, Planning, Stock Reports."
-msgstr ""
+msgstr "工單、規劃、倉庫報告"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sips
@@ -28942,7 +28942,7 @@ msgstr "編寫動作將執行的Python代碼。一些變量可供使用;有關py
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
 msgid "Write down your key"
-msgstr ""
+msgstr "寫下您的金鑰"
 
 #. module: base
 #: model:res.country,name:base.ye
@@ -28975,7 +28975,7 @@ msgstr "您正在邀請新使用者。"
 msgid ""
 "You are not allowed to access '%(document_kind)s' (%(document_model)s) "
 "records."
-msgstr ""
+msgstr "您並無權限存取 '%(document_kind)s' (%(document_model)s) 記錄。"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -28983,7 +28983,7 @@ msgstr ""
 msgid ""
 "You are not allowed to create '%(document_kind)s' (%(document_model)s) "
 "records."
-msgstr ""
+msgstr "您並無權限建立 '%(document_kind)s' (%(document_model)s) 記錄。"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -28991,7 +28991,7 @@ msgstr ""
 msgid ""
 "You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
 "records."
-msgstr ""
+msgstr "您並無權限刪除 '%(document_kind)s' (%(document_model)s) 記錄。"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -28999,7 +28999,7 @@ msgstr ""
 msgid ""
 "You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
 "records."
-msgstr ""
+msgstr "您並無權限修改 '%(document_kind)s' (%(document_model)s) 記錄。"
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -29145,7 +29145,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
-msgstr ""
+msgstr "您沒有權限匯出資料。請聯繫系統管理員。"
 
 #. module: base
 #: code:addons/base/wizard/base_partner_merge.py:0
@@ -29273,7 +29273,7 @@ msgstr "允許群組 %s"
 #: code:addons/models.py:0
 #, python-format
 msgid "always forbidden"
-msgstr ""
+msgstr "永遠禁止"
 
 #. module: base
 #: code:addons/base/models/res_currency.py:0
@@ -29463,6 +29463,8 @@ msgid ""
 "has been successfully installed.\n"
 "Users can choose his favorite language in their preferences."
 msgstr ""
+"已經成功安裝。\n"
+"使用者可以根據他們的喜好選擇他最喜愛的語言。"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -29540,7 +29542,7 @@ msgstr "many2one_reference"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "minute"
-msgstr ""
+msgstr "分鐘"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -29644,7 +29646,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "second"
-msgstr ""
+msgstr "秒"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__selection
@@ -29659,7 +29661,7 @@ msgstr "snailmail_account"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "test"
-msgstr ""
+msgstr "測試"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mimetypes
@@ -29679,7 +29681,7 @@ msgstr "測試-只讀組"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_xlsx_export
 msgid "test xlsx export"
-msgstr ""
+msgstr "測試 xlsx 匯出"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_assetsbundle
@@ -29776,13 +29778,13 @@ msgstr "web_dashboard"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "week"
-msgstr ""
+msgstr "周"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "year"
-msgstr ""
+msgstr "年"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0

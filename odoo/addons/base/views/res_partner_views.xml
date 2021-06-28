@@ -178,12 +178,12 @@
                         <group>
                             <field name="type" groups="base.group_no_one" attrs="{'invisible': [('is_company','=', True)], 'readonly': [('user_ids', '!=', [])]}"/>
                             <span class="o_form_label o_td_label" name="address_name">
-                                <b attrs="{'invisible': [('type', '!=', 'contact')]}">Company Address</b>
-                                <b attrs="{'invisible': [('type', '!=', 'invoice')]}">Invoice Address</b>
-                                <b attrs="{'invisible': [('type', '!=', 'delivery')]}">Delivery Address</b>
-                                <b attrs="{'invisible': [('type', '!=', 'other')]}">Other Address</b>
-                                <b attrs="{'invisible': [('type', '!=', 'private')]}">Private Address</b>
-                                <b attrs="{'invisible': [('type', '!=', False)]}">Address</b>
+                                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}">Company Address</b>
+                                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}">Invoice Address</b>
+                                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}">Delivery Address</b>
+                                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}">Other Address</b>
+                                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}">Private Address</b>
+                                <b attrs="{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}">Address</b>
                             </span>
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street"
@@ -328,6 +328,7 @@
                                         </group>
                                         <field name="lang" invisible="True"/>
                                         <field name="user_id" invisible="True"/>
+                                        <field name="image_128" invisible="1"/>
                                     </sheet>
                                 </form>
                             </field>

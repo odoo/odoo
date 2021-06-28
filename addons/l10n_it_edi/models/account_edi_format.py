@@ -21,6 +21,96 @@ class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
     # -------------------------------------------------------------------------
+    # Helpers
+    # -------------------------------------------------------------------------
+
+    @api.model
+    def _l10n_it_edi_generate_electronic_invoice_filename(self, invoice):
+        '''Returns a name conform to the Fattura pa Specifications:
+           See ES documentation 2.2
+        '''
+        a = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        n = invoice.id
+        progressive_number = ""
+        while n:
+            (n, m) = divmod(n, len(a))
+            progressive_number = a[m] + progressive_number
+
+        return '%(country_code)s%(codice)s_%(progressive_number)s.xml' % {
+            'country_code': invoice.company_id.country_id.code,
+            'codice': invoice.company_id.l10n_it_codice_fiscale.replace(' ', ''),
+            'progressive_number': progressive_number.zfill(5),
+        }
+
+    def _l10n_it_edi_check_invoice_configuration(self, invoice):
+        errors = []
+        seller = invoice.company_id
+        buyer = invoice.commercial_partner_id
+
+        # <1.1.1.1>
+        if not seller.country_id:
+            errors.append(_("%s must have a country", seller.display_name))
+
+        # <1.1.1.2>
+        if not seller.vat:
+            errors.append(_("%s must have a VAT number", seller.display_name))
+        elif len(seller.vat) > 30:
+            errors.append(_("The maximum length for VAT number is 30. %s have a VAT number too long: %s.", seller.display_name, seller.vat))
+
+        # <1.2.1.2>
+        if not seller.l10n_it_codice_fiscale:
+            errors.append(_("%s must have a codice fiscale number", seller.display_name))
+
+        # <1.2.1.8>
+        if not seller.l10n_it_tax_system:
+            errors.append(_("The seller's company must have a tax system."))
+
+        # <1.2.2>
+        if not seller.street and not seller.street2:
+            errors.append(_("%s must have a street.", seller.display_name))
+        if not seller.zip:
+            errors.append(_("%s must have a post code.", seller.display_name))
+        elif len(seller.zip) != 5 and seller.country_id.code == 'IT':
+            errors.append(_("%s must have a post code of length 5.", seller.display_name))
+        if not seller.city:
+            errors.append(_("%s must have a city.", seller.display_name))
+        if not seller.country_id:
+            errors.append(_("%s must have a country.", seller.display_name))
+
+        if seller.l10n_it_has_tax_representative and not seller.l10n_it_tax_representative_partner_id.vat:
+            errors.append(_("Tax representative partner %s of %s must have a tax number.", seller.l10n_it_tax_representative_partner_id.display_name, seller.display_name))
+
+        # <1.4.1>
+        if not buyer.vat and not buyer.l10n_it_codice_fiscale and buyer.country_id.code == 'IT':
+            errors.append(_("The buyer, %s, or his company must have either a VAT number either a tax code (Codice Fiscale).", buyer.display_name))
+
+        # <1.4.2>
+        if not buyer.street and not buyer.street2:
+            errors.append(_("%s must have a street.", buyer.display_name))
+        if not buyer.zip:
+            errors.append(_("%s must have a post code.", buyer.display_name))
+        if len(buyer.zip) != 5 and buyer.country_id.code == 'IT':
+            errors.append(_("%s must have a post code of length 5.", buyer.display_name))
+        if not buyer.city:
+            errors.append(_("%s must have a city.", buyer.display_name))
+        if not buyer.country_id:
+            errors.append(_("%s must have a country.", buyer.display_name))
+
+        # <2.2.1>
+        for invoice_line in invoice.invoice_line_ids:
+            if not invoice_line.display_type and len(invoice_line.tax_ids) != 1:
+                raise UserError(_("You must select one and only one tax by line."))
+
+        for tax_line in invoice.line_ids.filtered(lambda line: line.tax_line_id):
+            if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
+                errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
+
+        if not invoice.partner_bank_id:
+            errors.append(_("The seller must have a bank account."))
+
+        return errors
+
+    # -------------------------------------------------------------------------
     # Export
     # -------------------------------------------------------------------------
 
@@ -36,25 +126,30 @@ class AccountEdiFormat(models.Model):
             return super()._is_compatible_with_journal(journal)
         return journal.type == 'sale' and journal.country_code == 'IT'
 
+    def _l10n_it_edi_is_required_for_invoice(self, invoice):
+        """ Is the edi required for this invoice based on the method (here: PEC mail)
+            Deprecated: in future release PEC mail will be removed.
+            TO OVERRIDE
+        """
+        return invoice.is_sale_document() and invoice.l10n_it_send_state not in ('sent', 'delivered', 'delivered_accepted') and invoice.country_code == 'IT'
+
     def _is_required_for_invoice(self, invoice):
         # OVERRIDE
         self.ensure_one()
         if self.code != 'fattura_pa':
             return super()._is_required_for_invoice(invoice)
 
-        # Determine on which invoices the Mexican CFDI must be generated.
-        return invoice.is_sale_document() and invoice.l10n_it_send_state not in ['sent', 'delivered', 'delivered_accepted'] and invoice.country_code == 'IT'
+        return self._l10n_it_edi_is_required_for_invoice(invoice)
 
-    def _post_invoice_edi(self, invoices, test_mode=False):
-        # OVERRIDE
-        self.ensure_one()
-        edi_result = super()._post_invoice_edi(invoices, test_mode=test_mode)
-        if self.code != 'fattura_pa':
-            return edi_result
-
+    def _post_fattura_pa(self, invoices):
+        # TO OVERRIDE
         invoice = invoices  # no batching ensure that we only have one invoice
         invoice.l10n_it_send_state = 'other'
         invoice._check_before_xml_exporting()
+        if invoice.l10n_it_einvoice_id and invoice.l10n_it_send_state not in ['invalid', 'to_send']:
+            return {'error': _("You can't regenerate an E-Invoice when the first one is sent and there are no errors")}
+        if invoice.l10n_it_einvoice_id:
+            invoice.l10n_it_einvoice_id.unlink()
         res = invoice.invoice_generate_xml()
         if len(invoice.commercial_partner_id.l10n_it_pa_index or '') == 6:
             invoice.message_post(
@@ -63,6 +158,15 @@ class AccountEdiFormat(models.Model):
         else:
             invoice.l10n_it_send_state = 'to_send'
         return {invoice: res}
+
+    def _post_invoice_edi(self, invoices, test_mode=False):
+        # OVERRIDE
+        self.ensure_one()
+        edi_result = super()._post_invoice_edi(invoices)
+        if self.code != 'fattura_pa':
+            return edi_result
+
+        return self._post_fattura_pa(invoices)
 
     # -------------------------------------------------------------------------
     # Import
@@ -109,6 +213,18 @@ class AccountEdiFormat(models.Model):
                 invoice = self.env['account.move']
             first_run = False
 
+            # Type must be present in the context to get the right behavior of the _default_journal method (account.move).
+            # journal_id must be present in the context to get the right behavior of the _default_account method (account.move.line).
+            elements = tree.xpath('//CessionarioCommittente//IdCodice')
+            company = elements and self.env['res.company'].search([('vat', 'ilike', elements[0].text)], limit=1)
+            if not company:
+                elements = tree.xpath('//CessionarioCommittente//CodiceFiscale')
+                company = elements and self.env['res.company'].search([('l10n_it_codice_fiscale', 'ilike', elements[0].text)], limit=1)
+                if not company:
+                    # Only invoices with a correct VAT or Codice Fiscale can be imported
+                    _logger.warning('No company found with VAT or Codice Fiscale like %r.', elements[0].text)
+                    continue
+
             # Refund type.
             # TD01 == invoice
             # TD02 == advance/down payment on invoice
@@ -123,32 +239,14 @@ class AccountEdiFormat(models.Model):
                 move_type = 'in_refund'
             elif elements and elements[0].text and elements[0].text != 'TD01':
                 _logger.info('Document type not managed: %s. Invoice type is set by default.', elements[0].text)
-            invoice_ctx = invoice.with_context(default_move_type=move_type)
 
-            # type must be present in the context to get the right behavior of the _default_journal method (account.move).
-            # journal_id must be present in the context to get the right behavior of the _default_account method (account.move.line).
-
-            elements = tree.xpath('//CessionarioCommittente//IdCodice')
-            company = elements and self.env['res.company'].search([('vat', 'ilike', elements[0].text)], limit=1)
-            if not company:
-                elements = tree.xpath('//CessionarioCommittente//CodiceFiscale')
-                company = elements and self.env['res.company'].search([('l10n_it_codice_fiscale', 'ilike', elements[0].text)], limit=1)
-
-            if company:
-                invoice_ctx = invoice_ctx.with_context(company_id=company.id)
-            else:
-                company = self.env.company
-                if elements:
-                    _logger.info('No company found with codice fiscale: %s. The user\'s company is set by default.', elements[0].text)
-                else:
-                    _logger.info('Company not found. The user\'s company is set by default.')
-
-            if not self.env.is_superuser():
-                if self.env.company != company:
-                    raise UserError(_("You can only import invoice concern your current company: %s", self.env.company.display_name))
+            # Setup the context for the Invoice Form
+            invoice_ctx = invoice.with_company(company) \
+                                 .with_context(default_move_type=move_type,
+                                               account_predictive_bills_disable_prediction=True)
 
             # move could be a single record (editing) or be empty (new).
-            with Form(invoice_ctx.with_context(account_predictive_bills_disable_prediction=True)) as invoice_form:
+            with Form(invoice_ctx) as invoice_form:
                 message_to_log = []
 
                 # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>
@@ -190,7 +288,7 @@ class AccountEdiFormat(models.Model):
                 if elements:
                     date_str = elements[0].text
                     date_obj = datetime.strptime(date_str, DEFAULT_FACTUR_ITALIAN_DATE_FORMAT)
-                    invoice_form.invoice_date = date_obj.strftime(DEFAULT_FACTUR_ITALIAN_DATE_FORMAT)
+                    invoice_form.invoice_date = date_obj
 
                 #  Dati Bollo. <2.1.1.6>
                 elements = body_tree.xpath('.//DatiGeneraliDocumento/DatiBollo/ImportoBollo')
@@ -295,7 +393,7 @@ class AccountEdiFormat(models.Model):
                     if elements:
                         message_to_log.append("%s<br/>%s" % (
                             _("Bank account not found, useful informations from XML file:"),
-                            self._compose_info_message(body_tree, './/DatiPagamento')))
+                            invoice._compose_info_message(body_tree, './/DatiPagamento')))
 
                 # Invoice lines. <2.2.1>
                 elements = body_tree.xpath('.//DettaglioLinee')

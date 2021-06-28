@@ -20,8 +20,8 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2020
 # abc Def <hdogan1974@gmail.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
-# Ediz Duman <neps1192@gmail.com>, 2020
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
+# Ediz Duman <neps1192@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,8 +45,8 @@ msgid ""
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                 (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or\n"
-"                 'Purchase Order - %s' % (object.name))"
+"                 (object.state in ('draft', 'sent') and 'Teklif Talebi - %s' % (object.name) or\n"
+"                 'Satınalma Siparişi - %s' % (object.name))"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
@@ -65,6 +65,12 @@ msgstr "Satır Sayısı"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 msgstr "${object.company_id.name} Sipariş (Ref ${object.name or 'n/a' })"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "%(name)s confirmed the receipt will take place on %(date)s."
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -112,12 +118,12 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear ${object.partner_id.name}\n"
+"        Sayın ${object.partner_id.name}\n"
 "        % if object.partner_id.parent_id:\n"
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Here is a reminder that the delivery of the purchase order <strong>${object.name}</strong>\n"
+"         Burada satınalma siparişinin teslimatının bir hatırlatmasıdır.<strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
 "            <strong>(${object.partner_ref})</strong>\n"
 "        % endif \n"
@@ -127,7 +133,7 @@ msgstr ""
 "        % else:\n"
 "            <strong>undefined</strong>.\n"
 "        % endif\n"
-"        Could you please confirm it will be delivered on time?\n"
+"        Lütfen zamanında teslim edileceğini onaylar mısınız?\n"
 "    </p>\n"
 "</div>"
 
@@ -158,12 +164,12 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear ${object.partner_id.name}\n"
+"        Sayın ${object.partner_id.name}\n"
 "        % if object.partner_id.parent_id:\n"
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Here is in attachment a purchase order <strong>${object.name}</strong>\n"
+"         İşte ekte bir satın alma siparişi var<strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
 "            with reference: ${object.partner_ref}\n"
 "        % endif\n"
@@ -173,7 +179,7 @@ msgstr ""
 "        % if object.date_planned:\n"
 "            The receipt is expected for <strong>${format_date(object.date_planned)}</strong>.\n"
 "            <br/><br/>\n"
-"            Could you please acknowledge the receipt of this order?\n"
+"            Lütfen bu siparişin alındığını onaylar mısınız?\n"
 "        % endif\n"
 "    </p>\n"
 "</div>"
@@ -517,7 +523,7 @@ msgstr "Aktivite Durumu"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Aktivite Tipi Simgesi"
+msgstr "Aktivite Simge Tipi "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -555,7 +561,7 @@ msgstr "Yönetici"
 #: code:addons/purchase/controllers/portal.py:0
 #, python-format
 msgid "All"
-msgstr "Belirlenmedi"
+msgstr "Hepsi"
 
 #. module: purchase
 #. openerp-web
@@ -923,7 +929,7 @@ msgstr "Onaylanan satınalma siparişleri düzenlenemez"
 #: model:ir.model,name:purchase.model_res_partner
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Contact"
-msgstr "Temas"
+msgstr "Kontak"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_method
@@ -2622,6 +2628,12 @@ msgid "Terms and Conditions"
 msgstr "Şartlar ve Koşullar"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "The order receipt has been acknowledged by %(name)s."
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
@@ -2969,7 +2981,7 @@ msgstr "Bekleme Teklif Talepleri"
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__warning
 #: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__warning
 msgid "Warning"
-msgstr "İkaz"
+msgstr "Uyarı"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0

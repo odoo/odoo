@@ -10,11 +10,11 @@
 # Simone Bernini <simone@aperturelabs.it>, 2020
 # Petra <bop@odoo.com>, 2020
 # Marius Marolla <mariusmarolla@entersys.it>, 2020
+# David Minneci <david@numeko.it>, 2020
 # Giovanni Perteghella <giovanni@perteghella.org>, 2020
 # Luigi Di Naro <gigidn@gmail.com>, 2020
 # Lorenzo Battistini <lb@takobi.online>, 2020
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2020
-# David Minneci <david@numeko.it>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2020
@@ -6784,6 +6784,12 @@ msgid ""
 "It adds a timer to a view for time recording purpose\n"
 "    "
 msgstr ""
+"\n"
+"Questo modulo implementa un timer.\n"
+"==========================================\n"
+"\n"
+"Aggiunge un timer a una vista al fine di registrare i tempi\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
@@ -8011,21 +8017,21 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Indirizzo azienda</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Indirizzo fattura</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Indirizzo di consegna</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Altro indirizzo</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Indirizzo privato</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Indirizzo</b>\n"
+"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Indirizzo azienda</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Indirizzo fattura</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Indirizzo di consegna</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Altro indirizzo</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Indirizzo privato</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Indirizzo</b>\n"
 "                            </span>"
 
 #. module: base
@@ -9013,7 +9019,7 @@ msgstr "Aggiungi lingua"
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
 msgid "Add OdooBot in discussions"
-msgstr "Aggiunge il bot Odoo nelle discussioni"
+msgstr "Aggiunge OdooBot alle discussioni"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_sepa_direct_debit
@@ -9121,7 +9127,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_im_livechat_mail_bot
 msgid "Add livechat support for OdooBot"
-msgstr "Aggiunge il supporto per il bot Odoo alla chat dal vivo"
+msgstr "Aggiunge alla chat dal vivo il supporto per OdooBot"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
@@ -9660,7 +9666,7 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
-msgstr ""
+msgstr "Per far funzionare find_or_create è obbligatoria una e-mail"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
@@ -9927,7 +9933,7 @@ msgstr "Aruba"
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "As a team, we are happy to contribute to this event."
-msgstr ""
+msgstr "Come gruppo contribuiamo volentieri all'evento."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
@@ -11480,7 +11486,7 @@ msgstr "Colonna relativa al record nella tabella del modello"
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Come see us live, we hope to meet you !"
-msgstr ""
+msgstr "Vieni a vederci dal vivo, speriamo di incontrarti !"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -11500,7 +11506,7 @@ msgid ""
 "'calendar', etc. (Default: tree,form)"
 msgstr ""
 "Elenco delle modalità consentite per la vista, separate da virgola, come: "
-"\"modulo\", \"albero\", \"calendario\" ecc. (predefinito: albero, modulo)"
+"\"scheda\", \"albero\", \"calendario\" ecc. (predefinito: albero, scheda)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__comment
@@ -11516,7 +11522,7 @@ msgstr "Commenti"
 #: model:ir.model.fields,field_description:base.field_res_partner__commercial_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__commercial_partner_id
 msgid "Commercial Entity"
-msgstr "Ente commerciale"
+msgstr "Entità commerciale"
 
 #. module: base
 #: model:res.country,name:base.km
@@ -12228,11 +12234,10 @@ msgid ""
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
 msgstr ""
-"Crea e gestisci gli utenti che si connetteranno al sistema. Gli utenti "
-"possono essere disattivati nel caso in cui ci sia un periodo durante il "
-"quale essi non dovranno/dovrebbero connettersi al sistema. È possibile "
-"assegnare loro gruppi per fornire un accesso specifico alle applicazioni che"
-" devono utilizzare nel sistema."
+"Crea e gestisce gli utenti che si collegheranno al sistema. Possono essere "
+"disattivati per un periodo di inattività o di preclusione all'accesso. Per "
+"fornire loro accessi ad applicazioni specifiche necessarie per l'utilizzo "
+"del sistema è possibile assegnare dei gruppi."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_approvals
@@ -12257,7 +12262,7 @@ msgstr "Crea contatti da registrazioni eventi."
 #. module: base
 #: model:ir.module.module,description:base.module_crm_livechat
 msgid "Create new lead with using /lead command in the channel"
-msgstr "Creare un lead con il comando /lead del canale"
+msgstr "Crea un nuovo contatto usando il comando /lead nel canale"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -14837,6 +14842,8 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
+"File dal quale ha origine la vista.\n"
+"                                                          Utile per il ripristino (forte) delle viste danneggiate o per leggere, nella modalità dev-xml, l'architettura dal file."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -15055,8 +15062,8 @@ msgid ""
 "For safety reasons, you cannot merge more than 3 contacts together. You can "
 "re-open the wizard several times if needed."
 msgstr ""
-"Per motivi di sicurezza, non è possibile unire più di 3 contatti insieme. È "
-"possibile riaprire la procedura guidata più volte, se necessario."
+"Per motivi di sicurezza non è possibile unire insieme più di 3 contatti. Se "
+"necessario, è possibile riaprire la procedura guidata più volte."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
@@ -15760,7 +15767,7 @@ msgstr "Gestione ordini pranzo dei dipendenti"
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Happy to be Sponsor"
-msgstr ""
+msgstr "Lieti di essere sponsor"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
@@ -16379,8 +16386,8 @@ msgid ""
 "If set to true, the action will not be displayed on the right toolbar of a "
 "form view."
 msgstr ""
-"Se impostato a vero, nella barra degli strumenti destra di un vista modulo "
-"non viene visualizzata l'azione."
+"Se impostato a vero, non viene visualizzata l'azione nella barra degli "
+"strumenti destra di un vista scheda."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_default__company_id
@@ -16551,17 +16558,17 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "Impacted Apps"
-msgstr "Applicazioni interessate"
+msgstr "Applicazioni coinvolte"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall__model_ids
 msgid "Impacted data models"
-msgstr "Modelli di dati interessati"
+msgstr "Modelli dati coinvolti"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall__module_ids
 msgid "Impacted modules"
-msgstr "Moduli interessati"
+msgstr "Moduli coinvolti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_auth_password_policy
@@ -19313,7 +19320,7 @@ msgstr "Esito aggiornamento moduli"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_install
 msgid "Module Upgrade Install"
-msgstr "Installazione di un avanzamento modulo"
+msgstr "Installazione avanzamento modulo"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
@@ -21391,6 +21398,10 @@ msgid ""
 "\n"
 "Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
 msgstr ""
+"Odoo non è in grado di unire i PDF allegati ai seguenti record:\n"
+"%s\n"
+"\n"
+"Per proseguire, escluderli dalla selezione. È ancora possibile recuperare tali PDF, evitando l'unione, selezionando singolarmente i record interessati."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
@@ -21409,12 +21420,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_bot
 msgid "OdooBot"
-msgstr "Bot Odoo"
+msgstr "OdooBot"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_im_livechat_mail_bot
 msgid "OdooBot for livechat"
-msgstr "Bot Odoo per chat dal vivo"
+msgstr "OdooBot per chat dal vivo"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_12
@@ -21598,9 +21609,9 @@ msgid ""
 " ask the Administrator if you need to merge several contacts linked to "
 "existing Journal Items."
 msgstr ""
-"Solo il contatto di destinazione può essere collegato agli elementi di "
-"giornale esistenti. Si prega di chiedere all’amministratore se è necessario "
-"unire più contatti collegati agli elementi di giornale esistenti."
+"Ai movimenti contabili esistenti può essere collegato solo il contatto di "
+"destinazione. Se è necessario unire alcuni contatti, chiedere "
+"all'amministratore."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -22201,7 +22212,7 @@ msgstr "Categoria madre"
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_parent_id
 #: model:ir.model.fields,field_description:base.field_res_company__parent_id
 msgid "Parent Company"
-msgstr "Azienda madre"
+msgstr "Azienda principale"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_id
@@ -23501,7 +23512,7 @@ msgstr "Errore di ricorsività nelle dipendenze dei moduli"
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "Recursion found in child server actions"
-msgstr ""
+msgstr "Trovata ricorsività nelle azioni server secondarie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__reference
@@ -24232,7 +24243,7 @@ msgstr "San Marino"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__sanitized_acc_number
 msgid "Sanitized Account Number"
-msgstr ""
+msgstr "Numero conto pulito"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__6
@@ -24757,7 +24768,7 @@ msgstr "Imposta da fare"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_open_base_onboarding_company
 msgid "Set your company data"
-msgstr "Imposta i dati aziendali"
+msgstr "Impostazione dati aziendali"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
@@ -24786,7 +24797,7 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
-msgstr "Non è permesso impostare password vuote per motivi di sicurezza!"
+msgstr "Per motivi di sicurezza non è consentito impostare password vuote."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_config_setting_act_window
@@ -25226,7 +25237,7 @@ msgstr "Stato di Palestina"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__base_onboarding_company_state
 msgid "State of the onboarding company step"
-msgstr ""
+msgstr "Stato della fase di configurazione azienda"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_ids
@@ -26501,6 +26512,8 @@ msgid ""
 "This field will save the current `arch_db` before writing on it.\n"
 "                                                                         Useful to (soft) reset a broken view."
 msgstr ""
+"Campo che salva l'attuale `arch_db` prima di effettuare la scrittura.\n"
+"                                                                         Utile per il ripristino (leggero) di una vista danneggiata."
 
 #. module: base
 #: code:addons/image.py:0
@@ -26800,7 +26813,7 @@ msgstr "Gantt per ferie"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timer
 msgid "Timer"
-msgstr ""
+msgstr "Timer"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_timer
@@ -27629,7 +27642,7 @@ msgstr "Aggiornamenti"
 #: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Upgrade"
-msgstr "Aggiorna"
+msgstr "Avanza"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_upgrade
@@ -28823,6 +28836,8 @@ msgstr "Impossibile attivare il superutente."
 #, python-format
 msgid "You cannot archive a contact linked to a portal or internal user."
 msgstr ""
+"Impossibile archiviare un contatto collegato a un portale o a un utente "
+"interno."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -28868,8 +28883,7 @@ msgstr "Impossibile eliminare la lingua impostata come preferita dall'utente."
 #: code:addons/base/wizard/base_partner_merge.py:0
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
-msgstr ""
-"Non è possibile unire un contatto con uno dei suoi contatti correlati."
+msgstr "Impossibile unire un contatto con uno da cui deriva."
 
 #. module: base
 #: code:addons/models.py:0

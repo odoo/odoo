@@ -789,7 +789,7 @@ msgstr "Stuklijst gebruikt op de productieorder."
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Bill of Materials"
-msgstr "Stuklijsten"
+msgstr "Stuklijst"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__bom_id
@@ -806,7 +806,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
 msgid "Bills of Materials"
-msgstr "Stuklijsten"
+msgstr "Stuklijst"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1327,7 +1327,7 @@ msgstr "Maakt een nieuw serie of partijnummer"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_document_form
 msgid "Creation"
-msgstr "Aanmaken"
+msgstr "Aangemaakt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_producing
@@ -5303,6 +5303,16 @@ msgstr ""
 "Je hebt nog geen <i>geproduceerde</i> hoeveelheden geregistreerd, door op "
 "<i>toepassen</i> te klikken zal Odoo alle eindproducten produceren en alle "
 "componenten verbruiken."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
+msgstr ""
+"U moet een verbruikte hoeveelheid aangeven die niet gelijk is aan nul voor "
+"minstens één van uw componenten"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0

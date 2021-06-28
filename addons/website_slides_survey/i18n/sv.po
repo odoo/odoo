@@ -61,7 +61,7 @@ msgstr ""
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
@@ -85,6 +85,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '&gt;', 0)]}\">Finished</span>\n"
 "                <span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '=', 0)]}\">Certified</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '&gt;', 0)]}\">Fullföljda</span>\n"
+"                <span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '=', 0)]}\">Examinerade</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.all_user_card
@@ -99,17 +101,18 @@ msgstr ""
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_kanban
 msgid "<span class=\"text-muted\">Certified</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Examinerade</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_kanban
 msgid "<span class=\"text-muted\">Finished</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Fullföljd</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
 msgid "<span>Start Now</span><i class=\"fa fa-chevron-right ml-2 align-middle\"/>"
 msgstr ""
+"<span>Börja nu </span><i class=\"fa fa-chevron-right ml-2 align-middle\"/>"
 
 #. module: website_slides_survey
 #: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_survey_id
@@ -156,7 +159,7 @@ msgstr ""
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
 msgid "Begin your <b>certification</b> today!"
-msgstr ""
+msgstr "Påbörja din <b>examen </b> idag!"
 
 #. module: website_slides_survey
 #. openerp-web
@@ -167,7 +170,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_type__certification
 #, python-format
 msgid "Certification"
-msgstr ""
+msgstr "Examinering"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
@@ -220,7 +223,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_slides_survey.website_slides_menu_report_certification
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
 msgid "Certifications"
-msgstr ""
+msgstr "Examineringar"
 
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_1
@@ -230,19 +233,19 @@ msgstr ""
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_channel
 msgid "Course"
-msgstr ""
+msgstr "Kurs"
 
 #. module: website_slides_survey
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_form
 #, python-format
 msgid "Courses"
-msgstr ""
+msgstr "Kurser"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_channel_count
 msgid "Courses Count"
-msgstr ""
+msgstr "Antal kurser"
 
 #. module: website_slides_survey
 #: model:slide.slide,name:website_slides_survey.slide_slide_demo_6_0
@@ -300,7 +303,7 @@ msgstr ""
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
 msgid "Go back to course"
-msgstr ""
+msgstr "Återgå till kursen"
 
 #. module: website_slides_survey
 #. openerp-web
@@ -372,7 +375,7 @@ msgstr ""
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_id
 msgid "Related course slide"
-msgstr ""
+msgstr "Relaterat kursmaterial"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate

@@ -23,9 +23,10 @@ class CouponProgram(models.Model):
             'name': _('Sales Orders'),
             'view_mode': 'tree,form',
             'res_model': 'sale.order',
+            'search_view_id': [self.env.ref('sale.sale_order_view_search_inherit_quotation').id],
             'type': 'ir.actions.act_window',
-            'domain': [('id', 'in', orders.ids), ('state', 'not in', ('draft', 'sent', 'cancel'))],
-            'context': dict(self._context, create=False)
+            'domain': [('id', 'in', orders.ids)],
+            'context': dict(self._context, create=False),
         }
 
     def _check_promo_code(self, order, coupon_code):
@@ -40,7 +41,7 @@ class CouponProgram(models.Model):
             )}
         elif self.promo_code and self.promo_code == order.promo_code:
             message = {'error': _('The promo code is already applied on this order')}
-        elif not self.promo_code and self in order.no_code_promo_program_ids:
+        elif self in order.no_code_promo_program_ids:
             message = {'error': _('The promotional offer is already applied on this order')}
         elif not self.active:
             message = {'error': _('Promo code is invalid')}

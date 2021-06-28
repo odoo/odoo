@@ -2133,7 +2133,7 @@ msgstr "Icona"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare una eccezione attività."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction
@@ -3616,7 +3616,7 @@ msgstr "Ordine POS"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_count
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_count
 msgid "Pos Order Count"
-msgstr "Totale ordini POS"
+msgstr "Numero ordini POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
@@ -4516,6 +4516,14 @@ msgid "Small Shelf"
 msgstr "Mensola piccola"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"Some Cash Registers are already posted. Please reset them to new in order to close the session.\n"
+"Cash Registers: %r"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
@@ -5380,7 +5388,7 @@ msgstr "Tipo di carta utilizzata"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di eccezione attività sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0

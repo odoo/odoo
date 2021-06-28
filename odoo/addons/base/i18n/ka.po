@@ -3,9 +3,15 @@
 # 	* base
 # 
 # Translators:
-# Davit Matchakhelidze <david.machakhelidze@gmail.com>, 2021
 # Mari Khomeriki <mari.khomeriki@maxinai.com>, 2021
 # G S <giorgi.shvelidze@maxinai.com>, 2021
+# Davit Matchakhelidze <david.machakhelidze@gmail.com>, 2021
+# Saba Khmaladze <skhmaladze@uglt.org>, 2021
+# Martin Trigaux, 2021
+# Temur, 2021
+# Giorgi Melitauri <gmelitauri@live.com>, 2021
+# Gizo Kobakhidze <040168@gmail.com>, 2021
+# Gvantsa Gvinianidze <gvantsa@live.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: G S <giorgi.shvelidze@maxinai.com>, 2021\n"
+"Last-Translator: Gvantsa Gvinianidze <gvantsa@live.com>, 2021\n"
 "Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -277,6 +283,9 @@ msgid ""
 "\n"
 "This addon is already installed on your system"
 msgstr ""
+"\n"
+"\n"
+"ეს დამატებითი პროგრამა უკვე დაყენებულია თქვენს სისტემაზე"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sale
@@ -5171,6 +5180,13 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"ეს მოდული გეხმარებათ მოახდინოთ სისტემის კონფიგურაცია ახალი მონაცემთა ბაზის დაყენების შემდგომ.\n"
+"================================================================================\n"
+"\n"
+"წარმოგიდგენთ მოდულების და ფუნქციონალის სიას რომლიდანაც შეგიძლიათ მოახდინოთ დაყენება.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_test
@@ -5804,7 +5820,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%A - Full weekday name."
-msgstr ""
+msgstr "%A - კვირის დღის სრული სახელი."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -5839,12 +5855,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%a - Abbreviated weekday name."
-msgstr ""
+msgstr "%a - კვირის დღის შემოკლებული სახელი."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%b - Abbreviated month name."
-msgstr ""
+msgstr "%b - შემოკლებული თვის სახელი."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -5874,7 +5890,7 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (ასლი)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -6216,12 +6232,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
 
@@ -6572,6 +6588,12 @@ msgid ""
 "to see. Whether they can have a read, write, create and delete access right "
 "can be managed from here."
 msgstr ""
+"ჯგუფი წარმოადგენს ფუნქციონალური არეალების ერთობლიობას რომელიც მინიჭებულ "
+"იქნება მოხმარებელზე რათა მისცეს მას წვდომის საშუალება შესაბამის მოდულზე ან "
+"ამოცანებზე სისტემაში. თქვენ შეგიძლიათ შექმნათ განსხვავებული ჯგუფები ან "
+"შეცვალოთ უკვე არსებულები რათა შეიმუშაოთ განსხვავებული მენიუს ვიუ რომელსაც "
+"მომხმარებელი დაინახავს მიუხედავად იმისა ექნება მომხმარებელს წაკითხვის, "
+"ჩაწერის, შექმნის თუ წაშლის უფლება - მათი მართვა შესაძლებელია აქედან."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_homepage
@@ -6752,7 +6774,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__user_ids
 msgid "Accepted Users"
-msgstr ""
+msgstr "მიღებული მომხმარებლები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__access_ids
@@ -6763,7 +6785,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__model_access
 msgid "Access Controls"
-msgstr ""
+msgstr "დაშვების კონტროლები"
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
@@ -6794,12 +6816,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
 #, python-format
 msgid "Access Rights"
-msgstr ""
+msgstr "წვდომის უფლებები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__access_token
 msgid "Access Token"
-msgstr ""
+msgstr "წვდომის ნებართვა"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr
@@ -6845,7 +6867,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_account_charts
 msgid "Account Charts"
-msgstr ""
+msgstr "ანგარიშთა გეგმები"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_us_consolidation_demo
@@ -6860,12 +6882,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
 msgid "Account Holder"
-msgstr ""
+msgstr "ანგარიშის მფლობელი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "ანგარიშის მფლობელის სახელი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -6880,7 +6902,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_number
 msgid "Account Number"
-msgstr ""
+msgstr "ანგარიშის ნომერი"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_bank_unique_number
@@ -6895,7 +6917,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr ""
+msgstr "ანგარიში TaxCloud"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_account_taxcloud
@@ -6933,6 +6955,8 @@ msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
 msgstr ""
+"ანგარიშის მფლობელის სახელი, იმშემტხვევაში, თუ ის განსხვავებულია ამგარიშის "
+"მფლობელისგან"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -6940,7 +6964,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_account_accountant
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Accounting"
-msgstr ""
+msgstr "ანგარიშგება"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_account
@@ -7005,7 +7029,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.action_view_tree
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_search
 msgid "Action"
-msgstr ""
+msgstr "მოქმედება"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -7025,7 +7049,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__help
 #: model:ir.model.fields,field_description:base.field_ir_cron__help
 msgid "Action Description"
-msgstr ""
+msgstr "ქმედების განმარტება"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__name
@@ -7034,18 +7058,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__name
 #: model:ir.model.fields,field_description:base.field_ir_cron__name
 msgid "Action Name"
-msgstr ""
+msgstr "ქმედების სახელი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__target
 msgid "Action Target"
-msgstr ""
+msgstr "ქმედების მიზანი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__state
 #: model:ir.model.fields,field_description:base.field_ir_cron__state
 msgid "Action To Do"
-msgstr ""
+msgstr "გასაკეთებელია"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__type
@@ -7058,13 +7082,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_cron__type
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Action Type"
-msgstr ""
+msgstr "ქმედების ტიპი"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_url
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__url
 msgid "Action URL"
-msgstr ""
+msgstr "ქმედების URL"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__usage
@@ -7093,7 +7117,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.next_id_6
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Actions"
-msgstr ""
+msgstr "მოქმედებები"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
@@ -7126,7 +7150,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Active"
-msgstr ""
+msgstr "აქტიური"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__active_lang_count
@@ -7143,7 +7167,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
 msgid "Add"
-msgstr ""
+msgstr "დამატება"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
@@ -7306,7 +7330,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #, python-format
 msgid "Address"
-msgstr ""
+msgstr "მისამართი"
 
 #. module: base
 #: model:ir.model,name:base.model_format_address_mixin
@@ -7317,7 +7341,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__type
 #: model:ir.model.fields,field_description:base.field_res_users__type
 msgid "Address Type"
-msgstr ""
+msgstr "მისამართის ტიპი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
@@ -7421,7 +7445,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_administration_administration
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Administration"
-msgstr ""
+msgstr "ადმინისტრირება"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_N
@@ -7532,7 +7556,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_currency__position__after
 msgid "After Amount"
-msgstr ""
+msgstr "შემდგომი მოცულობა"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_services_helpdesk
@@ -7547,12 +7571,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.al
 msgid "Albania"
-msgstr ""
+msgstr "ალბანეთი"
 
 #. module: base
 #: model:res.country,name:base.dz
 msgid "Algeria"
-msgstr ""
+msgstr "ალჟირი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dz
@@ -7568,7 +7592,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
 msgid "All"
-msgstr ""
+msgstr "ყველა"
 
 #. module: base
 #: code:addons/base/wizard/base_partner_merge.py:0
@@ -7728,7 +7752,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.as
 msgid "American Samoa"
-msgstr ""
+msgstr "ამერიკული სამოა"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
@@ -7760,6 +7784,9 @@ msgid ""
 " its dependencies are satisfied. If the module has no dependency, it is "
 "always installed."
 msgstr ""
+"ავტომატურად დაყენებადი მოდულის ავტომატური დაყენება ხორციელდება მაშინ როდესაც"
+" ყველა მოდული რომელზეც იგი დამოკიდებულია უკვე დაყენებულია. ხოლო თუ მოდულს არ"
+" გააჩნია დამოკიდებულება, იგი ყოველთვის დაყენებულია."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -7770,7 +7797,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "ანალიტიკური ბუღალტერია"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_enterprise
@@ -7791,22 +7818,22 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ao
 msgid "Angola"
-msgstr ""
+msgstr "ანგოლა"
 
 #. module: base
 #: model:res.country,name:base.ai
 msgid "Anguilla"
-msgstr ""
+msgstr "ანგუილა"
 
 #. module: base
 #: model:res.country,name:base.aq
 msgid "Antarctica"
-msgstr ""
+msgstr "ანტარქტიკა"
 
 #. module: base
 #: model:res.country,name:base.ag
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "ანტიგუა და ბარბუდა"
 
 #. module: base
 #: model:ir.actions.client,name:base.modules_act_cl
@@ -7826,18 +7853,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module__application
 #: model:ir.model.fields,field_description:base.field_res_groups__category_id
 msgid "Application"
-msgstr ""
+msgstr "პროგრამა"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
 msgid "Application Terms"
-msgstr ""
+msgstr "მოდულის პირობები"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_onboarding_company_form
 #: model_terms:ir.ui.view,arch_db:base.res_config_view_base
 msgid "Apply"
-msgstr ""
+msgstr "გააქტიურება"
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -7915,7 +7942,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.module_tree
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 msgid "Apps"
-msgstr ""
+msgstr "მოდულები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__modules
@@ -7950,7 +7977,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
 msgid "Architecture"
-msgstr ""
+msgstr "არქიტექტურა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__arch_diff
@@ -7974,7 +8001,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_sequence_search
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Archived"
-msgstr ""
+msgstr "დაარქივებული"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -7990,7 +8017,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ar
 msgid "Argentina"
-msgstr ""
+msgstr "არგენტინა"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar
@@ -8015,12 +8042,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.am
 msgid "Armenia"
-msgstr ""
+msgstr "სასომხეთი"
 
 #. module: base
 #: model:res.country,name:base.aw
 msgid "Aruba"
-msgstr ""
+msgstr "არუბა"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
@@ -8040,7 +8067,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset
 msgid "Assets Management"
-msgstr ""
+msgstr "აქტივების მართვა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__report_ids
@@ -8050,7 +8077,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_association
 msgid "Associations Management"
-msgstr ""
+msgstr "ასოციაციების მართვა"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -8066,13 +8093,13 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "Attached To"
-msgstr ""
+msgstr "მიმაგრებულია"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attachment"
-msgstr ""
+msgstr "დანართი"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
@@ -8081,7 +8108,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_tree
 msgid "Attachments"
-msgstr ""
+msgstr "თანდართული ფაილები"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_attachment_indexation
@@ -8092,7 +8119,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_human_resources_attendances
 #: model:ir.module.module,shortdesc:base.module_hr_attendance
 msgid "Attendances"
-msgstr ""
+msgstr "დასწრებები"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance_mobile
@@ -8118,7 +8145,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.au
 msgid "Australia"
-msgstr ""
+msgstr "ავსტრალია"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
@@ -8133,12 +8160,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.at
 msgid "Austria"
-msgstr ""
+msgstr "ავსტრია"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_at
 msgid "Austria - Accounting"
-msgstr ""
+msgstr "ავსტრია - ბუღალტერია"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_at_reports
@@ -8163,13 +8190,13 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_ldap
 msgid "Authentication via LDAP"
-msgstr ""
+msgstr "აუთენთიფიკაცია LDAP-ის მეშვეობით"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__author
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 msgid "Author"
-msgstr ""
+msgstr "ავტორი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -8195,7 +8222,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automated Action Rules"
-msgstr ""
+msgstr "ავტომატიზირებული ქმედებების წესები"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation_hr_contract
@@ -8256,7 +8283,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.az
 msgid "Azerbaijan"
-msgstr ""
+msgstr "აზერბაიჯანი"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_12
@@ -8339,24 +8366,24 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.bs
 msgid "Bahamas"
-msgstr ""
+msgstr "ბაჰამები"
 
 #. module: base
 #: model:res.country,name:base.bh
 msgid "Bahrain"
-msgstr ""
+msgstr "ბაჰრეინი"
 
 #. module: base
 #: model:res.country,name:base.bd
 msgid "Bangladesh"
-msgstr ""
+msgstr "ბანგლადეში"
 
 #. module: base
 #: model:ir.model,name:base.model_res_bank
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_id
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Bank"
-msgstr ""
+msgstr "ბანკი"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
@@ -8366,7 +8393,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_search
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_tree
 msgid "Bank Accounts"
-msgstr ""
+msgstr "საბანკო ანგარიშები"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
@@ -8377,17 +8404,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_bank__bic
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_bic
 msgid "Bank Identifier Code"
-msgstr ""
+msgstr "ბანკის საიდენტიფიკაციო კოდი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_search
 msgid "Bank Name"
-msgstr ""
+msgstr "ბანკის სახელი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
 msgid "Bank account"
-msgstr ""
+msgstr "საბანკო ანგარიში"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank__acc_type
@@ -8406,12 +8433,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users__bank_ids
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_tree
 msgid "Banks"
-msgstr ""
+msgstr "ბანკები"
 
 #. module: base
 #: model:res.country,name:base.bb
 msgid "Barbados"
-msgstr ""
+msgstr "ბარბადოსი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__barcode
@@ -8419,7 +8446,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_barcodes
 #: model:ir.module.module,shortdesc:base.module_stock_barcode
 msgid "Barcode"
-msgstr ""
+msgstr "ბარკოდი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_control
@@ -8464,7 +8491,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
 msgid "Base"
-msgstr ""
+msgstr "ძირითადი"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_base_automation
@@ -8474,7 +8501,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__state__base
 msgid "Base Field"
-msgstr ""
+msgstr "ძირითადი ველი"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -8500,7 +8527,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model__state__base
 msgid "Base Object"
-msgstr ""
+msgstr "ძირითადი ობიექტი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -8592,7 +8619,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.by
 msgid "Belarus"
-msgstr ""
+msgstr "ბელორუსია"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
@@ -8627,12 +8654,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.be
 msgid "Belgium"
-msgstr ""
+msgstr "ბელგია"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be
 msgid "Belgium - Accounting"
-msgstr ""
+msgstr "ბელგია - ბუღალტერია"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports
@@ -8657,7 +8684,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
 msgid "Belgium - Payroll"
-msgstr ""
+msgstr "ბელგია - სახელფასო"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_fleet
@@ -8672,27 +8699,27 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_invoice_bba
 msgid "Belgium - Structured Communication"
-msgstr ""
+msgstr "ბელგია - სტრუქტურირებული კომუნიკაცია"
 
 #. module: base
 #: model:res.country,name:base.bz
 msgid "Belize"
-msgstr ""
+msgstr "ბელიზი"
 
 #. module: base
 #: model:res.country,name:base.bj
 msgid "Benin"
-msgstr ""
+msgstr "ბენინი"
 
 #. module: base
 #: model:res.country,name:base.bm
 msgid "Bermuda"
-msgstr ""
+msgstr "ბერმუდა"
 
 #. module: base
 #: model:res.country,name:base.bt
 msgid "Bhutan"
-msgstr ""
+msgstr "ბუტანი"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_delivery_ups
@@ -8702,7 +8729,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__binary
 msgid "Binary"
-msgstr ""
+msgstr "ორობითი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__binding_model_id
@@ -8748,7 +8775,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.bo
 msgid "Bolivia"
-msgstr ""
+msgstr "ბოლივია"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_bo
@@ -8758,12 +8785,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.bq
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr " ბონეირი, სინტ-ესტატიუსი და საბა"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__boolean
 msgid "Boolean"
-msgstr ""
+msgstr "ლოგიკური მნიშნველობა"
 
 #. module: base
 #: model:res.country,name:base.ba
@@ -8773,7 +8800,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.bw
 msgid "Botswana"
-msgstr ""
+msgstr "ბოცვანა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__margin_bottom
@@ -8783,7 +8810,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.bv
 msgid "Bouvet Island"
-msgstr ""
+msgstr "ბუვეს კუნძული"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_15
@@ -8796,12 +8823,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
-msgstr ""
+msgstr "ბრაზილია"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br
 msgid "Brazilian - Accounting"
-msgstr ""
+msgstr "ბრაზილიური ბუღალტერია"
 
 #. module: base
 #: model:ir.module.module,description:base.module_iap_crm
@@ -8874,12 +8901,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.io
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "ბრიტანეთის ინდოეთის ოკეანის ტერიტორია"
 
 #. module: base
 #: model:res.country,name:base.bn
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "ბრუნეი დარესალამი"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_buckaroo
@@ -8915,17 +8942,17 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.bg
 msgid "Bulgaria"
-msgstr ""
+msgstr "ბულგარეთი"
 
 #. module: base
 #: model:res.country,name:base.bf
 msgid "Burkina Faso"
-msgstr ""
+msgstr "ბურკინა ფასო"
 
 #. module: base
 #: model:res.country,name:base.bi
 msgid "Burundi"
-msgstr ""
+msgstr "ბურუნდი"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -8988,7 +9015,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__format__csv
 msgid "CSV File"
-msgstr ""
+msgstr "CSV ფაილი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -9008,7 +9035,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_productivity_calendar
 #: model:ir.module.module,shortdesc:base.module_calendar
 msgid "Calendar"
-msgstr ""
+msgstr "კალენდარი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_calendar_sms
@@ -9023,7 +9050,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cm
 msgid "Cameroon"
-msgstr ""
+msgstr "კამერუნი"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -9036,7 +9063,7 @@ msgstr ""
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
-msgstr ""
+msgstr "ვერ ვაახლებთ მოდულს '%s', რადგანაც არ არის დაყენებული."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -9053,7 +9080,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ca
 msgid "Canada"
-msgstr ""
+msgstr "კანადა"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ca
@@ -9084,24 +9111,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 #: model_terms:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Cancel"
-msgstr ""
+msgstr "გაუქმება"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Cancel Install"
-msgstr ""
+msgstr "დაყენების გაუქმება"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Cancel Uninstall"
-msgstr ""
+msgstr "გაუქმების გაწყვეტა"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Cancel Upgrade"
-msgstr ""
+msgstr "განახლების შეწყვეტა"
 
 #. module: base
 #: code:addons/models.py:0
@@ -9144,12 +9171,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cv
 msgid "Cape Verde"
-msgstr ""
+msgstr "მწვანე კონცხი"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__cascade
 msgid "Cascade"
-msgstr ""
+msgstr "მიყოლებით დალაგება"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports_cash_basis
@@ -9159,23 +9186,23 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 msgid "Categories"
-msgstr ""
+msgstr "კატეგორიები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__category_id
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 msgid "Category"
-msgstr ""
+msgstr "კატეგორია"
 
 #. module: base
 #: model:res.country,name:base.ky
 msgid "Cayman Islands"
-msgstr ""
+msgstr "კაიმანის კუნძულები"
 
 #. module: base
 #: model:res.country,name:base.cf
 msgid "Central African Republic"
-msgstr ""
+msgstr "ცენტრალური აფრიკის რესპუბლიკა"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr
@@ -9190,18 +9217,18 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.td
 msgid "Chad"
-msgstr ""
+msgstr "ჩადი"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users_my
 msgid "Change My Preferences"
-msgstr ""
+msgstr "ჩემი პარამეტრების ცვლილება"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.change_password_wizard_action
 #: model_terms:ir.ui.view,arch_db:base.change_password_wizard_view
 msgid "Change Password"
-msgstr ""
+msgstr "პაროლის შეცვლა"
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_wizard
@@ -9232,7 +9259,7 @@ msgstr ""
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Changing the model of a field is forbidden!"
-msgstr ""
+msgstr "ველის მოდელის შეცვლა აკრძალულია!"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -9245,7 +9272,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__char
 msgid "Char"
-msgstr ""
+msgstr "ჩარი"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_im_livechat
@@ -9293,7 +9320,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_res_partner__employee
 #: model:ir.model.fields,help:base.field_res_users__employee
 msgid "Check this box if this contact is an Employee."
-msgstr ""
+msgstr "მონიშნეთ თუ საკონტაქტო პირი თანამშრომელია"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__checksum
@@ -9309,12 +9336,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__child_ids
 msgid "Child Applications"
-msgstr ""
+msgstr "შვილობილი პროგრამები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__child_ids
 msgid "Child Companies"
-msgstr ""
+msgstr "შვილობილი კომპანიები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__field_parent
@@ -9324,7 +9351,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__child_id
 msgid "Child IDs"
-msgstr ""
+msgstr "შვილობილი იდენტიფიკატორები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__child_ids
@@ -9342,7 +9369,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cl
 msgid "Chile"
-msgstr ""
+msgstr "ჩილე"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl
@@ -9362,7 +9389,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cn
 msgid "China"
-msgstr ""
+msgstr "ჩინეთი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn
@@ -9393,7 +9420,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cx
 msgid "Christmas Island"
-msgstr ""
+msgstr "შობის კუნძული"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__city
@@ -9406,7 +9433,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "City"
-msgstr ""
+msgstr "ქალაქი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_city
@@ -9416,17 +9443,17 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_logging__type__client
 msgid "Client"
-msgstr ""
+msgstr "მომხმარებელი"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_client
 msgid "Client Action"
-msgstr ""
+msgstr "კლიენტის ქმედება"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__tag
 msgid "Client action tag"
-msgstr ""
+msgstr "კლიენტის ქმედების თეგი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -9435,18 +9462,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Close"
-msgstr ""
+msgstr "დახურვა"
 
 #. module: base
 #: model:res.country,name:base.cc
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "ქოქოსის (ქილინგ) კუნძულები"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_translation__type__code
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
 msgid "Code"
-msgstr ""
+msgstr "კოდი"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__compute
@@ -9468,7 +9495,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad
 msgid "Collaborative Pads"
-msgstr ""
+msgstr "კოლაბორაციული პადები"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa_direct_debit
@@ -9486,7 +9513,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.co
 msgid "Colombia"
-msgstr ""
+msgstr "კოლუმბია"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co
@@ -9520,7 +9547,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_category__color
 #: model:ir.model.fields,field_description:base.field_res_users__color
 msgid "Color Index"
-msgstr ""
+msgstr "ფერის ინდექსი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__column1
@@ -9569,11 +9596,13 @@ msgid ""
 "Comma-separated list of allowed view modes, such as 'form', 'tree', "
 "'calendar', etc. (Default: tree,form)"
 msgstr ""
+"დასაშვები რეჟიმების მძიმეებით დაშორებული სია, როგორიც არის 'ფორმა', "
+"'იერარქია', 'კალენდარი', და ა.შ. (გაჩუმებით: იერარქია,ფორმა)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__comment
 msgid "Comment"
-msgstr ""
+msgstr "კომენტარი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_form
@@ -9589,7 +9618,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.km
 msgid "Comoros"
-msgstr ""
+msgstr "კომორის კუნძულები"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_company_form
@@ -9599,7 +9628,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_company_tree
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Companies"
-msgstr ""
+msgstr "კომპანიები"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -9626,7 +9655,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
 #, python-format
 msgid "Company"
-msgstr ""
+msgstr "კომპანია"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
@@ -9648,7 +9677,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__company_name
 #: model:ir.model.fields,field_description:base.field_res_users__company_name
 msgid "Company Name"
-msgstr ""
+msgstr "კომპანიის სახელი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__commercial_company_name
@@ -9670,7 +9699,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_registry
 msgid "Company Registry"
-msgstr ""
+msgstr "კომპანიის რეესტრი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_header
@@ -9725,12 +9754,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__complete_name
 msgid "Complete Name"
-msgstr ""
+msgstr "სრული სახელი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
-msgstr ""
+msgstr "გამოთვალე"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_score
@@ -9764,7 +9793,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_default__condition
 msgid "Condition"
-msgstr ""
+msgstr "პირობა"
 
 #. module: base
 #: model:ir.model,name:base.model_res_config
@@ -9785,7 +9814,7 @@ msgstr "კონფიგურაციის პარამეტრებ�
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Config Wizard Steps"
-msgstr ""
+msgstr "კონფიგურაციის ვიზარდის საფეხურები"
 
 #. module: base
 #: model:ir.actions.server,name:base.action_run_ir_action_todo
@@ -9796,7 +9825,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_reporting_config
 #: model_terms:ir.ui.view,arch_db:base.res_config_view_base
 msgid "Configuration"
-msgstr ""
+msgstr "კონფიგურაცია"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_installer
@@ -9834,17 +9863,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "Confirm"
-msgstr ""
+msgstr "დამოწმება"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 msgid "Confirm Password"
-msgstr ""
+msgstr "დაამოწმეთ პაროლი"
 
 #. module: base
 #: model:res.country,name:base.cg
 msgid "Congo"
-msgstr ""
+msgstr "კონგო"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_iot
@@ -9859,12 +9888,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "Connection Information"
-msgstr ""
+msgstr "ინფორმაცია შეერთების შესახებ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_encryption
 msgid "Connection Security"
-msgstr ""
+msgstr "კავშირის უსაფრთხოება"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
@@ -9888,7 +9917,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__name
 msgid "Constraint"
-msgstr ""
+msgstr "შეზღუდვა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__type
@@ -9934,7 +9963,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "Contact"
-msgstr ""
+msgstr "კონტაქტი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -9970,7 +9999,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
 msgid "Contact Titles"
-msgstr ""
+msgstr "კონტაქტის დასახელება"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -9988,7 +10017,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_contacts
 #: model_terms:ir.ui.view,arch_db:base.view_partner_tree
 msgid "Contacts"
-msgstr ""
+msgstr "კონტაქტები"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -10019,7 +10048,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__context
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__context
 msgid "Context Value"
-msgstr ""
+msgstr "კონტექსტური მნიშვნელობა"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__context
@@ -10027,6 +10056,8 @@ msgstr ""
 msgid ""
 "Context dictionary as Python expression, empty by default (Default: {})"
 msgstr ""
+"კონტექსტური ლექსიკონი როგორც Python-ის ექსპრესია, რომელიც ცარიელია "
+"სტანდარტულად (Default: {})"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_sign
@@ -10036,12 +10067,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_contracts
 msgid "Contracts"
-msgstr ""
+msgstr "კონტრაქტები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__contributors
 msgid "Contributors"
-msgstr ""
+msgstr "კონტრიბუტორები"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_control
@@ -10056,7 +10087,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ck
 msgid "Cook Islands"
-msgstr ""
+msgstr "კუკის კუნძულები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__copied
@@ -10066,12 +10097,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cr
 msgid "Costa Rica"
-msgstr ""
+msgstr "კოსტა-რიკა"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cr
 msgid "Costa Rica - Accounting"
-msgstr ""
+msgstr "კოსტარიკა - ბუღალტერია"
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -10088,7 +10119,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_country
 #: model:ir.model.fields,field_description:base.field_res_country_group__country_ids
 msgid "Countries"
-msgstr ""
+msgstr "ქვეყნები"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country
@@ -10106,7 +10137,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Country"
-msgstr ""
+msgstr "ქვეყანა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__phone_code
@@ -10116,7 +10147,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__code
 msgid "Country Code"
-msgstr ""
+msgstr "ქვეყნის კოდი"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_group
@@ -10124,7 +10155,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_country_group_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_group_tree
 msgid "Country Group"
-msgstr ""
+msgstr "ქვეყნების ჯგუფი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__country_group_ids
@@ -10134,12 +10165,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
-msgstr ""
+msgstr "ქვეყნის სახელი"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
 msgid "Country state"
-msgstr ""
+msgstr "ქვეყნის შტატი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_coupon
@@ -10159,7 +10190,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_create
 msgid "Create Access"
-msgstr ""
+msgstr "წვდომის შექმნა"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
@@ -10176,7 +10207,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__create_date
 #: model:ir.model.fields,field_description:base.field_res_users__create_date
 msgid "Create Date"
-msgstr ""
+msgstr "შექმნის თარიღი"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_jitsi
@@ -10188,7 +10219,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.act_menu_create
 #: model_terms:ir.ui.view,arch_db:base.view_model_menu_create
 msgid "Create Menu"
-msgstr ""
+msgstr "მენიუს შექმნა"
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
@@ -10209,12 +10240,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_menu_create
 msgid "Create _Menu"
-msgstr ""
+msgstr "შექმნა_მენიუ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Create a Menu"
-msgstr ""
+msgstr "მენიუს შექმნა"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_partner_bank_account_form
@@ -10282,6 +10313,11 @@ msgid ""
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
 msgstr ""
+"შექმენით და მართეთ მომხმარებლები რომლებიც დაუკავშირდებიან სისტემას. "
+"შესაძლებელია მომხმარებლების დეაქტივაცია პერიოდისთვის როდესაც მათ არ ჭირდებათ"
+" (ან არ შეიძლება) სისტემასთან დაკავშირება. თქვენ შეძლებთ მათთვის ჯგუფების "
+"მინიჭებას რათა განუსაზღვროთ წვდომის შესაბამისი უფლებები სხვადასხვა მოდულების"
+" გამოსაყენებლად."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_approvals
@@ -10316,12 +10352,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Created Menus"
-msgstr ""
+msgstr "შექმნილი მენიუები"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Created Views"
-msgstr ""
+msgstr "შექმნილი ვიუები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__create_uid
@@ -10403,7 +10439,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__create_uid
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Created by"
-msgstr ""
+msgstr "შემქმნელი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__create_date
@@ -10481,19 +10517,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__create_date
 msgid "Created on"
-msgstr ""
+msgstr "შექმნის თარიღი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "Creation"
-msgstr ""
+msgstr "შექმნა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys__create_date
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Creation Date"
-msgstr ""
+msgstr "შექმნის თარიღი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -10504,7 +10540,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__credit_limit
 #: model:ir.model.fields,field_description:base.field_res_users__credit_limit
 msgid "Credit Limit"
-msgstr ""
+msgstr "საკრედიტო ლიმიტი"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_mercury
@@ -10514,7 +10550,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.hr
 msgid "Croatia"
-msgstr ""
+msgstr "ხორვატია"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr
@@ -10524,12 +10560,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cu
 msgid "Cuba"
-msgstr ""
+msgstr "კუბა"
 
 #. module: base
 #: model:res.country,name:base.cw
 msgid "Curaçao"
-msgstr ""
+msgstr "კიურასაო"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_currency_all_form
@@ -10537,7 +10573,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 #: model_terms:ir.ui.view,arch_db:base.view_currency_tree
 msgid "Currencies"
-msgstr ""
+msgstr "ვალუტები"
 
 #. module: base
 #: model:ir.model,name:base.model_res_currency
@@ -10549,18 +10585,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 msgid "Currency"
-msgstr ""
+msgstr "ვალუტა"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__name
 msgid "Currency Code (ISO 4217)"
-msgstr ""
+msgstr "ვალუტის კოდი (ISO 4217)"
 
 #. module: base
 #: model:ir.model,name:base.model_res_currency_rate
 #: model_terms:ir.ui.view,arch_db:base.view_currency_rate_form
 msgid "Currency Rate"
-msgstr ""
+msgstr "ვალუტის კურსი"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_view_currency_rates
@@ -10592,7 +10628,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__symbol
 msgid "Currency sign, to be used when printing amounts."
-msgstr ""
+msgstr "ვალუტის ნიშანი, მოცულობების ბეჭდვისას გამოსაყენებლად."
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -10603,12 +10639,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__current_line_id
 msgid "Current Line"
-msgstr ""
+msgstr "მიმდინარე ხაზი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rate
 msgid "Current Rate"
-msgstr ""
+msgstr "მიმდინარე კურსი"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window__target__current
@@ -10621,22 +10657,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
 msgid "Custom"
-msgstr ""
+msgstr "განსხვავებული"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__state__manual
 msgid "Custom Field"
-msgstr ""
+msgstr "განსხვავებული ველი"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model__state__manual
 msgid "Custom Object"
-msgstr ""
+msgstr "სპეციფიური ობიექტი"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_administration_shortcut
 msgid "Custom Shortcuts"
-msgstr ""
+msgstr "განსხვავებული მალსახმობი"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
@@ -10647,7 +10683,7 @@ msgstr ""
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
-msgstr ""
+msgstr "სპეციფიური ველების დასახელებები უნდა იწყებოდეს 'x_'-ით !"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__name_position
@@ -10663,7 +10699,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_rating
 msgid "Customer Rating"
-msgstr ""
+msgstr "კლიენტის რეიტინგი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_customer
@@ -10674,7 +10710,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
 #: model:ir.actions.act_window,name:base.action_partner_form
 msgid "Customers"
-msgstr ""
+msgstr "კლიენტები"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_customizations
@@ -10693,7 +10729,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_tree
 msgid "Customized Views"
-msgstr ""
+msgstr "განსხვავებული ვიუები"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ui_view_custom
@@ -10705,12 +10741,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cy
 msgid "Cyprus"
-msgstr ""
+msgstr "კვიპროსი"
 
 #. module: base
 #: model:res.country,name:base.cz
 msgid "Czech Republic"
-msgstr ""
+msgstr "ჩეხეთის რესპუბლიკა"
 
 #. module: base
 #: model:res.country,name:base.ci
@@ -10748,7 +10784,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_board_root
 #: model:ir.ui.menu,name:base.menu_reporting_dashboard
 msgid "Dashboards"
-msgstr ""
+msgstr "დაფები"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_data_cleaning
@@ -10774,7 +10810,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
 msgid "Database"
-msgstr ""
+msgstr "მონაცემთა ბაზა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__db_datas
@@ -10791,12 +10827,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__dbname
 msgid "Database Name"
-msgstr ""
+msgstr "ახალი ბაზის სახელი"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_9
 msgid "Database Structure"
-msgstr ""
+msgstr "მონაცემთა ბაზის სტრუქტურა"
 
 #. module: base
 #: code:addons/models.py:0
@@ -10816,12 +10852,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_currency_rate_search
 #, python-format
 msgid "Date"
-msgstr ""
+msgstr "თარიღ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__date_format
 msgid "Date Format"
-msgstr ""
+msgstr "თარიღის ფორმატი"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -10866,12 +10902,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__datetime
 msgid "DateTime"
-msgstr ""
+msgstr "თარიღი და დრო"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__days
 msgid "Days"
-msgstr ""
+msgstr "დღე"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_debit_note
@@ -10882,7 +10918,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
 msgid "Debugging"
-msgstr ""
+msgstr "დებაგი"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_decimal_precision_form
@@ -10905,7 +10941,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__decimal_point
 msgid "Decimal Separator"
-msgstr ""
+msgstr "ათობითი გამყოფი"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_2
@@ -10947,12 +10983,12 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_default
 msgid "Default Values"
-msgstr ""
+msgstr "საწყისი მნიშვნელობები"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__limit
 msgid "Default limit for the list view"
-msgstr ""
+msgstr "სტანდარტული ლიმიტი სიის ხედისთვის"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__default
@@ -10972,7 +11008,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Defined Reports"
-msgstr ""
+msgstr "განსაზღვრული რეპორტები"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_map
@@ -10987,7 +11023,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_unlink
 msgid "Delete Access"
-msgstr ""
+msgstr "დაშვების გაუქმება"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
@@ -11013,7 +11049,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery
 msgid "Delivery Costs"
-msgstr ""
+msgstr "მიწოდების ხარჯი"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo
@@ -11023,7 +11059,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__demo
 msgid "Demo Data"
-msgstr ""
+msgstr "სადემონსტრაციო მონაცემები"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure_wizard
@@ -11055,7 +11091,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.dk
 msgid "Denmark"
-msgstr ""
+msgstr "დანია"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk
@@ -11072,7 +11108,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module__dependencies_id
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Dependencies"
-msgstr ""
+msgstr "დამოკიდებულებანი"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__depends
@@ -11085,7 +11121,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__depend_id
 msgid "Dependency"
-msgstr ""
+msgstr "დამოკიდებულობა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__description
@@ -11096,7 +11132,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__name
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "Description"
-msgstr ""
+msgstr "აღწერა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__description_html
@@ -11189,7 +11225,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__direction
 msgid "Direction"
-msgstr ""
+msgstr "მიმართულება"
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -11213,7 +11249,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
-msgstr ""
+msgstr "გაუქმება"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
@@ -11234,7 +11270,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "Display"
-msgstr ""
+msgstr "ჩვენება"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field__unknown__display_name
@@ -11558,7 +11594,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__domain
 #: model:ir.model.fields,field_description:base.field_ir_rule__domain_force
 msgid "Domain"
-msgstr ""
+msgstr "დომენი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__domain
@@ -11581,7 +11617,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.do
 msgid "Dominican Republic"
-msgstr ""
+msgstr "დომინიკელთა რესპუბლიკა"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_do
@@ -11598,7 +11634,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_todo__state__done
 #: model:ir.model.fields.selection,name:base.selection__res_company__base_onboarding_company_state__done
 msgid "Done"
-msgstr ""
+msgstr "დასრულებულია"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
@@ -11773,7 +11809,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sv
 msgid "El Salvador"
-msgstr ""
+msgstr "სალვადორი"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_reports
@@ -11841,13 +11877,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.contact
 #, python-format
 msgid "Email"
-msgstr ""
+msgstr "ელ.ფოსტა"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "Email Address"
-msgstr ""
+msgstr "ელ.ფოსტის მისამართი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail
@@ -11869,7 +11905,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__employee
 #: model:ir.model.fields,field_description:base.field_res_users__employee
 msgid "Employee"
-msgstr ""
+msgstr "თანამშრომელი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract
@@ -11896,7 +11932,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_hr
 #: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employees"
-msgstr ""
+msgstr "თანამშრომლები"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_gantt
@@ -12017,7 +12053,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure__error
 msgid "Error"
-msgstr ""
+msgstr "შეცდომა"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
@@ -12163,7 +12199,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "Examples"
-msgstr ""
+msgstr "მაგალითები"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -12199,7 +12235,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__multi
 msgid "Execute several actions"
-msgstr ""
+msgstr "განახორციელეთ რამოდენიმე მოქმედება"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
@@ -12244,7 +12280,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_exports_line__export_id
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Export"
-msgstr ""
+msgstr "ექსპორტი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -12333,7 +12369,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__xml_id
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "External ID"
-msgstr ""
+msgstr "გარე იდენტიფიკატორი"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_data_name_nospaces
@@ -12504,7 +12540,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_selection_search
 msgid "Field"
-msgstr ""
+msgstr "ველი"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -12577,7 +12613,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_exports_line__name
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__name
 msgid "Field Name"
-msgstr ""
+msgstr "ველის სახელი"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_field_service
@@ -12614,7 +12650,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__ttype
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Field Type"
-msgstr ""
+msgstr "ველის ტიპი"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -12644,7 +12680,7 @@ msgstr ""
 #: code:addons/model.py:0
 #, python-format
 msgid "Field:"
-msgstr ""
+msgstr "ველი:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -12658,7 +12694,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_tree
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Fields"
-msgstr ""
+msgstr "ველები"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_fields_converter
@@ -12693,7 +12729,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_base_language_import__data
 #: model:ir.model.fields.selection,name:base.selection__ir_attachment__type__binary
 msgid "File"
-msgstr ""
+msgstr "ფაილი"
 
 #. module: base
 #: code:addons/base/wizard/base_import_language.py:0
@@ -12759,7 +12795,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
 msgid "Filter"
-msgstr ""
+msgstr "ფილტრი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__name
@@ -12784,12 +12820,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_tree
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Filters"
-msgstr ""
+msgstr "ფილტრები"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filters created by myself"
-msgstr ""
+msgstr "ჩემს მიერ შექმნილი ფილტრები"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -12824,7 +12860,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_partner_merge_automatic_wizard__state__finished
 msgid "Finished"
-msgstr ""
+msgstr "დასრულებული"
 
 #. module: base
 #: model:res.country,name:base.fi
@@ -12908,7 +12944,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__float
 msgid "Float"
-msgstr ""
+msgstr "მცურავი"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_4
@@ -12980,7 +13016,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__form
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Form"
-msgstr ""
+msgstr "ფორმა"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -12998,7 +13034,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__email_formatted
 #: model:ir.model.fields,field_description:base.field_res_users__email_formatted
 msgid "Formatted Email"
-msgstr ""
+msgstr "დაფორმატებული ელ-ფოსტა"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -13084,12 +13120,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__5
 msgid "Friday"
-msgstr ""
+msgstr "პარასკევი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_from
 msgid "From"
-msgstr ""
+msgstr "გამგზავნი"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_management
@@ -13099,7 +13135,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Full Access"
-msgstr ""
+msgstr "სწრული წვდომა"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
@@ -13109,7 +13145,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__full_name
 msgid "Full Name"
-msgstr ""
+msgstr "სრული სახელი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__complete_name
@@ -13120,7 +13156,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window__target__fullscreen
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_client__target__fullscreen
 msgid "Full Screen"
-msgstr ""
+msgstr "ხედვა სრულ ეკრანზე"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_mrp_workorder_quality
@@ -13131,7 +13167,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__func
 msgid "Function"
-msgstr ""
+msgstr "ფუნქცია"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_G
@@ -13207,7 +13243,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__gantt
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__gantt
 msgid "Gantt"
-msgstr ""
+msgstr "განტი"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays_gantt
@@ -13240,7 +13276,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_config
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "General Settings"
-msgstr ""
+msgstr "ძირითადი პარამეტრები"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_iap_lead
@@ -13314,7 +13350,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ge
 msgid "Georgia"
-msgstr ""
+msgstr "საქართველო"
 
 #. module: base
 #: model:res.country,name:base.de
@@ -13388,7 +13424,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Global"
-msgstr ""
+msgstr "გლობალური"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -13454,7 +13490,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__graph
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__graph
 msgid "Graph"
-msgstr ""
+msgstr "გრაფიკი"
 
 #. module: base
 #: model:res.country,name:base.gr
@@ -13486,7 +13522,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Group"
-msgstr ""
+msgstr "ჯგუფი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
@@ -13506,7 +13542,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Group By"
-msgstr ""
+msgstr "დაჯგუფება"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__full_name
@@ -13551,7 +13587,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #, python-format
 msgid "Groups"
-msgstr ""
+msgstr "ჯგუფები"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -13581,12 +13617,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.gg
 msgid "Guernsey"
-msgstr ""
+msgstr "გერნზი"
 
 #. module: base
 #: model:res.country,name:base.gn
 msgid "Guinea"
-msgstr ""
+msgstr "გვინეა"
 
 #. module: base
 #: model:res.country,name:base.gw
@@ -13698,7 +13734,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Help"
-msgstr ""
+msgstr "დახმარება"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -13709,7 +13745,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_services_helpdesk
 #: model:ir.module.module,shortdesc:base.module_helpdesk
 msgid "Helpdesk"
-msgstr ""
+msgstr "მხარდაჭერა"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_account
@@ -13814,7 +13850,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_expenses
 msgid "Helps you manage your expenses."
-msgstr ""
+msgstr "გეხმარებათ ხარჯების უკეთ მართვაში."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_inventory_inventory
@@ -13908,7 +13944,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "History"
-msgstr ""
+msgstr "ისტორია"
 
 #. module: base
 #: model:res.country,name:base.va
@@ -13953,7 +13989,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__hours
 msgid "Hours"
-msgstr ""
+msgstr "საათი"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_T
@@ -13998,7 +14034,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_human_resources
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Human Resources"
-msgstr ""
+msgstr "ადამიანური რესურსები"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hu
@@ -14156,7 +14192,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__xml_id
 msgid "ID of the view defined in xml file"
-msgstr ""
+msgstr "xml ფაილში განსაზღვრული ხედის იდენტიფიკატორი"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__barcode
@@ -14208,7 +14244,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__aggr_ids
 msgid "Ids"
-msgstr ""
+msgstr "იდენტიფიკატორი"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__group_expand
@@ -14353,7 +14389,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__image_1920
 #: model:ir.model.fields,field_description:base.field_res_users__image_1920
 msgid "Image"
-msgstr ""
+msgstr "გამოსახულება"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_image_mixin__image_1024
@@ -14436,7 +14472,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
 msgid "Import / Export"
-msgstr ""
+msgstr "იმპორტ / ექსპორტი"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_amazon
@@ -14516,7 +14552,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Inactive"
-msgstr ""
+msgstr "არააქტიური"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
@@ -14593,7 +14629,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__company_type__person
 msgid "Individual"
-msgstr ""
+msgstr "ფიზიკური პირი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
@@ -14633,7 +14669,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model__info
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Information"
-msgstr ""
+msgstr "ინფორმაცია"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_ingenico
@@ -14662,7 +14698,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__inherit_id
 msgid "Inherited View"
-msgstr ""
+msgstr "თანდაყოლილი ხედი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -14706,12 +14742,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_installer
 msgid "Install Apps"
-msgstr ""
+msgstr "პროგრამების დაყენება"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_install
 msgid "Install Language"
-msgstr ""
+msgstr "ენის დაყენება"
 
 #. module: base
 #: model:ir.actions.server,name:base.action_server_module_immediate_install
@@ -14816,7 +14852,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Internal Notes"
-msgstr ""
+msgstr "შიდა ჩანაწერები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_translation__src
@@ -14862,7 +14898,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__interval_type
 msgid "Interval Unit"
-msgstr ""
+msgstr "ინტერვალის ერთეული"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_intrastat
@@ -15036,7 +15072,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Invoice"
-msgstr ""
+msgstr "ინვოისი"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__type
@@ -15064,7 +15100,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account
 msgid "Invoicing"
-msgstr ""
+msgstr "ინვოისინგი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_posbox_homepage
@@ -15119,7 +15155,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_is_company
 msgid "Is Company"
-msgstr ""
+msgstr "არის კომპანია"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__is_company
@@ -15135,7 +15171,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.im
 msgid "Isle of Man"
-msgstr ""
+msgstr "კუნძული მენი"
 
 #. module: base
 #: model:res.country,name:base.il
@@ -15178,12 +15214,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.jm
 msgid "Jamaica"
-msgstr ""
+msgstr "იამაიკა"
 
 #. module: base
 #: model:res.country,name:base.jp
 msgid "Japan"
-msgstr ""
+msgstr "იაპონია"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jp
@@ -15193,7 +15229,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.je
 msgid "Jersey"
-msgstr ""
+msgstr "ჯერზი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__function
@@ -15236,7 +15272,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__kanban
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Kanban"
-msgstr ""
+msgstr "კანბანი"
 
 #. module: base
 #: model:res.country,name:base.kz
@@ -15260,7 +15296,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_show__key
 #: model_terms:ir.ui.view,arch_db:base.view_ir_config_search
 msgid "Key"
-msgstr ""
+msgstr "გასაღები"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_config_parameter_key_uniq
@@ -15369,7 +15405,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users__lang
 #: model_terms:ir.ui.view,arch_db:base.res_lang_search
 msgid "Language"
-msgstr ""
+msgstr "ენა"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -15411,7 +15447,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.res_lang_search
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Languages"
-msgstr ""
+msgstr "ენები"
 
 #. module: base
 #: model:res.country,name:base.la
@@ -15614,7 +15650,7 @@ msgstr "ბოლოს განახლებულია"
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__write_uid
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ბოლოს განაახლა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__write_date
@@ -15693,7 +15729,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__write_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ბოლოს განახლდა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__installed_version
@@ -15880,7 +15916,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__line_ids
 msgid "Lines"
-msgstr ""
+msgstr "ხაზები"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_payment
@@ -15992,7 +16028,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_localization
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Localization"
-msgstr ""
+msgstr "ლოკალიზაცია"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -16015,12 +16051,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users__login
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "Login"
-msgstr ""
+msgstr "შესვლა"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Logo"
-msgstr ""
+msgstr "ლოგო"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo_web
@@ -16058,7 +16094,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.lu
 msgid "Luxembourg"
-msgstr ""
+msgstr "ლუქსემბურგი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu
@@ -16088,7 +16124,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder
 msgid "MRP II"
-msgstr ""
+msgstr "MRP II"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_expiry
@@ -16469,7 +16505,7 @@ msgstr ""
 #: model:res.partner.industry,name:base.res_partner_industry_C
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Manufacturing"
-msgstr ""
+msgstr "წარმოება"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_product_expiry
@@ -16520,7 +16556,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_marketing
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Marketing"
-msgstr ""
+msgstr "მარკეტინგი"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_marketing_automation
@@ -16631,7 +16667,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access_search
 msgid "Menu"
-msgstr ""
+msgstr "მენიუ"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.grant_menu_access
@@ -16699,7 +16735,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_logging__message
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__message
 msgid "Message"
-msgstr ""
+msgstr "შეტყობინება"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi
@@ -16817,7 +16853,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__minutes
 msgid "Minutes"
-msgstr ""
+msgstr "წუთები"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -16828,7 +16864,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Miscellaneous"
-msgstr ""
+msgstr "სხვადასხვაგვარი"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -16873,7 +16909,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.contact
 #, python-format
 msgid "Mobile"
-msgstr ""
+msgstr "მობილური"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -16905,7 +16941,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Model"
-msgstr ""
+msgstr "მოდელი"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -16969,7 +17005,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_data__model
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__model
 msgid "Model Name"
-msgstr ""
+msgstr "მოდელის სახელი"
 
 #. module: base
 #: model:ir.actions.report,name:base.report_ir_model_overview
@@ -17013,7 +17049,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.ir_model_model_menu
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Models"
-msgstr ""
+msgstr "მოდელები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_updated
@@ -17035,7 +17071,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_data_search
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 msgid "Module"
-msgstr ""
+msgstr "მოდული"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_category_form
@@ -17115,7 +17151,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__module_ids
 msgid "Modules"
-msgstr ""
+msgstr "მოდულები"
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -17136,7 +17172,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__1
 msgid "Monday"
-msgstr ""
+msgstr "ორშაბათი"
 
 #. module: base
 #: model:res.country,name:base.mn
@@ -17161,7 +17197,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__months
 msgid "Months"
-msgstr ""
+msgstr "თვეები"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__montserrat
@@ -17276,7 +17312,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_tree
 #, python-format
 msgid "Name"
-msgstr ""
+msgstr "სახელი"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -17294,7 +17330,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Name:"
-msgstr ""
+msgstr "სახელი:"
 
 #. module: base
 #: model:res.country,name:base.na
@@ -17305,7 +17341,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Narrow"
-msgstr ""
+msgstr "ვიწრო"
 
 #. module: base
 #: model:res.country,name:base.nr
@@ -17361,14 +17397,14 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_change_password_user__new_passwd
 msgid "New Password"
-msgstr ""
+msgstr "ახალი პაროლი"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_url__target__new
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window__target__new
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_client__target__new
 msgid "New Window"
-msgstr ""
+msgstr "ახალი ფანჯარა"
 
 #. module: base
 #: model:res.country,name:base.nz
@@ -17388,7 +17424,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__nextcall
 msgid "Next Execution Date"
-msgstr ""
+msgstr "შემდეგი გაშვების თარიღი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_next
@@ -17564,7 +17600,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__none
 msgid "None"
-msgstr ""
+msgstr "არცერთი"
 
 #. module: base
 #: model:res.country,name:base.nf
@@ -17575,12 +17611,12 @@ msgstr ""
 #: code:addons/base/models/res_bank.py:0
 #, python-format
 msgid "Normal"
-msgstr ""
+msgstr "ნორმალური"
 
 #. module: base
 #: model:res.country,name:base.kp
 msgid "North Korea"
-msgstr ""
+msgstr "ჩრდილოეთი კორეა"
 
 #. module: base
 #: model:res.country,name:base.mk
@@ -17640,7 +17676,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Notes"
-msgstr ""
+msgstr "ჩანაწერები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__module_nr
@@ -17705,7 +17741,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Object"
-msgstr ""
+msgstr "ობიექტი"
 
 #. module: base
 #: code:addons/model.py:0
@@ -17716,7 +17752,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Object:"
-msgstr ""
+msgstr "ობიექტი:"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_blog
@@ -18866,7 +18902,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "Ok"
-msgstr ""
+msgstr "ოკ"
 
 #. module: base
 #: model:res.country,name:base.om
@@ -19076,7 +19112,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_partner_merge_automatic_wizard__state__option
 msgid "Option"
-msgstr ""
+msgstr "ოფცია"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__domain
@@ -19097,6 +19133,8 @@ msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
 msgstr ""
+"სასურველი დახმარების ტექსტი მომხმარებლებისთვის სამიზნე ხედის აღწერით, მათ "
+"შორის მიზნობრიობა და დანიშნულება."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_client__res_model
@@ -19122,12 +19160,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Options"
-msgstr ""
+msgstr "ოფციები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__order
 msgid "Order"
-msgstr ""
+msgstr "შეკვეთა"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track
@@ -19310,7 +19348,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_custom__ref_id
 msgid "Original View"
-msgstr ""
+msgstr "სტანდარტული ხედი"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -19327,7 +19365,7 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Other"
-msgstr ""
+msgstr "სხვა"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__other
@@ -19407,7 +19445,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Owner"
-msgstr ""
+msgstr "მფლობელი"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_P
@@ -19509,7 +19547,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__paperformat_id
 #: model:ir.ui.menu,name:base.paper_format_menuitem
 msgid "Paper Format"
-msgstr ""
+msgstr "ქაღალდის ფორმატი"
 
 #. module: base
 #: model:ir.model,name:base.model_report_paperformat
@@ -19545,7 +19583,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.py
 msgid "Paraguay"
-msgstr ""
+msgstr "პარაგვაი"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_ir_property
@@ -19573,19 +19611,19 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_id
 msgid "Parent Category"
-msgstr ""
+msgstr "მშობელი კატეგორია"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_parent_id
 #: model:ir.model.fields,field_description:base.field_res_company__parent_id
 msgid "Parent Company"
-msgstr ""
+msgstr "მშობელი კომპანია"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_id
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__menu_id
 msgid "Parent Menu"
-msgstr ""
+msgstr "ზედა დონის მენიუ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_path
@@ -19603,7 +19641,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_company__partner_id
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 msgid "Partner"
-msgstr ""
+msgstr "პარტნიორი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_autocomplete
@@ -19652,7 +19690,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Partners"
-msgstr ""
+msgstr "პარტნიორები"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
@@ -19670,7 +19708,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users__password
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__password
 msgid "Password"
-msgstr ""
+msgstr "პაროლი"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_identitycheck
@@ -19717,7 +19755,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "გადახდის ოპერატორი"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment
@@ -19809,7 +19847,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_human_resources_payroll
 #: model:ir.module.module,shortdesc:base.module_hr_payroll
 msgid "Payroll"
-msgstr ""
+msgstr "სახელფასო მოდული"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account
@@ -19865,7 +19903,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.contact
 #, python-format
 msgid "Phone"
-msgstr ""
+msgstr "ტელეფონი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_phone_validation
@@ -19959,7 +19997,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_sales_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point of Sale"
-msgstr ""
+msgstr "რეალიზაციის წერტილი - POS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -19984,7 +20022,7 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_portal
 msgid "Portal"
-msgstr ""
+msgstr "პორტალი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_rating
@@ -20042,7 +20080,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Preferences"
-msgstr ""
+msgstr "პარამეტრები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__prefix
@@ -20126,7 +20164,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_cron__priority
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__sequence
 msgid "Priority"
-msgstr ""
+msgstr "პრიორიტეტი"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__private
@@ -20174,7 +20212,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_productivity
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Productivity"
-msgstr ""
+msgstr "პროდუქტიულობა"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
@@ -20205,7 +20243,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_services_project
 #: model:ir.module.module,shortdesc:base.module_project
 msgid "Project"
-msgstr ""
+msgstr "პროექტი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_enterprise
@@ -20335,7 +20373,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Properties"
-msgstr ""
+msgstr "თვისებები"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0 code:addons/base/models/ir_model.py:0
@@ -20367,7 +20405,7 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_public
 msgid "Public"
-msgstr ""
+msgstr "საჯარო"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_O
@@ -20389,7 +20427,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Publish events, sell tickets"
-msgstr ""
+msgstr "გამოაქვეყნეთ ღონისძიებები, გაყიდეთ ბილეთები"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_customer
@@ -20422,7 +20460,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_purchase
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Purchase"
-msgstr ""
+msgstr "შესყიდვა"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition
@@ -20484,7 +20522,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_cron__code
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Python Code"
-msgstr ""
+msgstr "Python-ის კოდი"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_server_object_lines__evaluation_type__equation
@@ -20500,7 +20538,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__qweb
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "QWeb"
-msgstr ""
+msgstr "QWeb"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
@@ -20829,7 +20867,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
 msgid "Recruitment"
-msgstr ""
+msgstr "დაქირავება"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_reports
@@ -20866,7 +20904,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_server_object_lines__evaluation_type__reference
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Reference"
-msgstr ""
+msgstr "წყარო"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -20955,7 +20993,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Remove"
-msgstr ""
+msgstr "მოცილება"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -21028,7 +21066,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Report"
-msgstr ""
+msgstr "რეპორტი"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
@@ -21059,7 +21097,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_type
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Type"
-msgstr ""
+msgstr "რეპორტის ტიპი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
@@ -21075,7 +21113,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_accounting_localizations_reporting
 #: model:ir.ui.menu,name:base.reporting_menuitem
 msgid "Reporting"
-msgstr ""
+msgstr "რეპორტინგი"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ar_reports
@@ -21089,18 +21127,18 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_ir_action_report
 #: model:ir.ui.menu,name:base.reports_menuitem
 msgid "Reports"
-msgstr ""
+msgstr "ანგარიშგებები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__request
 msgid "Request"
-msgstr ""
+msgstr "მოთხოვნა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__required
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Required"
-msgstr ""
+msgstr "საჭიროა"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_partner_assign
@@ -21153,7 +21191,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_property__res_id
 #: model:ir.module.module,shortdesc:base.module_resource
 msgid "Resource"
-msgstr ""
+msgstr "რესურსი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__res_field
@@ -21163,7 +21201,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__res_id
 msgid "Resource ID"
-msgstr ""
+msgstr "რესურსის იდენტიფიკატორი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__res_model
@@ -21173,7 +21211,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__res_name
 msgid "Resource Name"
-msgstr ""
+msgstr "რესურსის სახელი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant
@@ -21255,7 +21293,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__rule_groups
 msgid "Rules"
-msgstr ""
+msgstr "წესები"
 
 #. module: base
 #: code:addons/base/models/ir_rule.py:0
@@ -21286,7 +21324,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.rw
 msgid "Rwanda"
-msgstr ""
+msgstr "რუანდა"
 
 #. module: base
 #: model:res.country,name:base.re
@@ -21361,7 +21399,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_host
 msgid "SMTP Server"
-msgstr ""
+msgstr "SMTP სერვერი"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase_stock
@@ -21378,12 +21416,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__ssl
 msgid "SSL/TLS"
-msgstr ""
+msgstr "SSL/TLS"
 
 #. module: base
 #: model:res.country,name:base.bl
 msgid "Saint Barthélémy"
-msgstr ""
+msgstr "სენ-ბართელმი"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -21403,12 +21441,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.mf
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "სენ-მარტინი (ფრანგული ნაწილი)"
 
 #. module: base
 #: model:res.country,name:base.pm
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "სენ-პიერი და მიკელონი"
 
 #. module: base
 #: model:res.country,name:base.vc
@@ -21438,7 +21476,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sale
 msgid "Sale"
-msgstr ""
+msgstr "გაყიდვა"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_accountant
@@ -21513,7 +21551,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales"
-msgstr ""
+msgstr "გაყიდვები"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -21571,7 +21609,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users__user_id
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Salesperson"
-msgstr ""
+msgstr "გამყიდველი"
 
 #. module: base
 #: model:res.country,name:base.ws
@@ -21591,12 +21629,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__6
 msgid "Saturday"
-msgstr ""
+msgstr "შაბათი"
 
 #. module: base
 #: model:res.country,name:base.sa
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "საუდის არაბეთი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa
@@ -21607,7 +21645,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Save"
-msgstr ""
+msgstr "შენახვა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment
@@ -21694,7 +21732,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Search"
-msgstr ""
+msgstr "ძიება"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_search
@@ -21724,12 +21762,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view
 msgid "Search View"
-msgstr ""
+msgstr "ძიების ხედი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view_id
 msgid "Search View Ref."
-msgstr ""
+msgstr "ძებნის ხედი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -21750,7 +21788,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Search..."
-msgstr ""
+msgstr "ძებნა..."
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -21769,7 +21807,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Security"
-msgstr ""
+msgstr "უსაფრთხოება"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -21812,7 +21850,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__selectable
 msgid "Selectable"
-msgstr ""
+msgstr "მონიშვნადი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -21830,7 +21868,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_selection_search
 #, python-format
 msgid "Selection"
-msgstr ""
+msgstr "მონიშვნა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__selection_ids
@@ -21998,7 +22036,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_sequence_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_tree
 msgid "Sequence"
-msgstr ""
+msgstr "მიმდევრობა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__code
@@ -22037,7 +22075,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_logging__type__server
 msgid "Server"
-msgstr ""
+msgstr "სერვერი"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server
@@ -22045,7 +22083,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Server Action"
-msgstr ""
+msgstr "სერვერის ქმედება"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_server_object_lines
@@ -22058,7 +22096,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_tree
 msgid "Server Actions"
-msgstr ""
+msgstr "სერვერის ქმედებები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__ir_actions_server_id
@@ -22078,7 +22116,7 @@ msgstr ""
 #: model:res.partner.category,name:base.res_partner_category_11
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Services"
-msgstr ""
+msgstr "სერვისები"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__set_null
@@ -22132,12 +22170,12 @@ msgstr ""
 #: model:res.groups,name:base.group_system
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Settings"
-msgstr ""
+msgstr "პარამეტრები"
 
 #. module: base
 #: model:res.country,name:base.sc
 msgid "Seychelles"
-msgstr ""
+msgstr "სეიშელის კუნძულები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__share
@@ -22158,7 +22196,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Shared"
-msgstr ""
+msgstr "გაზიარებული"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_wishlist
@@ -22179,7 +22217,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 msgid "Show active currencies"
-msgstr ""
+msgstr "გამოაჩინეთ აქტიური ვალუტები"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
@@ -22199,7 +22237,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sl
 msgid "Sierra Leone"
-msgstr ""
+msgstr "სიერა-ლეონე"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_sign
@@ -22230,7 +22268,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sg
 msgid "Singapore"
-msgstr ""
+msgstr "სინგაპური"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sg
@@ -22245,12 +22283,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sx
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "სინტ-მარტენი (ჰოლანდიური ნაწილი)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__size
 msgid "Size"
-msgstr ""
+msgstr "ზომა"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_fields_size_gt_zero
@@ -22275,7 +22313,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_installer
 msgid "Skip"
-msgstr ""
+msgstr "გამოტოვება"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -22291,7 +22329,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sk
 msgid "Slovakia"
-msgstr ""
+msgstr "სლოვაკეთი"
 
 #. module: base
 #: model:res.country,name:base.si
@@ -22423,7 +22461,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.gs
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "სამხრეთი გეორგია და სამხრეთ სენდვიჩის კუნძულები"
 
 #. module: base
 #: model:res.country,name:base.kr
@@ -22433,7 +22471,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ss
 msgid "South Sudan"
-msgstr ""
+msgstr "სამხრეთი სუდანი"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -22510,7 +22548,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_sequence__implementation__standard
 msgid "Standard"
-msgstr ""
+msgstr "სტანდარტული"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_saft
@@ -22536,7 +22574,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr ""
+msgstr "მდგომარეობა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -22578,7 +22616,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_translation__state
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Status"
-msgstr ""
+msgstr "მდგომარეობა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_increment
@@ -22674,7 +22712,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__street
 #: model:ir.model.fields,field_description:base.field_res_users__street
 msgid "Street"
-msgstr ""
+msgstr "ქუჩა"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
@@ -22692,7 +22730,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Street..."
-msgstr ""
+msgstr "ქუჩა..."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__street2
@@ -22700,7 +22738,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__street2
 #: model:ir.model.fields,field_description:base.field_res_users__street2
 msgid "Street2"
-msgstr ""
+msgstr "ქუჩა 2"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_stripe
@@ -22779,7 +22817,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__suffix
 msgid "Suffix"
-msgstr ""
+msgstr "სუფიქსი"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__suffix
@@ -22789,12 +22827,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__summary
 msgid "Summary"
-msgstr ""
+msgstr "შეჯამება"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__7
 msgid "Sunday"
-msgstr ""
+msgstr "კვირა"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__params
@@ -22886,7 +22924,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__position
 msgid "Symbol Position"
-msgstr ""
+msgstr "სიმბოლოს პოზიცია"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_synchro
@@ -22951,7 +22989,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__starttls
 msgid "TLS (STARTTLS)"
-msgstr ""
+msgstr "TLS (STARTTLS)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_totp_portal
@@ -22966,7 +23004,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Tag"
-msgstr ""
+msgstr "ტეგი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__name
@@ -22977,17 +23015,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__category_id
 #: model:ir.model.fields,field_description:base.field_res_users__category_id
 msgid "Tags"
-msgstr ""
+msgstr "ტეგები"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Tags..."
-msgstr ""
+msgstr "იარლიყები..."
 
 #. module: base
 #: model:res.country,name:base.tw
 msgid "Taiwan"
-msgstr ""
+msgstr "ტაივანი"
 
 #. module: base
 #: model:res.country,name:base.tj
@@ -23032,7 +23070,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr ""
+msgstr "საგადასახადო იდენტიფიკატორი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
@@ -23054,7 +23092,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_custom
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical"
-msgstr ""
+msgstr "ტექნიკური"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -23070,7 +23108,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module__name
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
 msgid "Technical Name"
-msgstr ""
+msgstr "ტექნიკური სახელი"
 
 #. module: base
 #: code:addons/base/models/ir_translation.py:0
@@ -23086,7 +23124,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_name
 msgid "Template Name"
-msgstr ""
+msgstr "შაბლონის სახელი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_base_automation
@@ -23174,7 +23212,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_tests
 #: model:ir.ui.menu,name:base.menu_tests
 msgid "Tests"
-msgstr ""
+msgstr "ტესტები"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_apikeys
@@ -23205,12 +23243,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_report__report_type__qweb-text
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__text
 msgid "Text"
-msgstr ""
+msgstr "ტექსტი"
 
 #. module: base
 #: model:res.country,name:base.th
 msgid "Thailand"
-msgstr ""
+msgstr "ტაილანდი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_th
@@ -23318,7 +23356,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_company_name_uniq
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "კომპანიის სახელი უნდა იყოს უნიკალური!"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.act_ir_actions_todo_form
@@ -23999,7 +24037,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__4
 msgid "Thursday"
-msgstr ""
+msgstr "ხუთშაბათი"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_livechat
@@ -24062,7 +24100,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_services_timesheets
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid
 msgid "Timesheets"
-msgstr ""
+msgstr "დროის აღრიცხვა"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance
@@ -24073,7 +24111,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__tz
 #: model:ir.model.fields,field_description:base.field_res_users__tz
 msgid "Timezone"
-msgstr ""
+msgstr "დროის სარტყელი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__tz_offset
@@ -24091,18 +24129,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_title__name
 #: model:ir.model.fields,field_description:base.field_res_users__title
 msgid "Title"
-msgstr ""
+msgstr "სახელწოდება"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_to
 msgid "To"
-msgstr ""
+msgstr "მიმღები"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_todo__state__open
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_search
 msgid "To Do"
-msgstr ""
+msgstr "გასაკეთებელია"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_translation__state__to_translate
@@ -24145,7 +24183,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Todo"
-msgstr ""
+msgstr "გასაკეთებელი"
 
 #. module: base
 #: model:res.country,name:base.tg
@@ -24285,7 +24323,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #, python-format
 msgid "Translate"
-msgstr ""
+msgstr "გადათარგმნა"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_translation__state__translated
@@ -24307,7 +24345,7 @@ msgstr ""
 #: model:ir.model,name:base.model_ir_translation
 #: model_terms:ir.ui.view,arch_db:base.view_translation_form
 msgid "Translation"
-msgstr ""
+msgstr "თარგმანი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_translation__value
@@ -24348,7 +24386,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
 #: model_terms:ir.ui.view,arch_db:base.view_translation_tree
 msgid "Translations"
-msgstr ""
+msgstr "თარგმანები"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
@@ -24360,7 +24398,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__tree
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Tree"
-msgstr ""
+msgstr "განშტოება"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -24384,7 +24422,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__2
 msgid "Tuesday"
-msgstr ""
+msgstr "სამშაბათი"
 
 #. module: base
 #: model:res.country,name:base.tn
@@ -24409,7 +24447,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.tc
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "ტერქსისა და კაიკოსის კუნძულები"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_client_extension
@@ -24432,7 +24470,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter_wall
 msgid "Twitter Wall"
-msgstr ""
+msgstr "ტვიტერის კედელი"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_twitter
@@ -24456,7 +24494,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Type"
-msgstr ""
+msgstr "ტიპი"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__state
@@ -24481,7 +24519,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Type:"
-msgstr ""
+msgstr "სახეობა:"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
@@ -24524,7 +24562,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_attachment__type__url
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "URL"
-msgstr ""
+msgstr "URL მისამართი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__url_code
@@ -24701,7 +24739,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module_exclusion__state__unknown
 #, python-format
 msgid "Unknown"
-msgstr ""
+msgstr "უცნობია"
 
 #. module: base
 #: code:addons/models.py:0
@@ -24713,13 +24751,13 @@ msgstr ""
 #: code:addons/models.py:0
 #, python-format
 msgid "Unknown database identifier '%s'"
-msgstr ""
+msgstr "უცნობი მონაცემთა ბაზის იდენტიფიკატორი '%s'"
 
 #. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Unknown error during import:"
-msgstr ""
+msgstr "უცნობი შეცდომა იმპორტის დროს:"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -24749,13 +24787,15 @@ msgstr ""
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "Unknown sub-field '%s'"
-msgstr ""
+msgstr "უცნობი ქვე-ველი '%s'"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "Unknown value '%s' for boolean field '%%(field)s', assuming '%s'"
 msgstr ""
+"უცნობი მნიშვნელობა '%s' - boolean ველისათვის '%%(field)s', ჩაითვალოს როგორც "
+"'%s'"
 
 #. module: base
 #: code:addons/translate.py:0
@@ -24798,7 +24838,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 #: model_terms:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Update"
-msgstr ""
+msgstr "განახლება"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_update
@@ -24835,7 +24875,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Upgrade"
-msgstr ""
+msgstr "განახლება"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_upgrade
@@ -24845,7 +24885,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__url
 msgid "Url"
-msgstr ""
+msgstr "Url"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__image_url
@@ -24996,7 +25036,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
 msgid "User"
-msgstr ""
+msgstr "მომხმარებელი"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_2
@@ -25063,7 +25103,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_user
 msgid "Username"
-msgstr ""
+msgstr "მომხმარებლის სახელი"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users
@@ -25171,7 +25211,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_server_object_lines__evaluation_type__value
 #: model_terms:ir.ui.view,arch_db:base.ir_property_view
 msgid "Value"
-msgstr ""
+msgstr "მნიშვნელობა"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -25223,7 +25263,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.vu
 msgid "Vanuatu"
-msgstr ""
+msgstr "ვანუატუ"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_variable_revenue
@@ -25245,7 +25285,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_0
 msgid "Vendor"
-msgstr ""
+msgstr "მომწოდებელი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
@@ -25255,7 +25295,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
 msgid "Vendors"
-msgstr ""
+msgstr "მომწოდებლები"
 
 #. module: base
 #: model:res.country,name:base.ve
@@ -25289,7 +25329,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__view_id
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "View"
-msgstr ""
+msgstr "ხედი"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -25337,7 +25377,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__view_mode
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__type
 msgid "View Type"
-msgstr ""
+msgstr "ხედის ტიპი"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports
@@ -25374,7 +25414,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_view_tree
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Views"
-msgstr ""
+msgstr "ხედები"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ui_view
@@ -25391,12 +25431,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.vg
 msgid "Virgin Islands (British)"
-msgstr ""
+msgstr "ვირჯინის კუნძულები (ბრიტანეთის)"
 
 #. module: base
 #: model:res.country,name:base.vi
 msgid "Virgin Islands (USA)"
-msgstr ""
+msgstr "აშშ-ის ვირჯინის კუნძულები"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__visible
@@ -25430,19 +25470,19 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0 code:addons/models.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "გაფრთხილება"
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "ფრთხილად!!"
 
 #. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Warnings"
-msgstr ""
+msgstr "გაფრთხილებები"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_E
@@ -25535,7 +25575,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 msgid "Website"
-msgstr ""
+msgstr "ვებსაიტი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_management
@@ -25560,7 +25600,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_form
 msgid "Website Form"
-msgstr ""
+msgstr "ვებ-გვერდის ფორმა"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk
@@ -25662,12 +25702,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
 msgid "Wednesday"
-msgstr ""
+msgstr "ოთხშაბათი"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__weeks
 msgid "Weeks"
-msgstr ""
+msgstr "კვირეები"
 
 #. module: base
 #: model:res.country,name:base.eh
@@ -25764,7 +25804,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_change_password_user__wizard_id
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure__wizard_id
 msgid "Wizard"
-msgstr ""
+msgstr "ვიზარდი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_search
@@ -26108,7 +26148,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "ZIP"
-msgstr ""
+msgstr "ZIP"
 
 #. module: base
 #: model:res.country,name:base.zm
@@ -26126,7 +26166,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__zip
 #: model:ir.model.fields,field_description:base.field_res_users__zip
 msgid "Zip"
-msgstr ""
+msgstr "ინდექსი"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__zip_required
@@ -26237,7 +26277,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__base_language_install__state__done
 #: model:ir.model.fields.selection,name:base.selection__base_module_update__state__done
 msgid "done"
-msgstr ""
+msgstr "შესრულებული"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -26268,7 +26308,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "e.g. Update order quantity"
-msgstr ""
+msgstr "მაგ. განაახლეთ შეკვეთის ოდენობა"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -26301,7 +26341,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_website_elearning
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "eLearning"
-msgstr ""
+msgstr "ესწავლება"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
@@ -26449,7 +26489,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "month"
-msgstr ""
+msgstr "თვე"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting
@@ -26460,7 +26500,7 @@ msgstr ""
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "name"
-msgstr ""
+msgstr "სახელი"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -26647,7 +26687,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__text
 msgid "text"
-msgstr ""
+msgstr "ტექსტი"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_installer
@@ -26681,9 +26721,9 @@ msgstr "წელი"
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "yes"
-msgstr ""
+msgstr "დიახ"
 
 #. module: base
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
-msgstr ""
+msgstr "ალანდის კუნძულები"

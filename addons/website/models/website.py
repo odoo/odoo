@@ -151,9 +151,12 @@ class Website(models.Model):
                 # don't add child menu if parent is forbidden
                 if menu.parent_id and menu.parent_id in menus:
                     menu.parent_id._cache['child_id'] += (menu.id,)
+
             # prefetch every website.page and ir.ui.view at once
             menus.mapped('is_visible')
-            website.menu_id = menus and menus.filtered(lambda m: not m.parent_id)[0].id or False
+
+            top_menus = menus.filtered(lambda m: not m.parent_id)
+            website.menu_id = top_menus and top_menus[0].id or False
 
     # self.env.uid for ir.rule groups on menu
     @tools.ormcache('self.env.uid', 'self.id')
@@ -942,15 +945,19 @@ class Website(models.Model):
 
     def _get_http_domain(self):
         """Get the domain of the current website, prefixed by http if no
-        scheme is specified.
+        scheme is specified and withtout trailing /.
 
         Empty string if no domain is specified on the website.
         """
         self.ensure_one()
         if not self.domain:
             return ''
-        res = urls.url_parse(self.domain)
-        return 'http://' + self.domain if not res.scheme else self.domain
+
+        domain = self.domain
+        if not self.domain.startswith('http'):
+            domain = 'http://%s' % domain
+
+        return domain.rstrip('/')
 
     def get_base_url(self):
         self.ensure_one()

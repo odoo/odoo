@@ -1667,6 +1667,7 @@
                 ctx.variables = Object.create(null);
                 ctx.parentNode = ctx.generateID();
                 ctx.allowMultipleRoots = true;
+                ctx.shouldDefineParent = true;
                 ctx.hasParentWidget = true;
                 ctx.shouldDefineResult = false;
                 ctx.addLine(`let c${ctx.parentNode} = extra.parentNode;`);
@@ -1830,7 +1831,7 @@
                     }
                 }
             }
-            if (node.nodeName !== "t") {
+            if (node.nodeName !== "t" || node.hasAttribute("t-tag")) {
                 let nodeID = this._compileGenericNode(node, ctx, withHandlers);
                 ctx = ctx.withParent(nodeID);
                 let nodeHooks = {};
@@ -2043,7 +2044,14 @@
                 ctx.addLine(`}`);
                 ctx.closeIf();
             }
-            ctx.addLine(`let vn${nodeID} = h('${node.nodeName}', p${nodeID}, c${nodeID});`);
+            let nodeName = `'${node.nodeName}'`;
+            if (node.hasAttribute("t-tag")) {
+                const tagExpr = node.getAttribute("t-tag");
+                node.removeAttribute("t-tag");
+                nodeName = `tag${ctx.generateID()}`;
+                ctx.addLine(`let ${nodeName} = ${ctx.formatExpression(tagExpr)};`);
+            }
+            ctx.addLine(`let vn${nodeID} = h(${nodeName}, p${nodeID}, c${nodeID});`);
             if (ctx.parentNode) {
                 ctx.addLine(`c${ctx.parentNode}.push(vn${nodeID});`);
             }
@@ -2068,6 +2076,7 @@
         att: 1,
         attf: 1,
         translation: 1,
+        tag: 1,
     };
     QWeb.DIRECTIVES = [];
     QWeb.TEMPLATES = {};
@@ -2368,7 +2377,9 @@
             }
             // Step 4: add the appropriate function call to current component
             // ------------------------------------------------
-            const parentComponent = `utils.getComponent(context)`;
+            const parentComponent = ctx.rootContext.shouldDefineParent
+                ? `parent`
+                : `utils.getComponent(context)`;
             const key = ctx.generateTemplateKey();
             const parentNode = ctx.parentNode ? `c${ctx.parentNode}` : "result";
             const extra = `Object.assign({}, extra, {parentNode: ${parentNode}, parent: ${parentComponent}, key: ${key}})`;
@@ -3649,16 +3660,28 @@
             this.vnode = component.__owl__.vnode || h("div");
             const qweb = component.env.qweb;
             let root = component;
-            let canCatch = false;
-            while (component && !(canCatch = !!component.catchError)) {
-                root = component;
-                component = component.__owl__.parent;
+            function handle(error) {
+                let canCatch = false;
+                qweb.trigger("error", error);
+                while (component && !(canCatch = !!component.catchError)) {
+                    root = component;
+                    component = component.__owl__.parent;
+                }
+                if (canCatch) {
+                    try {
+                        component.catchError(error);
+                    }
+                    catch (e) {
+                        root = component;
+                        component = component.__owl__.parent;
+                        return handle(e);
+                    }
+                    return true;
+                }
+                return false;
             }
-            qweb.trigger("error", error);
-            if (canCatch) {
-                component.catchError(error);
-            }
-            else {
+            let isHandled = handle(error);
+            if (!isHandled) {
                 // the 3 next lines aim to mark the root fiber as being in error, and
                 // to force it to end, without waiting for its children
                 this.root.counter = 0;
@@ -5387,9 +5410,9 @@
     exports.utils = utils;
 
 
-    __info__.version = '1.2.6';
-    __info__.date = '2021-05-19T10:28:32.429Z';
-    __info__.hash = 'e838781';
+    __info__.version = '1.3.2';
+    __info__.date = '2021-06-18T08:42:12.863Z';
+    __info__.hash = '2e83c73';
     __info__.url = 'https://github.com/odoo/owl';
 
 

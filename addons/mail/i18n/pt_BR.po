@@ -18,7 +18,7 @@
 # Yannick Belot <yannickbh@gmail.com>, 2020
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2020
 # Raphael Rodrigues <raphael0608@gmail.com>, 2020
-# rogeriojlle <rogerio.s.machado@gmail.com>, 2020
+# Rogerio Scholz Machado <rogerio.s.machado@gmail.com>, 2020
 # Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2020
 # Lauro de Lima <lauro@ciclix.com>, 2020
 # Fernando Colus <fcolus1@gmail.com>, 2020
@@ -78,13 +78,13 @@ msgstr "%(activity_name)s: %(summary)s atribuído a você"
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
 msgstr ""
-"%(user_name)s convida a você para seguir %(document)s documento: %(title)s"
+"%(user_name)s te convidou a seguir o documento %(document)s: %(title)s"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
 #, python-format
 msgid "%(user_name)s invited you to follow a new document."
-msgstr "%(user_name)s convida a você para seguir um novo documento."
+msgstr "%(user_name)s convidou você para seguir um novo documento"
 
 #. module: mail
 #. openerp-web
@@ -226,10 +226,10 @@ msgid ""
 "            Type <b>:shortcut</b> to insert a canned response in your message.<br>"
 msgstr ""
 "<br><br>\n"
-"            Tipo <b>@usuario</b> para mencionar alguém, e chamar sua atenção.<br>\n"
-"            Tipo <b>#canal</b> para mencionar um canal.<br>\n"
-"            Tipo <b>/comando</b> para executar um comando.<br>\n"
-"            Tipo <b>:atalho</b> para inserir uma resposta automática em sua mensagem.<br>"
+"            Digite <b>@usuario</b> para mencionar alguém, e chamar sua atenção.<br>\n"
+"            Digite <b>#canal</b> para mencionar um canal.<br>\n"
+"            Digite <b>/comando</b> para executar um comando.<br>\n"
+"            Digite <b>:atalho</b> para inserir uma resposta automática em sua mensagem.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -394,7 +394,7 @@ msgid ""
 "                                    <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Adicionar</span>\n"
-"<span class=\"o_stat_text\">Ação de Contexto</span>"
+"                                    <span class=\"o_stat_text\">Ação de Contexto</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -403,7 +403,7 @@ msgid ""
 "                                    <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Remover</span>\n"
-"<span class=\"o_stat_text\">Ação de Contexto</span>"
+"                                    <span class=\"o_stat_text\">Ação de Contexto</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -474,8 +474,8 @@ msgid ""
 "A shortcode is a keyboard shortcut. For instance, you type #gm and it will "
 "be transformed into \"Good Morning\"."
 msgstr ""
-"Um código abreviado é um atalho de teclado. Por exemplo, você digita #bd e "
-"será transformado em \"Bom Dia\"."
+"Um shortcode é um atalho de teclado. Por exemplo, você digita #bd e será "
+"transformado em \"Bom Dia\"."
 
 #. module: mail
 #. openerp-web
@@ -4541,12 +4541,15 @@ msgstr "Online"
 #, python-format
 msgid "Only administrators are allowed to export mail message"
 msgstr ""
+"Apenas administradores possuem permissão para exportar mensagens de e-mail"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
 msgid "Only administrators are allowed to use grouped read on message model"
 msgstr ""
+"Apenas administradores possuem permissão para usar leitura agrupada no "
+"modelo de mensagem"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0

@@ -3172,8 +3172,8 @@ msgstr ""
 "Koppel module om verloven te integreren in urenstaten\n"
 "================================================\n"
 "\n"
-"Deze module staat toe om automatisch urenstaten in te vullen wanneer werknemers op\n"
-"vakantie zijn. Projecten en taken kunnen op bedrijfsniveau geconfigureerd worden."
+"Deze module staat toe om automatisch urenstaten in te vullen wanneer werknemers met\n"
+"verlof zijn. Projecten en taken kunnen op bedrijfsniveau geconfigureerd worden."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation_hr_contract
@@ -5380,7 +5380,7 @@ msgstr ""
 "* Vakantie op afdeling\n"
 "* Vakantie analyse\n"
 "\n"
-"Een synchronisatie met een interne agenda (Meetings van de CRM module) is ook mogelijk om automatisch een meeting aan te maken wanneer een vakantieaanvraag is goedgekeurd door een type van meeting in te stellen op het type vakantie.\n"
+"Een synchronisatie met een interne agenda (Afspraken van de CRM module) is ook mogelijk om automatisch een afspraak aan te maken wanneer een vakantieaanvraag is goedgekeurd door een type van afspraak in te stellen op het type vakantie.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_slides
@@ -9514,21 +9514,21 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Bedrijfsadres</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Factuuradres</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Afleveradres</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Ander adres</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Privé adres</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Adres</b>\n"
+"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Bedrijfsadres</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Factuuradres</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Afleveradres</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Ander adres</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Privéadres</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Adres</b>\n"
 "                            </span>"
 
 #. module: base
@@ -14067,7 +14067,7 @@ msgstr "Aangemaakt op"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "Creation"
-msgstr "Aanmaken"
+msgstr "Aangemaakt"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys__create_date
@@ -15797,12 +15797,12 @@ msgstr "Evenement standhouders"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_meet
 msgid "Event Meeting / Rooms"
-msgstr "Evenement meeting / ruimtes"
+msgstr "Evenement afspraken / ruimtes"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_meet
 msgid "Event: meeting and chat rooms"
-msgstr "Evenement: meeting  en chatruimtes"
+msgstr "Evenement: afspraken  en chatruimtes"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_exhibitor
@@ -21033,7 +21033,7 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
-"Model voor aanmaken/updaten van record. Stel dit veld enkel in voor een "
+"Model voor aanmaken/bijwerken van record. Stel dit veld enkel in voor een "
 "ander model dan de base module."
 
 #. module: base
@@ -24038,7 +24038,7 @@ msgstr "Online vacatures"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_membership
 msgid "Online Members Directory"
-msgstr "Online leden archief"
+msgstr "Online ledenlijst"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_form_project
@@ -26990,7 +26990,7 @@ msgstr "Plan afspraken met uw klanten"
 #. module: base
 #: model:ir.module.module,summary:base.module_calendar
 msgid "Schedule employees' meetings"
-msgstr "Plan de meetings van werknemers"
+msgstr "Plan de afspraken van werknemers"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_social
@@ -28311,12 +28311,13 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__format__tgz
 msgid "TGZ Archive"
-msgstr "TGZ-archiefbestand"
+msgstr "TGZ gecomprimeerd bestand"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "TGZ format: bundles multiple PO(T) files as a single archive"
-msgstr "TGZ-formaat: bundelt meerdere PO(T) -bestanden als een enkel archief"
+msgstr ""
+"TGZ-formaat: bundelt meerdere PO(T) -bestanden als éé gecomprimeerd bestand."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__starttls
@@ -31582,8 +31583,8 @@ msgid ""
 "You can manage the different federal states you are working on from here. "
 "Each state is attached to one country."
 msgstr ""
-"Van hieruit kan u de verschillende federale staten waar u werkt beheren. "
-"Elke staat is gekoppeld met een land."
+"Van hieruit kan u de verschillende federale staten/provincies waar u werkt "
+"beheren. Elke staat is gekoppeld met een land."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0

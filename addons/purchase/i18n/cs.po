@@ -36,6 +36,9 @@ msgid ""
 "                (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or\n"
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
+"\n"
+"                (object.state in ('draft', 'sent') and 'Žádost o cenovou nabídku - %s' % (object.name) or\n"
+"                'Nákupní objednávka - %s' % (object.name))"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
@@ -55,6 +58,14 @@ msgstr "počet řádků"
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 msgstr ""
 "$ {object.company_id.name} Objednávka (Ref $ {object.name nebo 'n / a'})"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "%(name)s confirmed the receipt will take place on %(date)s."
+msgstr ""
+"%(name)s confirmed the receipt will take place on potvrdil, že příjem se "
+"uskuteční dne %(date)s."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -100,6 +111,26 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dobrý den ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Zde připomínáme, že doručení objednávky <strong>${object.name}</strong>\n"
+"        % if object.partner_ref:\n"
+"            <strong>(${object.partner_ref})</strong>\n"
+"        % endif \n"
+"        se očekává na \n"
+"        % if object.date_planned:\n"
+"            <strong>${format_date(object.date_planned)}</strong>.\n"
+"        % else:\n"
+"            <strong>undefined</strong>.\n"
+"        % endif\n"
+"        Můžete prosím potvrdit tento datum doručení?\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -126,6 +157,27 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dobrý den ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Zde je v příloze objednávka <strong>${object.name}</strong>\n"
+"        % if object.partner_ref:\n"
+"            s referenčním číslem: ${object.partner_ref}\n"
+"        % endif\n"
+"        ve výši <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        od ${object.company_id.name}. \n"
+"        <br/><br/>\n"
+"        % if object.date_planned:\n"
+"            Vyúčtování se očekává <strong>${format_date(object.date_planned)}</strong>.\n"
+"            <br/><br/>\n"
+"            Můžete prosím potvrdit přijetí této objednávky?\n"
+"        % endif\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -149,6 +201,24 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dobrý den ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Zde je v příloze žádost o cenovou nabídku <strong>${object.name}</strong>\n"
+"        % if object.partner_ref:\n"
+"            s referenčním číslem: ${object.partner_ref}\n"
+"        % endif\n"
+"        od ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        V případě jakýchkoli dotazů nás neváhejte kontaktovat.\n"
+"        <br/><br/>\n"
+"        S pozdravem,\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -2547,6 +2617,12 @@ msgid "Terms and Conditions"
 msgstr "Podmínky"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "The order receipt has been acknowledged by %(name)s."
+msgstr "Přijetí objednávky bylo potvrzeno od %(name)s."
+
+#. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
@@ -2940,6 +3016,12 @@ msgid ""
 " dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
+"Při vytváření nákupní objednávky se podívejte na hodnocení <i>včasného "
+"dodání dodavatele</i>: procento produktů dodaných včas. Pokud je příliš "
+"nízká, aktivujte <i>automatické upomínky</i>. Několik dní před termínem "
+"odeslání Odoo zašle dodavateli e-mail s žádostí o potvrzení termínů odeslání"
+" a bude vás informovat v případě zpoždění. Chcete-li získat statistiku "
+"výkonnosti dodavatele, klikněte na ukazatel OTD."
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1

@@ -504,9 +504,7 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'pos.payment.method',
         fields: ['name', 'is_cash_count', 'use_payment_terminal'],
-        domain: function(self, tmp) {
-            return [['id', 'in', tmp.payment_method_ids]];
-        },
+        domain: function(self){return ['|',['active', '=', false], ['active', '=', true]]; },
         loaded: function(self, payment_methods) {
             self.payment_methods = payment_methods.sort(function(a,b){
                 // prefer cash payment_method to be first in the list
@@ -2737,7 +2735,7 @@ exports.Order = Backbone.Model.extend({
             amount_paid: this.get_total_paid() - this.get_change(),
             amount_total: this.get_total_with_tax(),
             amount_tax: this.get_total_tax(),
-            amount_return: this.amount_return ? this.amount_return : this.get_change(),
+            amount_return: this.get_change(),
             lines: orderLines,
             statement_ids: paymentLines,
             pos_session_id: this.pos_session_id,
@@ -2993,14 +2991,14 @@ exports.Order = Backbone.Model.extend({
             line.set_quantity(options.quantity);
         }
 
-        if(options.price !== undefined){
-            line.set_unit_price(options.price);
-            this.fix_tax_included_price(line);
-        }
-
         if (options.price_extra !== undefined){
             line.price_extra = options.price_extra;
             line.set_unit_price(line.product.get_price(this.pricelist, line.get_quantity(), options.price_extra));
+            this.fix_tax_included_price(line);
+        }
+
+        if(options.price !== undefined){
+            line.set_unit_price(options.price);
             this.fix_tax_included_price(line);
         }
 
@@ -3335,11 +3333,18 @@ exports.Order = Backbone.Model.extend({
                 if (utils.float_is_zero(rounding_applied, this.pos.currency.decimals)){
                     // https://xkcd.com/217/
                     return 0;
-                } else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0) {
+                }
+                else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0 && remaining > 0) {
                     rounding_applied += this.pos.cash_rounding[0].rounding;
                 }
-                else if(this.pos.cash_rounding[0].rounding_method === "DOWN" && rounding_applied > 0){
+                else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied > 0 && remaining < 0) {
                     rounding_applied -= this.pos.cash_rounding[0].rounding;
+                }
+                else if(this.pos.cash_rounding[0].rounding_method === "DOWN" && rounding_applied > 0 && remaining > 0){
+                    rounding_applied -= this.pos.cash_rounding[0].rounding;
+                }
+                else if(this.pos.cash_rounding[0].rounding_method === "DOWN" && rounding_applied < 0 && remaining < 0){
+                    rounding_applied += this.pos.cash_rounding[0].rounding;
                 }
                 return sign * rounding_applied;
             }

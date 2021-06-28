@@ -1220,7 +1220,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             exc_vals = dict(base, record=record, field=field_names[field])
             record = dict(base, type=type, record=record, field=field,
                           message=str(exception.args[0]) % exc_vals)
-            if len(exception.args) > 1 and exception.args[1]:
+            if len(exception.args) > 1 and isinstance(exception.args[1], dict):
                 record.update(exception.args[1])
             log(record)
 
@@ -5296,6 +5296,9 @@ Fields:
                 result.append(self.browse())
             else:
                 (key, comparator, value) = d
+                if comparator in ('child_of', 'parent_of'):
+                    result.append(self.search([('id', 'in', self.ids), d]))
+                    continue
                 if key.endswith('.id'):
                     key = key[:-3]
                 if key == 'id':
@@ -5312,9 +5315,6 @@ Fields:
                 records_ids = OrderedSet()
                 for rec in self:
                     data = rec.mapped(key)
-                    if comparator in ('child_of', 'parent_of'):
-                        value = data.search([(data._parent_name, comparator, value)]).ids
-                        comparator = 'in'
                     if isinstance(data, BaseModel):
                         v = value
                         if (isinstance(value, list) or isinstance(value, tuple)) and len(value):
