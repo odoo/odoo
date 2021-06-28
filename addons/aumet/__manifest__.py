@@ -12,24 +12,23 @@
 
     'author': "Aumet",
     'website': "http://www.aumet.com",
-
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/14.0/odoo/addons/base/data/ir_module_category_data.xml
-    # for the full list
     'category': 'Aumet',
     'version': '0.1',
 
-    # any module necessary for this one to work correctly
-
-    'depends': ['product', 'base', 'base_setup'],
+    'depends': ['product', 'base', 'base_setup', 'point_of_sale'],
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
         'data/aumet.scientific_name.csv',
         'views/assets.xml',
         'views/views.xml',
-        # 'views/templates.xml',
+
+    ],
+
+    'images': ['static/description/icon.png'],
+
+    'qweb': [
+        'views/templates.xml'
     ],
 
     'css': ["static/src/css/aumet.css"],
