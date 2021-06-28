@@ -279,7 +279,12 @@ export async function loadState(env, state) {
         env = env.env;
     }
     env.bus.trigger("test:hashchange", state);
+    // wait the asynchronous hashchange
+    // (the event hashchange must be triggered in a nonBlocking stack)
     await nextTick();
+    // wait for the regular rendering
+    await nextTick();
+    // wait for the legacy rendering below owl layer
     await legacyExtraNextTick();
 }
 
