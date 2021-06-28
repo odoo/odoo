@@ -834,6 +834,9 @@ class Website(models.Model):
         res = urls.url_parse(self.domain)
         return 'http://' + self.domain if not res.scheme else self.domain
 
+    def _get_relative_url(self, url):
+        return urls.url_parse(url).replace(scheme='', netloc='').to_url()
+
 
 class SeoMetadata(models.AbstractModel):
 
@@ -918,7 +921,6 @@ class SeoMetadata(models.AbstractModel):
             'opengraph_meta': opengraph_meta,
             'twitter_meta': twitter_meta
         }
-
 
 class WebsiteMultiMixin(models.AbstractModel):
 
