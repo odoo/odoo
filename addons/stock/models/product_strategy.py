@@ -91,43 +91,63 @@ class StockPutawayRule(models.Model):
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         return super(StockPutawayRule, self).write(vals)
 
-    def _get_putaway_location(self, product, quantity=0, package=None, qty_by_location=None):
+    def _get_putaway_location(self, product, quantity=0, package=None, qty_by_location=None, quantity_per_line=None):
         package_type = package and package.package_type_id or None
+        quantity_per_line = quantity_per_line or quantity
 
+        location_ids = []
         checked_locations = set()
-        for putaway_rule in self:
+        rules = iter(self)
+        putaway_rule = next(rules, None)
+        while putaway_rule and quantity > 0:
             location_out = putaway_rule.location_out_id
 
             if not putaway_rule.storage_category_id:
                 if location_out in checked_locations:
+                    putaway_rule = next(rules, None)
                     continue
                 if location_out._check_can_be_used(product, quantity, package, qty_by_location[location_out.id]):
-                    return location_out
+                    quantity -= quantity_per_line
+                    qty_by_location[location_out.id] -= quantity_per_line
+                    location_ids.append(location_out.id)
+                    continue
+                putaway_rule = next(rules, None)
                 continue
 
             child_locations = self.env['stock.location'].search([('id', 'child_of', location_out.id), ('usage', '=', 'internal')])
             # check if already have the product/package type stored
             for location in child_locations:
                 if location in checked_locations:
+                    putaway_rule = next(rules, None)
                     continue
                 if package_type:
                     if location.quant_ids.filtered(lambda q: q.product_id == product and q.package_id and q.package_id.package_type_id == package_type):
                         if location._check_can_be_used(product, package=package, location_qty=qty_by_location[location.id]):
-                            return location
+                            quantity -= quantity_per_line
+                            qty_by_location[location.id] -= quantity_per_line
+                            location_ids.append(location.id)
+                            continue
                         else:
                             checked_locations.add(location)
                 elif float_compare(qty_by_location[location.id], 0, precision_rounding=product.uom_id.rounding) > 0:
                     if location._check_can_be_used(product, quantity, location_qty=qty_by_location[location.id]):
-                        return location
+                        quantity -= quantity_per_line
+                        qty_by_location[location.id] -= quantity_per_line
+                        location_ids.append(location.id)
+                        continue
                     else:
                         checked_locations.add(location)
 
             # check locations with matched storage category
             for location in child_locations.filtered(lambda l: l.storage_category_id == putaway_rule.storage_category_id):
                 if location in checked_locations:
+                    putaway_rule = next(rules, None)
                     continue
                 if location._check_can_be_used(product, quantity, package, qty_by_location[location.id]):
-                    return location
+                    quantity -= quantity_per_line
+                    qty_by_location[location.id] -= quantity_per_line
+                    location_ids.append(location.id)
+                    continue
                 checked_locations.add(location)
 
-        return None
+        return location_ids

@@ -1229,36 +1229,44 @@ class StockMove(models.Model):
         }
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
+        return self._prepare_move_line_vals_list(quantity=quantity, reserved_quant=reserved_quant)[0]
+
+    def _prepare_move_line_vals_list(self, quantity=None, quantity_per_line=None, reserved_quant=None):
         self.ensure_one()
+        quantity_per_line = quantity_per_line or quantity
         # apply putaway
-        location_dest_id = self.location_dest_id._get_putaway_strategy(self.product_id, quantity=quantity or 0, packaging=self.product_packaging_id).id
-        vals = {
-            'move_id': self.id,
-            'product_id': self.product_id.id,
-            'product_uom_id': self.product_uom.id,
-            'location_id': self.location_id.id,
-            'location_dest_id': location_dest_id,
-            'picking_id': self.picking_id.id,
-            'company_id': self.company_id.id,
-        }
-        if quantity:
-            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            uom_quantity = self.product_id.uom_id._compute_quantity(quantity, self.product_uom, rounding_method='HALF-UP')
-            uom_quantity = float_round(uom_quantity, precision_digits=rounding)
-            uom_quantity_back_to_product_uom = self.product_uom._compute_quantity(uom_quantity, self.product_id.uom_id, rounding_method='HALF-UP')
-            if float_compare(quantity, uom_quantity_back_to_product_uom, precision_digits=rounding) == 0:
-                vals = dict(vals, product_uom_qty=uom_quantity)
-            else:
-                vals = dict(vals, product_uom_qty=quantity, product_uom_id=self.product_id.uom_id.id)
-        if reserved_quant:
-            vals = dict(
-                vals,
-                location_id=reserved_quant.location_id.id,
-                lot_id=reserved_quant.lot_id.id or False,
-                package_id=reserved_quant.package_id.id or False,
-                owner_id =reserved_quant.owner_id.id or False,
-            )
-        return vals
+        location_dest_list = self.location_dest_id._get_putaway_strategy_list(self.product_id, quantity=quantity or 0, quantity_per_line=quantity_per_line, packaging=self.product_packaging_id)
+        move_line_vals_list = []
+        for location_dest_id in location_dest_list:
+            vals = {
+                'move_id': self.id,
+                'product_id': self.product_id.id,
+                'product_uom_id': self.product_uom.id,
+                'location_id': self.location_id.id,
+                'location_dest_id': location_dest_id,
+                'picking_id': self.picking_id.id,
+                'company_id': self.company_id.id,
+            }
+            if quantity_per_line:
+                # quantity is supposed to be multiple of quantity_per_line
+                rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+                uom_quantity = self.product_id.uom_id._compute_quantity(quantity_per_line, self.product_uom, rounding_method='HALF-UP')
+                uom_quantity = float_round(uom_quantity, precision_digits=rounding)
+                uom_quantity_back_to_product_uom = self.product_uom._compute_quantity(uom_quantity, self.product_id.uom_id, rounding_method='HALF-UP')
+                if float_compare(quantity, uom_quantity_back_to_product_uom, precision_digits=rounding) == 0:
+                    vals = dict(vals, product_uom_qty=uom_quantity)
+                else:
+                    vals = dict(vals, product_uom_qty=quantity, product_uom_id=self.product_id.uom_id.id)
+            if reserved_quant:
+                vals = dict(
+                    vals,
+                    location_id=reserved_quant.location_id.id,
+                    lot_id=reserved_quant.lot_id.id or False,
+                    package_id=reserved_quant.package_id.id or False,
+                    owner_id =reserved_quant.owner_id.id or False,
+                )
+            move_line_vals_list.append(vals)
+        return move_line_vals_list
 
     def _update_reserved_quantity(self, need, available_quantity, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
         """ Create or update move lines.
@@ -1354,8 +1362,7 @@ class StockMove(models.Model):
             if move._should_bypass_reservation():
                 # create the move line(s) but do not impact quants
                 if move.product_id.tracking == 'serial' and (move.picking_type_id.use_create_lots or move.picking_type_id.use_existing_lots):
-                    for i in range(0, int(missing_reserved_quantity)):
-                        move_line_vals_list.append(move._prepare_move_line_vals(quantity=1))
+                    move_line_vals_list += move._prepare_move_line_vals_list(quantity=int(missing_reserved_quantity), quantity_per_line=1)
                 else:
                     to_update = move.move_line_ids.filtered(lambda ml: ml.product_uom_id == move.product_uom and
                                                             ml.location_id == move.location_id and

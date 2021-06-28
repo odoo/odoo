@@ -198,11 +198,16 @@ class Location(models.Model):
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None):
+        location_ids = self._get_putaway_strategy_list(product, quantity=quantity, quantity_per_line=quantity, package=package, packaging=packaging)
+        return self.env['stock.location'].browse(location_ids[0])
+
+    def _get_putaway_strategy_list(self, product, quantity=0, package=None, packaging=None, quantity_per_line=None):
         """Returns the location where the product has to be put, if any compliant
         putaway strategy is found. Otherwise returns self.
         The quantity should be in the default UOM of the product, it is used when
         no package is specified.
         """
+        quantity_per_line = quantity_per_line or quantity
         # find package type on package or packaging
         package_type = self.env['stock.package.type']
         if package:
@@ -241,7 +246,7 @@ class Location(models.Model):
             for values in quant_data:
                 qty_by_location[values['location_id'][0]] += values['quantity']
 
-        return putaway_rules._get_putaway_location(product, quantity, package, qty_by_location) or self
+        return putaway_rules._get_putaway_location(product, quantity, package, qty_by_location, quantity_per_line) or (self.id for i in range(0, int(0.5 + quantity/quantity_per_line))) if quantity_per_line else [self.id]
 
     def _get_next_inventory_date(self):
         """ Used to get the next inventory date for a quant located in this location. It is
