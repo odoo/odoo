@@ -69,7 +69,7 @@ odoo.define('point_of_sale.tour.ReceiptScreenTourMethods', function (require) {
         emailIsSuccessful() {
             return [
                 {
-                    trigger: `.receipt-screen .notice.successful`,
+                    trigger: `.receipt-screen .notice .successful`,
                     run: () => {},
                 },
             ];

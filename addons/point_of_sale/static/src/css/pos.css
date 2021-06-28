@@ -3557,14 +3557,21 @@ td {
 
 .receipt-screen .notice {
     margin-top: 6px;
+    display: flex;
 }
 
-.receipt-screen .notice.failed {
+.receipt-screen .notice .failed {
     color: rgb(168, 89, 89);
 }
 
-.receipt-screen .notice.successful {
+.receipt-screen .notice .successful {
     color: #6EC89B;
+}
+
+.receipt-screen .notice .send-mail-info {
+    position: absolute;
+    right: 1.5rem;
+    font-style: italic;
 }
 
 @media screen and (max-width: 768px) {
