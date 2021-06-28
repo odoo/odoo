@@ -135,8 +135,7 @@ class Pricelist(models.Model):
         if is_product_template:
             prod_tmpl_ids = [tmpl.id for tmpl in products]
             # all variants of all products
-            prod_ids = [p.id for p in
-                        list(chain.from_iterable([t.product_variant_ids for t in products]))]
+            prod_ids = list(chain.from_iterable([t.product_variant_ids.ids for t in products]))
         else:
             prod_ids = [product.id for product in products]
             prod_tmpl_ids = [product.product_tmpl_id.id for product in products]
