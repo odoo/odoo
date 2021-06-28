@@ -203,12 +203,7 @@ class ir_cron(models.Model):
                     raise BadModuleState()
                 elif version != BASE_VERSION:
                     raise BadVersion()
-                # Careful to compare timestamps with 'UTC' - everything is UTC as of v6.1.
-                cr.execute("""SELECT * FROM ir_cron
-                              WHERE numbercall != 0
-                                  AND active AND nextcall <= (now() at time zone 'UTC')
-                              ORDER BY priority""")
-                jobs = cr.dictfetchall()
+                jobs = cls._get_all_ready_jobs(cr)
 
             if changes:
                 if not jobs:
@@ -269,6 +264,16 @@ class ir_cron(models.Model):
         finally:
             if hasattr(threading.current_thread(), 'dbname'):
                 del threading.current_thread().dbname
+
+    @classmethod
+    def _get_all_ready_jobs(cls, cr):
+        """ Return a list of all jobs that are ready to be executed """
+        # Careful to compare timestamps with 'UTC' - everything is UTC as of v6.1.
+        cr.execute("""SELECT * FROM ir_cron
+                        WHERE numbercall != 0
+                            AND active AND nextcall <= (now() at time zone 'UTC')
+                        ORDER BY priority""")
+        return cr.dictfetchall()
 
     @classmethod
     def _acquire_job(cls, db_name):
