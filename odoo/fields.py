@@ -1757,13 +1757,19 @@ class Html(_String):
     column_type = ('text', 'text')
     column_cast_from = ('varchar',)
 
-    sanitize = True                     # whether value must be sanitized
-    sanitize_tags = True                # whether to sanitize tags (only a white list of attributes is accepted)
-    sanitize_attributes = True          # whether to sanitize attributes (only a white list of attributes is accepted)
-    sanitize_style = False              # whether to sanitize style attributes
-    sanitize_form = True                # whether to sanitize forms
-    strip_style = False                 # whether to strip style attributes (removed and therefore not sanitized)
-    strip_classes = False               # whether to strip classes attributes
+    sanitize = True                             # whether value must be sanitized
+    sanitize_tags = True                        # whether to sanitize tags (only a white list of attributes is accepted)
+    sanitize_attributes = True                  # whether to sanitize attributes (only a white list of attributes is accepted)
+    sanitize_style = False                      # whether to sanitize style attributes
+
+    # remove and kill all the tags that are removed and killed by default with
+    # sanitize_form, except for "select"
+    sanitize_form = False                       # whether to sanitize forms
+    remove_tags = ['form']                      # list of tags to remove while keeping their content
+    kill_tags = ['button', 'input', 'textarea'] # list of tags to kill, along with their whole subtree
+
+    strip_style = False                         # whether to strip style attributes (removed and therefore not sanitized)
+    strip_classes = False                       # whether to strip classes attributes
 
     def _get_attrs(self, model_class, name):
         # called by _setup_attrs(), working together with _String._setup_attrs()
@@ -1797,6 +1803,8 @@ class Html(_String):
                 sanitize_attributes=self.sanitize_attributes,
                 sanitize_style=self.sanitize_style,
                 sanitize_form=self.sanitize_form,
+                remove_tags=self.remove_tags,
+                kill_tags=self.kill_tags,
                 strip_style=self.strip_style,
                 strip_classes=self.strip_classes)
         return value
@@ -1811,6 +1819,8 @@ class Html(_String):
                 sanitize_attributes=self.sanitize_attributes,
                 sanitize_style=self.sanitize_style,
                 sanitize_form=self.sanitize_form,
+                remove_tags=self.remove_tags,
+                kill_tags=self.kill_tags,
                 strip_style=self.strip_style,
                 strip_classes=self.strip_classes)
         return value

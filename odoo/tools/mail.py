@@ -167,7 +167,7 @@ class _Cleaner(clean.Cleaner):
                 del el.attrib['style']
 
 
-def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=False, sanitize_style=False, sanitize_form=True, strip_style=False, strip_classes=False):
+def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=False, sanitize_style=False, sanitize_form=True, remove_tags=None, kill_tags=None, strip_style=False, strip_classes=False):
     if not src:
         return src
     src = ustr(src, errors='replace')
@@ -190,16 +190,19 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         'comments': False,
         'processing_instructions': False
     }
+
     if sanitize_tags:
         kwargs['allow_tags'] = allowed_tags
+        extra_tags_to_kill = [] if kill_tags is None else kill_tags
+        extra_tags_to_remove = [] if remove_tags is None else remove_tags
         if etree.LXML_VERSION >= (2, 3, 1):
             # kill_tags attribute has been added in version 2.3.1
             kwargs.update({
-                'kill_tags': tags_to_kill,
-                'remove_tags': tags_to_remove,
+                'kill_tags': tags_to_kill + extra_tags_to_kill,
+                'remove_tags': tags_to_remove + extra_tags_to_remove,
             })
         else:
-            kwargs['remove_tags'] = tags_to_kill + tags_to_remove
+            kwargs['remove_tags'] = tags_to_kill + tags_to_remove + extra_tags_to_kill + extra_tags_to_remove
 
     if sanitize_attributes and etree.LXML_VERSION >= (3, 1, 0):  # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attributes in order to keep "style"
         if strip_classes:

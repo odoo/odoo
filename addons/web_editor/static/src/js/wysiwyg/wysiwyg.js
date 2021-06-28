@@ -160,7 +160,27 @@ const Wysiwyg = Widget.extend({
         $(this.odooEditor.editable).on('click', this._updateEditorUI.bind(this));
         $(this.odooEditor.editable).on('keydown', this._updateEditorUI.bind(this));
         $(this.odooEditor.editable).on('keydown', this._handleShortcuts.bind(this));
-        // Ensure the Toolbar always have the correct layout in note.
+
+        $(this.odooEditor.editable).on('mousedown', (ev) => {
+            const $target = $(ev.target);
+            // Keep popover open if clicked inside it, but not on a button
+            if (!($target.parents('.o_edit_select_popover').length && !$target.parent('a').addBack('a').length)) {
+                $('.o_edit_select_popover').popover('hide');
+                $('.o_edit_select_popover').find('[data-toggle="tooltip"]').tooltip('hide');
+            }
+        });
+        $(this.odooEditor.editable).on('mouseover', async ev => {
+            const $target = $(ev.target);
+            if ($target.is('select')) {
+                this._lastSelect = ev.target;
+                new weWidgets.SelectOptionsPopoverWidget(this, ev.target, this).appendTo(ev.target);
+            } else if (this._lastSelect && !$target.closest('.o_edit_select_popover').length) {
+                $(this._lastSelect).popover('hide');
+                this._lastSelect = undefined;
+            }
+        });
+
+        // Ensure the toolbar always has the correct layout in html fields.
         this._updateEditorUI();
 
         return _super.apply(this, arguments).then(() => {
@@ -641,13 +661,41 @@ const Wysiwyg = Widget.extend({
             }
         });
         mediaDialog.on('closed', this, function () {
-            // if the mediaDialog content has been saved
-            // the previous selection in not relevant anymore
+            // If the mediaDialog content has been saved, the previous selection
+            // in not relevant anymore.
             if (mediaDialog.destroyAction !== 'save') {
                 restoreSelection();
             }
         });
     },
+    /**
+     * Open the select options dialog.
+     *
+     * Used to insert or change a <select> element's options.
+     *
+     * @param {Node} [select] Optionnal
+     */
+    openSelectOptionsDialog: function (select) {
+        const restoreSelection = preserveCursor(this.odooEditor.document);
+        const selectOptionsDialog = new weWidgets.SelectOptionsDialog(this, {}, select);
+        selectOptionsDialog.open();
+
+        selectOptionsDialog.on('save', this, function (element) {
+            if (select) {
+                $(select).remove();
+            }
+            restoreSelection();
+            this.odooEditor.execCommand('insertHTML', element.outerHTML);
+        });
+        selectOptionsDialog.on('closed', this, function () {
+            // If the selectOptionsDialog content has been saved, the previous
+            // selection in not relevant anymore.
+            if (selectOptionsDialog.destroyAction !== 'save') {
+                restoreSelection();
+            }
+        });
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -1199,6 +1247,15 @@ const Wysiwyg = Widget.extend({
                     this.openMediaDialog({noVideos: false, noImages: true, noIcons: true, noDocuments: true});
                 },
             },
+            {
+                groupName: 'Forms',
+                title: 'Select',
+                description: 'Insert an options selector.',
+                fontawesome: 'fa-caret-square-o-down',
+                callback: () => {
+                    this.openSelectOptionsDialog();
+                },
+            },
         ];
         if (this.options.snippets) {
             commands.push(...this._getSnippetsCommands());
@@ -1541,6 +1598,7 @@ odoo.define('web_editor.widget', function (require) {
     return {
         Dialog: require('wysiwyg.widgets.Dialog'),
         MediaDialog: require('wysiwyg.widgets.MediaDialog'),
+        SelectOptionsDialog: require('wysiwyg.widgets.SelectOptionsDialog'),
         LinkDialog: require('wysiwyg.widgets.LinkDialog'),
     };
 });
