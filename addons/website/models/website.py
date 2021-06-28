@@ -831,3 +831,6 @@ class Website(models.Model):
             return ''
         res = urls.url_parse(self.domain)
         return 'http://' + self.domain if not res.scheme else self.domain
+
+    def _get_relative_url(self, url):
+        return urls.url_parse(url).replace(scheme='', netloc='').to_url()
