@@ -26,7 +26,15 @@ class ReportStockQuantity(models.Model):
         tools.drop_view_if_exists(self._cr, 'report_stock_quantity')
         query = """
 CREATE or REPLACE VIEW report_stock_quantity AS (
-WITH forecast_qty AS (
+SELECT
+    MIN(id) as id,
+    product_id,
+    state,
+    date,
+    sum(product_qty) as product_qty,
+    company_id,
+    warehouse_id
+FROM (
     SELECT
         m.id,
         m.product_id,
@@ -111,17 +119,7 @@ WITH forecast_qty AS (
         pt.type = 'product' AND
         product_qty != 0 AND
         (whs.id IS NULL or whd.id IS NULL OR whs.id != whd.id) AND
-        m.state NOT IN ('cancel', 'draft')
-)
-SELECT
-    MIN(id) as id,
-    product_id,
-    state,
-    date,
-    sum(product_qty) as product_qty,
-    company_id,
-    warehouse_id
-FROM forecast_qty
+        m.state NOT IN ('cancel', 'draft')) as forecast_qty
 GROUP BY product_id, state, date, company_id, warehouse_id
 );
 """
