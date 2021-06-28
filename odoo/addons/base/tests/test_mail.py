@@ -328,13 +328,21 @@ class TestHtmlTools(BaseCase):
         for content in void_strings_samples:
             self.assertTrue(is_html_empty(content))
 
-        void_html_samples = ['<p><br></p>', '<p><br> </p>', '<p><br /></p >', '<p style="margin: 4px"></p>',
-                             '<div style="margin: 4px"></div>', '<p class="oe_testing"><br></p>']
+        void_html_samples = [
+            '<p><br></p>', '<p><br> </p>', '<p><br /></p >',
+            '<p style="margin: 4px"></p>',
+            '<div style="margin: 4px"></div>',
+            '<p class="oe_testing"><br></p>',
+            '<p><span style="font-weight: bolder;"><font style="color: rgb(255, 0, 0);" class=" "></font></span><br></p>',
+        ]
         for content in void_html_samples:
             self.assertTrue(is_html_empty(content), 'Failed with %s' % content)
 
-        valid_html_samples = ['<p><br>1</p>', '<p>1<br > </p>', '<p style="margin: 4px">Hello World</p>',
-                              '<div style="margin: 4px"><p>Hello World</p></div>']
+        valid_html_samples = [
+            '<p><br>1</p>', '<p>1<br > </p>', '<p style="margin: 4px">Hello World</p>',
+            '<div style="margin: 4px"><p>Hello World</p></div>',
+            '<p><span style="font-weight: bolder;"><font style="color: rgb(255, 0, 0);" class=" ">W</font></span><br></p>',
+        ]
         for content in valid_html_samples:
             self.assertFalse(is_html_empty(content))
 
