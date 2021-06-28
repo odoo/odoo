@@ -120,13 +120,17 @@
     // Many2many tags
     &.o_field_many2manytags {
         flex-flow: row wrap;
-        align-items: baseline;
+        align-items: stretch;
         max-width: 100%;
 
         > .o_field_widget {
             flex: 1 0 100px;
             position: initial;
             max-width: 100%;
+        }
+
+        .o_field_many2one_selection, .o_input {
+            height: 100%;
         }
 
         .badge {
