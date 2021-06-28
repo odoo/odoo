@@ -197,7 +197,7 @@ class Location(models.Model):
             domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
-    def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None):
+    def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None, locations=None):
         """Returns the location where the product has to be put, if any compliant
         putaway strategy is found. Otherwise returns self.
         The quantity should be in the default UOM of the product, it is used when
@@ -221,7 +221,8 @@ class Location(models.Model):
 
         # get current product qty (qty in current quants and future qty on assigned ml) of all child locations
         qty_by_location = defaultdict(lambda: 0)
-        locations = self.env['stock.location'].search([('id', 'child_of', self.id), ('usage', '=', 'internal')])
+        if locations is None:
+            locations = self.env['stock.location'].search([('id', 'child_of', self.id), ('usage', '=', 'internal')])
         if locations.storage_category_id:
             move_line_data = self.env['stock.move.line'].read_group([
                 ('product_id', '=', product.id),

@@ -1228,10 +1228,10 @@ class StockMove(models.Model):
             'product_packaging_id': self.product_packaging_id,
         }
 
-    def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
+    def _prepare_move_line_vals(self, quantity=None, reserved_quant=None, locations=None):
         self.ensure_one()
         # apply putaway
-        location_dest_id = self.location_dest_id._get_putaway_strategy(self.product_id, quantity=quantity or 0, packaging=self.product_packaging_id).id
+        location_dest_id = self.location_dest_id._get_putaway_strategy(self.product_id, quantity=quantity or 0, packaging=self.product_packaging_id, locations=locations).id
         vals = {
             'move_id': self.id,
             'product_id': self.product_id.id,
@@ -1354,8 +1354,9 @@ class StockMove(models.Model):
             if move._should_bypass_reservation():
                 # create the move line(s) but do not impact quants
                 if move.product_id.tracking == 'serial' and (move.picking_type_id.use_create_lots or move.picking_type_id.use_existing_lots):
+                    locations = self.env['stock.location'].search([('id', 'child_of', self.location_dest_id.id), ('usage', '=', 'internal')])
                     for i in range(0, int(missing_reserved_quantity)):
-                        move_line_vals_list.append(move._prepare_move_line_vals(quantity=1))
+                        move_line_vals_list.append(move._prepare_move_line_vals(quantity=1, locations=locations))
                 else:
                     to_update = move.move_line_ids.filtered(lambda ml: ml.product_uom_id == move.product_uom and
                                                             ml.location_id == move.location_id and
@@ -1752,8 +1753,9 @@ class StockMove(models.Model):
                 res.append((0, 0, vals))
             else:
                 uom_qty = self.product_uom._compute_quantity(qty, self.product_id.uom_id)
+                locations = self.env['stock.location'].search([('id', 'child_of', self.location_dest_id.id), ('usage', '=', 'internal')])
                 for i in range(0, int(uom_qty)):
-                    vals = self._prepare_move_line_vals(quantity=0)
+                    vals = self._prepare_move_line_vals(quantity=0, locations=locations)
                     vals['qty_done'] = 1
                     vals['product_uom_id'] = self.product_id.uom_id.id
                     res.append((0, 0, vals))
