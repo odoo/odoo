@@ -62,6 +62,9 @@
             @include print-variable('o-cc#{$index}-btn-secondary-border', $-btn-secondary or theme-color('secondary'));
         }
     }
+
+    @include print-variable('o-grid-gutter-width', $grid-gutter-width);
+    @include print-variable('o-md-container-max-width', map-get($container-max-widths, md));
 }
 
 html, body {
