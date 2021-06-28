@@ -41,31 +41,11 @@ function factory(dependencies) {
             this.update({ isDoFocus: true });
         }
 
-        async refresh() {
-            if (this.hasActivities) {
-                this.thread.refreshActivities();
-            }
-            if (this.hasFollowers) {
-                this.thread.refreshFollowers();
-                this.thread.fetchAndUpdateSuggestedRecipients();
-            }
-            if (this.hasMessageList) {
-                this.thread.refresh();
-            }
-        }
-
         /**
          * Handle click on activity box title
          */
         onClickActivityBoxTitle() {
             this.update({ isActivityBoxVisible: !this.isActivityBoxVisible });
-        }
-
-        /**
-         * Handle message posted even.
-         */
-        onComposerMessagePosted() {
-            this.update({ isComposerVisible: false });
         }
 
         /**
@@ -75,6 +55,14 @@ function factory(dependencies) {
             this.update({
                 isAttachmentBoxVisible: !this.isAttachmentBoxVisible,
             });
+        }
+
+
+        /**
+         * Handle message posted even.
+         */
+        onComposerMessagePosted() {
+            this.update({ isComposerVisible: false });
         }
 
         onClickLogNote() {
@@ -103,6 +91,19 @@ function factory(dependencies) {
             this.update({ isComposerVisible: true });
             this.thread.composer.update({ isLog: true });
             this.focus();
+        }
+
+        async refresh() {
+            if (this.hasActivities) {
+                this.thread.refreshActivities();
+            }
+            if (this.hasFollowers) {
+                this.thread.refreshFollowers();
+                this.thread.fetchAndUpdateSuggestedRecipients();
+            }
+            if (this.hasMessageList) {
+                this.thread.refresh();
+            }
         }
 
         showSendMessage() {
