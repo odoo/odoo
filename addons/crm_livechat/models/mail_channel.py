@@ -45,9 +45,13 @@ class MailChannel(models.Model):
         return self.env['crm.lead'].create({
             'name': html2plaintext(key[5:]),
             'partner_id': customers[0].id if customers else False,
+<<<<<<< HEAD
             'user_id': False,
             'team_id': False,
             'description': description,
+=======
+            'description': html2plaintext(description),
+>>>>>>> f00aa6c2489... temp
             'referred': partner.name,
             'source_id': utm_source and utm_source.id,
         })
