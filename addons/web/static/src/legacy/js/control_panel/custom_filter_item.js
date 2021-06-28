@@ -271,7 +271,7 @@ odoo.define('web.CustomFilterItem', function (require) {
     CustomFilterItem.props = {
         fields: Object,
     };
-    CustomFilterItem.template = 'web.CustomFilterItem';
+    CustomFilterItem.template = 'web.Legacy.CustomFilterItem';
 
     return CustomFilterItem;
 });
