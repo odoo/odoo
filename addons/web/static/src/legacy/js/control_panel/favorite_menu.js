@@ -101,7 +101,7 @@ odoo.define('web.FavoriteMenu', function (require) {
     FavoriteMenu.components = Object.assign({}, DropdownMenu.components, {
         Dialog,
     });
-    FavoriteMenu.template = 'web.FavoriteMenu';
+    FavoriteMenu.template = 'web.Legacy.FavoriteMenu';
 
     return FavoriteMenu;
 });
