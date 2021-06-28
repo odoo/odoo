@@ -73,7 +73,7 @@ odoo.define('web.FilterMenu', function (require) {
     FilterMenu.props = Object.assign({}, DropdownMenu.props, {
         fields: Object,
     });
-    FilterMenu.template = 'web.FilterMenu';
+    FilterMenu.template = 'web.Legacy.FilterMenu';
 
     return FilterMenu;
 });
