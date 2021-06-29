@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_round, pycompat
+from odoo.tools import float_is_zero
 
 from itertools import groupby
 
@@ -265,6 +266,12 @@ class MrpBomLine(models.Model):
             'Lines with 0 quantities can be used as optional lines. \n'
             'You should install the mrp_byproduct module if you want to manage extra products on BoMs !'),
     ]
+
+    @api.constrains('product_qty')
+    def _check_product_qty(self):
+        for rec in self:
+            if float_is_zero(rec.product_qty, precision_rounding=rec.product_uom_id.rounding):
+                raise ValidationError(_("The quantity of each BOM line must be different of zero"))
 
     @api.one
     @api.depends('product_id', 'bom_id')
