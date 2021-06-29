@@ -5,8 +5,8 @@ from odoo import api, fields, models
 
 
 class Contacts(models.Model):
-    _name = 'calendar.contacts'
-    _description = 'Calendar Contacts'
+    _name = 'calendar.filters'
+    _description = 'Calendar Filters'
 
     user_id = fields.Many2one('res.users', 'Me', required=True, default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', 'Employee', required=True)

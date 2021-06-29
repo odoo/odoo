@@ -790,7 +790,7 @@ class Meeting(models.Model):
         if my_attendee:
             return my_attendee[:1]
 
-        event_checked_attendees = self.env['calendar.contacts'].search([
+        event_checked_attendees = self.env['calendar.filters'].search([
             ('user_id', '=', self.env.user.id),
             ('partner_id', 'in', self.attendee_ids.partner_id.ids),
             ('partner_checked', '=', True)
