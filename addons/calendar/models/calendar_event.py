@@ -438,14 +438,17 @@ class Meeting(models.Model):
             public = [event for event in events if event.get('privacy') != 'private']
             return private, public
 
-        def my_events(events):
+        def split_visibility(events):
             """
             :param events: list of event values (dict)
             :return: tuple(my events, other events)
             """
-            my = [event for event in events if event.get('user_id') and event.get('user_id')[0] == self.env.uid]
-            others = [event for event in events if not event.get('user_id') or event.get('user_id')[0] != self.env.uid]
-            return my, others
+            current_partner_id = self.env.user.partner_id.id
+            visible_events = [event for event in events if (event.get('user_id') and event.get('user_id')[0] == self.env.uid)
+                              or current_partner_id in event.get('partner_ids')]
+            my_ids = map(lambda e: e['id'], visible_events)
+            other_events = [event for event in events if event.get('id') not in my_ids]
+            return visible_events, other_events
 
         def obfuscated(events):
             """
@@ -458,10 +461,9 @@ class Meeting(models.Model):
                 for field, value in event.items()
             } for event in events]
 
-        events = super().read(fields=fields + ['privacy', 'user_id'], load=load)
+        events = super().read(fields=fields + ['privacy', 'user_id', 'partner_ids'], load=load)
         private_events, public_events = split_privacy(events)
-        my_private_events, others_private_events = my_events(private_events)
-
+        my_private_events, others_private_events = split_visibility(private_events)
         return public_events + my_private_events + obfuscated(others_private_events)
 
     def write(self, values):
