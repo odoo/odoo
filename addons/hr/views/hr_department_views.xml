@@ -32,6 +32,7 @@
                     <field name="display_name"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="manager_id"/>
+                    <field name="total_employee" string="Employees"/>
                     <field name="parent_id"/>
                 </tree>
             </field>
@@ -55,7 +56,7 @@
             <field name="name">hr.department.kanban</field>
             <field name="model">hr.department</field>
             <field name="arch" type="xml">
-                <kanban class="oe_background_grey o_kanban_dashboard o_hr_kanban" sample="1">
+                <kanban class="oe_background_grey o_kanban_dashboard o_hr_department_kanban" sample="1">
                     <field name="name"/>
                     <field name="company_id"/>
                     <field name="manager_id"/>
@@ -65,7 +66,7 @@
                             <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                                 <div t-attf-class="o_kanban_card_header">
                                     <div class="o_kanban_card_header_title">
-                                        <div class="o_primary"><field name="name"/></div>
+                                        <div class="o_primary"><a type="edit"><field name="name"/></a></div>
                                         <div class="o_secondary"><field name="company_id" groups="base.group_multi_company"/></div>
                                     </div>
                                     <div class="o_kanban_manage_button_section" t-if="!selection_mode">
