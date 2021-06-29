@@ -3807,12 +3807,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             SET parent_path = concat(%s, substr(child.parent_path,
                     length(node.parent_path) - length(node.id || '/') + 1))
             FROM {0} node
-            WHERE node.id IN %s
+            WHERE node.id = %s
             AND child.parent_path LIKE concat(node.parent_path, '%%')
             RETURNING child.id
         """
-        cr.execute(query.format(self._table), [prefix, tuple(self.ids)])
-        modified_ids = {row[0] for row in cr.fetchall()}
+        modified_ids = set([])
+        for record in self:
+            cr.execute(query.format(self._table), [prefix, record.id])
+            modified_ids.update(row[0] for row in cr.fetchall())
         self.browse(modified_ids).modified(['parent_path'])
 
     def _load_records_write(self, values):
