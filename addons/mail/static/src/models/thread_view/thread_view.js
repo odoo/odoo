@@ -67,6 +67,9 @@ function factory(dependencies) {
          * Handle onClick on retry load message link.
          */
         onClickRetryLoadMessages() {
+            if (!this.threadCache) {
+                return;
+            }
             this.threadCache.update({ hasLoadingFailed: false });
         }
 

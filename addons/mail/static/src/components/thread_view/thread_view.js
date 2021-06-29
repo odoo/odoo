@@ -108,9 +108,6 @@ export class ThreadView extends Component {
         if (!this.threadView) {
             return;
         }
-        if (!this.threadView.threadCache) {
-            return;
-        }
         this.threadView.onClickRetryLoadMessages();
     }
 
