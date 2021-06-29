@@ -8,7 +8,8 @@ import logging
 import pytz
 from werkzeug.urls import url_join
 
-from odoo import api, fields, models
+from odoo import api, fields, models, Command
+from odoo.osv.expression import AND
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.calendar.models.calendar_attendee import Attendee
 from odoo.addons.calendar.models.calendar_recurrence import weekday_to_field, RRULE_TYPE_SELECTION, END_TYPE_SELECTION, MONTH_BY_SELECTION, WEEKDAY_SELECTION, BYDAY_SELECTION
@@ -530,10 +531,15 @@ class Meeting(models.Model):
         grouped_fields = set(group_field.split(':')[0] for group_field in groupby)
         private_fields = grouped_fields - self._get_public_fields()
         if not self.env.su and private_fields:
-            raise AccessError(_(
-                "Grouping by %s is not allowed.",
-                ', '.join([self._fields[field_name].string for field_name in private_fields])
-            ))
+            # display public and confidential events
+            domain = AND([domain, ['|', ('privacy', '!=', 'private'), ('user_id', '=', self.env.user.id)]])
+            self.env['bus.bus'].sendone(
+                (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
+                {'type': 'simple_notification', 'title': _('Private Event Excluded'),
+                 'message': _('Grouping by %s is not allowed on private events.',
+                              ', '.join([self._fields[field_name].string for field_name in private_fields]))}
+            )
+            return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
         return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def unlink(self):

@@ -73,11 +73,15 @@ class TestAccessRights(TransactionCase):
         event = self.create_event(self.john)
         data = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['start'], groupby='start')
         self.assertTrue(data, "It should be able to read group")
+        data = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['name'],
+                                                                           groupby='name')
+        self.assertTrue(data, "It should be able to read group")
 
     def test_read_group_private(self):
-        event = self.create_event(self.john)
-        with self.assertRaises(AccessError):
-            self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['name'], groupby='name')
+        event = self.create_event(self.john, privacy='private')
+        result = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['name'], groupby='name')
+        self.assertFalse(result, "Private events should not be fetched")
+
 
     def test_read_group_agg(self):
         event = self.create_event(self.john)
