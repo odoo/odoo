@@ -55,6 +55,12 @@ def quick_eval(expr, globals_dict):
     return safe_eval.safe_eval(expr, globals_dict)
 
 
+def att_names(name):
+    yield name
+    yield f"t-att-{name}"
+    yield f"t-attf-{name}"
+
+
 def transfer_field_to_modifiers(field, modifiers):
     default_values = {}
     state_exceptions = {}
@@ -993,7 +999,6 @@ actual arch.
             parent = node.getparent()
             node_info = {
                 'modifiers': {},
-                'attr_model': name_manager.Model,
                 'editable': editable and self._editable_node(node, name_manager),
             }
 
@@ -1107,14 +1112,12 @@ actual arch.
                             'fields': sub_name_manager.available_fields,
                         }
                 attrs['views'] = views
-                if field.relational:
+                if field.type in ('many2one', 'many2many'):
                     comodel = self.env[field.comodel_name].sudo(False)
-                    node_info['attr_model'] = comodel
-                    if field.type in ('many2one', 'many2many'):
-                        can_create = comodel.check_access_rights('create', raise_exception=False)
-                        can_write = comodel.check_access_rights('write', raise_exception=False)
-                        node.set('can_create', 'true' if can_create else 'false')
-                        node.set('can_write', 'true' if can_write else 'false')
+                    can_create = comodel.check_access_rights('create', raise_exception=False)
+                    can_write = comodel.check_access_rights('write', raise_exception=False)
+                    node.set('can_create', 'true' if can_create else 'false')
+                    node.set('can_write', 'true' if can_write else 'false')
 
             name_manager.has_field(node.get('name'), attrs)
 
@@ -1223,7 +1226,6 @@ actual arch.
             # compute default
             tag = node.tag
             node_info = {
-                'attr_model': name_manager.Model,
                 'editable': editable and self._editable_node(node, name_manager),
             }
 
@@ -1294,24 +1296,28 @@ actual arch.
 
         field = name_manager.Model._fields.get(name)
         if field:
-            fields = self._get_field_domain_variables(node, field, node_info['editable'])
-            name_manager.must_have_fields(fields)
-            for child in node:
-                if child.tag not in ('form', 'tree', 'graph', 'kanban', 'calendar'):
-                    continue
-                node.remove(child)
-                sub_manager = self._validate_view(child, field.comodel_name, node_info['editable'])
-                name_manager.must_have_fields(sub_manager.mandatory_parent_fields)
+            if field.relational:
+                comodel = self.env[field.comodel_name]
+                if node.get('domain'):
+                    desc = f'domain of <field name="{name}">'
+                    fields = self._get_server_domain_variables(node, node.get('domain'), desc, comodel)
+                else:
+                    fields = self._get_field_domain_variables(node, field, node_info['editable'])
+                name_manager.must_have_fields(fields)
 
-            if node.get('domain') and not field.relational:
+            elif node.get('domain'):
                 msg = _(
                     'Domain on non-relational field "%(name)s" makes no sense (domain:%(domain)s)',
                     name=name, domain=node.get('domain'),
                 )
                 self._raise_view_error(msg, node)
 
-            if field.relational:
-                node_info['attr_model'] = self.env[field.comodel_name]
+            for child in node:
+                if child.tag not in ('form', 'tree', 'graph', 'kanban', 'calendar'):
+                    continue
+                node.remove(child)
+                sub_manager = self._validate_view(child, field.comodel_name, node_info['editable'])
+                name_manager.must_have_fields(sub_manager.mandatory_parent_fields)
 
         elif name not in name_manager.fields_get:
             msg = _(
@@ -1332,6 +1338,14 @@ actual arch.
                         attribute=attribute, value=val,
                     )
                     self._raise_view_error(msg, node)
+
+    def _validate_tag_filter(self, node, name_manager, node_info):
+        if node.get('domain'):
+            name = node.get('name')
+            desc = f'domain of <filter name="{name}">' if name else 'domain of <filter>'
+            model = name_manager.Model
+            fields = self._get_server_domain_variables(node, node.get('domain'), desc, model)
+            name_manager.must_have_fields(fields)
 
     def _validate_tag_button(self, node, name_manager, node_info):
         name = node.get('name')
@@ -1446,12 +1460,12 @@ actual arch.
             self._raise_view_error(_('Page direct ancestor must be notebook'), node)
 
     def _validate_tag_img(self, node, name_manager, node_info):
-        if not any(node.get(alt) for alt in self._att_list('alt')):
+        if not any(node.get(alt) for alt in att_names('alt')):
             self._log_view_warning('<img> tag must contain an alt attribute', node)
 
     def _validate_tag_a(self, node, name_manager, node_info):
         #('calendar', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-        if any('btn' in node.get(cl, '') for cl in self._att_list('class')):
+        if any('btn' in node.get(cl, '') for cl in att_names('class')):
             if node.get('role') != 'button':
                 msg = '"<a>" tag with "btn" class must have "button" role'
                 self._log_view_warning(msg, node)
@@ -1469,51 +1483,47 @@ actual arch.
 
     def _check_dropdown_menu(self, node):
         #('calendar', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-        if any('dropdown-menu' in node.get(cl, '') for cl in self._att_list('class')):
+        if any('dropdown-menu' in node.get(cl, '') for cl in att_names('class')):
             if node.get('role') != 'menu':
                 msg = 'dropdown-menu class must have menu role'
                 self._log_view_warning(msg, node)
 
     def _check_progress_bar(self, node):
-        if any('o_progressbar' in node.get(cl, '') for cl in self._att_list('class')):
+        if any('o_progressbar' in node.get(cl, '') for cl in att_names('class')):
             if node.get('role') != 'progressbar':
                 msg = 'o_progressbar class must have progressbar role'
                 self._log_view_warning(msg, node)
-            if not any(node.get(at) for at in self._att_list('aria-valuenow')):
+            if not any(node.get(at) for at in att_names('aria-valuenow')):
                 msg = 'o_progressbar class must have aria-valuenow attribute'
                 self._log_view_warning(msg, node)
-            if not any(node.get(at) for at in self._att_list('aria-valuemin')):
+            if not any(node.get(at) for at in att_names('aria-valuemin')):
                 msg = 'o_progressbar class must have aria-valuemin attribute'
                 self._log_view_warning(msg, node)
-            if not any(node.get(at) for at in self._att_list('aria-valuemax')):
+            if not any(node.get(at) for at in att_names('aria-valuemax')):
                 msg = 'o_progressbar class must have aria-valuemaxattribute'
                 self._log_view_warning(msg, node)
 
-    def _att_list(self, name):
-        return [name, 't-att-%s' % name, 't-attf-%s' % name]
-
     def _validate_attrs(self, node, name_manager, node_info):
         """ Generic validation of node attrs. """
-        Model = node_info['attr_model']
-
         for attr, expr in node.items():
-            if attr == 'domain':
-                fields = self._get_server_domain_variables(node, expr, 'domain of <%s%s>' % (node.tag, (' name="%s"' % node.get('name')) if node.get('name') else ''), Model)
-                name_manager.must_have_fields(fields)
+            if attr in ('class', 't-att-class', 't-attf-class'):
+                self._validate_classes(node, expr)
 
-            elif attr.startswith('decoration-'):
-                fields = dict.fromkeys(get_variable_names(expr), '%s=%s' % (attr, expr))
-                name_manager.must_have_fields(fields)
-
-            elif attr in ('attrs', 'context'):
+            elif attr == 'attrs':
                 for key, val_ast in get_dict_asts(expr).items():
-                    if attr == 'attrs' and isinstance(val_ast, ast.List):
+                    if isinstance(val_ast, ast.List):
                         # domains in attrs are used for readonly, invisible, ...
                         # and thus are only executed client side
                         fields = self._get_client_domain_variables(node, val_ast, attr, expr)
                         name_manager.must_have_fields(fields)
+                    else:
+                        use = '%s (%s)' % (attr, expr)
+                        fields = dict.fromkeys(get_variable_names(val_ast), use)
+                        name_manager.must_have_fields(fields)
 
-                    elif key == 'group_by':  # only in context
+            elif attr == 'context':
+                for key, val_ast in get_dict_asts(expr).items():
+                    if key == 'group_by':  # only in context
                         if not isinstance(val_ast, ast.Str):
                             msg = _(
                                 '"group_by" value must be a string %(attribute)s=%(value)r',
@@ -1522,7 +1532,7 @@ actual arch.
                             self._raise_view_error(msg, node)
                         group_by = val_ast.s
                         fname = group_by.split(':')[0]
-                        if not fname in Model._fields:
+                        if fname not in name_manager.Model._fields:
                             msg = _(
                                 'Unknown field "%(field)s" in "group_by" value in %(attribute)s=%(value)r',
                                 field=fname, attribute=attr, value=expr,
@@ -1532,6 +1542,14 @@ actual arch.
                         use = '%s (%s)' % (attr, expr)
                         fields = dict.fromkeys(get_variable_names(val_ast), use)
                         name_manager.must_have_fields(fields)
+
+            elif attr == 'groups':
+                for group in expr.replace('!', '').split(','):
+                    # further improvement: add all groups to name_manager in
+                    # order to batch check them at the end
+                    if not self.env['ir.model.data']._xmlid_to_res_id(group.strip(), raise_if_not_found=False):
+                        msg = "The group %r defined in view does not exist!"
+                        self._log_view_warning(msg % group, node)
 
             elif attr in ('col', 'colspan'):
                 # col check is mainly there for the tag 'group', but previous
@@ -1543,21 +1561,9 @@ actual arch.
                         node,
                     )
 
-            elif attr in ('class', 't-att-class', 't-attf-class'):
-                self._validate_classes(node, expr)
-
-            elif attr == 'groups':
-                key_description = '%s=%r' % (attr, expr)
-                for group in expr.replace('!', '').split(','):
-                    # further improvement: add all groups to name_manager in
-                    # order to batch check them at the end
-                    if not self.env['ir.model.data']._xmlid_to_res_id(group.strip(), raise_if_not_found=False):
-                        msg = "The group %r defined in view does not exist!"
-                        self._log_view_warning(msg % group, node)
-
-            elif attr == 'group':
-                msg = "attribute 'group' is not valid.  Did you mean 'groups'?"
-                self._log_view_warning(msg, node)
+            elif attr.startswith('decoration-'):
+                fields = dict.fromkeys(get_variable_names(expr), '%s=%s' % (attr, expr))
+                name_manager.must_have_fields(fields)
 
             elif attr == 'data-toggle' and expr == 'tab':
                 if node.get('role') != 'tab':
@@ -1574,6 +1580,10 @@ actual arch.
             elif attr == "role" and expr in ('presentation', 'none'):
                 msg = ("A role cannot be `none` or `presentation`. "
                     "All your elements must be accessible with screen readers, describe it.")
+                self._log_view_warning(msg, node)
+
+            elif attr == 'group':
+                msg = "attribute 'group' is not valid.  Did you mean 'groups'?"
                 self._log_view_warning(msg, node)
 
     def _validate_classes(self, node, expr):
@@ -1634,11 +1644,9 @@ actual arch.
                 self._log_view_warning(msg, node)
 
     def _validate_fa_class_accessibility(self, node, description):
-        valid_aria_attrs = set(
-            self._att_list('title')
-            + self._att_list('aria-label')
-            + self._att_list('aria-labelledby')
-        )
+        valid_aria_attrs = {
+            *att_names('title'), *att_names('aria-label'), *att_names('aria-labelledby'),
+        }
         valid_t_attrs = {'t-value', 't-raw', 't-field', 't-esc'}
 
         ## Following or preceding text
