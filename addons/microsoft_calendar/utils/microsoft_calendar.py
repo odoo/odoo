@@ -88,6 +88,13 @@ class MicrosoftCalendarService():
                 raise e
             _logger.info("Microsoft event %s was already deleted" % event_id)
 
+    @requires_auth_token
+    def answer(self, event_id, answer, values, token=None, timeout=TIMEOUT):
+        url = "/v1.0/me/calendar/events/%s/%s" % (event_id, answer)
+        headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
+        self.microsoft_service._do_request(url, json.dumps(values), headers, method='POST', timeout=timeout)
+
+
     #####################################
     ##  MANAGE CONNEXION TO MICROSOFT  ##
     #####################################
