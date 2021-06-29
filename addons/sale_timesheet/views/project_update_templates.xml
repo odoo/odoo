@@ -7,13 +7,13 @@
 <div name="profitability" t-if="profitability">
 <h1>Profitability</h1>
 
-<t t-if="project.allow_timesheets and user.has_group('hr_timesheet.group_hr_timesheet_user')">
+<t t-if="profitability['allow_timesheets']">
 In <t t-esc="profitability['month']"/>, <b><t t-if="profitability['is_timesheet_uom_hour']" t-esc="profitability['timesheet_unit_amount']"/><t t-else="" t-esc="profitability['timesheet_unit_amount']"/> <t t-esc="profitability['timesheet_uom']"/></b> have been recorded on the project vs.
 <t t-if="profitability['is_timesheet_uom_hour']" t-esc="profitability['previous_timesheet_unit_amount']"/><t t-else="" t-esc="profitability['previous_timesheet_unit_amount']"/>
 <t t-esc="profitability['timesheet_uom']"/> in <t t-esc="profitability['previous_month']"/> (<t t-esc="profitability['timesheet_trend']"/> %).
 </t>
 
-<t t-if="project.analytic_account_id and project.allow_billable and user.has_group('project.group_project_manager')">
+<t t-if="profitability['allow_costs_and_revenues']">
 The cost of the project is now at <t t-esc="profitability['costs']"/>, for a revenue of <t t-esc="profitability['revenues']"/>, leading to a
 <span>
 <font t-if="profitability['margin'] &gt; 0"  style="color: rgb(0, 128, 0)">
