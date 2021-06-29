@@ -2818,8 +2818,10 @@
         set(mode) {
             QWeb.dev = mode === "dev";
             if (QWeb.dev) {
-                const url = `https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode`;
-                console.warn(`Owl is running in 'dev' mode.  This is not suitable for production use. See ${url} for more information.`);
+                console.info(`Owl is running in 'dev' mode.
+
+This is not suitable for production use.
+See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for more information.`);
             }
             else {
                 console.log(`Owl is now running in 'prod' mode.`);

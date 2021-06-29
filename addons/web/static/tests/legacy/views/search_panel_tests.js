@@ -1144,7 +1144,7 @@ QUnit.module('Views', {
                 "partner,false,search": `
                     <search>
                         <searchpanel>
-                            <field name="category_id" enable_counters="1"/>
+                            <field name="category_id"/>
                             <field name="company_id" select="multi" domain="[['category_id', '=', category_id]]" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
@@ -2065,7 +2065,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="category_id" enable_counters="1"/>
+                            <field name="category_id"/>
                             <field name="company_id" select="multi" domain="[['category_id', '=', category_id]]" enable_counters="1"/>
                         </searchpanel>
                     </search>`,
@@ -4135,7 +4135,7 @@ QUnit.module('Views', {
                 'partner,false,search': `
                     <search>
                         <searchpanel>
-                            <field name="category_id" enable_counters="1"/>
+                            <field name="category_id"/>
                             <field name="company_id" select="multi" domain="[['category_id', '=', category_id]]"/>
                         </searchpanel>
                     </search>`,

@@ -926,8 +926,8 @@ var FieldDate = InputField.extend({
      * @returns {boolean}
      */
     _isSameValue: function (value) {
-        if (value === false) {
-            return this.value === false;
+        if (this.value === false || value === false) {
+            return this.value === value;
         }
         return value.isSame(this.value, 'day');
     },
@@ -1005,8 +1005,8 @@ var FieldDateTime = FieldDate.extend({
      * @private
      */
     _isSameValue: function (value) {
-        if (value === false) {
-            return this.value === false;
+        if (this.value === false || value === false) {
+            return this.value === value;
         }
         return value.isSame(this.value);
     },

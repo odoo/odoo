@@ -166,7 +166,15 @@ var MockServer = Class.extend({
             var message = result && result.message;
             var event = result && result.event;
             var errorString = JSON.stringify(message || false);
-            console.warn('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
+            if (debug) {
+                console.warn(
+                    '%c[rpc] response (error) %s%s, during test %s',
+                    'color: orange; font-weight: bold;',
+                    route,
+                    message != null && ` -> ${errorString}`,
+                    JSON.stringify(QUnit.config.current.testName)
+                );
+            }
             return Promise.reject({message: errorString, event: event || $.Event()});
         });
 
@@ -1152,7 +1160,7 @@ var MockServer = Class.extend({
         if (!action) {
             // when the action doesn't exist, the real server doesn't crash, it
             // simply returns false
-            console.warn("No action found for ID " + kwargs.action_id);
+            console.warn(`No action found for ID ${kwargs.action_id} during test ${QUnit.config.current.testName} (legacy)`);
         }
         return action || false;
     },

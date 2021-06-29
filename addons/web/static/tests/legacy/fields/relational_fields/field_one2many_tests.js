@@ -1,6 +1,7 @@
 odoo.define('web.field_one_to_many_tests', function (require) {
 "use strict";
 
+const {delay} = require('web.concurrency');
 var AbstractField = require('web.AbstractField');
 var AbstractStorageService = require('web.AbstractStorageService');
 const ControlPanel = require('web.ControlPanel');
@@ -1659,9 +1660,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('embedded one2many with handle widget with minimum setValue calls', async function (assert) {
-            var done = assert.async();
             assert.expect(20);
-
 
             this.data.turtle.records[0].turtle_int = 6;
             this.data.turtle.records.push({
@@ -1669,18 +1668,18 @@ QUnit.module('fields', {}, function () {
                 turtle_int: 20,
                 turtle_foo: "a1",
             }, {
-                    id: 5,
-                    turtle_int: 9,
-                    turtle_foo: "a2",
-                }, {
-                    id: 6,
-                    turtle_int: 2,
-                    turtle_foo: "a3",
-                }, {
-                    id: 7,
-                    turtle_int: 11,
-                    turtle_foo: "a4",
-                });
+                id: 5,
+                turtle_int: 9,
+                turtle_foo: "a2",
+            }, {
+                id: 6,
+                turtle_int: 2,
+                turtle_foo: "a3",
+            }, {
+                id: 7,
+                turtle_int: 11,
+                turtle_foo: "a4",
+            });
             this.data.partner.records[0].turtles = [1, 2, 3, 4, 5, 6, 7];
 
             var form = await createView({
@@ -1688,18 +1687,12 @@ QUnit.module('fields', {}, function () {
                 model: 'partner',
                 data: this.data,
                 arch: '<form string="Partners">' +
-                    '<sheet>' +
-                    '<notebook>' +
-                    '<page string="P page">' +
                     '<field name="turtles">' +
                     '<tree default_order="turtle_int">' +
                     '<field name="turtle_int" widget="handle"/>' +
                     '<field name="turtle_foo"/>' +
                     '</tree>' +
                     '</field>' +
-                    '</page>' +
-                    '</notebook>' +
-                    '</sheet>' +
                     '</form>',
                 res_id: 1,
             });
@@ -1715,40 +1708,29 @@ QUnit.module('fields', {}, function () {
                 [5, 1, 'top', ['7', '6', '1', '2', '5']], // move the penultimate to the second line
                 [2, 5, 'bottom', ['1', '2', '5', '6']], // move the third to the penultimate line
             ];
-            async function dragAndDrop() {
-                var pos = positions.shift();
-
+            for (const [source, target, position, steps] of positions) {
                 await testUtils.dom.dragAndDrop(
-                    form.$('.ui-sortable-handle').eq(pos[0]),
-                    form.$('tbody tr').eq(pos[1]),
-                    { position: pos[2] }
+                    form.$('.ui-sortable-handle').eq(source),
+                    form.$('tbody tr').eq(target),
+                    {position: position}
                 );
 
-                assert.verifySteps(pos[3],
+                await delay(10);
+
+                assert.verifySteps(steps,
                     "sequences values should be apply from the begin index to the drop index");
-
-                if (positions.length) {
-
-                    setTimeout(dragAndDrop, 10);
-
-                } else {
-
-                    assert.deepEqual(_.pluck(form.model.get(form.handle).data.turtles.data, 'data'), [
-                        { id: 3, turtle_foo: "kawa", turtle_int: 2 },
-                        { id: 7, turtle_foo: "a4", turtle_int: 3 },
-                        { id: 1, turtle_foo: "yop", turtle_int: 4 },
-                        { id: 2, turtle_foo: "blip", turtle_int: 5 },
-                        { id: 5, turtle_foo: "a2", turtle_int: 6 },
-                        { id: 6, turtle_foo: "a3", turtle_int: 7 },
-                        { id: 4, turtle_foo: "a1", turtle_int: 8 }
-                    ], "sequences must be apply correctly");
-
-                    form.destroy();
-                    done();
-                }
             }
+            assert.deepEqual(_.pluck(form.model.get(form.handle).data.turtles.data, 'data'), [
+                { id: 3, turtle_foo: "kawa", turtle_int: 2 },
+                { id: 7, turtle_foo: "a4", turtle_int: 3 },
+                { id: 1, turtle_foo: "yop", turtle_int: 4 },
+                { id: 2, turtle_foo: "blip", turtle_int: 5 },
+                { id: 5, turtle_foo: "a2", turtle_int: 6 },
+                { id: 6, turtle_foo: "a3", turtle_int: 7 },
+                { id: 4, turtle_foo: "a1", turtle_int: 8 }
+            ], "sequences must be apply correctly");
 
-            dragAndDrop();
+            form.destroy();
         });
 
         QUnit.test('embedded one2many (editable list) with handle widget', async function (assert) {
@@ -9720,7 +9702,7 @@ QUnit.module('fields', {}, function () {
             assert.expect(2);
 
             let o2m;
-            testUtils.patch(FieldOne2Many, {
+            testUtils.mock.patch(FieldOne2Many, {
                 init() {
                     this._super(...arguments);
                     o2m = this;
@@ -9747,7 +9729,7 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(o2m.recordData.display_name, "val");
 
             form.destroy();
-            testUtils.unpatch(FieldOne2Many);
+            testUtils.mock.unpatch(FieldOne2Many);
         });
 
         QUnit.test('nested one2many, onchange, no command value', async function (assert) {
