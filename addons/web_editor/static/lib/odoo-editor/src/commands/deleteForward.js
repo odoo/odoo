@@ -11,8 +11,9 @@ import {
     CTYPES,
     leftPos,
     isFontAwesome,
-    rightLeafOnlyNotBlockPath,
-    rightLeafOnlyPath,
+    rightLeafOnlyNotBlockNotEditablePath,
+    rightLeafOnlyPathNotBlockNotEditablePath,
+    isNotEditableNode,
 } from '../utils/utils.js';
 
 Text.prototype.oDeleteForward = function (offset) {
@@ -24,23 +25,27 @@ Text.prototype.oDeleteForward = function (offset) {
 };
 
 HTMLElement.prototype.oDeleteForward = function (offset) {
-    const filterFunc = node => isVisibleEmpty(node) || isContentTextNode(node);
+    const filterFunc = node =>
+        isVisibleEmpty(node) || isContentTextNode(node) || isNotEditableNode(node);
 
-    const firstInlineNode = findNode(rightLeafOnlyNotBlockPath(this, offset), filterFunc);
-    if (isFontAwesome(firstInlineNode && firstInlineNode.parentElement)) {
-        firstInlineNode.parentElement.remove();
+    const firstLeafNode = findNode(rightLeafOnlyNotBlockNotEditablePath(this, offset), filterFunc);
+
+    if (firstLeafNode && (isFontAwesome(firstLeafNode) || isNotEditableNode(firstLeafNode))) {
+        firstLeafNode.remove();
         return;
     }
     if (
-        firstInlineNode &&
-        (firstInlineNode.nodeName !== 'BR' ||
-            getState(...rightPos(firstInlineNode), DIRECTIONS.RIGHT).cType !== CTYPES.BLOCK_INSIDE)
+        firstLeafNode &&
+        (firstLeafNode.nodeName !== 'BR' ||
+            getState(...rightPos(firstLeafNode), DIRECTIONS.RIGHT).cType !== CTYPES.BLOCK_INSIDE)
     ) {
-        firstInlineNode.oDeleteBackward(Math.min(1, nodeSize(firstInlineNode)));
+        firstLeafNode.oDeleteBackward(Math.min(1, nodeSize(firstLeafNode)));
         return;
     }
     const firstOutNode = findNode(
-        rightLeafOnlyPath(...(firstInlineNode ? rightPos(firstInlineNode) : [this, offset])),
+        rightLeafOnlyPathNotBlockNotEditablePath(
+            ...(firstLeafNode ? rightPos(firstLeafNode) : [this, offset]),
+        ),
         filterFunc,
     );
     if (firstOutNode) {
