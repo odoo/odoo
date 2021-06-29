@@ -6,7 +6,7 @@ import { clear, create, insert, insertAndReplace, link, replace, unlink, unlinkA
 import { OnChange } from '@mail/model/model_onchange';
 import throttle from '@mail/utils/throttle/throttle';
 import Timer from '@mail/utils/timer/timer';
-import { cleanSearchTerm, isEventHandled } from '@mail/utils/utils';
+import { cleanSearchTerm, isEventHandled, markEventHandled } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
 
 function factory(dependencies) {
@@ -729,6 +729,11 @@ function factory(dependencies) {
             }, { shadow: true }));
         }
 
+        onClickMarkAsSeen(ev, message) {
+            markEventHandled(ev, 'thread.markAsSeen');
+            this.markAsSeen(message);
+        }
+
         /**
          * Mark the specified conversation as read/seen.
          *
@@ -805,7 +810,9 @@ function factory(dependencies) {
         }
 
         onClickNeedActionPreview(ev) {
-            if (isEventHandled(ev, 'needAction.markAsRead')) {
+            if (isEventHandled(ev, 'needAction.markAsRead') ||
+                isEventHandled(ev, 'thread.markAsSeen')
+               ) {
                 return;
             }
             this.open();

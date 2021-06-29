@@ -72,12 +72,7 @@ export class ThreadPreview extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
-        const markAsRead = this._markAsReadRef.el;
-        if (markAsRead && markAsRead.contains(ev.target)) {
-            // handled in `_onClickMarkAsRead`
-            return;
-        }
-        this.thread.onClickNeedActionPreview();
+        this.thread.onClickNeedActionPreview(ev);
     }
 
     /**
@@ -86,7 +81,7 @@ export class ThreadPreview extends Component {
      */
     _onClickMarkAsRead(ev) {
         if (this.thread.lastNonTransientMessage) {
-            this.thread.markAsSeen(this.thread.lastNonTransientMessage);
+            this.thread.onClickMarkAsSeen(ev, this.thread.lastNonTransientMessage);
         }
     }
 
