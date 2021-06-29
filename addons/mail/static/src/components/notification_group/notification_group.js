@@ -51,12 +51,15 @@ export class NotificationGroup extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
-        const markAsRead = this._markAsReadRef.el;
-        if (markAsRead && markAsRead.contains(ev.target)) {
-            // handled in `_onClickMarkAsRead`
-            return;
-        }
-        this.group.onClickGroup();
+        this.group.onClickGroup(ev);
+    }
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickMarkAsRead(ev) {
+        this.group.onClickMarkAsRead(ev);
     }
 
 }

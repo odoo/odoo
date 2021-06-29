@@ -6,7 +6,7 @@ import { clear, create, insert, insertAndReplace, link, replace, unlink, unlinkA
 import { OnChange } from '@mail/model/model_onchange';
 import throttle from '@mail/utils/throttle/throttle';
 import Timer from '@mail/utils/timer/timer';
-import { cleanSearchTerm } from '@mail/utils/utils';
+import { cleanSearchTerm, isEventHandled } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
 
 function factory(dependencies) {
@@ -804,18 +804,21 @@ function factory(dependencies) {
             this.follow();
         }
 
+        onClickNeedActionPreview(ev) {
+            if (isEventHandled(ev, 'needAction.markAsRead')) {
+                return;
+            }
+            this.open();
+            if (!this.env.messaging.device.isMobile) {
+                this.env.messaging.messagingMenu.close();
+            }
+        }
+
         /**
          * Handle onClick on unfollow button
          */
         onClickUnfollow() {
             this.unfollow();
-        }
-
-        onClickOpen() {
-            this.open();
-            if (!this.env.messaging.device.isMobile) {
-                this.env.messaging.messagingMenu.close();
-            }
         }
 
         /**

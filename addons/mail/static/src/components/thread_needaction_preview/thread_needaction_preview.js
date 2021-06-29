@@ -6,6 +6,7 @@ import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
 import { MessageAuthorPrefix } from '@mail/components/message_author_prefix/message_author_prefix';
 import { PartnerImStatusIcon } from '@mail/components/partner_im_status_icon/partner_im_status_icon';
+import { markEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -78,12 +79,7 @@ export class ThreadNeedactionPreview extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
-        const markAsRead = this._markAsReadRef.el;
-        if (markAsRead && markAsRead.contains(ev.target)) {
-            // handled in `_onClickMarkAsRead`
-            return;
-        }
-        this.thread.onClickOpen();
+        this.thread.onClickNeedActionPreview(ev);
     }
 
     /**
@@ -91,6 +87,7 @@ export class ThreadNeedactionPreview extends Component {
      * @param {MouseEvent} ev
      */
     _onClickMarkAsRead(ev) {
+        markEventHandled(ev, 'needAction.markAsRead');
         this.env.models['mail.message'].markAllAsRead([
             ['model', '=', this.thread.model],
             ['res_id', '=', this.thread.id],

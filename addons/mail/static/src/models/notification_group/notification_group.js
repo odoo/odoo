@@ -3,6 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2many } from '@mail/model/model_field';
 import { clear, insert, unlink } from '@mail/model/model_field_command';
+import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 function factory(dependencies) {
 
@@ -15,7 +16,10 @@ function factory(dependencies) {
         /**
          * Handle onClick on a grouped notification.
          */
-        onClickGroup() {
+        onClickGroup(ev) {
+            if (isEventHandled(ev, 'NotificationGroup.markAsRead')) {
+                return;
+            }
             this.openDocuments();
             if (!this.env.messaging.device.isMobile) {
                 this.env.messaging.messagingMenu.close();
@@ -25,7 +29,8 @@ function factory(dependencies) {
         /**
          * Handle onClick on the mark as read button.
          */
-        onClickMarkAsRead() {
+        onClickMarkAsRead(ev) {
+            markEventHandled(ev, 'NotificationGroup.markAsRead');
             this.openCancelAction();
             if (!this.env.messaging.device.isMobile) {
                 this.env.messaging.messagingMenu.close();
