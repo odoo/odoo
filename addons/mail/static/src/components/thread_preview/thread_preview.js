@@ -8,7 +8,6 @@ import { MessageAuthorPrefix } from '@mail/components/message_author_prefix/mess
 import { PartnerImStatusIcon } from '@mail/components/partner_im_status_icon/partner_im_status_icon';
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
 
 const components = { MessageAuthorPrefix, PartnerImStatusIcon };
 
@@ -21,11 +20,6 @@ export class ThreadPreview extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useModels();
-        /**
-         * Reference of the "mark as read" button. Useful to disable the
-         * top-level click handler when clicking on this specific button.
-         */
-        this._markAsReadRef = useRef('markAsRead');
     }
 
     //--------------------------------------------------------------------------
