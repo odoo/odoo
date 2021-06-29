@@ -7,7 +7,7 @@ from . import calendar_event
 from . import calendar_alarm
 from . import calendar_alarm_manager
 from . import calendar_attendee
-from . import calendar_contact
+from . import calendar_filter
 from . import calendar_event_type
 from . import calendar_recurrence
 from . import mail_activity
