@@ -77,6 +77,15 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                 .get_table_orders(table)
                 .filter(o => o.orderlines.length !== 0 || o.paymentlines.length !== 0).length;
         }
+        movePinch(hypot) {
+            const delta = hypot / this.scalehypot ;
+            const value = this.initalScale * delta;
+            this.setScale(value);
+        }
+        startPinch(hypot) {
+            this.scalehypot = hypot;
+            this.initalScale = this.getScale();
+        }
         getMapNode() {
             return this.el.querySelector('.floor-map > .tables, .floor-map > .empty-floor');
         }
@@ -216,6 +225,25 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                     throw error;
                 }
             }
+        }
+        _computePinchHypo(ev, callbackFunction) {
+            const touches = ev.touches;
+            // If two pointers are down, check for pinch gestures
+            if (touches.length === 2) {
+                const deltaX = touches[0].pageX - touches[1].pageX;
+                const deltaY = touches[0].pageY - touches[1].pageY;
+                callbackFunction(Math.hypot(deltaX, deltaY))
+            }
+        }
+        _onPinchStart(ev) {
+            ev.currentTarget.style.setProperty('touch-action', 'none');
+            this._computePinchHypo(ev, this.startPinch.bind(this));
+        }
+        _onPinchEnd(ev) {
+            ev.currentTarget.style.removeProperty('touch-action');
+        }
+        _onPinchMove(ev) {
+            debounce(this._computePinchHypo, 10, true)(ev, this.movePinch.bind(this));
         }
         _onSelectTable(event) {
             const table = event.detail;

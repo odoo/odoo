@@ -47,7 +47,14 @@
                         </div>
                     </t>
                 </div>
-                <div t-if="state.view === 'floor-map'" class="floor-map" t-on-click="trigger('deselect-table')" t-ref="floor-map-ref">
+                <div t-if="state.view === 'floor-map'"
+                     class="floor-map"
+                     t-on-touchstart="_onPinchStart"
+                     t-on-touchmove="_onPinchMove"
+                     t-on-touchend="_onPinchEnd"
+                     t-on-click="trigger('deselect-table')"
+                     t-ref="floor-map-ref"
+                     >
                     <div t-if="isFloorEmpty" class="empty-floor">
                         <span>This floor has no tables yet, use the </span>
                         <i class="fa fa-plus" role="img" aria-label="Add button" title="Add button"></i>
