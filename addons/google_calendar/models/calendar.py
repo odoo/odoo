@@ -132,19 +132,22 @@ class Meeting(models.Model):
         if google_event.exists(self.env):
             existing_attendees = self.browse(google_event.odoo_id(self.env)).attendee_ids
         attendees_by_emails = {tools.email_normalize(a.email): a for a in existing_attendees}
-        for attendee in google_attendees:
-            email = attendee.get('email')
-
+        partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True)
+        for attendee in zip(emails, partners, google_attendees):
+            email = attendee[0]
             if email in attendees_by_emails:
                 # Update existing attendees
-                attendee_commands += [(1, attendees_by_emails[email].id, {'state': attendee.get('responseStatus')})]
+                attendee_commands += [(1, attendees_by_emails[email].id, {'state': attendee[2].get('responseStatus')})]
             else:
                 # Create new attendees
-                partner = self.env.user.partner_id if attendee.get('self') else self.env['res.partner'].find_or_create(attendee.get('email'))
-                attendee_commands += [(0, 0, {'state': attendee.get('responseStatus'), 'partner_id': partner.id})]
+                if attendee[2].get('self'):
+                    partner = self.env.user.partner_id
+                else:
+                    partner = attendee[1]
+                attendee_commands += [(0, 0, {'state': attendee[2].get('responseStatus'), 'partner_id': partner.id})]
                 partner_commands += [(4, partner.id)]
-                if attendee.get('displayName') and not partner.name:
-                    partner.name = attendee.get('displayName')
+                if attendee[2].get('displayName') and not partner.name:
+                    partner.name = attendee[2].get('displayName')
         for odoo_attendee in attendees_by_emails.values():
             # Remove old attendees
             if tools.email_normalize(odoo_attendee.email) not in emails:
