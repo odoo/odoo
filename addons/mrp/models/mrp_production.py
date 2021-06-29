@@ -615,9 +615,7 @@ class MrpProduction(models.Model):
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
     def _onchange_move_finished(self):
         if self.product_id and self.product_qty > 0:
-            # keep manual entries
-            list_move_finished = [(4, move.id) for move in self.move_finished_ids.filtered(
-                lambda m: not m.byproduct_id and m.product_id != self.product_id)]
+            list_move_finished = []
             moves_finished_values = self._get_moves_finished_values()
             moves_byproduct_dict = {move.byproduct_id.id: move for move in self.move_finished_ids.filtered(lambda m: m.byproduct_id)}
             move_finished = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id)
@@ -630,6 +628,7 @@ class MrpProduction(models.Model):
                 else:
                     # add new entries
                     list_move_finished += [(0, 0, move_finished_values)]
+            self.move_finished_ids = [(5, 0, 0)]
             self.move_finished_ids = list_move_finished
         else:
             self.move_finished_ids = [(2, move.id) for move in self.move_finished_ids.filtered(lambda m: m.bom_line_id)]
