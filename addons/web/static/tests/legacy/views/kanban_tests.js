@@ -7803,6 +7803,292 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+
+    QUnit.test("progressbar filter state is kept unchanged when domain is updated (records still in group)", async function (assert) {
+        assert.expect(16);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <kanban default_group_by="bar">
+                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="id"/>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        });
+
+        // Check that we have 2 columns and check their progressbar's state
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "1 __false"],
+        );
+
+        // Apply an active filter
+        await testUtils.dom.click(kanban.el.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]"));
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "true");
+
+        // Add searchdomain to something restricting progressbars' values (records still in filtered group)
+        await kanban.update({ domain: [["foo", "=", "yop"]] });
+
+        // Check that we have now 1 column only and check its progressbar's state
+        assert.containsOnce(kanban.el, ".o_kanban_group");
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.strictEqual(kanban.el.querySelector(".o_column_title").innerText, "true");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "0 blip", "0 __false"],
+        );
+
+        // Undo searchdomain
+        await kanban.update({ domain: [] });
+
+        // Check that we have 2 columns back and check their progressbar's state
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "1 __false"],
+        );
+
+        kanban.destroy();
+    });
+
+    QUnit.test("progressbar filter state is kept unchanged when domain is updated (emptying group)", async function (assert) {
+        assert.expect(25);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <kanban default_group_by="bar">
+                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="id"/>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        });
+
+        // Check that we have 2 columns, check their progressbar's state and check records
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_record")].map(el => el.innerText),
+            ["4 blip"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "1 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
+            ["1 yop", "2 blip", "3 gnap"],
+        );
+
+        // Apply an active filter
+        await testUtils.dom.click(kanban.el.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]"));
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "true");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group.o_kanban_group_show .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "1 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group.o_kanban_group_show .o_kanban_record")].map(el => el.innerText),
+            ["1 yop"],
+        );
+
+        // Add searchdomain to something restricting progressbars' values + emptying the filtered group
+        await kanban.update({ domain: [["foo", "=", "blip"]] });
+
+        // Check that we still have 2 columns, check their progressbar's state and check records
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_record")].map(el => el.innerText),
+            ["4 blip"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
+            [],
+        );
+
+        // Undo searchdomain
+        await kanban.update({ domain: [] });
+
+        // Check that we still have 2 columns and check their progressbar's state
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_record")].map(el => el.innerText),
+            ["4 blip"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "1 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
+            ["1 yop"],
+        );
+
+        kanban.destroy();
+    });
+
+    QUnit.test("filtered column keeps consistent counters when dropping in a non-matching record", async function (assert) {
+        assert.expect(19);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <kanban default_group_by="bar">
+                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="id"/>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        });
+
+        // Check that we have 2 columns, check their progressbar's state, and check records
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_record")].map(el => el.innerText),
+            ["4 blip"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "1 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
+            ["1 yop", "2 blip", "3 gnap"],
+        );
+
+        // Apply an active filter
+        await testUtils.dom.click(kanban.el.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]"));
+        assert.hasClass(kanban.el.querySelector(".o_kanban_group:nth-child(2)"), "o_kanban_group_show");
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "true");
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show .o_kanban_record");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_kanban_record").innerText, "1 yop");
+
+        // Drop in the non-matching record from first column
+        await testUtils.dom.dragAndDrop(
+            kanban.el.querySelector(".o_kanban_group:nth-child(1) .o_kanban_record"),
+            kanban.el.querySelector(".o_kanban_group.o_kanban_group_show")
+        );
+
+        // Check that we have 2 columns, check their progressbar's state, and check records
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "0 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_record")].map(el => el.innerText),
+            [],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "2 blip", "1 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
+            ["1 yop", "4 blip"],
+        );
+
+        kanban.destroy();
+    });
 });
 
 });

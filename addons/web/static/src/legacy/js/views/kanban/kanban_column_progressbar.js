@@ -43,7 +43,7 @@ var KanbanColumnProgressBar = Widget.extend({
             this.groupCount = state.groupCount;
             this.subgroupCounts = state.subgroupCounts;
             this.totalCounterValue = state.totalCounterValue;
-            this.activeFilter = state.activeFilter;
+            this.activeFilter = columnState.activeFilter || state.activeFilter;
         }
 
         // Prepare currency (TODO this should be automatic... use a field ?)
