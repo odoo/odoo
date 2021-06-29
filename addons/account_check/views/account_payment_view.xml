@@ -6,13 +6,14 @@
         <field name="inherit_id" ref="account.view_account_payment_form" />
         <field name="arch" type="xml">
             <form>
-                <field name="available_check_ids" invisible="0"/>
+                <field name="available_check_ids" invisible="1"/>
             </form>
             <xpath expr="//div[@name='amount_div']//field[@name='amount']" position="attributes">
                 <attribute name="attrs">{'readonly': [('payment_method_code', 'in', ['in_third_checks', 'out_third_checks'])]}</attribute>
                 <attribute name="force_save">1</attribute>
             </xpath>
             <field name="check_payment_date" position="after">
+                <field name="third_check_state" string="Check State" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'new_third_checks'), ('state', '!=', 'posted')]}"/>
                 <field
                     name="check_id"
                     attrs="{'invisible': [('payment_method_code', 'not in', ['in_third_checks', 'out_third_checks'])], 'required': [('payment_method_code', 'in', ['in_third_checks', 'out_third_checks'])]}"
@@ -31,11 +32,25 @@
 
 <!-- Third Check Views and menus -->
 
+    <record model="ir.ui.view" id="view_account_third_check_tree">
+        <field name="name">account.check.tree</field>
+        <field name="model">account.payment</field>
+        <field name="priority">100</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="account_check_printing.view_account_check_tree"/>
+        <field name="arch" type="xml">
+            <field name="is_matched" position="replace"/>
+            <field name="state" position="after">
+                <field name="third_check_state" string="Check State"/>
+            </field>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="action_third_check">
         <field name="name">Third Checks</field>
         <field name="res_model">account.payment</field>
         <field name="view_mode">tree,form,calendar,graph,pivot</field>
-        <field name="view_id" ref="account_check_printing.view_account_check_tree"/>
+        <field name="view_id" ref="account_check.view_account_third_check_tree"/>
         <field name="domain">[('payment_method_code', '=', 'new_third_checks')]</field>
         <!-- <field name="context">{'search_default_state':'holding','default_type':'third_check', 'search_default_groupby_journal_id': 1}</field> -->
     </record>
