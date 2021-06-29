@@ -16,6 +16,7 @@ _logger = logging.getLogger(__name__)
 
 
 class OgoneController(http.Controller):
+    _hosted_payment_page_return_url = '/payment/ogone/hostedpaymentpage'
     _flexcheckout_return_url = '/payment/ogone/flexcheckout'
     _directlink_return_url = '/payment/ogone/directlink'
     _backward_compatibility_urls = [
@@ -27,6 +28,25 @@ class OgoneController(http.Controller):
         '/payment/ogone/validate/decline',
         '/payment/ogone/validate/exception',
     ]  # Facilitates the migration of users who registered the URLs in Ogone's backend prior to 14.3
+
+    @http.route(
+        _hosted_payment_page_return_url, type='http', auth='public', methods=['GET', 'POST'],
+        csrf=False
+    )  # 'GET' or 'POST' depending on the configuration in Ogone backend
+    def ogone_return_from_hosted_payment_page(self, **feedback_data):
+        """ Process the data returned by Ogone after redirection to the Hosted Payment Page.
+
+        :param dict feedback_data: The feedback data
+        """
+        # Check the source and integrity of the data
+        data = self._homogenize_data(feedback_data)
+        self._verify_signature(feedback_data, data)
+
+        # Handle the feedback data
+        data['FEEDBACK_TYPE'] = 'hosted_payment_page'
+        _logger.info("entering _handle_feedback_data with data:\n%s", pprint.pformat(data))
+        request.env['payment.transaction'].sudo()._handle_feedback_data('ogone', data)
+        return werkzeug.utils.redirect('/payment/status')
 
     @http.route(
         _flexcheckout_return_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False
@@ -47,6 +67,15 @@ class OgoneController(http.Controller):
 
         # Process the payment through the token
         tree = tx_sudo._ogone_send_order_request(request_3ds_authentication=True)
+        feedback_data = {
+            'FEEDBACK_TYPE': 'directlink',
+            'ORDERID': tree.get('orderID'),
+            'tree': tree,
+        }
+        _logger.info(
+            "entering _handle_feedback_data with data:\n%s", pprint.pformat(feedback_data)
+        )
+        request.env['payment.transaction'].sudo()._handle_feedback_data('ogone', feedback_data)
 
         # Handle the response
         redirect_html_element = tree.find('HTML_ANSWER')
@@ -64,15 +93,6 @@ class OgoneController(http.Controller):
                 'payment_ogone.directlink_feedback', {'redirect_html': redirect_html}
             )
         else:
-            feedback_data = {
-                'FEEDBACK_TYPE': 'directlink',
-                'ORDERID': tree.get('orderID'),
-                'tree': tree,
-            }
-            _logger.info(
-                "entering _handle_feedback_data with data:\n%s", pprint.pformat(feedback_data)
-            )
-            request.env['payment.transaction'].sudo()._handle_feedback_data('ogone', feedback_data)
             if tx_sudo.state in ('cancel', 'error'):
                 tx_sudo.token_id.active = False  # The initial payment failed, archive the token
             return werkzeug.utils.redirect('/payment/status')
@@ -88,6 +108,9 @@ class OgoneController(http.Controller):
         the request for a new order. This should normally only happen for the first payment of a
         token as this is the only case where we specifically request the authentication if necessary
         and handle the redirection request if one is returned.
+
+        This route can also accept S2S notifications from Ogone if it is configured as a webhook in
+        Ogone's backend.
 
         :param dict feedback_data: The feedback data
         """
