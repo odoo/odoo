@@ -32,8 +32,8 @@
                                 isFocusOnMount="true"
                                 isHtml="true"
                                 placeholder="FIND_OR_CREATE_CHANNEL"
-                                select="discuss.handleAddChannelAutocompleteSelect.bind(discuss)"
-                                source="discuss.handleAddChannelAutocompleteSource.bind(discuss)"
+                                select="discuss.onHandleAddChannelAutocompleteSelect.bind(discuss)"
+                                source="discuss.onHandleAddChannelAutocompleteSource.bind(discuss)"
                                 t-on-o-hide="_onHideAddingItem"
                             />
                         </div>
@@ -62,7 +62,7 @@
                                 isFocusOnMount="true"
                                 placeholder="'Find or start a conversation...'"
                                 select="discuss.handleAddChatAutocompleteSelect.bind(discuss)"
-                                source="discuss.handleAddChatAutocompleteSource.bind(discuss)"
+                                source="discuss.onHandleAddChatAutocompleteSource.bind(discuss)"
                                 t-on-o-hide="_onHideAddingItem"
                             />
                         </div>

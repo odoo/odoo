@@ -212,10 +212,51 @@ function factory(dependencies) {
         }
 
         /**
-         * Handle inFocusin on composer.:wa
+         * Handle inFocusin on composer.
          */
-        onFocusinComposer(ev) {
+        onFocusinComposer() {
             this.update({ isDoFocus: false });
+        }
+
+
+        /**
+         * Handle the select for autocomplete chat add field.
+         *
+         * @param {MouseEvent} ev
+         * @param {Object} ui
+         */
+        onHandleAddChannelAutocompleteSelect(ev, ui) {
+            this.handleAddChannelAutocompleteSelect(ev, ui);
+        }
+
+        /**
+         * Handle the source for autocomplete chat add field.
+         *
+         * @param {Object} req
+         * @param {Object} ui
+         */
+        onHandleAddChannelAutocompleteSource(req, ui) {
+            this.handleAddChannelAutocompleteSource(req, ui);
+        }
+
+        /**
+         * Handle the select for autocomplete chat add field.
+         *
+         * @param {MouseEvent} ev
+         * @param {Object} ui
+         */
+        onHandleAddChatAutocompleteSelect(ev, ui) {
+            this.handleAddChatAutocompleteSelect(ev, ui);
+        }
+
+        /**
+         * Handle the source for autocomplete chat add field.
+         *
+         * @param {Object} req
+         * @param {Object} ui
+         */
+        onHandleAddChatAutocompleteSource(req, ui) {
+            this.handleAddChatAutocompleteSource(req, ui);
         }
 
         /**

@@ -27,6 +27,14 @@ function factory(dependencies) {
             this.update({ activeTabId: ev.currentTarget.dataset.tabId });
         }
 
+        onHandleAddChatAutocompleteSelect(ev, ui) {
+            this.env.messaging.discuss.handleAddChatAutocompleteSelect(ev, ui);
+        }
+
+        onHandleAddChatAutocompleteSource(req, ui) {
+            this.env.messaging.discuss.handleAddChatAutocompleteSource(req, ui);
+        }
+
         /**
          * Handle onClick on new message link.
          */
