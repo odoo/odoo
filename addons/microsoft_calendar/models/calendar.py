@@ -141,21 +141,22 @@ class Meeting(models.Model):
         elif self.env.user.partner_id.email not in emails:
             commands_attendee += [(0, 0, {'state': 'accepted', 'partner_id': self.env.user.partner_id.id})]
             commands_partner += [(4, self.env.user.partner_id.id)]
+        partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True)
         attendees_by_emails = {a.email: a for a in existing_attendees}
-        for attendee in microsoft_attendees:
-            email = attendee.get('emailAddress').get('address')
-            state = ATTENDEE_CONVERTER_M2O.get(attendee.get('status').get('response'))
+        for attendee in zip(emails, partners, microsoft_attendees):
+            email = attendee[0]
+            state = ATTENDEE_CONVERTER_M2O.get(attendee[2].get('status').get('response'))
 
             if email in attendees_by_emails:
                 # Update existing attendees
                 commands_attendee += [(1, attendees_by_emails[email].id, {'state': state})]
             else:
                 # Create new attendees
-                partner = self.env['res.partner'].find_or_create(email)
+                partner = attendee[1]
                 commands_attendee += [(0, 0, {'state': state, 'partner_id': partner.id})]
                 commands_partner += [(4, partner.id)]
-                if attendee.get('emailAddress').get('name') and not partner.name:
-                    partner.name = attendee.get('emailAddress').get('name')
+                if attendee[2].get('emailAddress').get('name') and not partner.name:
+                    partner.name = attendee[2].get('emailAddress').get('name')
         for odoo_attendee in attendees_by_emails.values():
             # Remove old attendees
             if odoo_attendee.email not in emails:
