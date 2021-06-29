@@ -157,18 +157,18 @@ X[]
                 });
                 it('should remove contenteditable="false"', async () => {
                     await testEditor(BasicEditor, {
-                        contentBefore: `<div><span contenteditable="false">abc</span>[]def</div>`,
+                        contentBefore: `<div>[]<span contenteditable="false">abc</span>def</div>`,
                         stepFunction: async editor => {
-                            await deleteBackward(editor);
+                            await deleteForward(editor);
                         },
                         contentAfter: `<div>[]def</div>`,
                     });
                 });
                 it('should remove contenteditable="False"', async () => {
                     await testEditor(BasicEditor, {
-                        contentBefore: `<div><span contenteditable="False">abc</span>[]def</div>`,
+                        contentBefore: `<div>[]<span contenteditable="False">abc</span>def</div>`,
                         stepFunction: async editor => {
-                            await deleteBackward(editor);
+                            await deleteForward(editor);
                         },
                         contentAfter: `<div>[]def</div>`,
                     });
@@ -1041,6 +1041,24 @@ X[]
                         contentBefore: `<p>mollis.</p><p>\n <i>[]Pe</i><i>lentesque</i></p>`,
                         stepFunction: deleteBackward,
                         contentAfter: `<p>mollis.[]<i>Pelentesque</i></p>`,
+                    });
+                });
+                it('should remove contenteditable="false"', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<div><span contenteditable="false">abc</span>[]def</div>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: `<div>[]def</div>`,
+                    });
+                });
+                it('should remove contenteditable="False"', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<div><span contenteditable="False">abc</span>[]def</div>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: `<div>[]def</div>`,
                     });
                 });
             });
