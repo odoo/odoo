@@ -59,7 +59,8 @@ class AccountPayment(models.Model):
         with_checkbooks = self.filtered(lambda x: x.payment_method_id.code == 'check_printing' and x.journal_id.use_checkbooks)
         (self - with_checkbooks).checkbook_id = False
         for rec in with_checkbooks:
-            rec.checkbook_id = rec.journal_id.checkbook_ids.filtered(lambda x: x.state == 'active')
+            checkbook = rec.journal_id.checkbook_ids.filtered(lambda x: x.state == 'active')
+            rec.checkbook_id = checkbook and checkbook[0] or False
 
     @api.constrains('check_number', 'journal_id')
     def _constrains_check_number(self):
