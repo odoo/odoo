@@ -1977,11 +1977,7 @@ class ReportController(http.Controller):
         if data.get('options'):
             data.update(json.loads(data.pop('options')))
         if data.get('context'):
-            # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
-            # the user explicitely wants to change the lang, this mechanism overwrites it.
             data['context'] = json.loads(data['context'])
-            if data['context'].get('lang'):
-                del data['context']['lang']
             context.update(data['context'])
         if converter == 'html':
             html = report.with_context(context)._render_qweb_html(docids, data=data)[0]
