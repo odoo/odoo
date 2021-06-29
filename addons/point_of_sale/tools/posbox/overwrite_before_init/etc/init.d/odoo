@@ -32,7 +32,7 @@ function _start() {
     while ! test -a /run/systemd/timesync/synchronized && ! ip route | grep 10.11.12.1 && ((cnt--)); do
         sleep 1
     done
-    start-stop-daemon --start --quiet --pidfile $PIDFILE --chuid $USER:$USER --background --make-pidfile --exec $DAEMON -- --config $CONFIG --logfile $LOGFILE --load=$MODULES --limit-time-cpu=600 --limit-time-real=1200
+    start-stop-daemon --start --quiet --pidfile $PIDFILE --chuid $USER:$USER --background --make-pidfile --exec $DAEMON -- --config $CONFIG --logfile $LOGFILE --load=$MODULES
 }
 
 function _stop() {
