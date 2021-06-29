@@ -434,6 +434,22 @@ class ResPartner(models.Model):
         for partner in self:
             partner.bank_account_count = mapped_data.get(partner.id, 0)
 
+    @api.constrains('company_id')
+    def _check_company_and_invoices(self):
+        partners_with_company = self.filtered(lambda p: p.company_id)
+        if partners_with_company:
+            query = """
+                SELECT partner.id
+                  FROM res_partner partner
+                  JOIN account_invoice invoice ON invoice.partner_id = partner.id
+                                              AND invoice.company_id != partner.company_id
+                 WHERE partner.id IN %s
+                 LIMIT 1
+             """
+            self.env.cr.execute(query, (tuple(partners_with_company.ids),))
+            if self.env.cr.fetchall():
+                raise ValidationError(_("You can't change the company of a partner if the latter already has some invoices."))
+
     def _find_accounting_partner(self, partner):
         ''' Find the partner for which the accounting entries will be created '''
         return partner.commercial_partner_id
