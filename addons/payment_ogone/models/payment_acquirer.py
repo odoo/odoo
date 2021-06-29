@@ -43,6 +43,19 @@ class PaymentAcquirer(models.Model):
 
         return 1.0
 
+    def _get_redirect_form_view(self, is_validation=False):
+        """ Override of payment to return the FlexCheckout form for validation operations.
+
+        :param bool is_validation: Whether the operation is a validation
+        :return: The redirect form template
+        :rtype: record of `ir.ui.view`
+        """
+        res = super()._get_redirect_form_view()
+        if self.provider != 'ogone' or not is_validation:
+            return res  # self.redirect_form_view_id
+
+        return self.env.ref('payment_ogone.redirect_form_validation')
+
     def _ogone_get_api_url(self, api_key):
         """ Return the appropriate URL of the requested API for the acquirer state.
 
@@ -56,12 +69,14 @@ class PaymentAcquirer(models.Model):
 
         if self.state == 'enabled':
             api_urls = {
+                'hosted_payment_page': 'https://secure.ogone.com/ncol/prod/orderstandard_utf8.asp',
                 'flexcheckout': 'https://secure.ogone.com/Tokenization/HostedPage',
                 'directlink': 'https://secure.ogone.com/ncol/prod/orderdirect_utf8.asp',
                 'maintenancedirect': 'https://secure.ogone.com/ncol/prod/maintenancedirect_utf8.asp',
             }
         else:  # 'test'
             api_urls = {
+                'hosted_payment_page': 'https://ogone.test.v-psp.com/ncol/test/orderstandard_utf8.asp',
                 'flexcheckout': 'https://ogone.test.v-psp.com/Tokenization/HostedPage',
                 'directlink': 'https://ogone.test.v-psp.com/ncol/test/orderdirect_utf8.asp',
                 'maintenancedirect': 'https://ogone.test.v-psp.com/ncol/test/maintenancedirect_utf8.asp',
