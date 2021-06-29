@@ -20,6 +20,7 @@ class RatingParentMixin(models.AbstractModel):
         "Rating Satisfaction",
         compute="_compute_rating_percentage_satisfaction", compute_sudo=True,
         store=False, help="Percentage of happy ratings")
+    rating_count = fields.Integer(string='# Ratings', compute="_compute_rating_percentage_satisfaction", compute_sudo=True)
 
     @api.depends('rating_ids.rating', 'rating_ids.consumed')
     def _compute_rating_percentage_satisfaction(self):
@@ -45,6 +46,7 @@ class RatingParentMixin(models.AbstractModel):
         # compute percentage per parent
         for record in self:
             repartition = grades_per_parent.get(record.id, default_grades)
+            record.rating_count = sum(repartition.values())
             record.rating_percentage_satisfaction = repartition['great'] * 100 / sum(repartition.values()) if sum(repartition.values()) else -1
 
 

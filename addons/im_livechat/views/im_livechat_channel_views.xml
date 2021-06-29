@@ -29,6 +29,7 @@
                     <field name="user_ids"/>
                     <field name="nbr_channel"/>
                     <field name="rating_percentage_satisfaction"/>
+                    <field name="rating_count"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
@@ -48,15 +49,11 @@
                                             <br/>
                                             <i class="fa fa-comments" role="img" aria-label="Comments" title="Comments"></i>
                                             <t t-esc="record.nbr_channel.raw_value"/> Sessions
-                                             <div class="float-right">
-                                                <t t-if="record.rating_percentage_satisfaction.raw_value &gt; 0">
-                                                    <a type="action" name="%(rating_rating_action_livechat)d" tabindex="10">
-                                                        <i class="fa fa-smile-o text-success" t-if="record.rating_percentage_satisfaction.raw_value &gt;= 70" title="Rating: Great" role="img" aria-label="Happy face"/>
-                                                        <i class="fa fa-meh-o text-warning" t-if="record.rating_percentage_satisfaction.raw_value &gt; 30 and record.rating_percentage_satisfaction.raw_value &lt; 70" title="Rating: Okay" role="img" aria-label="Neutral face"/>
-                                                        <i class="fa fa-frown-o text-danger" t-if="record.rating_percentage_satisfaction.raw_value &lt;= 30" title="Rating: Bad" role="img" aria-label="Sad face"/>
-                                                       <t t-esc="record.rating_percentage_satisfaction.raw_value"/>%
-                                                   </a>
-                                                </t>
+                                            <div t-if="record.rating_count.raw_value &gt; 0" class="float-right">
+                                                <a name="action_view_rating" type="object" tabindex="10">
+                                                    <i class="fa fa-smile-o text-success" title="Percentage of happy ratings" role="img" aria-label="Happy face"/>
+                                                    <t t-esc="record.rating_percentage_satisfaction.raw_value"/>%
+                                               </a>
                                             </div>
                                         </div>
                                     </div>
@@ -79,11 +76,12 @@
                         <field name="are_you_inside" invisible="1"/>
                     </header>
                     <sheet>
+                        <field name="rating_count" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" type="action" attrs="{'invisible':[('nbr_channel','=', 0)]}" name="%(mail_channel_action_from_livechat_channel)d" icon="fa-comments">
                                 <field string="Sessions" name="nbr_channel" widget="statinfo"/>
                             </button>
-                            <button name="action_view_rating" attrs="{'invisible':[('rating_percentage_satisfaction','=', -1)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
+                            <button name="action_view_rating" attrs="{'invisible':[('rating_count', '=', 0)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
                                 <field string="% Happy" name="rating_percentage_satisfaction" widget="statinfo"/>
                             </button>
                         </div>
