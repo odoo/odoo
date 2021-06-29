@@ -372,11 +372,11 @@
                 </div>
                 <div class="row" id="so_date">
                     <div class="mb-3 col-6">
-                      <t t-if="sale_order.state == 'draft'">
-                        <strong>Quotation Date:</strong> 
-                      </t>
                       <t t-if="sale_order.state in ['sale', 'done', 'cancel']">
                         <strong>Order Date:</strong> 
+                      </t>
+                      <t t-else="">
+                         <strong>Quotation Date:</strong>
                       </t>
                       <span t-field="sale_order.date_order" t-options='{"widget": "date"}'/>
                     </div>
