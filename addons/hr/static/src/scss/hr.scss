@@ -29,3 +29,20 @@
     }
 
 }
+
+.o_kanban_dashboard.o_hr_department_kanban {
+    &.o_kanban_ungrouped {
+        .o_kanban_record {
+            width: 350px;
+        }
+    }
+    .o_kanban_group {
+        &:not(.o_column_folded) {
+            width: 350px + 2*$o-kanban-group-padding;
+
+            @include media-breakpoint-down(sm) {
+                width: 100%;
+            }
+        }
+    }
+}
