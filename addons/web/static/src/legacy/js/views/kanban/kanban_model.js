@@ -167,6 +167,8 @@ var KanbanModel = BasicModel.extend({
             } else {
                 result.isGroupedByM2ONoColumn = false;
             }
+            // Keep activeFilter
+            result.activeFilter = dp.activeFilter;
             // Add progressBarValues, loadMoreCount and loadMoreOffset key
             let loadMoreCount = result.count - result.data.length;
             let loadMoreOffset = result.data.length;
@@ -264,6 +266,11 @@ var KanbanModel = BasicModel.extend({
             if (index >= 0) {
                 old_group.data.splice(index, 1);
                 old_group.count--;
+                if (!old_group.activeFilter || old_group.activeFilter.value === record.data[parent.progressBar.field]) {
+                    // Here, the record leaving the old group matches its domain,
+                    // so we must decrease the domainCount too.
+                    old_group.domainCount--;
+                }
                 old_group.res_ids = _.without(old_group.res_ids, resID);
                 self._updateParentResIDs(old_group);
                 break;
@@ -355,6 +362,10 @@ var KanbanModel = BasicModel.extend({
         if (params.progressBar) {
             dataPoint.progressBar = params.progressBar;
         }
+        // In Kanban view, we sometimes drag into a group records that are
+        // outside of its domain. Here we make sure to remember the initial
+        // domain count. This is useful for e.g. progressbars computations.
+        dataPoint.domainCount = dataPoint.count;
         return dataPoint;
     },
     /**
@@ -403,7 +414,7 @@ var KanbanModel = BasicModel.extend({
             // Compute records count for progressbar field values
             // not specified in the progressbar attributes
             const counts = Object.assign({
-                __false: group.count - valuesCountTotal
+                __false: group.domainCount - valuesCountTotal
             }, valuesCount);
 
             group.progressBarValues = Object.assign({
