@@ -11,8 +11,8 @@ import {
     CTYPES,
     leftPos,
     isFontAwesome,
-    rightLeafOnlyNotBlockPath,
-    rightLeafOnlyPath,
+    rightLeafOnlyNotBlockNotEditablePath,
+    rightLeafOnlyPathNotBlockNotEditablePath,
 } from '../utils/utils.js';
 
 Text.prototype.oDeleteForward = function (offset) {
@@ -26,7 +26,10 @@ Text.prototype.oDeleteForward = function (offset) {
 HTMLElement.prototype.oDeleteForward = function (offset) {
     const filterFunc = node => isVisibleEmpty(node) || isContentTextNode(node);
 
-    const firstInlineNode = findNode(rightLeafOnlyNotBlockPath(this, offset), filterFunc);
+    const firstInlineNode = findNode(
+        rightLeafOnlyNotBlockNotEditablePath(this, offset),
+        filterFunc,
+    );
     if (isFontAwesome(firstInlineNode && firstInlineNode.parentElement)) {
         firstInlineNode.parentElement.remove();
         return;
@@ -40,7 +43,9 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
         return;
     }
     const firstOutNode = findNode(
-        rightLeafOnlyPath(...(firstInlineNode ? rightPos(firstInlineNode) : [this, offset])),
+        rightLeafOnlyPathNotBlockNotEditablePath(
+            ...(firstInlineNode ? rightPos(firstInlineNode) : [this, offset]),
+        ),
         filterFunc,
     );
     if (firstOutNode) {
