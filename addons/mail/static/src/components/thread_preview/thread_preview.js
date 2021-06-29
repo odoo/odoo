@@ -77,7 +77,7 @@ export class ThreadPreview extends Component {
             // handled in `_onClickMarkAsRead`
             return;
         }
-        this.thread.onClickOpen();
+        this.thread.onClickNeedActionPreview();
     }
 
     /**
