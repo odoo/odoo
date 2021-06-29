@@ -92,3 +92,16 @@ class TestAccessRights(TransactionCase):
         event = self.create_event(self.john)
         data = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['start'], groupby=['start'])
         self.assertTrue(data, "It should be able to read group")
+
+    def test_private_attendee(self):
+        event = self.create_event(
+            self.john,
+            privacy='private',
+            location='in the Sky',
+        )
+        partners = (self.john|self.raoul).mapped('partner_id')
+        event.write({'partner_ids': [(6, 0, partners.ids)]})
+        self.assertEqual(self.read_event(self.raoul, event, 'location'), 'in the Sky',
+                         "Owner should be able to read the event")
+        with self.assertRaises(AccessError):
+            self.read_event(self.portal, event, 'location')
