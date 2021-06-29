@@ -77,6 +77,26 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                 .get_table_orders(table)
                 .filter(o => o.orderlines.length !== 0 || o.paymentlines.length !== 0).length;
         }
+        getMapNode() {
+            return this.el.querySelector('.floor-map > .tables, .floor-map > .empty-floor');
+        }
+        getScale() {
+            const scale = this.getMapNode().style.getPropertyValue('--scale');
+            const parsedScaleValue = parseFloat(scale);
+            return isNaN(parsedScaleValue) ? 1 : parsedScaleValue;
+        }
+        setScale(value) {
+            // a scale can't be a negative number
+            if (value > 0) {
+                this.getMapNode().style.setProperty('--scale', value);
+            }
+        }
+        scaleOut() {
+            this.setScale(this.getScale() + 0.10);
+        }
+        scaleIn() {
+            this.setScale(this.getScale() - 0.10);
+        }
         selectFloor(floor) {
             this.state.selectedFloorId = floor.id;
             this.state.floorBackground = this.activeFloor.background_color;

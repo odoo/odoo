@@ -14,6 +14,14 @@
                     </div>
                 </t>
                 <div t-if="env.isMobile and !isFloorEmpty" class="buttons" t-attf-style="background: {{state.floorBackground}};">
+                    <t t-if="state.view === 'floor-map' and !('ontouchstart' in window)">
+                        <span class="button" t-on-click="scaleIn">
+                            <i class="fa fa-minus" role="img" aria-label="Zoom in" title="Zoom in" />
+                        </span>
+                        <span class="button" t-on-click="scaleOut">
+                            <i class="fa fa-plus" role="img" aria-label="Zoom out" title="Zoom out" />
+                        </span>
+                    </t>
                     <span class="button" t-on-click="state.view='list'">
                         <i class="fa fa-list-ul" role="img" aria-label="Floor list" title="Floor list" />
                     </span>
