@@ -1912,3 +1912,83 @@ class TestMrpOrder(TestMrpCommon):
         wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
         wizard.process()
         self.assertEqual(list(mo.workorder_ids.mapped("state")), ["done"])
+
+    def test_products_with_variants(self):
+        """Check for product with different variants with same bom"""
+
+        product = self.env['product.template'].create({
+            "attribute_line_ids": [
+                [0, 0, {"attribute_id": 2, "value_ids": [[6, 0, [3, 4]]]}]
+            ],
+            "name": "Product with variants",
+        })
+
+        variant_1 = product.product_variant_ids[0]
+        variant_2 = product.product_variant_ids[1]
+
+        component = self.env['product.template'].create({
+            "name": "Component",
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': False,
+            'product_tmpl_id': product.id,
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.product_variant_id.id, 'product_qty': 1})
+            ]
+        })
+
+        # First behavior to check, is changing the product (same product but another variant) after saving the MO a first time.
+
+        mo_form_1 = Form(self.env['mrp.production'])
+        mo_form_1.product_id = variant_1
+        mo_1 = mo_form_1.save()
+        mo_form_1 = Form(self.env['mrp.production'].browse(mo_1.id))
+        mo_form_1.product_id = variant_2
+        mo_1 = mo_form_1.save()
+        mo_1.action_confirm()
+        mo_1.action_assign()
+        mo_form_1 = Form(self.env['mrp.production'].browse(mo_1.id))
+        mo_form_1.qty_producing = 1
+        mo_1 = mo_form_1.save()
+        mo_1.button_mark_done()
+
+        move_lines_1 = self.env['stock.move.line'].search([("reference", "=", mo_1.name)])
+
+        # Second behavior is changing the product before saving the MO
+
+        mo_form_2 = Form(self.env['mrp.production'])
+        mo_form_2.product_id = variant_1
+        mo_form_2.product_id = variant_2
+        mo_2 = mo_form_2.save()
+        mo_2.action_confirm()
+        mo_2.action_assign()
+        mo_form_2 = Form(self.env['mrp.production'].browse(mo_2.id))
+        mo_form_2.qty_producing = 1
+        mo_2 = mo_form_2.save()
+        mo_2.button_mark_done()
+
+        move_lines_2 = self.env['stock.move.line'].search([("reference", "=", mo_2.name)])
+
+        # Third behavior is changing the product before saving the MO, then another time after
+
+        mo_form_3 = Form(self.env['mrp.production'])
+        mo_form_3.product_id = variant_1
+        mo_form_3.product_id = variant_2
+        mo_3 = mo_form_3.save()
+        mo_form_3 = Form(self.env['mrp.production'].browse(mo_3.id))
+        mo_form_3.product_id = variant_1
+        mo_3 = mo_form_3.save()
+        mo_3.action_confirm()
+        mo_3.action_assign()
+        mo_form_3 = Form(self.env['mrp.production'].browse(mo_3.id))
+        mo_form_3.qty_producing = 1
+        mo_3 = mo_form_3.save()
+        mo_3.button_mark_done()
+
+        move_lines_3 = self.env['stock.move.line'].search([("reference", "=", mo_3.name)])
+
+        # There always should be only two move lines, one for the component, another for the product
+        self.assertEqual(len(move_lines_1), 2)
+        self.assertEqual(len(move_lines_2), 2)
+        self.assertEqual(len(move_lines_3), 2)
