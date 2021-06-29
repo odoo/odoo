@@ -152,7 +152,8 @@ class MicrosoftService(models.AbstractModel):
             if int(status) in (204, 404):  # Page not found, no response
                 response = False
             else:
-                response = res.json()
+                # Some answers return empty content
+                response = res.content and res.json() or {}
 
             try:
                 ask_time = datetime.strptime(res.headers.get('date'), "%a, %d %b %Y %H:%M:%S %Z")
