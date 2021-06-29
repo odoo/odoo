@@ -76,8 +76,11 @@
                     <field name="check_number"/>
                 </field>
                 <field name="date" position="after">
-                    <field name="check_payment_date" string="Payment Date"/>
+                    <field name="check_payment_date" string="Payment Date" optional="hide"/>
                 </field>
+                <tree>
+                    <field name="is_matched"/>
+                </tree>
             </field>
         </record>
 
@@ -88,6 +91,7 @@
             <field name="view_id" ref="view_account_check_tree"/>
             <field name="domain">[('payment_method_code', '=', 'check_printing')]</field>
             <!-- <field name="context">{'search_default_state':'handed', 'default_type':'own_check'}</field> -->
+            <field name="context">{'search_default_is_matched': True}</field>
         </record>
 
         <menuitem
