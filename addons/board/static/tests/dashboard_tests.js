@@ -702,7 +702,7 @@ QUnit.test('dashboard intercepts custom events triggered by sub controllers', as
 QUnit.test("save actions to dashboard", async function (assert) {
     assert.expect(6);
 
-    testUtils.patch(ListController, {
+    testUtils.mock.patch(ListController, {
         getOwnedQueryParams: function () {
             var result = this._super.apply(this, arguments);
             result.context = {
@@ -773,7 +773,7 @@ QUnit.test("save actions to dashboard", async function (assert) {
     await testUtils.fields.editInput($(".o_add_to_board input"), "a name");
     await testUtils.dom.click($(".o_add_to_board div button"));
 
-    testUtils.unpatch(ListController);
+    testUtils.mock.unpatch(ListController);
 });
 
 QUnit.test("save two searches to dashboard", async function (assert) {

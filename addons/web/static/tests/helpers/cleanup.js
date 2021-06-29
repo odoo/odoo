@@ -79,24 +79,18 @@ QUnit.on("OdooAfterTestHook", function (info) {
             (e) => e.tagName === bodyChild.tagName && bodyChild.getAttribute(e.attr) === e.value
         );
         if (!tolerated) {
-            console.error(`Test ${info.moduleName} > ${info.testName}`);
             console.error(
-                "Body still contains undesirable elements:" +
-                    "\nInvalid element:\n" +
-                    bodyChild.outerHTML
-            );
+`Test ${info.moduleName} > ${info.testName}: body still contains undesirable elements:
+    ${bodyChild.outerHTML}`);
             QUnit.pushFailure(`Body still contains undesirable elements`);
         }
         if (!tolerated || !tolerated.keep) {
             toRemove.push(bodyChild);
         }
     }
-    // check for leftovers in #qunit-fixture
+    // cleanup leftovers in #qunit-fixture
     const qunitFixture = document.getElementById("qunit-fixture");
     if (qunitFixture.children.length) {
-        // console.error('#qunit-fixture still contains elements:' +
-        //     '\n#qunit-fixture HTML:\n' + qunitFixture.outerHTML);
-        // QUnit.pushFailure(`#qunit-fixture still contains elements`);
         toRemove.push(...qunitFixture.children);
     }
     // remove unwanted elements if not in debug

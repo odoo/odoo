@@ -59,7 +59,11 @@ function runTestSet(assert, testSet, options) {
     }
 }
 
-QUnit.module("utils", () => {
+
+QUnit.module("utils", {
+        before() {moment.suppressDeprecationWarnings = true;},
+        after() {moment.suppressDeprecationWarnings = false;},
+    }, () => {
     QUnit.module("dates");
 
     QUnit.test("formatDateTime", async (assert) => {

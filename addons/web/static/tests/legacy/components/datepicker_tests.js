@@ -15,8 +15,9 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.expect(8);
 
             const picker = await createComponent(DatePicker, {
-                props: { date: moment('01/09/1997') },
+                props: { date: moment('1997-01-09') },
             });
+
 
             assert.containsOnce(picker, 'input.o_input.o_datepicker_input');
             assert.containsOnce(picker, 'span.o_datepicker_button');
@@ -46,7 +47,7 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.expect(5);
 
             const picker = await createComponent(DatePicker, {
-                props: { date: moment('01/09/1997') },
+                props: { date: moment('1997-01-09') },
                 intercepts: {
                     'datetime-changed': ev => {
                         assert.step('datetime-changed');
@@ -106,7 +107,7 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.verifySteps(['datetime-changed']);
 
             moment.locale(originalLocale);
-            moment.updateLocale('englishForTest', null);
+            moment.updateLocale('frenchForTests', null);
 
             picker.destroy();
         });
@@ -115,7 +116,7 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.expect(5);
 
             const picker = await createComponent(DatePicker, {
-                props: { date: moment('01/09/1997') },
+                props: { date: moment('1997-01-09') },
                 intercepts: {
                     'datetime-changed': ev => {
                         assert.step('datetime-changed');
@@ -146,9 +147,9 @@ odoo.define('web.datepicker_tests', function (require) {
         QUnit.test("Date format is correctly set", async function (assert) {
             assert.expect(2);
 
-            testUtils.patch(time, { getLangDateFormat: () => "YYYY/MM/DD" });
+            testUtils.mock.patch(time, { getLangDateFormat: () => "YYYY/MM/DD" });
             const picker = await createComponent(DatePicker, {
-                props: { date: moment('01/09/1997') },
+                props: { date: moment('1997-01-09') },
             });
             const input = picker.el.querySelector('.o_datepicker_input');
 
@@ -160,7 +161,7 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.strictEqual(input.value, '1997/01/09');
 
             picker.destroy();
-            testUtils.unpatch(time);
+            testUtils.mock.unpatch(time);
         });
 
         QUnit.module('DateTimePicker');
@@ -169,7 +170,7 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.expect(11);
 
             const picker = await createComponent(DateTimePicker, {
-                props: { date: moment('01/09/1997 12:30:01') },
+                props: { date: moment('1997-01-09 12:30:01') },
             });
 
             assert.containsOnce(picker, 'input.o_input.o_datepicker_input');
@@ -204,7 +205,7 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.expect(5);
 
             const picker = await createComponent(DateTimePicker, {
-                props: { date: moment('01/09/1997 12:30:01') },
+                props: { date: moment('1997-01-09 12:30:01') },
                 intercepts: {
                     'datetime-changed': ev => {
                         assert.step('datetime-changed');
@@ -292,7 +293,7 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.expect(9);
 
             const picker = await createComponent(DateTimePicker, {
-                props: { date: moment('01/09/1997 12:30:01') },
+                props: { date: moment('1997-01-09 12:30:01') },
                 intercepts: {
                     'datetime-changed': ev => {
                         assert.step('datetime-changed');
@@ -330,9 +331,9 @@ odoo.define('web.datepicker_tests', function (require) {
         QUnit.test("Date time format is correctly set", async function (assert) {
             assert.expect(2);
 
-            testUtils.patch(time, { getLangDatetimeFormat: () => "hh:mm:ss YYYY/MM/DD" });
+            testUtils.mock.patch(time, { getLangDatetimeFormat: () => "hh:mm:ss YYYY/MM/DD" });
             const picker = await createComponent(DateTimePicker, {
-                props: { date: moment('01/09/1997 12:30:01') },
+                props: { date: moment('1997-01-09 12:30:01') },
             });
             const input = picker.el.querySelector('.o_datepicker_input');
 
@@ -344,7 +345,7 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.strictEqual(input.value, '12:30:01 1997/01/09');
 
             picker.destroy();
-            testUtils.unpatch(time);
+            testUtils.mock.unpatch(time);
         });
     });
 });

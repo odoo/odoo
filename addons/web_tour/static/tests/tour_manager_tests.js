@@ -14,16 +14,17 @@ odoo.define('web_tour.tour_manager_tests', async function (require) {
 
     /**
      * Create a widget and a TourManager instance with a list of given Tour objects.
-     * @see TourManager.register() for more details on the Tours registry system.
-     * @param {Object} params
+     * @see `TourManager.register()` for more details on the Tours registry system.
+     * @param {Object} params aside from the parameters defined below, passed
+     *                        to {@see addMockEnvironment}.
      * @param {string[]} [params.consumed_tours]
-     * @param {boolean} [params.debug]
+     * @param {boolean} [params.debug] also passed along
      * @param {boolean} [params.disabled]
      * @param {string} params.template inner HTML content of the widget
      * @param {Object[]} params.tours { {string} name, {Object} option, {Object[]} steps }
      */
-    async function createTourManager({ consumed_tours, debug, disabled, template, tours }) {
-        const parent = await testUtils.createParent({ debug });
+    async function createTourManager({ consumed_tours, disabled, template, tours, ...params }) {
+        const parent = await testUtils.createParent(params);
         const tourManager = new TourManager(parent, consumed_tours, disabled);
         tourManager.running_step_delay = 0;
         for (const { name, options, steps } of tours) {
@@ -34,7 +35,7 @@ odoo.define('web_tour.tour_manager_tests', async function (require) {
             tourManager.destroy = _destroy;
             parent.destroy();
         };
-        await parent.prependTo(testUtils.prepareTarget(debug));
+        await parent.prependTo(testUtils.prepareTarget(params.debug));
         parent.el.innerHTML = template;
         await tourManager._register_all(true);
         // Wait for possible tooltips to be loaded and appended.
@@ -75,6 +76,7 @@ odoo.define('web_tour.tour_manager_tests', async function (require) {
             assert.expect(5);
 
             const tourManager = await createTourManager({
+                data: { 'web_tour.tour': {  fields: {}, consume() {} } },
                 template: `
                     <button class="btn anchor1">Anchor</button>
                     <button class="btn anchor2">Anchor</button>
