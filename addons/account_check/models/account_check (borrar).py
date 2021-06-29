@@ -246,99 +246,99 @@ class AccountCheck(models.Model):
     #                     'Check Number (%s) must be unique per Owner and Bank!'
     #                     '\n* Check ids: %s') % (rec.name, same_checks.ids))
 
-    def _del_operation(self, origin):
-        """
-        We check that the operation that is being cancel is the last operation
-        done (same as check state)
-        """
-        for rec in self:
-            if not rec.operation_ids or rec.operation_ids[0].move_line_id != origin:
-                raise ValidationError(_(
-                    'You can not cancel this operation because this is not '
-                    'the last operation over the check.\nCheck (id): %s (%s)'
-                ) % (rec.name, rec.id))
-            rec.operation_ids[0].unlink()
+    # def _del_operation(self, origin):
+    #     """
+    #     We check that the operation that is being cancel is the last operation
+    #     done (same as check state)
+    #     """
+    #     for rec in self:
+    #         if not rec.operation_ids or rec.operation_ids[0].move_line_id != origin:
+    #             raise ValidationError(_(
+    #                 'You can not cancel this operation because this is not '
+    #                 'the last operation over the check.\nCheck (id): %s (%s)'
+    #             ) % (rec.name, rec.id))
+    #         rec.operation_ids[0].unlink()
 
-    def _add_operation(self, operation, origin, date=False):
-        for rec in self:
-            rec._check_state_change(operation)
-            # agregamos validacion de fechas
-            date = date or fields.Datetime.now()
-            if rec.operation_ids and rec.operation_ids[0].date > date:
-                raise ValidationError(_(
-                    'The date of a new check operation can not be minor than '
-                    'last operation date.\n'
-                    '* Check Id: %s\n'
-                    '* Check Number: %s\n'
-                    '* Operation: %s\n'
-                    '* Operation Date: %s\n'
-                    '* Last Operation Date: %s') % (
-                    rec.id, rec.name, operation, date,
-                    rec.operation_ids[0].date))
-            vals = {
-                'operation': operation,
-                'date': date,
-                'check_id': rec.id,
-                'move_line_id': origin.id,
-            }
-            rec.operation_ids.create(vals)
+    # def _add_operation(self, operation, origin, date=False):
+    #     for rec in self:
+    #         rec._check_state_change(operation)
+    #         # agregamos validacion de fechas
+    #         date = date or fields.Datetime.now()
+    #         if rec.operation_ids and rec.operation_ids[0].date > date:
+    #             raise ValidationError(_(
+    #                 'The date of a new check operation can not be minor than '
+    #                 'last operation date.\n'
+    #                 '* Check Id: %s\n'
+    #                 '* Check Number: %s\n'
+    #                 '* Operation: %s\n'
+    #                 '* Operation Date: %s\n'
+    #                 '* Last Operation Date: %s') % (
+    #                 rec.id, rec.name, operation, date,
+    #                 rec.operation_ids[0].date))
+    #         vals = {
+    #             'operation': operation,
+    #             'date': date,
+    #             'check_id': rec.id,
+    #             'move_line_id': origin.id,
+    #         }
+    #         rec.operation_ids.create(vals)
 
-    @api.depends(
-        'operation_ids.operation',
-        'operation_ids.date',
-    )
-    def _compute_state(self):
-        for rec in self:
-            if rec.operation_ids.sorted():
-                operation = rec.operation_ids.sorted()[0].operation
-                rec.state = operation
-            else:
-                rec.state = 'draft'
+    # @api.depends(
+    #     'operation_ids.operation',
+    #     'operation_ids.date',
+    # )
+    # def _compute_state(self):
+    #     for rec in self:
+    #         if rec.operation_ids.sorted():
+    #             operation = rec.operation_ids.sorted()[0].operation
+    #             rec.state = operation
+    #         else:
+    #             rec.state = 'draft'
 
-    def _check_state_change(self, operation):
-        """
-        We only check state change from _add_operation because we want to
-        leave the user the possibility of making anything from interface.
-        Necesitamos este chequeo para evitar, por ejemplo, que un cheque se
-        agregue dos veces en un pago y luego al confirmar se entregue dos veces
-        On operation_from_state_map dictionary:
-        * key is 'to state'
-        * value is 'from states'
-        """
-        self.ensure_one()
-        old_state = self.state
-        operation_from_state_map = {
-            # 'draft': [False],
-            'holding': ['draft', 'deposited', 'delivered'],
-            'delivered': ['holding'],
-            'deposited': ['holding'],
-            'handed': ['draft'],
-            'withdrawed': ['draft'],
-            'rejected': ['delivered', 'deposited', 'handed'],
-            'debited': ['handed'],
-            'returned': ['handed', 'holding'],
-            # 'cancel': ['draft'],
-        }
-        from_states = operation_from_state_map.get(operation)
-        if not from_states:
-            raise ValidationError(_(
-                'Operation %s not implemented for checks!') % operation)
-        if old_state not in from_states:
-            raise ValidationError(_(
-                'You can not "%s" a check from state "%s"!\n'
-                'Check nbr (id): %s (%s)') % (
-                    self.operation_ids._fields['operation'].convert_to_export(
-                        operation, self),
-                    self._fields['state'].convert_to_export(old_state, self),
-                    self.name,
-                    self.id))
+    # def _check_state_change(self, operation):
+    #     """
+    #     We only check state change from _add_operation because we want to
+    #     leave the user the possibility of making anything from interface.
+    #     Necesitamos este chequeo para evitar, por ejemplo, que un cheque se
+    #     agregue dos veces en un pago y luego al confirmar se entregue dos veces
+    #     On operation_from_state_map dictionary:
+    #     * key is 'to state'
+    #     * value is 'from states'
+    #     """
+    #     self.ensure_one()
+    #     old_state = self.state
+    #     operation_from_state_map = {
+    #         # 'draft': [False],
+    #         'holding': ['draft', 'deposited', 'delivered'],
+    #         'delivered': ['holding'],
+    #         'deposited': ['holding'],
+    #         'handed': ['draft'],
+    #         'withdrawed': ['draft'],
+    #         'rejected': ['delivered', 'deposited', 'handed'],
+    #         'debited': ['handed'],
+    #         'returned': ['handed', 'holding'],
+    #         # 'cancel': ['draft'],
+    #     }
+    #     from_states = operation_from_state_map.get(operation)
+    #     if not from_states:
+    #         raise ValidationError(_(
+    #             'Operation %s not implemented for checks!') % operation)
+    #     if old_state not in from_states:
+    #         raise ValidationError(_(
+    #             'You can not "%s" a check from state "%s"!\n'
+    #             'Check nbr (id): %s (%s)') % (
+    #                 self.operation_ids._fields['operation'].convert_to_export(
+    #                     operation, self),
+    #                 self._fields['state'].convert_to_export(old_state, self),
+    #                 self.name,
+    #                 self.id))
 
-    @api.ondelete(at_uninstall=False)
-    def check_unlink(self):
-        for rec in self:
-            if rec.state not in ('draft', 'cancel'):
-                raise ValidationError(_(
-                    'The Check must be in draft state for unlink !'))
+    # @api.ondelete(at_uninstall=False)
+    # def check_unlink(self):
+    #     for rec in self:
+    #         if rec.state not in ('draft', 'cancel'):
+    #             raise ValidationError(_(
+    #                 'The Check must be in draft state for unlink !'))
 
     # TODO re enable
     # @api.constrains('currency_id', 'amount', 'amount_company_currency')
