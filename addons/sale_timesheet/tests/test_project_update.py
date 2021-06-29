@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo import fields
 from odoo.tests import tagged
 from odoo.tests.common import Form
+from odoo.tools import format_date
 
 from odoo.addons.project.tests.test_project_update_flow import TestProjectUpdate
 
@@ -27,9 +29,9 @@ class TestProjectUpdateSaleTimesheet(TestProjectUpdate):
         self.project_pigs.allow_billable = True
         template_values = self.env['project.update']._get_template_values(self.project_pigs)
         today = fields.Date.context_today(self.project_pigs)
-        self.assertEqual(template_values['profitability']['month'], today.strftime('%B %Y'),
+        self.assertEqual(template_values['profitability']['month'], format_date(self.env, today, date_format='LLLL y'),
                          "The month used in the template should be well defined")
-        self.assertEqual(template_values['profitability']['previous_month'], (today + relativedelta(months=-1)).strftime('%B'),
+        self.assertEqual(template_values['profitability']['previous_month'], format_date(self.env, (today + relativedelta(months=-1)), date_format='LLLL'),
                          "The previous month used in the template should be well defined")
         self.assertTrue(template_values['profitability']['is_timesheet_uom_hour'], "Default timesheet uom is hour.")
         self.assertEqual(template_values['profitability']['timesheet_uom'], "hours", "Default timesheet uom should be displayed as 'hours'")
@@ -62,3 +64,61 @@ class TestProjectUpdateSaleTimesheet(TestProjectUpdate):
             self.project_pigs.action_view_timesheet()
         except Exception as e:
             raise AssertionError("Error raised unexpectedly while calling the action defined in profitalities action panel data ! Exception : " + e.args[0])
+
+    def test_project_update_description_date(self):
+        self.project_pigs.allow_timesheets = True
+        self.project_pigs.allow_billable = True
+        self.employee_user = self.env['hr.employee'].create({
+            'name': 'Employee User',
+            'timesheet_cost': 15,
+        })
+        self.env['account.analytic.line'].create({
+            'project_id': self.project_pigs.id,
+            'task_id': self.task_1.id,
+            'name': 'my first timesheet',
+            'unit_amount': 4,
+            'employee_id': self.employee_user.id,
+            'date': '2021-07-23'
+        })
+        self.env['account.analytic.line'].create({
+            'project_id': self.project_pigs.id,
+            'task_id': self.task_1.id,
+            'name': 'my second timesheet',
+            'unit_amount': 6,
+            'employee_id': self.employee_user.id,
+            'date': '2021-08-23'
+        })
+        with freeze_time('2021-08-24'):
+            template_values = self.env['project.update']._get_template_values(self.project_pigs)
+            self.assertEqual(template_values['profitability']['timesheet_unit_amount'], '6', "Timesheet unit amount used in the template should be defined.")
+            self.assertEqual(template_values['profitability']['previous_timesheet_unit_amount'], '4', "Previous Timesheet unit amount used in the template should be defined.")
+
+    def test_project_update_description_date_lang(self):
+        self.project_pigs.allow_timesheets = True
+        self.project_pigs.allow_billable = True
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env.user.write({'lang': 'fr_FR'})
+        self.employee_user = self.env['hr.employee'].create({
+            'name': 'Employee User',
+            'timesheet_cost': 15,
+        })
+        self.env['account.analytic.line'].create({
+            'project_id': self.project_pigs.id,
+            'task_id': self.task_1.id,
+            'name': 'my first timesheet',
+            'unit_amount': 4,
+            'employee_id': self.employee_user.id,
+            'date': '2021-07-23'
+        })
+        self.env['account.analytic.line'].create({
+            'project_id': self.project_pigs.id,
+            'task_id': self.task_1.id,
+            'name': 'my second timesheet',
+            'unit_amount': 6,
+            'employee_id': self.employee_user.id,
+            'date': '2021-08-23'
+        })
+        with freeze_time('2021-08-24'):
+            template_values = self.env['project.update']._get_template_values(self.project_pigs)
+            self.assertEqual(template_values['profitability']['timesheet_unit_amount'], '6', "Timesheet unit amount used in the template should be defined.")
+            self.assertEqual(template_values['profitability']['previous_timesheet_unit_amount'], '4', "Previous Timesheet unit amount used in the template should be defined.")
