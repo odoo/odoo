@@ -7,21 +7,14 @@ models.load_models([{
     model:  'hr.employee',
     fields: ['name', 'id', 'user_id'],
     domain: function(self){
-        return self.config.employee_ids.length > 0
-            ? [
-                  '&',
-                  ['company_id', '=', self.config.company_id[0]],
-                  '|',
-                  ['user_id', '=', self.user.id],
-                  ['id', 'in', self.config.employee_ids],
-              ]
-            : [['company_id', '=', self.config.company_id[0]]];
+        return [['company_id', '=', self.config.company_id[0]]];
     },
     loaded: function(self, employees) {
         if (self.config.module_pos_hr) {
-            self.employees = employees;
             self.employee_by_id = {};
-            self.employees.forEach(function(employee) {
+            var employee_ids = self.config.employee_ids;
+            var config_employees = [];
+            employees.forEach(function(employee) {
                 self.employee_by_id[employee.id] = employee;
                 var hasUser = self.users.some(function(user) {
                     if (user.id === employee.user_id[0]) {
@@ -33,7 +26,11 @@ models.load_models([{
                 if (!hasUser) {
                     employee.role = 'cashier';
                 }
+                if (hasUser || employee_ids.includes(employee.id)){
+                    config_employees.push(employee);
+                }
             });
+            self.employees = config_employees;
         }
     }
 }]);
