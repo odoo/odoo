@@ -218,7 +218,6 @@ function factory(dependencies) {
             this.update({ isDoFocus: false });
         }
 
-
         /**
          * Handle the select for autocomplete chat add field.
          *

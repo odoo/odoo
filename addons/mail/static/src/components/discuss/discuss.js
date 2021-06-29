@@ -157,6 +157,20 @@ export class Discuss extends Component {
 
     /**
      * @private
+     */
+    _onDialogClosedModerationDiscard() {
+        this.discuss.update({ hasModerationDiscardDialog: false });
+    }
+
+    /**
+     * @private
+     */
+    _onDialogClosedModerationReject() {
+        this.discuss.update({ hasModerationRejectDialog: false });
+    }
+
+    /**
+     * @private
      * @param {CustomEvent} ev
      */
     _onFocusinComposer(ev) {
