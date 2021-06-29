@@ -2447,6 +2447,7 @@ exports.Paymentline = Backbone.Model.extend({
     init_from_JSON: function(json){
         this.amount = json.amount;
         this.payment_method = this.pos.payment_methods_by_id[json.payment_method_id];
+        this.can_be_reversed = json.can_be_reversed;
         this.name = this.payment_method.name;
         this.payment_status = json.payment_status;
         this.ticket = json.ticket;
@@ -2530,6 +2531,7 @@ exports.Paymentline = Backbone.Model.extend({
             payment_method_id: this.payment_method.id,
             amount: this.get_amount(),
             payment_status: this.payment_status,
+            can_be_reversed: this.can_be_resersed,
             ticket: this.ticket,
             card_type: this.card_type,
             cardholder_name: this.cardholder_name,
