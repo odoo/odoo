@@ -17,7 +17,6 @@
 
     'depends': ['product', 'base', 'base_setup', 'point_of_sale'],
 
-    # always loaded
     'data': [
         'data/aumet.scientific_name.csv',
         'views/assets.xml',
