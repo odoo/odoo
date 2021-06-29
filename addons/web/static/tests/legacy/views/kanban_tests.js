@@ -7968,7 +7968,7 @@ QUnit.module('Views', {
         );
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
-            [],
+            ["2 blip"],
         );
 
         // Undo searchdomain
@@ -7976,7 +7976,7 @@ QUnit.module('Views', {
 
         // Check that we still have 2 columns and check their progressbar's state
         assert.containsN(kanban.el, ".o_kanban_group", 2);
-        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
             ["false", "true"],
@@ -7995,7 +7995,7 @@ QUnit.module('Views', {
         );
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
-            ["1 yop"],
+            ["1 yop", "2 blip", "3 gnap"],
         );
 
         kanban.destroy();
@@ -8086,6 +8086,114 @@ QUnit.module('Views', {
             [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
             ["1 yop", "4 blip"],
         );
+
+        kanban.destroy();
+    });
+
+    QUnit.test("filtered column is reloaded when dragging out its last record", async function (assert) {
+        assert.expect(33);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <kanban default_group_by="bar">
+                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="id"/>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super(route, args);
+            },
+        });
+
+        // Check that we have 2 columns, check their progressbar's state, and check records
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_record")].map(el => el.innerText),
+            ["4 blip"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "1 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
+            ["1 yop", "2 blip", "3 gnap"],
+        );
+        assert.verifySteps([
+            "web_read_group",
+            "read_progress_bar",
+            "/web/dataset/search_read",
+            "/web/dataset/search_read",
+        ]);
+
+        // Apply an active filter
+        await testUtils.dom.click(kanban.el.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]"));
+        assert.hasClass(kanban.el.querySelector(".o_kanban_group:nth-child(2)"), "o_kanban_group_show");
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "true");
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show .o_kanban_record");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_kanban_record").innerText, "1 yop");
+        assert.verifySteps(["/web/dataset/search_read"]);
+
+        // Drag out its only record onto the first column
+        await testUtils.dom.dragAndDrop(
+            kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_kanban_record"),
+            kanban.el.querySelector(".o_kanban_group:nth-child(1)")
+        );
+
+        // Check that we have 2 columns, check their progressbar's state, and check records
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_record")].map(el => el.innerText),
+            ["4 blip", "1 yop"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "1 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
+            ["2 blip", "3 gnap"],
+        );
+        assert.verifySteps([
+            "write",
+            "read",
+            "web_read_group",
+            "read_progress_bar",
+            "/web/dataset/search_read",
+            "/web/dataset/resequence",
+        ]);
 
         kanban.destroy();
     });
