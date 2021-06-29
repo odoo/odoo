@@ -30,6 +30,7 @@ import {
     splitElement,
     splitTextNode,
     startPos,
+    nodeSize,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
