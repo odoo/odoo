@@ -125,35 +125,44 @@ const PATH_END_REASONS = {
     BLOCK_OUT: 1,
     BLOCK_HIT: 2,
     OUT_OF_SCOPE: 3,
+    CUSTOM_STOP: 4,
 };
 /**
  * Creates a generator function according to the given parameters. Pre-made
  * generators to traverse the DOM are made using this function:
  *
- * @see leftDeepFirstPath
- * @see leftDeepOnlyPath
- * @see leftDeepFirstInlinePath
- * @see leftDeepOnlyInlinePath
- *
- * @see rightDeepFirstPath
- * @see rightDeepOnlyPath
- * @see rightDeepFirstInlinePath
- * @see rightDeepOnlyInlinePath
+ * @see leftLeafFirstPath
+ * @see leftLeafOnlyNotBlockPath
+ * @see leftLeafOnlyInScopeNotBlockPath
+ * @see rightLeafOnlyNotBlockPath
+ * @see rightLeafOnlyPath
+ * @see rightLeafOnlyNotBlockInScopePath
+ * @see rightLeafOnlyNotBlockPath
  *
  * @param {number} direction
- * @param {boolean} deepOnly
- * @param {boolean} inline
+ * @param {boolean} options.leafOnly if true, do not yeild any non-leaf node
+ * @param {boolean} options.inScope if true, stop the generator as soon as a node is not
+ *                      a descendant of `node` provided when traversing the
+ *                      generated function.
+ * @param {Function} options.isNodeDescendantTraversable a function that takes a node
+ *                      and should return true when a node descendant should not
+ *                      be traversed.
+ * @param {Function} options.stopFunction function that makes the generator stop when a
+ *                      node is encountered.
  */
-export function createDOMPathGenerator(direction, deepOnly, inline, inScope = false) {
+export function createDOMPathGenerator(
+    direction,
+    { leafOnly = false, inScope = false, isNodeDescendantTraversable, stopFunction } = {},
+) {
     const nextDeepest =
         direction === DIRECTIONS.LEFT
-            ? node => lastLeaf(node.previousSibling, inline)
-            : node => firstLeaf(node.nextSibling, inline);
+            ? node => lastLeaf(node.previousSibling, isNodeDescendantTraversable)
+            : node => firstLeaf(node.nextSibling, isNodeDescendantTraversable);
 
     const firstNode =
         direction === DIRECTIONS.LEFT
-            ? (node, offset) => lastLeaf(node.childNodes[offset - 1], inline)
-            : (node, offset) => firstLeaf(node.childNodes[offset], inline);
+            ? (node, offset) => lastLeaf(node.childNodes[offset - 1], isNodeDescendantTraversable)
+            : (node, offset) => firstLeaf(node.childNodes[offset], isNodeDescendantTraversable);
 
     // Note "reasons" is a way for the caller to be able to know why the
     // generator ended yielding values.
@@ -167,15 +176,15 @@ export function createDOMPathGenerator(direction, deepOnly, inline, inScope = fa
         }
 
         while (currentNode) {
-            if (inline && isBlock(currentNode)) {
-                reasons.push(movedUp ? PATH_END_REASONS.BLOCK_OUT : PATH_END_REASONS.BLOCK_HIT);
+            if (stopFunction && stopFunction(currentNode)) {
+                reasons.push(PATH_END_REASONS.CUSTOM_STOP);
                 break;
             }
             if (inScope && currentNode === node) {
                 reasons.push(PATH_END_REASONS.OUT_OF_SCOPE);
                 break;
             }
-            if (!deepOnly || !movedUp) {
+            if (!(leafOnly && movedUp)) {
                 yield currentNode;
             }
 
@@ -255,10 +264,11 @@ export function closestBlock(node) {
  *
  * @param {Node} node
  * @param {boolean} [stopAtBlock=false]
+ * @param {Function} filterOutFunction
  * @returns {Node}
  */
-export function lastLeaf(node, stopAtBlock = false) {
-    while (node && node.lastChild && !(stopAtBlock && isBlock(node))) {
+export function lastLeaf(node, filterOutFunction) {
+    while (node && node.lastChild && !(filterOutFunction && filterOutFunction(node))) {
         node = node.lastChild;
     }
     return node;
@@ -268,10 +278,11 @@ export function lastLeaf(node, stopAtBlock = false) {
  *
  * @param {Node} node
  * @param {boolean} [stopAtBlock=false]
+ * @param {Function} stopFunction
  * @returns {Node}
  */
-export function firstLeaf(node, stopAtBlock = false) {
-    while (node && node.firstChild && !(stopAtBlock && isBlock(node))) {
+export function firstLeaf(node, stopFunction) {
+    while (node && node.firstChild && !(stopFunction && stopFunction(node))) {
         node = node.firstChild;
     }
     return node;
@@ -399,7 +410,7 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
             }
         }
         if (el) {
-            const leftInlineNode = leftDeepOnlyInlineInScopePath(el, elOffset).next().value;
+            const leftInlineNode = leftLeafOnlyInScopeNotBlockPath(el, elOffset).next().value;
             let leftVisibleEmpty = false;
             if (leftInlineNode) {
                 leftVisibleEmpty =
@@ -410,7 +421,7 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
                     : endPos(leftInlineNode);
             }
             if (!leftInlineNode || leftVisibleEmpty) {
-                const rightInlineNode = rightDeepOnlyInlineInScopePath(el, elOffset).next().value;
+                const rightInlineNode = rightLeafOnlyNotBlockInScopePath(el, elOffset).next().value;
                 if (rightInlineNode) {
                     const rightVisibleEmpty =
                         isVisibleEmpty(rightInlineNode) ||
@@ -1433,8 +1444,8 @@ export function prepareUpdate(...args) {
  * @returns {Object}
  */
 export function getState(el, offset, direction, leftCType) {
-    const leftDOMPath = leftDeepOnlyInlinePath;
-    const rightDOMPath = rightDeepOnlyInlinePath;
+    const leftDOMPath = leftLeafOnlyNotBlockPath;
+    const rightDOMPath = rightLeafOnlyNotBlockPath;
 
     let domPath;
     let inverseDOMPath;
@@ -1684,10 +1695,10 @@ export function enforceWhitespace(el, offset, direction, rule) {
     let domPath;
     let expr;
     if (direction === DIRECTIONS.LEFT) {
-        domPath = leftDeepOnlyInlinePath(el, offset);
+        domPath = leftLeafOnlyNotBlockPath(el, offset);
         expr = /[^\S\u00A0]+$/;
     } else {
-        domPath = rightDeepOnlyInlinePath(el, offset);
+        domPath = rightLeafOnlyNotBlockPath(el, offset);
         expr = /^[^\S\u00A0]+/;
     }
 
@@ -1833,24 +1844,36 @@ export function getRangePosition(el, document, options = {}) {
     return offset;
 }
 
-export const leftDeepFirstPath = createDOMPathGenerator(DIRECTIONS.LEFT, false, false);
-export const leftDeepOnlyPath = createDOMPathGenerator(DIRECTIONS.LEFT, true, false);
-export const leftDeepFirstInlinePath = createDOMPathGenerator(DIRECTIONS.LEFT, false, true);
-export const leftDeepOnlyInlinePath = createDOMPathGenerator(DIRECTIONS.LEFT, true, true);
-export const leftDeepOnlyInlineInScopePath = createDOMPathGenerator(
-    DIRECTIONS.LEFT,
-    true,
-    true,
-    true,
-);
+const isNotEditableNode = node =>
+    node.getAttribute && node.getAttribute('contenteditable') === 'false';
+const isNotBlock = node => !isBlock(node);
 
-export const rightDeepFirstPath = createDOMPathGenerator(DIRECTIONS.RIGHT, false, false);
-export const rightDeepOnlyPath = createDOMPathGenerator(DIRECTIONS.RIGHT, true, false);
-export const rightDeepFirstInlinePath = createDOMPathGenerator(DIRECTIONS.RIGHT, false, true);
-export const rightDeepOnlyInlinePath = createDOMPathGenerator(DIRECTIONS.RIGHT, true, true);
-export const rightDeepOnlyInlineInScopePath = createDOMPathGenerator(
-    DIRECTIONS.RIGHT,
-    true,
-    true,
-    true,
-);
+export const leftLeafFirstPath = createDOMPathGenerator(DIRECTIONS.LEFT);
+export const leftLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.LEFT, {
+    leafOnly: true,
+    isNodeDescendantTraversable: isNotBlock,
+    stopFunction: isNotBlock,
+});
+export const leftLeafOnlyInScopeNotBlockPath = createDOMPathGenerator(DIRECTIONS.LEFT, {
+    leafOnly: true,
+    inScope: true,
+    isNodeDescendantTraversable: isNotBlock,
+    stopFunction: isNotBlock,
+});
+
+export const rightLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
+    leafOnly: true,
+    isNodeDescendantTraversable: isNotBlock,
+    stopFunction: isNotBlock,
+});
+
+export const rightLeafOnlyPath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
+    leafOnly: true,
+    isNodeDescendantTraversable: isNotEditableNode,
+});
+export const rightLeafOnlyNotBlockInScopePath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
+    leafOnly: true,
+    inScope: true,
+    isNodeDescendantTraversable: isNotBlock,
+    stopFunction: isNotBlock,
+});
