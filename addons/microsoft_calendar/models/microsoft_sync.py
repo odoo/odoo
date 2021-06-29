@@ -316,6 +316,17 @@ class MicrosoftSync(models.AbstractModel):
                     'need_sync_m': False,
                 })
 
+    def _microsoft_attendee_answer(self, microsoft_service: MicrosoftCalendarService, microsoft_id, answer, params, timeout=TIMEOUT):
+        if not answer:
+            return
+        with microsoft_calendar_token(self.env.user.sudo()) as token:
+            if token:
+                self._ensure_attendees_have_email()
+                microsoft_service.answer(microsoft_id, answer, params, token=token, timeout=timeout)
+                self.write({
+                    'need_sync_m': False,
+                })
+
     def _get_microsoft_records_to_sync(self, full_sync=False):
         """Return records that should be synced from Odoo to Microsoft
 
