@@ -102,6 +102,8 @@ var CalendarView = AbstractView.extend({
                         'title': fields[fieldName].string,
                         'fieldName': fieldName,
                         'filters': [],
+                        'check_all': {},
+                        'filters': [],
                     };
                     filters[fieldName].avatar_field = child.attrs.avatar_field;
                     filters[fieldName].avatar_model = fields[fieldName].relation;
@@ -111,6 +113,7 @@ var CalendarView = AbstractView.extend({
                         'title': fields[fieldName].string,
                         'fieldName': fieldName,
                         'filters': [],
+                        'check_all': {},
                     };
                     filters[fieldName].write_model = child.attrs.write_model;
                     filters[fieldName].write_field = child.attrs.write_field; // can't use a x2many fields
@@ -122,6 +125,7 @@ var CalendarView = AbstractView.extend({
                     filters[fieldName] = filters[fieldName] || {
                         'title': fields[fieldName].string,
                         'fieldName': fieldName,
+                        'check_all': {},
                         'filters': [],
                     };
                     if (child.attrs.color) {
