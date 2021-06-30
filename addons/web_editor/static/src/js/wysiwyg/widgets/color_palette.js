@@ -52,6 +52,8 @@ const ColorPaletteWidget = Widget.extend({
         this.selectedColor = '';
         this.resetButton = this.options.resetButton;
         this.withCombinations = this.options.withCombinations;
+
+        this.trigger_up('request_editable', {callback: val => this.options.$editable = val});
     },
     /**
      * @override
