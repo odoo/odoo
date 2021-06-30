@@ -444,6 +444,7 @@ exports.PosModel = Backbone.Model.extend({
                 }
                 product.categ = _.findWhere(self.product_categories, {'id': product.categ_id[0]});
                 product.pos = self;
+                product.taxes_id = _.filter(product.taxes_id, t => t in self.taxes_by_id);
                 return new exports.Product({}, product);
             }));
         },
