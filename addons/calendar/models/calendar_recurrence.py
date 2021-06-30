@@ -133,7 +133,7 @@ class RecurrenceRule(models.Model):
     def _compute_name(self):
         for recurrence in self:
             period = dict(RRULE_TYPE_SELECTION)[recurrence.rrule_type]
-            every = _("Every %(count)s %(period)s, ", count=recurrence.interval, period=period)
+            every = _("Every %(count)s %(period)s", count=recurrence.interval, period=period)
 
             if recurrence.end_type == 'count':
                 end = _("for %s events", recurrence.count)
@@ -142,19 +142,24 @@ class RecurrenceRule(models.Model):
             else:
                 end = ''
 
-            if recurrence.rrule_type == 'weeky':
+            if recurrence.rrule_type == 'weekly':
                 weekdays = recurrence._get_week_days()
-                weekday_fields = (self._fields[weekday_to_field(w)] for w in weekdays)
-                on = _("on %s,") % ", ".join([field.string for field in weekday_fields])
+                # Convert Weekday object
+                weekdays = [str(w) for w in weekdays]
+                # We need to get the day full name from its three first letters.
+                week_map = {v: k for k, v in RRULE_WEEKDAYS.items()}
+                weekday_short = [week_map[w] for w in weekdays]
+                day_strings = [d[1] for d in WEEKDAY_SELECTION if d[0] in weekday_short]
+                on = _("on %s") % ", ".join([day_name for day_name in day_strings])
             elif recurrence.rrule_type == 'monthly':
                 if recurrence.month_by == 'day':
                     weekday_label = dict(BYDAY_SELECTION)[recurrence.byday]
-                    on = _("on the %(position)s %(weekday)s, ", position=recurrence.byday, weekday=weekday_label)
+                    on = _("on the %(position)s %(weekday)s", position=recurrence.byday, weekday=weekday_label)
                 else:
-                    on = _("day %s, ", recurrence.day)
+                    on = _("day %s", recurrence.day)
             else:
                 on = ''
-            recurrence.name = every + on + end
+            recurrence.name = ' '.join(filter(lambda s: s, [every, on, end]))
 
     @api.depends('calendar_event_ids.start')
     def _compute_dtstart(self):
@@ -210,7 +215,7 @@ class RecurrenceRule(models.Model):
             if specific_values_creation:
                 ranges = set([(x[1], x[2]) for x in specific_values_creation if x[0] == recurrence.id])
             else:
-                ranges = set(recurrence._get_ranges(event.start, duration))
+                ranges = recurrence._range_calculation(event, duration)
 
             events_to_keep, ranges = recurrence._reconcile_events(ranges)
             keep |= events_to_keep
@@ -384,6 +389,28 @@ class RecurrenceRule(models.Model):
                 starts = set(recurrence._get_occurrences(start))
                 synced_events |= recurrence.calendar_event_ids.filtered(lambda e: e.start in starts)
         return self.calendar_event_ids - synced_events
+
+    def _range_calculation(self, event, duration):
+        """ Calculate the range of recurrence when applying the recurrence
+        The following issues are taken into account:
+            start of period is sometimes in the past (weekly or monthly rule).
+            We can easily filter these range values but then the count value may be wrong...
+            In that case, we just increase the count value, recompute the ranges and dismiss the useless values
+        """
+        self.ensure_one()
+        original_count = self.end_type == 'count' and self.count
+        ranges = set(self._get_ranges(event.start, duration))
+        future_events = set((x, y) for x, y in ranges if x.date() >= event.start.date() and y.date() >= event.start.date())
+        if original_count and len(future_events) < original_count:
+            # Rise count number because some past values will be dismissed.
+            self.count = (2*original_count) - len(future_events)
+            ranges = set(self._get_ranges(event.start, duration))
+            # We set back the occurrence number to its original value
+            self.count = original_count
+        # Remove ranges of events occurring in the past
+        ranges = set((x, y) for x, y in ranges if x.date() >= event.start.date() and y.date() >= event.start.date())
+        return ranges
+
 
     def _get_ranges(self, start, event_duration):
         starts = self._get_occurrences(start)

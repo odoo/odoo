@@ -1,17 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.api import model
+
 from odoo.tools import email_normalize
-from odoo.tools.sql import existing_tables
-import pytz
 import logging
 from typing import Iterator, Mapping
 from collections import abc
-from dateutil.parser import parse
-from dateutil.relativedelta import relativedelta
-
-
-from odoo import _
 
 _logger = logging.getLogger(__name__)
 

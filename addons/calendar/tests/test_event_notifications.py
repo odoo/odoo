@@ -152,6 +152,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
                 'duration': 20,
             })
             self.event.write({
+                'name': 'test event',
                 'start': now + relativedelta(minutes=15),
                 'stop': now + relativedelta(minutes=18),
                 'partner_ids': [fields.Command.link(self.partner.id)],
