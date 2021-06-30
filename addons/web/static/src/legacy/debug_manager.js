@@ -416,16 +416,16 @@ export function editView({ accessRights, action, component, env }) {
     };
 }
 
-function editControlPanelView({ accessRights, component, env }) {
+export function editSearchView({ accessRights, component, env }) {
     if (!accessRights.canEditView) {
         return null;
     }
-    const description = env._t("Edit ControlPanelView");
+    const description = env._t("Edit SearchView");
     return {
         type: "item",
         description,
         callback: () => {
-            editModelDebug(env, description, "ir.ui.view", component.props.viewInfo.view_id);
+            editModelDebug(env, description, "ir.ui.view", component.props.viewParams.controlPanelFieldsView.view_id);
         },
         sequence: 360,
     };
@@ -516,7 +516,7 @@ debugRegistry
     .add("viewSeparator", viewSeparator)
     .add("fieldsViewGet", fieldsViewGet)
     .add("editView", editView)
-    .add("editControlPanelView", editControlPanelView);
+    .add("editSearchView", editSearchView);
 
 debugRegistry
     .category("form")
