@@ -15,7 +15,7 @@ import { makeFakeDialogService, makeFakeLocalizationService } from "../../helper
 import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
 import { openViewItem } from "@web/core/debug/debug_menu_items";
-import { editView } from "@web/legacy/debug_manager";
+import { editView, editSearchView } from "@web/legacy/debug_manager";
 
 const { Component, hooks, mount, tags } = owl;
 const { useSubEnv } = hooks;
@@ -338,6 +338,43 @@ QUnit.module("DebugMenu", (hooks) => {
         assert.strictEqual(
             webClient.el.querySelector(".modal .o_form_view .o_field_widget[name=id]").value,
             "18"
+        );
+    });
+
+    QUnit.test("can edit a search view", async (assert) => {
+        const mockRPC = async (route, args) => {
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+        };
+        prepareRegistriesWithCleanup();
+
+        patchWithCleanup(odoo, {
+            debug: true,
+        });
+
+        registry.category("debug").add("editSearchViewItem", editSearchView);
+        registry.category("services").add("debug", debugService);
+
+        const serverData = getActionManagerServerData();
+
+        serverData.views["partner,293,search"] = "<search></search>";
+        serverData.actions[1].search_view_id = [293, "some_search_view"];
+        serverData.models["ir.ui.view"] = {
+            fields: {},
+            records: [{ id: 293 }],
+        };
+        serverData.views["ir.ui.view,false,form"] = `<form><field name="id"/></form>`;
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1);
+        await click(webClient.el.querySelector(".o_debug_manager button"));
+        await click(webClient.el.querySelector(".o_debug_manager .o_dropdown_item"));
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".modal .o_form_view");
+        assert.strictEqual(
+            webClient.el.querySelector(".modal .o_form_view .o_field_widget[name=id]").value,
+            "293"
         );
     });
 });
