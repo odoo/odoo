@@ -45,8 +45,9 @@ class Meeting(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        return super().create([
-            dict(vals, need_sync_m=False) if vals.get('recurrency') else vals
+        notify_context = self.env.context.get('dont_notify', False)
+        return super(Meeting, self.with_context(dont_notify=notify_context)).create([
+            dict(vals, need_sync_m=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
 
@@ -61,10 +62,26 @@ class Meeting(models.Model):
             if previous_event_before_write != previous_event_after_write:
                 # Outlook returns a 400 error if you try to synchronize an occurrence of this type.
                 raise UserError(_("Modified occurrence is crossing or overlapping adjacent occurrence."))
-        return super().write(values)
+        notify_context = self.env.context.get('dont_notify', False)
+        res = super(Meeting, self.with_context(dont_notify=notify_context)).write(values)
+        if recurrence_update_setting in ('all_events',) and len(self) == 1 and values.keys() & self._get_microsoft_synced_fields():
+            self.recurrence_id.need_sync_m = True
+        return res
 
     def _get_microsoft_sync_domain(self):
-        return [('partner_ids.user_ids', 'in', self.env.user.id)]
+        # in case of full sync, limit to a range of 1y in past and 1y in the future by default
+        ICP = self.env['ir.config_parameter'].sudo()
+        day_range = int(ICP.get_param('google_calendar.sync.range_days', default=365))
+        lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
+        upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
+        return [
+            ('partner_ids.user_ids', 'in', self.env.user.id),
+            ('stop', '>', lower_bound),
+            ('start', '<', upper_bound),
+            # Do not sync events that follow the recurrence, they are already synced at recurrence creation
+            '!', '&', '&', ('recurrency', '=', True), ('recurrence_id', '!=', False), ('follow_recurrence', '=', True)
+        ]
+
 
     @api.model
     def _microsoft_to_odoo_values(self, microsoft_event, default_reminders=(), default_values={}):
@@ -93,13 +110,20 @@ class Meeting(models.Model):
             'user_id': microsoft_event.owner(self.env).id,
             'privacy': sensitivity_o2m.get(microsoft_event.sensitivity, self.default_get(['privacy'])['privacy']),
             'attendee_ids': commands_attendee,
-            'partner_ids': commands_partner,
             'allday': microsoft_event.isAllDay,
             'start': start,
             'stop': stop,
             'show_as': 'free' if microsoft_event.showAs == 'free' else 'busy',
             'recurrency': microsoft_event.is_recurrent()
         }
+        if commands_partner:
+            # Add partner_commands only if set from Microsoft. The write method on calendar_events will
+            # override attendee commands if the partner_ids command is set but empty.
+            values['partner_ids'] = commands_partner
+
+        if microsoft_event.is_recurrent() and not microsoft_event.is_recurrence():
+            # Propagate the follow_recurrence according to the google result
+            values['follow_recurrence'] = not microsoft_event.is_recurrence_outlier()
 
         values['microsoft_id'] = microsoft_event.id
         if microsoft_event.is_recurrent():
@@ -306,7 +330,7 @@ class Meeting(models.Model):
                 pattern['type'] = recurrence.rrule_type
             else:
                 prefix = 'absolute' if recurrence.month_by == 'date' else 'relative'
-                pattern['type'] = prefix + recurrence.rrule_type.capitalize()
+                pattern['type'] = recurrence.rrule_type and prefix + recurrence.rrule_type.capitalize()
 
             if recurrence.month_by == 'date':
                 pattern['dayOfMonth'] = recurrence.day
@@ -334,8 +358,9 @@ class Meeting(models.Model):
                 }
                 pattern['index'] = byday_selection[recurrence.byday]
 
+            dtstart = recurrence.dtstart or fields.Datetime.now()
             rule_range = {
-                'startDate': (recurrence.dtstart.date()).isoformat()
+                'startDate': (dtstart.date()).isoformat()
             }
 
             if recurrence.end_type == 'count':  # e.g. stop after X occurence
