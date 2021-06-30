@@ -130,7 +130,7 @@ class FetchmailServer(models.Model):
                 connection = server.connect()
                 server.write({'state': 'done'})
             except Exception as err:
-                _logger.info("Failed to connect to %s server %s.", server.type, server.name, exc_info=True)
+                _logger.error("Failed to connect to %s server %s.", server.type, server.name, exc_info=True)
                 raise UserError(_("Connection test failed: %s") % tools.ustr(err))
             finally:
                 try:
@@ -175,14 +175,14 @@ class FetchmailServer(models.Model):
                         try:
                             res_id = MailThread.with_context(**additionnal_context).message_process(server.object_id.model, data[0][1], save_original=server.original, strip_attachments=(not server.attach))
                         except Exception:
-                            _logger.info('Failed to process mail from %s server %s.', server.type, server.name, exc_info=True)
+                            _logger.error('Failed to process mail from %s server %s.', server.type, server.name, exc_info=True)
                             failed += 1
                         imap_server.store(num, '+FLAGS', '\\Seen')
                         self._cr.commit()
                         count += 1
                     _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", count, server.type, server.name, (count - failed), failed)
                 except Exception:
-                    _logger.info("General failure when trying to fetch mail from %s server %s.", server.type, server.name, exc_info=True)
+                    _logger.error("General failure when trying to fetch mail from %s server %s.", server.type, server.name, exc_info=True)
                 finally:
                     if imap_server:
                         imap_server.close()
@@ -201,7 +201,7 @@ class FetchmailServer(models.Model):
                                 res_id = MailThread.with_context(**additionnal_context).message_process(server.object_id.model, message, save_original=server.original, strip_attachments=(not server.attach))
                                 pop_server.dele(num)
                             except Exception:
-                                _logger.info('Failed to process mail from %s server %s.', server.type, server.name, exc_info=True)
+                                _logger.error('Failed to process mail from %s server %s.', server.type, server.name, exc_info=True)
                                 failed += 1
                             self.env.cr.commit()
                         if num_messages < MAX_POP_MESSAGES:
@@ -209,7 +209,7 @@ class FetchmailServer(models.Model):
                         pop_server.quit()
                         _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", num_messages, server.type, server.name, (num_messages - failed), failed)
                 except Exception:
-                    _logger.info("General failure when trying to fetch mail from %s server %s.", server.type, server.name, exc_info=True)
+                    _logger.error("General failure when trying to fetch mail from %s server %s.", server.type, server.name, exc_info=True)
                 finally:
                     if pop_server:
                         pop_server.quit()
