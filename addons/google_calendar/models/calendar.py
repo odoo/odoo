@@ -82,7 +82,7 @@ class Meeting(models.Model):
         name = google_event.summary or related_event and related_event.name or _("(No title)")
         values = {
             'name': name,
-            'description': tools.plaintext2html(google_event.description),
+            'description': google_event.description and tools.html_sanitize(google_event.description),
             'location': google_event.location,
             'user_id': google_event.owner(self.env).id,
             'privacy': google_event.visibility or self.default_get(['privacy'])['privacy'],
@@ -125,7 +125,7 @@ class Meeting(models.Model):
             user = google_event.owner(self.env)
             google_attendees += [{
                 'email': user.partner_id.email,
-                'responseStatus': 'accepted',
+                'responseStatus': 'needsAction',
             }]
         emails = [a.get('email') for a in google_attendees]
         existing_attendees = self.env['calendar.attendee']
@@ -203,14 +203,18 @@ class Meeting(models.Model):
             start = {'date': self.start_date.isoformat()}
             end = {'date': (self.stop_date + relativedelta(days=1)).isoformat()}
         else:
-            event_tz = self.event_tz or 'Etc/UTC'
-            start = {'dateTime': self.start.isoformat(), 'timeZone': event_tz}
-            end = {'dateTime': self.stop.isoformat(), 'timeZone': event_tz}
+            start = {'dateTime': pytz.utc.localize(self.start).isoformat()}
+            end = {'dateTime': pytz.utc.localize(self.stop).isoformat()}
         reminders = [{
             'method': "email" if alarm.alarm_type == "email" else "popup",
             'minutes': alarm.duration_minutes
         } for alarm in self.alarm_ids]
-        attendee_values = [{'email': attendee.partner_id.email_normalized, 'responseStatus': attendee.state} for attendee in self.attendee_ids if attendee.partner_id.email_normalized]
+
+        attendees = self.attendee_ids
+        if self.user_id and self.user_id != self.env.user and bool(self.user_id.sudo().google_calendar_token):
+            # We avoid updating the other attendee status if we are not the organizer
+            attendees = self.attendee_ids.filtered(lambda att: att.partner_id == self.env.user.partner_id)
+        attendee_values = [{'email': attendee.partner_id.email_normalized, 'responseStatus': attendee.state} for attendee in attendees if attendee.partner_id.email_normalized]
         # We sort the attendees to avoid undeterministic test fails. It's not mandatory for Google.
         attendee_values.sort(key=lambda k: k['email'])
         values = {

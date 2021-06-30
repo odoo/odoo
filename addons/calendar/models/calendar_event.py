@@ -3,10 +3,8 @@
 
 from datetime import timedelta
 import math
-from uuid import uuid4
 import logging
 import pytz
-from werkzeug.urls import url_join
 
 from odoo import api, fields, models, Command
 from odoo.osv.expression import AND
@@ -16,7 +14,7 @@ from odoo.addons.calendar.models.calendar_recurrence import weekday_to_field, RR
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
 from odoo.tools import pycompat, html2plaintext, is_html_empty
-from odoo.exceptions import UserError, ValidationError, AccessError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -81,8 +79,7 @@ class Meeting(models.Model):
         """ When active_model is res.partner, the current partners should be attendees """
         partners = self.env.user.partner_id
         active_id = self._context.get('active_id')
-        if self._context.get('active_model') == 'res.partner' and active_id:
-            if active_id not in partners.ids:
+        if self._context.get('active_model') == 'res.partner' and active_id and active_id not in partners.ids:
                 partners |= self.env['res.partner'].browse(active_id)
         return partners
 
@@ -92,14 +89,6 @@ class Meeting(models.Model):
         (happens when we quickcreate an event)"""
         return self._attendees_values([(4, self.env.user.partner_id.id)])
 
-    @api.model
-    def _default_videocall_location(self):
-        if self.env.context.get('calendar_no_videocall'):
-            return False
-        jitsi_url = self.env['ir.config_parameter'].sudo().get_param('website_jitsi.jitsi_server_domain', 'meet.jit.si')
-        if not jitsi_url.startswith('http'):
-            jitsi_url = 'https://' + jitsi_url
-        return url_join(jitsi_url, 'odoo-%s' % (uuid4().hex[:12]))
 
     # description
     name = fields.Char('Meeting Subject', required=True)
@@ -108,7 +97,7 @@ class Meeting(models.Model):
     partner_id = fields.Many2one(
         'res.partner', string='Scheduled by', related='user_id.partner_id', readonly=True)
     location = fields.Char('Location', tracking=True, help="Location of Event")
-    videocall_location = fields.Char('Join Video Call', default=_default_videocall_location)
+    videocall_location = fields.Char('Meeting URL')
     # visibility
     privacy = fields.Selection(
         [('public', 'Public'),
@@ -217,6 +206,8 @@ class Meeting(models.Model):
     weekday = fields.Selection(WEEKDAY_SELECTION, compute='_compute_recurrence', readonly=False)
     byday = fields.Selection(BYDAY_SELECTION, compute='_compute_recurrence', readonly=False)
     until = fields.Date(compute='_compute_recurrence', readonly=False)
+    # UI Fields.
+    display_description = fields.Boolean(compute='_compute_display_description')
 
     def _compute_is_highlighted(self):
         if self.env.context.get('active_model') == 'res.partner':
@@ -282,11 +273,16 @@ class Meeting(models.Model):
         for event in self:
             # Round the duration (in hours) to the minute to avoid weird situations where the event
             # stops at 4:19:59, later displayed as 4:19.
-            event.stop = event.start + timedelta(minutes=round((event.duration or 1.0) * 60))
+            event.stop = event.start and event.start + timedelta(minutes=round((event.duration or 1.0) * 60))
             if event.allday:
                 event.stop -= timedelta(seconds=1)
 
     def _inverse_dates(self):
+        """ This method is used to set the start and stop values of all day events.
+            The calendar view needs date_start and date_stop values to display correctly the allday events across
+            several days. As the user edit the {start,stop}_date fields when allday is true,
+            this inverse method is needed to update the  start/stop value and have a relevant calendar view.
+        """
         for meeting in self:
             if meeting.allday:
 
@@ -350,6 +346,11 @@ class Meeting(models.Model):
                 event.update({**false_values, **defaults, **event_values, **rrule_values})
             else:
                 event.update(false_values)
+
+    @api.depends('description')
+    def _compute_display_description(self):
+        for event in self:
+            event.display_description = not is_html_empty(event.description)
 
     # ------------------------------------------------------------
     # CRUD
@@ -444,10 +445,13 @@ class Meeting(models.Model):
             :return: tuple(my events, other events)
             """
             current_partner_id = self.env.user.partner_id.id
-            visible_events = [event for event in events if (event.get('user_id') and event.get('user_id')[0] == self.env.uid)
-                              or current_partner_id in event.get('partner_ids')]
-            my_ids = map(lambda e: e['id'], visible_events)
-            other_events = [event for event in events if event.get('id') not in my_ids]
+            visible_events = []
+            other_events = []
+            for event in events:
+                if (event.get('user_id') and event.get('user_id')[0] == self.env.uid) or current_partner_id in event.get('partner_ids'):
+                    visible_events.append(event)
+                else:
+                    other_events.append(event)
             return visible_events, other_events
 
         def obfuscated(events):
@@ -525,6 +529,7 @@ class Meeting(models.Model):
 
         current_attendees = self.filtered('active').attendee_ids
         if 'partner_ids' in values:
+            # we send to all partners and not only the new ones
             (current_attendees - previous_attendees)._send_mail_to_attendees(
                 self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False)
             )
@@ -575,10 +580,10 @@ class Meeting(models.Model):
          """
         self.ensure_one()
         if not default:
-            default = dict()
+            default = {}
         # We need to make sure that the attendee_ids are recreated with new ids to avoid sharing attendees between events
         # The copy should not have the same attendee status than the original event
-        default.update({'partner_ids': [Command.set([])], 'attendee_ids': [Command.set([])]})
+        default.update(partner_ids=[Command.set([])], attendee_ids=[Command.set([])])
         copied_event = super().copy(default)
         copied_event.write({'partner_ids': [(Command.set(self.partner_ids.ids))]})
         return copied_event
@@ -639,17 +644,25 @@ class Meeting(models.Model):
     def action_open_composer(self):
         if not self.partner_ids:
             raise UserError(_("There are no attendees on these events"))
+        template_id = self.env['ir.model.data']._xmlid_to_res_id('calendar.calendar_template_meeting_update', raise_if_not_found=False)
+        # The mail is sent with datetime corresponding to the sending user TZ
+        composition_mode = self.env.context.get('composition_mode', 'comment')
         compose_ctx = dict(
-            default_composition_mode='mass_mail',
-            default_subject=_("Event update"),
+            default_composition_mode=composition_mode,
             default_model='calendar.event',
             default_res_ids=self.ids,
+            default_use_template=bool(template_id),
+            default_template_id=template_id,
+            default_partner_ids=self.partner_ids.ids,
+            mail_tz=self.env.user.tz,
         )
         return {
-            'name': _('Contact Attendees'),
             'type': 'ir.actions.act_window',
+            'name': _('Contact Attendees'),
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
+            'views': [(False, 'form')],
+            'view_id': False,
             'target': 'new',
             'context': compose_ctx,
         }
@@ -785,12 +798,9 @@ class Meeting(models.Model):
         self.ensure_one()
         if not time_values:
             return self.browse()
-        before = previous_week_day_field = weekday_to_field(self._get_start_date().weekday())
         if self.follow_recurrence and self.recurrency:
-            # arj fixme understand what is done here !!!! it can explain the issues...
             previous_week_day_field = weekday_to_field(self._get_start_date().weekday())
         else:
-            # arj fixme understand what is done here !!!! it can explain the issues...
             # When we try to change recurrence values of an event not following the recurrence, we get the parameters from
             # the base_event
             previous_week_day_field = weekday_to_field(self.recurrence_id.base_event_id._get_start_date().weekday())
@@ -941,7 +951,9 @@ class Meeting(models.Model):
             return fields.Date.today()
         if self.recurrence_id.event_tz:
             tz = pytz.timezone(self.recurrence_id.event_tz)
-            return pytz.utc.localize(self.start).astimezone(tz).date()
+            # Ensure that all day events date are not calculated around midnight. TZ shift would potentially return bad date
+            start = self.start if not self.allday else self.start.replace(hour=12)
+            return pytz.utc.localize(start).astimezone(tz).date()
         return self.start.date()
 
     def _range(self):
@@ -1111,5 +1123,5 @@ class Meeting(models.Model):
     def _get_public_fields(self):
         return self._get_recurrent_fields() | self._get_time_fields() | self._get_custom_fields() | {
             'id', 'active', 'allday',
-            'duration', 'user_id', 'interval',
+            'duration', 'user_id', 'interval', 'partner_id',
             'count', 'rrule', 'recurrence_id', 'show_as', 'privacy'}

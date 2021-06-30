@@ -273,8 +273,6 @@ const GoogleCalendarRenderer = CalendarRenderer.include({
         var self = this;
         var context = this.getSession().user_context;
         this.$googleButton.prop('disabled', true);
-        this._getGoogleStopButton();
-        this.$googleButton.hide();
         this.trigger_up('syncGoogleCalendar', {
             on_always: function () {
                 self.$googleButton.prop('disabled', false);
