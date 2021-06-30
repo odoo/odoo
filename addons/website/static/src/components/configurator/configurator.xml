@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-name="website.Configurator.SkipButton" owl="1">
-    <button class="btn btn-link" t-on-click="skip()">Skip and start from scratch</button>
-</t>
-
-<t t-name="website.Configurator.WelcomeScreen" owl="1">
-    <div class="o_configurator_screen h-100 d-flex flex-column o_welcome_screen">
-        <div class="container-fluid pt-3 pb-2">
-            <img class="ml-lg-5" style="height: 31px; width: 99px;" src="/website/static/src/img/odoo_logo.svg" title="Odoo Logo"/>
+    <t t-name="website.Configurator.SkipButton" owl="1">
+        <div class="container-fluid py-2 pb-md-3 text-right pr-lg-5">
+            <button class="btn btn-link" t-on-click="skip()">Skip and start from scratch</button>
         </div>
-        <div class="o_configurator_screen_content d-flex h-100">
-            <div class="container align-self-center o_configurator_show">
-                <div class="display-4 mb-2">
-                    Ready to build the<br class="d-none d-lg-inline"/>
+    </t>
+
+    <t t-name="website.Configurator.WelcomeScreen" owl="1">
+        <div class="o_configurator_screen h-100 d-flex flex-column o_welcome_screen">
+            <div class="container-fluid pt-3 pb-2">
+                <img class="ml-lg-5" style="height: 31px; width: 99px;" src="/website/static/src/img/odoo_logo.svg" title="Odoo Logo"/>
+            </div>
+            <div class="o_configurator_screen_content d-flex h-100">
+                <div class="container align-self-center o_configurator_show">
+                    <div class="display-4 mb-2">Ready to build the<br class="d-none d-lg-inline"/>
                     <b>perfect website?</b>
                 </div>
-                <div class="lead font-weight-normal mb-4 text-600">
-                    We'll set you up and running in <b>4 steps</b>
+                <div class="lead font-weight-normal mb-4 text-600">We'll set you up and running in <b>4 steps</b>
                 </div>
-                <div class="d-flex">
-                    <button class="o_configurator_show btn btn-primary btn-lg px-4 py-2" t-on-click="goToDescription()">Let's do it</button>
-                    <SkipButton/>
-                </div>
+                <button class="o_configurator_show btn btn-primary btn-lg px-4 py-2" t-on-click="goToDescription()">Let's do it</button>
             </div>
         </div>
+        <SkipButton/>
     </div>
 </t>
 
@@ -85,9 +83,7 @@
                 </div>
             </div>
         </div>
-        <div class="container-fluid py-2 pb-md-3 text-right pr-lg-5">
-            <SkipButton/>
-        </div>
+        <SkipButton/>
     </div>
 </t>
 
@@ -147,9 +143,7 @@
                 </div>
             </div>
         </div>
-        <div class="container-fluid py-2 pb-md-3 text-right pr-lg-5">
-            <SkipButton/>
-        </div>
+        <SkipButton/>
     </div>
 </t>
 
@@ -191,9 +185,7 @@
                 </div>
             </div>
         </div>
-        <div class="container-fluid py-2 pb-md-3 text-right pr-lg-5">
-            <SkipButton/>
-        </div>
+        <SkipButton/>
     </div>
 </t>
 
