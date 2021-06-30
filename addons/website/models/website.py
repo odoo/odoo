@@ -1228,6 +1228,50 @@ class Menu(models.Model):
             res.append((menu.id, website_suffix if menu.website_id and self.env.user.has_group('website.group_multi_website') else menu.name))
         return res
 
+    # Criado pela Multidados
+    @api.multi
+    def write(self, vals):
+        """ Chamado na hora de atualizar um registro, sobrescrito
+        para acertar o parent_id do menu que está sendo atualizado
+        de acordo com o website passado nos vals.
+
+        Args:
+            vals (dict): Novos valores para o registro
+
+        Returns:
+            bool: True se o registro foi atualizado com sucesso
+        """
+        if 'parent_id' in vals:
+            if 'website_id' in vals:
+                same_url_ids = self.get_same_url_menus(vals)
+                for menu_id in same_url_ids:
+                    vals['parent_id'] = menu_id
+        return super(Menu, self).write(vals)
+
+    # Criado pela Multidados
+    def get_same_url_menus(self, vals):
+        """ Método para obter o menu equivalente ao menu atual
+        no website de destino.
+
+        Args:
+            vals (dict): valores que serão passados para o registro
+
+        Returns:
+            list: lista com o id do menu equivalente
+        """
+        parent_menu = self.env['website.menu'].browse(vals['parent_id'])
+        website = self.env['website'].search([('id', '=', vals['website_id'])])
+        same_url_ids = []
+        if parent_menu.url == '/default-main-menu':
+            # Se o parent for o menu default, pega o menu default do website
+            same_url_ids += [website.menu_id.id]
+        else:
+            # Busca o novo parent para o website passado nos vals
+            same_url_ids += [menu.id for menu in website.menu_id.child_id if menu.url == parent_menu.url]
+
+        return same_url_ids
+
+    # Editado pela Multidados
     @api.model
     def create(self, vals):
         ''' In case a menu without a website_id is trying to be created, we duplicate
@@ -1242,6 +1286,10 @@ class Menu(models.Model):
             return super(Menu, self).create(vals)
 
         if 'website_id' in vals:
+            if 'parent_id' in vals:
+                same_url_ids = self.get_same_url_menus(vals)
+                for menu_id in same_url_ids:
+                    vals['parent_id'] = menu_id
             return super(Menu, self).create(vals)
         elif self._context.get('website_id'):
             vals['website_id'] = self._context.get('website_id')

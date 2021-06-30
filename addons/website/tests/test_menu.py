@@ -108,3 +108,15 @@ class TestMenu(common.TransactionCase):
         default_menu = self.env.ref('website.main_menu')
         default_menu.child_id[0].unlink()
         self.assertEqual(total_menu_items - 3, Menu.search_count([]), "Deleting a default menu item should delete its 'copies' (same URL) from website's menu trees. In this case, the default child menu and its copies on website 1 and website 2")
+
+    def test_write(self):
+        Menu = self.env['website.menu']
+        website = self.env.ref('website.default_website')
+
+        menu_child = Menu.create({
+            'name': 'Child',
+            'parent_id': self.env.ref('website.main_menu').id,
+            'website_id': website.id,
+        })
+
+        self.assertIn(menu_child, website.menu_id.child_id)
