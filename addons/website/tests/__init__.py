@@ -5,6 +5,7 @@ from . import test_base_url
 from . import test_controllers
 from . import test_converter
 from . import test_crawl
+from . import test_disable_unused_snippets_assets
 from . import test_get_current_website
 from . import test_lang_url
 from . import test_menu
