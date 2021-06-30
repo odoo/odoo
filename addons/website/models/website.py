@@ -1342,3 +1342,98 @@ class Website(models.Model):
 
     def _get_cached(self, field):
         return self._get_cached_values()[field]
+
+    def _get_html_fields(self):
+        html_fields = [('ir_ui_view', 'arch_db')]
+        cr = self.env.cr
+        cr.execute(r"""
+            SELECT f.model,
+                   f.name
+              FROM ir_model_fields f
+              JOIN ir_model m
+                ON m.id = f.model_id
+             WHERE f.ttype = 'html'
+               AND f.store = true
+               AND m.transient = false
+               AND f.model NOT LIKE 'ir.actions%'
+               AND f.model != 'mail.message'
+        """)
+        for model, name in cr.fetchall():
+            table = self.env[model]._table
+            if tools.table_exists(cr, table) and tools.column_exists(cr, table, name):
+                html_fields.append((table, name))
+        return html_fields
+
+    def _get_snippets_assets(self):
+        """Returns every parent snippet asset from the database, filtering out
+        their potential overrides defined in other modules. As they share the same
+        snippet_id, asset_version and asset_type, it is possible to do that using
+        Postgres' DISTINCT ON and ordering by asset_id, as overriden assets will be
+        created later than their parents.
+        The assets are returned in the form of a list of tuples :
+        [(snippet_module, snippet_id, asset_version, asset_type, asset_id)]
+        """
+        self.env.cr.execute(r"""
+            SELECT DISTINCT ON (snippet_id, asset_version, asset_type)
+                   regexp_matches[1] AS snippet_module,
+                   regexp_matches[2] AS snippet_id,
+                   regexp_matches[3] AS asset_version,
+                   CASE
+                       WHEN regexp_matches[4]='scss' THEN 'css'
+                       ELSE regexp_matches[4]
+                   END AS asset_type,
+                   id AS asset_id
+            FROM (
+                SELECT REGEXP_MATCHES(PATH, '(\w*)\/.*\/snippets\/(\w*)\/(\d{3})\.(js|scss)'),
+                       id
+                FROM ir_asset
+            ) AS regexp
+            ORDER BY snippet_id, asset_version, asset_type, asset_id;
+        """)
+        return self.env.cr.fetchall()
+
+    def _is_snippet_used(self, snippet_module, snippet_id, asset_version, asset_type, html_fields):
+        snippet_occurences = []
+        # Check snippet template definition to avoid disabling its related assets.
+        # This special case is needed because snippet template definitions do not
+        # have a `data-snippet` attribute (which is added during drag&drop).
+        snippet_template = self.env.ref(f'{snippet_module}.{snippet_id}', raise_if_not_found=False)
+        if snippet_template:
+            snippet_template_html = snippet_template._render()
+            match = re.search('<([^>]*class="[^>]*)>', snippet_template_html)
+            snippet_occurences.append(match.group())
+
+        # As well as every snippet dropped in html fields
+        snippet_regex = f'<([^>]*data-snippet="{snippet_id}"[^>]*)>'
+        snippet_dropped = 'UNION '.join(f'SELECT REGEXP_MATCHES({column}, \'{snippet_regex}\') FROM {table} ' for table, column in html_fields)
+        self.env.cr.execute(snippet_dropped)
+        results = self.env.cr.fetchall()
+        for r in results:
+            snippet_occurences.append(r[0][0])
+
+        for snippet in snippet_occurences:
+            if asset_version == '000':
+                if f'data-v{asset_type}' not in snippet:
+                    return True
+            else:
+                if f'data-v{asset_type}="{asset_version}"' in snippet:
+                    return True
+        return False
+
+    @api.autovacuum
+    def _disable_unused_snippets_assets(self):
+        snippets_assets = self._get_snippets_assets()
+        html_fields = self._get_html_fields()
+
+        for snippet_module, snippet_id, asset_version, asset_type, _ in snippets_assets:
+            is_snippet_used = self._is_snippet_used(snippet_module, snippet_id, asset_version, asset_type, html_fields)
+            filename_type = 'scss' if asset_type == 'css' else asset_type
+            assets_path = f'{snippet_id}/{asset_version}.{filename_type}'
+
+            # The query will also set to active or inactive assets overrides, as they
+            # share the same snippet_id, asset_version and filename_type as their parents
+            self.env.cr.execute("""
+                UPDATE ir_asset
+                SET active = %(active)s
+                WHERE path ~ %(assets_path)s
+            """, {"active": is_snippet_used, "assets_path": assets_path})
