@@ -586,7 +586,8 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
                     },
                     ticks: {
                         callback: (value, index, values)  => {
-                            debugger
+                            return value
+                            debugger // hum
                             return this._relabelling(value, comparisonFieldIndex)
                         }
                     },
