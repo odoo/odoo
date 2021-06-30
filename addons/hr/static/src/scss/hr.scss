@@ -28,6 +28,14 @@
         margin-right: -3px;
     }
 
+    .o_hr_employee_kanban_bottom {
+        //Prevent bottom row from preventing to click on buttons
+        pointer-events: none;
+        .oe_kanban_bottom_right {
+            pointer-events: auto;
+        }
+    }
+
 }
 
 .o_kanban_dashboard.o_hr_department_kanban {
