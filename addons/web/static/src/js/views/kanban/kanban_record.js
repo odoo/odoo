@@ -41,6 +41,7 @@ var KanbanRecord = Widget.extend({
         this.deletable = options.deletable;
         this.read_only_mode = options.read_only_mode;
         this.selectionMode = options.selectionMode;
+        this.noOpen = options.no_open;
         this.qweb = options.qweb;
         this.subWidgets = {};
 
@@ -200,7 +201,7 @@ var KanbanRecord = Widget.extend({
      * @private
      */
     _openRecord: function () {
-        if (this.$el.hasClass('o_currently_dragged')) {
+        if (this.$el.hasClass('o_currently_dragged') || this.noOpen) {
             // this record is currently being dragged and dropped, so we do not
             // want to open it.
             return;
@@ -355,6 +356,7 @@ var KanbanRecord = Widget.extend({
         this.$el.addClass('o_kanban_record').attr("tabindex", 0);
         this.$el.attr('role', 'article');
         this.$el.data('record', this);
+        this.$el.attr('data-db_id', this.db_id);
         // forcefully add class oe_kanban_global_click to have clickable record always to select it
         if (this.selectionMode) {
             this.$el.addClass('oe_kanban_global_click');
@@ -686,6 +688,7 @@ var KanbanRecord = Widget.extend({
                 break;
             case 'action':
             case 'object':
+                event.stopPropagation();
                 var attrs = $action.data();
                 attrs.confirm = $action.attr('confirm');
                 this.trigger_up('button_clicked', {

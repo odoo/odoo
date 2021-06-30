@@ -2970,7 +2970,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('image fields in subviews are loaded correctly', async function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = MY_IMAGE;
@@ -3024,7 +3024,9 @@ QUnit.module('basic_fields', {
         await testUtils.dom.click(form.$('.oe_kanban_global_click'));
         assert.strictEqual($('.modal').length, 1,
             'The modal should have opened');
-        assert.verifySteps(["The dialog's image should have been fetched"]);
+        assert.verifySteps([
+            "The view's image should have been fetched",
+            "The dialog's image should have been fetched"]);
 
         form.destroy();
     });
@@ -3160,7 +3162,7 @@ QUnit.module('basic_fields', {
                             '</templates>' +
                         '</kanban>' +
                         '<form>' +
-                            '<field name="image" widget="image_url"/>' +
+                            '<field name="image" widget="image_url" readonly="1"/>' +
                         '</form>' +
                     '</field>' +
                 '</form>',

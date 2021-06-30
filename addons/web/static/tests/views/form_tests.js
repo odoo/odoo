@@ -11014,6 +11014,55 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('Quick Edition: click one2many kanban record in form', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[0].p.push(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="p" mode="kanban">
+                            <kanban>
+                                <field name="foo"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div class="oe_kanban_global_click"><field name="foo"/></div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </group>
+                </form>`,
+            archs: {
+                'partner,false,form': `
+                    <form>
+                        <group>
+                            <field name="foo"/>
+                        </group>
+                        <group>
+                            <field name="qux"/>
+                        </group>
+                    </form>`
+            },
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+
+        await testUtils.dom.click(form.$('.oe_kanban_global_click'));
+        assert.containsOnce(form, '.o_form_view.o_form_editable',
+            'should switch into edit mode');
+        assert.containsOnce(document.body, '.modal .o_form_view.o_form_editable',
+            "editable form should be opened in modal");
+
+        form.destroy();
+    });
+
     QUnit.test('Quick Edition: CopyToClipboard click on value', async function (assert) {
         assert.expect(4);
 
