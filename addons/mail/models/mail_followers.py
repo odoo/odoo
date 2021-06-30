@@ -125,7 +125,8 @@ SELECT DISTINCT ON (pid) * FROM (
            partner.active as active,
            partner.partner_share as pshare,
            users.notification_type AS notif,
-           array_agg(groups_rel.gid) AS groups
+           array_agg(groups_rel.gid) AS groups,
+           partner.lang as lang
       FROM res_partner partner
  LEFT JOIN res_users users ON users.partner_id = partner.id
                           AND users.active
@@ -145,7 +146,7 @@ ORDER BY pid, notif
             query_pid = """
 SELECT partner.id as pid,
 partner.active as active, partner.partner_share as pshare,
-users.notification_type AS notif, NULL AS groups
+users.notification_type AS notif, NULL AS groups, partner.lang as lang
 FROM res_partner partner
 LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
 WHERE partner.id IN %s"""

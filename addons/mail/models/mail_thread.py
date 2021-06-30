@@ -2180,24 +2180,7 @@ class MailThread(models.AbstractModel):
         if not partners_data:
             return True
 
-        model = msg_vals.get('model') if msg_vals else message.model
-        model_name = model_description or (self._fallback_lang().env['ir.model']._get(model).display_name if model else False) # one query for display name
-        recipients_groups_data = self._notify_classify_recipients(partners_data, model_name, msg_vals=msg_vals)
-
-        if not recipients_groups_data:
-            return True
         force_send = self.env.context.get('mail_notify_force_send', force_send)
-
-        template_values = self._notify_prepare_template_context(message, msg_vals, model_description=model_description) # 10 queries
-
-        email_layout_xmlid = msg_vals.get('email_layout_xmlid') if msg_vals else message.email_layout_xmlid
-        template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.message_notification_email'
-        try:
-            base_template = self.env.ref(template_xmlid, raise_if_not_found=True).with_context(lang=template_values['lang']) # 1 query
-        except ValueError:
-            _logger.warning('QWeb template %s not found when sending notification emails. Sending without layouting.' % (template_xmlid))
-            base_template = False
-
         mail_subject = message.subject or (message.record_name and 'Re: %s' % message.record_name) # in cache, no queries
         # prepare notification mail values
         base_mail_values = {
@@ -2223,7 +2206,7 @@ class MailThread(models.AbstractModel):
         # loop on groups (customer, portal, user,  ... + model specific like group_sale_salesman)
         notif_create_values = []
         recipients_max = 50
-        for recipients_group_data in recipients_groups_data:
+        for (base_template, template_values, recipients_group_data) in self.get_template_generator(partners_data, msg_vals, message, model_description):
             # generate notification email content
             recipients_ids = recipients_group_data.pop('recipients')
             render_values = {**template_values, **recipients_group_data}
@@ -2304,6 +2287,31 @@ class MailThread(models.AbstractModel):
 
         return True
 
+    def get_template_generator(self, partners_data, msg_vals, message, model_description):
+        model = msg_vals.get('model') if msg_vals else message.model
+        email_layout_xmlid = msg_vals.get('email_layout_xmlid') if msg_vals else message.email_layout_xmlid
+        template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.message_notification_email'
+        for (lang, partners_data_batch) in self.group_partners_data_by_lang(partners_data):
+            self = self.with_context(lang=lang)
+            model_name = model_description or (self.env['ir.model']._get(model).display_name if model else False) # one query for display name
+            groups = self._notify_classify_recipients(partners_data_batch, model_name, msg_vals=msg_vals)
+            if not groups:
+                continue
+            template_values = self._notify_prepare_template_context(message, msg_vals, model_description=model_description) # 10 queries
+            try:
+                base_template = self.env.ref(template_xmlid, raise_if_not_found=True) # 1 query
+            except ValueError:
+                _logger.warning('QWeb template %s not found when sending notification emails. Sending without layouting.', template_xmlid)
+                base_template = False
+            for recipients_group_data in groups:
+                yield (base_template, template_values, recipients_group_data)
+
+    def group_partners_data_by_lang(self, partners_data):
+        batches = {}
+        for data in partners_data:
+            batches.setdefault(data.get('lang') or self.env.lang, []).append(data)
+        return batches.items()
+
     @api.model
     def _notify_prepare_template_context(self, message, msg_vals, model_description=False, mail_auto_delete=True):
         # compute send user and its related signature
@@ -2313,7 +2321,6 @@ class MailThread(models.AbstractModel):
         model = msg_vals.get('model') if msg_vals else message.model
         add_sign = msg_vals.get('add_sign') if msg_vals else message.add_sign
         subtype_id = msg_vals.get('subtype_id') if msg_vals else message.subtype_id.id
-        message_id = message.id
         record_name = msg_vals.get('record_name') if msg_vals else message.record_name
         author_user = user if user.partner_id == author else author.user_ids[0] if author and author.user_ids else False
         # trying to use user (self.env.user) instead of browing user_ids if he is the author will give a sudo user,
@@ -2332,15 +2339,7 @@ class MailThread(models.AbstractModel):
         else:
             website_url = False
 
-        # Retrieve the language in which the template was rendered, in order to render the custom
-        # layout in the same language.
-        # TDE FIXME: this whole brol should be cleaned !
         lang = self.env.context.get('lang')
-        if {'default_template_id', 'default_model', 'default_res_id'} <= self.env.context.keys():
-            template = self.env['mail.template'].browse(self.env.context['default_template_id'])
-            if template and template.lang:
-                lang = template._render_lang([self.env.context['default_res_id']])[self.env.context['default_res_id']]
-
         if not model_description and model:
             model_description = self.env['ir.model'].with_context(lang=lang)._get(model).display_name
 
@@ -2366,7 +2365,6 @@ class MailThread(models.AbstractModel):
             'tracking_values': tracking,
             'is_discussion': is_discussion,
             'subtype': message.subtype_id,
-            'lang': lang,
         }
 
     def _notify_by_email_add_values(self, base_mail_values):
@@ -2398,13 +2396,13 @@ class MailThread(models.AbstractModel):
             return recipients_data
 
         author_id = msg_vals.get('author_id') or message.author_id.id
-        for pid, active, pshare, notif, groups in res:
+        for pid, active, pshare, notif, groups, lang in res:
             if pid and pid == author_id and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
                 continue
             if pid:
                 if active is False:
                     continue
-                pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups or []}
+                pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups or [], 'lang': lang}
                 if notif == 'inbox':
                     recipients_data.append(dict(pdata, notif=notif, type='user'))
                 elif not pshare and notif:  # has an user and is not shared, is therefore user
