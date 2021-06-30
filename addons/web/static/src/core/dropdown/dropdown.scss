@@ -10,7 +10,7 @@
 .dropdown-item {
   &.active {
     position: relative;
-    @extend .font-weight-bold;
+    font-weight: $font-weight-bold;
 
     &:focus, &:hover  {
       background-color: $dropdown-link-hover-bg;
@@ -32,12 +32,12 @@
   }
 
   &.selected { // Legacy
-    @extend .dropdown-item.active;
+    @extend .active;
   }
 }
 
 .dropdown-header {
-  @extend .font-weight-bold;
+  font-weight: $font-weight-bold;
   padding-bottom: .1em;
 
   &:not(:first-child) {
