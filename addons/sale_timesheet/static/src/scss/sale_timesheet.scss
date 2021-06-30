@@ -1,5 +1,3 @@
-$canceled-color: gray;
-
 
 .o_timesheet_plan_sale_timesheet {
 
@@ -67,48 +65,21 @@ $canceled-color: gray;
     }
 
     .o_timesheet_plan_sale_timesheet_people_time {
+        $-timesheet-progress-colors: (
+            'billable_time':  nth($o-colors-complete, 3),
+            'billable_fixed': nth($o-colors-complete, 5),
+            'non_billable_project': theme-color('primary'),
+            'non_billable_timesheet': nth($o-colors-complete, 11),
+            'non_billable': nth($o-colors-complete, 18),
+            'canceled': $o-gray-500,
+        );
 
-        .o_progress_billable_time {
-            background-color: #f0ad4e;
-            color: white;
-            cursor: pointer;
-        }
-        .o_progress_billable_fixed {
-            background-color: #5bc0de;
-            color: white;
-            cursor: pointer;
-        }
-        .o_progress_non_billable_project {
-            background-color: theme-color('primary');
-            color: white;
-            cursor: pointer;
-        }
-        .o_progress_non_billable_timesheet {
-            background-color: rgb(11, 194, 1);
-            color: white;
-            cursor: pointer;
-        }
-        .o_progress_non_billable {
-            background-color: purple;
-            color: white;
-            cursor: pointer;
-        }
-        .o_progress_canceled {
-            background-color: $canceled-color;
-            color: white;
-            cursor: pointer;
-        }
-        .progress {
-            border-radius: 3px;
-        }
+        @each $-key, $-bg in $-timesheet-progress-colors {
+            .o_progress_#{$-key} {
+                background-color: $-bg;
 
-        .o_timesheet_plan_badge {
-            margin-bottom: 10px;
-            > .badge {
-                border: none;
-                font-size: unset;
-                    a {
-                    color: white;
+                a {
+                    color: color-yiq($-bg);
                 }
             }
         }
@@ -164,8 +135,8 @@ $canceled-color: gray;
         }
 
         .o_canceled_tag {
-            background-color: $canceled-color;
-            color: white;
+            background-color: $o-gray-500;
+            color: color-yiq($o-gray-500);
             border: 0px;
         }
     }
