@@ -569,6 +569,20 @@ class Meeting(models.Model):
         self.env['calendar.alarm_manager']._notify_next_alarm(partner_ids)
         return result
 
+    def copy(self, default=None):
+        """When an event is copied, the attendees should be recreated to avoid sharing the same attendee records
+         between copies
+         """
+        self.ensure_one()
+        if not default:
+            default = dict()
+        # We need to make sure that the attendee_ids are recreated with new ids to avoid sharing attendees between events
+        # The copy should not have the same attendee status than the original event
+        default.update({'partner_ids': [Command.set([])], 'attendee_ids': [Command.set([])]})
+        copied_event = super().copy(default)
+        copied_event.write({'partner_ids': [(Command.set(self.partner_ids.ids))]})
+        return copied_event
+
     def _attendees_values(self, partner_commands):
         """
         :param partner_commands: ORM commands for partner_id field (0 and 1 commands not supported)
