@@ -6,6 +6,8 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
     const fieldUtils = require("web.field_utils");
     const { sortBy } = require("web.utils");
 
+    const DATA_SIZE_THRESHOLD = 750;
+
     const {
         COLORS,
         DEFAULT_BG,
@@ -562,6 +564,24 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
                     };
                 }
             }
+
+            let dataSize = 0;
+            for (const dataPt of this.processedDataPoints) {
+                if (dataPt.value) {
+                    dataSize++;
+                }
+            }
+
+            if (dataSize > DATA_SIZE_THRESHOLD) {
+                return {
+                    title: this.env._t("Too big data"),
+                    description: [
+                        this.env._t("The size of data to display is too large "),
+                        this.env._t("Try to change your domain or dimensions to display less data in your chart")
+                    ].join("")
+                }
+            }
+
             return null;
         }
 
