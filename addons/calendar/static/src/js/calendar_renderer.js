@@ -40,7 +40,7 @@ const AttendeeCalendarPopover = CalendarPopover.extend({
      * @return {boolean}
      */
     isCurrentPartnerAttendee() {
-        return this.event.extendedProps.record.partner_ids.includes(session.partner_id) && this.event.extendedProps.attendee_id === session.partner_id;
+        return this.event.extendedProps.record.partner_ids.includes(session.partner_id);
     },
     /**
      * @override
@@ -104,6 +104,11 @@ const AttendeeCalendarPopover = CalendarPopover.extend({
 
 
 const AttendeeCalendarRenderer = CalendarRenderer.extend({
+    template: "CalendarView",
+    events: _.extend({}, CalendarPopover.prototype.events, {
+        'click .o_sync_button': '_onSyncCalendar',
+        'click .o_calendar_close_banner': '_onCalendarCloseBanner',
+    }),
 	config: _.extend({}, CalendarRenderer.prototype.config, {
         CalendarPopover: AttendeeCalendarPopover,
         eventTemplate: 'Calendar.calendar-box',
@@ -128,6 +133,18 @@ const AttendeeCalendarRenderer = CalendarRenderer.extend({
             selector += `[data-attendee-id=${info.event.extendedProps.attendee_id}]`;
         }
         return selector;
+    },
+
+    _onSyncCalendar: function () {
+        this.do_action({
+            name: 'Sync Settings',
+            type: 'ir.actions.act_window',
+            res_model: 'res.config.settings',
+            target: 'inline',
+            view_mode: 'form',
+            views: [[false, 'form']],
+            context: {'module' : 'general_settings', 'bin_size': false},
+        });
     },
 });
 

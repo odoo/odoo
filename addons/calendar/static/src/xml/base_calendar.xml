@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
-    <t t-name="Many2ManyAttendeeTag" t-extend="FieldMany2ManyTagAvatar">
-        <t t-jquery="span:first" t-operation="prepend">
-            <span t-if="attendeesData[el_index] and attendeesData[el_index].status and attendeesData[el_index].status !== 'needsAction'"
-                t-attf-class="o_calendar_invitation d-inline-block align-middle #{attendeesData[el_index].status}"/>
-        </t>
-    </t>
-
     <div t-name="calendar.RecurrentEventUpdate">
         <div class="form-check o_radio_item">
             <input name="recurrence-update" type="radio" class="form-check-input o_radio_input" checked="true" value="self_only" id="self_only"/>
