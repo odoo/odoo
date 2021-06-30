@@ -41,13 +41,6 @@ msgstr "تعداد ویرایشگر کد"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
-#, python-format
-msgid "${-diffDays} days ago"
-msgstr "${-diffDays} روز گذشته"
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/js/core/translation.js:0
 #, python-format
 msgid "%d days ago"
@@ -87,6 +80,13 @@ msgstr "%d سال پیش"
 #, python-format
 msgid "%s Files"
 msgstr "%s فایل‌ها"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
+#, python-format
+msgid "%s days ago"
+msgstr "%s روز گذشته"
 
 #. module: web
 #. openerp-web
@@ -1168,6 +1168,11 @@ msgid "Company Tagline"
 msgstr "شعار شرکت"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.frontend_layout
+msgid "Company name"
+msgstr "نام شرکت"
+
+#. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/comparison_menu.js:0
 #, python-format
@@ -1276,6 +1281,11 @@ msgstr "کپی تمام خطا به کلیپ بورد"
 #, python-format
 msgid "Copy to Clipboard"
 msgstr "کپی به کلیپ برد"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.frontend_layout
+msgid "Copyright &amp;copy;"
+msgstr "کپی‌رایت &amp;copy;"
 
 #. module: web
 #. openerp-web
@@ -1611,7 +1621,7 @@ msgstr "از حذف کردن این فیلتر از فیلتر‌های محبو
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Do you want to create"
-msgstr "آیا می‌خواهید رکورد جدید "
+msgstr "آیا می‌خواهید "
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__external_report_layout_id
@@ -1829,6 +1839,7 @@ msgstr "دانلود"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Export All"
@@ -2052,6 +2063,7 @@ msgstr "سبز"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/groupby_menu.js:0
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #, python-format
 msgid "Group By"
 msgstr "گروه‌بندی بر مبنای"
@@ -2155,8 +2167,8 @@ msgstr "تصویر"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "In ${diffDays} days"
-msgstr "در ${diffDays} روز"
+msgid "In %s days"
+msgstr "در %s روز"
 
 #. module: web
 #. openerp-web
@@ -2515,6 +2527,7 @@ msgstr "شاید بهتر باشد با فشردن کلید F5 برنامه را
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Measures"
@@ -2625,7 +2638,7 @@ msgstr "متن جند خطی"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "My Odoo.com account"
-msgstr "اکانت من در kenevist.com"
+msgstr "اکانت من در kenevist.ir"
 
 #. module: web
 #. openerp-web
@@ -2645,8 +2658,8 @@ msgstr "جدید"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
-msgid "New ${this.name}"
-msgstr "${this.name} جدید"
+msgid "New %s"
+msgstr "%s جدید"
 
 #. module: web
 #. openerp-web
@@ -2949,8 +2962,8 @@ msgstr "فقط خودتان"
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
-msgid "Open Developer Tools#{widget.debug_mode_help}"
-msgstr "باز کردن ابزار توسعه دهی #{widget.debug_mode_help}"
+msgid "Open Developer Tools"
+msgstr "باز کردن ابزار توسعه دهی"
 
 #. module: web
 #. openerp-web
@@ -2997,6 +3010,13 @@ msgstr "بازکردن در نمای لیست"
 #, python-format
 msgid "Open: "
 msgstr "باز: "
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list/list_renderer.js:0
+#, python-format
+msgid "Optional columns"
+msgstr "ستون‌های اختیاری"
 
 #. module: web
 #. openerp-web
@@ -3589,7 +3609,7 @@ msgstr "ذخیره به صورت:"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Save current search"
-msgstr "ذخیره سازی جستجوی جاری"
+msgstr "ذخیره‌سازی جستجوی جاری"
 
 #. module: web
 #. openerp-web
@@ -3808,6 +3828,15 @@ msgstr "امضا"
 #, python-format
 msgid "Size:"
 msgstr "اندازه:"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/core/ajax.js:0
+#, python-format
+msgid ""
+"Something happened while trying to contact the server, check that the server"
+" is online and that you still have a working network connection."
+msgstr "هنگام تلاش برای برقراری ارتباط با سرور، مشکلی پیش آمده است، آنلاین بودن سرور را بررسی کنید و از متصل بودن شبکه اطمینان حاصل کنید."
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -4470,6 +4499,13 @@ msgstr "تغییرات"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View %s"
+msgstr "نمایش %s"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "View Access Rights"
@@ -4773,7 +4809,7 @@ msgstr "برای این به روزرسانی معتبر هستند"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "as a new"
-msgstr "اضافه شود به"
+msgstr " را به عنوان یک "
 
 #. module: web
 #. openerp-web
@@ -4830,6 +4866,7 @@ msgstr "برای:"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "greater than"
@@ -5003,6 +5040,7 @@ msgstr "کمتر از یک دقیقه پیش"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "less than or equal to"
 msgstr "کمتر یا مساوی با"
@@ -5128,17 +5166,3 @@ msgstr "پر شده"
 #, python-format
 msgid "set (true)"
 msgstr "پر شده یا درست"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
-#, python-format
-msgid "In %s days"
-msgstr "در %s روز"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
-#, python-format
-msgid "%s days ago"
-msgstr "%s روز گذشته"
