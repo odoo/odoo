@@ -24,6 +24,7 @@ return AbstractModel.extend({
         // calendar uses index 0 for Sunday but Odoo stores it as 7
         this.week_start = week_start !== undefined && week_start !== false ? week_start % 7 : moment().startOf('week').day();
         this.week_stop = this.week_start + 6;
+        this.filter_check_all = {};
     },
 
     //--------------------------------------------------------------------------
@@ -115,13 +116,30 @@ return AbstractModel.extend({
         if (filter.value === 'all') {
             Filter.all = filter.active;
         }
+        else if (filter.value === 'check_all') {
+            // Select all numeric filters and update the checkboxes
+            this.filter_check_all[filter.fieldName] = filter.active;
+            // Deactivate the All selection
+            Filter.all = false;
+            if (filter.active) {
+                // Check every displayed filters except the 'all' filter
+                Filter.filters.filter(el => el.value !== 'all').forEach(element => element.active = true );
+                return true;
+
+            } else {
+               Filter.filters.forEach(element => element.active = false);
+               return true;
+            }
+        }
         var f = _.find(Filter.filters, function (f) {
             return f.value === filter.value;
         });
         if (f) {
             if (f.active !== filter.active) {
+                // Update the value according to the checkbox state
                 f.active = filter.active;
-            } else {
+            } else if (filter.active) {
+                // if the filter is NOT active, we remove it by returning true [triggered by _onFilterRemove]
                 return false;
             }
         } else if (filter.active) {
@@ -150,8 +168,6 @@ return AbstractModel.extend({
             });
     },
     /**
-     * @todo I think this is dead code
-     *
      * @param {any} ids
      * @param {any} model
      * @returns
@@ -384,6 +400,8 @@ return AbstractModel.extend({
         _.each(this.data.filters, function (filter) {
             // Skip 'all' filters because they do not affect the domain
             if (filter.all) return;
+            // all visible filters have been activated
+            if (filter.visible) return;
 
             // Loop over subfilters to complete authorizedValues
             _.each(filter.filters, function (f) {
@@ -518,18 +536,9 @@ return AbstractModel.extend({
     _loadColors: function (element, events) {
         if (this.fieldColor) {
             var fieldName = this.fieldColor;
-            var self = this;
             _.each(events, function (event) {
                 var value = event.record[fieldName];
-                var filter = self.loadParams.filters[fieldName];
-                var color = filter && _.map(filter.filters, f => f.value) || value;
-                var everyoneFilter = filter && (_.find(filter.filters, f => f.value === "all") || {}).active || false;
-                if (!everyoneFilter) {
-                    color = [event.attendee_id || value]
-                } else {
-                    color = value.includes(self.getSession().partner_id) ? self.getSession().partner_id : value
-                }
-                event.color_index = _.isArray(color) ? self._getColorIndex(value, color[0]) : color;
+                event.color_index = _.isArray(value) ? value[0] : value;
             });
             this.model_color = this.fields[fieldName].relation || element.model;
         }
@@ -539,7 +548,7 @@ return AbstractModel.extend({
      * Get the color index used to render the event and the filter.
      * Since we have a maximum of 30 colors, we have to adapt the color
      * index in case the id exceeds the number of colors available.
-     * 
+     *
      * - actual_color_list contains the list of color already used in the filter
      * - color_index is the color we try to apply for the event
      * 
@@ -550,7 +559,7 @@ return AbstractModel.extend({
      */
     _getColorIndex: function(actual_color_list, color_index) {
         var actual_color_list = actual_color_list || [0];
-        var new_color_index = color_index % 30;
+        var new_color_index = color_index % 50;
         if (new_color_index !== color_index && actual_color_list.includes(new_color_index)) {
             new_color_index = this._getColorIndex(actual_color_list, new_color_index + 3);
         }
