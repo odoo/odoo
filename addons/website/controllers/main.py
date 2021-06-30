@@ -282,8 +282,8 @@ class Website(Home):
         suggested_controllers = []
         for name, url, mod in current_website.get_suggested_controllers():
             if needle.lower() in name.lower() or needle.lower() in url.lower():
-                module = mod and request.env.ref('base.module_%s' % mod, False)
-                icon = mod and "<img src='%s' width='24px' class='mr-2 rounded' /> " % (module and module.icon or mod) or ''
+                module_sudo = mod and request.env.ref('base.module_%s' % mod, False).sudo()
+                icon = mod and "<img src='%s' width='24px' class='mr-2 rounded' /> " % (module_sudo and module_sudo.icon or mod) or ''
                 suggested_controllers.append({
                     'value': url,
                     'label': '%s%s (%s)' % (icon, url, name),
