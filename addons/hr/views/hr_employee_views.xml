@@ -307,17 +307,17 @@
                                    <li t-if="record.work_email.raw_value" class="o_text_overflow"><field name="work_email" /></li>
                                    <li t-if="record.work_phone.raw_value" class="o_force_ltr"><field name="work_phone" /></li>
                                </ul>
-                                <div class="oe_kanban_content position-absolute fixed-bottom mr-2">
-                                    <div class="o_kanban_record_bottom">
-                                        <div class="oe_kanban_bottom_left"/>
-                                        <div class="oe_kanban_bottom_right">
-                                            <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
-                                            <div class="hr_activity_container">
-                                                <field name="activity_ids" widget="kanban_activity"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                           </div>
+                           <div class="oe_kanban_content position-absolute fixed-bottom mr-2 o_hr_employee_kanban_bottom">
+                               <div class="o_kanban_record_bottom">
+                                   <div class="oe_kanban_bottom_left"/>
+                                   <div class="oe_kanban_bottom_right float-right">
+                                       <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                                       <div class="hr_activity_container">
+                                           <field name="activity_ids" widget="kanban_activity"/>
+                                       </div>
+                                   </div>
+                               </div>
                            </div>
                        </div>
                        </t>
