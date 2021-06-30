@@ -1092,6 +1092,7 @@ var SnippetsMenu = Widget.extend({
         'user_value_widget_opening': '_onUserValueWidgetOpening',
         'user_value_widget_closing': '_onUserValueWidgetClosing',
         'reload_snippet_template': '_onReloadSnippetTemplate',
+        'request_editable': '_onRequestEditable',
     },
     // enum of the SnippetsMenu's tabs.
     tabs: {
@@ -3046,6 +3047,13 @@ var SnippetsMenu = Widget.extend({
      */
     _onRedo: async function() {
         this.options.wysiwyg.redo();
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onRequestEditable: function (ev) {
+        ev.data.callback($(this.options.wysiwyg.odooEditor.editable));
     },
 });
 
