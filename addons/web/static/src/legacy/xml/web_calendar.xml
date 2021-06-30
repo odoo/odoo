@@ -7,6 +7,7 @@
         <div class="o_calendar_sidebar_container d-none d-md-block">
             <div class="o_calendar_sidebar">
                 <div class="o_calendar_mini"/>
+                <div id="calendar_sync" class="o_calendar_sync container inline btn-group"/>
             </div>
         </div>
     </div>
@@ -23,8 +24,10 @@
         <div t-attf-class="o_cw_popover popover card shadow #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : ''}" role="tooltip">
             <div class="arrow"/>
             <div class="card-header d-flex justify-content-between py-2 pr-2">
-                <h4 class="popover-header border-0 p-0 pt-1"/>
-                <span class="o_cw_popover_close ml-4"><i class="fa fa-close small"/></span>
+                <h4 class="p-0 pt-1">
+                    <span class="popover-header border-0"/><span t-if="displayLock" class="ml-1"><i class="fa fa-lock"/></span>
+                </h4>
+                <span class="o_cw_popover_close ml-4 mt-2 mr-2"><i class="fa fa-close"/></span>
             </div>
             <div class="o_cw_body">
             </div>
@@ -55,12 +58,25 @@
         <t t-set="needCollapse" t-value="widget.filters.length > 2 and widget.title"></t>
         <t t-set="titleWithoutSpace" t-value="widget.title.split(' ').join('')"></t>
         <div class="o_calendar_filter">
-            <h5 t-if="needCollapse" type="button" data-toggle="collapse" t-attf-data-target="#o_cw_filter_collapse_#{titleWithoutSpace}" class="d-flex justify-content-between align-items-center">
-                <t t-esc="widget.title"/><i class="o_cw_filter_collapse_icon fa fa-chevron-down"/>
-            </h5>
-
-            <h5 t-elif="widget.title" t-esc="widget.title"/>
-
+            <div class="d-flex">
+                <div class="o_calendar_filter_items_checkall mr-2" data-value="check_all">
+                    <input t-att-id="widget.title + '_id'" type="checkbox" name="selection" class="position-absolute"
+                           t-att-checked="widget.filter_check_all[widget.fieldName] ? true : undefined"
+                    />
+                    <label t-att-for="widget.title + '_id'" class="align-items-center m-0">
+                        <span class="o_cw_filter_input_bg o_calendar_filter_all">
+                            <i class="fa fa-check position-relative"/>
+                        </span>
+                    </label>
+                </div>
+                <div t-if="needCollapse" type="button" data-toggle="collapse"
+                     t-attf-data-target="#o_cw_filter_collapse_#{titleWithoutSpace}"
+                     class="justify-content-between align-items-center h5">
+                    <span t-esc="widget.title"/>
+                    <i class="o_cw_filter_collapse_icon fa fa-chevron-down"/>
+                </div>
+                <h5 t-elif="widget.title" t-esc="widget.title"/>
+            </div>
             <div t-attf-class="o_calendar_filter_items #{needCollapse ? 'collapse show' : 0}" aria-expanded="true" t-attf-id="o_cw_filter_collapse_#{titleWithoutSpace}">
                 <t t-foreach="widget.filters" t-as="filter" t-if="filter.display == null || filter.display">
                     <t t-set="idForLabel" t-value="_.uniqueId('o_calendar_filter_item_')"/>

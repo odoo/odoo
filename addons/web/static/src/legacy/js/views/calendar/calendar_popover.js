@@ -205,9 +205,26 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
                     const fieldModifier = record.evalModifiers(_.pick(fieldWidget.attrs.modifiers, 'invisible'));
                     fieldClass += fieldModifier.invisible ? ' o_invisible_modifier' : '';
                 }
+                if (fieldWidget.attrs) {
+                    if (fieldWidget.attrs.options && fieldWidget.attrs.options.icon) {
+                        field.icon = fieldWidget.attrs.options.icon;
+                    }
+                    if (fieldWidget.attrs.class) {
+                        fieldClass += ' ' + fieldWidget.attrs.class;
+                    }
+                    if (fieldWidget.attrs.modifiers) {
+                        const fieldModifier = record.evalModifiers(fieldWidget.attrs.modifiers);
+                        fieldClass += fieldModifier.invisible ? ' o_invisible_modifier' : '';
+                    }
+                }
 
                 var $field = $('<li>', {class: fieldClass});
-                var $fieldLabel = $('<strong>', {class: 'mr-2', text: _.str.sprintf('%s : ', field.string)});
+                let $fieldLabel;
+                if (field.icon) {
+                    $fieldLabel = $('<strong>', {class: 'mr-2', html: _.str.sprintf("<b><i class='%s'/></b>", field.icon)});
+                } else {
+                    $fieldLabel = $('<strong>', {class: 'mr-2', text: _.str.sprintf('%s : ', field.string)});
+                }
                 $fieldLabel.appendTo($field);
                 var $fieldContainer = $('<div>', {class: 'flex-grow-1'});
                 $fieldContainer.appendTo($field);

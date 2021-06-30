@@ -53,6 +53,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
         this.filters = options.filters;
         this.label = options.label;
         this.getColor = options.getColor;
+        this.filter_check_all = options.check_all;
     },
     /**
      * @override
@@ -95,6 +96,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
         }
         this.$el.on('click', '.o_remove', this._onFilterRemove.bind(this));
         this.$el.on('click', '.o_calendar_filter_items input', this._onFilterActive.bind(this));
+        this.$el.on('click', '.o_calendar_filter_items_checkall input', this._onFilterCheckAll.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -130,6 +132,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
      */
     _onFilterActive: function (e) {
         var $input = $(e.currentTarget);
+        this.filter_check_all[this.fieldName] = false;
         this.trigger_up('changeFilter', {
             'fieldName': this.fieldName,
             'value': $input.closest('.o_calendar_filter_item').data('value'),
@@ -143,6 +146,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
     _onFilterRemove: function (e) {
         var self = this;
         var $filter = $(e.currentTarget).closest('.o_calendar_filter_item');
+        this.filter_check_all[this.fieldName] = false;
         self._rpc({
                 model: self.write_model,
                 method: 'unlink',
@@ -156,6 +160,23 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
                     'value': $filter.data('value'),
                 });
             });
+    },
+    /**
+     * @private
+     * When the user check the box near the filter title: all existing filters
+     * are active, excepts the 'all' filter that removes the domain on active filters.
+     * @param {MouseEvent} e
+     */
+    _onFilterCheckAll: function (e) {
+        let $input = $(e.currentTarget);
+        let $filter = $(e.currentTarget).closest('.o_calendar_filter_item');
+        this.filter_check_all[this.fieldName] = $input.prop('checked');
+        this.trigger_up('changeFilter', {
+            'fieldName': this.fieldName,
+            'value': 'check_all',
+            'active': $input.prop('checked'),
+        });
+
     },
 });
 
@@ -381,6 +402,10 @@ return AbstractRenderer.extend({
     _preOpenCreate: function (data) {
         if (this.$('.o_cw_popover').length) {
             this._unselectEvent();
+            // Don't take into account the selection if the user closed a popover by doing a "selection"
+            this.$('.fc-event').not(".o_event").remove();
+            // Clicking anywhere in the interface will only close the popover but we don't want the quickCreate
+            return;
         }
         if (this.state.context.default_name) {
             data.title = this.state.context.default_name;
@@ -546,6 +571,8 @@ return AbstractRenderer.extend({
             },
             height: 'parent',
             unselectAuto: false,
+            // prevent too small events
+            timeGridEventMinHeight: 15,
             dir: _t.database.parameters.direction,
             events: (info, successCB) => {
                 successCB(self.state.data);
@@ -612,6 +639,7 @@ return AbstractRenderer.extend({
      */
     _initSidebar: function () {
         this.$sidebar = this.$('.o_calendar_sidebar');
+        this.$calendarSyncContainer = this.$('#calendar_sync');
         this.$sidebar_container = this.$(".o_calendar_sidebar_container");
         this._initCalendarMini();
     },
@@ -857,6 +885,12 @@ return AbstractRenderer.extend({
      * @param {Object} eventData
      */
     _getPopoverParams: function (eventData) {
+        // Display a small lock for private events that we manage
+        const displayLock = eventData.extendedProps.record.privacy === 'private' && eventData.extendedProps.record.partner_ids.includes(session.partner_id);
+        let title = eventData.extendedProps.record.display_name;
+        if (title.length > 30) {
+            title = title.substring(0, 30) + "…";
+        }
         return {
             animation: false,
             delay: {
@@ -865,8 +899,9 @@ return AbstractRenderer.extend({
             },
             trigger: 'manual',
             html: true,
-            title: eventData.extendedProps.record.display_name,
-            template: qweb.render('CalendarView.event.popover.placeholder', {color: this.getColor(eventData.extendedProps.color_index)}),
+            title: title,
+            template: qweb.render('CalendarView.event.popover.placeholder',
+            {color: this.getColor(eventData.extendedProps.color_index), displayLock: displayLock}),
             container: eventData.allDay ? '.fc-view' : '.fc-scroller',
         }
     },

@@ -248,9 +248,12 @@ var CalendarController = AbstractController.extend({
      * @param {OdooEvent} event
      */
     _onChangeFilter: async function (event) {
-        if (event.data.value !== "all" && event.target.filter_field) {
-            const domain = [['user_id', '=', this.getSession().uid], [event.target.write_field, '=', parseInt(event.data.value)]];
-            const contact = await this._rpc({
+        if (event.data.value !== 'all' && event.target.filter_field) {
+            const domain = [['user_id', '=', this.getSession().uid]];
+            if (event.data.value !== 'check_all') {
+                domain.push([event.target.write_field, '=', parseInt(event.data.value)]);
+            }
+            const existingFilter = await this._rpc({
                 model: event.target.write_model,
                 method: 'search',
                 args: [domain],
@@ -261,7 +264,7 @@ var CalendarController = AbstractController.extend({
             await this._rpc({
                 model: event.target.write_model,
                 method: 'write',
-                args: [contact, val],
+                args: [existingFilter, val],
             });
         }
         if (this.model.changeFilter(event.data) && !event.data.no_reload) {
@@ -275,34 +278,32 @@ var CalendarController = AbstractController.extend({
     _onDeleteRecord: async function (event) {
         var self = this;
         if (event.data.event.record.recurrency) {
-                const recurrenceUpdate = await this._askRecurrenceUpdatePolicy();
-                event.data = _.extend({}, event.data, {
-                    'recurrenceUpdate': recurrenceUpdate,
-                });
-                if (recurrenceUpdate === 'self_only') {
-                    self.model.deleteRecords([event.data.id], self.modelName).then(function () {
-                    self.reload();
-                });
-                } else {
-                    return this._rpc({
-                        model: self.modelName,
-                        method: 'action_mass_deletion',
-                        args: [[event.data.id], recurrenceUpdate],
-                    }).then( function () {
-                        self.reload();
-                    });
-                }
-        } else {
-            Dialog.confirm(this, _t("Are you sure you want to delete this record ?"), {
-            confirm_callback: function () {
+            const recurrenceUpdate = await this._askRecurrenceUpdatePolicy();
+            event.data = Object.assign({}, event.data, {
+                'recurrenceUpdate': recurrenceUpdate,
+            });
+            if (recurrenceUpdate === 'self_only') {
                 self.model.deleteRecords([event.data.id], self.modelName).then(function () {
+                self.reload();
+            });
+            } else {
+                return this._rpc({
+                    model: self.modelName,
+                    method: 'action_mass_deletion',
+                     args: [[event.data.id], recurrenceUpdate],
+                }).then( function () {
                     self.reload();
                 });
             }
-        });
+        } else {
+            Dialog.confirm(this, _t("Are you sure you want to delete this record ?"), {
+                confirm_callback: function () {
+                    self.model.deleteRecords([event.data.id], self.modelName).then(function () {
+                        self.reload();
+                    });
+                }
+            });
         }
-
-
     },
     /**
      * @private
@@ -517,14 +518,12 @@ var CalendarController = AbstractController.extend({
      */
      _onAttendeeStatus: async function(event) {
          const self = this;
-         let recurrenceUpdate;
+         let recurrenceUpdate = false;
          if (event.data.record.recurrency) {
             recurrenceUpdate = await this._askRecurrenceUpdatePolicy();
-            event.data = _.extend({}, event.data, {
+            event.data = Object.assign({}, event.data, {
                 'recurrenceUpdate': recurrenceUpdate,
             });
-         } else {
-            recurrenceUpdate = false;
          }
         return this._rpc({
             model: self.modelName,

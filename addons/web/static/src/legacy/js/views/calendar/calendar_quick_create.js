@@ -40,6 +40,8 @@ var QuickCreate = Dialog.extend({
         var self = this;
         this._super(parent, {
             title: options.title,
+            // Close the dialog when clicking outside of it
+            backdrop: true,
             size: 'small',
             buttons: this._buttons ? [
                 {text: _t("Create"), classes: 'btn-primary', click: function () {
