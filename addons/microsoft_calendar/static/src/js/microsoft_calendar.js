@@ -161,15 +161,35 @@ const MicrosoftCalendarController = CalendarController.include({
         });
     },
 
-    _onArchiveRecord: function (event) {
-        var self = this;
-        Dialog.confirm(this, _t("Are you sure you want to archive this record ?"), {
-            confirm_callback: function () {
-                self.model.archiveRecords([event.data.id], self.modelName).then(function () {
+    _onArchiveRecord: async function (event) {
+        const self = this;
+        if (event.data.event.record.recurrency) {
+            const recurrenceUpdate = await this._askRecurrenceUpdatePolicy();
+            event.data = Object.assign({}, event.data, {
+                    'recurrenceUpdate': recurrenceUpdate,
+                });
+                if (recurrenceUpdate === 'self_only') {
+                    self.model.archiveRecords([event.data.id], self.modelName).then(function () {
                     self.reload();
                 });
-            }
-        });
+                } else {
+                    return this._rpc({
+                        model: self.modelName,
+                        method: 'action_mass_archive',
+                        args: [[event.data.id], recurrenceUpdate],
+                    }).then( function () {
+                        self.reload();
+                    });
+                }
+        } else {
+            Dialog.confirm(this, _t("Are you sure you want to delete this record ?"), {
+                confirm_callback: function () {
+                    self.model.archiveRecords([event.data.id], self.modelName).then(function () {
+                        self.reload();
+                    });
+                }
+            });
+        }
     },
 });
 
@@ -280,7 +300,7 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
 
     _onArchiveEvent: function (event) {
         this._unselectEvent();
-        this.trigger_up('archiveRecord', {id: parseInt(event.data.id, 10)});
+        this.trigger_up('archiveRecord', {id: parseInt(event.data.id, 10), event: event.target.event.extendedProps});
     },
 });
 
