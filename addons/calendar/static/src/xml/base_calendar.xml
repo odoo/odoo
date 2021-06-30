@@ -17,6 +17,12 @@
             <input name="recurrence-update" type="radio" class="form-check-input o_radio_input" value="future_events" id="future_events"/>
             <label class="form-check-label o_form_label" for="future_events">This and following events</label>
         </div>
+
+        <div class="form-check o_radio_item">
+            <input name="recurrence-update" type="radio" class="form-check-input o_radio_input" value="all_events" id="all_events"/>
+            <label class="form-check-label o_form_label" for="all_events">All events</label>
+        </div>
+
     </div>
 
     <t t-extend="mail.systray.ActivityMenu.Previews">
