@@ -69,11 +69,12 @@ class TestSyncOdoo2Microsoft(TransactionCase):
             'partner_id': partner.id,
         })
         user.stop_microsoft_synchronization()
+        # In case of full sync, limit to a range of 1y in past and 1y in the future by default
         event = self.env['calendar.event'].with_user(user).create({
             'microsoft_id': microsoft_id,
             'name': "Event",
-            'start': datetime(2020, 1, 15, 8, 0),
-            'stop': datetime(2020, 1, 15, 18, 0),
+            'start': datetime(2021, 1, 15, 8, 0),
+            'stop': datetime(2021, 1, 15, 18, 0),
             'partner_ids': [(4, partner.id)],
         })
 
@@ -82,8 +83,8 @@ class TestSyncOdoo2Microsoft(TransactionCase):
         microsoft_guid = self.env['ir.config_parameter'].sudo().get_param('microsoft_calendar.microsoft_guid', False)
         self.assertMicrosoftEventPatched(event.microsoft_id, {
             'id': event.microsoft_id,
-            'start': {'dateTime': '2020-01-15T08:00:00+00:00', 'timeZone': 'Europe/London'},
-            'end': {'dateTime': '2020-01-15T18:00:00+00:00', 'timeZone': 'Europe/London'},
+            'start': {'dateTime': '2021-01-15T08:00:00+00:00', 'timeZone': 'Europe/London'},
+            'end': {'dateTime': '2021-01-15T18:00:00+00:00', 'timeZone': 'Europe/London'},
             'subject': 'Event',
             'body': {'content': '', 'contentType': 'text'},
             'attendees': [],

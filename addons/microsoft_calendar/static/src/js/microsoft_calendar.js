@@ -265,8 +265,6 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
         var self = this;
         var context = this.getSession().user_context;
         this.$microsoftButton.prop('disabled', true);
-        this._getMicrosoftStopButton();
-        this.$microsoftButton.hide();
         this.trigger_up('syncMicrosoftCalendar', {
             on_always: function () {
                 self.$microsoftButton.prop('disabled', false);

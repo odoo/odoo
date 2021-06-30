@@ -7,7 +7,6 @@ import logging
 
 from werkzeug import urls
 
-from odoo import api, _
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_account.models.microsoft_service import TIMEOUT
 
@@ -66,14 +65,14 @@ class MicrosoftCalendarService():
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
         if not values.get('id'):
             values.pop('id', None)
-        status, data, time = self.microsoft_service._do_request(url, json.dumps(values), headers, method='POST', timeout=timeout)
+        dummy, data, dummy = self.microsoft_service._do_request(url, json.dumps(values, separators=(',', ':')), headers, method='POST', timeout=timeout)
         return data['id']
 
     @requires_auth_token
     def patch(self, event_id, values, token=None, timeout=TIMEOUT):
         url = "/v1.0/me/calendar/events/%s" % event_id
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
-        self.microsoft_service._do_request(url, json.dumps(values), headers, method='PATCH', timeout=timeout)
+        self.microsoft_service._do_request(url, json.dumps(values, separators=(',', ':')), headers, method='PATCH', timeout=timeout)
 
     @requires_auth_token
     def delete(self, event_id, token=None, timeout=TIMEOUT):

@@ -191,7 +191,8 @@ class MicrosoftEvent(abc.Set):
         if month_by:
             result['month_by'] = month_by
 
-        week_days = [x[:2] for x in pattern.get('daysOfWeek', [])]
+        # daysOfWeek contains the full name of the day, the fields contain the first 3 letters (mon, tue, etc)
+        week_days = [x[:3] for x in pattern.get('daysOfWeek', [])]
         for week_day in ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']:
             result[week_day] = week_day in week_days
         if week_days:
