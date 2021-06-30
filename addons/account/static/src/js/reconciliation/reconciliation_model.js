@@ -1849,6 +1849,9 @@ var ManualModel = StatementModel.extend({
      * @returns {Promise}
      */
     _performMoveLine: function (handle, mode, limit) {
+        if (limit === 0) {
+            return this._formatMoveLine(handle, '', []);
+        }
         limit = limit || this.limitMoveLines;
         var line = this.getLine(handle);
         var excluded_ids = _.map(_.union(line.reconciliation_proposition, line.mv_lines_match), function (prop) {
