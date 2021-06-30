@@ -9,6 +9,7 @@ from odoo.tests.common import new_test_user
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
 from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent
 from odoo.tools import html2plaintext
+from odoo import Command
 
 class TestSyncGoogle2Odoo(TestSyncGoogle):
 
@@ -118,6 +119,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
 
     @patch_api
     def test_cancelled(self):
+        """ Cancel event when the current user is the organizer """
         google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
         event = self.env['calendar.event'].create({
             'name': 'coucou',
@@ -138,22 +140,28 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
 
     @patch_api
     def test_attendee_cancelled(self):
+        """ Cancel event when the current user is not the organizer """
+        user = new_test_user(self.env, login='calendar-user')
         google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
         event = self.env['calendar.event'].create({
             'name': 'coucou',
-            'start': date(2020, 1, 6),
+            'start': date(2020, 1, 5),
             'stop': date(2020, 1, 6),
             'allday': True,
             'google_id': google_id,
             'need_sync': False,
             'user_id': False,  # Not the current user
-            'partner_ids': [(6, 0, self.env.user.partner_id.ids)]  # current user is attendee
+            'partner_ids': [Command.set(user.partner_id.ids)],
         })
         gevent = GoogleEvent([{
             'id': google_id,
             'status': 'cancelled',
         }])
-        self.sync(gevent)
+        user_attendee = event.attendee_ids
+        self.assertEqual(user_attendee.state, 'needsAction')
+        # We have to call sync with the attendee user
+        gevent.clear_type_ambiguity(self.env)
+        self.env['calendar.event'].with_user(user)._sync_google2odoo(gevent)
         self.assertTrue(event.active)
         user_attendee = event.attendee_ids
         self.assertTrue(user_attendee)

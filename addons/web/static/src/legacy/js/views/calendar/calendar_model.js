@@ -535,7 +535,7 @@ return AbstractModel.extend({
      */
     _loadColors: function (element, events) {
         if (this.fieldColor) {
-            var fieldName = this.fieldColor;
+            const fieldName = this.fieldColor;
             _.each(events, function (event) {
                 var value = event.record[fieldName];
                 event.color_index = _.isArray(value) ? value[0] : value;

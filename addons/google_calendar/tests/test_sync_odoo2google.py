@@ -42,8 +42,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
             'id': False,
-            'start': {'dateTime': '2020-01-15T08:00:00', 'timeZone': 'Etc/UTC'},
-            'end': {'dateTime': '2020-01-15T18:00:00', 'timeZone': 'Etc/UTC'},
+            'start': {'dateTime': '2020-01-15T08:00:00+00:00'},
+            'end': {'dateTime': '2020-01-15T18:00:00+00:00'},
             'summary': 'Event',
             'description': '',
             'location': '',
@@ -175,13 +175,15 @@ class TestSyncOdoo2Google(TestSyncGoogle):
     @patch_api
     def test_synced_inactive_event(self):
         google_id = 'aaaaaaaaa'
+        # writing on synced event will put it in a need_sync state.
+        # Delete api will not be called but the state of the event will be set as 'cancelled'
         event = self.env['calendar.event'].create({
             'google_id': google_id,
             'name': "Event",
             'start': datetime(2020, 1, 15),
             'stop': datetime(2020, 1, 15),
             'active': False,
-            'need_sync': False,
+            'need_sync': True,
         })
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventDeleted(google_id)
@@ -338,8 +340,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         user.with_user(user).restart_google_synchronization()
         self.assertGoogleEventPatched(event.google_id, {
             'id': event.google_id,
-            'start': {'dateTime': '2020-01-15T08:00:00', 'timeZone': 'Etc/UTC'},
-            'end': {'dateTime': '2020-01-15T18:00:00', 'timeZone': 'Etc/UTC'},
+            'start': {'dateTime': '2020-01-15T08:00:00+00:00'},
+            'end': {'dateTime': '2020-01-15T18:00:00+00:00'},
             'summary': 'Event',
             'description': '',
             'location': '',

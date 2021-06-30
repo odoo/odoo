@@ -76,7 +76,10 @@ class User(models.Model):
                 })
                 self.env.cr.commit()
             error_key = error.response.json().get("error", "nc")
-            error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired [%s]", error_key)
+            error_msg = _(
+                "An error occurred while generating the token. Your authorization code may be invalid or has already expired [%s]. "
+                "You should check your Client ID and secret on the Microsoft Azure portal or try to stop and restart your calendar synchronisation.",
+                error_key)
             raise UserError(error_msg)
 
     def _sync_microsoft_calendar(self, calendar_service: MicrosoftCalendarService):

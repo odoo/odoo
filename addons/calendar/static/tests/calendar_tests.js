@@ -66,11 +66,11 @@ QUnit.module('calendar', {
             "there should be 2 tags");
         assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge:first').text().trim(), "Jesus",
             "the tag should be correctly named");
-        assert.hasClass(form.$('.o_field_widget[name="partner_ids"] .badge:first .o_calendar_invitation'),'accepted',
+        assert.hasClass(form.$('.o_field_widget[name="partner_ids"] .badge:first img'),'o_attendee_border_accepted',
             "Jesus should attend the meeting");
         assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge[data-id="2"]').text().trim(), "Mahomet",
             "the tag should be correctly named");
-        assert.hasClass(form.el.querySelector('.o_field_widget[name="partner_ids"] .badge[data-id="2"] .o_calendar_invitation'), 'tentative',
+        assert.hasClass(form.el.querySelector('.o_field_widget[name="partner_ids"] .badge[data-id="2"] img'), 'o_attendee_border_tentative',
             "Mohamet should still confirm his attendance to the meeting");
         assert.hasClass(form.el.querySelector('.o_field_many2manytags'), 'avatar',
             "should have avatar class");

@@ -106,7 +106,7 @@
                 % endfor
                 </ul></li>
                 % if object.event_id.videocall_location:
-                <li>Join Video Call: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
+                <li>Meeting URL: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
                 % endif
                 % if not is_html_empty(object.event_id.description):
                     <li>Description of the event:
@@ -228,7 +228,7 @@
                 % endfor
                 </ul></li>
                 % if object.event_id.videocall_location:
-                <li>Join Video Call: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
+                <li>Meeting URL: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
                 % endif
                 % if not is_html_empty(object.event_id.description):
                     <li>Description of the event:
@@ -330,7 +330,7 @@
                 % endfor
                 </ul></li>
                 % if object.event_id.videocall_location:
-                <li>Join Video Call: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
+                <li>Meeting URL: <a href="${object.event_id.videocall_location}" target="_blank">${object.event_id.videocall_location}</a></li>
                 % endif
                 % if not is_html_empty(object.event_id.description):
                     <li>Description of the event:
@@ -349,6 +349,100 @@
             </field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="calendar_template_meeting_update" model="mail.template">
+            <field name="name">Calendar: Event Update</field>
+            <field name="model_id" ref="calendar.model_calendar_event"/>
+            <field name="subject">${object.name}: Event update</field>
+            <field name="email_from">${(object.user_id.email_formatted or user.email_formatted or '') | safe}</field>
+            <field name="email_to">${('' if object.partner_id.email and object.partner_id.email == object.email else object.email) | safe}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html" type="html">
+<div>
+    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}
+    % set is_online = 'appointment_type_id' in object and object.appointment_type_id
+    % set target_responsible = object.partner_id == object.partner_id
+    % set target_customer = object.partner_id == customer
+    % set recurrent = object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')
+    % set mail_tz = ctx.get('mail_tz')
+    <div>
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td width="130px;">
+                    <div style="border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
+                        ${format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format="EEEE", lang_code=object.env.lang)}
+                    </div>
+                    <div style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;">
+                        ${format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format="d", lang_code=object.env.lang)}
+                    </div>
+                    <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;'>
+                        ${format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format="MMMM y", lang_code=object.env.lang)}
+                    </div>
+                    <div style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;">
+                        % if not object.allday
+                        <div>
+                            ${format_time(time=object.start, tz=mail_tz, time_format="short", lang_code=object.env.lang)}
+                        </div>
+                        % if mail_tz
+                        <div style="font-size: 10px; font-weight: normal">
+                            (${mail_tz})
+                        </div>
+                        % endif
+                        %endif
+                    </div>
+                </td>
+                <td width="20px;"/>
+                <td style="padding-top: 5px;">
+                    <p>
+                        <strong>Details of the event</strong>
+                    </p>
+                    <ul>
+                        % if not is_online and object.display_description :
+                        <li>Description: ${object.description}</li>
+                        % elif is_online and object.description:
+                        % set splitted_description = object.description_to_html_lines()
+                        <li>Description:
+                            <ul>
+                                % for description_line in splitted_description:
+                                <li>${description_line | safe}</li>
+                                % endfor
+                            </ul>
+                        </li>
+                        % endif
+                        % if object.videocall_location:
+                        <li>Meeting URL:
+                            <a href="${object.videocall_location}" target="_blank">
+                                ${object.videocall_location}
+                            </a>
+                        </li>
+                        % endif
+                        % if object.location:
+                        <li>Location: ${object.location}
+                            (<a target="_blank"
+                                href="http://maps.google.com/maps?oi=map&amp;q=${object.location}">View Map</a>)
+                        </li>
+                        % endif
+                        % if recurrent:
+                        <li>When: ${object.recurrence_id.name}</li>
+                        % endif
+                        % if not object.allday and object.duration
+                        <li>Duration:
+                            ${('%dH%02d' % (object.duration,round(object.duration*60)%60))}
+                        </li>
+                        % endif
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="user_input">
+        <hr/>
+        <p placeholder="Enter your message here"><br/></p>
+
+    </div>
+</div>
+            </field>
         </record>
     </data>
 </odoo>
