@@ -575,29 +575,33 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
                 return {};
             }
             const { comparisonFieldIndex } = this.props;
-            const xAxes = [{
-                type: "category",
-                scaleLabel: {
-                    display: this.props.processedGroupBy.length && !this.props.isEmbedded,
-                    labelString: this.props.processedGroupBy.length ?
-                        this.props.fields[this.props.processedGroupBy[0].split(":")[0]].string :
-                        "",
+            return {
+                x: {
+                    type: "category",
+                    title: {
+                        display: this.props.processedGroupBy.length && !this.props.isEmbedded,
+                        text: this.props.processedGroupBy.length ?
+                            this.props.fields[this.props.processedGroupBy[0].split(":")[0]].string :
+                            "",
+                    },
+                    ticks: {
+                        callback: (value, index, values)  => {
+                            debugger
+                            return this._relabelling(value, comparisonFieldIndex)
+                        }
+                    },
                 },
-                ticks: { callback: label => this._relabelling(label, comparisonFieldIndex) },
-            }];
-            const yAxes = [{
-                type: "linear",
-                scaleLabel: {
-                    display: !this.props.isEmbedded,
-                    labelString: this.measureDescription,
-                },
-                ticks: {
-                    callback: value => this._formatValue(value),
+                y: {
+                    type: "linear",
+                    title: {
+                        display: !this.props.isEmbedded,
+                        text: this.measureDescription,
+                    },
                     suggestedMax: 0,
                     suggestedMin: 0,
-                },
-            }];
-            return { xAxes, yAxes };
+                    ticks: { callback: value => this._formatValue(value) },
+                }
+            };
         }
 
         /**
@@ -744,12 +748,12 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
             const options = {
                 maintainAspectRatio: false,
                 scales: this._getScaleOptions(),
-                legend: this._getLegendOptions(datasetsCount),
-                tooltips: this._getTooltipOptions(),
-                elements: this._getElementOptions(),
+                // legend: this._getLegendOptions(datasetsCount),
+                // tooltips: this._getTooltipOptions(),
+                // elements: this._getElementOptions(),
             };
             if (this._isRedirectionEnabled()) {
-                options.onClick = ev => this._onGraphClicked(ev);
+                // options.onClick = ev => this._onGraphClicked(ev);
             }
             return options;
         }
@@ -828,11 +832,14 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
             const config = this._createConfig();
             const canvasContext = this.canvasRef.el.getContext("2d");
             this.chart = new Chart(canvasContext, config);
+
+            window.myChart = this.chart;
             // To perform its animations, ChartJS will perform each animation
             // step in the next animation frame. The initial rendering itself
             // is delayed for consistency. We can avoid this by manually
             // advancing the animation service.
-            Chart.animationService.advance();
+
+            // Chart.animationService.advance();
         }
 
         /**
