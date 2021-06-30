@@ -70,6 +70,7 @@ class AccountMove(models.Model):
 
     @api.model
     def _get_tax_key_for_group_add_base(self, line):
+        # DEPRECATED: TO BE REMOVED IN MASTER
         tax_key = super(AccountMove, self)._get_tax_key_for_group_add_base(line)
 
         tax_key += [
