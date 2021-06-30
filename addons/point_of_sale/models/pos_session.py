@@ -178,6 +178,13 @@ class PosSession(models.Model):
             if (company.period_lock_date and start_date <= company.period_lock_date) or (company.fiscalyear_lock_date and start_date <= company.fiscalyear_lock_date):
                 raise ValidationError(_("You cannot create a session before the accounting lock date."))
 
+    def _check_bank_statement_state(self):
+        for session in self:
+            closed_statement_ids = session.statement_ids.filtered(lambda x: x.state != "open")
+            if closed_statement_ids:
+                raise UserError(_("Some Cash Registers are already posted. Please reset them to new in order to close the session.\n"
+                                  "Cash Registers: %r", list(statement.name for statement in closed_statement_ids)))
+
     @api.model
     def create(self, values):
         config_id = values.get('config_id') or self.env.context.get('default_config_id')
@@ -248,8 +255,7 @@ class PosSession(models.Model):
             if session.config_id.cash_control and not session.rescue:
                 last_sessions = self.env['pos.session'].search([('config_id', '=', self.config_id.id)]).ids
                 # last session includes the new one already.
-                if len(last_sessions) > 1:
-                    self.cash_register_id.balance_start = self.env['pos.session'].browse(last_sessions[1]).cash_register_id.balance_end_real
+                self.cash_register_id.balance_start = self.env['pos.session'].browse(last_sessions[1]).cash_register_id.balance_end_real if len(last_sessions) > 1 else 0
                 values['state'] = 'opening_control'
             else:
                 values['state'] = 'opened'
@@ -281,6 +287,7 @@ class PosSession(models.Model):
         # Session without cash payment method will not have a cash register.
         # However, there could be other payment methods, thus, session still
         # needs to be validated.
+        self._check_bank_statement_state()
         if not self.cash_register_id:
             return self._validate_session()
 
@@ -322,10 +329,12 @@ class PosSession(models.Model):
                 self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
             else:
                 self.move_id.unlink()
-        elif not self.cash_register_id.difference:
-            cash_register = self.cash_register_id.sudo() if sudo else self.cash_register_id
-            cash_register.pos_session_id = False
-            cash_register.unlink()
+        else:
+            statement = self.cash_register_id
+            if not self.config_id.cash_control:
+                statement.write({'balance_end_real': statement.balance_end})
+            statement.button_post()
+            statement.button_validate()
         self.write({'state': 'closed'})
         return {
             'type': 'ir.actions.client',

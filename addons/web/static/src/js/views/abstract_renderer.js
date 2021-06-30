@@ -90,6 +90,15 @@ return mvc.Renderer.extend({
     giveFocus: function () {
     },
     /**
+     * Resets state that renderer keeps, state may contains scroll position,
+     * the currently active tab page, ...
+     *
+     * @see getLocalState
+     * @see setLocalState
+     */
+    resetLocalState() {
+    },
+    /**
      * This is the reverse operation from getLocalState.  With this method, we
      * expect the renderer to restore all DOM state, if it is relevant.
      *

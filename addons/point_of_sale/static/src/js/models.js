@@ -2991,14 +2991,14 @@ exports.Order = Backbone.Model.extend({
             line.set_quantity(options.quantity);
         }
 
-        if(options.price !== undefined){
-            line.set_unit_price(options.price);
-            this.fix_tax_included_price(line);
-        }
-
         if (options.price_extra !== undefined){
             line.price_extra = options.price_extra;
             line.set_unit_price(line.product.get_price(this.pricelist, line.get_quantity(), options.price_extra));
+            this.fix_tax_included_price(line);
+        }
+
+        if(options.price !== undefined){
+            line.set_unit_price(options.price);
             this.fix_tax_included_price(line);
         }
 
