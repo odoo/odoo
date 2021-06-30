@@ -2,90 +2,44 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import requests
-from odoo.addons.google_calendar.models.google_sync import google_calendar_token
-from datetime import timedelta
 
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
-from odoo.loglevels import exception_to_unicode
-from odoo.addons.google_account.models.google_service import GOOGLE_TOKEN_ENDPOINT
+from odoo import api, fields, models, Command
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService, InvalidSyncToken
+from odoo.addons.google_calendar.models.google_sync import google_calendar_token
+from odoo.loglevels import exception_to_unicode
 
 _logger = logging.getLogger(__name__)
 
 class User(models.Model):
     _inherit = 'res.users'
 
-    google_calendar_rtoken = fields.Char('Refresh Token', copy=False, groups="base.group_system")
-    google_calendar_token = fields.Char('User token', copy=False, groups="base.group_system")
-    google_calendar_token_validity = fields.Datetime('Token Validity', copy=False)
-    google_calendar_sync_token = fields.Char('Next Sync Token', copy=False)
-    google_calendar_cal_id = fields.Char('Calendar ID', copy=False, help='Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID')
-    google_synchronization_stopped = fields.Boolean('Google Synchronization stopped', copy=False)
+    google_cal_account_id = fields.Many2one('google.calendar.credentials')
+    google_calendar_rtoken = fields.Char(related='google_cal_account_id.calendar_rtoken', groups="base.group_system")
+    google_calendar_token = fields.Char(related='google_cal_account_id.calendar_token')
+    google_calendar_token_validity = fields.Datetime(related='google_cal_account_id.calendar_token_validity')
+    google_calendar_sync_token = fields.Char(related='google_cal_account_id.calendar_sync_token')
+    google_calendar_cal_id = fields.Char(related='google_cal_account_id.calendar_cal_id')
+    google_synchronization_stopped = fields.Boolean(related='google_cal_account_id.synchronization_stopped', readonly=False)
+
+    _sql_constraints = [
+        ('google_token_uniq', 'unique (google_cal_account_id)', "The user has already a google account"),
+    ]
+
 
     @property
     def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['google_synchronization_stopped']
+        return super().SELF_READABLE_FIELDS + ['google_synchronization_stopped', 'google_cal_account_id']
 
     @property
     def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + ['google_synchronization_stopped']
-
-    def _set_auth_tokens(self, access_token, refresh_token, ttl):
-        self.write({
-            'google_calendar_rtoken': refresh_token,
-            'google_calendar_token': access_token,
-            'google_calendar_token_validity': fields.Datetime.now() + timedelta(seconds=ttl) if ttl else False,
-        })
-
-    def _google_calendar_authenticated(self):
-        return bool(self.sudo().google_calendar_rtoken)
+        return super().SELF_WRITEABLE_FIELDS + ['google_synchronization_stopped', 'google_cal_account_id']
 
     def _get_google_calendar_token(self):
         self.ensure_one()
-        if self.google_calendar_rtoken and not self._is_google_calendar_valid():
-            self._refresh_google_calendar_token()
-        return self.google_calendar_token
-
-    def _is_google_calendar_valid(self):
-        return self.google_calendar_token_validity and self.google_calendar_token_validity >= (fields.Datetime.now() + timedelta(minutes=1))
-
-    def _refresh_google_calendar_token(self):
-        # LUL TODO similar code exists in google_drive. Should be factorized in google_account
-        self.ensure_one()
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        client_id = get_param('google_calendar_client_id')
-        client_secret = get_param('google_calendar_client_secret')
-
-        if not client_id or not client_secret:
-            raise UserError(_("The account for the Google Calendar service is not configured."))
-
-        headers = {"content-type": "application/x-www-form-urlencoded"}
-        data = {
-            'refresh_token': self.google_calendar_rtoken,
-            'client_id': client_id,
-            'client_secret': client_secret,
-            'grant_type': 'refresh_token',
-        }
-
-        try:
-            dummy, response, dummy = self.env['google.service']._do_request(GOOGLE_TOKEN_ENDPOINT, params=data, headers=headers, method='POST', preuri='')
-            ttl = response.get('expires_in')
-            self.write({
-                'google_calendar_token': response.get('access_token'),
-                'google_calendar_token_validity': fields.Datetime.now() + timedelta(seconds=ttl),
-            })
-        except requests.HTTPError as error:
-            if error.response.status_code in (400, 401):  # invalid grant or invalid client
-                # Delete refresh token and make sure it's commited
-                self.env.cr.rollback()
-                self._set_auth_tokens(False, False, 0)
-                self.env.cr.commit()
-            error_key = error.response.json().get("error", "nc")
-            error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired [%s]", error_key)
-            raise UserError(error_msg)
+        if self.google_cal_account_id.calendar_rtoken and not self.google_cal_account_id._is_google_calendar_valid():
+            self.sudo().google_cal_account_id._refresh_google_calendar_token()
+        return self.google_cal_account_id.calendar_token
 
     def _sync_google_calendar(self, calendar_service: GoogleCalendarService):
         self.ensure_one()
@@ -102,11 +56,11 @@ class User(models.Model):
         full_sync = not bool(self.google_calendar_sync_token)
         with google_calendar_token(self) as token:
             try:
-                events, next_sync_token, default_reminders = calendar_service.get_events(self.google_calendar_sync_token, token=token)
+                events, next_sync_token, default_reminders = calendar_service.get_events(self.google_cal_account_id.calendar_sync_token, token=token)
             except InvalidSyncToken:
                 events, next_sync_token, default_reminders = calendar_service.get_events(token=token)
                 full_sync = True
-        self.google_calendar_sync_token = next_sync_token
+        self.google_cal_account_id.calendar_sync_token = next_sync_token
 
         # Google -> Odoo
         events.clear_type_ambiguity(self.env)
@@ -144,6 +98,8 @@ class User(models.Model):
 
     def restart_google_synchronization(self):
         self.ensure_one()
+        if not self.google_cal_account_id:
+            self.google_cal_account_id = self.env['google.calendar.credentials'].sudo().create([{'user_ids': [Command.set(self.ids)]}])
         self.google_synchronization_stopped = False
         self.env['calendar.recurrence']._restart_google_sync()
         self.env['calendar.event']._restart_google_sync()
