@@ -122,7 +122,7 @@ class GoogleSync(models.AbstractModel):
 
         updated_records = records_to_sync.filtered('google_id')
         new_records = records_to_sync - updated_records
-        for record in cancelled_records.filtered('google_id'):
+        for record in cancelled_records.filtered(lambda e: e.google_id and e.need_sync):
             record._google_delete(google_service, record.google_id)
         for record in new_records:
             record._google_insert(google_service, record._google_values())
