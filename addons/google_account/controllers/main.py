@@ -20,7 +20,7 @@ class GoogleAuth(http.Controller):
         if kw.get('code'):
             access_token, refresh_token, ttl = request.env['google.service']._get_google_tokens(kw['code'], service)
             # LUL TODO only defined in google_calendar
-            request.env.user._set_auth_tokens(access_token, refresh_token, ttl)
+            request.env.user.google_cal_account_id._set_auth_tokens(access_token, refresh_token, ttl)
             return request.redirect(url_return)
         elif kw.get('error'):
             return request.redirect("%s%s%s" % (url_return, "?error=", kw['error']))
