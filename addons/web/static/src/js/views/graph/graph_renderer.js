@@ -748,7 +748,8 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
         _prepareOptions(datasetsCount) {
             const options = {
                 maintainAspectRatio: false,
-                scales: this._getScaleOptions(),
+                animation: false,
+                // scales: this._getScaleOptions(),
                 // legend: this._getLegendOptions(datasetsCount),
                 // tooltips: this._getTooltipOptions(),
                 // elements: this._getElementOptions(),
