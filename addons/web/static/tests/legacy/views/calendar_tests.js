@@ -237,7 +237,7 @@ QUnit.module('Views', {
         // test filters
         assert.containsN($sidebar, '.o_calendar_filter', 2, "should display 2 filters");
 
-        var $typeFilter =  $sidebar.find('.o_calendar_filter:has(h5:contains(user))');
+        var $typeFilter =  $sidebar.find('.o_calendar_filter:has(span:contains(user))');
         assert.ok($typeFilter.length, "should display 'user' filter");
         assert.containsN($typeFilter, '.o_calendar_filter_item', 3, "should display 3 filter items for 'user'");
 
@@ -246,27 +246,27 @@ QUnit.module('Views', {
         assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last .o_cw_filter_title').text(), "Undefined", "filters having false value should display 'Undefined' string");
         assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last label img').length, 0, "filters having false value should not have any user image");
 
-        var $attendeesFilter =  $sidebar.find('.o_calendar_filter:has(h5:contains(attendees))');
+        var $attendeesFilter =  $sidebar.find('.o_calendar_filter:has(span:contains(attendees))');
         assert.ok($attendeesFilter.length, "should display 'attendees' filter");
-        assert.containsN($attendeesFilter, '.o_calendar_filter_item', 3, "should display 3 filter items for 'attendees' who use write_model (2 saved + Everything)");
+        assert.containsN($attendeesFilter, '.o_calendar_filter_item', 3, "should display 3 filter items for 'attendees' who use write_model (checkall + 2 saved + Everything)");
         assert.ok($attendeesFilter.find('.o_field_many2one').length, "should display one2many search bar for 'attendees' filter");
 
         assert.containsN(calendar, '.fc-event', 7,
             "should display 7 events ('event 5' counts for 2 because it spans two weeks and thus generate two fc-event elements)");
-        await testUtils.dom.click(calendar.$('.o_calendar_filter input[type="checkbox"]').first());
+        await testUtils.dom.click(calendar.$('.o_calendar_filter input[type="checkbox"]').eq(1)); // click on partner 2
         assert.containsN(calendar, '.fc-event', 4, "should now only display 4 event");
-        await testUtils.dom.click(calendar.$('.o_calendar_filter input[type="checkbox"]').eq(1));
+        await testUtils.dom.click(calendar.$('.o_calendar_filter input[type="checkbox"]').eq(2));
         assert.containsNone(calendar, '.fc-event', "should not display any event anymore");
 
         // test search bar in filter
         await testUtils.dom.click($sidebar.find('input[type="text"]'));
-        assert.strictEqual($('ul.ui-autocomplete li:not(.o_m2o_dropdown_option)').length, 2,"should display 2 choices in one2many autocomplete"); // TODO: remove :not(.o_m2o_dropdown_option) because can't have "create & edit" choice
+        assert.strictEqual($('ul.ui-autocomplete li').length, 2,"should display 2 choices in one2many autocomplete");
         await testUtils.dom.click($('ul.ui-autocomplete li:first'));
-        assert.containsN($sidebar, '.o_calendar_filter:has(h5:contains(attendees)) .o_calendar_filter_item', 4, "should display 4 filter items for 'attendees'");
+        assert.containsN($sidebar, '.o_calendar_filter:has(span:contains(attendees)) .o_calendar_filter_item', 4, "should display 4 filter items for 'attendees'");
         await testUtils.dom.click($sidebar.find('input[type="text"]'));
-        assert.strictEqual($('ul.ui-autocomplete li:not(.o_m2o_dropdown_option)').text(), "partner 4", "should display the last choice in one2many autocomplete"); // TODO: remove :not(.o_m2o_dropdown_option) because can't have "create & edit" choice
-        await testUtils.dom.click($sidebar.find('.o_calendar_filter_item .o_remove').first(), {allowInvisible: true});
-        assert.containsN($sidebar, '.o_calendar_filter:has(h5:contains(attendees)) .o_calendar_filter_item', 3, "click on remove then should display 3 filter items for 'attendees'");
+        assert.strictEqual($('ul.ui-autocomplete li').text(), "partner 4", "should display the last choice in one2many autocomplete");
+        await testUtils.dom.click($sidebar.find('.o_calendar_filter_item .o_remove').eq(1), {allowInvisible: true});
+        assert.containsN($sidebar, '.o_calendar_filter:has(span:contains(attendees)) .o_calendar_filter_item', 3, "click on remove then should display 3 filter items for 'attendees'");
         calendar.destroy();
     });
 
@@ -2279,7 +2279,7 @@ QUnit.module('Views', {
 
         assert.containsN(calendar, '.o_calendar_filter', 2, "should display 2 filters");
 
-        var $typeFilter =  calendar.$('.o_calendar_filter:has(h5:contains(Event Type))');
+        var $typeFilter =  calendar.$('.o_calendar_filter:has(span:contains(Event Type))');
         assert.ok($typeFilter.length, "should display 'Event Type' filter");
         assert.containsOnce($typeFilter, '#o_cw_filter_collapse_EventType', "Id should be equals to o_cw_filter_collapse_EventType for 'Event Type'");
         assert.containsN($typeFilter, '.o_calendar_filter_item', 3, "should display 3 filter items for 'Event Type'");
@@ -2450,7 +2450,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Update event with filters', async function (assert) {
-        assert.expect(6);
+        assert.expect(12);
 
         var records = this.data.user.records;
         records.push({
@@ -2516,6 +2516,19 @@ QUnit.module('Views', {
         assert.containsN(calendar, '.o_calendar_filter_item', 6, "should add the missing filter (active)");
         assert.containsN(calendar, '.fc-event', 3, "should display the updated item");
 
+        // test the behavior of the 'select all' input checkbox
+        assert.containsN(calendar, '.o_calendar_filter_item input:checked', 3, "should display 3 true checkbox");
+        assert.containsN(calendar, '.o_calendar_filter_item input:not(:checked)', 3, "should display 3 false checkbox");
+        // Click to select all users
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_items_checkall:eq(1) input'));
+        // should contains 4 events
+        assert.containsN(calendar, '.fc-event', 4, "should display the updated events");
+        // Should have 4 checked boxes
+        assert.containsN(calendar, '.o_calendar_filter_item input:checked', 4, "should display 4 true checkbox");
+        // unselect all user
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_items_checkall:eq(1) input'));
+        assert.containsN(calendar, '.fc-event', 0, "should not display any event");
+        assert.containsN(calendar, '.o_calendar_filter_item input:checked', 1, "should display 1 true checkbox");
         calendar.destroy();
     });
 

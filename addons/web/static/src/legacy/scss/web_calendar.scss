@@ -1,5 +1,4 @@
 // Variables
-$o-cw-color-today: nth($o-colors, 3);
 $o-cw-color-today-accent: #FC3D39;
 $o-cw-popup-avatar-size: 16px;
 $o-cw-filter-avatar-size: 20px;
@@ -140,10 +139,10 @@ $o-cw-filter-avatar-size: 20px;
                 padding-left: $o-horizontal-padding;
             }
 
-            // Hide unnecessary borders
-            table td, div.fc-row.fc-week.fc-widget-content {
-                border-left-color: transparent;
-                border-right-color: transparent;
+            .fc-widget-header.fc-today{
+                  border-radius: 25px;
+                  background: $o-brand-odoo;
+                  color: white;
             }
 
             // Reinfornce default border color
@@ -178,6 +177,8 @@ $o-cw-filter-avatar-size: 20px;
             div.fc-day-grid {
                 background-color: $o-view-background-color;
                 box-shadow: 0 6px 12px -6px rgba(black, 0.16);
+                border-left-color: rgba($o-brand-odoo, 0.3);
+                border-right-color: rgba($o-brand-odoo, 0.3);
 
                 + hr.fc-widget-header {
                     padding: 1px 0 0;
@@ -196,9 +197,9 @@ $o-cw-filter-avatar-size: 20px;
             }
 
             .fc-day.fc-widget-content.fc-today {
-                border-left-color: rgba($o-cw-color-today, 0.3);
-                border-right-color: rgba($o-cw-color-today, 0.3);
-                background: rgba($o-cw-color-today, 0.05 );
+                border-left-color: rgba($o-brand-odoo, 0.3);
+                border-right-color: rgba($o-brand-odoo, 0.3);
+                background: rgba($o-brand-odoo, .05);
             }
 
             .fc-event {
@@ -272,6 +273,7 @@ $o-cw-filter-avatar-size: 20px;
             .fc-day-top {
                     text-align: center;
                     padding-top: 3px;
+                    padding-bottom: 3px;
                     .fc-day-number {
                         float: none !important;
                     }
@@ -557,6 +559,10 @@ $o-cw-filter-avatar-size: 20px;
         @include media-breakpoint-up('xl') {
             width: 250px;
         }
+        // sync buttons are only displayed on calendar.event views
+        .o_calendar_sync {
+            padding-top: 0.5em;
+        }
     }
 
     .ui-datepicker {
@@ -670,7 +676,7 @@ $o-cw-filter-avatar-size: 20px;
             opacity: 1;
         }
 
-        .o_calendar_filter_item {
+        .o_calendar_filter_items_checkall, .o_calendar_filter_item {
             cursor: pointer;
             overflow: hidden;
 
@@ -775,7 +781,7 @@ $o-cw-filter-avatar-size: 20px;
 
     .o_cw_popover_fields_secondary {
         max-height: 170px; // Fallback for old browsers
-        max-height: 75vh;
+        max-height: 25vh;
         overflow: auto;
         padding-bottom: 1px; // prevents the scrollbar to show when not needed
 
@@ -802,9 +808,17 @@ $o-cw-filter-avatar-size: 20px;
     }
 }
 
+// Generated with http://phrogz.net/css/distinct-colors.html
+$o-filter_colors: #ff1e00, #bf9600, #00ff84, #00aeff, #0003b3, #ff006a, #cc3300, #ffea00, #00cc85, #007ab3,
+                    #6900cc, #ff0048, #ff6200, #c2cc00, #00ffc8, #008cff, #a600ff, #bf0036, #b24400, #d0ff00,
+                    #00ffea, #0062b3, #ea00ff, #ff0026, #ff8400, #8bcc00, #00bfaf, #006aff, #af00bf, #bf001d,
+                    #bf6300, #8cff00, #00f2ff, #004ab3, #ff00d0, #ffa600, #3acc00, #00b6bf, #0048ff, #d90094,
+                    #bf7c00, #04ff00, #00d0ff, #0036bf, #ff008c, #ffc800, #00bf49, #0092b3, #0004ff, #b20062,
+                    #649173 !default;
+
 // ===============  Generate color classes ===============
-@for $i from 1 through length($o-colors-complete) {
-    $color: nth($o-colors-complete, $i);
+@for $i from 1 through length($o-filter_colors) {
+    $color: nth($o-filter_colors, $i);
 
     .o_calendar_view .fc-view {
         .o_calendar_hatched_#{$i - 1} {
@@ -918,6 +932,7 @@ $o-cw-filter-avatar-size: 20px;
         }
 
         .card-header {
+            padding-left: 2px;
             border-color: mix($card-border-color, mix(white, $color));
         }
     }
