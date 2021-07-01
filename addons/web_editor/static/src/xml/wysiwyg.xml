@@ -13,13 +13,13 @@
                     <link type="text/css" rel="stylesheet" t-att-href="cssLib"/>
                 </t>
                 <t t-foreach="asset.cssContents || []" t-as="cssContent">
-                    <style type="text/css" t-raw="cssContent"/>
+                    <style type="text/css" t-out="cssContent"/>
                 </t>
                 <t t-foreach="asset.jsLibs || []" t-as="jsLib">
                     <script type="text/javascript" t-att-src="jsLib"/>
                 </t>
                 <t t-foreach="asset.jsContents || []" t-as="jsContent" t-if="jsContent.indexOf('inline asset') !== -1">
-                    <script type="text/javascript" t-raw="jsContent"/>
+                    <script type="text/javascript" t-out="jsContent"/>
                 </t>
             </t>
             <script type="text/javascript">
