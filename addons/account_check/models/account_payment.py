@@ -27,9 +27,9 @@ class AccountPayment(models.Model):
     ],
         # required=True,
         # default='draft',
+        readonly=True,
         copy=False,
         index=True,
-        readonly=False,
     )
     third_check_issue_date = fields.Date(
         readonly=True,
