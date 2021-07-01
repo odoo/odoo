@@ -91,13 +91,10 @@ export class CommandPalette extends Component {
 
         for (const command of this.initialCommands) {
             if (command.hotkey) {
-                useHotkey(
-                    command.hotkey,
-                    () => {
-                        command.action();
-                        this.props.closeMe();
-                    },
-                );
+                useHotkey(command.hotkey, () => {
+                    command.action();
+                    this.props.closeMe();
+                });
             }
         }
     }
@@ -123,7 +120,7 @@ export class CommandPalette extends Component {
         if (isMacOS()) {
             result = result.map((x) => x.replace("control", "command"));
         }
-        if (altIsOptional) {
+        if (!altIsOptional) {
             result = isMacOS() ? ["control", ...result] : ["alt", ...result];
         }
         return result.map((key) => key.toUpperCase());
