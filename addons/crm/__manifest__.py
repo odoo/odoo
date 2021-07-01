@@ -33,6 +33,7 @@
         'data/crm_stage_data.xml',
         'data/crm_team_data.xml',
         'data/digest_data.xml',
+        'data/ir_action_data.xml',
         'data/ir_cron_data.xml',
         'data/mail_data.xml',
         'data/crm_recurring_plan_data.xml',
@@ -71,9 +72,13 @@
     'application': True,
     'auto_install': False,
     'assets': {
+        'web.assets_qweb': [
+            'crm/static/src/xml/forecast_kanban.xml',
+        ],
         'web.assets_backend': [
             'crm/static/src/js/crm_form.js',
             'crm/static/src/js/crm_kanban.js',
+            'crm/static/src/js/forecast/*',
             'crm/static/src/js/systray_activity_menu.js',
             'crm/static/src/js/tours/crm.js',
             'crm/static/src/scss/crm.scss',
@@ -84,6 +89,7 @@
         ],
         'web.qunit_suite_tests': [
             'crm/static/tests/mock_server.js',
+            'crm/static/tests/forecast_kanban_tests.js',
             'crm/static/tests/crm_rainbowman_tests.js',
         ],
     }

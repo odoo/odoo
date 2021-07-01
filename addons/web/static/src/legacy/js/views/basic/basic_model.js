@@ -652,6 +652,7 @@ var BasicModel = AbstractModel.extend({
             res_ids: element.res_ids.slice(0),
             type: 'list',
             value: element.value,
+            range: element.range,
             viewType: element.viewType,
         };
         if (element.fieldsInfo) {
@@ -4053,6 +4054,9 @@ var BasicModel = AbstractModel.extend({
      * @param {boolean} [params.static=false]
      * @param {string} [params.type='record'|'list']
      * @param {[type]} [params.value]
+     * @param {Object} [params.range] only for datapoints representing groups coming from a groupBy on a
+     *   date(time) field @see _readGroup format: {[fieldName]: {from: string, to: string}}, where
+     *   'from' (inclusive) and 'to' (exclusive) are the group bounds under the respective date format
      * @param {string} [params.viewType] the type of the view, e.g. 'list' or 'form'
      * @returns {Object} the resource created
      */
@@ -4119,6 +4123,7 @@ var BasicModel = AbstractModel.extend({
             static: params.static || false,
             type: type,  // 'record' | 'list'
             value: value,
+            range: params.range,
             viewType: params.viewType,
         };
 
@@ -4731,6 +4736,7 @@ var BasicModel = AbstractModel.extend({
                         fields: list.fields,
                         fieldsInfo: list.fieldsInfo,
                         value: value,
+                        range: group.__range,
                         aggregateValues: aggregateValues,
                         groupedBy: list.groupedBy.slice(1),
                         orderedBy: list.orderedBy,
