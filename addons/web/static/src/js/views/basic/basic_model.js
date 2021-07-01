@@ -248,38 +248,38 @@ var BasicModel = AbstractModel.extend({
         if (dataPoint.type === 'record') {
             await this.applyRawChanges(dataPointID, viewInfo.viewType);
         }
-            const proms = [];
-            const fieldInfo = dataPoint.fieldsInfo[viewInfo.viewType];
-            // recursively apply the new field info on sub datapoints
-            if (dataPoint.type === 'list') {
-                // case 'list': on all datapoints in the list
-                Object.values(dataPoint._cache).forEach(subDataPointID => {
-                    proms.push(this.addFieldsInfo(subDataPointID, {
-                        fields: dataPoint.fields,
-                        fieldInfo: dataPoint.fieldsInfo[viewInfo.viewType],
-                        viewType: viewInfo.viewType,
-                    }));
-                });
-            } else {
-                // case 'record': on datapoints of all x2many fields
-                const values = _.extend({}, dataPoint.data, dataPoint._changes);
-                Object.keys(fieldInfo).forEach(fieldName => {
-                    const fieldType = dataPoint.fields[fieldName].type;
-                    if (fieldType === 'one2many' || fieldType === 'many2many') {
-                        const mode = fieldInfo[fieldName].mode;
-                        const views = fieldInfo[fieldName].views;
-                        const x2mDataPointID = values[fieldName];
-                        if (views[mode] && x2mDataPointID) {
-                            proms.push(this.addFieldsInfo(x2mDataPointID, {
-                                fields: views[mode].fields,
-                                fieldInfo: views[mode].fieldsInfo[mode],
-                                viewType: mode,
-                            }));
-                        }
+        const proms = [];
+        const fieldInfo = dataPoint.fieldsInfo[viewInfo.viewType];
+        // recursively apply the new field info on sub datapoints
+        if (dataPoint.type === 'list') {
+            // case 'list': on all datapoints in the list
+            Object.values(dataPoint._cache).forEach(subDataPointID => {
+                proms.push(this.addFieldsInfo(subDataPointID, {
+                    fields: dataPoint.fields,
+                    fieldInfo: dataPoint.fieldsInfo[viewInfo.viewType],
+                    viewType: viewInfo.viewType,
+                }));
+            });
+        } else {
+            // case 'record': on datapoints of all x2many fields
+            const values = _.extend({}, dataPoint.data, dataPoint._changes);
+            Object.keys(fieldInfo).forEach(fieldName => {
+                const fieldType = dataPoint.fields[fieldName].type;
+                if (fieldType === 'one2many' || fieldType === 'many2many') {
+                    const mode = fieldInfo[fieldName].mode;
+                    const views = fieldInfo[fieldName].views;
+                    const x2mDataPointID = values[fieldName];
+                    if (views[mode] && x2mDataPointID) {
+                        proms.push(this.addFieldsInfo(x2mDataPointID, {
+                            fields: views[mode].fields,
+                            fieldInfo: views[mode].fieldsInfo[mode],
+                            viewType: mode,
+                        }));
                     }
-                });
-            }
-            return Promise.all(proms);
+                }
+            });
+        }
+        return Promise.all(proms);
     },
     /**
      * Onchange RPCs may return values for fields that are not in the current
