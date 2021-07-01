@@ -542,6 +542,17 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {$.Element}
+         */
+        _computePrettyBodyWithReadMoreLess() {
+            const $template = $('<div>');
+            $template.html(this.prettyBody);
+            this._insertReadMoreLess($template);
+            return $template;
+        }
+
+        /**
+         * @private
          * @returns {mail.thread[]}
          */
         _computeThreads() {
@@ -562,6 +573,91 @@ function factory(dependencies) {
                 threads.push(this.originThread);
             }
             return [['replace', threads]];
+        }
+
+        /**
+         * Modifies the message to add the 'read more/read less' functionality
+         * All element nodes with 'data-o-mail-quote' attribute are concerned.
+         * All text nodes after a ``#stopSpelling`` element are concerned.
+         * Those text nodes need to be wrapped in a span (toggle functionality).
+         * All consecutive elements are joined in one 'read more/read less'.
+         *
+         * FIXME This method should be rewritten (task-2308951)
+         *
+         * @private
+         * @param {jQuery} $element
+         */
+         _insertReadMoreLess($element) {
+            const groups = [];
+            let readMoreNodes;
+
+            // nodeType 1: element_node
+            // nodeType 3: text_node
+            const $children = $element.contents()
+                .filter((index, content) =>
+                    content.nodeType === 1 || (content.nodeType === 3 && content.nodeValue.trim())
+                );
+
+            for (const child of $children) {
+                let $child = $(child);
+
+                // Hide Text nodes if "stopSpelling"
+                if (
+                    child.nodeType === 3 &&
+                    $child.prevAll('[id*="stopSpelling"]').length > 0
+                ) {
+                    // Convert Text nodes to Element nodes
+                    $child = $('<span>', {
+                        text: child.textContent,
+                        'data-o-mail-quote': '1',
+                    });
+                    child.parentNode.replaceChild($child[0], child);
+                }
+
+                // Create array for each 'read more' with nodes to toggle
+                if (
+                    $child.attr('data-o-mail-quote') ||
+                    (
+                        $child.get(0).nodeName === 'BR' &&
+                        $child.prev('[data-o-mail-quote="1"]').length > 0
+                    )
+                ) {
+                    if (!readMoreNodes) {
+                        readMoreNodes = [];
+                        groups.push(readMoreNodes);
+                    }
+                    $child.hide();
+                    readMoreNodes.push($child);
+                } else {
+                    readMoreNodes = undefined;
+                    this._insertReadMoreLess($child);
+                }
+            }
+
+            for (const group of groups) {
+                // Insert link just before the first node
+                const $readMoreLess = $('<a>', {
+                    class: 'o_Message_readMoreLess',
+                    href: '#',
+                    text: this.env._t("read more"),
+                }).insertBefore(group[0]);
+
+                // Toggle All next nodes
+                let isReadMore = true;
+                $readMoreLess.click(e => {
+                    e.preventDefault();
+                    isReadMore = !isReadMore;
+                    for (const $child of group) {
+                        $child.hide();
+                        $child.toggle(!isReadMore);
+                    }
+                    $readMoreLess.text(
+                        isReadMore
+                            ? this.env._t("read more")
+                            : this.env._t("read less")
+                    );
+                });
+            }
         }
 
     }
@@ -772,6 +868,22 @@ function factory(dependencies) {
         prettyBody: attr({
             compute: '_computePrettyBody',
             dependencies: ['body'],
+        }),
+        /**
+         * This value is jQuery representation of pretty body with insertion of
+         * read more/less.
+         *
+         * Root node is always an HTML node (DIV) that is not
+         * part of the message content. Anything below root node is part of
+         * message content, and it can be either HTML child nodes or text node.
+         *
+         * The initial value is always folded read more/less content.
+         * User interaction on the read more/less links affects fold state of
+         * the read more/less content of pretty body.
+         */
+        prettyBodyWithReadMoreLess: attr({
+            compute: '_computePrettyBodyWithReadMoreLess',
+            dependencies: ['prettyBody'],
         }),
         subject: attr(),
         subtype_description: attr(),

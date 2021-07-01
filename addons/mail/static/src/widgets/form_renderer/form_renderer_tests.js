@@ -640,11 +640,6 @@ QUnit.test('read more/less links are not duplicated when switching from read to 
                 </div>
             </form>
         `,
-        waitUntilEvent: {
-            eventName: 'o-component-message-read-more-less-inserted',
-            message: "should wait until read more/less is inserted initially",
-            predicate: ({ message }) => message.id === 1000,
-        },
     });
     assert.containsOnce(
         document.body,
@@ -661,24 +656,18 @@ QUnit.test('read more/less links are not duplicated when switching from read to 
         '.o_Message_readMoreLess',
         "there should be only one read more"
     );
-    await afterNextRender(() => this.afterEvent({
-        eventName: 'o-component-message-read-more-less-inserted',
-        func: () => document.querySelector('.o_form_button_edit').click(),
-        message: "should wait until read more/less is inserted after clicking on edit",
-        predicate: ({ message }) => message.id === 1000,
-    }));
+    await afterNextRender(
+        () => document.querySelector('.o_form_button_edit').click(),
+    );
     assert.containsOnce(
         document.body,
         '.o_Message_readMoreLess',
         "there should still be only one read more after switching to edit mode"
     );
 
-    await afterNextRender(() => this.afterEvent({
-        eventName: 'o-component-message-read-more-less-inserted',
-        func: () => document.querySelector('.o_form_button_cancel').click(),
-        message: "should wait until read more/less is inserted after canceling edit",
-        predicate: ({ message }) => message.id === 1000,
-    }));
+    await afterNextRender(
+        () => document.querySelector('.o_form_button_cancel').click(),
+    );
     assert.containsOnce(
         document.body,
         '.o_Message_readMoreLess',
@@ -729,11 +718,6 @@ QUnit.test('read more links becomes read less after being clicked', async functi
                 </div>
             </form>
         `,
-        waitUntilEvent: {
-            eventName: 'o-component-message-read-more-less-inserted',
-            message: "should wait until read more/less is inserted initially",
-            predicate: ({ message }) => message.id === 1000,
-        },
     });
     assert.containsOnce(
         document.body,
@@ -756,12 +740,9 @@ QUnit.test('read more links becomes read less after being clicked', async functi
         "read more/less link should contain 'read more' as text"
     );
 
-    await afterNextRender(() => this.afterEvent({
-        eventName: 'o-component-message-read-more-less-inserted',
-        func: () => document.querySelector('.o_form_button_edit').click(),
-        message: "should wait until read more/less is inserted after clicking on edit",
-        predicate: ({ message }) => message.id === 1000,
-    }));
+    await afterNextRender(
+        () => document.querySelector('.o_form_button_edit').click(),
+    );
     assert.strictEqual(
         document.querySelector('.o_Message_readMoreLess').textContent,
         'read more',
@@ -773,6 +754,81 @@ QUnit.test('read more links becomes read less after being clicked', async functi
         document.querySelector('.o_Message_readMoreLess').textContent,
         'read less',
         "read more/less link should contain 'read less' as text after it has been clicked"
+    );
+});
+
+QUnit.test('[TECHNICAL] unfolded read more/less links should not fold on message click besides those button links', async function (assert) {
+    // message click triggers a re-render. Before writting of this test, the
+    // insertion of read more/less links were done during render. This meant
+    // any re-render would re-insert the read more/less links. If some button
+    // links were unfolded, any re-render would fold them again.
+    //
+    // This previous behaviour is undesirable, and results to bothersome UX
+    // such as unability to copy/paste unfolded message content due to click
+    // from text selection automatically folding all read more/less links.
+    assert.expect(3);
+
+    this.data['mail.message'].records.push({
+        author_id: 100,
+        // "data-o-mail-quote" added by server is intended to be compacted in read more/less blocks
+        body: `
+            <div>
+                Dear Joel Willis,<br>
+                Thank you for your enquiry.<br>
+                If you have any questions, please let us know.
+                <br><br>
+                Thank you,<br>
+                <span data-o-mail-quote="1">-- <br data-o-mail-quote="1">
+                    System
+                </span>
+            </div>
+        `,
+        id: 1000,
+        model: 'res.partner',
+        res_id: 2,
+    });
+    this.data['res.partner'].records.push({
+        display_name: "Someone",
+        id: 100,
+    });
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        res_id: 2,
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        `,
+    });
+    assert.strictEqual(
+        document.querySelector('.o_Message_readMoreLess').textContent,
+        "read more",
+        "read more/less link on message should be folded initially (read more)"
+    );
+
+    document.querySelector('.o_Message_readMoreLess').click(),
+    assert.strictEqual(
+        document.querySelector('.o_Message_readMoreLess').textContent,
+        "read less",
+        "read more/less link on message should be unfolded after a click from initial rendering (read less)"
+    );
+
+    await afterNextRender(
+        () => document.querySelector('.o_Message').click(),
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_readMoreLess').textContent,
+        "read less",
+        "read more/less link on message should still be unfolded after a click on message aside of this button click (read less)"
     );
 });
 

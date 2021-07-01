@@ -14,15 +14,12 @@ const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
-const { _lt } = require('web.core');
 const { format } = require('web.field_utils');
 const { getLangDatetimeFormat } = require('web.time');
 
 const { Component, useState } = owl;
 const { useRef } = owl.hooks;
 
-const READ_MORE = _lt("read more");
-const READ_LESS = _lt("read less");
 const { isEventHandled, markEventHandled } = require('mail/static/src/utils/utils.js');
 
 class Message extends Component {
@@ -345,87 +342,6 @@ class Message extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Modifies the message to add the 'read more/read less' functionality
-     * All element nodes with 'data-o-mail-quote' attribute are concerned.
-     * All text nodes after a ``#stopSpelling`` element are concerned.
-     * Those text nodes need to be wrapped in a span (toggle functionality).
-     * All consecutive elements are joined in one 'read more/read less'.
-     *
-     * FIXME This method should be rewritten (task-2308951)
-     *
-     * @private
-     * @param {jQuery} $element
-     */
-    _insertReadMoreLess($element) {
-        const groups = [];
-        let readMoreNodes;
-
-        // nodeType 1: element_node
-        // nodeType 3: text_node
-        const $children = $element.contents()
-            .filter((index, content) =>
-                content.nodeType === 1 || (content.nodeType === 3 && content.nodeValue.trim())
-            );
-
-        for (const child of $children) {
-            let $child = $(child);
-
-            // Hide Text nodes if "stopSpelling"
-            if (
-                child.nodeType === 3 &&
-                $child.prevAll('[id*="stopSpelling"]').length > 0
-            ) {
-                // Convert Text nodes to Element nodes
-                $child = $('<span>', {
-                    text: child.textContent,
-                    'data-o-mail-quote': '1',
-                });
-                child.parentNode.replaceChild($child[0], child);
-            }
-
-            // Create array for each 'read more' with nodes to toggle
-            if (
-                $child.attr('data-o-mail-quote') ||
-                (
-                    $child.get(0).nodeName === 'BR' &&
-                    $child.prev('[data-o-mail-quote="1"]').length > 0
-                )
-            ) {
-                if (!readMoreNodes) {
-                    readMoreNodes = [];
-                    groups.push(readMoreNodes);
-                }
-                $child.hide();
-                readMoreNodes.push($child);
-            } else {
-                readMoreNodes = undefined;
-                this._insertReadMoreLess($child);
-            }
-        }
-
-        for (const group of groups) {
-            // Insert link just before the first node
-            const $readMoreLess = $('<a>', {
-                class: 'o_Message_readMoreLess',
-                href: '#',
-                text: READ_MORE,
-            }).insertBefore(group[0]);
-
-            // Toggle All next nodes
-            let isReadMore = true;
-            $readMoreLess.click(e => {
-                e.preventDefault();
-                isReadMore = !isReadMore;
-                for (const $child of group) {
-                    $child.hide();
-                    $child.toggle(!isReadMore);
-                }
-                $readMoreLess.text(isReadMore ? READ_MORE : READ_LESS);
-            });
-        }
-    }
-
-    /**
      * @private
      */
     _update() {
@@ -433,20 +349,17 @@ class Message extends Component {
             return;
         }
         if (this._prettyBodyRef.el && this.message.prettyBody !== this._lastPrettyBody) {
-            this._prettyBodyRef.el.innerHTML = this.message.prettyBody;
-            this._lastPrettyBody = this.message.prettyBody;
-        }
-        // Remove all readmore before if any before reinsert them with _insertReadMoreLess.
-        // This is needed because _insertReadMoreLess is working with direct DOM mutations
-        // which are not sync with Owl.
-        if (this._contentRef.el) {
-            for (const el of [...this._contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')]) {
-                el.remove();
+            if (
+                this.message.prettyBodyWithReadMoreLess.children().length > 0
+            ) {
+                this._prettyBodyRef.el.innerHTML = '';
+                for (const child of this.message.prettyBodyWithReadMoreLess.children()) {
+                    this._prettyBodyRef.el.appendChild(child);
+                }
+            } else {
+                this._prettyBodyRef.el.innerHTML = this.message.prettyBodyWithReadMoreLess.text();
             }
-            this._insertReadMoreLess($(this._contentRef.el));
-            this.env.messagingBus.trigger('o-component-message-read-more-less-inserted', {
-                message: this.message,
-            });
+            this._lastPrettyBody = this.message.prettyBody;
         }
         this._wasSelected = this.props.isSelected;
         this.message.refreshDateFromNow();
