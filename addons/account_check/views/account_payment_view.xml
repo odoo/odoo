@@ -8,24 +8,33 @@
             <form>
                 <field name="available_check_ids" invisible="1"/>
             </form>
+            <div class="oe_button_box" name="button_box">
+                <button name="button_open_check_operations" type="object" class="oe_stat_button" icon="fa-bars" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('payment_method_code', '!=', 'new_third_checks')]}">
+                    Check
+                    Operations
+                </button>
+            </div>
             <xpath expr="//div[@name='amount_div']//field[@name='amount']" position="attributes">
-                <attribute name="attrs">{'readonly': [('payment_method_code', 'in', ['in_third_checks', 'out_third_checks'])]}</attribute>
+                <attribute name="attrs">{'readonly': ['|', ('state', '!=', 'draft'), ('payment_method_code', 'in', ['in_third_checks', 'out_third_checks'])]}</attribute>
                 <attribute name="force_save">1</attribute>
             </xpath>
-            <field name="check_payment_date" position="after">
-                <field name="third_check_state" string="Check State" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'new_third_checks'), ('state', '!=', 'posted')]}"/>
+            <field name="destination_journal_id" position="after">
                 <field
                     name="check_id"
                     attrs="{'invisible': [('payment_method_code', 'not in', ['in_third_checks', 'out_third_checks'])], 'required': [('payment_method_code', 'in', ['in_third_checks', 'out_third_checks'])]}"
                     domain="[('id', 'in', available_check_ids)]"
                     options="{'no_create': True}"
+                    context="{'show_check_number': True}"
                 />
+            </field>
+            <field name="check_payment_date" position="after">
                 <field name="check_number" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')], 'readonly': [('state', '!=', 'draft')]}"/>
                 <field name="third_check_issue_date" string="Check Issue Date" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
                 <field name="check_payment_date" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')]}"/>
                 <field name="third_check_bank_id" string="Check Bank" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
                 <field name="third_check_issuer_vat" string="Check Issuer Vat" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
                 <field name="third_check_issuer_name" string="Check Issuer" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
+                <field name="third_check_state" string="Check State" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'new_third_checks'), ('state', '!=', 'posted')]}"/>
             </field>
         </field>
     </record>
@@ -35,11 +44,14 @@
     <record model="ir.ui.view" id="view_account_third_check_tree">
         <field name="name">account.check.tree</field>
         <field name="model">account.payment</field>
-        <field name="priority">100</field>
+        <field name="priority">110</field>
         <field name="mode">primary</field>
         <field name="inherit_id" ref="account_check_printing.view_account_check_tree"/>
         <field name="arch" type="xml">
             <field name="is_matched" position="replace"/>
+            <field name="journal_id" position="replace">
+                <field name="third_check_last_journal_id" string="Current Journal"/>
+            </field>
             <field name="state" position="after">
                 <field name="third_check_state" string="Check State"/>
             </field>
