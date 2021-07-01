@@ -131,6 +131,7 @@ SectionAndNoteFieldOne2Many.include({
         }).open();
 
         MatrixDialog.opened(function () {
+            MatrixDialog.$content.closest('.o_dialog_container').removeClass('d-none');
             if (editedCellAttributes.length > 0) {
                 var str = editedCellAttributes.toString();
                 MatrixDialog.$content.find('.o_matrix_input').filter((k, v) => v.attributes.ptav_ids.nodeValue === str)[0].focus();

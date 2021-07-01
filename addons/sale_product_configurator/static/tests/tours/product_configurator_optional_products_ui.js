@@ -31,8 +31,6 @@ tour.register('sale_product_configurator_optional_products_tour', {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
     run: 'click'
 }, {
-    trigger: '.o_sale_product_configurator_add'
-}, {
     trigger: 'tr:has(.td-product_name:contains("Office Chair Black")) .js_add',
 }, {
     trigger: 'tr:has(.td-product_name:contains("Customizable Desk")) .fa-plus'
@@ -52,7 +50,7 @@ tour.register('sale_product_configurator_optional_products_tour', {
     trigger: 'tr:has(.td-product_name:contains("Conference Chair")) + tr:has(.td-product_name:contains("Chair floor protection"))'
 }, {
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_optional_products_modal',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: 'click'
 }, {
     trigger: 'tr:has(td.o_data_cell:contains("Customizable Desk")) td.o_data_cell:contains("2.0")',
