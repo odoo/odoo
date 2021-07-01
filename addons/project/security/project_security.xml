@@ -231,6 +231,15 @@
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
 
+    <record model="ir.rule" id="report_project_task_user_rule">
+        <field name="name">Tasks Analysis: project visibility</field>
+        <field name="model_id" ref="model_report_project_task_user"/>
+        <field name="domain_force">['|',
+            ('project_id.privacy_visibility', '!=', 'followers'),
+            ('project_id.message_partner_ids', 'in', [user.partner_id.id])]
+        </field>
+    </record>
+
     <record id="update_visibility_project_admin" model="ir.rule">
         <field name="name">Project updates : Project user can see all project updates</field>
         <field name="model_id" ref="project.model_project_update"/>
