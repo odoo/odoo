@@ -4895,6 +4895,66 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('one2manys (list editable) inside one2manys discard and edit o2m again', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[0].p = [2]; // one2many
+        this.data.partner.records[1].p = [4]; // one2many
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="p"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                "partner,false,form": '<form>' +
+                        '<field name="p">' +
+                            '<tree editable="top">' +
+                                '<field name="display_name"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</form>'
+            },
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+
+        // add a o2m subrecord
+        await testUtils.dom.click(form.$('.o_field_one2many tbody tr:eq(0) td.o_data_cell:first'));
+        await testUtils.dom.click($('.modal-body .o_field_one2many tbody tr:eq(0) td.o_data_cell:first'));
+        await testUtils.fields.editInput($('.modal-body input'), 'xtv');
+        await testUtils.dom.click($('.modal-footer button:first'));
+        assert.strictEqual($('.modal').length, 0,
+            "dialog should be closed");
+
+        // Discard record and edit record again
+        await testUtils.form.clickDiscard(form);
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
+        await testUtils.form.clickEdit(form);
+
+        await testUtils.dom.click(form.$('.o_field_one2many tbody tr:eq(0) td.o_data_cell:first'));
+        await testUtils.dom.click($('.modal-body .o_field_one2many tbody tr:eq(0) td.o_data_cell:first'));
+        await testUtils.fields.editInput($('.modal-body input'), 'xtv');
+        await testUtils.dom.click($('.modal-footer button:first'));
+        assert.strictEqual($('.modal').length, 0,
+            "dialog should be closed");
+
+        var row = form.$('.o_field_one2many .o_list_view .o_data_row');
+        assert.strictEqual(row.children()[0].textContent, '1 record',
+            "the cell should contains the number of record: 1");
+
+        form.destroy();
+    });
+
     QUnit.test('oe_read_only className is handled in list views', async function (assert) {
         assert.expect(7);
 
