@@ -152,7 +152,7 @@ TRANSLATED_ATTRS = dict.fromkeys({
     'value_label',
 }, lambda e: True)
 TRANSLATED_ATTRS.update(
-    value=lambda e: (e.tag == 'input' and e.attrib.get('type', 'text') == 'text') and 'datetimepicker-input' not in e.attrib.get('class').split(' '),
+    value=lambda e: (e.tag == 'input' and e.attrib.get('type', 'text') == 'text') and 'datetimepicker-input' not in e.attrib.get('class', '').split(' '),
     text=lambda e: (e.tag == 'field' and e.attrib.get('widget', '') == 'url'),
     **{f't-attf-{attr}': cond for attr, cond in TRANSLATED_ATTRS.items()},
 )
