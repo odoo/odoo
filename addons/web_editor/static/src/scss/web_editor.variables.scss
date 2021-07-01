@@ -634,21 +634,6 @@ $o-color-extras-nesting-selector: '&, .o_colored_level &';
     @return $color1;
 }
 
-// Print a document property the right way (depending on the type of the printed
-// variable).
-@mixin print-variable($key, $value) {
-    @if $value != null {
-        $-type: type-of($value);
-        @if $-type == 'string' {
-            --#{$key}: '#{$value}';
-        } @else if $-type == 'list' {
-            --#{$key}: #{inspect($value)};
-        } @else {
-            --#{$key}: #{$value};
-        }
-    }
-}
-
 // format: (module_name: (shape_filename: ('position': X, 'size': Y, 'colors': (1, [3], ...)), ...))
 $o-bg-shapes: ('web_editor': (
     'Airy/01': ('position': bottom, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
