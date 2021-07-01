@@ -496,7 +496,11 @@ const UserValueWidget = Widget.extend({
         if (!previewMode && !isPreviewed) {
             this.notifyValueChange(true);
         }
-
+        // Ensure oe-field are saved when they are inside the target snippet.
+        if(!previewMode) {
+            this.$target.find('[data-oe-field]').addClass('o_dirty');
+        }
+        
         const data = {
             previewMode: previewMode || false,
             isSimulatedEvent: !!isSimulatedEvent,
