@@ -120,6 +120,9 @@ class ORM {
     read(model, ids, fields, ctx) {
         validatePrimitiveList("ids", "number", ids);
         validatePrimitiveList("fields", "string", fields);
+        if (!ids.length) {
+            return Promise.resolve([]);
+        }
         return this.call(model, "read", [ids, fields], { context: ctx });
     }
 
@@ -156,6 +159,9 @@ class ORM {
 
     unlink(model, ids, ctx) {
         validatePrimitiveList("ids", "number", ids);
+        if (!ids.length) {
+            return true;
+        }
         return this.call(model, "unlink", [ids], { context: ctx });
     }
 
