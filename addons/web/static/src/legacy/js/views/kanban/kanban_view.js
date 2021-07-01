@@ -103,6 +103,23 @@ var KanbanView = BasicView.extend({
         return true;
     },
     /**
+     * Handles the <field> attribute allow_group_range_value,
+     * used to configure, for a date(time) field, whether we want to use the front-end
+     * logic to get the group value. (i.e. with drag&drop and quickCreate features)
+     * if false, those features will be disabled for the current field.
+     * Only handles the following types: date / datetime
+     * if undefined the default is false
+     *
+     * @override
+     */
+    _processField(viewType, field, attrs) {
+        if (['date', 'datetime'].includes(field.type) && 'allow_group_range_value' in attrs) {
+            attrs.allowGroupRangeValue = !!JSON.parse(attrs.allow_group_range_value);
+            delete attrs.allow_group_range_value;
+        }
+        return this._super(...arguments);
+    },
+    /**
      * Detect <img t-att-src="kanban_image(...)"/> nodes to automatically add the
      * '__last_update' field in the fieldsInfo to ensure that the images is
      * properly reloaded when necessary.

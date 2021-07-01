@@ -25,6 +25,8 @@ class TestUi(HttpCase):
         })
         self.start_tour("/web", 'crm_rainbowman', login="temp_crm_user")
 
+    def test_03_crm_tour_forecast(self):
+        self.start_tour("/web", 'crm_forecast', login="admin")
 
 class TestCRMLeadMisc(TestCrmCommon):
 

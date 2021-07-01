@@ -2062,6 +2062,66 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create record if grouped on date(time) field with attribute allow_group_range_value: true',
+        async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.records[0].date = '2017-01-08';
+        this.data.partner.records[1].date = '2017-01-09';
+        this.data.partner.records[2].date = '2017-01-08';
+        this.data.partner.records[3].date = '2017-01-10';
+        this.data.partner.records[0].datetime = '2017-01-08 10:55:05';
+        this.data.partner.records[1].datetime = '2017-01-09 11:31:10';
+        this.data.partner.records[2].datetime = '2017-01-08 09:20:25';
+        this.data.partner.records[3].datetime = '2017-01-10 08:05:51';
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create" quick_create_view="quick_form">' +
+                        '<field name="date" allow_group_range_value="true"/>' +
+                        '<field name="datetime" allow_group_range_value="true"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="display_name"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            archs: {
+                'partner,quick_form,form': '<form>' +
+                    '<field name="date"/>' +
+                    '<field name="datetime"/>' +
+                '</form>',
+            },
+            groupBy: ['date'],
+        });
+
+        assert.containsOnce(kanban, '.o_kanban_header .o_kanban_quick_add i',
+            "quick create should be enabled when grouped on a non-readonly date field");
+
+        // clicking on CREATE in control panel should open a quick create
+        await testUtils.kanban.clickCreate(kanban);
+        assert.containsOnce(kanban, '.o_kanban_group:first .o_kanban_quick_create',
+            "should have opened the quick create in the first column");
+        assert.strictEqual(kanban.$(
+            ".o_kanban_group:first .o_kanban_quick_create .o_datepicker_input[name=date]"
+        ).val(), "01/31/2017");
+
+        await kanban.reload({groupBy: ['datetime']});
+
+        assert.containsOnce(kanban, '.o_kanban_header .o_kanban_quick_add i',
+            "quick create should be enabled when grouped on a non-readonly datetime field");
+
+        // clicking on CREATE in control panel should open a quick create
+        await testUtils.kanban.clickCreate(kanban);
+        assert.containsOnce(kanban, '.o_kanban_group:first .o_kanban_quick_create',
+            "should have opened the quick create in the first column");
+        assert.strictEqual(kanban.$(
+            ".o_kanban_group:first .o_kanban_quick_create .o_datepicker_input[name=datetime]"
+        ).val(), "01/31/2017 23:59:59");
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create record feature is properly enabled/disabled at reload', async function (assert) {
         assert.expect(3);
 
@@ -2959,19 +3019,24 @@ QUnit.module('Views', {
     });
 
     QUnit.test('prevent drag and drop if grouped by date/datetime field', async function (assert) {
-        assert.expect(5);
+        assert.expect(10);
 
         this.data.partner.records[0].date = '2017-01-08';
         this.data.partner.records[1].date = '2017-01-09';
         this.data.partner.records[2].date = '2017-02-08';
         this.data.partner.records[3].date = '2017-02-10';
+        this.data.partner.records[0].datetime = '2017-01-08 10:55:05';
+        this.data.partner.records[1].datetime = '2017-01-09 11:31:10';
+        this.data.partner.records[2].datetime = '2017-02-08 09:20:25';
+        this.data.partner.records[3].datetime = '2017-02-10 08:05:51';
 
         var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             arch: '<kanban class="o_kanban_test">' +
-                        '<field name="bar"/>' +
+                        '<field name="date"/>' +
+                        '<field name="datetime"/>' +
                         '<templates><t t-name="kanban-box">' +
                         '<div><field name="foo"/></div>' +
                     '</t></templates></kanban>',
@@ -2994,6 +3059,100 @@ QUnit.module('Views', {
                         "Should remain same records in first column(2 records)");
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 2,
                         "Should remain same records in 2nd column(2 record)");
+
+        await kanban.reload({groupBy: ['datetime:month']});
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have 2 columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 2,
+                        "1st column should contain 2 records of January month");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 2,
+                        "2nd column should contain 2 records of February month");
+
+        // drag&drop a record in another column
+        $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        $group = kanban.$('.o_kanban_group:nth-child(2)');
+        await testUtils.dom.dragAndDrop($record, $group);
+
+        // should not drag&drop record
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length , 2,
+                        "Should remain same records in first column(2 records)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 2,
+                        "Should remain same records in 2nd column(2 record)");
+        kanban.destroy();
+    });
+
+    QUnit.test('drag and drop record if grouped by date/time field with attribute allow_group_range_value: true', async function (assert) {
+        assert.expect(14);
+
+        this.data.partner.records[0].date = '2017-01-08';
+        this.data.partner.records[1].date = '2017-01-09';
+        this.data.partner.records[2].date = '2017-02-08';
+        this.data.partner.records[3].date = '2017-02-10';
+        this.data.partner.records[0].datetime = '2017-01-08 10:55:05';
+        this.data.partner.records[1].datetime = '2017-01-09 11:31:10';
+        this.data.partner.records[2].datetime = '2017-02-08 09:20:25';
+        this.data.partner.records[3].datetime = '2017-02-10 08:05:51';
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<field name="date" allow_group_range_value="true"/>' +
+                        '<field name="datetime" allow_group_range_value="true"/>' +
+                        '<templates>' +
+                            '<t t-name="kanban-box">' +
+                                '<div><field name="display_name"/></div>' +
+                            '</t>' +
+                        '</templates>' +
+                    '</kanban>',
+            groupBy: ['date:month'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    assert.ok(true, "should call resequence");
+                    return Promise.resolve(true);
+                }
+                if (args.model === 'partner' && args.method === 'write') {
+                    if ("date" in args.args[1]) {
+                        assert.deepEqual(args.args[1], {date: '2017-02-28'});
+                    } else if ("datetime" in args.args[1]) {
+                        assert.deepEqual(args.args[1], {datetime: '2017-02-28 23:59:59'});
+                    } 
+                }
+                return this._super(route, args);
+            },
+        });
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have 2 columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 2,
+                        "1st column should contain 2 records of January month");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 2,
+                        "2nd column should contain 2 records of February month");
+
+        var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        var $group = kanban.$('.o_kanban_group:nth-child(2)');
+        await testUtils.dom.dragAndDrop($record, $group);
+
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length , 1,
+                        "Should only have one record remaining");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 3,
+                        "Should now have 3 records");
+
+        await kanban.reload({groupBy: ['datetime:month']});
+        
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have 2 columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 2,
+                        "1st column should contain 2 records of January month");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 2,
+                        "2nd column should contain 2 records of February month");
+
+        $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        $group = kanban.$('.o_kanban_group:nth-child(2)');
+        await testUtils.dom.dragAndDrop($record, $group);
+
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length , 1,
+                        "Should only have one record remaining");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 3,
+                        "Should now have 3 records");
         kanban.destroy();
     });
 
