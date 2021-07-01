@@ -3,7 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { debugService } from "@web/core/debug/debug_service";
 import { registry } from "@web/core/registry";
-import { editView } from "@web/legacy/debug_manager";
+import { editView } from "@web/views/debug_items";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
 import AbstractView from "web.AbstractView";
 import FormView from "web.FormView";

@@ -15,7 +15,7 @@ import { makeFakeDialogService, makeFakeLocalizationService } from "../../helper
 import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
 import { openViewItem } from "@web/core/debug/debug_menu_items";
-import { editView, editSearchView } from "@web/legacy/debug_manager";
+import { editSearchView, editView } from "@web/views/debug_items";
 
 const { Component, hooks, mount, tags } = owl;
 const { useSubEnv } = hooks;

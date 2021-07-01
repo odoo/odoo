@@ -10,6 +10,7 @@ import { registry } from "../../core/registry";
 import { KeepLast } from "../../core/utils/concurrency";
 import { sprintf } from "../../core/utils/strings";
 import { ActionDialog } from "./action_dialog";
+import { useDebugMenu } from "@web/core/debug/debug_menu";
 
 /** @typedef {number|false} ActionId */
 /** @typedef {Object} ActionDescription */
@@ -444,6 +445,7 @@ function makeActionManager(env) {
             setup() {
                 this.Component = controller.Component;
                 this.componentRef = hooks.useRef("component");
+                useDebugMenu("action", { action });
                 this.registerCallback = null;
                 if (action.target !== "new") {
                     let beforeLeaveFn;

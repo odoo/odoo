@@ -157,7 +157,6 @@ class ActionAdapter extends ComponentAdapter {
 export class ClientActionAdapter extends ActionAdapter {
     setup() {
         super.setup();
-        useDebugMenu("action", { action: this.props.widgetArgs[0] });
         owl.hooks.onMounted(() => {
             const action = this.props.widgetArgs[0];
             if ("params" in action) {
@@ -252,11 +251,7 @@ export class ViewAdapter extends ActionAdapter {
         this.vm = useService("view");
         this.shouldUpdateWidget = true;
         this.magicReload = useMagicLegacyReload();
-        useDebugMenu("action", {
-            action: this.props.viewParams.action,
-            component: this,
-        });
-        useDebugMenu("view");
+        useDebugMenu("view", { component: this });
         if (this.props.viewInfo.type === "form") {
             useDebugMenu("form");
         }

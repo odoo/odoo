@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
-import { browser } from "../browser/browser";
-import { routeToUrl } from "../browser/router_service";
-import { registry } from "../registry";
+import { browser } from "@web/core/browser/browser";
+import { routeToUrl } from "@web/core/browser/router_service";
+import { registry } from "@web/core/registry";
 
 // @legacy
 import dialogs from "web.view_dialogs";
 import { ComponentAdapter } from "web.OwlCompatibility";
+
+const debugRegistry = registry.category("debug");
 
 // Backend Debug Manager Items
 function runJSTestsItem({ env }) {
@@ -152,8 +154,7 @@ function leaveDebugMode({ env }) {
     };
 }
 
-registry
-    .category("debug")
+debugRegistry
     // Backend
     .add("runJSTestsItem", runJSTestsItem)
     .add("runJSTestsMobileItem", runJSTestsMobileItem)
