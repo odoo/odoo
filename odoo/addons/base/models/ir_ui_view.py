@@ -1297,13 +1297,19 @@ actual arch.
         field = name_manager.Model._fields.get(name)
         if field:
             if field.relational:
-                comodel = self.env[field.comodel_name]
-                if node.get('domain'):
-                    desc = f'domain of <field name="{name}">'
-                    fields = self._get_server_domain_variables(node, node.get('domain'), desc, comodel)
-                else:
-                    fields = self._get_field_domain_variables(node, field, node_info['editable'])
-                name_manager.must_have_fields(fields)
+                domain = (
+                    node.get('domain')
+                    or node_info['editable'] and field._description_domain(self.env)
+                )
+                if isinstance(domain, str):
+                    # dynamic domain: in [('foo', '=', bar)], field 'foo' must
+                    # exist on the comodel and field 'bar' must be in the view
+                    desc = (f'domain of <field name="{name}">' if node.get('domain')
+                            else f"domain of field '{name}'")
+                    fnames, vnames = self._get_domain_identifiers(node, domain, desc)
+                    self._check_field_paths(node, fnames, field.comodel_name, f"{desc} ({domain})")
+                    if vnames:
+                        name_manager.must_have_fields(dict.fromkeys(vnames, f"{desc} ({domain})"))
 
             elif node.get('domain'):
                 msg = _(
@@ -1340,12 +1346,14 @@ actual arch.
                     self._raise_view_error(msg, node)
 
     def _validate_tag_filter(self, node, name_manager, node_info):
-        if node.get('domain'):
+        domain = node.get('domain')
+        if domain:
             name = node.get('name')
             desc = f'domain of <filter name="{name}">' if name else 'domain of <filter>'
-            model = name_manager.Model
-            fields = self._get_server_domain_variables(node, node.get('domain'), desc, model)
-            name_manager.must_have_fields(fields)
+            fnames, vnames = self._get_domain_identifiers(node, domain, desc)
+            self._check_field_paths(node, fnames, name_manager.Model._name, f"{desc} ({domain})")
+            if vnames:
+                name_manager.must_have_fields(dict.fromkeys(vnames, f"{desc} ({domain})"))
 
     def _validate_tag_button(self, node, name_manager, node_info):
         name = node.get('name')
@@ -1423,8 +1431,13 @@ actual arch.
                     name=field.name, type=field.type,
                 )
                 self._raise_view_error(msg, node)
-            fields = self._get_field_domain_variables(node, field, node_info['editable'])
-            name_manager.must_have_fields(fields)
+            domain = node_info['editable'] and field._description_domain(self.env)
+            if isinstance(domain, str):
+                desc = f"domain of field '{name}'"
+                fnames, vnames = self._get_domain_identifiers(node, domain, desc)
+                self._check_field_paths(node, fnames, field.comodel_name, f"{desc} ({domain})")
+                if vnames:
+                    name_manager.must_have_fields(dict.fromkeys(vnames, f"{desc} ({domain})"))
 
             # move all children nodes into a new node <groupby>
             groupby_node = E.groupby(*node)
@@ -1514,12 +1527,13 @@ actual arch.
                     if isinstance(val_ast, ast.List):
                         # domains in attrs are used for readonly, invisible, ...
                         # and thus are only executed client side
-                        fields = self._get_client_domain_variables(node, val_ast, attr, expr)
-                        name_manager.must_have_fields(fields)
+                        fnames, vnames = self._get_domain_identifiers(node, val_ast, attr, expr)
+                        fields = fnames | vnames
+                        name_manager.must_have_fields(dict.fromkeys(fields, f"attrs ({expr})"))
                     else:
-                        use = '%s (%s)' % (attr, expr)
-                        fields = dict.fromkeys(get_variable_names(val_ast), use)
-                        name_manager.must_have_fields(fields)
+                        vnames = get_variable_names(val_ast)
+                        if vnames:
+                            name_manager.must_have_fields(dict.fromkeys(vnames, f"attrs ({expr})"))
 
             elif attr == 'context':
                 for key, val_ast in get_dict_asts(expr).items():
@@ -1539,9 +1553,9 @@ actual arch.
                             )
                             self._raise_view_error(msg, node)
                     else:
-                        use = '%s (%s)' % (attr, expr)
-                        fields = dict.fromkeys(get_variable_names(val_ast), use)
-                        name_manager.must_have_fields(fields)
+                        vnames = get_variable_names(val_ast)
+                        if vnames:
+                            name_manager.must_have_fields(dict.fromkeys(vnames, f"context ({expr})"))
 
             elif attr == 'groups':
                 for group in expr.replace('!', '').split(','):
@@ -1562,8 +1576,9 @@ actual arch.
                     )
 
             elif attr.startswith('decoration-'):
-                fields = dict.fromkeys(get_variable_names(expr), '%s=%s' % (attr, expr))
-                name_manager.must_have_fields(fields)
+                vnames = get_variable_names(expr)
+                if vnames:
+                    name_manager.must_have_fields(dict.fromkeys(vnames, f"{attr}={expr}"))
 
             elif attr == 'data-toggle' and expr == 'tab':
                 if node.get('role') != 'tab':
@@ -1699,74 +1714,42 @@ actual arch.
         msg = ('%s must have title in its tag, parents, descendants or have text')
         self._log_view_warning(msg % description, node)
 
-    def _get_client_domain_variables(self, node, domain, key, expr):
-        """ Returns all field and variable names present in the given domain
-        (to be used client-side).
-
-        :param str: key (attrs.<attrs_key>)
-        :param str domain:
-        """
+    def _get_domain_identifiers(self, node, domain, use, expr=None):
         try:
-            (field_names, var_names) = get_domain_identifiers(domain)
+            return get_domain_identifiers(domain)
         except ValueError:
-            msg = _('Invalid domain format %(expr)s in %(key)s', expr=expr, key=key)
+            msg = _("Invalid domain format %(expr)s in %(use)s", expr=expr or domain, use=use)
             self._raise_view_error(msg, node)
 
-        return dict.fromkeys(field_names | var_names, '%s (%s)' % (key, expr))
-
-    def _get_server_domain_variables(self, node, domain, key, Model):
-        """ Returns all the variable names present in the given domain (to be
-        used server-side).
+    def _check_field_paths(self, node, field_paths, model_name, use):
+        """ Check whether the given field paths (dot-separated field names)
+        correspond to actual sequences of fields on the given model.
         """
-        try:
-            (field_names, var_names) = get_domain_identifiers(domain)
-        except ValueError as e:
-            msg = _('Invalid domain format %(expr)s in %(key)s', expr=domain, key=key)
-            self._raise_view_error(msg, node, from_traceback=e.__traceback__)
-
-        # checking field names
-        for name_seq in field_names:
-            fnames = name_seq.split('.')
-            model = Model
-            try:
-                for fname in fnames:
-                    if not isinstance(model, models.BaseModel):
-                        msg = _(
-                            'Non-relational field %(field)r in path %(field_path)r in %(key)s (%(domain)s)',
-                            field=fname, field_path=name_seq, key=key, domain=domain,
-                        )
-                        self._raise_view_error(msg, node)
-                    field = model._fields[fname]
-                    if not field._description_searchable:
-                        msg = _(
-                            'Unsearchable field %(field)r in path %(field_path)r in %(key)s (%(domain)s)',
-                            field=fname, field_path=name_seq, key=key, domain=domain,
-                        )
-                        self._raise_view_error(msg, node)
-                    model = model[fname]
-            except KeyError:
-                msg = _(
-                    'Unknown field "%(model)s.%(field)s" in %(key)s (%(domain)s)',
-                    model=model._name, field=fname, key=key, domain=domain,
-                )
-                self._raise_view_error(msg, node)
-
-        return dict.fromkeys(var_names, "%s (%s)" % (key, domain))
-
-    def _get_field_domain_variables(self, node, field, editable):
-        """ Return the variable names present in the field's domain, if no
-        domain is given on the node itself.
-        """
-        if editable and not node.get('domain') and field.relational:
-            domain = field._description_domain(self.env)
-            if isinstance(domain, str):
-                return self._get_server_domain_variables(
-                    node,
-                    domain,
-                    'domain of field %r' % field.name,
-                    self.env[field.comodel_name],
-                )
-        return {}
+        for field_path in field_paths:
+            names = field_path.split('.')
+            Model = self.pool[model_name]
+            for index, name in enumerate(names):
+                if Model is None:
+                    msg = _(
+                        'Non-relational field %(field)r in path %(field_path)r in %(use)s)',
+                        field=names[index - 1], field_path=field_path, use=use,
+                    )
+                    self._raise_view_error(msg, node)
+                try:
+                    field = Model._fields[name]
+                except KeyError:
+                    msg = _(
+                        'Unknown field "%(model)s.%(field)s" in %(use)s)',
+                        model=Model._name, field=name, use=use,
+                    )
+                    self._raise_view_error(msg, node)
+                if not field._description_searchable:
+                    msg = _(
+                        'Unsearchable field %(field)r in path %(field_path)r in %(use)s)',
+                        field=name, field_path=field_path, use=use,
+                    )
+                    self._raise_view_error(msg, node)
+                Model = self.pool.get(field.comodel_name)
 
     #------------------------------------------------------
     # QWeb template views
