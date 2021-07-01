@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { browser } from "../browser/browser";
-import { routeToUrl } from "../browser/router_service";
-import { registry } from "../registry";
+import { browser } from "@web/core/browser/browser";
+import { routeToUrl } from "@web/core/browser/router_service";
+import { registry } from "@web/core/registry";
 
 function activateAssetsDebugging({ env }) {
     return {
