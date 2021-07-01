@@ -862,6 +862,7 @@ class AccountPayment(models.Model):
                 'payment_type': payment.payment_type == 'outbound' and 'inbound' or 'outbound',
                 'move_id': None,
                 'ref': payment.ref,
+                'date': payment.date,
                 'paired_internal_transfer_payment_id': payment.id
             })
             paired_payment.move_id._post(soft=False)
