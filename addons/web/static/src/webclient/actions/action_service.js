@@ -9,6 +9,8 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { sprintf } from "@web/core/utils/strings";
+import { useDebugCategory } from "@web/core/debug/debug_context";
+import { View } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
 
 /** @typedef {number|false} ActionId */
@@ -462,7 +464,7 @@ function makeActionManager(env) {
             setup() {
                 this.Component = controller.Component;
                 this.componentRef = hooks.useRef("component");
-                this.registerCallback = null;
+                useDebugCategory("action", { action });
                 if (action.target !== "new") {
                     let beforeLeaveFn;
                     this.registerCallback = (type, fn) => {

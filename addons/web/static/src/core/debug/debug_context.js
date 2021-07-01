@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 import { registry } from "../registry";
 import { memoize } from "../utils/functions";
 import { useEffect } from "@web/core/utils/hooks";
@@ -94,9 +95,12 @@ export function getCurrentDebugContext() {
 }
 
 export function useDebugCategory(category, context = {}) {
-    const debugContext = useEnvDebugContext();
-    useEffect(
-        () => debugContext.activateCategory(category, context),
-        () => []
-    );
+    const env = useEnv();
+    if (env.debug) {
+        const debugContext = useEnvDebugContext();
+        useEffect(
+            () => debugContext.activateCategory(category, context),
+            () => []
+        );
+    }
 }
