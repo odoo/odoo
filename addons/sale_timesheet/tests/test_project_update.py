@@ -3,6 +3,7 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
+from odoo import fields
 from odoo.tests import tagged
 from odoo.tests.common import Form
 
@@ -24,7 +25,7 @@ class TestProjectUpdateSaleTimesheet(TestProjectUpdate):
 
     def test_project_update_description_profitability(self):
         template_values = self.env['project.update']._get_template_values(self.project_pigs)
-        today = date.today()
+        today = fields.Date.context_today(self.project_pigs)
         self.assertEqual(template_values['profitability']['month'], today.strftime('%B %Y'),
                          "The month used in the template should be well defined")
         self.assertEqual(template_values['profitability']['previous_month'], (today + relativedelta(months=-1)).strftime('%B'),
