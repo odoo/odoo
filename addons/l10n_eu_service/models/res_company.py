@@ -32,7 +32,6 @@ class Company(models.Model):
                 ('tax_group_id', 'not in', oss_tax_groups.mapped('res_id'))])
             for country in eu_countries - company.account_tax_fiscal_country_id:
                 mapping = []
-                foreign_taxes = {}
                 fpos = self.env['account.fiscal.position'].search([
                             ('country_id', '=', country.id),
                             ('company_id', '=', company.id),
@@ -40,11 +39,14 @@ class Company(models.Model):
                             ('vat_required', '=', False)], limit=1)
                 if not fpos:
                     fpos = self.env['account.fiscal.position'].create({
-                        'name': _('OSS B2C %s', country.name),
+                        'name': 'OSS B2C %s' % country.name,
                         'country_id': country.id,
                         'company_id': company.id,
                         'auto_apply': True,
                     })
+
+                foreign_taxes = {tax.amount: tax for tax in fpos.tax_ids.tax_dest_id if tax.amount_type == 'percent'}
+
                 for domestic_tax in taxes:
                     tax_amount = EU_TAX_MAP.get((company.account_tax_fiscal_country_id.code, domestic_tax.amount, country.code), False)
                     if tax_amount and domestic_tax not in fpos.tax_ids.tax_src_id:
@@ -58,7 +60,7 @@ class Company(models.Model):
                                     'noupdate': True,
                                     })
                             foreign_taxes[tax_amount] = self.env['account.tax'].create({
-                                'name': _('%(rate)s%% %(country)s %(label)s', rate=tax_amount, country=country.code, label=country.vat_label),
+                                'name': '%(rate)s%% %(country)s %(label)s' % {'rate': tax_amount, 'country': country.code, 'label': country.vat_label},
                                 'amount': tax_amount,
                                 'invoice_repartition_line_ids': invoice_repartition_lines,
                                 'refund_repartition_line_ids': refund_repartition_lines,
@@ -94,7 +96,7 @@ class Company(models.Model):
                 return False
             new_code = self.env['account.account']._search_new_account_code(self, len(sales_tax_accounts[0].code), sales_tax_accounts[0].code[:-2])
             oss_account = self.env['account.account'].create({
-                'name': _('%s OSS', sales_tax_accounts[0].name),
+                'name': '%s OSS' % sales_tax_accounts[0].name,
                 'code': new_code,
                 'user_type_id': sales_tax_accounts[0].user_type_id.id,
                 'company_id': self.id,
