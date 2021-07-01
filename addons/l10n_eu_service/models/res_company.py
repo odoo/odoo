@@ -33,7 +33,6 @@ class Company(models.Model):
                 ('tax_group_id', 'not in', oss_tax_groups.mapped('res_id'))])
             for country in eu_countries - company.account_fiscal_country_id:
                 mapping = []
-                foreign_taxes = {}
                 fpos = self.env['account.fiscal.position'].search([
                             ('country_id', '=', country.id),
                             ('company_id', '=', company.id),
@@ -46,6 +45,9 @@ class Company(models.Model):
                         'company_id': company.id,
                         'auto_apply': True,
                     })
+
+                foreign_taxes = {tax.amount: tax for tax in fpos.tax_ids.tax_dest_id if tax.amount_type == 'percent'}
+
                 for domestic_tax in taxes:
                     tax_amount = EU_TAX_MAP.get((company.account_fiscal_country_id.code, domestic_tax.amount, country.code), False)
                     if tax_amount and domestic_tax not in fpos.tax_ids.tax_src_id:
