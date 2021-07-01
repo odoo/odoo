@@ -1,17 +1,12 @@
-@mixin o-background-color {
+.o_status_bubble {
+    @extend .o_status;
+
     @for $size from 2 through length($o-colors) {
         // Note: the first color is supposed to be invisible so it's ignored
         &.o_color_bubble_#{$size - 1} {
             background-color: nth($o-colors, $size);
         }
     }
-}
-
-.o_status_bubble {
-    @extend .o_status;
-    margin-right: 0.5rem;
-    border-radius: 50%;
-    @include o-background-color;
 }
 
 .o_status_with_color {
@@ -27,18 +22,6 @@
 
 .o_project_update_description a[type="object"] {
     cursor: pointer;
-}
-
-ol.breadcrumb li.o_project_updates_breadcrumb {
-    margin-left: 1rem;
-    color: $breadcrumb-active-color;
-    &.o_project_updates_clickable {
-        cursor: pointer;
-    }
-    .o_status_bubble {
-        width: 10px;
-        height: 10px;
-    }
 }
 
 .o_kanban_view.o_pupdate_kanban {

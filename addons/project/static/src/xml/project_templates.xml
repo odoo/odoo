@@ -23,15 +23,20 @@
         </xpath>
     </div>
 
+    <t t-name="project.ControlPanelContentBadge" owl="1">
+        <t t-tag="is_project_manager ? 'button' : 'span'" class="badge border d-flex p-2 ml-2 bg-white">
+            <span t-attf-class="o_status_bubble o_color_bubble_{{data.color}}"/>
+            <span class="font-weight-normal ml-1" t-esc="data.status"/>
+        </t>
+    </t>
+
     <t t-name="project.ControlPanelContent" owl="1">
         <t t-if="show_project_update">
-            <li t-if="is_project_manager" class="o_project_updates_breadcrumb o_project_updates_clickable" t-on-click="onStatusClick">
-                <span t-attf-class="o_status_bubble o_color_bubble_{{data.color}} position-relative'"/>
-                <span class="font-italic"><t t-esc="data.status"/></span>
+            <li t-if="is_project_manager" class="o_project_updates_breadcrumb pl-3" t-on-click="onStatusClick">
+                <t t-call="project.ControlPanelContentBadge"></t>
             </li>
-            <li t-else="" class="o_project_updates_breadcrumb">
-                <span t-attf-class="o_status_bubble o_color_bubble_{{data.color}} position-relative'"/>
-                <span class="font-italic"><t t-esc="data.status"/></span>
+            <li t-else="" class="o_project_updates_breadcrumb pl-3">
+                <t t-call="project.ControlPanelContentBadge"></t>
             </li>
         </t>
     </t>
