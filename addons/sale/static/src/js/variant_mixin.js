@@ -49,29 +49,50 @@ var VariantMixin = {
      * @returns {Deferred}
      */
     _getCombinationInfo: function (ev) {
-        var self = this;
-
         if ($(ev.target).hasClass('variant_custom_value')) {
             return Promise.resolve();
         }
 
-        var $parent = $(ev.target).closest('.js_product');
-        var qty = $parent.find('input[name="add_qty"]').val();
-        var combination = this.getSelectedVariantValues($parent);
-        var parentCombination = $parent.find('ul[data-attribute_exclusions]').data('attribute_exclusions').parent_combination;
-        var productTemplateId = parseInt($parent.find('.product_template_id').val());
+        const $parent = $(ev.target).closest('.js_product');
+        const combination = this.getSelectedVariantValues($parent);
+        let parentCombination;
 
-        self._checkExclusions($parent, combination);
+        if ($parent.hasClass('main_product')) {
+            parentCombination = $parent.find('ul[data-attribute_exclusions]').data('attribute_exclusions').parent_combination;
+            const $optProducts = $parent.parent().find(`[data-parent-unique-id='${$parent.data('uniqueId')}']`);
+
+            for (const optionalProduct of $optProducts) {
+                const $currentOptionalProduct = $(optionalProduct);
+                const childCombination = this.getSelectedVariantValues($currentOptionalProduct);
+                const productTemplateId = parseInt($currentOptionalProduct.find('.product_template_id').val());
+                ajax.jsonRpc(this._getUri('/sale/get_combination_info'), 'call', {
+                    'product_template_id': productTemplateId,
+                    'product_id': this._getProductId($currentOptionalProduct),
+                    'combination': childCombination,
+                    'add_qty': parseInt($currentOptionalProduct.find('input[name="add_qty"]').val()),
+                    'pricelist_id': this.pricelistId || false,
+                    'parent_combination': combination,
+                }).then((combinationData) => {
+                    this._onChangeCombination(ev, $currentOptionalProduct, combinationData);
+                    this._checkExclusions($currentOptionalProduct, childCombination, combinationData.parent_exclusions);
+                });
+            }
+        } else {
+            parentCombination = this.getSelectedVariantValues(
+                $parent.parent().find('.js_product.in_cart.main_product')
+            );
+        }
 
         return ajax.jsonRpc(this._getUri('/sale/get_combination_info'), 'call', {
-            'product_template_id': productTemplateId,
+            'product_template_id': parseInt($parent.find('.product_template_id').val()),
             'product_id': this._getProductId($parent),
             'combination': combination,
-            'add_qty': parseInt(qty),
+            'add_qty': parseInt($parent.find('input[name="add_qty"]').val()),
             'pricelist_id': this.pricelistId || false,
             'parent_combination': parentCombination,
-        }).then(function (combinationData) {
-            self._onChangeCombination(ev, $parent, combinationData);
+        }).then((combinationData) => {
+            this._onChangeCombination(ev, $parent, combinationData);
+            this._checkExclusions($parent, combination, combinationData.parent_exclusions);
         });
     },
 
@@ -105,6 +126,7 @@ var VariantMixin = {
                               .data('custom_product_template_attribute_value_id') !== parseInt(attributeValueId)) {
                     $variantContainer.find('.variant_custom_value').remove();
 
+                    const previousCustomValue = $customInput.attr("previous_custom_value");
                     var $input = $('<input>', {
                         type: 'text',
                         'data-custom_product_template_attribute_value_id': attributeValueId,
@@ -115,6 +137,9 @@ var VariantMixin = {
                     $input.attr('placeholder', attributeValueName);
                     $input.addClass('custom_value_radio');
                     $variantContainer.append($input);
+                    if (previousCustomValue) {
+                        $input.val(previousCustomValue);
+                    }
                     $input[0].focus();
                 }
             } else {
@@ -153,8 +178,8 @@ var VariantMixin = {
     onChangeAddQuantity: function (ev) {
         var $parent;
 
-        if ($(ev.currentTarget).closest('.oe_optional_products_modal').length > 0){
-            $parent = $(ev.currentTarget).closest('.oe_optional_products_modal');
+        if ($(ev.currentTarget).closest('.oe_advanced_configurator_modal').length > 0){
+            $parent = $(ev.currentTarget).closest('.oe_advanced_configurator_modal');
         } else if ($(ev.currentTarget).closest('form').length > 0){
             $parent = $(ev.currentTarget).closest('form');
         }  else {
@@ -246,16 +271,10 @@ var VariantMixin = {
 
     /**
      * Will return the list of selected product.template.attribute.value ids
-     * For the modal, the "main product"'s attribute values are stored in the
-     * "unchanged_value_ids" data
-     *
      * @param {$.Element} $container the container to look into
      */
     getSelectedVariantValues: function ($container) {
         var values = [];
-        var unchangedValues = $container
-            .find('div.oe_unchanged_value_ids')
-            .data('unchanged_value_ids') || [];
 
         var variantsValuesSelectors = [
             'input.js_variant_change:checked',
@@ -265,7 +284,7 @@ var VariantMixin = {
             values.push(+$(el).val());
         });
 
-        return values.concat(unchangedValues);
+        return values;
     },
 
     /**
@@ -325,13 +344,18 @@ var VariantMixin = {
      * @private
      * @param {$.Element} $parent the parent container to apply exclusions
      * @param {Array} combination the selected combination of product attribute values
+     * @param {Array} parentExclusions the exclusions induced by the variant selection of the parent product
+     * For example chair cannot have steel legs if the parent Desk doesn't have steel legs
      */
-    _checkExclusions: function ($parent, combination) {
+    _checkExclusions: function ($parent, combination, parentExclusions) {
         var self = this;
         var combinationData = $parent
             .find('ul[data-attribute_exclusions]')
             .data('attribute_exclusions');
 
+        if (parentExclusions && combinationData.parent_exclusions) {
+            combinationData.parent_exclusions = parentExclusions;
+        }
         $parent
             .find('option, input, label, .o_variant_pills')
             .removeClass('css_not_available')
@@ -565,6 +589,11 @@ var VariantMixin = {
      */
     _toggleDisable: function ($parent, isCombinationPossible) {
         $parent.toggleClass('css_not_available', !isCombinationPossible);
+        if ($parent.hasClass('in_cart')) {
+            const primaryButton = $parent.parents('.modal-content').find('.modal-footer .btn-primary');
+            primaryButton.prop('disabled', !isCombinationPossible);
+            primaryButton.toggleClass('disabled', !isCombinationPossible);
+        }
     },
     /**
      * Updates the product image.

@@ -58,7 +58,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
         this.container = parent;
         this.pricelistId = params.pricelistId;
         this.previousModalHeight = params.previousModalHeight;
-        this.dialogClass = 'oe_optional_products_modal';
+        this.dialogClass = 'oe_advanced_configurator_modal';
         this._productImageField = 'image_128';
 
         this._opened.then(function () {
@@ -73,7 +73,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
     willStart: function () {
         var self = this;
 
-        var uri = this._getUri("/sale_product_configurator/show_optional_products");
+        var uri = this._getUri("/sale_product_configurator/show_advanced_configurator");
         var getModalContent = ajax.jsonRpc(uri, 'call', {
             product_id: self.rootProduct.product_id,
             variant_values: self.rootProduct.variant_values,
@@ -178,18 +178,27 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
      *   {Array} no_variant_attribute_values
      * @public
      */
-    getSelectedProducts: function () {
+    getAndCreateSelectedProducts: async function () {
         var self = this;
-        var products = [this.rootProduct];
-        this.$modal.find('.js_product.in_cart:not(.main_product)').each(function () {
-            var $item = $(this);
+        const products = [];
+        let productCustomVariantValues;
+        let noVariantAttributeValues;
+        for (const product of self.$modal.find('.js_product.in_cart')) {
+            var $item = $(product);
             var quantity = parseInt($item.find('input[name="add_qty"]').val(), 10);
-            var parentUniqueId = this.dataset.parentUniqueId;
-            var uniqueId = this.dataset.uniqueId;
-            var productCustomVariantValues = self.getCustomVariantValues($(this));
-            var noVariantAttributeValues = self.getNoVariantAttributeValues($(this));
+            var parentUniqueId = product.dataset.parentUniqueId;
+            var uniqueId = product.dataset.uniqueId;
+            productCustomVariantValues = self.getCustomVariantValues($item);
+            noVariantAttributeValues = self.getNoVariantAttributeValues($item);
+
+            const productID = await self.selectOrCreateProduct(
+                $item,
+                parseInt($item.find('input.product_id').val(), 10),
+                parseInt($item.find('input.product_template_id').val(), 10),
+                true
+            );
             products.push({
-                'product_id': parseInt($item.find('input.product_id').val(), 10),
+                'product_id': productID,
                 'product_template_id': parseInt($item.find('input.product_template_id').val(), 10),
                 'quantity': quantity,
                 'parent_unique_id': parentUniqueId,
@@ -197,8 +206,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
                 'product_custom_attribute_values': productCustomVariantValues,
                 'no_variant_attribute_values': noVariantAttributeValues
             });
-        });
-
+        }
         return products;
     },
 
@@ -229,14 +237,18 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
                 text: $productDescription.text()
             }));
 
-            $.each(this.rootProduct.product_custom_attribute_values, function (){
-                $updatedDescription.append($('<div>', {
-                    text: this.attribute_value_name + ': ' + this.custom_value
-                }));
+            $.each(this.rootProduct.product_custom_attribute_values, function () {
+                if (this.custom_value) {
+                    const $customInput = $modalContent
+                        .find(".main_product [data-is_custom='True']")
+                        .closest(`[data-value_id='${this.custom_product_template_attribute_value_id}']`);
+                    $customInput.attr('previous_custom_value', this.custom_value);
+                    VariantMixin.handleCustomValues($customInput);
+                }
             });
 
-            $.each(this.rootProduct.no_variant_attribute_values, function (){
-                if (this.is_custom !== 'True'){
+            $.each(this.rootProduct.no_variant_attribute_values, function () {
+                if (this.is_custom !== 'True') {
                     $updatedDescription.append($('<div>', {
                         text: this.attribute_name + ': ' + this.attribute_value_name
                     }));
@@ -282,7 +294,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
         ev.preventDefault();
         var self = this;
         var $target = $(ev.currentTarget);
-        var $modal = $target.parents('.oe_optional_products_modal');
+        var $modal = $target.parents('.oe_advanced_configurator_modal');
         var $parent = $target.parents('.js_product:first');
         $parent.find("a.js_add, span.js_remove").toggleClass('d-none');
         $parent.find(".js_remove");

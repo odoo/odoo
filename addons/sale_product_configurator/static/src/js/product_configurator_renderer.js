@@ -54,6 +54,7 @@ var ProductConfiguratorFormRenderer = FormRenderer.extend(VariantMixin, {
 
         this.triggerVariantChange($configuratorContainer);
         this._applyCustomValues();
+        this.trigger_up('handle_add');
     },
 
     //--------------------------------------------------------------------------

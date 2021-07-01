@@ -28,10 +28,10 @@ class ProductConfiguratorController(http.Controller):
             'product_combination': product_combination
         })
 
-    @http.route(['/sale_product_configurator/show_optional_products'], type='json', auth="user", methods=['POST'])
-    def show_optional_products(self, product_id, variant_values, pricelist_id, **kw):
+    @http.route(['/sale_product_configurator/show_advanced_configurator'], type='json', auth="user", methods=['POST'])
+    def show_advanced_configurator(self, product_id, variant_values, pricelist_id, **kw):
         pricelist = self._get_pricelist(pricelist_id)
-        return self._show_optional_products(product_id, variant_values, pricelist, False, **kw)
+        return self._show_advanced_configurator(product_id, variant_values, pricelist, False, **kw)
 
     @http.route(['/sale_product_configurator/optional_product_items'], type='json', auth="user", methods=['POST'])
     def optional_product_items(self, product_id, pricelist_id, **kw):
@@ -56,14 +56,9 @@ class ProductConfiguratorController(http.Controller):
             'add_qty': add_qty,
         })
 
-    def _show_optional_products(self, product_id, variant_values, pricelist, handle_stock, **kw):
+    def _show_advanced_configurator(self, product_id, variant_values, pricelist, handle_stock, **kw):
         product = request.env['product.product'].browse(int(product_id))
         combination = request.env['product.template.attribute.value'].browse(variant_values)
-        has_optional_products = product.optional_product_ids.filtered(lambda p: p._is_add_to_cart_possible(combination))
-
-        if not has_optional_products:
-            return False
-
         add_qty = int(kw.get('add_qty', 1))
 
         no_variant_attribute_values = combination.filtered(
@@ -80,6 +75,7 @@ class ProductConfiguratorController(http.Controller):
             'variant_values': variant_values,
             'pricelist': pricelist,
             'handle_stock': handle_stock,
+            'already_configured': kw.get("already_configured", False)
         })
 
     def _get_pricelist(self, pricelist_id, pricelist_fallback=False):

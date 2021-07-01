@@ -32,26 +32,24 @@ tour.register('sale_product_configurator_single_custom_attribute_tour', {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
     run: 'click'
 }, {
-    trigger: '.configurator_container span:contains("Aluminium")',
+    trigger: '.oe_advanced_configurator_modal span:contains("Aluminium")',
     run: function () {
         // used to check that the radio is NOT rendered
-        if ($('.configurator_container ul[data-attribute_id].d-none input[data-value_name="single product attribute value"]').length === 1) {
-            $('.configurator_container').addClass('tour_success');
+        if ($('.oe_advanced_configurator_modal ul[data-attribute_id].d-none input[data-value_name="single product attribute value"]').length === 1) {
+            $('.oe_advanced_configurator_modal').addClass('tour_success');
         }
     }
 }, {
-    trigger: '.configurator_container.tour_success',
+    trigger: '.oe_advanced_configurator_modal.tour_success',
     run: function () {
         //check
     }
 }, {
-    trigger: '.configurator_container .variant_custom_value',
+    trigger: '.oe_advanced_configurator_modal .variant_custom_value',
     run: 'text great single custom value'
 }, {
-    trigger: '.o_sale_product_configurator_add',
-}, {
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_optional_products_modal',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: 'click'
 }, {
     trigger: 'td.o_data_cell:contains("single product attribute value: great single custom value")',

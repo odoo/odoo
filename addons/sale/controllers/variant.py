@@ -23,6 +23,7 @@ class VariantController(http.Controller):
                     combination = product.product_template_attribute_value_ids
             res.update({
                 'is_combination_possible': product_template._is_combination_possible(combination=combination, parent_combination=parent_combination),
+                'parent_exclusions': product_template._get_parent_attribute_exclusions(parent_combination=parent_combination)
             })
         return res
 

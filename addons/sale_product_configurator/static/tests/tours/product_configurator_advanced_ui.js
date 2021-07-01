@@ -41,89 +41,62 @@ tour.register('sale_product_configurator_advanced_tour', {
     run: 'click'
 }, {
     trigger: 'span:contains("Custom")',
-    extra_trigger: '.o_product_configurator',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: 'click'
 }, {
-    trigger: '.o_product_configurator ul.js_add_cart_variants li[data-attribute_id]:nth-child(1) .variant_custom_value',
-    extra_trigger: '.o_product_configurator',
+    trigger: '.oe_advanced_configurator_modal ul.js_add_cart_variants li[data-attribute_id]:nth-child(1) .variant_custom_value',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: 'text Custom 1'
 }, {
-    trigger: '.o_product_configurator ul.js_add_cart_variants li[data-attribute_id]:nth-child(3) span:contains("PAV9")',
-    extra_trigger: '.o_product_configurator',
+    trigger: '.oe_advanced_configurator_modal ul.js_add_cart_variants li[data-attribute_id]:nth-child(3) span:contains("PAV9")',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: 'click'
 }, {
-    trigger: '.o_product_configurator ul.js_add_cart_variants li[data-attribute_id]:nth-child(3) .variant_custom_value',
-    extra_trigger: '.o_product_configurator',
+    trigger: '.oe_advanced_configurator_modal ul.js_add_cart_variants li[data-attribute_id]:nth-child(3) .variant_custom_value',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: 'text Custom 2'
 }, {
-    trigger: '.o_product_configurator ul.js_add_cart_variants li[data-attribute_id]:nth-child(4) span:contains("PAV5")',
-    extra_trigger: '.o_product_configurator',
+    trigger: '.oe_advanced_configurator_modal ul.js_add_cart_variants li[data-attribute_id]:nth-child(4) span:contains("PAV5")',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: 'click'
 }, {
-    trigger: '.o_product_configurator ul.js_add_cart_variants li[data-attribute_id]:nth-child(6) select ',
-    extra_trigger: '.o_product_configurator',
+    trigger: '.oe_advanced_configurator_modal ul.js_add_cart_variants li[data-attribute_id]:nth-child(6) select ',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: function (){
-        var inputValue = $('.o_product_configurator ul.js_add_cart_variants li[data-attribute_id]:nth-child(6) option[data-value_name="PAV9"]').val();
-        $('.o_product_configurator ul.js_add_cart_variants li[data-attribute_id]:nth-child(6) select').val(inputValue);
-        $('.o_product_configurator ul.js_add_cart_variants li[data-attribute_id]:nth-child(6) select').trigger('change');
+        var inputValue = $('.oe_advanced_configurator_modal ul.js_add_cart_variants li[data-attribute_id]:nth-child(6) option[data-value_name="PAV9"]').val();
+        $('.oe_advanced_configurator_modal ul.js_add_cart_variants li[data-attribute_id]:nth-child(6) select').val(inputValue);
+        $('.oe_advanced_configurator_modal ul.js_add_cart_variants li[data-attribute_id]:nth-child(6) select').trigger('change');
     }
 }, {
-    trigger: '.o_product_configurator ul.js_add_cart_variants li[data-attribute_id]:nth-child(6) .variant_custom_value',
-    extra_trigger: '.o_product_configurator',
+    trigger: '.oe_advanced_configurator_modal ul.js_add_cart_variants li[data-attribute_id]:nth-child(6) .variant_custom_value',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: 'text Custom 3'
 }, {
-    trigger: ".o_sale_product_configurator_add",
-    run: 'click'
-}, {
     trigger: '.main_product strong:contains("Custom, White, PAV9, PAV5, PAV1")',
-    extra_trigger: '.oe_optional_products_modal',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: function () {} //check
 }, {
-    trigger: '.main_product div:contains("Custom: Custom 1")',
-    extra_trigger: '.oe_optional_products_modal',
-    run: function () {} //check
-}, {
-    trigger: '.main_product div:contains("PAV9: Custom 2")',
-    extra_trigger: '.oe_optional_products_modal',
-    run: function () {} //check
-}, {
-    trigger: '.main_product div:contains("PAV9: Custom 3")',
-    extra_trigger: '.oe_optional_products_modal',
-    run: function () {} //check
-}, {
-    trigger: '.main_product div:contains("PA5: PAV1")',
-    extra_trigger: '.oe_optional_products_modal',
-    run: function () {} //check
-}, {
-    trigger: '.main_product div:contains("PA7: PAV1")',
-    extra_trigger: '.oe_optional_products_modal',
-    run: function () {} //check
-}, {
-    trigger: '.main_product div:contains("PA8: PAV1")',
-    extra_trigger: '.oe_optional_products_modal',
-    run: function () {} //check
-}, {
-    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (TEST) (Steel)")',
+    trigger: '.oe_advanced_configurator_modal .js_product:eq(1) div:contains("Conference Chair (TEST) (Steel)")',
     run: function () {
-        optionVariantImage = $('.oe_optional_products_modal .js_product:eq(1) img.variant_image').attr('src');
+        optionVariantImage = $('.oe_advanced_configurator_modal .js_product:eq(1) img.variant_image').attr('src');
     }
 }, {
-    trigger: '.oe_optional_products_modal .js_product:eq(1) input[data-value_name="Aluminium"]',
+    trigger: '.oe_advanced_configurator_modal .js_product:eq(1) input[data-value_name="Aluminium"]',
 }, {
-    trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (TEST) (Aluminium)")',
+    trigger: '.oe_advanced_configurator_modal .js_product:eq(1) div:contains("Conference Chair (TEST) (Aluminium)")',
     run: function () {
-        var newVariantImage = $('.oe_optional_products_modal .js_product:eq(1) img.variant_image').attr('src');
+        var newVariantImage = $('.oe_advanced_configurator_modal .js_product:eq(1) img.variant_image').attr('src');
         if (newVariantImage !== optionVariantImage) {
-            $('<p>').text('image variant option src changed').insertAfter('.oe_optional_products_modal .js_product:eq(1) .product-name');
+            $('<p>').text('image variant option src changed').insertAfter('.oe_advanced_configurator_modal .js_product:eq(1) .product-name');
         }
 
     }
 }, {
-    extra_trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("image variant option src changed")',
-    trigger: '.oe_optional_products_modal .js_product:eq(1) input[data-value_name="Steel"]',
+    extra_trigger: '.oe_advanced_configurator_modal .js_product:eq(1) div:contains("image variant option src changed")',
+    trigger: '.oe_advanced_configurator_modal .js_product:eq(1) input[data-value_name="Steel"]',
 }, {
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_optional_products_modal',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: 'click'
 }, {
     trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Custom, White, PAV9, PAV5, PAV1)")',

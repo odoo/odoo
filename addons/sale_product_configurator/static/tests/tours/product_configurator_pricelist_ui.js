@@ -62,22 +62,19 @@ tour.stepUtils.showAppsMenuItem(),
     trigger: 'span.oe_currency_value:contains("600.00")',
     run: function () {} // check price (pricelist has discount for 2)
 }, {
-    content: "click add",
-    trigger: '.o_sale_product_configurator_add:not(.disabled)'
-}, {
     content: "check we are on the add modal",
     trigger: '.td-product_name:contains("Customizable Desk (TEST) (Steel, White)")',
-    extra_trigger: '.oe_optional_products_modal',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: 'click'
 }, {
     content: "add conference chair",
     trigger: '.js_product:has(strong:contains(Conference Chair)) .js_add',
-    extra_trigger: '.oe_optional_products_modal .js_product:has(strong:contains(Conference Chair))',
+    extra_trigger: '.oe_advanced_configurator_modal .js_product:has(strong:contains(Conference Chair))',
     run: 'click'
 }, {
     content: "add chair floor protection",
     trigger: '.js_product:has(strong:contains(Chair floor protection)) .js_add',
-    extra_trigger: '.oe_optional_products_modal .js_product:has(strong:contains(Chair floor protection))',
+    extra_trigger: '.oe_advanced_configurator_modal .js_product:has(strong:contains(Chair floor protection))',
     run: 'click'
 }, {
     content: "verify configurator final price", // tax excluded
@@ -85,7 +82,7 @@ tour.stepUtils.showAppsMenuItem(),
 }, {
     content: "add to SO",
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_optional_products_modal',
+    extra_trigger: '.oe_advanced_configurator_modal',
     run: 'click'
 }, {
     content: "verify SO final price excluded",

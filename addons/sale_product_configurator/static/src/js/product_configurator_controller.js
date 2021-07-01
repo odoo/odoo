@@ -52,6 +52,9 @@ var ProductConfiguratorFormController = FormController.extend({
         if (this.renderer.state.context.configuratorMode === 'options') {
             this.$el.closest('.modal').addClass('d-none');
         }
+
+        const renderSecondOnly = this.renderer.state.context.configuratorMode !== 'edit';
+        this.$el.closest('.o_dialog_container').toggleClass('d-none', renderSecondOnly);
     },
 
     //--------------------------------------------------------------------------
@@ -237,7 +240,9 @@ var ProductConfiguratorFormController = FormController.extend({
      */
     _onModalConfirm: function () {
         this._wasConfirmed = true;
-        this._addProducts(this.optionalProductsModal.getSelectedProducts());
+        this.optionalProductsModal.getAndCreateSelectedProducts().then((products) => {
+            this._addProducts(products);
+        });
     },
 
     /**
@@ -247,9 +252,9 @@ var ProductConfiguratorFormController = FormController.extend({
      * @private
      */
     _onModalClose: function () {
-        if (this.renderer.state.context.configuratorMode === 'options'
+        if (['options', 'add'].includes(this.renderer.state.context.configuratorMode)
             && this._wasConfirmed !== true) {
-              this.do_action({type: 'ir.actions.act_window_close'});
+            this.do_action({type: 'ir.actions.act_window_close'});
         }
     },
 
