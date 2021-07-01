@@ -2,6 +2,9 @@
 
 import ActivityView from '@mail/js/views/activity/activity_view';
 import testUtils from 'web.test_utils';
+import ActivityRenderer from "@mail/js/views/activity/activity_renderer"
+import domUtils from "web.dom";
+import { patch, unpatch } from "web.utils";
 
 var createActionManager = testUtils.createActionManager;
 
@@ -515,6 +518,43 @@ QUnit.test('Activity view: discard an activity creation dialog', async function 
         "Activity Modal should be closed");
 
     actionManager.destroy();
+});
+
+QUnit.test("Activity view: on_destroy_callback doesn't crash", async function (assert) {
+    assert.expect(3);
+
+    const params = {
+        View: ActivityView,
+        model: 'task',
+        data: this.data,
+        arch: '<activity string="Task">' +
+                '<templates>' +
+                    '<div t-name="activity-box">' +
+                        '<field name="foo"/>' +
+                    '</div>' +
+                '</templates>'+
+            '</activity>',
+    };
+
+    patch(ActivityRenderer.prototype, 'test_mounted_unmounted', {
+            mounted() {
+                assert.step('mounted');
+            },
+            willUnmount() {
+                assert.step('willUnmount');
+            }
+    });
+
+    const activity = await createView(params);
+    domUtils.detach([{widget: activity}]);
+
+    assert.verifySteps([
+        'mounted', 
+        'willUnmount'
+    ]);
+
+    unpatch(ActivityRenderer.prototype, 'test_mounted_unmounted');
+    activity.destroy();
 });
 
 });
