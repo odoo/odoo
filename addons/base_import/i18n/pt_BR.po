@@ -30,48 +30,36 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:612
+#: code:addons/base_import/static/src/js/import_action.js:617
 #, python-format
 msgid "%d records were successfully imported"
 msgstr "%d registros foram importados com sucesso"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:647
+#: code:addons/base_import/static/src/js/import_action.js:652
 #, python-format
 msgid "(%d more)"
 msgstr "(mais %d)"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:378
+#: code:addons/base_import/static/src/js/import_action.js:381
 #, python-format
-msgid ""
-"A single column was found in the file, this often means the file separator "
-"is incorrect"
-msgstr ""
-"Uma única coluna foi encontrada no arquivo, isso muitas vezes significa que "
-"o separador do arquivo está incorreto"
+msgid "A single column was found in the file, this often means the file separator is incorrect"
+msgstr "Uma única coluna foi encontrada no arquivo, isso muitas vezes significa que o separador do arquivo está incorreto"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:582
+#: code:addons/base_import/static/src/js/import_action.js:586
 #, python-format
-msgid ""
-"An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
-"import it at once."
-msgstr ""
-"Ocorreu um problema desconhecido durante a importação (possível perda de conexão, dados"
-"limite excedido ou limites de memória excedidos). Tente novamente caso o problema seja"
-"transitório. Se o problema persistir, tente dividir o arquivo em vez de"
-"importe-o imediatamente."
+msgid "An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once."
+msgstr "Ocorreu um problema desconhecido durante a importação (possível perda de conexão, dadoslimite excedido ou limites de memória excedidos). Tente novamente caso o problema sejatransitório. Se o problema persistir, tente dividir o arquivo em vez deimporte-o imediatamente."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
 msgid "Base"
-msgstr "Base"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
@@ -85,19 +73,19 @@ msgstr "Mapeamento de importação base"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:102
+#: code:addons/base_import/static/src/xml/base_import.xml:101
 #, python-format
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:693
+#: code:addons/base_import/models/base_import.py:716
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
 msgstr "A coluna %s contém valores incorretos (valor: %s)"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:788
+#: code:addons/base_import/models/base_import.py:817
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
 msgstr "A coluna %s contém valores incorretos. Erro na linha %d: %s"
@@ -109,25 +97,21 @@ msgstr "Nome da coluna"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:211
-#: code:addons/base_import/static/src/js/import_action.js:228
+#: code:addons/base_import/static/src/js/import_action.js:210
+#: code:addons/base_import/static/src/js/import_action.js:227
 #, python-format
 msgid "Comma"
 msgstr "Vírgula"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:825
+#: code:addons/base_import/models/base_import.py:856
 #, python-format
-msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
-msgstr ""
-"Não foi possível recuperar a URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+msgid "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+msgstr "Não foi possível recuperar a URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:108
+#: code:addons/base_import/static/src/xml/base_import.xml:107
 #, python-format
 msgid "Create if doesn't exist"
 msgstr "Criar se não existir"
@@ -176,16 +160,10 @@ msgstr "Criado em"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:107
+#: code:addons/base_import/static/src/xml/base_import.xml:106
 #, python-format
-msgid ""
-"Creates new records if they can't be found (instead of failing to import). "
-"Note that the value in the column will be used as the new record's 'name', "
-"and assumes this is sufficient to create the record."
-msgstr ""
-"Cria novos registros se eles não puderem ser encontrados (em vez de falhar na importação). "
-"Observe que o valor na coluna será usado como o 'nome' do novo registro, "
-"e assume que isso é suficiente para criar o registro."
+msgid "Creates new records if they can't be found (instead of failing to import). Note that the value in the column will be used as the new record's 'name', and assumes this is sufficient to create the record."
+msgstr "Cria novos registros se eles não puderem ser encontrados (em vez de falhar na importação). Observe que o valor na coluna será usado como o 'nome' do novo registro, e assume que isso é suficiente para criar o registro."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -194,8 +172,8 @@ msgid "Currency"
 msgstr "Moeda"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:207
-#: code:addons/base_import/models/base_import.py:212
+#: code:addons/base_import/models/base_import.py:215
+#: code:addons/base_import/models/base_import.py:220
 #, python-format
 msgid "Database ID"
 msgstr "ID Banco de Dados"
@@ -247,18 +225,18 @@ msgstr "Adiar o cálculo de pai/filho"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__display_name
 msgid "Display Name"
-msgstr "Nome exibido"
+msgstr "Nome Exibido"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:445
+#: code:addons/base_import/static/src/js/import_action.js:449
 #, python-format
 msgid "Don't import"
 msgstr "Não importar"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:229
+#: code:addons/base_import/static/src/js/import_action.js:228
 #, python-format
 msgid "Dot"
 msgstr "Ponto"
@@ -268,12 +246,12 @@ msgstr "Ponto"
 #: code:addons/base_import/static/src/xml/base_import.xml:87
 #, python-format
 msgid "Download"
-msgstr "Download"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
 msgid "Dt"
-msgstr "Dt"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -283,20 +261,20 @@ msgid "Encoding:"
 msgstr "Codificação:"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:790
+#: code:addons/base_import/models/base_import.py:819
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "Erro de Análise de Data [%s:L%d]:%s"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:289
+#: code:addons/base_import/models/base_import.py:297
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
 msgstr "Ocorreu um erro validando em alguma célula XLS/XLSX file: %s"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:624
+#: code:addons/base_import/static/src/js/import_action.js:629
 #, python-format
 msgid "Everything seems valid."
 msgstr "Tudo parece válido."
@@ -309,8 +287,8 @@ msgid "Excel files are recommended as fields formatting is automatic."
 msgstr "Arquivos Excel são recomendados, pois a formatação dos campos é automática."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:169
-#: code:addons/base_import/models/base_import.py:206
+#: code:addons/base_import/models/base_import.py:177
+#: code:addons/base_import/models/base_import.py:214
 #, python-format
 msgid "External ID"
 msgstr "ID Externo"
@@ -336,8 +314,8 @@ msgid "File Type"
 msgstr "Tipo de Arquivo"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:808
-#: code:addons/base_import/models/base_import.py:814
+#: code:addons/base_import/models/base_import.py:838
+#: code:addons/base_import/models/base_import.py:844
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
 msgstr "O tamanho do arquivo excede o máximo configurado (%s bytes)"
@@ -349,7 +327,7 @@ msgstr "Arquivo para checar e/ou importar, formato binário (não base64)"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:137
+#: code:addons/base_import/static/src/xml/base_import.xml:136
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
 msgstr "Para arquivos CSV, você pode precisar selecionar o delimitador correto."
@@ -362,22 +340,28 @@ msgid "Formatting Options…"
 msgstr "Opções de formatação…"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:791
+#, python-format
+msgid "Found invalid image data, images should be imported as either URLs or base64-encoded data."
+msgstr "Dados de imagem inválidos encontrados, as imagens devem ser importadas como URLs ou dados codificados em base64."
+
+#. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:671
+#: code:addons/base_import/static/src/js/import_action.js:676
 #, python-format
 msgid "Get all possible values"
 msgstr "Obter todos os valores possíveis"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:658
+#: code:addons/base_import/static/src/js/import_action.js:663
 #, python-format
 msgid "Here are the possible values:"
 msgstr "Aqui estão os possíveis valores:"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:138
+#: code:addons/base_import/static/src/xml/base_import.xml:137
 #, python-format
 msgid "Here is the start of the file we could not import:"
 msgstr "Aqui é o início do arquivo que não foi possível importar:"
@@ -401,20 +385,18 @@ msgstr "Aqui é o início do arquivo que não foi possível importar:"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__id
 msgid "ID"
-msgstr "ID"
+msgstr "Id."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:67
 #, python-format
-msgid ""
-"If the file contains\n"
+msgid "If the file contains\n"
 "                the column names, Odoo can try auto-detecting the\n"
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
-msgstr ""
-"se o arquivo contem \n"
-"                os nomes de colunas, Odoo pode tentar auto detectar\n"
+msgstr "se o arquivo contem \n"
+"                os nomes de colunas, MultiERP pode tentar auto detectar\n"
 "                o campo correspondente à coluna. Isto torna simples a\n"
 "                importação, especialmente quando o aquivo contem\n"
 "                muitas colunas."
@@ -423,32 +405,20 @@ msgstr ""
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:45
 #, python-format
-msgid ""
-"If the model uses openchatter, history tracking                             "
-"will set up subscriptions and send notifications"
-"                             during the import, but lead to a slower import."
-msgstr ""
-"Se o modelo usa diálogo aberto, acompanhamento de histórico definirá "
-"assinaturas e enviará notificações durante a importação, mas isso leva a uma"
-" importação mais lenta."
+msgid "If the model uses openchatter, history tracking                             will set up subscriptions and send notifications                             during the import, but lead to a slower import."
+msgstr "Se o modelo usa diálogo aberto, acompanhamento de histórico definirá assinaturas e enviará notificações durante a importação, mas isso leva a uma importação mais lenta."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:54
 #, python-format
-msgid ""
-"If the model uses parent/child relations, computing the                     "
-"parent / child relation occurs on every line, and lead to a slower import."
-"                     Defering it can speed up import."
-msgstr ""
-"Se o modelo usa relações pai / filho, calculando o                          "
-"a relação pai / filho ocorre em todas as linhas e leva a uma importação mais lenta."
-"                     Adiar pode acelerar a importação."
+msgid "If the model uses parent/child relations, computing the                     parent / child relation occurs on every line, and lead to a slower import.                     Defering it can speed up import."
+msgstr "Se o modelo usa relações pai / filho, calculando o                          a relação pai / filho ocorre em todas as linhas e leva a uma importação mais lenta.                     Adiar pode acelerar a importação."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:98
-#: code:addons/base_import/static/src/xml/base_import.xml:169
+#: code:addons/base_import/static/src/xml/base_import.xml:168
 #, python-format
 msgid "Import"
 msgstr "Importar"
@@ -469,31 +439,24 @@ msgstr "Importar Arquivo"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:612
+#: code:addons/base_import/static/src/js/import_action.js:617
 #, python-format
 msgid "Import completed"
 msgstr "Importação concluída"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:136
+#: code:addons/base_import/static/src/xml/base_import.xml:135
 #, python-format
 msgid "Import preview failed due to:"
 msgstr "A visualização da importação falhou devido a:"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:579
+#: code:addons/base_import/static/src/js/import_action.js:583
 #, python-format
-msgid ""
-"Import timed out. Please retry. If you still encounter this issue, the file "
-"may be too big for the system's configuration, try to split it (import less "
-"records per file)."
-msgstr ""
-"A importação teve o seu tempo esgotado. Por favor tente novamente. Se você "
-"ainda encontrar esse problema, o arquivo pode ser muito grande para a "
-"configuração do sistema, tente dividi-lo (importe menos registros por "
-"arquivo)."
+msgid "Import timed out. Please retry. If you still encounter this issue, the file may be too big for the system's configuration, try to split it (import less records per file)."
+msgstr "A importação teve o seu tempo esgotado. Por favor tente novamente. Se você ainda encontrar esse problema, o arquivo pode ser muito grande para a configuração do sistema, tente dividi-lo (importe menos registros por arquivo)."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -560,14 +523,14 @@ msgstr "Última atualização em"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:101
+#: code:addons/base_import/static/src/xml/base_import.xml:100
 #, python-format
 msgid "Load File"
 msgstr "Carregar Arquivo"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:364
+#: code:addons/base_import/static/src/js/import_action.js:367
 #, python-format
 msgid "Load New File"
 msgstr "Carregar Novo Arquivo"
@@ -598,14 +561,14 @@ msgstr "Precisa de Ajuda?"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:231
+#: code:addons/base_import/static/src/js/import_action.js:230
 #, python-format
 msgid "No Separator"
 msgstr "Nenhum Separador"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:513
+#: code:addons/base_import/static/src/js/import_action.js:517
 #, python-format
 msgid "Normal Fields"
 msgstr "Campos normais"
@@ -622,17 +585,10 @@ msgstr "Superior (Conta-pai)"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:514
+#: code:addons/base_import/static/src/js/import_action.js:518
 #, python-format
 msgid "Relation Fields"
 msgstr "Campos Relacionais"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:100
-#, python-format
-msgid "Reload File"
-msgstr "Recarregar Arquivo"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -648,7 +604,7 @@ msgstr "Selecione um CSV ou arquivo Excel para importar."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:212
+#: code:addons/base_import/static/src/js/import_action.js:211
 #, python-format
 msgid "Semicolon"
 msgstr "Ponto e vírgula"
@@ -674,17 +630,17 @@ msgstr "Algum Valor"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:214
+#: code:addons/base_import/static/src/js/import_action.js:213
 #, python-format
 msgid "Space"
 msgstr "Espaço"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:213
+#: code:addons/base_import/static/src/js/import_action.js:212
 #, python-format
 msgid "Tab"
-msgstr "Tab"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -779,11 +735,9 @@ msgstr "Delimitador de Texto:"
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:62
 #, python-format
-msgid ""
-"The first row\n"
+msgid "The first row\n"
 "                 contains the label of the column"
-msgstr ""
-"A primeira linha do\n"
+msgstr "A primeira linha do\n"
 "                arquivo contém os títulos das colunas"
 
 #. module: base_import
@@ -801,21 +755,16 @@ msgid "Track history during import"
 msgstr "Acompanhar histórico durante importação"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:254
+#: code:addons/base_import/models/base_import.py:262
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr ""
-"Não foi possível carregar  o arquivo \"{extension}\": o módulo Python "
-"\"{modname}\" é necessário"
+msgstr "Não foi possível carregar  o arquivo \"{extension}\": o módulo Python \"{modname}\" é necessário"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:255
+#: code:addons/base_import/models/base_import.py:263
 #, python-format
-msgid ""
-"Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr ""
-"Formato de arquivo não suportado \" {} \" , a importação só é permitida para"
-" os seguintes formatos de arquivos: CSV, ODS , XLS e XLSX"
+msgid "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
+msgstr "Formato de arquivo não suportado \" {} \" , a importação só é permitida para os seguintes formatos de arquivos: CSV, ODS , XLS e XLSX"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -845,31 +794,27 @@ msgid "Value2"
 msgstr "Valor2"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:760
+#: code:addons/base_import/models/base_import.py:784
 #, python-format
-msgid ""
-"You can not import images via URL, check with your administrator or support "
-"for the reason."
-msgstr ""
-"Você pode importar imagens via URL, verifique com seu administrador ou "
-"suporte o motivo"
+msgid "You can not import images via URL, check with your administrator or support for the reason."
+msgstr "Você pode importar imagens via URL, verifique com seu administrador ou suporte o motivo"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:631
+#: code:addons/base_import/models/base_import.py:654
 #, python-format
 msgid "You must configure at least one field to import"
 msgstr "Você precisa configurar pelo menos um campo para importar"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:641
+#: code:addons/base_import/static/src/js/import_action.js:646
 #, python-format
 msgid "at row %d"
 msgstr "na linha %d"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:643
+#: code:addons/base_import/static/src/js/import_action.js:648
 #, python-format
 msgid "between rows %d and %d"
 msgstr "entre as linhas% d e% d"
