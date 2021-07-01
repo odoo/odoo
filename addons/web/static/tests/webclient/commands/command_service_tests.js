@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
@@ -7,7 +8,7 @@ import { useCommand } from "@web/webclient/commands/command_hook";
 import { commandService } from "@web/webclient/commands/command_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { click, getFixture, nextTick, triggerHotkey } from "../../helpers/utils";
+import { click, getFixture, nextTick, patchWithCleanup, triggerHotkey } from "../../helpers/utils";
 
 const { Component, mount, tags } = owl;
 const { xml } = tags;
@@ -189,7 +190,6 @@ QUnit.test("access to hotkeys from the command palette", async (assert) => {
         hotkey,
         hotkeyOptions: { altIsOptional: true },
     });
-    await nextTick();
 
     class MyComponent extends Component {
         onClickB() {
@@ -228,7 +228,7 @@ QUnit.test("access to hotkeys from the command palette", async (assert) => {
     triggerHotkey("control+k", true);
     await nextTick();
 
-     // Trigger the command b
+    // Trigger the command b
     triggerHotkey("b");
     await nextTick();
     assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
@@ -256,7 +256,6 @@ QUnit.test("can be searched", async (assert) => {
     for (const name of names) {
         env.services.command.add(name, action);
     }
-    await nextTick();
 
     // Open palette
     triggerHotkey("control+k", true);
@@ -307,7 +306,6 @@ QUnit.test("command categories", async (assert) => {
     env.services.command.add("b", action, { category: "custom" });
     env.services.command.add("c", action);
     env.services.command.add("d", action, { category: "invalid-category" });
-    await nextTick();
 
     // Open palette
     triggerHotkey("control+k", true);
@@ -360,5 +358,71 @@ QUnit.test("data-command-category", async (assert) => {
             ),
         ].map((el) => el.textContent),
         ["Aria Stark", "Bran Stark"]
+    );
+});
+
+QUnit.test("display shortcuts correctly for non-MacOS ", async (assert) => {
+    patchWithCleanup(browser, {
+        navigator: {
+            platform: "OdooOS",
+        },
+    });
+
+    testComponent = await mount(TestComponent, { env, target });
+
+    // Register some commands
+    function action() {}
+    env.services.command.add("a", action);
+    env.services.command.add("b", action, { hotkey: "b" });
+    env.services.command.add("c", action, { hotkey: "c", hotkeyOptions: { altIsOptional: true } });
+    env.services.command.add("d", action, {
+        hotkey: "control+d",
+        hotkeyOptions: { altIsOptional: true },
+    });
+    env.services.command.add("e", action, {
+        hotkey: "control+e",
+        hotkeyOptions: { altIsOptional: false },
+    });
+
+    // Open palette
+    triggerHotkey("control+k", true);
+    await nextTick();
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        ["a", "bALT + B", "cC", "dCONTROL + D", "eALT + CONTROL + E"]
+    );
+});
+
+QUnit.test("display shortcuts correctly for MacOS ", async (assert) => {
+    patchWithCleanup(browser, {
+        navigator: {
+            platform: "Mac",
+        },
+    });
+
+    testComponent = await mount(TestComponent, { env, target });
+
+    // Register some commands
+    function action() {}
+    env.services.command.add("a", action);
+    env.services.command.add("b", action, { hotkey: "b" });
+    env.services.command.add("c", action, { hotkey: "c", hotkeyOptions: { altIsOptional: true } });
+    env.services.command.add("d", action, {
+        hotkey: "control+d",
+        hotkeyOptions: { altIsOptional: true },
+    });
+    env.services.command.add("e", action, {
+        hotkey: "control+e",
+        hotkeyOptions: { altIsOptional: false },
+    });
+
+    // Open palette
+    triggerHotkey("control+k", true);
+    await nextTick();
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        ["a", "bCONTROL + B", "cC", "dCOMMAND + D", "eCONTROL + COMMAND + E"]
     );
 });
