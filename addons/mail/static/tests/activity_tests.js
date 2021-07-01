@@ -3,6 +3,9 @@ odoo.define('mail.activity_view_tests', function (require) {
 
 var ActivityView = require('mail.ActivityView');
 var testUtils = require('web.test_utils');
+const ActivityRenderer = require('mail.ActivityRenderer');
+const domUtils = require('web.dom');
+const { patch, unpatch } = require('web.utils');
 
 var createActionManager = testUtils.createActionManager;
 
@@ -516,6 +519,43 @@ QUnit.test('Activity view: discard an activity creation dialog', async function 
         "Activity Modal should be closed");
 
     actionManager.destroy();
+});
+
+QUnit.test("Activity view: on_destroy_callback doesn't crash", async function (assert) {
+    assert.expect(3);
+
+    const params = {
+        View: ActivityView,
+        model: 'task',
+        data: this.data,
+        arch: '<activity string="Task">' +
+                '<templates>' +
+                    '<div t-name="activity-box">' +
+                        '<field name="foo"/>' +
+                    '</div>' +
+                '</templates>'+
+            '</activity>',
+    };
+
+    patch(ActivityRenderer.prototype, 'test_mounted_unmounted', {
+            mounted() {
+                assert.step('mounted');
+            },
+            willUnmount() {
+                assert.step('willUnmount');
+            }
+    });
+
+    const activity = await createView(params);
+    domUtils.detach([{widget: activity}]);
+
+    assert.verifySteps([
+        'mounted', 
+        'willUnmount'
+    ]);
+
+    unpatch(ActivityRenderer.prototype, 'test_mounted_unmounted');
+    activity.destroy();
 });
 
 });
