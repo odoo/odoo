@@ -66,6 +66,27 @@ export const Commands = {
     },
 };
 
+function validateModel(value) {
+    if (typeof value !== "string" || value.length === 0) {
+        throw new Error(`Invalid model name: ${value}`);
+    }
+}
+function validatePrimitiveList(name, type, value) {
+    if (!Array.isArray(value) || value.some((val) => typeof val !== type)) {
+        throw new Error(`Invalid ${name} list: ${value}`);
+    }
+}
+function validateObject(name, obj) {
+    if (typeof obj !== "object" || obj === null || Array.isArray(obj)) {
+        throw new Error(`${name} should be an object`);
+    }
+}
+function validateArray(name, array) {
+    if (!Array.isArray(array)) {
+        throw new Error(`${name} should be an array`);
+    }
+}
+
 class ORM {
     constructor(rpc, user) {
         this.rpc = rpc;
@@ -78,6 +99,7 @@ class ORM {
     }
 
     call(model, method, args = [], kwargs = {}) {
+        validateModel(model);
         let url = `/web/dataset/call_kw/${model}/${method}`;
         const fullContext = Object.assign({}, this.user.context, kwargs.context || {});
         const fullKwargs = Object.assign({}, kwargs, { context: fullContext });
@@ -91,14 +113,20 @@ class ORM {
     }
 
     create(model, state, ctx) {
+        validateObject("state", state);
         return this.call(model, "create", [state], { context: ctx });
     }
 
     read(model, ids, fields, ctx) {
+        validatePrimitiveList("ids", "number", ids);
+        validatePrimitiveList("fields", "string", fields);
         return this.call(model, "read", [ids, fields], { context: ctx });
     }
 
     readGroup(model, domain, fields, groupby, options = {}, ctx = {}) {
+        validatePrimitiveList("fields", "string", fields);
+        validatePrimitiveList("groupby", "string", groupby);
+        validateArray("domain", domain);
         const kwargs = {
             domain,
             groupby,
@@ -110,6 +138,7 @@ class ORM {
     }
 
     search(model, domain, options = {}, ctx = {}) {
+        validateArray("domain", domain);
         const kwargs = {
             context: ctx,
         };
@@ -118,22 +147,29 @@ class ORM {
     }
 
     searchRead(model, domain, fields, options = {}, ctx = {}) {
+        validateArray("domain", domain);
+        validatePrimitiveList("fields", "string", fields);
         const kwargs = { context: ctx, domain, fields };
         assignOptions(kwargs, options, ["offset", "limit", "order"]);
         return this.call(model, "search_read", [], kwargs);
     }
 
     unlink(model, ids, ctx) {
+        validatePrimitiveList("ids", "number", ids);
         return this.call(model, "unlink", [ids], { context: ctx });
     }
 
     webSearchRead(model, domain, fields, options = {}, ctx = {}) {
+        validateArray("domain", domain);
+        validatePrimitiveList("fields", "string", fields);
         const kwargs = { context: ctx, domain, fields };
         assignOptions(kwargs, options, ["offset", "limit", "order"]);
         return this.call(model, "web_search_read", [], kwargs);
     }
 
     write(model, ids, data, ctx) {
+        validatePrimitiveList("ids", "number", ids);
+        validateObject("data", data);
         return this.call(model, "write", [ids, data], { context: ctx });
     }
 }
