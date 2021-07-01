@@ -119,7 +119,12 @@ class ORM {
 
     read(model, ids, fields, ctx) {
         validatePrimitiveList("ids", "number", ids);
-        validatePrimitiveList("fields", "string", fields);
+        if (fields) {
+            validatePrimitiveList("fields", "string", fields);
+        }
+        if (!ids.length) {
+            return Promise.resolve([]);
+        }
         return this.call(model, "read", [ids, fields], { context: ctx });
     }
 
@@ -148,7 +153,9 @@ class ORM {
 
     searchRead(model, domain, fields, options = {}, ctx = {}) {
         validateArray("domain", domain);
-        validatePrimitiveList("fields", "string", fields);
+        if (fields) {
+            validatePrimitiveList("fields", "string", fields);
+        }
         const kwargs = { context: ctx, domain, fields };
         assignOptions(kwargs, options, ["offset", "limit", "order"]);
         return this.call(model, "search_read", [], kwargs);
@@ -156,6 +163,9 @@ class ORM {
 
     unlink(model, ids, ctx) {
         validatePrimitiveList("ids", "number", ids);
+        if (!ids.length) {
+            return true;
+        }
         return this.call(model, "unlink", [ids], { context: ctx });
     }
 

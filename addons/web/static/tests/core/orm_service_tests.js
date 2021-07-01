@@ -261,9 +261,9 @@ QUnit.test("silent mode", async (assert) => {
     orm.call("my_model", "my_method");
     orm.silent.call("my_model", "my_method");
     orm.call("my_model", "my_method");
-    orm.read("my_model", [], []);
-    orm.silent.read("my_model", [], []);
-    orm.read("my_model", [], []);
+    orm.read("my_model", [1], []);
+    orm.silent.read("my_model", [1], []);
+    orm.read("my_model", [1], []);
 
     assert.verifySteps([
         "/web/dataset/call_kw/my_model/my_method",
@@ -290,4 +290,28 @@ QUnit.test("validate some obviously wrong calls", async (assert) => {
     } catch (error) {
         assert.strictEqual(error.message, "Invalid ids list: false");
     }
+});
+
+QUnit.test("optimize read and unlink if no ids", async (assert) => {
+    serviceRegistry.add("rpc", {
+        start() {
+            return async (route) => {
+                assert.step(route);
+            };
+        },
+    });
+    const env = await makeTestEnv();
+    const orm = env.services.orm;
+
+    await orm.read("my_model", [1], []);
+    assert.verifySteps(["/web/dataset/call_kw/my_model/read"]);
+
+    await orm.read("my_model", [], []);
+    assert.verifySteps([]);
+
+    await orm.unlink("my_model", [1], {});
+    assert.verifySteps(["/web/dataset/call_kw/my_model/unlink"]);
+
+    await orm.unlink("my_model", [], {});
+    assert.verifySteps([]);
 });
