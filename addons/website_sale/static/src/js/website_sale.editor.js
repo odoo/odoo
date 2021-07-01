@@ -56,6 +56,7 @@ var options = require('web_editor.snippets.options');
 var publicWidget = require('web.public.widget');
 const Wysiwyg = require('web_editor.wysiwyg');
 const {qweb, _t} = require('web.core');
+const {Markup} = require('web.utils');
 
 Wysiwyg.include({
     custom_events: Object.assign(Wysiwyg.prototype.custom_events, {
@@ -79,7 +80,10 @@ Wysiwyg.include({
                 fields: ['id', 'html', 'bg_color', 'text_color', 'html_class'],
             });
         }
-        this.ribbons = Object.fromEntries(ribbons.map(ribbon => [ribbon.id, ribbon]));
+        this.ribbons = Object.fromEntries(ribbons.map(ribbon => {
+            ribbon.html = Markup(ribbon.html);
+            return [ribbon.id, ribbon];
+        }));
         this.originalRibbons = Object.assign({}, this.ribbons);
         this.productTemplatesRibbons = [];
         this.deletedRibbonClasses = '';

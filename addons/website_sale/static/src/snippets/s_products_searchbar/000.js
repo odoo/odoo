@@ -5,6 +5,7 @@ const concurrency = require('web.concurrency');
 const publicWidget = require('web.public.widget');
 
 const { qweb } = require('web.core');
+const { Markup } = require('web.utils');
 
 /**
  * @todo maybe the custom autocomplete logic could be extract to be reusable
@@ -56,8 +57,8 @@ publicWidget.registry.productsSearchBar = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _fetch: function () {
-        return this._rpc({
+    async _fetch() {
+        const res = await this._rpc({
             route: '/shop/products/autocomplete',
             params: {
                 'term': this.$input.val(),
@@ -70,6 +71,10 @@ publicWidget.registry.productsSearchBar = publicWidget.Widget.extend({
                 },
             },
         });
+        if (this.displayDescription) {
+            res.products.forEach(p => {p.description_sale = Markup(p.description_sale);});
+        }
+        return res;
     },
     /**
      * @private
