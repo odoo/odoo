@@ -257,16 +257,22 @@ class AccountPayment(models.Model):
         check.message_post(body=msg)
         check.third_check_state = to_operation
 
+    @api.model
+    def _get_trigger_fields_to_sincronize(self):
+        res = super()._get_trigger_fields_to_sincronize()
+        return res + ('check_payment_date', 'check_number')
+
     def _prepare_move_line_default_vals(self, write_off_line_vals=None):
         """ Add check name and operation on liquidity line """
         res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
-        if self.check_id:
+        check = self if self.payment_method_id.code == 'new_third_checks' else self.check_id
+        if check:
             from_operation, to_operation, domain = self._get_checks_operations()
-            document_name = _('Check %s %s') % (self.check_id.name, to_operation)
+            document_name = _('Check %s %s') % (check.check_number, to_operation)
             res[0].update({
                 'name': self.env['account.move.line']._get_default_line_name(
                     document_name, self.amount, self.currency_id, self.date, partner=self.partner_id),
-                'date_maturity': self.check_id.check_payment_date or self.date,
+                'date_maturity': check.check_payment_date or self.date,
             })
         return res
 
