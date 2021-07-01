@@ -208,7 +208,7 @@ class OdooSuite(unittest.suite.TestSuite):
                                         info=exc)
 
         def _createClassOrModuleLevelException(self, result, exc, method_name, parent, info=None):
-            errorName = f'{method_name} ({parent})'
+            errorName = '%s (%s)' % (method_name, parent)
             self._addClassOrModuleLevelException(result, exc, errorName, info)
 
         def _addClassOrModuleLevelException(self, result, exception, errorName, info=None):
