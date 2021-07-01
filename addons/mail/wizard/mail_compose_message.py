@@ -284,7 +284,7 @@ class MailComposer(models.TransientModel):
                             ActiveModel.browse(res_id).message_post(**post_params)
 
                 if wizard.composition_mode == 'mass_mail':
-                    batch_mails.send(auto_commit=auto_commit)
+                    batch_mails.mark_outgoing()
 
     def get_mail_values(self, res_ids):
         """Generate the values that will be used by send_mail to create mail_messages
