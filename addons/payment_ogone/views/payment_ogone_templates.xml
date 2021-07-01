@@ -43,7 +43,7 @@
     <template id="directlink_feedback" name="Payment processing page">
         <t t-call="web.layout">
             <t t-call-assets="web.assets_common"/>
-            <t t-raw="redirect_html"/>
+            <t t-out="redirect_html"/>
         </t>
     </template>
 
