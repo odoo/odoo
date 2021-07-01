@@ -23,8 +23,9 @@
                         </t>
                     </div>
                     <div class="o_carousel_product_card_footer card-footer d-flex align-items-center">
-                        <div class="d-block font-weight-bold" t-esc="data['price']"
-                            t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        <div>
+                            <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
+                        </div>
                         <button type="button" role="button" class="btn btn-primary js_add_cart ml-auto" title="Add to Cart">
                             <i class="fa fa-fw fa-shopping-cart"/>
                         </button>
@@ -50,8 +51,9 @@
                         </t>
                     </div>
                     <div class="o_carousel_product_card_footer card-footer d-flex align-items-center">
-                        <div class="card-text text-center" t-esc="data['price']"
-                            t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        <div>
+                            <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
+                        </div>
                         <a class="btn btn-primary ml-auto" t-att-href="record.website_url">
                             <i class="fa fa-fw fa-eye"/>
                         </a>
@@ -80,8 +82,9 @@
                     <a class="o_carousel_product_img_link" t-att-href="record.website_url">
                         <img class="card-img-top p-3" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                     </a>
-                    <div class="card-text text-center" t-esc="data['price']"
-                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                    <div class="card-text text-center pb-1">
+                        <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
+                    </div>
                 </div>
             </t>
         </template>
@@ -97,6 +100,13 @@
                     <div class="h6 card-footer mb-1 px-1 text-center text-truncate" t-field="record.display_name"/>
                 </div>
             </t>
+        </template>
+
+        <template id="price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
+            <span t-esc="data['price']" class="font-weight-bold"
+                  t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+            <del t-if="data['has_discounted_price']" class="text-danger ml-1 h6" style="white-space: nowrap;"
+                 t-esc="data['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
         </template>
     </data>
 </odoo>
