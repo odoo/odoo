@@ -235,6 +235,27 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(leave.date_to, datetime(2019, 5, 6, 5, 0, 0), "It should have been localized before saving in UTC")
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_timezone_company_validated(self):
+        """ Create a leave request for a company in another timezone and validate it """
+        self.env.user.tz = 'NZ' # GMT+12
+        company = self.env['res.company'].create({'name': "Hergé"})
+        employee = self.env['hr.employee'].create({'name': "Remi", 'company_id': company.id})
+        leave_form = Form(self.env['hr.leave'], view='hr_holidays.hr_leave_view_form_manager')
+        leave_form.holiday_type = 'company'
+        leave_form.mode_company_id = company
+        leave_form.holiday_status_id = self.holidays_type_1
+        leave_form.request_date_from = date(2019, 5, 6)
+        leave_form.request_date_to = date(2019, 5, 6)
+        leave = leave_form.save()
+        leave.state = 'confirm'
+        leave.action_validate()
+        employee_leave = self.env['hr.leave'].search([('employee_id', '=', employee.id)])
+        self.assertEqual(
+            employee_leave.request_date_from, date(2019, 5, 6),
+            "Timezone should be kept between company and employee leave"
+        )
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_timezone_department_leave_request(self):
         """ Create a leave request for a department in another timezone """
         company = self.env['res.company'].create({'name': "Hergé"})
