@@ -261,9 +261,9 @@ QUnit.test("silent mode", async (assert) => {
     orm.call("my_model", "my_method");
     orm.silent.call("my_model", "my_method");
     orm.call("my_model", "my_method");
-    orm.read("my_model");
-    orm.silent.read("my_model");
-    orm.read("my_model");
+    orm.read("my_model", [], []);
+    orm.silent.read("my_model", [], []);
+    orm.read("my_model", [], []);
 
     assert.verifySteps([
         "/web/dataset/call_kw/my_model/my_method",
@@ -273,4 +273,21 @@ QUnit.test("silent mode", async (assert) => {
         "/web/dataset/call_kw/my_model/read (silent)",
         "/web/dataset/call_kw/my_model/read",
     ]);
+});
+
+QUnit.test("validate some obviously wrong calls", async (assert) => {
+    assert.expect(2);
+    const [query, rpc] = makeFakeRPC();
+    serviceRegistry.add("rpc", rpc);
+    const env = await makeTestEnv();
+    try {
+        await env.services.orm.read(false, [3], ["id", "descr"]);
+    } catch (error) {
+        assert.strictEqual(error.message, "Invalid model name: false");
+    }
+    try {
+        await env.services.orm.read("res.partner", false, ["id", "descr"]);
+    } catch (error) {
+        assert.strictEqual(error.message, "Invalid ids list: false");
+    }
 });
