@@ -8,8 +8,8 @@ from datetime import timedelta, datetime
 from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, AccessError, ValidationError, RedirectWarning
-from odoo.osv.expression import OR
+from odoo.exceptions import UserError, ValidationError, RedirectWarning
+from odoo.osv import expression
 
 from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
@@ -649,7 +649,14 @@ class Task(models.Model):
     _name = "project.task"
     _description = "Task"
     _date_name = "date_assign"
-    _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin']
+    _inherit = [
+        'portal.mixin',
+        'mail.thread.customer',
+        'mail.thread.cc',
+        'mail.activity.mixin',
+        'rating.mixin',
+    ]
+    _mail_field_email = 'email_from'
     _mail_post_access = 'read'
     _order = "priority desc, sequence, id desc"
     _check_company_auto = True
@@ -1243,7 +1250,7 @@ class Task(models.Model):
             recurrence_domain = []
             if recurrence_update == 'subsequent':
                 for task in self:
-                    recurrence_domain = OR([recurrence_domain, ['&', ('recurrence_id', '=', task.recurrence_id.id), ('create_date', '>=', task.create_date)]])
+                    recurrence_domain = expression.OR([recurrence_domain, ['&', ('recurrence_id', '=', task.recurrence_id.id), ('create_date', '>=', task.create_date)]])
             else:
                 recurrence_domain = [('recurrence_id', 'in', self.recurrence_id.ids)]
             tasks |= self.env['project.task'].search(recurrence_domain)
@@ -1377,7 +1384,7 @@ class Task(models.Model):
         return [x for x in email_list if x.split('@')[0] not in aliases]
 
     @api.model
-    def message_new(self, msg, custom_values=None):
+    def message_new(self, msg_dict, custom_values=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
             This override updates the document according to the email.
@@ -1386,43 +1393,29 @@ class Task(models.Model):
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
         # found.
-        create_context = dict(self.env.context or {})
-        create_context['default_user_id'] = False
-        if custom_values is None:
-            custom_values = {}
         defaults = {
-            'name': msg.get('subject') or _("No Subject"),
-            'email_from': msg.get('from'),
+            'name': msg_dict.get('subject') or _("No Subject"),
             'planned_hours': 0.0,
-            'partner_id': msg.get('author_id')
         }
-        defaults.update(custom_values)
+        if custom_values:
+            defaults.update(custom_values)
 
-        task = super(Task, self.with_context(create_context)).message_new(msg, custom_values=defaults)
-        email_list = task.email_split(msg)
+        task = super(Task, self.with_context(default_user_id=False)).message_new(msg_dict, custom_values=defaults)
+
+        email_list = task.email_split(msg_dict)
         partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=task, force_create=False) if p]
         task.message_subscribe(partner_ids)
         return task
 
-    def message_update(self, msg, update_vals=None):
+    def message_update(self, msg_dict, update_vals=None):
         """ Override to update the task according to the email. """
-        email_list = self.email_split(msg)
+        email_list = self.email_split(msg_dict)
         partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=self, force_create=False) if p]
         self.message_subscribe(partner_ids)
-        return super(Task, self).message_update(msg, update_vals=update_vals)
+        return super(Task, self).message_update(msg_dict, update_vals=update_vals)
 
-    def _message_get_suggested_recipients(self):
-        recipients = super(Task, self)._message_get_suggested_recipients()
-        for task in self:
-            if task.partner_id:
-                reason = _('Customer Email') if task.partner_id.email else _('Customer')
-                task._message_add_suggested_recipient(recipients, partner=task.partner_id, reason=reason)
-            elif task.email_from:
-                task._message_add_suggested_recipient(recipients, email=task.email_from, reason=_('Customer Email'))
-        return recipients
-
-    def _notify_email_header_dict(self):
-        headers = super(Task, self)._notify_email_header_dict()
+    def _notify_email_headers(self):
+        headers = super(Task, self)._notify_email_headers()
         if self.project_id:
             current_objects = [h for h in headers.get('X-Odoo-Objects', '').split(',') if h]
             current_objects.insert(0, 'project.project-%s, ' % self.project_id.id)
@@ -1431,22 +1424,17 @@ class Task(models.Model):
             headers['X-Odoo-Tags'] = ','.join(self.tag_ids.mapped('name'))
         return headers
 
+    def _message_post_update_customer_filter(self):
+        return expression.AND([
+            super(Task, self)._message_post_update_customer_filter(),
+            [('stage_id.fold', '=', False)]
+        ])
+
     def _message_post_after_hook(self, message, msg_vals):
         if message.attachment_ids and not self.displayed_image_id:
             image_attachments = message.attachment_ids.filtered(lambda a: a.mimetype == 'image')
             if image_attachments:
                 self.displayed_image_id = image_attachments[0]
-
-        if self.email_from and not self.partner_id:
-            # we consider that posting a message with a specified recipient (not a follower, a specific one)
-            # on a document without customer means that it was created through the chatter using
-            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
-            if new_partner:
-                self.search([
-                    ('partner_id', '=', False),
-                    ('email_from', '=', new_partner.email),
-                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
         return super(Task, self)._message_post_after_hook(message, msg_vals)
 
     def action_assign_to_me(self):

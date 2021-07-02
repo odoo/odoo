@@ -84,6 +84,20 @@ class BaseModel(models.AbstractModel):
             res[record.id] = {'partner_ids': recipient_ids, 'email_to': email_to, 'email_cc': email_cc}
         return res
 
+
+    # ------------------------------------------------------------
+    # GATEWAY: NOTIFICATION
+    # ------------------------------------------------------------
+
+    def _notify_email_headers(self):
+        """ Generate the email headers based on record """
+        if not self:
+            return {}
+        self.ensure_one()
+        return {
+            'X-Odoo-Objects': "%s-%s" % (self._name, self.id),
+        }
+
     def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
         """ Returns the preferred reply-to email address when replying to a thread
         on documents. This method is a generic implementation available for
@@ -193,21 +207,3 @@ class BaseModel(models.AbstractModel):
         activity_box = E.div(field, {'t-name': "activity-box"})
         templates = E.templates(activity_box)
         return E.activity(templates, string=self._description)
-
-    # ------------------------------------------------------------
-    # GATEWAY: NOTIFICATION
-    # ------------------------------------------------------------
-
-    def _notify_email_headers(self):
-        """
-            Generate the email headers based on record
-        """
-        if not self:
-            return {}
-        self.ensure_one()
-        return repr(self._notify_email_header_dict())
-
-    def _notify_email_header_dict(self):
-        return {
-            'X-Odoo-Objects': "%s-%s" % (self._name, self.id),
-        }

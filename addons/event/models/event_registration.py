@@ -5,13 +5,14 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.tools import format_datetime
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import ValidationError
+from odoo.osv import expression
 
 
 class EventRegistration(models.Model):
     _name = 'event.registration'
     _description = 'Event Registration'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread.customer', 'mail.activity.mixin']
     _order = 'id desc'
 
     # event
@@ -266,23 +267,6 @@ class EventRegistration(models.Model):
     # MAILING / GATEWAY
     # ------------------------------------------------------------
 
-    def _message_get_suggested_recipients(self):
-        recipients = super(EventRegistration, self)._message_get_suggested_recipients()
-        public_users = self.env['res.users'].sudo()
-        public_groups = self.env.ref("base.group_public", raise_if_not_found=False)
-        if public_groups:
-            public_users = public_groups.sudo().with_context(active_test=False).mapped("users")
-        try:
-            for attendee in self:
-                is_public = attendee.sudo().with_context(active_test=False).partner_id.user_ids in public_users if public_users else False
-                if attendee.partner_id and not is_public:
-                    attendee._message_add_suggested_recipient(recipients, partner=attendee.partner_id, reason=_('Customer'))
-                elif attendee.email:
-                    attendee._message_add_suggested_recipient(recipients, email=attendee.email, reason=_('Customer Email'))
-        except AccessError:     # no read access rights -> ignore suggested recipients
-            pass
-        return recipients
-
     def _message_get_default_recipients(self):
         # Prioritize registration email over partner_id, which may be shared when a single
         # partner booked multiple seats
@@ -292,19 +276,11 @@ class EventRegistration(models.Model):
             'email_cc': False}
             for r in self}
 
-    def _message_post_after_hook(self, message, msg_vals):
-        if self.email and not self.partner_id:
-            # we consider that posting a message with a specified recipient (not a follower, a specific one)
-            # on a document without customer means that it was created through the chatter using
-            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email)
-            if new_partner:
-                self.search([
-                    ('partner_id', '=', False),
-                    ('email', '=', new_partner.email),
-                    ('state', 'not in', ['cancel']),
-                ]).write({'partner_id': new_partner.id})
-        return super(EventRegistration, self)._message_post_after_hook(message, msg_vals)
+    def _message_post_update_customer_filter(self):
+        return expression.AND([
+            super(EventRegistration, self)._message_post_update_customer_filter(),
+            [('state', '!=', 'cancel')],
+        ])
 
     # ------------------------------------------------------------
     # TOOLS

@@ -175,7 +175,6 @@ function factory(dependencies) {
                 default_model: this.thread.model,
                 default_partner_ids: this.recipients.map(partner => partner.id),
                 default_res_id: this.thread.id,
-                mail_post_autofollow: true,
             };
 
             const action = {
@@ -251,11 +250,6 @@ function factory(dependencies) {
                     Object.assign(postData, {
                         subtype_xmlid: this.isLog ? 'mail.mt_note' : 'mail.mt_comment',
                     });
-                    if (!this.isLog) {
-                        postData.context = {
-                            mail_post_autofollow: true,
-                        };
-                    }
                     messageId = await this.async(() =>
                         this.env.models['mail.thread'].performRpcMessagePost({
                             postData,

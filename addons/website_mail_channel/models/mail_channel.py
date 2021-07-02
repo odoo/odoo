@@ -10,8 +10,8 @@ from odoo.addons.http_routing.models.ir_http import slug
 class MailGroup(models.Model):
     _inherit = 'mail.channel'
 
-    def _notify_email_header_dict(self):
-        headers = super(MailGroup, self)._notify_email_header_dict()
+    def _notify_email_headers(self):
+        headers = super(MailGroup, self)._notify_email_headers()
         base_url = self.get_base_url()
         headers['List-Archive'] = '<%s/groups/%s>' % (base_url, slug(self))
         headers['List-Subscribe'] = '<%s/groups>' % (base_url)

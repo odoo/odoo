@@ -330,7 +330,7 @@ class MailComposer(models.TransientModel):
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
                 record = self.env[self.model].browse(res_id)
-                mail_values['headers'] = record._notify_email_headers()
+                mail_values['headers'] = repr(record._notify_email_headers())
                 # keep a copy unless specifically requested, reset record name (avoid browsing records)
                 mail_values.update(notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail

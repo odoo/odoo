@@ -220,6 +220,9 @@ class Partner(models.Model):
         'Share Partner', compute='_compute_partner_share', store=True,
         help="Either customer (not a user), either shared user. Indicated the current partner is a customer without "
              "access or with a limited access created for sharing data.")
+    partner_public = fields.Boolean(
+        'Partner of a Public User', compute='_compute_partner_public',
+        help="Partner linked to only public users. Used when we want to deal with real customers or users.")
     contact_address = fields.Char(compute='_compute_contact_address', string='Complete Address')
 
     # technical field used for managing commercial fields
@@ -295,6 +298,14 @@ class Partner(models.Model):
             super_partner.partner_share = False
         for partner in self - super_partner:
             partner.partner_share = not partner.user_ids or not any(not user.share for user in partner.user_ids)
+
+    @api.depends('user_ids.share', 'user_ids.active')
+    def _compute_partner_public(self):
+        super_partner = self.env['res.users'].browse(SUPERUSER_ID).partner_id
+        if super_partner in self:
+            super_partner.partner_public = False
+        for partner in (self - super_partner).with_context(active_test=False):
+            partner.partner_public = partner.user_ids and all(user._is_public() for user in partner.user_ids)
 
     @api.depends('vat', 'company_id')
     def _compute_same_vat_partner_id(self):

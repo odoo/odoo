@@ -2461,13 +2461,15 @@ class AccountMove(models.Model):
             msg_dict['body'] = '<div><div><h3>%s</h3></div>%s</div>' % (msg_dict['subject'], msg_dict['body'])
 
         # Create the invoice.
-        values = {
+        defaults = dict(
+            custom_values or {}, **{
             'name': '/',  # we have to give the name otherwise it will be set to the mail's subject
             'invoice_source_email': from_mail_addresses[0],
             'partner_id': partners and partners[0].id or False,
-        }
+        })
+
         move_ctx = self.with_context(default_move_type=custom_values['move_type'], default_journal_id=custom_values['journal_id'])
-        move = super(AccountMove, move_ctx).message_new(msg_dict, custom_values=values)
+        move = super(AccountMove, move_ctx).message_new(msg_dict, custom_values=defaults)
         move._compute_name()  # because the name is given, we need to recompute in case it is the first invoice of the journal
 
         # Assign followers.

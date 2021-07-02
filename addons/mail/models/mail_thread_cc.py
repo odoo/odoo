@@ -12,34 +12,38 @@ class MailCCMixin(models.AbstractModel):
     email_cc = fields.Char('Email cc', help='List of cc from incoming emails.')
 
     def _mail_cc_sanitized_raw_dict(self, cc_string):
-        '''return a dict of sanitize_email:raw_email from a string of cc'''
+        """ Returns a dict of sanitize_email:r aw_email from a string that should
+        contain emails. """
         if not cc_string:
             return {}
-        return {tools.email_normalize(email): tools.formataddr((name, tools.email_normalize(email)))
-            for (name, email) in tools.email_split_tuples(cc_string)}
+        return {
+            tools.email_normalize(email): tools.formataddr((name, tools.email_normalize(email)))
+            for (name, email) in tools.email_split_tuples(cc_string)
+        }
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         if custom_values is None:
             custom_values = {}
-        cc_values = {
-            'email_cc': ", ".join(self._mail_cc_sanitized_raw_dict(msg_dict.get('cc')).values()),
+        defaults = {
+            "email_cc": ", ".join(self._mail_cc_sanitized_raw_dict(msg_dict.get('cc')).values()),
         }
-        cc_values.update(custom_values)
-        return super(MailCCMixin, self).message_new(msg_dict, cc_values)
+        if custom_values:
+            defaults.update(custom_values)
+        return super(MailCCMixin, self).message_new(msg_dict, custom_values=defaults)
 
     def message_update(self, msg_dict, update_vals=None):
-        '''Adds cc email to self.email_cc while trying to keep email as raw as possible but unique'''
-        if update_vals is None:
-            update_vals = {}
-        cc_values = {}
+        """ Adds cc email to self.email_cc while trying to keep email as raw as
+        possible but unique. """
+        values = {}
         new_cc = self._mail_cc_sanitized_raw_dict(msg_dict.get('cc'))
         if new_cc:
             old_cc = self._mail_cc_sanitized_raw_dict(self.email_cc)
             new_cc.update(old_cc)
-            cc_values['email_cc'] = ", ".join(new_cc.values())
-        cc_values.update(update_vals)
-        return super(MailCCMixin, self).message_update(msg_dict, cc_values)
+            values["email_cc"] = ", ".join(new_cc.values())
+        if update_vals:
+            values.update(update_vals)
+        return super(MailCCMixin, self).message_update(msg_dict, update_vals=values)
 
     def _message_get_suggested_recipients(self):
         recipients = super(MailCCMixin, self)._message_get_suggested_recipients()

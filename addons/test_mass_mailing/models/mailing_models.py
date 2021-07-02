@@ -29,7 +29,7 @@ class MailingBLacklist(models.Model):
     _description = 'Mailing Blacklist Enabled'
     _name = 'mailing.test.blacklist'
     _inherit = ['mail.thread.blacklist']
-    _primary_email = 'email_from'
+    _mail_field_email = 'email_from'
 
     name = fields.Char()
     email_from = fields.Char()
@@ -43,7 +43,7 @@ class MailingOptOut(models.Model):
     _description = 'Mailing Blacklist / Optout Enabled'
     _name = 'mailing.test.optout'
     _inherit = ['mail.thread.blacklist']
-    _primary_email = 'email_from'
+    _mail_field_email = 'email_from'
 
     name = fields.Char()
     email_from = fields.Char()
@@ -76,7 +76,7 @@ class MailingPerformanceBL(models.Model):
     _name = 'mailing.performance.blacklist'
     _description = 'Mailing: blacklist performance'
     _inherit = ['mail.thread.blacklist']
-    _primary_email = 'email_from'  # blacklist field to check
+    _mail_field_email = 'email_from'  # blacklist field to check
 
     name = fields.Char()
     email_from = fields.Char()

@@ -16,7 +16,13 @@ class Track(models.Model):
     _name = "event.track"
     _description = 'Event Track'
     _order = 'priority, date'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'website.seo.metadata', 'website.published.mixin']
+    _inherit = [
+        'mail.thread.customer',
+        'mail.activity.mixin',
+        'website.seo.metadata',
+        'website.published.mixin',
+    ]
+    _mail_field_email = 'contact_email'
 
     @api.model
     def _get_default_stage_id(self):
@@ -440,37 +446,18 @@ class Track(models.Model):
         }
 
     def _message_get_suggested_recipients(self):
+        """ Fallback: contact_email and partner_id not set -> suggest partner_email """
         recipients = super(Track, self)._message_get_suggested_recipients()
         for track in self:
-            if track.partner_id:
-                if track.partner_id not in recipients:
-                    track._message_add_suggested_recipient(recipients, partner=track.partner_id, reason=_('Contact'))
-            else:
-                #  Priority: contact information then speaker information
-                if track.contact_email and track.contact_email != track.partner_id.email:
-                    track._message_add_suggested_recipient(recipients, email=track.contact_email, reason=_('Contact Email'))
-                if not track.contact_email and track.partner_email and track.partner_email != track.partner_id.email:
-                    track._message_add_suggested_recipient(recipients, email=track.partner_email, reason=_('Speaker Email'))
+            if not track.partner_id and not track.contact_email and track.partner_email and track.partner_email != track.partner_id.email:
+                track._message_add_suggested_recipient(recipients, email=track.partner_email, reason=_('Speaker Email'))
         return recipients
 
-    def _message_post_after_hook(self, message, msg_vals):
-        #  OVERRIDE
-        #  If no partner is set on track when sending a message, then we create one from suggested contact selected.
-        #  If one or more have been created from chatter (Suggested Recipients) we search for the expected one and write the partner_id on track.
-        if msg_vals.get('partner_ids') and not self.partner_id:
-            #  Contact(s) created from chatter set on track : we verify if at least one is the expected contact
-            #  linked to the track. (created from contact_email if any, then partner_email if any)
-            main_email = self.contact_email or self.partner_email
-            if main_email:
-                new_partner = message.partner_ids.filtered(lambda partner: partner.email == main_email)
-                if new_partner:
-                    main_email_string = 'contact_email' if self.contact_email else 'partner_email'
-                    self.search([
-                        ('partner_id', '=', False),
-                        (main_email_string, '=', new_partner.email),
-                        ('stage_id.is_cancel', '=', False),
-                    ]).write({'partner_id': new_partner.id})
-        return super(Track, self)._message_post_after_hook(message, msg_vals)
+    def _message_post_update_customer_filter(self):
+        return expression.AND([
+            super(Track, self)._message_post_update_customer_filter(),
+            [('stage_id.is_cancel', '=', False)]
+        ])
 
     def _track_template(self, changes):
         res = super(Track, self)._track_template(changes)

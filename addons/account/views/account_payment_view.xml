@@ -407,7 +407,6 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
             <field name="context" eval="{
-                'mail_post_autofollow': True,
                 'default_composition_mode': 'comment',
                 'default_use_template': True,
                 'default_template_id': ref('account.mail_template_data_payment_receipt'),
@@ -424,7 +423,6 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
             <field name="context" eval="{
-                'mail_post_autofollow': True,
                 'default_composition_mode': 'mass_mail',
                 'default_use_template': True,
                 'default_template_id': ref('account.mail_template_data_payment_receipt'),

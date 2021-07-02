@@ -6,6 +6,7 @@ from random import randint
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Normal'),
@@ -106,13 +107,19 @@ class Applicant(models.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = [
+        'mail.thread.customer',
+        'mail.thread.cc',
+        'mail.activity.mixin',
+        'utm.mixin'
+    ]
+    _mail_field_email = 'email_from'
     _mailing_enabled = True
 
     name = fields.Char("Subject / Application Name", required=True, help="Email subject for applications sent via email")
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Html("Description")
-    email_from = fields.Char("Email", size=128, help="Applicant email", compute='_compute_partner_phone_email',
+    email_from = fields.Char("Email", size=128, help="Applicant email", compute='_compute_partner_email',
         inverse='_inverse_partner_email', store=True)
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact", copy=False)
@@ -140,9 +147,9 @@ class Applicant(models.Model):
     salary_expected = fields.Float("Expected Salary", group_operator="avg", help="Salary Expected by Applicant", tracking=True)
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
     partner_name = fields.Char("Applicant's Name")
-    partner_phone = fields.Char("Phone", size=32, compute='_compute_partner_phone_email',
+    partner_phone = fields.Char("Phone", size=32, compute='_compute_partner_phone',
         inverse='_inverse_partner_phone', store=True)
-    partner_mobile = fields.Char("Mobile", size=32, compute='_compute_partner_phone_email',
+    partner_mobile = fields.Char("Mobile", size=32, compute='_compute_partner_mobile',
         inverse='_inverse_partner_mobile', store=True)
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
     department_id = fields.Many2one(
@@ -267,11 +274,19 @@ class Applicant(models.Model):
             applicant.user_id = applicant.job_id.user_id.id or self.env.uid
 
     @api.depends('partner_id')
-    def _compute_partner_phone_email(self):
+    def _compute_partner_email(self):
+        for applicant in self:
+            applicant.email_from = applicant.partner_id.email
+
+    @api.depends('partner_id')
+    def _compute_partner_mobile(self):
+        for applicant in self:
+            applicant.partner_mobile = applicant.partner_id.mobile
+
+    @api.depends('partner_id')
+    def _compute_partner_phone(self):
         for applicant in self:
             applicant.partner_phone = applicant.partner_id.phone
-            applicant.partner_mobile = applicant.partner_id.mobile
-            applicant.email_from = applicant.partner_id.email
 
     def _inverse_partner_email(self):
         for applicant in self.filtered(lambda a: a.partner_id and a.email_from and not a.partner_id.email):
@@ -299,16 +314,12 @@ class Applicant(models.Model):
             self = self.with_context(default_department_id=vals.get('department_id'))
         if vals.get('user_id'):
             vals['date_open'] = fields.Datetime.now()
-        if vals.get('email_from'):
-            vals['email_from'] = vals['email_from'].strip()
         return super(Applicant, self).create(vals)
 
     def write(self, vals):
         # user_id change: update date_open
         if vals.get('user_id'):
             vals['date_open'] = fields.Datetime.now()
-        if vals.get('email_from'):
-            vals['email_from'] = vals['email_from'].strip()
         # stage_id: track last stage before update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
@@ -409,60 +420,35 @@ class Applicant(models.Model):
             res.update(super(Applicant, leftover)._notify_get_reply_to(default=default, records=None, company=company, doc_names=doc_names))
         return res
 
-    def _message_get_suggested_recipients(self):
-        recipients = super(Applicant, self)._message_get_suggested_recipients()
-        for applicant in self:
-            if applicant.partner_id:
-                applicant._message_add_suggested_recipient(recipients, partner=applicant.partner_id, reason=_('Contact'))
-            elif applicant.email_from:
-                email_from = applicant.email_from
-                if applicant.partner_name:
-                    email_from = tools.formataddr((applicant.partner_name, email_from))
-                applicant._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
-        return recipients
-
     @api.model
-    def message_new(self, msg, custom_values=None):
+    def message_new(self, msg_dict, custom_values=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
             This override updates the document according to the email.
         """
-        # remove default author when going through the mail gateway. Indeed we
-        # do not want to explicitly set user_id to False; however we do not
-        # want the gateway user to be responsible if no other responsible is
-        # found.
-        self = self.with_context(default_user_id=False)
-        val = msg.get('from').split('<')[0]
         defaults = {
-            'name': msg.get('subject') or _("No Subject"),
-            'partner_name': val,
-            'email_from': msg.get('from'),
-            'partner_id': msg.get('author_id', False),
+            'name': msg_dict.get('subject') or _("No Subject"),
         }
-        if msg.get('priority'):
-            defaults['priority'] = msg.get('priority')
+        if msg_dict.get('author_id'):
+            partner = self.env['res.partner'].browse(msg_dict['author_id'])
+            defaults.update({
+                'partner_name': partner.name,
+            })
+        else:
+            from_split = tools.email_split_tuples(msg_dict.get('email_from'))
+            if from_split:
+                defaults['partner_name'] = from_split[0]
+
         if custom_values:
             defaults.update(custom_values)
-        return super(Applicant, self).message_new(msg, custom_values=defaults)
 
-    def _message_post_after_hook(self, message, msg_vals):
-        if self.email_from and not self.partner_id:
-            # we consider that posting a message with a specified recipient (not a follower, a specific one)
-            # on a document without customer means that it was created through the chatter using
-            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
-            if new_partner:
-                if new_partner.create_date.date() == fields.Date.today():
-                    new_partner.write({
-                        'type': 'private',
-                        'phone': self.partner_phone,
-                        'mobile': self.partner_mobile,
-                    })
-                self.search([
-                    ('partner_id', '=', False),
-                    ('email_from', '=', new_partner.email),
-                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Applicant, self)._message_post_after_hook(message, msg_vals)
+        return super(Applicant, self).message_new(msg_dict, custom_values=defaults)
+
+    def _message_post_update_customer_filter(self):
+        return expression.AND([
+            super(Applicant, self)._message_post_update_customer_filter(),
+            [('stage_id.fold', '=', False)]
+        ])
 
     def create_employee_from_applicant(self):
         """ Create an hr.employee from the hr.applicants """
