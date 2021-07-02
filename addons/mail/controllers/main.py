@@ -257,6 +257,8 @@ class MailController(http.Controller):
     def mail_init_messaging(self):
         partner_root = request.env.ref('base.partner_root')
         current_partner = request.env.user.partner_id
+        public_partners = request.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id
+        partner_ids_to_prefetch = set(public_partners.ids + [partner_root.id, current_partner.id])
         values = {
             'needaction_inbox_counter': request.env['res.partner'].get_needaction_count(),
             'starred_counter': request.env['res.partner'].get_starred_count(),
@@ -268,9 +270,9 @@ class MailController(http.Controller):
             'menu_id': request.env['ir.model.data'].xmlid_to_res_id('mail.menu_root_discuss'),
             'moderation_counter': request.env.user.moderation_counter,
             'moderation_channel_ids': request.env.user.moderation_channel_ids.ids,
-            'partner_root': partner_root.sudo().mail_partner_format().get(partner_root),
-            'public_partners': list(request.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id.mail_partner_format().values()),
-            'current_partner': current_partner.mail_partner_format().get(current_partner),
+            'partner_root': partner_root.with_prefetch(partner_ids_to_prefetch).sudo().mail_partner_format().get(partner_root),
+            'public_partners': list(public_partners.with_prefetch(partner_ids_to_prefetch).mail_partner_format().values()),
+            'current_partner': current_partner.with_prefetch(partner_ids_to_prefetch).mail_partner_format().get(current_partner),
             'current_user_id': request.env.user.id,
         }
         return values

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -24,12 +24,12 @@ class TestOutOfOffice(TestHrHolidaysCommon):
     def test_leave_ooo(self):
         self.assertNotEqual(self.employee_hruser.user_id.im_status, 'leave_offline', 'user should not be on leave')
         self.assertNotEqual(self.employee_hruser.user_id.partner_id.im_status, 'leave_offline', 'user should not be on leave')
-        leave_date_end = (datetime.today() + relativedelta(days=3))
+        leave_date_end = (date.today() + relativedelta(days=3))
         leave = self.env['hr.leave'].create({
             'name': 'Christmas',
             'employee_id': self.employee_hruser.id,
             'holiday_status_id': self.leave_type.id,
-            'date_from': (datetime.today() - relativedelta(days=1)),
+            'date_from': (date.today() - relativedelta(days=1)),
             'date_to': leave_date_end,
             'number_of_days': 4,
         })

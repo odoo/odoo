@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields
+from odoo import api, models
 
 
 class ResPartner(models.Model):
@@ -20,18 +20,12 @@ class ResPartner(models.Model):
                     partner.im_status = 'leave_offline'
 
     def mail_partner_format(self):
-        now = fields.Datetime.now()
-        leaves = self.env['hr.leave'].sudo().search([
-            ('user_id.partner_id', 'in', self.ids),
-            ('state', 'not in', ['cancel', 'refuse']),
-            ('date_from', '<=', now),
-            ('date_to', '>=', now),
-        ])
-        leave_per_partner = {leave.user_id.partner_id: leave for leave in leaves}
         partners_format = super(ResPartner, self).mail_partner_format()
+        main_user_ids = set(partner_format['user_id'] for partner_format in partners_format.values())
         for partner in self:
+            main_user = self.env['res.users'].browse(partners_format.get(partner)['user_id']).with_prefetch(main_user_ids)
             partners_format.get(partner).update({
-                'out_of_office_date_end': leave_per_partner.get(partner, self.env['hr.leave']).date_to
+                'out_of_office_date_end': main_user.leave_date_to,
             })
         return partners_format
 
