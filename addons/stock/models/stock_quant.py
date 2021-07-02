@@ -53,7 +53,7 @@ class StockQuant(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product',
         domain=lambda self: self._domain_product_id(),
-        ondelete='restrict', readonly=True, required=True, index=True, check_company=True)
+        ondelete='restrict', required=True, index=True, check_company=True)
     product_tmpl_id = fields.Many2one(
         'product.template', string='Product Template',
         related='product_id.product_tmpl_id')
@@ -64,18 +64,18 @@ class StockQuant(models.Model):
     location_id = fields.Many2one(
         'stock.location', 'Location',
         domain=lambda self: self._domain_location_id(),
-        auto_join=True, ondelete='restrict', readonly=True, required=True, index=True, check_company=True)
+        auto_join=True, ondelete='restrict', required=True, index=True, check_company=True)
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number', index=True,
-        ondelete='restrict', readonly=True, check_company=True,
+        ondelete='restrict', check_company=True,
         domain=lambda self: self._domain_lot_id())
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
         domain="[('location_id', '=', location_id)]",
-        help='The package containing this quant', readonly=True, ondelete='restrict', check_company=True)
+        help='The package containing this quant', ondelete='restrict', check_company=True)
     owner_id = fields.Many2one(
         'res.partner', 'Owner',
-        help='This is the owner of the quant', readonly=True, check_company=True)
+        help='This is the owner of the quant', check_company=True)
     quantity = fields.Float(
         'Quantity',
         help='Quantity of products in this quant, in the default unit of measure of the product',
@@ -200,6 +200,15 @@ class StockQuant(models.Model):
         if self._is_inventory_mode():
             res._check_company()
         return res
+
+    def _load_records_create(self, values):
+        """ Add default location if import file did not fill it"""
+        company_user = self.env.company
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
+        for value in values:
+            if 'location_id' not in value:
+                value['location_id'] = warehouse.lot_stock_id.id
+        return super()._load_records_create(values)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):

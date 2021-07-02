@@ -491,8 +491,8 @@ class StockQuant(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 1.0)
 
     def test_access_rights_1(self):
-        """ Directly update the quant with a user with or without stock access rights sould raise
-        an AccessError.
+        """ Directly update the quant with a user with or without stock access rights should not raise
+        an AccessError only deletion will.
         """
         quant = self.env['stock.quant'].create({
             'product_id': self.product.id,
@@ -512,16 +512,14 @@ class StockQuant(TransactionCase):
             quant.with_user(self.demo_user).unlink()
 
         self.env = self.env(user=self.stock_user)
+        self.env['stock.quant'].create({
+            'product_id': self.product.id,
+            'location_id': self.stock_location.id,
+            'quantity': 1.0,
+        })
+        quant.with_user(self.stock_user).with_context(inventory_mode=True).write({'quantity': 3.0})
         with self.assertRaises(AccessError):
-            self.env['stock.quant'].create({
-                'product_id': self.product.id,
-                'location_id': self.stock_location.id,
-                'quantity': 1.0,
-            })
-        with self.assertRaises(AccessError):
-            quant.with_user(self.demo_user).write({'quantity': 2.0})
-        with self.assertRaises(AccessError):
-            quant.with_user(self.demo_user).unlink()
+            quant.with_user(self.stock_user).unlink()
 
     def test_in_date_1(self):
         """ Check that no incoming date is set when updating the quantity of an untracked quant.
