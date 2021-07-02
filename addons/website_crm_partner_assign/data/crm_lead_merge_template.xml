@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="crm_lead_merge_summary_inherit_partner_assign" inherit_id="crm.crm_lead_merge_summary">
+    <xpath expr="//div[@name='company']" position="after">
+        <br t-if="lead.date_partner_assign or lead.partner_assigned_id" />
+        <div t-if="lead.partner_assigned_id">
+            Assigned Partner: <span t-field="lead.partner_assigned_id"/>
+        </div>
+        <div name="date_partner_assign" t-if="lead.date_partner_assign">
+            Partner Assignment Date: <span t-field="lead.date_partner_assign"/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>
