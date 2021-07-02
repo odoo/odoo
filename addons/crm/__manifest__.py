@@ -28,6 +28,7 @@
         'security/crm_security.xml',
         'security/ir.model.access.csv',
 
+        'data/crm_lead_merge_template.xml',
         'data/crm_lead_prediction_data.xml',
         'data/crm_lost_reason_data.xml',
         'data/crm_stage_data.xml',
