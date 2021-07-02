@@ -34,6 +34,8 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                 isEditMode: false,
                 floorBackground: floor.background_color,
                 floorMapScrollTop: 0,
+                isDisplaySearch: false,
+                searchQuery: '',
                 view: 'floor-map'
             });
             this.floorMapRef = useRef('floor-map-ref');
@@ -63,6 +65,15 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
         }
         get isFloorEmpty() {
             return this.activeTables.length === 0;
+        }
+        get isProcessSearch() {
+            return this.state.searchQuery.length > 0;
+        }
+        get displayTables() {
+            if (!this.isProcessSearch || this.state.isEditMode) {
+                return this.activeTables;
+            }
+            return this.activeTables.filter(table => table.name.toLowerCase().includes(this.state.searchQuery.toLowerCase()));
         }
         get selectedTable() {
             return this.state.selectedTableId !== null
@@ -111,6 +122,8 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             this.state.floorBackground = this.activeFloor.background_color;
             this.state.isEditMode = false;
             this.state.selectedTableId = null;
+            this.state.isDisplaySearch = false;
+            this.state.searchQuery = '';
         }
         toggleEditMode() {
             this.state.isEditMode = !this.state.isEditMode;
@@ -234,6 +247,10 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                 const deltaY = touches[0].pageY - touches[1].pageY;
                 callbackFunction(Math.hypot(deltaX, deltaY))
             }
+        }
+        _onCloseSearch() {
+            this.state.isDisplaySearch = false;
+            this.state.searchQuery = '';
         }
         _onPinchStart(ev) {
             ev.currentTarget.style.setProperty('touch-action', 'none');
