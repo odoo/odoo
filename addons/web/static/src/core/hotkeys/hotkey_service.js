@@ -24,6 +24,7 @@ const AUTHORIZED_KEYS = new Set([...ALPHANUM_KEYS, ...NAV_KEYS]);
 
 export const hotkeyService = {
     dependencies: ["ui"],
+    overlayModifier: () => isMacOS() ? "alt+control" : "alt",
     start(env, { ui }) {
         const registrations = new Map();
         let nextToken = 0;
@@ -68,7 +69,7 @@ export const hotkeyService = {
             }
 
             // Special case: open hotkey overlays
-            if (isMacOS() ? hotkey === "control" : hotkey === "alt") {
+            if (hotkey === hotkeyService.overlayModifier()) {
                 addHotkeyOverlays();
                 event.preventDefault();
                 return;
@@ -101,7 +102,7 @@ export const hotkeyService = {
         function dispatch(infos) {
             let dispatched = false;
             const { hotkey, _originalEvent: event } = infos;
-            const isAlted = isMacOS() ? event.ctrlKey : event.altKey;
+            const hotkeyWithoutAlt = hotkey.indexOf("alt+") === 0 ? hotkey.slice(4) : hotkey;
             const activeElement = ui.activeElement;
 
             // Dispatch actual hotkey to all matching registrations
@@ -110,11 +111,7 @@ export const hotkeyService = {
                     continue;
                 }
 
-                if (reg.hotkey !== hotkey) {
-                    continue;
-                }
-
-                if (!reg.altIsOptional && !isAlted) {
+                if (reg.hotkey !== (reg.altIsOptional ? hotkeyWithoutAlt : hotkey)) {
                     continue;
                 }
 
@@ -126,9 +123,10 @@ export const hotkeyService = {
                 dispatched = true;
             }
 
-            if (!event.repeat && isAlted) {
+            if (!event.repeat && hotkey.indexOf(hotkeyService.overlayModifier()) !== -1) {
                 // Click on all elements having a data-hotkey attribute matching the actual hotkey.
-                const elems = activeElement.querySelectorAll(`[data-hotkey='${hotkey}' i]`);
+                const singleKey = hotkey.split("+").pop();
+                const elems = activeElement.querySelectorAll(`[data-hotkey='${singleKey}' i]`);
                 for (const el of elems) {
                     // AAB: not sure it is enough, we might need to trigger all events that occur when you actually click
                     el.focus();
@@ -198,6 +196,9 @@ export const hotkeyService = {
 
             // ------- Modifiers -------
             // Modifiers are pushed in ascending order to the hotkey.
+            if (isMacOS() ? ev.ctrlKey : ev.altKey) {
+                hotkey.push("alt");
+            }
             if (isMacOS() ? ev.metaKey : ev.ctrlKey) {
                 hotkey.push("control");
             }
@@ -277,6 +278,9 @@ export const hotkeyService = {
                 allowRepeat: options && options.allowRepeat,
                 global: options && options.global,
             };
+            if (!registration.altIsOptional) {
+                registration.hotkey = "alt+" + registration.hotkey;
+            }
             registrations.set(token, registration);
 
             // Due to the way elements are mounted in the DOM by Owl (bottom-to-top),
