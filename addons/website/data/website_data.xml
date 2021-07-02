@@ -54,7 +54,7 @@
                             <div id="contactus_section">
                                 <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
                                     <div class="container">
-                                        <form id="contactus_form" action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+                                        <form id="contactus_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                                             <div class="s_website_form_rows row s_col_no_bgcolor">
                                                 <div class="form-group col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="char" data-name="Field">
                                                     <div class="row s_col_no_resize s_col_no_bgcolor">
@@ -156,9 +156,9 @@
         <field name="url">/contactus-thank-you</field>
         <field name="website_indexed" eval="False"/>
         <field name="is_published">True</field>
-        <field name="key">website_form.contactus_thanks</field>
+        <field name="key">website.contactus_thanks</field>
         <field name="arch" type="xml">
-            <t name="Thanks (Contact us)" t-name="website_form.contactus_thanks">
+            <t name="Thanks (Contact us)" t-name="website.contactus_thanks">
                 <t t-call="website.layout">
                     <div id="wrap">
                         <div class="oe_structure" id="oe_structure_website_form_contact_us_thanks_1"/>

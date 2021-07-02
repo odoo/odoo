@@ -1,4 +1,4 @@
-odoo.define('website_form_editor.tour', function (require) {
+odoo.define('website.tour.form_editor', function (require) {
     'use strict';
 
     const rpc = require('web.rpc');

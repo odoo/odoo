@@ -92,7 +92,7 @@ class TableCompute(object):
 
 class WebsiteSaleForm(WebsiteForm):
 
-    @http.route('/website_form/shop.sale.order', type='http', auth="public", methods=['POST'], website=True)
+    @http.route('/website/form/shop.sale.order', type='http', auth="public", methods=['POST'], website=True)
     def website_form_saleorder(self, **kwargs):
         model_record = request.env.ref('sale.model_sale_order')
         try:
