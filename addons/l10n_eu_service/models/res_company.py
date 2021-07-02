@@ -69,6 +69,7 @@ class Company(models.Model):
                                 'type_tax_use': 'sale',
                                 'description': "%s%%" % tax_amount,
                                 'tax_group_id': self.env.ref('l10n_eu_service.%s' % tax_group_fid).id,
+                                'country_id': company.account_fiscal_country_id.id,
                                 'sequence': 1000,
                                 'company_id': company.id,
                             })
