@@ -67,9 +67,7 @@
                             t-att-alt="widget.sponsorData.country_name"/>
                     </div>
                 </div>
-                <span class="col-12" t-if="widget.sponsorData.website_description" t-raw="widget.sponsorData.website_description"/>
-            </div>
-            <div>
+                <div class="col-12" t-if="widget.sponsorData.website_description" t-out="widget.sponsorData.website_description"/>
             </div>
         </div>
     </t>
