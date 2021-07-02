@@ -142,6 +142,15 @@
             <attribute name="t-field">o.l10n_latam_amount_untaxed</attribute>
         </span>
 
+        <!-- If the invoice has an Argentinean non-cero tax group do not show the base amount -->
+        <xpath expr="//div[@id='total']//t[@t-esc='amount_by_group[4]']/.." position="replace">
+            <t t-if="o.line_ids.tax_ids.filtered(lambda tax: tax.tax_group_id.l10n_ar_vat_afip_code in ['0', '1', '2'])">
+                <span class="text-nowrap"> on
+                    <t t-esc="amount_by_group[4]"/>
+                </span>
+            </t>
+        </xpath>
+
         <!-- use column vat instead of taxes and only if vat discriminated -->
         <xpath expr="//th[@name='th_taxes']/span" position="replace">
             <span>% VAT</span>
@@ -320,6 +329,15 @@
         <span t-field="o.amount_untaxed" position="attributes">
             <attribute name="t-field">o.l10n_latam_amount_untaxed</attribute>
         </span>
+
+        <!-- If the invoice has an Argentinean non-cero tax group do not show the base amount -->
+        <xpath expr="//div[@id='total']//t[@t-esc='amount_by_group[4]']/.." position="replace">
+            <t t-if="o.line_ids.tax_ids.filtered(lambda tax: tax.tax_group_id.l10n_ar_vat_afip_code in ['0', '1', '2'])">
+                <span class="text-nowrap"> on
+                    <t t-esc="amount_by_group[4]"/>
+                </span>
+            </t>
+        </xpath>
 
         <!-- use column vat instead of taxes and only if vat discriminated -->
         <xpath expr="//th[@name='th_taxes']/span" position="replace">
