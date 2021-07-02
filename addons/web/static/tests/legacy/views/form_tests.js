@@ -1097,6 +1097,7 @@ QUnit.module('Views', {
         await doAction(webClient, 1);
 
         await testUtils.dom.click(webClient.el.querySelector('.o_list_button_add'));
+        await legacyExtraNextTick();
         assert.containsOnce(webClient, '.o_form_view');
 
         // click on second page tab
