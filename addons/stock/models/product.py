@@ -539,7 +539,8 @@ class Product(models.Model):
             )
         else:
             self = self.with_context(product_tmpl_ids=self.product_tmpl_id.ids)
-        action = self.env['stock.quant']._get_quants_action(domain)
+        action = self.env['stock.quant'].action_view_inventory()
+        action['domain'] = domain
         action["name"] = _('Update Quantity')
         return action
 
