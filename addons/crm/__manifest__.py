@@ -59,6 +59,8 @@
         'report/crm_activity_report_views.xml',
         'report/crm_opportunity_report_views.xml',
         'views/crm_team_views.xml',
+        'views/crm_menu_views.xml',
+        'views/crm_helper_templates.xml',
     ],
     'demo': [
         'data/crm_team_demo.xml',
