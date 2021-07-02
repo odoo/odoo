@@ -628,8 +628,14 @@ class Team(models.Model):
         team_with_pipelines.update({'dashboard_button_name': _("Pipeline")})
 
     def action_primary_channel_button(self):
+        self.ensure_one()
         if self.use_opportunities:
-            return self.env["ir.actions.actions"]._for_xml_id("crm.crm_case_form_view_salesteams_opportunity")
+            action = self.env['ir.actions.actions']._for_xml_id('crm.crm_case_form_view_salesteams_opportunity')
+            rcontext = {
+                'team': self,
+            }
+            action['help'] = self.env['ir.ui.view']._render_template('crm.crm_action_helper', values=rcontext)
+            return action
         return super(Team,self).action_primary_channel_button()
 
     def _graph_get_model(self):
