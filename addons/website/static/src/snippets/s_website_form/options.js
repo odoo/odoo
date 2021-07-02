@@ -1,8 +1,8 @@
-odoo.define('website_form_editor', function (require) {
+odoo.define('website.form_editor', function (require) {
 'use strict';
 
 const core = require('web.core');
-const FormEditorRegistry = require('website_form.form_editor_registry');
+const FormEditorRegistry = require('website.form_editor_registry');
 const options = require('web_editor.snippets.options');
 require('website.editor.snippets.options');
 
@@ -11,7 +11,7 @@ const _t = core._t;
 
 const FormEditor = options.Class.extend({
     xmlDependencies: [
-        '/website_form/static/src/xml/website_form_editor.xml',
+        '/website/static/src/xml/website_form_editor.xml',
         '/google_recaptcha/static/src/xml/recaptcha.xml',
     ],
 
@@ -125,7 +125,7 @@ const FormEditor = options.Class.extend({
     _renderField: function (field) {
         field.id = Math.random().toString(36).substring(2, 15); // Big unique ID
         const template = document.createElement('template');
-        template.innerHTML = qweb.render("website_form.field_" + field.type, {field: field}).trim();
+        template.innerHTML = qweb.render("website.form_field_" + field.type, {field: field}).trim();
         if (field.description && field.description !== true) {
             $(template.content.querySelector('.s_website_form_field_description')).replaceWith(field.description);
         }
@@ -445,7 +445,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         this.$target[0].dataset.successMode = value;
         if (value === 'message') {
             if (!this.$message.length) {
-                this.$message = $(qweb.render('website_form.s_website_form_end_message'));
+                this.$message = $(qweb.render('website.s_website_form_end_message'));
             }
             this.$target.after(this.$message);
         } else {
@@ -489,7 +489,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         } else {
             const template = document.createElement('template');
             const labelWidth = this.$target[0].querySelector('.s_website_form_label').style.width;
-            $(template).html(qweb.render("webite_form.s_website_form_recaptcha_legal", {labelWidth: labelWidth}));
+            $(template).html(qweb.render("website.s_website_form_recaptcha_legal", {labelWidth: labelWidth}));
             const legal = template.content.firstElementChild;
             legal.setAttribute('contentEditable', true);
             this.$target.find('.s_website_form_submit').before(legal);
@@ -574,7 +574,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
     _addHiddenField: function (value, fieldName) {
         this.$target.find(`.s_website_form_dnone:has(input[name="${fieldName}"])`).remove();
         if (value) {
-            const hiddenField = qweb.render('website_form.field_hidden', {
+            const hiddenField = qweb.render('website.form_field_hidden', {
                 field: {
                     name: fieldName,
                     value: value,

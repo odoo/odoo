@@ -1,7 +1,7 @@
 odoo.define('website_sale.form', function (require) {
 'use strict';
 
-var FormEditorRegistry = require('website_form.form_editor_registry');
+var FormEditorRegistry = require('website.form_editor_registry');
 
 FormEditorRegistry.add('create_customer', {
     formFields: [{
