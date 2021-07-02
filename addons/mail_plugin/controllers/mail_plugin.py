@@ -16,6 +16,13 @@ _logger = logging.getLogger(__name__)
 
 class MailPluginController(http.Controller):
 
+    @http.route('/mail_plugin/test_installation', type="json", auth="public", cors="*")
+    def test_installation(self):
+        """
+            Used by the plugin to determine if the mail_plugin module is installed
+        """
+        return {'status': 'success'}
+
     @http.route('/mail_client_extension/modules/get', type="json", auth="outlook", csrf=False, cors="*")
     def modules_get(self, **kwargs):
         """
