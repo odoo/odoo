@@ -2,7 +2,7 @@ odoo.define('website_form_project.form', function (require) {
 'use strict';
 
 var core = require('web.core');
-var FormEditorRegistry = require('website_form.form_editor_registry');
+var FormEditorRegistry = require('website.form_editor_registry');
 
 var _t = core._t;
 
