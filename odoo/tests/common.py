@@ -208,7 +208,11 @@ class OdooSuite(unittest.suite.TestSuite):
                                         info=exc)
 
         def _createClassOrModuleLevelException(self, result, exc, method_name, parent, info=None):
+<<<<<<< HEAD
             errorName = f'{method_name} ({parent})'
+=======
+            errorName = '%s (%s)' % (method_name, parent)
+>>>>>>> 7428eabc900... temp
             self._addClassOrModuleLevelException(result, exc, errorName, info)
 
         def _addClassOrModuleLevelException(self, result, exception, errorName, info=None):
@@ -581,6 +585,7 @@ class SingleTransactionCase(BaseCase):
 
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
+<<<<<<< HEAD
 
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
         cls.addClassCleanup(cls.env.reset)
@@ -588,6 +593,11 @@ class SingleTransactionCase(BaseCase):
     def setUp(self):
         super(SingleTransactionCase, self).setUp()
         self.env.user.flush()
+=======
+
+        cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
+        cls.addClassCleanup(cls.env.reset)
+>>>>>>> 7428eabc900... temp
 
 
 savepoint_seq = itertools.count()
@@ -603,8 +613,12 @@ class SavepointCase(SingleTransactionCase):
     the test data either.
     """
     def setUp(self):
+<<<<<<< HEAD
         super().setUp()
 
+=======
+        super(SavepointCase, self).setUp()
+>>>>>>> 7428eabc900... temp
         # restore environments after the test to avoid invoking flush() with an
         # invalid environment (inexistent user id) from another test
         envs = self.env.all.envs
@@ -617,10 +631,13 @@ class SavepointCase(SingleTransactionCase):
         self._savepoint_id = next(savepoint_seq)
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
         self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
+<<<<<<< HEAD
 
 
 class ChromeBrowserException(Exception):
     pass
+=======
+>>>>>>> 7428eabc900... temp
 
 
 class ChromeBrowser():
@@ -1213,6 +1230,7 @@ class HttpCase(TransactionCase):
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     @classmethod
+<<<<<<< HEAD
     def start_browser(cls):
         # start browser on demand
         if cls.browser is None:
@@ -1224,6 +1242,19 @@ class HttpCase(TransactionCase):
         if cls.browser:
             cls.browser.stop()
             cls.browser = None
+=======
+    def terminate_browser(cls):
+        if cls.browser:
+            cls.browser.stop()
+            cls.browser = None
+
+    @classmethod
+    def start_browser(cls, logger):
+        # start browser on demand
+        if cls.browser is None:
+            cls.browser = ChromeBrowser(logger, cls.browser_size)
+            cls.addClassCleanup(cls.terminate_browser)
+>>>>>>> 7428eabc900... temp
 
     def setUp(self):
         super(HttpCase, self).setUp()
