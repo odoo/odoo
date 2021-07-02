@@ -3,6 +3,7 @@ odoo.define('website_event_exhibitor.event_exhibitor_connect', function (require
 
 var Dialog = require('web.Dialog');
 var publicWidget = require('web.public.widget');
+const {Markup} = require('web.utils');
 
 var ExhibitorConnectClosedDialog = Dialog.extend({
     events: _.extend({}, Dialog.prototype.events, {
@@ -44,18 +45,13 @@ var ExhibitorConnectClosedDialog = Dialog.extend({
 
     /**
      * @private
-     * @returns {Promise<*>} promise after fetching sponsor data, given its
-     *   sponsorId. Necessary to render template content;
      */
-    _fetchSponsor: function () {
-        let self = this;
-        let rpcPromise = this._rpc({
-            route: `/event_sponsor/${this.sponsorId}/read`,
-        }).then(function (readData) {
-            self.sponsorData = readData;
-            return Promise.resolve();
+    async _fetchSponsor() {
+        const sponsorData = await this._rpc({
+            route: `/event_sponsor/${this.sponsorId}/read`
         });
-        return rpcPromise;
+        sponsorData.website_description = Markup(sponsorData.website_description);
+        this.sponsorData = sponsorData;
     },
 });
 
