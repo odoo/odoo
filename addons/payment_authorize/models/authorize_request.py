@@ -138,6 +138,19 @@ class AuthorizeAPI:
         return self._format_response(response, 'deleteCustomerProfile')
 
     #=== Transaction management ===#
+    def _prepare_transaction_request(self, transaction_type, tx_data, amount, reference):
+        return {
+            'transactionRequest': {
+                'transactionType': transaction_type,
+                'amount': str(amount),
+                **tx_data,
+                'order': {
+                    'invoiceNumber': reference[:20],
+                    'description': reference[:255],
+                },
+                'customerIP': payment_utils.get_customer_ip_address(),
+            }
+        }
 
     def authorize(self, amount, reference, token=None, opaque_data=None):
         """ Authorize (without capture) a payment for the given amount.
@@ -151,18 +164,10 @@ class AuthorizeAPI:
         :rtype: dict
         """
         tx_data = self._prepare_tx_data(token=token, opaque_data=opaque_data)
-        response = self._make_request('createTransactionRequest', {
-            'transactionRequest': {
-                'transactionType': 'authOnlyTransaction',
-                'amount': str(amount),
-                **tx_data,
-                'order': {
-                    'invoiceNumber': reference[:20],
-                    'description': reference[:255],
-                },
-                'customerIP': payment_utils.get_customer_ip_address(),
-            }
-        })
+        response = self._make_request(
+            'createTransactionRequest',
+            self._prepare_transaction_request('authOnlyTransaction', tx_data, amount, reference)
+        )
         return self._format_response(response, 'auth_only')
 
     def auth_and_capture(self, amount, reference, token=None, opaque_data=None):
@@ -180,18 +185,10 @@ class AuthorizeAPI:
         :rtype: dict
         """
         tx_data = self._prepare_tx_data(token=token, opaque_data=opaque_data)
-        response = self._make_request('createTransactionRequest', {
-            'transactionRequest': {
-                'transactionType': 'authCaptureTransaction',
-                'amount': str(amount),
-                **tx_data,
-                'order': {
-                    'invoiceNumber': reference[:20],
-                    'description': reference[:255],
-                },
-                'customerIP': payment_utils.get_customer_ip_address(),
-            }
-        })
+        response = self._make_request(
+            'createTransactionRequest',
+            self._prepare_transaction_request('authCaptureTransaction', tx_data, amount, reference)
+        )
 
         result = self._format_response(response, 'auth_capture')
         errors = response.get('transactionResponse', {}).get('errors')
