@@ -38,6 +38,7 @@ class MailComposeMessage(models.TransientModel):
                     'mailing_domain': self.active_domain,
                     'attachment_ids': [(6, 0, self.attachment_ids.ids)],
                 })
+                self.mass_mailing_id = mass_mailing.id
 
             recipients_info = self._process_recipient_values(res)
             mass_mail_layout = self.env.ref('mass_mailing.mass_mailing_mail_layout', raise_if_not_found=False)
@@ -69,3 +70,15 @@ class MailComposeMessage(models.TransientModel):
                     'auto_delete': not mass_mailing.keep_archives,
                 })
         return res
+
+    def _get_done_emails(self, mail_values_dict):
+        seen_list = super(MailComposeMessage, self)._get_done_emails(mail_values_dict)
+        if self.mass_mailing_id:
+            seen_list += self.mass_mailing_id._get_seen_list()
+        return seen_list
+
+    def _get_optout_emails(self, mail_values_dict):
+        opt_out_list = super(MailComposeMessage, self)._get_optout_emails(mail_values_dict)
+        if self.mass_mailing_id:
+            opt_out_list += self.mass_mailing_id._get_opt_out_list()
+        return opt_out_list
