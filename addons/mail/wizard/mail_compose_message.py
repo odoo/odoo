@@ -7,6 +7,7 @@ import re
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
+from odoo.tools import email_re
 
 
 def _reopen(self, res_id, model, context=None):
@@ -350,17 +351,6 @@ class MailComposer(models.TransientModel):
             records = self.env[self.model].browse(res_ids)
             reply_to_value = records._notify_get_reply_to(default=self.email_from)
 
-        blacklisted_rec_ids = set()
-        if mass_mail_mode and issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
-            self.env['mail.blacklist'].flush(['email'])
-            self._cr.execute("SELECT email FROM mail_blacklist WHERE active=true")
-            blacklist = {x[0] for x in self._cr.fetchall()}
-            if blacklist:
-                targets = self.env[self.model].browse(res_ids).read(['email_normalized'])
-                # First extract email from recipient before comparing with blacklist
-                blacklisted_rec_ids.update(target['id'] for target in targets
-                                           if target['email_normalized'] in blacklist)
-
         for res_id in res_ids:
             # static wizard (mail.message) values
             mail_values = {
@@ -412,14 +402,114 @@ class MailComposer(models.TransientModel):
                     attachment_ids,
                     {'model': 'mail.message', 'res_id': 0}
                 )['attachment_ids']
-                # Filter out the blacklisted records by setting the mail state to cancel -> Used for Mass Mailing stats
-                if res_id in blacklisted_rec_ids:
-                    mail_values['state'] = 'cancel'
-                    # Do not post the mail into the recipient's chatter
-                    mail_values['notification'] = False
 
             results[res_id] = mail_values
+
+        results = self._process_state(results)
         return results
+
+    def _process_recipient_values(self, mail_values_dict):
+        # Preprocess res.partners to batch-fetch from db if recipient_ids is present
+        # it means they are partners (the only object to fill get_default_recipient this way)
+        recipient_pids = [
+            recipient_command[1]
+            for mail_values in mail_values_dict.values()
+            # recipient_ids is a list of x2m command tuples at this point
+            for recipient_command in mail_values.get('recipient_ids') or []
+            if recipient_command[1]
+        ]
+        recipient_emails = {
+            p.id: p.email
+            for p in self.env['res.partner'].browse(set(recipient_pids))
+        } if recipient_pids else {}
+
+        recipients_info = {}
+        for record_id, mail_values in mail_values_dict.items():
+            mail_to = []
+            if mail_values.get('email_to'):
+                mail_to += email_re.findall(mail_values['email_to'])
+                # if unrecognized email in email_to -> keep it as used for further processing
+                if not mail_to:
+                    mail_to.append(mail_values['email_to'])
+            # add email from recipients (res.partner)
+            mail_to += [
+                recipient_emails[recipient_command[1]]
+                for recipient_command in mail_values.get('recipient_ids') or []
+                if recipient_command[1]
+            ]
+            mail_to = list(set(mail_to))
+            recipients_info[record_id] = {
+                'mail_to': mail_to,
+                'mail_to_normalized': [
+                    tools.email_normalize(mail)
+                    for mail in mail_to
+                    if tools.email_normalize(mail)
+                ]
+            }
+        return recipients_info
+
+    def _process_state(self, mail_values_dict):
+        recipients_info = self._process_recipient_values(mail_values_dict)
+        blacklist_ids = self._get_blacklist_record_ids(mail_values_dict)
+        optout_emails = self._get_optout_emails(mail_values_dict)
+        done_emails = self._get_done_emails(mail_values_dict)
+
+        for record_id, mail_values in mail_values_dict.items():
+            recipients = recipients_info[record_id]
+            # when having more than 1 recipient: we cannot really decide when a single
+            # email is linked to several to -> skip that part. Mass mailing should
+            # anyway always have a single recipient per record as this is default behavior.
+            if len(recipients['mail_to']) > 1:
+                continue
+
+            mail_to = recipients['mail_to'][0] if recipients['mail_to'] else ''
+            mail_to_normalized = recipients['mail_to_normalized'][0] if recipients['mail_to_normalized'] else ''
+
+            # prevent sending to blocked addresses that were included by mistake
+            # blacklisted or optout or duplicate -> cancel
+            if record_id in blacklist_ids:
+                mail_values['state'] = 'cancel'
+                mail_values['failure_type'] = 'mail_bl'
+                # Do not post the mail into the recipient's chatter
+                mail_values['notification'] = False
+            elif optout_emails and mail_to in optout_emails:
+                mail_values['state'] = 'cancel'
+                mail_values['failure_type'] = 'mail_optout'
+            elif done_emails and mail_to in done_emails:
+                mail_values['state'] = 'cancel'
+                mail_values['failure_type'] = 'mail_dup'
+            # void of falsy values -> error
+            elif not mail_to:
+                mail_values['state'] = 'cancel'
+                mail_values['failure_type'] = 'mail_email_missing'
+            elif not mail_to_normalized or not email_re.findall(mail_to):
+                mail_values['state'] = 'cancel'
+                mail_values['failure_type'] = 'mail_email_invalid'
+            elif done_emails is not None:
+                done_emails.append(mail_to)
+
+        return mail_values_dict
+
+    def _get_blacklist_record_ids(self, mail_values_dict):
+        blacklisted_rec_ids = set()
+        if self.composition_mode == 'mass_mail' and issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
+            self.env['mail.blacklist'].flush(['email'])
+            self._cr.execute("SELECT email FROM mail_blacklist WHERE active=true")
+            blacklist = {x[0] for x in self._cr.fetchall()}
+            if blacklist:
+                targets = self.env[self.model].browse(mail_values_dict.keys()).read(['email_normalized'])
+                # First extract email from recipient before comparing with blacklist
+                blacklisted_rec_ids.update(target['id'] for target in targets
+                                           if target['email_normalized'] in blacklist)
+        return blacklisted_rec_ids
+
+    def _get_done_emails(self, mail_values_dict):
+        seen_list = self._context.get('mass_mailing_seen_list') or []
+        return seen_list
+
+    def _get_optout_emails(self, mail_values_dict):
+        opt_out_list = self._context.get('mass_mailing_opt_out_list') or []
+        return opt_out_list
 
     def _onchange_template_id(self, template_id, composition_mode, model, res_id):
         """ - mass_mailing: we cannot render, so return the template values

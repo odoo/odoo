@@ -50,12 +50,24 @@ class MailMail(models.Model):
         ('exception', 'Delivery Failed'),
         ('cancel', 'Cancelled'),
     ], 'Status', readonly=True, copy=False, default='outgoing')
-    auto_delete = fields.Boolean(
-        'Auto Delete',
-        help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
+    failure_type = fields.Selection(selection=[
+        # generic
+        ("unknown", "Unknown error"),
+        # mail
+        ("mail_email_invalid", "Invalid email address"),
+        ("mail_email_missing", "Missing email"),
+        ("mail_smtp", "Connection failed (outgoing mail server problem)"),
+        # mass mode
+        ("mail_bl", "Blacklisted Address"),
+        ("mail_optout", "Opted Out"),
+        ("mail_dup", "Duplicated Email"),
+        ], string='Failure type')
     failure_reason = fields.Text(
         'Failure Reason', readonly=1, copy=False,
         help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.")
+    auto_delete = fields.Boolean(
+        'Auto Delete',
+        help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
     scheduled_date = fields.Char('Scheduled Send Date',
         help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible.")
 
