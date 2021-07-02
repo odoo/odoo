@@ -14,23 +14,36 @@
                     </div>
                 </t>
                 <div t-if="env.isMobile and !isFloorEmpty" class="buttons" t-attf-style="background: {{state.floorBackground}};">
-                    <t t-if="state.view === 'floor-map' and !('ontouchstart' in window)">
-                        <span class="button" t-on-click="scaleIn">
-                            <i class="fa fa-minus" role="img" aria-label="Zoom in" title="Zoom in" />
+                    <t t-if="state.isDisplaySearch">
+                        <span class="button close-search-icon" t-on-click="_onCloseSearch">
+                            <i class="fa fa-arrow-left" role="img" aria-label="Back" title="Back" />
                         </span>
-                        <span class="button" t-on-click="scaleOut">
-                            <i class="fa fa-plus" role="img" aria-label="Zoom out" title="Zoom out" />
+                        <input class="search button" type="text" autofocus="autofocus" placeholder="Search..." name="searchTable" t-model="state.searchQuery" />
+                    </t>
+                    <t t-else="">
+                        <t t-if="state.view === 'floor-map' and !('ontouchstart' in window)">
+                            <span class="button" t-on-click="scaleIn">
+                                <i class="fa fa-minus" role="img" aria-label="Zoom in" title="Zoom in" />
+                            </span>
+                            <span class="button" t-on-click="scaleOut">
+                                <i class="fa fa-plus" role="img" aria-label="Zoom out" title="Zoom out" />
+                            </span>
+                        </t>
+                        <span class="search button" t-attf-style="background: {{state.floorBackground }};">
+                            <span class="search-icon" t-on-click="state.isDisplaySearch=!state.isDisplaySearch">
+                                <i class="fa fa-search" role="img" aria-label="Search" title="Search" />
+                            </span>
+                        </span>
+                        <span class="button" t-on-click="state.view='list'">
+                            <i class="fa fa-list-ul" role="img" aria-label="Floor list" title="Floor list" />
+                        </span>
+                        <span class="button" t-on-click="state.view='floor-map'">
+                            <i class="fa fa-map" role="img" aria-label="Floor map" title="Floor map" />
                         </span>
                     </t>
-                    <span class="button" t-on-click="state.view='list'">
-                        <i class="fa fa-list-ul" role="img" aria-label="Floor list" title="Floor list" />
-                    </span>
-                    <span class="button" t-on-click="state.view='floor-map'">
-                        <i class="fa fa-map" role="img" aria-label="Floor map" title="Floor map" />
-                    </span>
                 </div>
                 <div t-if="state.view === 'list'" class="floor-list" t-attf-style="background: {{state.floorBackground}};">
-                    <t t-foreach="activeTables" t-as="table" t-key="table.id">
+                    <t t-foreach="displayTables" t-as="table" t-key="table.id">
                         <div class="floor-list-item" t-on-click="trigger('select-table', table)">
                             <div class="order-row">
                                 <div class="col">Table</div>
@@ -61,7 +74,7 @@
                         <span> button in the editing toolbar to create new tables.</span>
                     </div>
                     <div t-else="" class="tables">
-                        <t t-foreach="activeTables" t-as="table" t-key="table.id">
+                        <t t-foreach="displayTables" t-as="table" t-key="table.id">
                             <TableWidget t-if="table.id !== state.selectedTableId" table="table" />
                             <EditableTable t-else="" table="table" />
                         </t>

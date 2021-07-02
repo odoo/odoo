@@ -608,8 +608,10 @@
     text-align: end;
 }
 .buttons {
+    display: flex;
     text-align: end;
     padding: 5px;
+    height: 44px;
 }
 .buttons .button {
     padding: 5px;
@@ -617,4 +619,17 @@
     font-size: 20px;
     line-height: 32px;
     width: 32px;
+}
+.buttons .button.close-search-icon {
+    background: white;
+    text-align: center;
+}
+.buttons .search {
+    width: 100%;
+    background: white;
+}
+.buttons .search input {
+    width: 85%;
+    color: #63717f;
+    border: solid 1px white;
 }
