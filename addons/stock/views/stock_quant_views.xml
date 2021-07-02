@@ -122,7 +122,7 @@
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
             <tree editable="bottom"
-                  create="1" edit="1" import="0" js_class="singleton_list"
+                  create="1" edit="1" js_class="singleton_list"
                   sample="1">
                 <field name="id" invisible="1"/>
                 <field name="tracking" invisible="1"/>
@@ -340,7 +340,7 @@
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id" decoration-warning='is_outdated' editable="bottom" create="1" edit="1" import="0" js_class="singleton_list" sample="1">
+            <tree default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id" decoration-warning='is_outdated' editable="bottom" create="1" edit="1" import="1" js_class="singleton_list" sample="1">
                 <header>
                     <button name="stock.action_stock_inventory_adjustement_name" groups="stock.group_stock_manager" type="action" string="Apply"/>
                     <button name="action_set_inventory_quantity" type="object" string="Set"/>
