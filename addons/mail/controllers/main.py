@@ -255,10 +255,12 @@ class MailController(http.Controller):
 
     @http.route('/mail/init_messaging', type='json', auth='user')
     def mail_init_messaging(self):
+        partner_root = request.env.ref('base.partner_root')
+        current_partner = request.env.user.partner_id
         values = {
             'needaction_inbox_counter': request.env['res.partner'].get_needaction_count(),
             'starred_counter': request.env['res.partner'].get_starred_count(),
-            'channel_slots': request.env['mail.channel'].channel_fetch_slot(),
+            'channels': request.env['mail.channel'].channel_fetch_slot().channel_info(),
             'mail_failures': request.env['mail.message'].message_fetch_failed(),
             'commands': request.env['mail.channel'].get_mention_commands(),
             'mention_partner_suggestions': request.env['res.partner'].get_static_mention_suggestions(),
@@ -266,9 +268,9 @@ class MailController(http.Controller):
             'menu_id': request.env['ir.model.data'].xmlid_to_res_id('mail.menu_root_discuss'),
             'moderation_counter': request.env.user.moderation_counter,
             'moderation_channel_ids': request.env.user.moderation_channel_ids.ids,
-            'partner_root': request.env.ref('base.partner_root').sudo().mail_partner_format().get(request.env.ref('base.partner_root')),
+            'partner_root': partner_root.sudo().mail_partner_format().get(partner_root),
             'public_partners': list(request.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id.mail_partner_format().values()),
-            'current_partner': request.env.user.partner_id.mail_partner_format().get(request.env.user.partner_id),
+            'current_partner': current_partner.mail_partner_format().get(current_partner),
             'current_user_id': request.env.user.id,
         }
         return values

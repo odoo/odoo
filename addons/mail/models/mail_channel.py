@@ -1046,24 +1046,24 @@ class Channel(models.Model):
 
     @api.model
     def channel_fetch_slot(self):
-        """ Return the channels of the user grouped by 'slot' (channel, direct_message or private_group), and
-            the mapping between partner_id/channel_id for direct_message channels.
-            :returns dict : the grouped channels and the mapping
-        """
-        values = {}
-        my_partner_id = self.env.user.partner_id.id
-        pinned_channels = self.env['mail.channel.partner'].search([('partner_id', '=', my_partner_id), ('is_pinned', '=', True)]).mapped('channel_id')
-
-        # get the group/public channels
-        values['channel_channel'] = self.search([('channel_type', '=', 'channel'), ('public', 'in', ['public', 'groups']), ('channel_partner_ids', 'in', [my_partner_id])]).channel_info()
-
+        """Return the channels of the current user."""
+        channels = self.env['mail.channel']
+        # get channels
+        channels |= self.env['mail.channel'].search([
+            ('channel_type', '=', 'channel'),
+            ('channel_last_seen_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
+                ('partner_id', '=', self.env.user.partner_id.id),
+            ])),
+        ])
         # get the pinned 'direct message' channel
-        direct_message_channels = self.search([('channel_type', '=', 'chat'), ('id', 'in', pinned_channels.ids)])
-        values['channel_direct_message'] = direct_message_channels.channel_info()
-
-        # get the private group
-        values['channel_private_group'] = self.search([('channel_type', '=', 'channel'), ('public', '=', 'private'), ('channel_partner_ids', 'in', [my_partner_id])]).channel_info()
-        return values
+        channels |= self.env['mail.channel'].search([
+            ('channel_type', '=', 'chat'),
+            ('channel_last_seen_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
+                ('partner_id', '=', self.env.user.partner_id.id),
+                ('is_pinned', '=', True)
+            ])),
+        ])
+        return channels
 
     @api.model
     def channel_search_to_join(self, name=None, domain=None):

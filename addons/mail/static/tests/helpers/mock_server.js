@@ -380,21 +380,17 @@ MockServer.include({
             ['members', 'in', this.currentPartnerId],
             ['public', 'in', ['public', 'groups']],
         ]);
-        const channelInfos = this._mockMailChannelChannelInfo(channels.map(channel => channel.id));
-
         const directMessages = this._getRecords('mail.channel', [
             ['channel_type', '=', 'chat'],
             ['is_pinned', '=', true],
             ['members', 'in', this.currentPartnerId],
         ]);
-        const directMessageInfos = this._mockMailChannelChannelInfo(directMessages.map(channel => channel.id));
-
         const privateGroups = this._getRecords('mail.channel', [
             ['channel_type', '=', 'channel'],
             ['members', 'in', this.currentPartnerId],
             ['public', '=', 'private'],
         ]);
-        const privateGroupInfos = this._mockMailChannelChannelInfo(privateGroups.map(channel => channel.id));
+        const channelsInfo = this._mockMailChannelChannelInfo(channels.concat(directMessages, privateGroups).map(channel => channel.id));
 
         const moderation_channel_ids = this._getRecords('mail.channel', [['is_moderator', '=', true]]).map(channel => channel.id);
         const moderation_counter = this._getRecords('mail.message', [
@@ -433,11 +429,7 @@ MockServer.include({
         ]).length;
 
         return {
-            channel_slots: {
-                channel_channel: channelInfos,
-                channel_direct_message: directMessageInfos,
-                channel_private_group: privateGroupInfos,
-            },
+            channels: channelsInfo,
             commands,
             current_partner: currentPartnerFormat,
             current_user_id: this.currentUserId,

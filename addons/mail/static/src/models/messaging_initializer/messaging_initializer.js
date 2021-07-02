@@ -70,7 +70,7 @@ function factory(dependencies) {
         /**
          * @private
          * @param {Object} param0
-         * @param {Object} param0.channel_slots
+         * @param {Object} param0.channels
          * @param {Array} [param0.commands=[]]
          * @param {Object} param0.current_partner
          * @param {integer} param0.current_user_id
@@ -85,7 +85,7 @@ function factory(dependencies) {
          * @param {integer} [param0.starred_counter=0]
          */
         async _init({
-            channel_slots,
+            channels,
             commands = [],
             current_partner,
             current_user_id,
@@ -122,7 +122,7 @@ function factory(dependencies) {
             this._initCommands(commands);
             this._initMentionPartnerSuggestions(mention_partner_suggestions);
             // channels when the rest of messaging is ready
-            await this.async(() => this._initChannels(channel_slots));
+            await this.async(() => this._initChannels(channels));
             // failures after channels
             this._initMailFailures(mail_failures);
             discuss.update({ menu_id });
@@ -140,17 +140,9 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @param {Object} [param0={}]
-         * @param {Object[]} [param0.channel_channel=[]]
-         * @param {Object[]} [param0.channel_direct_message=[]]
-         * @param {Object[]} [param0.channel_private_group=[]]
+         * @param {Object[]} channelsData
          */
-        async _initChannels({
-            channel_channel = [],
-            channel_direct_message = [],
-            channel_private_group = [],
-        } = {}) {
-            const channelsData = channel_channel.concat(channel_direct_message, channel_private_group);
+        async _initChannels(channelsData) {
             return executeGracefully(channelsData.map(channelData => () => {
                 const convertedData = this.env.models['mail.thread'].convertData(channelData);
                 const channel = this.env.models['mail.thread'].insert(

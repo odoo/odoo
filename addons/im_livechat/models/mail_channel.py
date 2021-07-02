@@ -73,16 +73,15 @@ class MailChannel(models.Model):
 
     @api.model
     def channel_fetch_slot(self):
-        values = super(MailChannel, self).channel_fetch_slot()
-        livechat_channels = self.env['mail.channel'].search([
+        channels = super(MailChannel, self).channel_fetch_slot()
+        channels |= self.env['mail.channel'].search([
             ('channel_type', '=', 'livechat'),
             ('channel_last_seen_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
                 ('partner_id', '=', self.env.user.partner_id.id),
-                ('is_pinned', '=', True)])
-            ),
+                ('is_pinned', '=', True)
+            ])),
         ])
-        values['channel_livechat'] = livechat_channels.channel_info()
-        return values
+        return channels
 
     def _channel_get_livechat_visitor_info(self):
         self.ensure_one()

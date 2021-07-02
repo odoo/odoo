@@ -90,9 +90,9 @@ MockServer.include({
             ['is_pinned', '=', true],
             ['members', 'in', this.currentPartnerId],
         ]);
-        initMessaging.channel_slots.channel_livechat = this._mockMailChannelChannelInfo(
+        initMessaging.channels.push(...this._mockMailChannelChannelInfo(
             livechats.map(channel => channel.id)
-        );
+        ));
 
         return initMessaging;
     },
