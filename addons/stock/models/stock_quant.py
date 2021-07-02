@@ -285,13 +285,10 @@ class StockQuant(models.Model):
             'context': ctx,
             'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
             'help': """
-                <p class="o_view_nocontent_barcode_scanner">
-                    Want to speed up your inventory counts? Try our Barcode app
+                <p class="o_view_nocontent_smiling_face">
+                    Your stock is currently empty
                 </p><p>
-                    Barcode scanner can be activated via inventory settings.
-                    Manual inventory adjustments can also be performed and pre-filled with
-                    suggested counted quantity.
-                </p>
+                    Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout Favorites <span class="fa fa-long-arrow-right"/> Import</p>
                 """
         }
         return action
