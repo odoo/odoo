@@ -222,7 +222,7 @@
                         <button name="open_bank_statement_view" type="object" icon="fa-edit" title="Edit" attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), ('statement_id', '=', False)]}"/>
                         <button name="open_payment_view" type="object" icon="fa-edit" title="Edit" attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), ('payment_id', '=', False)]}"/>
                         <button name="action_post" states="draft" icon="fa-check" title="Post" type="object" groups="account.group_account_invoice"/>
-                        <button name="%(action_view_account_move_reversal)d" states="posted" title="Reverse" icon="fa-refresh" type="action" groups="account.group_account_invoice"/>
+                        <button name="%(action_view_account_move_reversal)d" states="posted" title="Reverse" icon="fa-undo" type="action" groups="account.group_account_invoice"/>
                         <button name="action_duplicate" icon="fa-files-o" title="Duplicate" type="object" groups="account.group_account_invoice"/>
                     </groupby>
                 </tree>
