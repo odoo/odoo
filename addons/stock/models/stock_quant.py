@@ -307,19 +307,6 @@ class StockQuant(models.Model):
         # for some reason if multi-record, env.context doesn't pass to wizards...
         ctx = dict(self.env.context or {})
         ctx['default_quant_ids'] = self.ids
-        quants_not_entered = self.filtered(lambda quant: not quant.inventory_quantity_set)
-        if quants_not_entered:
-            view = self.env.ref('stock.inventory_warning_apply_view', False)
-            return {
-                'name': _('Quantities Not Entered'),
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'views': [(view.id, 'form')],
-                'view_id': view.id,
-                'res_model': 'stock.inventory.warning',
-                'target': 'new',
-                'context': ctx,
-            }
         quants_outdated = self.filtered(lambda quant: quant.is_outdated)
         if quants_outdated:
             ctx['default_quant_to_fix_ids'] = quants_outdated.ids
