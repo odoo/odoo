@@ -353,7 +353,7 @@
                 <field name="inventory_quantity_set" invisible="1"/>
                 <field name="location_id" domain="[('usage', 'in', ['internal', 'transit'])]" attrs="{'readonly': [('id', '!=', False)]}" invisible="context.get('hide_location', False)" options="{'no_create': True}"/>
                 <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}" readonly="context.get('single_product', False)" force_save="1" options="{'no_create': True}"/>
-                <field name="product_categ_id" optional="show"/>
+                <field name="product_categ_id" optional="hide"/>
                 <field name="lot_id" groups="stock.group_production_lot"
                     attrs="{'readonly': ['|', ('id', '!=', False), ('tracking', 'not in', ['serial', 'lot'])]}"
                     invisible="context.get('hide_lot', False)"
