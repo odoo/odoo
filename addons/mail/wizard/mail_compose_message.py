@@ -504,12 +504,10 @@ class MailComposer(models.TransientModel):
         return blacklisted_rec_ids
 
     def _get_done_emails(self, mail_values_dict):
-        seen_list = self._context.get('mass_mailing_seen_list') or []
-        return seen_list
+        return []
 
     def _get_optout_emails(self, mail_values_dict):
-        opt_out_list = self._context.get('mass_mailing_opt_out_list') or []
-        return opt_out_list
+        return []
 
     def _onchange_template_id(self, template_id, composition_mode, model, res_id):
         """ - mass_mailing: we cannot render, so return the template values

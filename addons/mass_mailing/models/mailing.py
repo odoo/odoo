@@ -603,8 +603,6 @@ class MassMailing(models.Model):
     def _get_mass_mailing_context(self):
         """Returns extra context items with pre-filled blacklist and seen list for massmailing"""
         return {
-            'mass_mailing_opt_out_list': self._get_opt_out_list(),
-            'mass_mailing_seen_list': self._get_seen_list(),
             'post_convert_links': self._get_link_tracker_values(),
         }
 
