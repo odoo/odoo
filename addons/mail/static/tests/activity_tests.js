@@ -1,10 +1,13 @@
 /** @odoo-module **/
 
+import ActivityRenderer from '@mail/js/views/activity/activity_renderer';
 import ActivityView from '@mail/js/views/activity/activity_view';
 import testUtils from 'web.test_utils';
+import domUtils from 'web.dom';
 
 import { legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { patch, unpatch } from 'web.utils';
 import { registry } from "@web/core/registry";
 
 let serverData;
@@ -579,6 +582,42 @@ QUnit.test('Activity view: many2one_avatar_user widget in activity view', async 
         "should have m2o avatar image");
     assert.containsNone(webClient, '.o_m2o_avatar > span',
         "should not have text on many2one_avatar_user if onlyImage node option is passed");
+});
+
+QUnit.test("Activity view: on_destroy_callback doesn't crash", async function (assert) {
+    assert.expect(3);
+
+    const params = {
+        View: ActivityView,
+        model: 'task',
+        data: this.data,
+        arch: `<activity string="Task">
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </activity>`,
+    };
+
+    patchWithCleanup(ActivityRenderer.prototype, {
+        mounted() {
+            assert.step('mounted');
+        },
+        willUnmount() {
+            assert.step('willUnmount');
+        }
+    });
+
+    const activity = await createView(params);
+    domUtils.detach([{ widget: activity }]);
+
+    assert.verifySteps([
+        'mounted',
+        'willUnmount'
+    ]);
+
+    activity.destroy();
 });
 
 });
