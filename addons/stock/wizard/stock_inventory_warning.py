@@ -10,9 +10,6 @@ class StockInventoryWarning(models.TransientModel):
 
     quant_ids = fields.Many2many('stock.quant')
 
-    def action_apply(self):
-        return self.quant_ids.filtered(lambda q: q.inventory_quantity_set).action_apply_inventory()
-
     def action_reset(self):
         return self.quant_ids.action_set_inventory_quantity_to_zero()
 
