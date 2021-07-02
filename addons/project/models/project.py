@@ -535,7 +535,6 @@ class Project(models.Model):
                     'active_id': self.id,
                     'search_default_open_tasks': True,
                     'search_default_Stage': True,
-                    'search_default_User': True
                 }),
             },
             'value': counts['open_tasks_count']
