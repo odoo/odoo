@@ -15,6 +15,7 @@ This module includes contact phone and mobile numbers validation.""",
     'data': [
         'security/ir.model.access.csv',
         'data/website_crm_data.xml',
+        'data/website_crm_lead_merge_post_message_template.xml',
         'views/website_crm_lead_views.xml',
         'views/website_crm_templates.xml',
         'views/res_config_settings_views.xml',

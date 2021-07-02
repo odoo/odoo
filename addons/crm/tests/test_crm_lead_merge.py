@@ -286,5 +286,4 @@ class TestLeadMerge(TestLeadMergeCommon):
         self.assertEqual(calendar_event.res_id, master_lead.id)
         self.assertTrue(all(att.res_id == master_lead.id for att in attachments))
         # 2many accessors updated
-        self.assertEqual(master_lead.activity_ids, activity)
         self.assertEqual(master_lead.calendar_event_ids, calendar_event)

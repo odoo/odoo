@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="merged_opportunities" inherit_id="crm.merged_opportunities">
+
+        <xpath expr="//div[@name='marketing']" position="attributes">
+            <attribute name="t-if">lead.campaign_id or lead.medium_id or lead.source_id or lead.visitor_ids</attribute>
+        </xpath>
+
+        <xpath expr="//div[@name='marketing']" position="inside">
+            <t t-if="lead.visitor_ids">
+                <div>
+                    Web Visitors:
+                    <t t-esc="', '.join(lead.visitor_ids.mapped('name'))"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

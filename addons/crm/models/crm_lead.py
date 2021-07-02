@@ -1234,54 +1234,6 @@ class Lead(models.Model):
 
         return data
 
-    def _merge_notify_get_merged_fields_message(self):
-        """ Generate the message body with the changed values
-
-        :param fields : list of fields to track
-        :returns a list of message bodies for the corresponding leads
-        """
-        bodies = []
-        for lead in self:
-            title = "%s : %s\n" % (_('Merged opportunity') if lead.type == 'opportunity' else _('Merged lead'), lead.name)
-            body = [title]
-            _fields = self.env['ir.model.fields'].search([
-                ('name', 'in', self._merge_get_fields()),
-                ('model_id.model', '=', lead._name),
-            ])
-            for field in _fields:
-                value = getattr(lead, field.name, False)
-                if field.ttype == 'selection':
-                    selections = lead.fields_get()[field.name]['selection']
-                    value = next((v[1] for v in selections if v[0] == value), value)
-                elif field.ttype == 'many2one':
-                    if value:
-                        value = value.sudo().display_name
-                elif field.ttype == 'many2many':
-                    if value:
-                        value = ','.join(
-                            val.display_name
-                            for val in value.sudo()
-                        )
-                body.append("%s: %s" % (field.field_description, value or ''))
-            bodies.append("<br/>".join(body + ['<br/>']))
-        return bodies
-
-    def _merge_notify(self, opportunities):
-        """ Post a message gathering merged leads/opps informations. It explains
-        which fields has been merged and their new value. `self` is the resulting
-        merge crm.lead record.
-
-        :param opportunities: see ``_merge_dependences``
-        """
-        # TODO JEM: mail template should be used instead of fix body, subject text
-        self.ensure_one()
-        merge_message = _('Merged leads') if self.type == 'lead' else _('Merged opportunities')
-        subject = merge_message + ": " + ", ".join(opportunities.mapped('name'))
-        # message bodies
-        message_bodies = opportunities._merge_notify_get_merged_fields_message()
-        message_body = "\n\n".join(message_bodies)
-        return self.message_post(body=message_body, subject=subject)
-
     def merge_opportunity(self, user_id=False, team_id=False, auto_unlink=True):
         """ Merge opportunities in one. Different cases of merge:
                 - merge leads together = 1 new lead
@@ -1325,7 +1277,9 @@ class Lead(models.Model):
             merged_data['team_id'] = team_id
 
         # log merge message
-        opportunities_head._merge_notify(opportunities_tail)
+        opportunities_head.message_post_with_view('crm.merged_opportunities',
+                                                  values={"opportunities": opportunities_tail, "is_html_empty": is_html_empty},
+                                                  subtype_id=self.env.ref('mail.mt_note').id)
         # merge other data (mail.message, attachments, ...) from tail into head
         opportunities_head._merge_dependences(opportunities_tail)
 
@@ -1365,37 +1319,8 @@ class Lead(models.Model):
           merge;
         """
         self.ensure_one()
-        self._merge_dependences_history(opportunities)
         self._merge_dependences_attachments(opportunities)
         self._merge_dependences_calendar_events(opportunities)
-
-    def _merge_dependences_history(self, opportunities):
-        """ Move history from the given opportunities to the current one. `self`
-        is the crm.lead record destination for message of `opportunities`.
-
-        This method moves
-          * messages
-          * activities
-
-        :param opportunities: see ``_merge_dependences``
-        """
-        self.ensure_one()
-        for opportunity in opportunities:
-            for message in opportunity.message_ids:
-                if message.subject:
-                    subject = _("From %(source_name)s : %(source_subject)s", source_name=opportunity.name, source_subject=message.subject)
-                else:
-                    subject = _("From %(source_name)s", source_name=opportunity.name)
-                message.write({
-                    'res_id': self.id,
-                    'subject': subject,
-                })
-
-        opportunities.activity_ids.write({
-            'res_id': self.id,
-        })
-
-        return True
 
     def _merge_dependences_attachments(self, opportunities):
         """ Move attachments of given opportunities to the current one `self`, and rename

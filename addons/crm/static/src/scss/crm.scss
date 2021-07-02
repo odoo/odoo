@@ -31,3 +31,44 @@
         }
     }
 }
+
+
+.o_crm_merge_post_message {
+
+    .o_crm_merge_content {
+        border-left: solid 0.5px black;
+        padding-left: 1em;
+    }
+
+    summary {
+        font-size: 1em;
+    }
+
+    details > summary {
+        list-style: none;
+    }
+
+    details {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+
+    // remove old caret
+    summary::-webkit-details-marker {
+        display: none
+    }
+
+    // put a new caret after the label
+    summary {
+        h6::after {
+            content: ' ►';
+        }
+    }
+
+    details[open] summary {
+        h6:after {
+            content: " ▼";
+        }
+    }
+
+}
