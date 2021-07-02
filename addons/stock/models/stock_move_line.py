@@ -307,7 +307,13 @@ class StockMoveLine(models.Model):
 
                 # Unreserve the old charateristics of the move line.
                 if not ml._should_bypass_reservation(ml.location_id):
-                    Quant._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                    try:
+                        Quant._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                    except UserError:
+                        pass
+                    if new_product_uom_qty == 0:
+                        moves_to_recompute_state |= ml.move_id
+                        ml.with_context(bypass_reservation_update=True).product_uom_qty = 0
 
                 # Reserve the maximum available of the new charateristics of the move line.
                 if not ml._should_bypass_reservation(updates.get('location_id', ml.location_id)):
