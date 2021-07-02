@@ -34,7 +34,7 @@ class AccountMove(models.Model):
             for copy_vals in res:
                 if 'line_ids' in copy_vals:
                     copy_vals['line_ids'] = [line_vals for line_vals in copy_vals['line_ids']
-                                             if line_vals[0] != 0 or not line_vals[2]['is_anglo_saxon_line']]
+                                             if line_vals[0] != 0 or not line_vals[2].get('is_anglo_saxon_line')]
 
         return res
 
