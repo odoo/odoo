@@ -455,7 +455,9 @@ class Environment(Mapping):
         self.registry = Registry(cr.dbname)
         self.cache = envs.cache
         self._cache_key = {}                    # memo {field: cache_key}
-        self._protected = envs.protected        # proxy to shared data structure
+        # proxy to shared data structures
+        self._protected = envs.protected
+        self._fresh_records = envs.fresh_records
         self.all = envs
         envs.add(self)
         return self
@@ -672,6 +674,32 @@ class Environment(Mapping):
         finally:
             protected.popmap()
 
+    @contextmanager
+    def fresh_records(self, records):
+        """ Mark just created records """
+        stack = self._fresh_records
+        try:
+            stack.pushmap()
+            model_name = records._name
+            ids = stack.get(model_name, frozenset())
+            stack[model_name] = ids.union(records._ids)
+            yield
+        finally:
+            stack.popmap()
+
+    def may_have_links(self, field, records):
+        if field.type in ('one2many', 'many2many'):
+            # inversed field for x2many could be res_id (fields.Integer). Skip this case for simplicity
+            return True
+
+        try:
+            fresh_records = self._fresh_records[field.comodel_name]
+        except KeyError:
+            return True
+
+        all_records_are_fresh = set(records.ids) <= fresh_records
+        return not all_records_are_fresh
+
     def fields_to_compute(self):
         """ Return a view on the field to compute. """
         return self.all.tocompute.keys()
@@ -751,6 +779,7 @@ class Environments(object):
         self.envs = WeakSet()                   # weak set of environments
         self.cache = Cache()                    # cache for all records
         self.protected = StackMap()             # fields to protect {field: ids, ...}
+        self.fresh_records = StackMap()         # just created records {model_name: ids, ...}
         self.tocompute = defaultdict(set)       # recomputations {field: ids}
         # updates {model: {id: {field: value}}}
         self.towrite = defaultdict(lambda: defaultdict(dict))

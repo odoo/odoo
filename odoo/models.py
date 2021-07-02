@@ -4009,7 +4009,7 @@ Fields:
 
         # protect fields being written against recomputation
         protected = [(data['protected'], data['record']) for data in data_list]
-        with self.env.protecting(protected):
+        with self.env.protecting(protected), self.env.fresh_records(records):
             # mark computed fields as todo
             records.modified(self._fields, create=True)
 
@@ -5848,7 +5848,7 @@ Fields:
                     new_records = self.filtered(lambda r: not r.id)
                     real_records = self - new_records
                     records = model.browse()
-                    if real_records:
+                    if real_records and self.env.may_have_links(key, real_records):
                         records |= model.search([(key.name, 'in', real_records.ids)], order='id')
                     if new_records:
                         cache_records = self.env.cache.get_records(model, key)
