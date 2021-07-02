@@ -766,25 +766,6 @@ class Channel(models.Model):
     #   - when a message is posted on a channel (to the channel, using _notify() method)
     # ------------------------------------------------------------
 
-    @api.model
-    def _get_channel_partner_info(self, all_partners, direct_partners):
-        """
-        Return the information needed by channel to display channel members
-            :param all_partners: list of res.parner():
-            :param direct_partners: list of res.parner():
-            :returns: a list of {'id', 'name', 'email'} for each partner and adds {im_status} for direct_partners.
-            :rtype : list(dict)
-        """
-        # TODO
-        partner_infos = {partner['id']: partner for partner in all_partners.sudo().read(['id', 'name', 'email'])}
-        # add im _status for direct_partners
-        direct_partners_im_status = {partner['id']: partner for partner in direct_partners.sudo().read(['im_status'])}
-
-        for i in direct_partners_im_status.keys():
-            partner_infos[i].update(direct_partners_im_status[i])
-
-        return partner_infos
-
     def channel_info(self, extra_info=False):
         """ Get the informations header for the current channels
             :returns a list of channels values

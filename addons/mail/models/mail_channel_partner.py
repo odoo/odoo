@@ -51,7 +51,7 @@ class ChannelPartner(models.Model):
         for channel_partner in self:
             formatted_members.append({
                 'id': channel_partner.id,
-                'partner': channel_partner.partner_id.mail_partner_format(),
+                'partner': channel_partner.partner_id.mail_partner_format().get(channel_partner.partner_id),
                 'fetched_message_id': channel_partner.fetched_message_id.id,
                 'seen_message_id': channel_partner.seen_message_id.id,
             })
