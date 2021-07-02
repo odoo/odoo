@@ -258,22 +258,25 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return self.env['account.move']
 
-    def _create_invoice_from_binary(self, filename, content):
+    def _create_invoice_from_binary(self, filename, content, extension):
         """ Create a new invoice with the data inside a binary file.
 
-        :param filename: The name of the file.
-        :param content:  The content of the binary file.
-        :returns:        The created invoice.
+        :param filename:  The name of the file.
+        :param content:   The content of the binary file.
+        :param extension: The extensions as a string.
+        :returns:         The created invoice.
         """
         # TO OVERRIDE
         self.ensure_one()
         return self.env['account.move']
 
-    def _update_invoice_from_binary(self, filename, content, invoice):
+    def _update_invoice_from_binary(self, filename, content, extension, invoice):
         """ Update an existing invoice with the data inside a binary file.
 
         :param filename: The name of the file.
         :param content:  The content of the binary file.
+        :param extension: The extensions as a string.
+        :param invoice:  The invoice to update.
         :returns:        The updated invoice.
         """
         # TO OVERRIDE
@@ -382,6 +385,7 @@ class AccountEdiFormat(models.Model):
 
     def _decode_binary(self, filename, content):
         """Decodes any file into a list of one dictionary representing an attachment.
+        This is a fallback for all files that are not decoded by other methods.
 
         :param filename:    The name of the file.
         :param content:     The bytes representing the file.
@@ -392,7 +396,7 @@ class AccountEdiFormat(models.Model):
         """
         return [{
             'filename': filename,
-            'extension': pathlib.Path(filename).suffixes,
+            'extension': ''.join(pathlib.Path(filename).suffixes),
             'content': content,
             'type': 'binary',
         }]
@@ -435,7 +439,7 @@ class AccountEdiFormat(models.Model):
                     elif file_data['type'] == 'pdf':
                         res = edi_format.with_company(self.env.company)._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'])
                         file_data['pdf_reader'].stream.close()
-                    else:  # file_data['type'] == 'binary'
+                    else:
                         res = edi_format._create_invoice_from_binary(file_data['filename'], file_data['content'], file_data['extension'])
                 except Exception as e:
                     _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
