@@ -269,6 +269,7 @@ class ModelManager {
                 Model.fields[fieldName] = field;
             } else {
                 Object.assign(Model.fields[fieldName].dependencies, field.dependencies);
+                if (typeof field.default !== 'undefined') Model.fields[fieldName].default = field.default;
             }
         }
     }
