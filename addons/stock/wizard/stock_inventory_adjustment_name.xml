@@ -7,8 +7,12 @@
         <field name="arch" type="xml">
             <form>
                 <div>
+                    <div attrs="{'invisible': [('show_info', '=', False)]}">
+                        Some selected lines don't have any quantities set, they will be ignored.
+                    </div>
                     <group>
-                        <field name="inventory_adjustment_name" string="Inventory Reference"/>
+                        <field name="inventory_adjustment_name" string="Inventory Reference / Reason"/>
+                        <field name="show_info" invisible="1"/>
                     </group>
                 </div>
                 <footer>
@@ -19,7 +23,7 @@
         </field>
     </record>
     <record id="action_stock_inventory_adjustement_name" model="ir.actions.act_window">
-        <field name="name">Name Inventory Adjustement</field>
+        <field name="name">Inventory Adjustment Reference / Reason</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.inventory.adjustment.name</field>
         <field name="view_mode">form</field>
