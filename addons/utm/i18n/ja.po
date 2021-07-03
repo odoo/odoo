@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Shunho Kin <s-kin@shonan-innovation.co.jp>, 2020
-# Martin Trigaux, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2020
 # Manami Hashi <manami@roomsfor.hk>, 2020
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2020
+# Shigekazu N. <shigekazu.noka@gmail.com>, 2020
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # Noma Yuki, 2020
+# Martin Trigaux, 2020
+# Ryoko Tsuda <ryoko@quartile.co>, 2021
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Noma Yuki, 2020\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2021\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +35,7 @@ msgstr "有効"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
 msgid "Add a new tag"
-msgstr ""
+msgstr "新しいタグを追加"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_campaign__is_website
@@ -233,6 +234,11 @@ msgid "Dropdown menu"
 msgstr "ドロップダウンメニュー"
 
 #. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Edit"
+msgstr "編集"
+
+#. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
 msgid "Email Campaign - Products"
 msgstr "Eメールキャンペーン - 製品"
@@ -381,7 +387,7 @@ msgstr "媒体"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
 msgid "Medium Name"
-msgstr ""
+msgstr "メディア名"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
@@ -561,6 +567,13 @@ msgid ""
 msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_utm_tag__color
+msgid ""
+"Tag color. No color means no display in kanban to distinguish internal tags "
+"from public categorization tags."
+msgstr ""
+
+#. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
 msgid "Tag name already exists !"
 msgstr "そのタグ名は既に使われています！"
@@ -589,19 +602,19 @@ msgstr "今週"
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
-msgstr ""
+msgstr "これは、Fall_Drive、Christmas_Specialなど、さまざまなキャンペーンの取り組みを追跡するのに役立つ名前です。"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr ""
+msgstr "これは、はがき、電子メール、バナー広告などの配信方法です。"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr ""
+msgstr "これはリンクのソースです。たとえば、検索エンジン、別のドメイン、またはメーリングリストの名前です。"
 
 #. module: utm
 #. openerp-web
