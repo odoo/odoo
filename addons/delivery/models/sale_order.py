@@ -111,8 +111,10 @@ class SaleOrder(models.Model):
             values['name'] += '\n' + 'Free Shipping'
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
-        if self.picking_ids:
-            self.picking_ids.write({'carrier_id': carrier.id})
+
+        to_update = self.picking_ids.filtered(lambda p: p.state not in ['cancel', 'done'] and p.carrier_tracking_ref == False)
+        if to_update:
+            to_update.write({'carrier_id': carrier.id})
         sol = SaleOrderLine.sudo().create(values)
         return sol
 
