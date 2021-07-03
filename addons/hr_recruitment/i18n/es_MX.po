@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgstr "% endif"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Click to view</b> the application."
-msgstr "<b>Haz clic para ver</b> la postulación."
+msgstr "<b>Haga clic para ver</b> la postulación."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -37,7 +38,7 @@ msgstr "<b>Haz clic para ver</b> la postulación."
 #, python-format
 msgid "<b>Did you apply by sending an email?</b> Check incoming applications."
 msgstr ""
-"<b>¿Te postulaste enviando un correo electrónico?</b> Verifica las "
+"<b>¿Se postuló enviando un correo electrónico?</b> Verifique las "
 "postulaciones entrantes."
 
 #. module: hr_recruitment
@@ -46,7 +47,7 @@ msgstr ""
 #, python-format
 msgid "<b>Drag this card</b>, to qualify him for a first interview."
 msgstr ""
-"<b>Arrastra esta tarjeta</b>, para calificarlo para una primera entrevista."
+"<b>Arrastre esta tarjeta</b>, para calificarlo para una primera entrevista."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -56,7 +57,7 @@ msgid ""
 "<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All "
 "emails sent or received are saved in the history here</i>"
 msgstr ""
-"<div><b>Intenta mandarle un correo electrónico</b> al "
+"<div><b>Intente mandarle un correo electrónico</b> al "
 "candidato.</div><div><i>Consejo: Todos los correos electrónicos enviados o "
 "recibidos son guardados en este historial</i>"
 
@@ -68,8 +69,8 @@ msgid ""
 "<div>Great job! You hired a new colleague!</div><div>Try the Website app to "
 "publish job offers online.</div>"
 msgstr ""
-"<div>¡Bien hecho! ¡Contrataste a un nuevo colega!</div><div>Prueba la "
-"aplicación de Sitio Web para publicar ofertas de trabajo en línea.</div>"
+"<div>¡Bien hecho! ¡Contrató a un nuevo colega!</div><div>Pruebe la "
+"aplicación de Sitio web para publicar ofertas de trabajo en línea.</div>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -121,7 +122,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
 msgid "<span>Folded in Recruitment Pipe: </span>"
-msgstr "<span>Doblado en el pipeline de reclutamiento: </span>"
+msgstr "<span>Doblado en el flujo de reclutamiento: </span>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_congratulations
@@ -209,10 +210,10 @@ msgstr ""
 "            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "                Hola,\n"
 "                <br/><br/>\n"
-"                Confirmamos que hemos recibido con éxito tu aplicación para el trabajo\n"
+"                Confirmamos que hemos recibido con éxito su aplicación para el trabajo\n"
 "                \"<a href=\"${object.job_id.website_url or ''}\" style=\"color:#9A6C8E;\"><strong>${object.job_id.name}</strong></a>\" en <strong>${object.company_id.name}</strong>.\n"
 "                <br/><br/>\n"
-"                Te contactaremos pronto.\n"
+"                Le contactaremos pronto.\n"
 "\n"
 "                % if 'website_url' in object.job_id and object.job_id.website_url:\n"
 "                    <div style=\"margin: 16px 8px 16px 8px;\">\n"
@@ -222,7 +223,7 @@ msgstr ""
 "\n"
 "                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
 "                % if object.user_id:\n"
-"                    <h3 style=\"color:#9A6C8E;\"><strong>Tu contacto:</strong></h3>\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Su contacto:</strong></h3>\n"
 "                    <table>\n"
 "                        <tr>\n"
 "                            <td width=\"75\">\n"
@@ -240,9 +241,9 @@ msgstr ""
 "\n"
 "                <h3 style=\"color:#9A6C8E;\"><strong>¿Cuál es el siguiente paso?</strong></h3>\n"
 "                Usualmente <strong>contestamos postulaciones en pocos días.</strong><br/><br/>\n"
-"                Siéntete libre de <strong>contactarnos si quieres una retroalimentación\n"
-"                más rápida</strong> o si no recibes noticias de nosotros\n"
-"                lo suficientemente rápido (solo responde a este correo electrónico).\n"
+"                Siéntase libre de <strong>contactarnos si quiere una retroalimentación\n"
+"                más rápida</strong> o si no recibe noticias de nosotros\n"
+"                lo suficientemente rápido (solo responda a este correo electrónico).\n"
 "\n"
 "                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
 "                % set location = ''\n"
@@ -380,13 +381,13 @@ msgstr ""
 "        <td valign=\"top\" style=\"padding: 0px 10px;\">\n"
 "            <div style=\"text-align: center\">\n"
 "                <h2>¡Felicidades!</h2>\n"
-"                <div style=\"color:grey;\">Tu currículum ha sido calificado positivamente.</div>\n"
+"                <div style=\"color:grey;\">Su currículum ha sido calificado positivamente.</div>\n"
 "                <img src=\"/hr_recruitment/static/src/img/congratulations.png\" alt=\"¡Felicidades!\" style=\"width:175px;margin:20px 0;\"/>\n"
 "            </div>\n"
 "            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
-"                Acabamos de revisar tu currículum y nos llamó\n"
-"                la atención. Como creemos que serías el adecuado\n"
-"                para el puesto, tu postulación ha sido preseleccionada para una \n"
+"                Acabamos de revisar su currículum y nos llamó\n"
+"                la atención. Como creemos que sería el adecuado\n"
+"                para el puesto, su postulación ha sido preseleccionada para una \n"
 "                llamada o entrevista.\n"
 "                <br/><br/>\n"
 "                % if 'website_url' in object.job_id and object.job_id.website_url:\n"
@@ -396,7 +397,7 @@ msgstr ""
 "                % endif\n"
 "\n"
 "                % if object.user_id:\n"
-"                    Pronto serás contactado por:\n"
+"                    Pronto será contactado por:\n"
 "                    <table>\n"
 "                        <tr>\n"
 "                            <td width=\"75\">\n"
@@ -416,7 +417,7 @@ msgstr ""
 "                    -- <br/>\n"
 "                    El Equipo de RRHH\n"
 "                    % if 'website_url' in object.job_id and object.job_id.website_url\n"
-"                        Descubre <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">todos nuestros trabajos</a>.<br/>\n"
+"                        Descubra <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">todos nuestros trabajos</a>.<br/>\n"
 "                    % endif\n"
 "                </div>\n"
 "\n"
@@ -426,9 +427,9 @@ msgstr ""
 "                <br/><br/>\n"
 "                El siguiente paso será o una llamada o una junta en nuestras oficinas.\n"
 "                <br/>\n"
-"                Siéntete libre <strong>de contactarnos si quieres una retroalimentación\n"
-"                más rápida</strong> o si no recibes noticias de nosotros\n"
-"                lo suficientemente rápido (solo responde a este correo electrónico).\n"
+"                Siéntase libre <strong>de contactarnos si quiere una retroalimentación\n"
+"                más rápida</strong> o si no recibe noticias de nosotros\n"
+"                lo suficientemente rápido (solo responda a este correo electrónico).\n"
 "                <br/>\n"
 "\n"
 "                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
@@ -518,23 +519,23 @@ msgstr ""
 "        <td valign=\"top\">\n"
 "            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "                Hola,<br/><br/>\n"
-"                Gracias por mostrar interés en unirte al equipo de\n"
-"                <b>${object.company_id.name}</b>.  Queremos informarte\n"
-"                que, aunque tu currículum es competitivo,\n"
-"                nuestro equipo de contratación revisó tu postulación y <b>no lo\n"
+"                Gracias por mostrar interés en unirse al equipo de\n"
+"                <b>${object.company_id.name}</b>.  Queremos informarle\n"
+"                que, aunque su currículum es competitivo,\n"
+"                nuestro equipo de contratación revisó su postulación y <b>no lo\n"
 "                seleccionó para mayor consideración</b>.\n"
 "                <br/><br/>\n"
-"                Toma en cuenta que reclutar es difícil y podemos cometer\n"
-"                errores. No dudes en contestar a este correo electrónico si\n"
-"                piensas que hemos cometido un error, o si quieres más información\n"
+"                Tome en cuenta que reclutar es difícil y podemos cometer\n"
+"                errores. No dude en contestar a este correo electrónico si\n"
+"                piensa que hemos cometido un error, o si quiere más información\n"
 "                sobre nuestra decisión.\n"
 "                <br/><br/>\n"
-"                Sin embargo, mantendremos tu currículum en el registro y te\n"
+"                Sin embargo, mantendremos su currículum en el registro y le\n"
 "                contactaremos si hay oportunidades futuras que puedan ser\n"
-"                más adecuadas para tus habilidades y experiencia..\n"
+"                más adecuadas para sus habilidades y experiencia..\n"
 "                <br/><br/>\n"
-"                Te deseamos lo mejor en tu búsqueda de empleo y esperamos\n"
-"                tener la oportunidad de considerarte para otro puesto\n"
+"                Le deseamos lo mejor en su búsqueda de empleo y esperamos\n"
+"                tener la oportunidad de considerarlo para otro puesto\n"
 "                en el futuro.\n"
 "                <br/><br/>\n"
 "                Gracias,\n"
@@ -562,8 +563,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Un diccionario Python a evaluar para proporcionar valores por defecto cuando"
-" un nuevo registro se cree para este seudónimo."
+"Un diccionario Python a evaluar para proporcionar valores predeterminados "
+"cuando un nuevo registro se cree para este seudónimo."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
@@ -584,7 +585,7 @@ msgstr "Actividades"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoración de Actividad de Excepción"
+msgstr "Decoración de actividad de excepción"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_state
@@ -594,7 +595,7 @@ msgstr "Estado de la actividad"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Ícono de tipo de actividad"
+msgstr "Icono de tipo de actividad"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -606,7 +607,7 @@ msgstr "Tipos de actividad"
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid "Add a new stage in the recruitment process"
-msgstr "Agrega una nueva etapa en el proceso de reclutamiento"
+msgstr "Agregue una nueva etapa en el proceso de reclutamiento"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
@@ -656,7 +657,7 @@ msgstr "Modelo con seudónimo"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__all_application_count
 msgid "All Application Count"
-msgstr "Cantidad de postulaciones"
+msgstr "Número de postulaciones"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ_all_app
@@ -723,8 +724,8 @@ msgid ""
 "                so that you can easily search through their content."
 msgstr ""
 "Los candidatos y su CV adjunto se crean automáticamente cuando se envía un correo electrónico.\n"
-"                Si instalas los módulos de gestión de documentos, todos los currículums se indexarán automáticamente\n"
-"                de modo que puedes buscar fácilmente a través de su contenido."
+"                Si instala los módulos de gestión de documentos, todos los currículums se indexarán automáticamente\n"
+"                de modo que puede buscar fácilmente a través de su contenido."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -734,8 +735,8 @@ msgid ""
 "            so that you can easily search through their content."
 msgstr ""
 "Los candidatos y su CV adjunto se crean automáticamente cuando se envía un correo electrónico.\n"
-"            Si instalas los módulos de gestión de documentos, todos los currículums se indexarán automáticamente,\n"
-"            de modo que puedes buscar fácilmente a través de su contenido."
+"            Si instala los módulos de gestión de documentos, todos los currículums se indexarán automáticamente,\n"
+"            de modo que puede buscar fácilmente a través de su contenido."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -807,7 +808,7 @@ msgstr "Asignado"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_attachment_count
 msgid "Attachment Count"
-msgstr "Nº de archivos adjuntos"
+msgstr "Número de archivos adjuntos"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_ids
@@ -888,7 +889,7 @@ msgid ""
 "        % set record = object.env['hr.job'].search([('alias_name', '!=', False)], limit=1)\n"
 "        % if record and record.alias_domain"
 msgstr ""
-"Al establecer un seudónimo a este puesto de trabajo los correos electrónicos enviados a esta dirección crearán aplicaciones automáticamente. Incluso puedes utilizar múltiples rastreadores para obtener estadísticas de acuerdo a la fuente de la aplicación: LinkedIn, Monster, Indeed, etc.\n"
+"Al establecer un seudónimo a este puesto de trabajo los correos electrónicos enviados a esta dirección crearán aplicaciones automáticamente. Incluso puede utilizar múltiples rastreadores para obtener estadísticas de acuerdo a la fuente de la aplicación: LinkedIn, Monster, Indeed, etc.\n"
 "        % set record = object.env['hr.job'].search([('alias_name', '!=', False)], limit=1)\n"
 "        % if record and record.alias_domain"
 
@@ -922,7 +923,7 @@ msgstr "Categoría del candidato"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Choose an application email."
-msgstr "Elige un correo electrónico de postulación."
+msgstr "Elija un correo electrónico de postulación."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_closed
@@ -934,7 +935,7 @@ msgstr "Cerrado"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__color
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__color
 msgid "Color Index"
-msgstr "Índice de Colores"
+msgstr "Índice de colores"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__company_id
@@ -991,8 +992,8 @@ msgstr "Contrato firmado"
 #, python-format
 msgid "Copy this email address, to paste it in your email composer, to apply."
 msgstr ""
-"Copia esta dirección de correo electrónico, para pegarla en tu redactor de "
-"correo electrónico, para postularte."
+"Copie esta dirección de correo electrónico, para pegarla en su redactor de "
+"correo electrónico, para postularse."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1015,7 +1016,7 @@ msgstr "Crear un puesto de trabajo"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Create your first Job Position."
-msgstr "Crea tu primer Puesto de Trabajo."
+msgstr "Cree su primer puesto de trabajo."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
@@ -1045,12 +1046,12 @@ msgstr "Creado el"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Creation Date"
-msgstr "Fecha de Creación"
+msgstr "Fecha de creación"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Mensaje rebotado personalizado"
+msgstr "Mensaje devuelto personalizado"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__day_close
@@ -1075,8 +1076,8 @@ msgid ""
 "empty, the default email address will be used which is in human resources "
 "settings"
 msgstr ""
-"Define una dirección de contacto específica para este puesto. Si lo dejas en"
-" blanco, la dirección predeterminada que será usada es la que se haya "
+"Defina una dirección de contacto específica para este puesto. Si lo deja en "
+"blanco, la dirección predeterminada que será usada es la que se haya "
 "definido en la configuración de recursos humanos"
 
 #. module: hr_recruitment
@@ -1086,7 +1087,7 @@ msgid ""
 "            qualification call, first interview, second interview, refused,\n"
 "            hired."
 msgstr ""
-"Define aquí las etapas de tu proceso de reclutamiento, por ejemplo:\n"
+"Defina aquí las etapas de su proceso de reclutamiento, por ejemplo:\n"
 "            llamada de calificación, primera entrevista, segunda entrevista, rechazado,\n"
 "            contratado."
 
@@ -1103,7 +1104,7 @@ msgstr "Título"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__name
 msgid "Degree Name"
-msgstr "Nombre del Titulo"
+msgstr "Nombre del titulo"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
@@ -1169,7 +1170,7 @@ msgstr "Descartar"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre en pantalla"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/digest.py:0
@@ -1187,7 +1188,7 @@ msgstr "Doctorado"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__documents_count
 msgid "Document Count"
-msgstr "Conteo de documentos"
+msgstr "Número de documentos"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__document_ids
@@ -1207,7 +1208,7 @@ msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "            is different according to the job position."
 msgstr ""
-"No olvides especificar el departamento si tu proceso de reclutamiento\n"
+"No olvide especificar el departamento si su proceso de reclutamiento\n"
 "            es diferente según el puesto de trabajo."
 
 #. module: hr_recruitment
@@ -1462,7 +1463,7 @@ msgstr "Icono para indicar una actividad de excepción."
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_unread
 msgid "If checked, new messages require your attention."
 msgstr ""
-"Si se encuentra seleccionado, hay nuevos mensajes que requieren tu atención."
+"Si se encuentra seleccionado, hay nuevos mensajes que requieren su atención."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error
@@ -1494,7 +1495,7 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the case "
 "without removing it."
 msgstr ""
-"Si el campo activo es falso, te permitirá ocultar el caso sin eliminarlo."
+"Si el campo activo es falso, le permitirá ocultar el caso sin eliminarlo."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -1703,7 +1704,7 @@ msgstr "Actividades atrasadas"
 #, python-format
 msgid "Let people apply by email to save time."
 msgstr ""
-"Permite que las personas se postulen por correo electrónico para ahorrar "
+"Permita que las personas se postulen por correo electrónico para ahorrar "
 "tiempo."
 
 #. module: hr_recruitment
@@ -1720,7 +1721,7 @@ msgid ""
 "Let's create the position. An email will be setup for applications, and a "
 "public job description, if you use the Website app."
 msgstr ""
-"Vamos a crear el puesto. Si utilizas la aplicación de Sitio Web, se "
+"Vamos a crear el puesto. Si utiliza la aplicación de Sitio web, se "
 "establecerá un correo electrónico para las postulaciones, y también una "
 "descripción pública del trabajo."
 
@@ -1731,14 +1732,14 @@ msgstr ""
 #, python-format
 msgid "Let's have a look at how to <b>improve</b> your <b>hiring process</b>."
 msgstr ""
-"Echemos un vistazo a cómo <b>mejorar</b> tu <b>proceso de contratación</b>."
+"Echemos un vistazo a cómo <b>mejorar</b> su <b>proceso de contratación</b>."
 
 #. module: hr_recruitment
 #. openerp-web
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let's have a look at the applications pipeline."
-msgstr "Echemos un vistazo al pipeline de postulaciones."
+msgstr "Echemos un vistazo al flujo de postulaciones."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1789,7 +1790,7 @@ msgstr "Media"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_count
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__meeting_count
 msgid "Meeting Count"
-msgstr "Conteo de reuniones"
+msgstr "Número de reuniones"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1799,7 +1800,7 @@ msgstr "Reuniones"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_error
 msgid "Message Delivery error"
-msgstr "Error de Envío de Mensaje"
+msgstr "Error de envío de mensaje"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_ids
@@ -1978,7 +1979,7 @@ msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "                process and follow up all operations: meetings, interviews, etc."
 msgstr ""
-"Odoo te ayuda a llevar el seguimiento de los candidatos en el proceso de\n"
+"Odoo le ayuda a llevar el seguimiento de los candidatos en el proceso de\n"
 "                reclutamiento y de todas las operaciones: reuniones, entrevistas, etc."
 
 #. module: hr_recruitment
@@ -1987,7 +1988,7 @@ msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "            process and follow up all operations: meetings, interviews, etc."
 msgstr ""
-"Odoo te ayuda a llevar el seguimiento de los candidatos en el proceso de\n"
+"Odoo le ayuda a llevar el seguimiento de los candidatos en el proceso de\n"
 "            reclutamiento y de todas las operaciones: reuniones, entrevistas, etc."
 
 #. module: hr_recruitment
@@ -2022,7 +2023,7 @@ msgstr ""
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Or talk about this applicant privately with your colleagues."
-msgstr "O habla en privado con tus colegas sobre este candidato."
+msgstr "O hable en privado con sus colegas sobre este candidato."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -2096,7 +2097,7 @@ msgstr "Salario extra propuesto"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish available jobs on your website"
-msgstr "Publica ofertas de trabajo en tu sitio web"
+msgstr "Publique ofertas de trabajo en su sitio web"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -2125,7 +2126,7 @@ msgstr "Publica ofertas de trabajo en tu sitio web"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #, python-format
 msgid "Ready for Next Stage"
-msgstr "Lista para la siguiente etapa"
+msgstr "Listo para la siguiente etapa"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job
@@ -2289,7 +2290,7 @@ msgstr "Salario propuesto por la organización, con ventajas adicionales"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Save it !"
-msgstr "¡Guárdalo!"
+msgstr "¡Guárdelo!"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -2322,7 +2323,7 @@ msgstr "Segunda entrevista"
 #, python-format
 msgid "Send your email. Followers will get a copy of the communication."
 msgstr ""
-"Envía tu correo electrónico. Los seguidores recibirán una copia de la "
+"Envíe su correo electrónico. Los seguidores recibirán una copia de la "
 "comunicación."
 
 #. module: hr_recruitment
@@ -2511,8 +2512,8 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "El nombre de este seudónimo de correo electrónico. Por ejemplo, "
-"\"trabajos\",  si lo que quieres es obtener los correos para "
-"<trabajos@example.odoo.com>."
+"\"trabajos\",  si lo que quiere es obtener los correos para "
+"<jobs@example.odoo.com>."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_user_id
@@ -2567,7 +2568,7 @@ msgstr ""
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "Tip: Let candidates apply by email"
 msgstr ""
-"Consejo: Permite que los candidatos se postulen por correo electrónico"
+"Consejo: Permita que los candidatos se postulen por correo electrónico"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -2577,7 +2578,7 @@ msgstr "Por reclutar"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Today Activities"
-msgstr "Actividades de Hoy"
+msgstr "Actividades de hoy"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -2587,7 +2588,7 @@ msgstr "Información sobre herramientas"
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "Try sending an email"
-msgstr "Intenta enviar un correo electrónico"
+msgstr "Intente enviar un correo electrónico"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -2609,17 +2610,17 @@ msgstr "Mensajes sin leer"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Nº de mensajes sin leer"
+msgstr "Número de mensajes sin leer"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Use emails and links trackers"
-msgstr "Utiliza correos electrónicos y rastreadores de enlaces"
+msgstr "Utilice correos electrónicos y rastreadores de enlaces"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use interview forms during recruitment process"
-msgstr "Utiliza formularios de entrevista en el proceso de reclutamiento"
+msgstr "Utilice formularios de entrevista en el proceso de reclutamiento"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2628,8 +2629,8 @@ msgid ""
 "process. Select the form to use in the job position detail form. This relies"
 " on the Survey app."
 msgstr ""
-"Utiliza formularios de entrevista adaptados a cada puesto de trabajo durante"
-" el proceso de reclutamiento. Selecciona el formulario que se usará en el "
+"Utilice formularios de entrevista adaptados a cada puesto de trabajo durante"
+" el proceso de reclutamiento. Seleccione el formulario que se usará en el "
 "formulario de detalles del puesto. Esto utiliza la aplicación de Encuesta"
 
 #. module: hr_recruitment
@@ -2645,7 +2646,7 @@ msgstr "Muy bueno"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Want to analyse where applications come from ?"
-msgstr "¿Quieres analizar de dónde vienen las postulaciones?"
+msgstr "¿Quiere analizar de dónde vienen las postulaciones?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
@@ -2663,7 +2664,7 @@ msgstr "Historial de comunicaciones del sitio web"
 #, python-format
 msgid "What do you want to recruit today? Choose a job title..."
 msgstr ""
-"¿Qué quieres reclutar hoy? Escoge un título para el puesto de trabajo..."
+"¿Qué quiere reclutar hoy? Escoja un título para el puesto de trabajo..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -2671,14 +2672,14 @@ msgid ""
 "You can define here the labels that will be displayed for the kanban state instead\n"
 "                        of the default labels."
 msgstr ""
-"Aquí puedes definir las etiquetas que serán mostradas en el estado de kanban en lugar\n"
+"Aquí puede definir las etiquetas que serán mostradas en el estado de kanban en lugar\n"
 "                        de las etiquetas predeterminadas."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "You must define a Contact Name for this applicant."
-msgstr "Debes definir un nombre de contacto para este candidato."
+msgstr "Debe definir un nombre de contacto para este candidato."
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
@@ -2695,12 +2696,12 @@ msgstr "ej. LinkedIn"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. Sales Manager"
-msgstr "ej. Gerente de Ventas"
+msgstr "ej. Gerente de ventas"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. sales-manager"
-msgstr "ej. Gerente de Ventas"
+msgstr "ej. Gerente de ventas"
 
 #. module: hr_recruitment
 #: model:ir.actions.server,name:hr_recruitment.hr_applicant_resumes_server
