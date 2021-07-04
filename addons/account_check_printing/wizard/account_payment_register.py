@@ -26,13 +26,15 @@ class AccountPaymentRegister(models.TransientModel):
     checkbook_type = fields.Selection(related='checkbook_id.type')
     checkbook_id = fields.Many2one('account.checkbook', 'Checkbook', store=True, compute='_compute_checkbook', readonly=False)
     check_payment_date = fields.Date()
+    check_printing_type = fields.Selection(related='checkbook_id.check_printing_type')
 
     @api.depends('payment_method_id.code', 'journal_id.use_checkbooks')
     def _compute_checkbook(self):
         with_checkbooks = self.filtered(lambda x: x.payment_method_id.code == 'check_printing' and x.journal_id.use_checkbooks)
         (self - with_checkbooks).checkbook_id = False
         for rec in with_checkbooks:
-            rec.checkbook_id = rec.journal_id.checkbook_ids.filtered(lambda x: x.state == 'active')
+            checkbook = rec.journal_id.with_context(active_test=True).checkbook_ids
+            rec.checkbook_id = checkbook and checkbook[0] or False
 
     def _create_payment_vals_from_wizard(self):
         vals = super()._create_payment_vals_from_wizard()
@@ -43,12 +45,14 @@ class AccountPaymentRegister(models.TransientModel):
         })
         return vals
 
-    @api.depends('journal_id', 'payment_method_code')
+    @api.depends('journal_id', 'payment_method_code', 'checkbook_id')
     def _compute_check_number(self):
         for pay in self:
             if pay.journal_id.check_manual_sequencing and pay.payment_method_code == 'check_printing':
                 sequence = pay.journal_id.check_sequence_id
                 pay.check_number = sequence.get_next_char(sequence.number_next_actual)
+            elif pay.checkbook_id.check_printing_type == 'no_print':
+                pay.check_number = pay.checkbook_id.sequence_id.get_next_char(pay.checkbook_id.next_number)
             else:
                 pay.check_number = False
 

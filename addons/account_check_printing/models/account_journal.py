@@ -31,7 +31,7 @@ class AccountJournal(models.Model):
         help="Technical feature used to know whether check printing was enabled as payment method.",
     )
     use_checkbooks = fields.Boolean()
-    checkbook_ids = fields.One2many('account.checkbook', 'journal_id', 'Checkbooks')
+    checkbook_ids = fields.One2many('account.checkbook', 'journal_id', 'Checkbooks', context={'active_test': False},)
 
     @api.depends('check_manual_sequencing')
     def _compute_check_next_number(self):
