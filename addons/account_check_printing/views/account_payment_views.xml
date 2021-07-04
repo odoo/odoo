@@ -15,7 +15,7 @@
                 </xpath>
                 <xpath expr="//field[@name='payment_method_line_id']" position="after">
                     <field name="check_manual_sequencing" invisible="1"/>
-                    <field name="check_number" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_number', '=', False)]}" readonly="1"/>
+                    <field name="check_number" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_number', '=', False), ('check_printing_type', '!=', 'no_print')], 'readonly': ['|', ('state', '!=', 'draft'), ('check_printing_type', '!=', 'no_print')], 'required': [('check_printing_type', '=', 'no_print')]}" />
                     <field name="check_payment_date" attrs="{'invisible': [('checkbook_type', '!=', 'deferred')], 'required': [('checkbook_type', '=', 'deferred')]}"/>
                 </xpath>
                 <xpath expr="//field[@name='name']" position='before'>

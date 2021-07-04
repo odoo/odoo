@@ -10,9 +10,10 @@
                 <field name="use_checkbooks" invisible="1"/>
                 <field name="payment_method_code" invisible="1"/>
                 <field name="checkbook_type" invisible="1"/>
-                <field name="checkbook_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('use_checkbooks', '=', False)], 'required': [('payment_method_code', '=', 'check_printing'), ('use_checkbooks', '=', True)]}" domain="[('journal_id', '=', journal_id), ('state', '=', 'active')]"/>
+                <field name="checkbook_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('use_checkbooks', '=', False)], 'required': [('payment_method_code', '=', 'check_printing'), ('use_checkbooks', '=', True)]}" domain="[('journal_id', '=', journal_id)]"/>
                 <field name="check_manual_sequencing" invisible="1"/>
-                <field name="check_number" readonly="1" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_number', '=', False)]}"/>
+                <field name="check_printing_type" invisible="1"/>
+                <field name="check_number" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_number', '=', False), ('check_printing_type', '!=', 'no_print')], 'readonly': [('check_printing_type', '!=', 'no_print')], 'required': [('check_printing_type', '=', 'no_print')]}" />
                 <field name="check_payment_date" attrs="{'invisible': [('checkbook_type', '!=', 'deferred')], 'required': [('checkbook_type', '=', 'deferred')]}"/>
             </field>
         </field>

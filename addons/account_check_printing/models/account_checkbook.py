@@ -1,7 +1,3 @@
-##############################################################################
-# For copyright and license notices, see __manifest__.py file in module root
-# directory
-##############################################################################
 from odoo import fields, models, api, _
 import logging
 _logger = logging.getLogger(__name__)
@@ -48,29 +44,27 @@ class AccountCheckbook(models.Model):
         readonly=True,
         required=True,
         ondelete='cascade',
-        states={'draft': [('readonly', False)]},
     )
     range_to = fields.Integer(
         'To Number',
-        # readonly=True,
-        # states={'draft': [('readonly', False)]},
         help='If you set a number here, this checkbook will be automatically'
         ' set as used when this number is raised.'
     )
-    state = fields.Selection(
-        [('draft', 'Draft'), ('active', 'In Use'), ('used', 'Used')],
-        string='State',
-        # readonly=True,
-        default='active',
-        copy=False,
+    active = fields.Boolean(
+        default=True,
     )
-    numerate_on_printing = fields.Boolean(
-        default=False,
-        string='Numerate on printing?',
-        # readonly=True,
-        # states={'draft': [('readonly', False)]},
-        help='No number will be assigne while creating payment, number will be'
-        'assigned after printing check.'
+    check_printing_type = fields.Selection([
+        ('no_print', 'No Print'),
+        ('print_with_number', 'Print with number'),
+        ('print_without_number', 'Print without number'),
+        # (pre-printed cheks numbered)
+        # ('pre_printed_not_numbered', 'Print (pre-printed cheks not numbered)'),
+        ],
+        default='no_print',
+        help="* No Print: number will be assigned while creating payment, no print button\n"
+        "* Print with number: number will be assigned when creating the payment and will be printed on the check\n"
+        "* Print without number: number will be assigned when printing the check (to verify it's corresponds with next"
+        " check) and number won't be printed on the check"
     )
 
     @api.depends('sequence_id.number_next_actual')

@@ -216,12 +216,11 @@ class AccountPayment(models.Model):
         check = self.check_id
         from_operation, to_operation, domain = self._get_checks_operations()
         operations = check.third_check_operation_ids.sorted()
-        # if operations and operations[0] != self:
-        #     raise ValidationError(_(
-        #         'You can not cancel this operation because this is not '
-        #         'the last operation over the check.\nCheck (id): %s (%s)'
-        #     ) % (check.check_number, check.id))
-        # rec.operation_ids[0].unlink()
+        if operations and operations[0] != self:
+            raise ValidationError(_(
+                'You can not cancel this operation because this is not '
+                'the last operation over the check.\nCheck (id): %s (%s)'
+            ) % (check.check_number, check.id))
         msg = 'Check %s cancelled by %s' % (to_operation, self)
         check.message_post(body=msg)
         check.third_check_state = from_operation

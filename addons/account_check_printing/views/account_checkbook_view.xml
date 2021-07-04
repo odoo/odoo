@@ -5,24 +5,22 @@
         <field name="name">account.checkbook.tree</field>
         <field name="model">account.checkbook</field>
         <field name="arch" type="xml">
-            <tree string="Checkbooks" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" editable="bottom">
+            <tree string="Checkbooks" decoration-muted="not active" editable="bottom">
                 <field name="type"/>
                 <field name="next_number" force_save="1" attrs="{'readonly': [('type', '==', 'electronic')]}"/>
                 <field name="range_to" force_save="1" attrs="{'readonly': [('type', '==', 'electronic')]}"/>
-                <field name="numerate_on_printing"/>
-                <field name="state"/>
+                <field name="check_printing_type"/>
+                <field name="active" widget="boolean_toggle"/>
             </tree>
         </field>
     </record>
 
+<!-- 
     <record id="view_account_checkbook_form" model="ir.ui.view">
         <field name="name">account.checkbook.form</field>
         <field name="model">account.checkbook</field>
         <field name="arch" type="xml">
-            <form string="Checkbooks">
-                <header string="Checkbooks">
-                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
-                </header>
+            <form>
                 <sheet string="Checkbooks">
                     <group>
                         <field name="name" invisible="1"/>
@@ -35,6 +33,5 @@
                 </sheet>
             </form>
         </field>
-    </record>
-
+    </record> -->
 </odoo>
