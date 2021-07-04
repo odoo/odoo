@@ -36,7 +36,7 @@ msgstr "Uživatelské heslo API"
 #: code:addons/payment_ogone/models/payment_acquirer.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
-msgstr ""
+msgstr "Nepodařilo se navázat spojení s rozhraním API."
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__display_name
@@ -63,7 +63,7 @@ msgstr "Naposled změněno"
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Nebyla nalezena žádná transakce odpovídající odkazu %s."
 
 #. module: payment_ogone
 #: model:ir.model.fields.selection,name:payment_ogone.selection__payment_acquirer__provider__ogone
@@ -99,7 +99,7 @@ msgstr "Poskytovatel"
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Přijatá data s neplatným stavem platby: %s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/controllers/main.py:0
@@ -108,38 +108,46 @@ msgid ""
 "Received data with invalid signature. expected: %(exp)s ; received: %(rec)s ; data:\n"
 "%(data)s"
 msgstr ""
+"Přijatá data s neplatným podpisem. očekávané: %(exp)s ; přijato: %(rec)s ; data:\n"
+"%(data)s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received feedback data with unknown type: %s"
-msgstr ""
+msgstr "Přijatá data zpětné vazby s neznámým typem: %s"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
 msgid "SHA Key IN"
-msgstr ""
+msgstr "SHA Klíč IN"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_out
 msgid "SHA Key OUT"
-msgstr ""
+msgstr "SHA Klíč OUT"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_token.py:0
 #, python-format
 msgid "Saved payment methods cannot be restored once they have been archived."
-msgstr ""
+msgstr "Uložené platební metody nelze po archivaci obnovit."
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/payment_transaction.py:89
+#, python-format
+msgid "Storing your payment details is necessary for future use."
+msgstr "Uložení platebních údajů je nezbytné pro budoucí použití."
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
-msgstr ""
+msgstr "ID slouží výhradně k identifikaci uživatele API s Ogone"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_pspid
 msgid "The ID solely used to identify the account with Ogone"
-msgstr ""
+msgstr "ID slouží výhradně k identifikaci účtu u společnosti Ogone."
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__provider
@@ -151,10 +159,10 @@ msgstr ""
 #: code:addons/payment_ogone/models/payment_acquirer.py:0
 #, python-format
 msgid "The communication with the API failed."
-msgstr ""
+msgstr "Komunikace s rozhraním API se nezdařila."
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "Transakce není spojena s tokenem."

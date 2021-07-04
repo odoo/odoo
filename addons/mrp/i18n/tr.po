@@ -24,6 +24,7 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Ediz Duman <neps1192@gmail.com>, 2021
+# Özlem Atalay <ozlema@eskayazilim.com.tr>, 2021
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-11 09:25+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2021\n"
+"Last-Translator: Özlem Atalay <ozlema@eskayazilim.com.tr>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -430,6 +431,7 @@ msgstr "Üretim Emri bitmiş ya da iptal edilmiş."
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
+"Kit tipi ürün reçetesine sahip bir ürünün yeniden sıralama kuralı olamaz."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -1078,7 +1080,7 @@ msgstr "Bileşen Mevcut"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
 msgid "Component of Draft MO"
-msgstr ""
+msgstr "Taslak MO Bileşenleri"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_raw_ids
@@ -1397,6 +1399,8 @@ msgid ""
 "Define the components and finished products you wish to use in\n"
 "                bill of materials and manufacturing orders."
 msgstr ""
+"Ürün reçetesinde ve üretim emirlerinde kullanmak istediğiniz bileşen ve "
+"bitmiş ürünleri tanımlayın."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__resource_calendar_id
@@ -2729,7 +2733,7 @@ msgstr "Ön Teslimat Yok"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid "No bill of materials found. Let's create one!"
-msgstr ""
+msgstr "Üretim reçetesi bulunamadı. Bir tane oluşturalım!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -2746,7 +2750,7 @@ msgstr "Henüz veri yok!"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "No manufacturing order found. Let's create one."
-msgstr ""
+msgstr "Üretim emri bulunamadı. Bir tane oluşturalım!"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
@@ -2761,7 +2765,7 @@ msgstr "Bu ekipman için verimlilik kaybı yok"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "No unbuild order found"
-msgstr ""
+msgstr "Parçalama emri bulunamadı"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -3139,7 +3143,7 @@ msgstr "Planlanan Tarih"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Planned at the same time as other workorder(s) at %s"
-msgstr ""
+msgstr "%s'deki diğer iş emri ile aynı zamanda planlandı"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.mrp_planning_menu_root
@@ -3180,6 +3184,8 @@ msgid ""
 "Prevent manufacturing users from modifying quantities to consume, unless a "
 "manager has unlocked the document"
 msgstr ""
+"Bir yönetici belgenin kilidini açmadığı sürece, üretim kullanıcılarının "
+"tüketim miktarlarında değişiklik yapmasını önle."
 
 #. module: mrp
 #. openerp-web
@@ -3377,7 +3383,7 @@ msgstr "Üretim İş Merkezi"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
 msgid "Production of Draft MO"
-msgstr ""
+msgstr "Taslak MO Üretimi"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -4316,6 +4322,8 @@ msgid ""
 "Time in minutes:- In manual mode, time used- In automatic mode, supposed "
 "first time when there aren't any work orders yet"
 msgstr ""
+"Dakika cinsinden zaman. Manuel modda kullanılan zaman, Otomatik modda "
+"herhangi bir iş emri bulunmayan ilk zaman varsayılır"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
@@ -4909,6 +4917,9 @@ msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
 "                    Operations are defined in the bill of materials or added in the manufacturing order directly."
 msgstr ""
+"İş emirleri bir üretim emrinin parçası olarak yapılacak operasyonlardır. "
+"Operasyonlar ürün reçetesinde tanımlanır ya da üretim emrine doğrudan "
+"eklenir."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -5030,6 +5041,8 @@ msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
 msgstr ""
+"En az bir yeniden sıralama kuralı olan ürünler için kit tipi ürün reçetesi "
+"oluşturamazsınız."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5153,6 +5166,8 @@ msgid ""
 "You must indicate a non-zero amount consumed for at least one of your "
 "components"
 msgstr ""
+"Bileşenlerinizin en az biri için sıfır olmayan bir tüketim miktarı "
+"belirtmelisiniz."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0

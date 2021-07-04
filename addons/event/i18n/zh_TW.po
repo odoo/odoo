@@ -7,8 +7,8 @@
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
 # Michael Yeung, 2019
 # Martin Trigaux, 2021
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # Mandy Choy <mnc@odoo.com>, 2021
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-11 09:26+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: Mandy Choy <mnc@odoo.com>, 2021\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,7 +92,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-arrow-right o_event_fontsize_09\" title=\"End date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right o_event_fontsize_09\" title=\"結束日\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -100,18 +100,20 @@ msgid ""
 "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "
+"title=\"確認報名\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" title=\"確認報名\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-level-up fa-rotate-90\" title=\"Confirmed\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-level-up fa-rotate-90\" title=\"已確認\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -125,7 +127,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-map-marker\" title=\"地點\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -133,6 +135,8 @@ msgid ""
 "<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
 "button\" title=\"Confirm Attendance\"/>"
 msgstr ""
+"<i class=\"fa fa-user-plus fa-3x\" role=\"img\" aria-label=\"Attended "
+"button\" title=\"確認出席\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -140,6 +144,8 @@ msgid ""
 "<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
 "title=\"Confirm Attendance\"/>"
 msgstr ""
+"<i class=\"fa fa-user-plus\" role=\"img\" aria-label=\"Attended button\" "
+"title=\"確認出席\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -162,6 +168,8 @@ msgid ""
 "<span class=\"text-muted\" states=\"done\">Attended</span>\n"
 "                                    <span class=\"text-muted\" states=\"cancel\">Canceled</span>"
 msgstr ""
+"<span class=\"text-muted\" states=\"done\">出席</span>\n"
+"                                    <span class=\"text-muted\" states=\"cancel\">取消</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -753,7 +761,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
 msgid "Autoconfirmation"
-msgstr ""
+msgstr "報名參加者直接確認出席"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__auto_confirm
@@ -824,13 +832,13 @@ msgstr "已封鎖"
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
 msgid "Booked"
-msgstr ""
+msgstr "已預定"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Booked by"
-msgstr ""
+msgstr "活動報名者:"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_campaign_id
@@ -1077,12 +1085,12 @@ msgstr "定位最後日期"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__pipe_end
 msgid "End Stage"
-msgstr ""
+msgstr "為結束階段"
 
 #. module: event
 #: model:event.stage,name:event.event_stage_done
 msgid "Ended"
-msgstr ""
+msgstr "活動結束"
 
 #. module: event
 #: model:ir.model,name:event.model_event_event
@@ -1189,13 +1197,13 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_stage
 msgid "Event Stage"
-msgstr ""
+msgstr "活動階段"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_stage_action
 #: model:ir.ui.menu,name:event.event_stage_menu
 msgid "Event Stages"
-msgstr ""
+msgstr "活動規劃階段"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
@@ -1225,7 +1233,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type__name
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Template"
-msgstr ""
+msgstr "活動模板"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_ticket
@@ -1243,7 +1251,7 @@ msgstr ""
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Templates"
-msgstr ""
+msgstr "產品類別"
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -1302,7 +1310,7 @@ msgstr "事件信件發送排定器"
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_tree
 msgid "Events Stage"
-msgstr ""
+msgstr "活動階段"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -1388,12 +1396,12 @@ msgstr ""
 #. module: event
 #: model:event.stage,description:event.event_stage_new
 msgid "Freshly created"
-msgstr ""
+msgstr "活動初始創建"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
 msgid "Fully ended"
-msgstr ""
+msgstr "活動結束"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1646,7 +1654,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Limit Registrations"
-msgstr ""
+msgstr "設置最高與會者"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -1725,7 +1733,7 @@ msgstr "管理並發佈具有追蹤記錄的時間表"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Mark as Attending"
-msgstr ""
+msgstr "標註為確認參加"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1735,7 +1743,7 @@ msgstr "市場行銷"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum"
-msgstr ""
+msgstr "最高數量"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_limited
@@ -1757,7 +1765,7 @@ msgstr "最大註冊數"
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_max
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Maximum Seats"
-msgstr ""
+msgstr "最大座位數"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -2177,7 +2185,7 @@ msgstr "定期時間"
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Seats Limit"
-msgstr ""
+msgstr "有限座位"
 
 #. module: event
 #: model:event.type,name:event.event_type_data_ticket
@@ -2266,7 +2274,7 @@ msgstr "階段名稱"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__description
 msgid "Stage description"
-msgstr ""
+msgstr "活動階段敘述"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin
@@ -2282,7 +2290,7 @@ msgstr "定位開始日期"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__start_sale_datetime
 msgid "Start sale date"
-msgstr ""
+msgstr "銷售開始日"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__state
@@ -2560,7 +2568,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
 msgid "Venue"
-msgstr ""
+msgstr "場地地點"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -2618,6 +2626,8 @@ msgid ""
 "You can define here labels that will be displayed for the state instead\n"
 "                            of the default labels in the kanban view."
 msgstr ""
+"您可以於此設置活動看板中狀態的意義內容\n"
+"                            用來替換預設的活動狀態顏色呈現"
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge

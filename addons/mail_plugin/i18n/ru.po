@@ -6,9 +6,9 @@
 # Martin Trigaux, 2021
 # Collex100, 2021
 # Vasiliy Korobatov <korobatov@gmail.com>, 2021
-# ILMIR <karamov@it-projects.info>, 2021
 # Irina Fedulova <istartlin@gmail.com>, 2021
 # Сергей Шебанин <sergey@shebanin.ru>, 2021
+# ILMIR <karamov@it-projects.info>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-11 09:26+0000\n"
 "PO-Revision-Date: 2021-05-11 12:35+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2021\n"
+"Last-Translator: ILMIR <karamov@it-projects.info>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +33,7 @@ msgstr "Разрешить"
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
 #, python-format
 msgid "Bad Email."
-msgstr ""
+msgstr "Некорректная электронная почта."
 
 #. module: mail_plugin
 #: model:ir.model,name:mail_plugin.model_res_partner
@@ -44,12 +44,12 @@ msgstr "Контакт"
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
 #, python-format
 msgid "Contact has no valid email"
-msgstr ""
+msgstr "У контакта нет корректного адреса электронной почты "
 
 #. module: mail_plugin
 #: model:ir.model.fields,help:mail_plugin.field_res_partner_iap__partner_id
 msgid "Corresponding partner"
-msgstr ""
+msgstr "Соответствующий партнер"
 
 #. module: mail_plugin
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__create_uid
@@ -64,7 +64,7 @@ msgstr "Создан"
 #. module: mail_plugin
 #: model_terms:ir.ui.view,arch_db:mail_plugin.app_auth
 msgid "Deny"
-msgstr ""
+msgstr "Отклонить"
 
 #. module: mail_plugin
 #: model:ir.model.fields,field_description:mail_plugin.field_ir_http__display_name
@@ -76,7 +76,7 @@ msgstr "Отображаемое имя"
 #. module: mail_plugin
 #: model:ir.model.fields,help:mail_plugin.field_res_partner_iap__iap_search_domain
 msgid "Domain used to find the company"
-msgstr ""
+msgstr "Домен используется, чтобы найти компанию"
 
 #. module: mail_plugin
 #: model:ir.model,name:mail_plugin.model_ir_http
@@ -88,26 +88,26 @@ msgstr "Маршрутизация HTTP"
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__iap_enrich_info
 #: model:ir.model.fields,field_description:mail_plugin.field_res_users__iap_enrich_info
 msgid "IAP Enrich Info"
-msgstr ""
+msgstr "Информация о пополнении IAP"
 
 #. module: mail_plugin
 #: model:ir.actions.act_window,name:mail_plugin.res_partner_iap_action
 #: model_terms:ir.ui.view,arch_db:mail_plugin.res_partner_iap_view_form
 #: model_terms:ir.ui.view,arch_db:mail_plugin.res_partner_iap_view_tree
 msgid "IAP Partner"
-msgstr ""
+msgstr "IAP партнер"
 
 #. module: mail_plugin
 #: model:ir.ui.menu,name:mail_plugin.res_partner_iap_menu
 msgid "IAP Partners"
-msgstr ""
+msgstr "IAP партнер"
 
 #. module: mail_plugin
 #: model:ir.model.fields,help:mail_plugin.field_res_partner__iap_enrich_info
 #: model:ir.model.fields,help:mail_plugin.field_res_partner_iap__iap_enrich_info
 #: model:ir.model.fields,help:mail_plugin.field_res_users__iap_enrich_info
 msgid "IAP response stored as a JSON string"
-msgstr ""
+msgstr "Ответ IAP хранится в виде строки JSON "
 
 #. module: mail_plugin
 #: model:ir.model.fields,field_description:mail_plugin.field_ir_http__id
@@ -136,12 +136,12 @@ msgstr "Последнее обновление"
 #. module: mail_plugin
 #: model_terms:ir.ui.view,arch_db:mail_plugin.app_auth
 msgid "Let"
-msgstr ""
+msgstr "Позволить"
 
 #. module: mail_plugin
 #: model:ir.model.constraint,message:mail_plugin.constraint_res_partner_iap_unique_partner_id
 msgid "Only one partner IAP is allowed for one partner"
-msgstr ""
+msgstr "Для одного партнера разрешен только один IAP партнер"
 
 #. module: mail_plugin
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__partner_id
@@ -151,28 +151,30 @@ msgstr "Партнёр"
 #. module: mail_plugin
 #: model:ir.model,name:mail_plugin.model_res_partner_iap
 msgid "Partner IAP"
-msgstr ""
+msgstr "Партнерский IAP"
 
 #. module: mail_plugin
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner__iap_search_domain
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__iap_search_domain
 #: model:ir.model.fields,field_description:mail_plugin.field_res_users__iap_search_domain
 msgid "Search Domain / Email"
-msgstr ""
+msgstr "Поисковый домен / Эл. почта"
 
 #. module: mail_plugin
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
 #, python-format
 msgid "The partner already has a company related to him"
-msgstr ""
+msgstr "У партнера уже есть связанная с ним компания "
 
 #. module: mail_plugin
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
 #, python-format
 msgid "You need to specify at least the partner_id or the name and the email"
 msgstr ""
+"Вам нужно указать по крайней мере partner_id или имя и адрес электронной "
+"почты "
 
 #. module: mail_plugin
 #: model_terms:ir.ui.view,arch_db:mail_plugin.app_auth
 msgid "access your Odoo database?"
-msgstr ""
+msgstr "получить доступ к базе данных Odoo? "
