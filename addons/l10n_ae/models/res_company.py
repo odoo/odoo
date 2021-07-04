@@ -1,10 +1,5 @@
 from odoo import models, api
-import os, sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from tools import create_journals
-
-JOURNAL_TO_CREATE = [{"code": "TA", "name": "Tax Adjustments", "type": "general"},
-                      {"code": "IFRS", "name": "IFRS 16", "type": "general"}]
+from ..tools import create_journals
 
 
 class Company(models.Model):
