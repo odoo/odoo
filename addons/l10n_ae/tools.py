@@ -3,6 +3,8 @@ JOURNALS_TO_CREATE = {"TA": {"name": "Tax Adjustments", "type": "general"},
 
 
 def create_journals(env):
+    """"Create Tax Adjustments (TA) and IFRS 16 (IFRS) journals for all companies based in UAE if the journals do not already exist"""
+
     journals_to_create_code_set = set(JOURNALS_TO_CREATE.keys())
     ae_company_ids = set(env['res.company'].search([('partner_id.country_id.code', '=', 'AE')]).ids)
     journals = env['account.journal'].search(
