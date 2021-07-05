@@ -28,7 +28,7 @@ class MailMessage(models.Model):
 
     def message_format(self):
         message_values = super().message_format()
-        ratings = self.env['rating.rating'].search([('message_id', 'in', self.ids), ('consumed', '=', True)])
+        ratings = self.env['rating.rating'].sudo().search([('message_id', 'in', self.ids), ('consumed', '=', True)])
         rating_message_mapping = dict((r.message_id.id, r) for r in ratings)
         for vals in message_values:
             if vals['id'] in rating_message_mapping:
