@@ -3235,6 +3235,21 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
             }
             return this._super(...arguments);
         },
+        services: {
+            notification: {
+                notify(notification) {
+                    assert.ok(
+                        true,
+                        "should display a notification after posting reply"
+                    );
+                    assert.strictEqual(
+                        notification.message,
+                        "Message posted on \"Refactoring\"",
+                        "notification should tell that message has been posted to the record 'Refactoring'"
+                    );
+                }
+            }
+        },
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Message').length,
@@ -3298,15 +3313,6 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
     assert.notOk(
         document.querySelector('.o_Message').classList.contains('o-selected'),
         "message should not longer be selected after posting reply"
-    );
-    assert.ok(
-        document.querySelector('.o_notification'),
-        "should display a notification after posting reply"
-    );
-    assert.strictEqual(
-        document.querySelector('.o_notification_content').textContent,
-        "Message posted on \"Refactoring\"",
-        "notification should tell that message has been posted to the record 'Refactoring'"
     );
 });
 

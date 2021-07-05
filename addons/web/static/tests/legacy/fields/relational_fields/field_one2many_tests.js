@@ -6,11 +6,9 @@ var AbstractField = require('web.AbstractField');
 var AbstractStorageService = require('web.AbstractStorageService');
 const ControlPanel = require('web.ControlPanel');
 const fieldRegistry = require('web.field_registry');
-var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 var KanbanRecord = require('web.KanbanRecord');
 var ListRenderer = require('web.ListRenderer');
-var NotificationService = require('web.NotificationService');
 var RamStorage = require('web.RamStorage');
 var relationalFields = require('web.relational_fields');
 var testUtils = require('web.test_utils');
@@ -5832,11 +5830,11 @@ QUnit.module('fields', {}, function () {
                 },
                 res_id: 1,
                 services: {
-                    notification: NotificationService.extend({
+                    notification: {
                         notify: function (params) {
                             assert.step(params.type);
                         }
-                    }),
+                    },
                 },
                 intercepts: {
                     execute_action: function (event) {

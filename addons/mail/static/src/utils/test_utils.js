@@ -15,7 +15,6 @@ import MessagingMenuWidget from '@mail/widgets/messaging_menu/messaging_menu';
 import { MockModels } from '@mail/../tests/helpers/mock_models';
 
 import AbstractStorageService from 'web.AbstractStorageService';
-import NotificationService from 'web.NotificationService';
 import RamStorage from 'web.RamStorage';
 import {
     createView,
@@ -523,7 +522,6 @@ async function start(param0 = {}) {
             _listenHomeMenu: () => {},
         }),
         local_storage: AbstractStorageService.extend({ storage: new RamStorage() }),
-        notification: NotificationService.extend(),
     }, param0.services);
 
     const kwargs = Object.assign({}, param0, {

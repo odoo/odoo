@@ -182,6 +182,21 @@ QUnit.module('hr', {}, function () {
                 return this._super(...arguments);
             },
             res_id: 1,
+            services: {
+                notification: {
+                    notify(notification) {
+                        assert.ok(
+                            true,
+                            "should display a toast notification after failing to open chat"
+                        );
+                        assert.strictEqual(
+                            notification.message,
+                            "You can only chat with employees that have a dedicated user.",
+                            "should display the correct information in the notification"
+                        );
+                    },
+                },
+            },
         });
 
         mock.intercept(form, 'call_service', (ev) => {
@@ -198,17 +213,6 @@ QUnit.module('hr', {}, function () {
             'read foo 1',
             'read hr.employee.public 11',
         ]);
-
-        assert.containsOnce(
-            document.body,
-            '.toast .o_notification_content',
-            "should display a toast notification after failing to open chat"
-        );
-        assert.strictEqual(
-            document.querySelector('.o_notification_content').textContent,
-            "You can only chat with employees that have a dedicated user.",
-            "should display the correct information in the notification"
-        );
 
         form.destroy();
     });
@@ -339,6 +343,21 @@ QUnit.module('hr', {}, function () {
                 return this._super(...arguments);
             },
             res_id: 1,
+            services: {
+                notification: {
+                    notify(notification) {
+                        assert.ok(
+                            true,
+                            "should display a toast notification after failing to open chat"
+                        );
+                        assert.strictEqual(
+                            notification.message,
+                            "You can only chat with employees that have a dedicated user.",
+                            "should display the correct information in the notification"
+                        );
+                    },
+                },
+            },
         });
 
         mock.intercept(form, 'call_service', (ev) => {
@@ -363,16 +382,6 @@ QUnit.module('hr', {}, function () {
             "read hr.employee.public 23"
         ]);
 
-        assert.containsOnce(
-            document.body,
-            '.toast .o_notification_content',
-            "should display a toast notification after failing to open chat"
-        );
-        assert.strictEqual(
-            document.querySelector('.o_notification_content').textContent,
-            "You can only chat with employees that have a dedicated user.",
-            "should display the correct information in the notification"
-        );
         assert.containsOnce(document.body, '.o_ChatWindowHeader_name',
             "should have 1 chat window");
 

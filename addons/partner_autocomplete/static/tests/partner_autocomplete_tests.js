@@ -6,7 +6,6 @@ odoo.define('partner_autocomplete.tests', function (require) {
     var testUtils = require("web.test_utils");
     var AutocompleteField = require('partner.autocomplete.fieldchar');
     var PartnerField = require('partner.autocomplete.many2one');
-    var NotificationService = require('web.NotificationService');
 
     var createView = testUtils.createView;
 
@@ -377,7 +376,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
     });
 
     QUnit.test("Partner autocomplete : Notify not enough credits", async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         enrichData = {
             error: true,
@@ -394,7 +393,12 @@ odoo.define('partner_autocomplete.tests', function (require) {
                 '<field name="name" widget="field_partner_autocomplete"/>' +
                 '</form>',
             services: {
-                notification: NotificationService,
+                notification: {
+                    notify(notification) {
+                        assert.equal(notification.type, "warning");
+                        assert.equal(notification.className, "o_partner_autocomplete_test_notify");
+                    },
+                },
             },
             mockRPC: function (route, args) {
                 if (args.method === "get_credits_url"){
@@ -412,9 +416,6 @@ odoo.define('partner_autocomplete.tests', function (require) {
 
             var $dropdown = form.$(".o_field_partner_autocomplete .dropdown-menu:visible");
             await testUtils.dom.click($dropdown.find("a").first());
-
-            var $notify = $(".o_partner_autocomplete_test_notify");
-            assert.isVisible($notify, "there should be an 'Insufficient Credit' notification");
 
             form.destroy();
     });
