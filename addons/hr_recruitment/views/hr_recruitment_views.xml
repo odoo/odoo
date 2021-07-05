@@ -73,10 +73,10 @@
         <field name="arch" type="xml">
           <form string="Jobs - Recruitment Form" class="o_applicant_form">
             <header>
-                <button string="Create Employee" name="create_employee_from_applicant" type="object"
+                <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="v"
                         class="oe_highlight o_create_employee" attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}"/>
-                <button string="Refuse" name="archive_applicant" type="object" attrs="{'invisible': [('active', '=', False)]}"/>
-                <button string="Restore" name="toggle_active" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
+                <button string="Refuse" name="archive_applicant" type="object" attrs="{'invisible': [('active', '=', False)]}" data-hotkey="x"/>
+                <button string="Restore" name="toggle_active" type="object" attrs="{'invisible': [('active', '=', True)]}" data-hotkey="z"/>
                 <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('active', '=', False),('emp_id', '=', False)]}"/>
             </header>
             <sheet>
@@ -454,8 +454,8 @@
                         </div>
                     </group>
                     <footer>
-                        <button string="Create" name="close_dialog" type="object" class="btn-primary o_create_job"/>
-                        <button string="Discard" class="btn-secondary" special="cancel"/>
+                        <button string="Create" name="close_dialog" type="object" class="btn-primary o_create_job" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </sheet>
             </form>

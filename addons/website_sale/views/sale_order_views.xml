@@ -54,7 +54,7 @@
                 <attribute name="attrs">{'invisible': ['|','&amp;',('is_abandoned_cart', '=', True), ('cart_recovery_email_sent', '=', False)]}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_quotation_send']" position="after">
-                <button name="action_recovery_email_send"
+                <button name="action_recovery_email_send" data-hotkey="l"
                     string="Send a Recovery Email"
                     type="object"
                     class="btn-primary"

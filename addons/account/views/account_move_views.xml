@@ -592,48 +592,50 @@
                     <header>
                         <!-- Post -->
                         <button name="action_post" string="Post" class="oe_highlight"
-                                type="object" groups="account.group_account_invoice"
+                                type="object" groups="account.group_account_invoice" data-hotkey="v"
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('auto_post', '=', True), ('move_type', '!=', 'entry')]}"/>
                         <button name="action_post" string="Confirm" class="oe_highlight"
-                                type="object" groups="account.group_account_invoice"
+                                type="object" groups="account.group_account_invoice" data-hotkey="v"
                                 attrs="{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), ('auto_post', '=', True), ('move_type', '=', 'entry'), ('display_inactive_currency_warning','=',True)]}"/>
                         <!-- Send (only invoices) -->
                         <button name="action_invoice_sent"
                                 type="object"
                                 string="Send &amp; Print"
                                 attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', True), ('move_type', 'not in', ('out_invoice', 'out_refund'))]}"
-                                class="oe_highlight"/>
+                                class="oe_highlight"
+                                data-hotkey="y"/>
                         <button name="action_invoice_sent"
                                 type="object"
                                 string="Send &amp; Print"
-                                attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', False), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
+                                attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', False), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"
+                                data-hotkey="y"/>
                         <!-- Register Payment (only invoices / receipts) -->
                         <button name="action_register_payment" id="account_invoice_payment_btn"
                                 type="object" class="oe_highlight"
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('payment_state', 'not in', ('not_paid', 'partial')), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"
                                 context="{'dont_redirect_to_payments': True}"
-                                string="Register Payment"
+                                string="Register Payment" data-hotkey="g"
                                 groups="account.group_account_invoice"/>
                         <!-- Preview (only customer invoices) -->
-                        <button name="preview_invoice" type="object" string="Preview"
+                        <button name="preview_invoice" type="object" string="Preview" data-hotkey="o"
                                 attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}"/>
                         <!-- Reverse -->
                         <button name="%(action_view_account_move_reversal)d" string="Reverse Entry"
-                                type="action" groups="account.group_account_invoice"
+                                type="action" groups="account.group_account_invoice" data-hotkey="z"
                                 attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), '|', ('state', '!=', 'posted'), ('payment_state', '=', 'reversed')]}"/>
                         <button name="action_reverse" string='Add Credit Note'
                                 type='object' groups="account.group_account_invoice"
                                 attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'in_invoice')), ('state', '!=', 'posted')]}"/>
                         <!-- Cancel -->
-                        <button name="button_cancel" string="Cancel Entry" type="object" groups="account.group_account_invoice"
+                        <button name="button_cancel" string="Cancel Entry" type="object" groups="account.group_account_invoice" data-hotkey="w"
                                 attrs="{'invisible' : ['|', '|', ('id', '=', False), ('state', '!=', 'draft'),('move_type', '!=', 'entry')]}"/>
-                        <button name="button_cancel" string="Cancel" type="object" groups="account.group_account_invoice"
+                        <button name="button_cancel" string="Cancel" type="object" groups="account.group_account_invoice" data-hotkey="w"
                                 attrs="{'invisible' : ['|', '|', ('id', '=', False), ('state', '!=', 'draft'),('move_type', '==', 'entry')]}"/>
                         <button name="button_draft" string="Reset to Draft" type="object" groups="account.group_account_invoice"
-                                attrs="{'invisible' : [('show_reset_to_draft_button', '=', False)]}"/>
+                                attrs="{'invisible' : [('show_reset_to_draft_button', '=', False)]}" data-hotkey="q" />
                         <!-- Set as Checked -->
                         <button name="button_set_checked" string="Set as Checked" type="object" groups="account.group_account_invoice"
-                                attrs="{'invisible' : [('to_check', '=', False)]}"/>
+                                attrs="{'invisible' : [('to_check', '=', False)]}" data-hotkey="k" />
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
                     <!-- Invoice outstanding credits -->

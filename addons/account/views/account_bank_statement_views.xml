@@ -42,8 +42,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//sheet" position="after">
                     <footer>
-                        <button string="Confirm" class="btn-primary" special="save"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        <button string="Confirm" class="btn-primary" special="save" data-hotkey="v"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </xpath>
             </field>
@@ -58,8 +58,8 @@
                     <p>The closing balance is different than the computed one!</p>
                     <p>Confirming this will create automatically a journal entry with the difference in the profit/loss account set on the cash journal.</p>
                     <footer>
-                        <button string="Confirm" name="validate" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        <button string="Confirm" name="validate" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </div>
                 </form>

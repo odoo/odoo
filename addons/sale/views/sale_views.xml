@@ -262,33 +262,33 @@
               <form string="Sales Order" class="o_sale_order" js_class="sale_discount_form">
                 <header>
                     <field name="authorized_transaction_ids" invisible="1"/>
-                    <button name="payment_action_capture" type="object"
+                    <button name="payment_action_capture" type="object" data-hotkey="shift+g"
                             string="Capture Transaction" class="oe_highlight"
                             attrs="{'invisible': [('authorized_transaction_ids', '=', [])]}"/>
                     <button name="payment_action_void" type="object"
-                            string="Void Transaction"
+                            string="Void Transaction" data-hotkey="shift+v"
                             confirm="Are you sure you want to void the authorized transaction? This action can't be undone."
                             attrs="{'invisible': [('authorized_transaction_ids', '=', [])]}"/>
                     <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
-                        type="action" class="btn-primary"
+                        type="action" class="btn-primary" data-hotkey="q"
                         attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>
                     <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
-                        type="action" context="{'default_advance_payment_method': 'percentage'}"
+                        type="action" context="{'default_advance_payment_method': 'percentage'}" data-hotkey="q"
                         attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
-                    <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
+                    <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary" data-hotkey="g"/>
                     <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice"
                       groups="sale.group_proforma_sales" class="btn-primary"
                       attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
-                    <button name="action_confirm" id="action_confirm"
+                    <button name="action_confirm" id="action_confirm" data-hotkey="v"
                         string="Confirm" class="btn-primary" type="object"
                         attrs="{'invisible': [('state', 'not in', ['sent'])]}"/>
-                    <button name="action_confirm"
+                    <button name="action_confirm" data-hotkey="v"
                         string="Confirm" type="object"
                         attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
                     <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
-                    <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
-                    <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': ['|', ('state', 'not in', ['draft', 'sent','sale']), ('id', '=', False)]}"/>
-                    <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
+                    <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale" data-hotkey="g"/>
+                    <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': ['|', ('state', 'not in', ['draft', 'sent','sale']), ('id', '=', False)]}" data-hotkey="z"/>
+                    <button name="action_draft" states="cancel" type="object" string="Set to Quotation" data-hotkey="w"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
                 </header>
                 <sheet>

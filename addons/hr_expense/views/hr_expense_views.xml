@@ -110,12 +110,12 @@
             <field name="arch" type="xml">
                 <form string="Expenses" class="o_expense_form" js_class="hr_expense_form_view">
                 <header>
-                  <button name="action_submit_expenses" string="Create Report" type="object" class="oe_highlight o_expense_submit" attrs="{'invisible': ['|', '|', ('id', '=', False), ('attachment_number', '&lt;=', 0), ('sheet_id', '!=', False)]}"/>
+                  <button name="action_submit_expenses" string="Create Report" type="object" class="oe_highlight o_expense_submit" attrs="{'invisible': ['|', '|', ('id', '=', False), ('attachment_number', '&lt;=', 0), ('sheet_id', '!=', False)]}" data-hotkey="v"/>
                   <widget name="attach_document" string="Attach Receipt" action="message_post" attrs="{'invisible': ['|', ('attachment_number', '&lt;', 1), ('id','=',False)]}"/>
                   <widget name="attach_document" string="Attach Receipt" action="message_post" highlight="1" attrs="{'invisible': ['|',('attachment_number', '&gt;=', 1), ('id','=',False)]}"/>
-                  <button name="action_submit_expenses" string="Create Report" type="object" class="o_expense_submit" attrs="{'invisible': ['|', '|', ('id', '=', False), ('attachment_number', '&gt;=', 1), ('sheet_id', '!=', False)]}"/>
+                  <button name="action_submit_expenses" string="Create Report" type="object" class="o_expense_submit" attrs="{'invisible': ['|', '|', ('id', '=', False), ('attachment_number', '&gt;=', 1), ('sheet_id', '!=', False)]}" data-hotkey="v"/>
                   <field name="state" widget="statusbar" statusbar_visible="draft,reported,approved,done,refused"/>
-                  <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('sheet_id', '=', False)]}"/>
+                  <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('sheet_id', '=', False)]}" data-hotkey="w"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -668,27 +668,30 @@
                 <field name="can_reset" invisible="1"/>
                 <field name="can_approve" invisible="1"/>
                  <header>
-                    <button name="action_submit_sheet" states="draft" string="Submit to Manager" type="object" class="oe_highlight o_expense_sheet_submit"/>
+                    <button name="action_submit_sheet" states="draft" string="Submit to Manager" type="object" class="oe_highlight o_expense_sheet_submit" data-hotkey="l"/>
                     <button name="approve_expense_sheets"
                             string="Approve"
                             type="object"
+                            data-hotkey="v"
                             attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', '!=', 'submit')]}"
                             class="oe_highlight o_expense_sheet_approve"/>
                     <button name="action_sheet_move_create"
                             string="Post Journal Entries"
                             type="object"
+                            data-hotkey="y"
                             class="oe_highlight o_expense_sheet_post"
                             attrs="{'invisible': [('state', '!=', 'approve')]}"
                             groups="account.group_account_invoice"/>
                     <button name="action_register_payment"
                             type="object"
+                            data-hotkey="w"
                             class="oe_highlight o_expense_sheet_pay"
                             attrs="{'invisible': [('state', '!=', 'post')]}"
                             context="{'dont_redirect_to_payments': True}"
                             string="Register Payment"
                             groups="account.group_account_invoice"/>
-                    <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit,approve" context="{'hr_expense_refuse_model':'hr.expense.sheet'}" string="Refuse" type="action" groups="hr_expense.group_hr_expense_team_approver" />
-                    <button name="reset_expense_sheets" string="Reset to Draft" type="object" attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['submit', 'cancel'])]}"/>
+                    <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit,approve" context="{'hr_expense_refuse_model':'hr.expense.sheet'}" string="Refuse" type="action" groups="hr_expense.group_hr_expense_team_approver" data-hotkey="x" />
+                    <button name="reset_expense_sheets" string="Reset to Draft" type="object" attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['submit', 'cancel'])]}" data-hotkey="q"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done" force_save="1"/>
                 </header>
                 <sheet>
