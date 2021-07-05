@@ -9,7 +9,7 @@ class HrExpenseSheet(models.Model):
     @api.model
     def _get_journal_domain(self):
         default_company_id = self.default_get(['company_id'])['company_id']
-        if self.env['res.company'].browse(default_company_id).country_code == 'CL':
+        if self.env['res.company'].browse(default_company_id).country_id.code == 'CL':
             return [('type', '=', 'general'), ('company_id', '=', default_company_id)]
         return [('type', '=', 'purchase'), ('company_id', '=', default_company_id)]
 
