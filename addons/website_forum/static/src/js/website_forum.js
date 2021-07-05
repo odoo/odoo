@@ -246,11 +246,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             msg = _t("Sorry you must be logged in to perform this action");
             title = _t("Access Denied");
         }
-        this.call('crash_manager', 'show_warning', {
+        this.displayNotification({
             message: msg,
             title: title,
-        }, {
             sticky: false,
+            type: "warning",
         });
     },
     /**
@@ -308,11 +308,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 } else if (data.error === 'post_non_flaggable') {
                     message = _t("This post can not be flagged");
                 }
-                self.call('crash_manager', 'show_warning', {
+                this.displayNotification({
                     message: message,
                     title: _t("Access Denied"),
-                }, {
                     sticky: false,
+                    type: "warning",
                 });
             } else if (data.success) {
                 var elem = $link;
@@ -348,11 +348,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 } else if (data.error === 'anonymous_user') {
                     message = _t('Sorry you must be logged to vote');
                 }
-                self.call('crash_manager', 'show_warning', {
+                this.displayNotification({
                     message: message,
                     title: _t("Access Denied"),
-                }, {
                     sticky: false,
+                    type: "warning",
                 });
             } else {
                 var $container = $btn.closest('.vote');
@@ -427,11 +427,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 if (data.error === 'anonymous_user') {
                     var message = _t("Sorry, anonymous users cannot choose correct answer.");
                 }
-                this.call('crash_manager', 'show_warning', {
+                this.displayNotification({
                     message: message,
                     title: _t("Access Denied"),
-                }, {
                     sticky: false,
+                    type: "warning",
                 });
             } else {
                 _.each(this.$('.forum_answer'), answer => {

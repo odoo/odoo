@@ -205,6 +205,7 @@ This module provides the core of the Odoo Web Client.
             # TODO: split debug files correctly when converting frontend debug
             # manager so we don't need action-service and stuff
             ('remove', 'web/static/src/core/debug/**/*'),
+            'web/static/src/public/error_notifications.js',
 
             'web/static/src/legacy/scss/base_frontend.scss',
             'web/static/src/legacy/scss/lazyloader.scss',
@@ -219,6 +220,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/public/public_root.js',
             'web/static/src/legacy/js/public/public_root_instance.js',
             'web/static/src/legacy/js/public/public_widget.js',
+            'web/static/src/legacy/legacy_promise_error_handler.js',
+            'web/static/src/legacy/legacy_rpc_error_handler.js',
 
             ('include', 'web.frontend_legacy'),
         ],
