@@ -45,6 +45,7 @@ class AccountMove(models.Model):
 
         # Copy data from PO
         invoice_vals = self.purchase_id.with_company(self.purchase_id.company_id)._prepare_invoice()
+        invoice_vals['currency_id'] = self.line_ids and self.currency_id or invoice_vals.get('currency_id')
         del invoice_vals['ref']
         self.update(invoice_vals)
 
