@@ -10,7 +10,7 @@ class BaseDocumentLayout(models.TransientModel):
     zip = fields.Char(related='company_id.zip', readonly=True)
     city = fields.Char(related='company_id.city', readonly=True)
     company_registry = fields.Char(related='company_id.company_registry', readonly=True)
-    bank_ids = fields.One2many(related='company_id.bank_ids', readonly=True)
+    bank_ids = fields.One2many(related='company_id.partner_id.bank_ids', readonly=True)
     l10n_de_template_data = fields.Binary(compute='_compute_l10n_de_template_data')
     l10n_de_document_title = fields.Char(compute='_compute_l10n_de_document_title')
 
