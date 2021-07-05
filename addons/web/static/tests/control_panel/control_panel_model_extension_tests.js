@@ -7,17 +7,17 @@ odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.
     function createModel(params = {}) {
         const archs = (params.arch && { search: params.arch, }) || {};
         const { ControlPanel: controlPanelInfo, } = ActionModel.extractArchInfo(archs);
+        const env = makeTestEnvironment();
         const extensions = {
             ControlPanel: {
                 context: params.context,
                 archNodes: controlPanelInfo.children,
                 dynamicFilters: params.dynamicFilters,
                 favoriteFilters: params.favoriteFilters,
-                env: makeTestEnvironment(),
                 fields: params.fields,
             },
         };
-        const model = new ActionModel(extensions);
+        const model = new ActionModel(extensions, { env });
         return model;
     }
     function sanitizeFilters(model) {
@@ -268,7 +268,7 @@ odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.
             ]);
         });
 
-        QUnit.module('Preparing initial state');
+        QUnit.module("Filters processing");
 
         QUnit.test('process favorite filters', async function (assert) {
             assert.expect(1);
@@ -369,5 +369,43 @@ odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.
 
         });
 
+        QUnit.test("undo last query action", async function (assert) {
+            assert.expect(4);
+
+            const arch = /* xml */`
+                <search>
+                    <field name="foo" />
+                    <field name="bar" />
+                </search>
+            `;
+            const model = createModel({ arch, fields: this.fields });
+            const filters = model.get("filters");
+
+            assert.deepEqual(model.get("domain"), []);
+
+            const barFilter = filters.find(f => f.fieldName === "bar");
+            await model.dispatch("addAutoCompletionValues", {
+                filterId: barFilter.id,
+                label: "Bar",
+                value: true,
+                operator: "=",
+            });
+
+            assert.deepEqual(model.get("domain"), [["bar", "=", true]]);
+
+            const fooFilter = filters.find(f => f.fieldName === "foo");
+            await model.dispatch("addAutoCompletionValues", {
+                filterId: fooFilter.id,
+                label: "Foo",
+                value: "abc",
+                operator: "ilike",
+            });
+
+            assert.deepEqual(model.get("domain"), ["&", ["bar", "=", true], ["foo", "ilike", "abc"]]);
+
+            await model.dispatch("undoLastQueryAction");
+
+            assert.deepEqual(model.get("domain"), [["bar", "=", true]]);
+        });
     });
 });

@@ -101,9 +101,10 @@ odoo.define("web/static/src/js/views/action_model.js", function (require) {
          */
         __get(excluded, property) {
             const results = super.__get(...arguments);
+            const { domain, context } = this.config;
             switch (property) {
-                case "domain": return [this.config.domain, ...results];
-                case "context": return [this.config.context, ...results];
+                case "domain": return domain ? [domain, ...results] : results;
+                case "context": return context ? [context, ...results] : results;
             }
             return results;
         }

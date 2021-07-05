@@ -175,6 +175,11 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                 }
             }
             this.labelPromises = [];
+            // This property only stores the last action altering the query that
+            // has been populated by user input values. Those are supposedly the
+            // only cases where the query needs to be reverted due to invalid
+            // value/formatting.
+            this.lastQueryActionUndoer = null;
 
             this.referenceMoment = moment();
             this.optionGenerators = getPeriodOptions(this.referenceMoment);
@@ -248,8 +253,17 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
             if (!queryElem) {
                 const { groupId } = this.state.filters[filterId];
                 this.state.query.push({ filterId, groupId, label, value, operator });
+                this.lastQueryActionUndoer = () => {
+                    this.state.query = this.state.query.filter(
+                        (elm) => elm.filterId !== filterId || elm.groupId !== groupId
+                    );
+                };
             } else {
+                const previousLabel = queryElem.label;
                 queryElem.label = label;
+                this.lastQueryActionUndoer = () => {
+                    queryElem.label = previousLabel;
+                };
             }
         }
 
@@ -258,6 +272,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
          */
         clearQuery() {
             this.state.query = [];
+            this.lastQueryActionUndoer = null;
         }
 
         /**
@@ -290,21 +305,27 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
             if (!prefilters.length) {
                 return [];
             }
+            const gId = groupId++;
+            const gNumber = groupNumber++;
             const newFilterIdS = [];
             prefilters.forEach(preFilter => {
+                const fId = filterId++;
                 const filter = Object.assign(preFilter, {
-                    groupId,
-                    groupNumber,
-                    id: filterId,
+                    groupId: gId,
+                    groupNumber: gNumber,
+                    id: fId,
                     type: 'filter',
                 });
-                this.state.filters[filterId] = filter;
-                this.state.query.push({ groupId, filterId });
-                newFilterIdS.push(filterId);
-                filterId++;
+                this.state.filters[fId] = filter;
+                this.state.query.push({ groupId: gId, filterId: fId });
+                newFilterIdS.push(fId);
+                this.lastQueryActionUndoer = () => {
+                    delete this.state.filters[fId];
+                    this.state.query = this.state.query.filter(
+                        (elm) => elm.filterId !== fId || elm.groupId !== gId
+                    );
+                };
             });
-            groupId++;
-            groupNumber++;
             return newFilterIdS;
         }
 
@@ -452,7 +473,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
             } else {
                 const { groupId, type } = this.state.filters[filterId];
                 if (type === 'favorite') {
-                    this.state.query = [];
+                    this.clearQuery();
                 }
                 this.state.query.push({ groupId, filterId });
             }
@@ -499,6 +520,18 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
             }
             if (filter.type === 'filter') {
                 this._checkComparisonStatus();
+            }
+        }
+
+        /**
+         * Reverts the last user input action on the query if any.
+         * TODO: This has been implemented as a fix for a very specific problem
+         * but the problem may be more generic and need a proper validation system
+         * implemented directly in the model/extensions.
+         */
+        undoLastQueryAction() {
+            if (this.lastQueryActionUndoer) {
+                this.lastQueryActionUndoer();
             }
         }
 
