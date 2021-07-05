@@ -3,12 +3,13 @@
 
 <template id="s_quotes_carousel" name="Quotes">
     <section class="s_quotes_carousel_wrapper" data-vxml="001" data-vcss="001">
-        <div id="myQuoteCarousel" class="s_quotes_carousel s_carousel_default carousel slide o_cc o_cc2" data-interval="10000">
+        <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
+        <div t-attf-id="myQuoteCarousel{{uniq}}" class="s_quotes_carousel s_carousel_default carousel slide o_cc o_cc2" data-interval="10000">
             <!-- Indicators -->
             <ol class="carousel-indicators">
-                <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"/>
-                <li data-target="#myQuoteCarousel" data-slide-to="1"/>
-                <li data-target="#myQuoteCarousel" data-slide-to="2"/>
+                <li t-attf-data-target="#myQuoteCarousel{{uniq}}" data-slide-to="0" class="active"/>
+                <li t-attf-data-target="#myQuoteCarousel{{uniq}}" data-slide-to="1"/>
+                <li t-attf-data-target="#myQuoteCarousel{{uniq}}" data-slide-to="2"/>
             </ol>
             <!-- Content -->
             <div class="carousel-inner">
@@ -59,11 +60,11 @@
                 </div>
             </div>
             <!-- Controls -->
-            <div class="carousel-control-prev o_not_editable" data-target="#myQuoteCarousel" data-slide="prev" role="img" aria-label="Previous" title="Previous">
+            <div class="carousel-control-prev o_not_editable" t-attf-data-target="#myQuoteCarousel{{uniq}}" data-slide="prev" role="img" aria-label="Previous" title="Previous">
                 <span class="carousel-control-prev-icon"/>
                 <span class="sr-only">Previous</span>
             </div>
-            <div class="carousel-control-next o_not_editable" data-target="#myQuoteCarousel" data-slide="next" role="img" aria-label="Next" title="Next">
+            <div class="carousel-control-next o_not_editable" t-attf-data-target="#myQuoteCarousel{{uniq}}" data-slide="next" role="img" aria-label="Next" title="Next">
                 <span class="carousel-control-next-icon"/>
                 <span class="sr-only">Next</span>
             </div>
