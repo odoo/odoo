@@ -180,7 +180,7 @@ var GeneratePriceList = AbstractAction.extend(StandaloneFieldManagerMixin, {
     _prepareActionReportParams: function () {
         return {
             active_model: this.context.active_model,
-            active_ids: this.context.active_ids,
+            active_ids: this.context.active_ids || '',
             is_visible_title: this.context.is_visible_title || '',
             pricelist_id: this.context.pricelist_id || '',
             quantities: this.context.quantities || [1],
