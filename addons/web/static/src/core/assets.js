@@ -99,7 +99,7 @@ const loadCSS = memoize(function loadCSS(url) {
  * @returns {Promise<XMLDocument>} A Promise of an XML document containing the
  *      owl templates.
  */
-const loadBundleTemplates = memoize(async function loadBundleTemplates(name) {
+export const loadBundleTemplates = memoize(async function loadBundleTemplates(name) {
     // TODO: quid of the "unique" in the URL? We can"t have one cache_hash
     // for each and every bundle I"m guessing.
     const bundleURL = new URL(`/web/webclient/qweb/${Date.now()}`, window.location.origin);

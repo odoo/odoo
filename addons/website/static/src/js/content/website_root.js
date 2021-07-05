@@ -8,7 +8,7 @@ import publicRootData from 'web.public.root';
 import "web.zoomodoo";
 import { FullscreenIndication } from '@website/js/widgets/fullscreen_indication';
 
-var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
+export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
     events: _.extend({}, KeyboardNavigationMixin.events, publicRootData.PublicRoot.prototype.events || {}, {
         'click .js_change_lang': '_onLangChangeClick',
         'click .js_publish_management .js_publish_btn': '_onPublishBtnClick',

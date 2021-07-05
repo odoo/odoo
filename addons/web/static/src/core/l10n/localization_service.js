@@ -13,7 +13,8 @@ export const localizationService = {
         const cacheHashes = session.cache_hashes;
         const translationsHash = cacheHashes.translations || new Date().getTime().toString();
         const lang = user.lang || null;
-        let url = `/web/webclient/translations/${translationsHash}`;
+        const translationURL = session.translationURL || "/web/webclient/translations";
+        let url = `${translationURL}/${translationsHash}`;
         if (lang) {
             url += `?lang=${lang}`;
         }
@@ -22,6 +23,7 @@ export const localizationService = {
         if (!response.ok) {
             throw new Error("Error while fetching translations");
         }
+
         const { lang_parameters: userLocalization, modules: modules } = await response.json();
 
         // FIXME We flatten the result of the python route.

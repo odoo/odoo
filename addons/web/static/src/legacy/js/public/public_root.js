@@ -8,6 +8,23 @@ import utils from 'web.utils';
 import publicWidget from 'web.public.widget';
 import { registry } from '@web/core/registry';
 
+import AbstractService from "web.AbstractService";
+import legacyEnv from "web.public_env";
+import lazyloader from "web.public.lazyloader";
+
+import {
+    makeLegacyNotificationService,
+    makeLegacyRpcService,
+    makeLegacySessionService,
+    makeLegacyDialogMappingService,
+} from "../../utils";
+import { ComponentAdapter } from "web.OwlCompatibility";
+
+import { loadBundleTemplates } from "@web/core/assets";
+import { makeEnv, startServices } from "@web/env";
+import { MainComponentsContainer } from "@web/core/main_components_container";
+const serviceRegistry = registry.category("services");
+
 // Load localizations outside the PublicRoot to not wait for DOM ready (but
 // wait for them in PublicRoot)
 function getLang() {
@@ -23,7 +40,7 @@ var localeDef = ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_'));
  * this Class instance. Its main role will be to retrieve RPC demands from its
  * children and handle them.
  */
-var PublicRoot = publicWidget.RootWidget.extend({
+export const PublicRoot = publicWidget.RootWidget.extend({
     events: _.extend({}, publicWidget.RootWidget.prototype.events || {}, {
         'submit .js_website_submit_form': '_onWebsiteFormSubmit',
         'click .js_disable_on_click': '_onDisableOnClick',
@@ -240,11 +257,14 @@ var PublicRoot = publicWidget.RootWidget.extend({
             }
         } else if (payload.service === 'ajax' && payload.method === 'loadLibs') {
             args[1] = _computeContext.call(this, args[1]);
+        } else {
+            return;
         }
 
         const service = this.env.services[payload.service];
         const result = service[payload.method].apply(service, args);
         payload.callback(result);
+        ev.stopPropagation();
     },
     /**
      * Called when someone asked for the global public context.
@@ -328,6 +348,46 @@ var PublicRoot = publicWidget.RootWidget.extend({
     },
 });
 
-export default {
-    PublicRoot: PublicRoot,
-};
+const { Component, mount } = owl;
+
+/**
+ * Configure Owl with the public env
+ */
+owl.config.mode = legacyEnv.isDebug() ? "dev" : "prod";
+owl.Component.env = legacyEnv;
+
+/**
+ * This widget is important, because the tour manager needs a root widget in
+ * order to work. The root widget must be a service provider with the ajax
+ * service, so that the tour manager can let the server know when tours have
+ * been consumed.
+ */
+export async function createPublicRoot(RootWidget) {
+    await lazyloader.allScriptsLoaded;
+    AbstractService.prototype.deployServices(legacyEnv);
+    // add a bunch of mapping services that will redirect service calls from the legacy env
+    // to the wowl env
+    serviceRegistry.add("legacy_rpc", makeLegacyRpcService(legacyEnv));
+    serviceRegistry.add("legacy_session", makeLegacySessionService(legacyEnv, session));
+    serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
+    serviceRegistry.add("legacy_crash_manager", makeLegacyCrashManagerService(legacyEnv));
+    serviceRegistry.add("legacy_dialog_mapping", makeLegacyDialogMappingService(legacyEnv));
+    await Promise.all([owl.utils.whenReady(), session.is_bound]);
+
+    const wowlEnv = makeEnv();
+    wowlEnv.qweb.addTemplates(await loadBundleTemplates("web.assets_frontend"));
+    await startServices(wowlEnv);
+
+    const adapter = new ComponentAdapter(null, { Component }); // Used for _trigger_up compat layer
+    const publicRoot = new RootWidget(adapter);
+    await Promise.all([
+        mount(MainComponentsContainer, {
+            target: document.body,
+            env: wowlEnv,
+        }),
+        publicRoot.attachTo(document.body),
+    ]);
+    return publicRoot;
+}
+
+export default { PublicRoot, createPublicRoot };
