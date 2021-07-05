@@ -119,6 +119,17 @@
             <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the channels of the sales pipeline.</field>
         </record>
 
+        <record id="crm_team_view_tree" model="ir.ui.view">
+            <field name="name">crm.team.tree.inherit.crm</field>
+            <field name="model">crm.team</field>
+            <field name="inherit_id" ref="sales_team.crm_team_view_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field string="Alias" name="alias_id"/>
+                </field>
+            </field>
+        </record>
+
         <record id="sales_team_form_view_in_crm" model="ir.ui.view">
             <field name="name">crm.team.form.inherit</field>
             <field name="model">crm.team</field>
@@ -243,8 +254,8 @@
                     </xpath>
 
                     <xpath expr="//div[hasclass('o_primary')]" position="after">
-                        <div t-if="record.use_leads.raw_value and record.alias_name.value and record.alias_domain.value">
-                            <small t-translation="off"><i class="fa fa-envelope-o" aria-label="Leads" title="Leads" role="img"></i>&amp;nbsp; <field name="alias_id"/></small>
+                        <div t-if="record.alias_name.value and record.alias_domain.value">
+                            <span t-translation="off"><i class="fa fa-envelope-o" aria-label="Leads" title="Leads" role="img"></i>&amp;nbsp; <field name="alias_id"/></span>
                         </div>
                     </xpath>
 
@@ -284,7 +295,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
+                    <xpath expr="//div[hasclass('o_kanban_manage_view')]/div[hasclass('o_kanban_card_manage_title')]" position="after">
                         <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(crm_case_form_view_salesteams_lead)d" type="action">
                                 Leads
@@ -297,7 +308,12 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[hasclass('o_kanban_manage_new')]" position="inside">
+                    <xpath expr="//div[hasclass('o_kanban_manage_new')]/div[hasclass('o_kanban_card_manage_title')]" position="after">
+                        <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
+                            <a name="%(crm_lead_action_open_lead_form)d" type="action">
+                                Leads
+                            </a>
+                        </div>
                         <div t-if="record.use_opportunities.raw_value">
                             <a  name="%(action_opportunity_form)d" type="action">
                                 Opportunity
@@ -305,7 +321,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
+                    <xpath expr="//div[hasclass('o_kanban_manage_reports')]/div[hasclass('o_kanban_card_manage_title')]" position="after">
                         <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(action_report_crm_lead_salesteam)d" type="action">
                                 Leads
@@ -316,10 +332,15 @@
                                 Opportunities
                             </a>
                         </div>
-                        <div t-if="record.use_opportunities.raw_value">
-                            <a name="%(crm.crm_activity_report_action_team)d" type="action">
-                                Activities
-                            </a>
+                    </xpath>
+
+                    <xpath expr="//div[hasclass('o_kanban_manage_reports')]/div[@name='o_team_kanban_report_separator']" position="after">
+                        <div name="activity_report">
+                            <div t-if="record.use_opportunities.raw_value">
+                                <a name="%(crm.crm_activity_report_action_team)d" type="action" style="color: #444B5A;">
+                                    Activities
+                                </a>
+                            </div>
                         </div>
                     </xpath>
                 </data>
