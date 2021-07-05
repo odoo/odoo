@@ -37,6 +37,7 @@ class MailTestActivity(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char()
+    date = fields.Date()
     email_from = fields.Char()
     active = fields.Boolean(default=True)
 
