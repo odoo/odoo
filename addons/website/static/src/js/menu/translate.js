@@ -9,6 +9,8 @@ var EditorMenu = require('website.editMenu');
 var localStorage = require('web.local_storage');
 var websiteNavbarData = require('website.navbar');
 
+const { registry } = require("@web/core/registry");
+
 var _t = core._t;
 
 var localStorageNoDialogKey = 'website_translator_nodialog';
@@ -347,5 +349,8 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
 });
 
-websiteNavbarData.websiteNavbarRegistry.add(TranslatePageMenu, '.o_menu_systray:has([data-action="translate"])');
+registry.category("website_navbar_widgets").add("TranslatePageMenu", {
+    Widget: TranslatePageMenu,
+    selector: '.o_menu_systray:has([data-action="translate"])',
+});
 });

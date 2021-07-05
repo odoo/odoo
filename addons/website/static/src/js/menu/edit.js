@@ -7,6 +7,8 @@ var wysiwygLoader = require('web_editor.loader');
 var websiteNavbarData = require('website.navbar');
 var Dialog = require('web.Dialog');
 
+const { registry } = require("@web/core/registry");
+
 var _t = core._t;
 
 /**
@@ -540,7 +542,10 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
 });
 
-websiteNavbarData.websiteNavbarRegistry.add(EditPageMenu, '#edit-page-menu');
+registry.category("website_navbar_widgets").add("EditPageMenu", {
+    Widget: EditPageMenu,
+    selector: '#edit-page-menu',
+});
 
 return EditPageMenu;
 });
