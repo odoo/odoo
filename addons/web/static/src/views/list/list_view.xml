@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.ListView" owl="1">
+    <div class="o_list_view">
+      <ControlPanel t-props="props.info" />
+      <div class="o_content">
+        <ListRenderer model="model" fields="props.fields" info="archInfo" />
+      </div>
+    </div>
+  </t>
+</templates>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.FormView" owl="1">
+      <div class="o_form_view">
+          <ControlPanel
+              t-props="props.info"
+              displayName="model.root.data.display_name"
+              display="{'top-right': false}"
+          >
+            <t t-set-slot="control-panel-bottom-right">
+                <div role="search" class="o_cp_pager">
+                    <Pager t-props="pagerProps"/>
+                </div>
+            </t>
+          </ControlPanel>
+
+          <div class="o_content">
+              <FormRenderer model="model" fields="props.fields" info="archInfo" mode="'readonly'" />
+          </div>
+      </div>
+  </t>
+</templates>
