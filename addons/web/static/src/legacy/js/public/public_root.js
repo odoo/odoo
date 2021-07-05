@@ -17,6 +17,7 @@ import {
     makeLegacyRpcService,
     makeLegacySessionService,
     makeLegacyDialogMappingService,
+    mapLegacyEnvToWowlEnv,
 } from "../../utils";
 import { ComponentAdapter } from "web.OwlCompatibility";
 
@@ -370,13 +371,13 @@ export async function createPublicRoot(RootWidget) {
     serviceRegistry.add("legacy_rpc", makeLegacyRpcService(legacyEnv));
     serviceRegistry.add("legacy_session", makeLegacySessionService(legacyEnv, session));
     serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
-    serviceRegistry.add("legacy_crash_manager", makeLegacyCrashManagerService(legacyEnv));
     serviceRegistry.add("legacy_dialog_mapping", makeLegacyDialogMappingService(legacyEnv));
     await Promise.all([owl.utils.whenReady(), session.is_bound]);
 
     const wowlEnv = makeEnv();
     wowlEnv.qweb.addTemplates(await loadBundleTemplates("web.assets_frontend"));
     await startServices(wowlEnv);
+    mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
 
     const adapter = new ComponentAdapter(null, { Component }); // Used for _trigger_up compat layer
     const publicRoot = new RootWidget(adapter);
