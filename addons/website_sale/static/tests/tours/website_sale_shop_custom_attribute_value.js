@@ -19,7 +19,7 @@ odoo.define("website_sale.tour_shop_custom_attribute_value", function (require) 
         run: 'text Wood',
     }, {
         id: 'add_cart_step',
-        trigger: 'a:contains(Add to Cart)',
+        trigger: 'a:contains(ADD TO CART)',
         run: 'click',
     },
         tourUtils.goToCart(), 

@@ -38,7 +38,7 @@ tour.register('shop_sale_coupon', {
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: "a:contains(Add to Cart)",
+            trigger: "a:contains(ADD TO CART)",
         },
             tourUtils.goToCart(2),
         {
@@ -119,7 +119,7 @@ tour.register('shop_sale_coupon', {
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: "a:contains(Add to Cart)",
+            trigger: "a:contains(ADD TO CART)",
         },
             tourUtils.goToCart(3),
         {

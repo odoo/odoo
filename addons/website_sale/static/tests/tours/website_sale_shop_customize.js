@@ -113,7 +113,7 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
             },
             {
                 content: "click on 'Add to Cart' button",
-                trigger: "a:contains(Add to Cart)",
+                trigger: "a:contains(ADD TO CART)",
             },
             {
                 content: "check quantity",

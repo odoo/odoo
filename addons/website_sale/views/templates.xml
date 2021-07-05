@@ -361,7 +361,7 @@
                             <t t-esc="website_sale_sortable_current[0][0]"/>
                         </t>
                         <t t-else='1'>
-                            Default
+                            Featured
                         </t>
                     </span>
                     <i class="fa fa-sort-amount-asc d-lg-none"/>
@@ -610,7 +610,7 @@
                                     </t>
                                     <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
                                     <div id="add_to_cart_wrap" class="d-inline">
-                                        <a role="button" id="add_to_cart" class="btn btn-primary btn-lg js_check_product a-submit text-uppercase my-1 mr-1 px-5 font-weight-bold flex-grow-1" href="#"><i class="fa fa-shopping-cart mr-2"/>Add to Cart</a>
+                                        <a role="button" id="add_to_cart" class="btn btn-primary btn-lg js_check_product a-submit my-1 mr-1 px-5 font-weight-bold flex-grow-1" href="#"><i class="fa fa-shopping-cart mr-2"/>ADD TO CART</a>
                                         <div id="product_option_block" class="d-inline-block align-middle"/>
                                     </div>
                                 </div>
@@ -748,7 +748,7 @@
 
     <template id="product_buy_now" inherit_id="website_sale.product" active="False" customize_show="True" name="Buy Now Button">
         <xpath expr="//a[@id='add_to_cart']" position="after">
-            <a role="button" class="btn btn-outline-primary btn-lg text-uppercase px-5 font-weight-bold o_we_buy_now" href="#"><i class="fa fa-bolt mr-2"/>Buy Now</a>
+            <a role="button" class="btn btn-outline-primary btn-lg px-5 font-weight-bold o_we_buy_now" href="#"><i class="fa fa-bolt mr-2"/>BUY NOW</a>
         </xpath>
     </template>
 
