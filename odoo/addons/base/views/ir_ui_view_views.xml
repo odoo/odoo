@@ -130,8 +130,8 @@
                         <span attrs="{'invisible': [('reset_mode', '!=', 'other_view')]}">You need two views to compare.</span>
                     </div>
                     <footer>
-                        <button string="Reset View" name="reset_view_button" type="object" class="btn-primary" attrs="{'invisible': [('has_diff', '=', False)]}"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                        <button string="Reset View" name="reset_view_button" type="object" class="btn-primary" attrs="{'invisible': [('has_diff', '=', False)]}" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
                     </footer>
                 </form>
             </field>

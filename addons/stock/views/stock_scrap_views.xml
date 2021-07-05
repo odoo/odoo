@@ -26,7 +26,7 @@
             <field name="arch" type="xml">
                 <form string="Scrap">
                     <header>
-                        <button name="action_validate" states="draft" string="Validate" type="object" class="oe_highlight" context="{'not_unlink_on_discard': True}"/>
+                        <button name="action_validate" states="draft" string="Validate" type="object" class="oe_highlight" context="{'not_unlink_on_discard': True}" data-hotkey="v"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,done" />
                     </header>
                     <sheet>
@@ -178,8 +178,8 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="action_validate" string="Done" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                        <button name="action_validate" string="Done" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
                     </footer>
                 </form>
             </field>

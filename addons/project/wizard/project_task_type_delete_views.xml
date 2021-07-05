@@ -17,9 +17,9 @@
                     <p>You cannot delete stages containing tasks. You should first delete all of their tasks.</p>
                 </div>
                 <footer>
-                    <button string="Archive Stages" type="object" name="action_archive" class="btn btn-primary" attrs="{'invisible': ['|', ('stages_active', '=', False), ('tasks_count', '=', 0)]}" />
-                    <button string="Delete" type="object" name="action_unlink" class="btn btn-primary" attrs="{'invisible': [('tasks_count', '>', 0)]}" />
-                    <button string="Discard" special="cancel" />
+                    <button string="Archive Stages" type="object" name="action_archive" class="btn btn-primary" attrs="{'invisible': ['|', ('stages_active', '=', False), ('tasks_count', '=', 0)]}" data-hotkey="q"/>
+                    <button string="Delete" type="object" name="action_unlink" class="btn btn-primary" attrs="{'invisible': [('tasks_count', '>', 0)]}" data-hotkey="w"/>
+                    <button string="Discard" special="cancel" data-hotkey="z" />
                 </footer>
             </form>
         </field>
@@ -40,8 +40,8 @@
                     <p>Are you sure you want to continue?</p>
                 </div>
                 <footer>
-                    <button string="Confirm" type="object" name="action_confirm" class="btn btn-primary"/>
-                    <button string="Discard" special="cancel" />
+                    <button string="Confirm" type="object" name="action_confirm" class="btn btn-primary" data-hotkey="q"/>
+                    <button string="Discard" special="cancel" data-hotkey="z" />
                 </footer>
             </form>
         </field>

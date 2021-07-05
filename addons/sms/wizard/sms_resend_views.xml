@@ -24,12 +24,12 @@
                 </div>
                 <footer>
                     <button string="Buy credits" name="action_buy_credits" type="object" class="btn-primary o_mail_send" 
-                            attrs="{'invisible': [('has_insufficient_credit', '=', False)]}"/>
+                            attrs="{'invisible': [('has_insufficient_credit', '=', False)]}" data-hotkey="q"/>
                     <button string="Set up an account" name="action_buy_credits" type="object" class="btn-primary o_mail_send" 
-                            attrs="{'invisible': [('has_unregistered_account', '=', False)]}"/>
-                    <button string="Resend" name="action_resend" type="object" class="btn-primary o_mail_send"/>
-                    <button string="Ignore all" name="action_cancel" type="object" class="btn-secondary" />
-                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                            attrs="{'invisible': [('has_unregistered_account', '=', False)]}" data-hotkey="q"/>
+                    <button string="Resend" name="action_resend" type="object" class="btn-primary o_mail_send" data-hotkey="w"/>
+                    <button string="Ignore all" name="action_cancel" type="object" class="btn-secondary" data-hotkey="x"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
                 </footer>
             </form>
         </field>

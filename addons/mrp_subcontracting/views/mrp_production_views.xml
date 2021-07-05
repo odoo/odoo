@@ -46,9 +46,9 @@
             </xpath>
             <xpath expr="//sheet" position="inside">
                 <footer>
-                    <button name="subcontracting_record_component" attrs="{'invisible': ['|', ('state', '=', 'to_close'), ('qty_producing', '&lt;', 0.001)]}" string="Continue" type="object" class="oe_highlight"/>
-                    <button name="subcontracting_record_component" attrs="{'invisible': [('state', '!=', 'to_close')]}" string="Record Production" type="object" class="oe_highlight"/>
-                    <button string="Discard" special="cancel" />
+                    <button name="subcontracting_record_component" attrs="{'invisible': ['|', ('state', '=', 'to_close'), ('qty_producing', '&lt;', 0.001)]}" string="Continue" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button name="subcontracting_record_component" attrs="{'invisible': [('state', '!=', 'to_close')]}" string="Record Production" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button string="Discard" special="cancel" data-hotkey="z" />
                 </footer>
             </xpath>
         </field>

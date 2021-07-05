@@ -236,10 +236,10 @@
                          attrs="{'invisible': ['|','|',('carrier_tracking_ref','=',False),('carrier_id', '=', False),('delivery_type','=','grid')]}" />
                 </div>
                 <xpath expr="/form/header/button[last()]" position="after">
-                    <button name="send_to_shipper" string="Send to Shipper" type="object" attrs="{'invisible':['|','|','|','|',('carrier_tracking_ref','!=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done')),('picking_type_code', '=', 'incoming')]}"/>
+                    <button name="send_to_shipper" string="Send to Shipper" type="object" attrs="{'invisible':['|','|','|','|',('carrier_tracking_ref','!=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done')),('picking_type_code', '=', 'incoming')]}" data-hotkey="shift+v"/>
                 </xpath>
                 <xpath expr="/form/header/button[last()]" position="after">
-                    <button name="print_return_label" string="Print Return Label" type="object" attrs="{'invisible':['|', '|', ('is_return_picking', '=', False),('state', '=', 'done'),('picking_type_code', '!=', 'incoming')]}"/>
+                    <button name="print_return_label" string="Print Return Label" type="object" attrs="{'invisible':['|', '|', ('is_return_picking', '=', False),('state', '=', 'done'),('picking_type_code', '!=', 'incoming')]}" data-hotkey="shift+o"/>
                 </xpath>
               </data>
               <xpath expr="//field[@name='partner_id']" position="attributes">
@@ -337,7 +337,7 @@
                         </div>
                     </group>
                     <footer>
-                        <button string="OK" special="cancel" class="oe_highlight"/>
+                        <button string="OK" special="cancel" data-hotkey="z" class="oe_highlight"/>
                     </footer>
                 </form>
             </field>

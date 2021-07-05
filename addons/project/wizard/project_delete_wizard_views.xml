@@ -15,12 +15,12 @@
                         <span>Are you sure you want to delete this project ?</span>
                     </group>
                     <footer attrs="{'invisible': [('task_count', '=', 0)]}">
-                        <button string="Archive project" type="object" name="action_archive" class="btn btn-primary" attrs="{'invisible': [('projects_archived', '=', True)]}" />
-                        <button string="Discard" special="cancel" />
+                        <button string="Archive project" type="object" name="action_archive" class="btn btn-primary" attrs="{'invisible': [('projects_archived', '=', True)]}" data-hotkey="q"/>
+                        <button string="Discard" special="cancel" data-hotkey="z" />
                     </footer>
                     <footer attrs="{'invisible': [('task_count', '>', 0)]}">
-                        <button string="Ok" type="object" name="confirm_delete" class="btn btn-primary" />
-                        <button string="Cancel" special="cancel" />
+                        <button string="Ok" type="object" name="confirm_delete" class="btn btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" special="cancel" data-hotkey="z"/>
                     </footer>
                 </form>
             </field>

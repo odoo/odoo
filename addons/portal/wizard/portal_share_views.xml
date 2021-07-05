@@ -18,8 +18,8 @@
                     <field name="note" placeholder="Add a note"/>
                 </group>
                 <footer>
-                    <button string="Send" name="action_send_mail" attrs="{'invisible': [('access_warning', '!=', '')]}" type="object" class="btn-primary"/>
-                    <button string="Cancel" class="btn-default" special="cancel" />
+                    <button string="Send" name="action_send_mail" attrs="{'invisible': [('access_warning', '!=', '')]}" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-default" special="cancel" data-hotkey="z" />
                 </footer>
             </form>
         </field>

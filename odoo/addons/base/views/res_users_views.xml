@@ -10,8 +10,8 @@
                 <form string="Change Password">
                     <field name="user_ids"/>
                     <footer>
-                        <button string="Change Password" name="change_password_button" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                        <button string="Change Password" name="change_password_button" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
                     </footer>
                 </form>
             </field>
@@ -49,8 +49,8 @@
                         </div>
                     </sheet>
                     <footer>
-                        <button string="Confirm Password" type="object" name="run_check" class="btn btn-primary"/>
-                        <button string="Cancel" special="cancel" class="btn btn-secondary"/>
+                        <button string="Confirm Password" type="object" name="run_check" class="btn btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" special="cancel" data-hotkey="z" class="btn btn-secondary"/>
                         <a href="/web/reset_password/" class="btn btn-link" role="button">Forgot password?</a>
                     </footer>
                 </form>
@@ -386,8 +386,8 @@
                         identify the key once created</strong>.
                     </p>
                     <footer>
-                        <button name="make_key" type="object" string="Generate key" class="btn-primary"/>
-                        <button special="cancel" string="Cancel" class="btn-secondary"/>
+                        <button name="make_key" type="object" string="Generate key" class="btn-primary" data-hotkey="q"/>
+                        <button special="cancel" data-hotkey="z" string="Cancel" class="btn-secondary"/>
                     </footer>
                     </sheet>
                 </form>
@@ -414,7 +414,7 @@
                             to your user account, it is very important to store it securely.
                         </p>
                         <footer>
-                            <button special="cancel" string="Done!"/>
+                            <button special="cancel" data-hotkey="z" string="Done!"/>
                         </footer>
                     </sheet>
                 </form>
@@ -492,8 +492,8 @@
                         </page>
                     </notebook>
                     <footer>
-                        <button name="preference_save" type="object" string="Save" class="btn-primary"/>
-                        <button name="preference_cancel" string="Cancel" special="cancel" class="btn-secondary"/>
+                        <button name="preference_save" type="object" string="Save" class="btn-primary" data-hotkey="q"/>
+                        <button name="preference_cancel" string="Cancel" special="cancel" data-hotkey="z" class="btn-secondary"/>
                     </footer>
                 </form>
             </field>

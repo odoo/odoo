@@ -54,13 +54,13 @@
                 <form string="Mailing" class="o_mass_mailing_mailing_form">
                     <header style="min-height:31px;">
                         <button name="action_launch" type="object" class="oe_highlight" string="Send"
-                            attrs="{'invisible': [('state', 'in', ('in_queue',  'sending', 'done'))]}"
+                            attrs="{'invisible': [('state', 'in', ('in_queue',  'sending', 'done'))]}" data-hotkey="v"
                             confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
                         <button name="action_schedule" type="object" class="btn-secondary" string="Schedule"
-                            attrs="{'invisible': [('state', 'in', ('in_queue',  'sending', 'done'))]}"/>
-                        <button name="action_test" type="object" class="btn-secondary" string="Test"/>
-                        <button name="action_cancel" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="btn-secondary" string="Cancel"/>
-                        <button name="action_retry_failed" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry"/>
+                            attrs="{'invisible': [('state', 'in', ('in_queue',  'sending', 'done'))]}" data-hotkey="x"/>
+                        <button name="action_test" type="object" class="btn-secondary" string="Test" data-hotkey="k"/>
+                        <button name="action_cancel" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="btn-secondary" string="Cancel" data-hotkey="z"/>
+                        <button name="action_retry_failed" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry" data-hotkey="y"/>
 
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>

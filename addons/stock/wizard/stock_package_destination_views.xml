@@ -50,8 +50,8 @@
                     <field name="location_dest_id" domain="[('id', 'in', filtered_location)]" options="{'no_create': True, 'no_open': True}"/>
                 </div>
                 <footer>
-                    <button string="Confirm" name="action_done" type="object" class="btn-primary"/>
-                    <button string="Discard" name="cancel_button" class="btn-secondary" special="cancel"/>
+                    <button string="Confirm" name="action_done" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" name="cancel_button" class="btn-secondary" special="cancel" data-hotkey="z"/>
                 </footer>
             </form>
         </field>

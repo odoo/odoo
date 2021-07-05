@@ -55,15 +55,15 @@
                 </sheet>
                 <footer>
                     <!-- attrs doesn't work for 'disabled'-->
-                    <button string="Send SMS" type="object" class="oe_highlight" name="action_send_sms"
+                    <button string="Send SMS" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
                             attrs="{'invisible': ['|',('composition_mode', 'not in', ('comment', 'numbers')),('recipient_single_valid', '=', False)]}"/>
-                    <button string="Send SMS" type="object" class="oe_highlight" name="action_send_sms"
+                    <button string="Send SMS" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
                             attrs="{'invisible': ['|',('composition_mode', 'not in', ('comment', 'numbers')),('recipient_single_valid', '=', True)]}" disabled='1'/>
-                    <button string="Put in queue" type="object" class="oe_highlight" name="action_send_sms"
+                    <button string="Put in queue" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
                         attrs="{'invisible': [('composition_mode', '!=', 'mass')]}"/>
-                    <button string="Send Now" type="object" name="action_send_sms_mass_now"
+                    <button string="Send Now" type="object" name="action_send_sms_mass_now" data-hotkey="w"
                         attrs="{'invisible': [('composition_mode', '!=', 'mass')]}"/>
-                    <button string="Close" class="btn btn-secondary" special="cancel"/>
+                    <button string="Close" class="btn btn-secondary" special="cancel" data-hotkey="z"/>
                 </footer>
             </form>
         </field>

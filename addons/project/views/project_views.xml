@@ -502,8 +502,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//group" position="after">
                     <footer>
-                        <button string="Create" name="action_view_tasks" type="object" class="btn-primary o_open_tasks"/>
-                        <button string="Discard" class="btn-secondary" special="cancel"/>
+                        <button string="Create" name="action_view_tasks" type="object" class="btn-primary o_open_tasks" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </xpath>
             </field>
@@ -687,7 +687,7 @@
                     <field name="allow_task_dependencies" invisible="1" />
                     <header>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
-                            attrs="{'invisible' : [('user_id', '!=', False)]}"/>
+                            attrs="{'invisible' : [('user_id', '!=', False)]}" data-hotkey="q"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}"/>
                     </header>
                     <div class="alert alert-info oe_edit_only" role="status" attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_id', '=', False)]}">
