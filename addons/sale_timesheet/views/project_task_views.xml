@@ -9,13 +9,6 @@
             <xpath expr="//button[@name='%(project.action_project_task_burndown_chart_report)d']" position="after">
                 <button string="Costs / Revenues" class="oe_stat_button" type="object" name="action_view_timesheet" icon="fa-puzzle-piece" attrs="{'invisible': [('allow_billable', '=', False)]}" groups="project.group_project_manager"/>
             </xpath>
-            <xpath expr="//button[@name='%(project.act_project_project_2_project_task_all)d']" position="before">
-                <button class="d-none d-md-inline oe_stat_button"
-                        type="object" name="action_view_so" icon="fa-dollar"
-                        attrs="{'invisible': ['|', ('allow_billable', '=', False), ('sale_order_id', '=', False)]}"
-                        string="Sales Order"
-                        groups="sales_team.group_sale_salesman_all_leads"/>
-            </xpath>
             <xpath expr="//header" position="inside">
                 <button name="action_make_billable" string="Create Sales Order" type="object" attrs="{'invisible': [('display_create_order', '=', False)]}" groups="sales_team.group_sale_salesman"/>
             </xpath>
