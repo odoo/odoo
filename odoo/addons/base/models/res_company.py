@@ -78,7 +78,7 @@ class Company(models.Model):
         'res.country.state', compute='_compute_address', inverse='_inverse_state',
         string="Fed. State", domain="[('country_id', '=?', country_id)]"
     )
-    bank_ids = fields.One2many('res.partner.bank', 'company_id', string='Bank Accounts', help='Bank accounts related to this company')
+    bank_ids = fields.One2many(related='partner_id.bank_ids', readonly=False)
     country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', string="Country")
     email = fields.Char(related='partner_id.email', store=True, readonly=False)
     phone = fields.Char(related='partner_id.phone', store=True, readonly=False)
