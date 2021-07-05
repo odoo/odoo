@@ -4,6 +4,8 @@ odoo.define('website.form_editor', function (require) {
 const core = require('web.core');
 const FormEditorRegistry = require('website.form_editor_registry');
 const options = require('web_editor.snippets.options');
+const Dialog = require('web.Dialog');
+const dom = require('web.dom');
 require('website.editor.snippets.options');
 
 const qweb = core.qweb;
@@ -451,6 +453,55 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         this._addHiddenField(value, fieldName);
     },
     /**
+     * Prompts the user to save changes before being redirected
+     * towards an action specified in value.
+     *
+     * @see this.selectClass for parameters
+     */
+    promptSaveRedirect: function (name, value, widgetValue) {
+        return new Promise((resolve, reject) => {
+            const message = _t("Would you like to save before being redirected? Unsaved changes will be discarded.");
+            Dialog.confirm(this, message, {
+                cancel_callback: () => resolve(),
+                buttons: [
+                    {
+                        text: _t("Save"),
+                        classes: 'btn-primary',
+                        click: (ev) => {
+                            const restore = dom.addButtonLoadingEffect(ev.currentTarget);
+                            this.trigger_up('request_save', {
+                                reload: false,
+                                onSuccess: () => {
+                                    this._redirectToAction(value);
+                                },
+                                onFailure: () => {
+                                    restore();
+                                    this.displayNotification({
+                                        message: _t("Something went wrong."),
+                                        type: 'danger',
+                                        sticky: true,
+                                    });
+                                    reject();
+                                },
+                            });
+                            resolve();
+                        },
+                    }, {
+                        text: _t("Discard"),
+                        click: (ev) => {
+                            dom.addButtonLoadingEffect(ev.currentTarget);
+                            this._redirectToAction(value);
+                        },
+                    }, {
+                        text: _t("Cancel"),
+                        close: true,
+                        click: () => resolve(),
+                    },
+                ],
+            });
+        });
+    },
+    /**
      * Changes the onSuccess event.
      */
     onSuccess: function (previewMode, value, params) {
@@ -636,7 +687,33 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             button.dataset.addActionField = el.id;
             selectEl.append(button);
         });
+        if (field.createAction) {
+            return this._addCreateButton(selectEl, field.createAction);
+        }
         return selectEl;
+    },
+    /**
+     * Wraps an HTML element in a we-row element, and adds a
+     * we-button linking to the given action.
+     *
+     * @private
+     * @param {HTMLElement} element
+     * @param {String} action
+     * @returns {HTMLElement}
+     */
+    _addCreateButton: function (element, action) {
+        const iconEl = document.createElement('i');
+        iconEl.classList.add('fa', 'fa-fw', 'fa-plus');
+        const linkButtonEl = document.createElement('we-button');
+        linkButtonEl.title = _t("Create new");
+        linkButtonEl.dataset.noPreview = 'true';
+        linkButtonEl.dataset.promptSaveRedirect = action;
+        linkButtonEl.classList.add('o_we_button_icon');
+        linkButtonEl.append(iconEl);
+        const projectRowEl = document.createElement('we-row');
+        projectRowEl.append(element);
+        projectRowEl.append(linkButtonEl);
+        return projectRowEl;
     },
     /**
      * Apply the model on the form changing it's fields
@@ -705,6 +782,15 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             span.textContent = ` ${mark}`;
             field.querySelector('.s_website_form_label').appendChild(span);
         });
+    },
+    /**
+     * Redirects the user to the page of a specified action.
+     *
+     * @private
+     * @param {string} action
+     */
+    _redirectToAction: function (action) {
+        window.location.replace(`/web#action=${action}`);
     },
 
     //--------------------------------------------------------------------------

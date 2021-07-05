@@ -28,6 +28,7 @@ FormEditorRegistry.add('create_task', {
         type: 'many2one',
         relation: 'project.project',
         string: _t('Project'),
+        createAction: 'project.open_view_project_all',
     }],
 });
 
