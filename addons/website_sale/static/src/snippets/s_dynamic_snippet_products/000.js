@@ -92,11 +92,11 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
                 add_qty: 1
             },
         }).then(function (data) {
-            wSaleUtils.updateCartNavBar(data);
             var $navButton = $('header .o_wsale_my_cart').first();
             var fetch = self._fetchData();
             var animation = wSaleUtils.animateClone($navButton, $(ev.currentTarget).parents('.card'), 25, 40);
             Promise.all([fetch, animation]).then(function (values) {
+                wSaleUtils.updateCartNavBar(data);
                 self._render();
             });
         });

@@ -324,7 +324,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
             }
             wSaleUtils.updateCartNavBar(data);
             $input.val(data.quantity);
-            $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).html(data.quantity);
+            $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).text(data.quantity);
 
             if (data.warning) {
                 var cart_alert = $('.oe_cart').parent().find('#data_warning');

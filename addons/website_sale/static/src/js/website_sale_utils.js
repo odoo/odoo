@@ -32,9 +32,9 @@ const cartHandlerMixin = {
         this._rpc({
             route: "/shop/cart/update_json",
             params: params,
-        }).then(data => {
+        }).then(async data => {
+            await animateClone($('header .o_wsale_my_cart').first(), this.$itemImgContainer, 25, 40);
             updateCartNavBar(data);
-            animateClone($('header .o_wsale_my_cart').first(), this.$itemImgContainer, 25, 40);
         });
     },
 };
@@ -89,7 +89,10 @@ function updateCartNavBar(data) {
     _.each($qtyNavBar, function (qty) {
         var $qty = $(qty);
         $qty.parents('li:first').removeClass('d-none');
-        $qty.html(data.cart_quantity).hide().fadeIn(600);
+        $qty.addClass('o_mycart_zoom_animation').delay(300).queue(function () {
+            $(this).text(data.cart_quantity);
+            $(this).removeClass("o_mycart_zoom_animation").dequeue();
+        });
     });
     $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
     $(".js_cart_summary").first().before(data['website_sale.short_cart_summary']).end().remove();
