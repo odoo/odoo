@@ -636,6 +636,18 @@ class ResourceCalendar(models.Model):
         )
         return interval_dt(work_intervals[0]) if work_intervals else None
 
+    def _get_unusual_days(self, start_dt, end_dt):
+        if not self:
+            return {}
+        self.ensure_one()
+        if not start_dt.tzinfo:
+            start_dt = start_dt.replace(tzinfo=utc)
+        if not end_dt.tzinfo:
+            end_dt = end_dt.replace(tzinfo=utc)
+
+        works = {d[0].date() for d in self._work_intervals_batch(start_dt, end_dt)[False]}
+        return {fields.Date.to_string(day.date()): (day.date() not in works) for day in rrule(DAILY, start_dt, until=end_dt)}
+
     # --------------------------------------------------
     # External API
     # --------------------------------------------------
