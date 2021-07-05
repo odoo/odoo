@@ -148,15 +148,15 @@
                 <form string="Register Payment">
                     <header>
                         <button name="action_post" string="Confirm" type="object" class="oe_highlight"
-                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                                attrs="{'invisible': [('state', '!=', 'draft')]}" data-hotkey="v"/>
                         <button name="action_draft" string="Reset To Draft" type="object" class="btn btn-secondary"
                                 attrs="{'invisible': [('state', 'not in', ('posted', 'cancel'))]}"
-                                groups="account.group_account_invoice"/>
+                                groups="account.group_account_invoice" data-hotkey="w"/>
                         <button name="action_cancel" string="Cancel" type="object"
-                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
-                        <button name="mark_as_sent" string="Mark as Sent" type="object"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}" data-hotkey="z"/>
+                        <button name="mark_as_sent" string="Mark as Sent" type="object" data-hotkey="q"
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', True), ('payment_method_code', '!=', 'manual')]}"/>
-                        <button name="unmark_as_sent"  string="Unmark as Sent" type="object"
+                        <button name="unmark_as_sent"  string="Unmark as Sent" type="object" data-hotkey="k"
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', False), ('payment_method_code', '!=', 'manual')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>

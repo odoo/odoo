@@ -89,7 +89,7 @@
             <field name="arch" type="xml">
                 <form string="Unbuild Orders">
                     <header>
-                        <button name="action_validate" string="Unbuild" type="object" states="draft" class="oe_highlight"/>
+                        <button name="action_validate" string="Unbuild" type="object" states="draft" class="oe_highlight" data-hotkey="v"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
                     </header>
                     <sheet>
@@ -160,8 +160,8 @@
                         </group>
                     </sheet>
                     <footer class="oe_edit_only">
-                        <button name="action_validate" string="Unbuild" type="object" states="draft" class="oe_highlight"/>
-                        <button string="Discard" special="cancel"/>
+                        <button name="action_validate" string="Unbuild" type="object" states="draft" class="oe_highlight" data-hotkey="q"/>
+                        <button string="Discard" special="cancel" data-hotkey="z"/>
                     </footer>
                 </form>
             </field>
