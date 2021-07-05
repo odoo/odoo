@@ -10,6 +10,7 @@ class StockMoveLine(models.Model):
 
     workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True)
     production_id = fields.Many2one('mrp.production', 'Production Order', check_company=True)
+    description_bom_line = fields.Char(related='move_id.description_bom_line')
 
     @api.depends('production_id')
     def _compute_picking_type_id(self):
@@ -123,6 +124,22 @@ class StockMove(models.Model):
         help="The percentage of the final production cost for this by-product. The total of all by-products' cost share must be smaller or equal to 100.")
     product_qty_available = fields.Float('Product On Hand Quantity', related='product_id.qty_available')
     product_virtual_available = fields.Float('Product Forecasted Quantity', related='product_id.virtual_available')
+    description_bom_line = fields.Char('Kit', compute='_compute_description_bom_line')
+
+    @api.depends('bom_line_id')
+    def _compute_description_bom_line(self):
+        bom_line_description = {}
+        for bom in self.bom_line_id.bom_id:
+            if bom.type != 'phantom':
+                continue
+            line_ids = bom.bom_line_ids.ids
+            total = len(line_ids)
+            name = bom.display_name
+            for i, line_id in enumerate(line_ids):
+                bom_line_description[line_id] = '%s - %d/%d' % (name, i+1, total)
+
+        for move in self:
+            move.description_bom_line = bom_line_description.get(move.bom_line_id.id)
 
     @api.depends('raw_material_production_id.priority')
     def _compute_priority(self):

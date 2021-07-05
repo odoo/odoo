@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class StockPickingType(models.Model):
@@ -52,6 +52,13 @@ class StockPickingType(models.Model):
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
+
+    has_kits = fields.Boolean(compute='_compute_has_kits')
+
+    @api.depends('move_lines')
+    def _compute_has_kits(self):
+        for picking in self:
+            picking.has_kits = any(picking.move_lines.mapped('bom_line_id'))
 
     def _less_quantities_than_expected_add_documents(self, moves, documents):
         documents = super(StockPicking, self)._less_quantities_than_expected_add_documents(moves, documents)
