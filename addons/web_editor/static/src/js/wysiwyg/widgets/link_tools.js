@@ -2,7 +2,7 @@ odoo.define('wysiwyg.widgets.LinkTools', function (require) {
 'use strict';
 
 const Link = require('wysiwyg.widgets.Link');
-const OdooEditorLib = require('web_editor.odoo-editor');
+const OdooEditorLib = require('@web_editor/../lib/odoo-editor/src/OdooEditor');
 const dom = require('web.dom');
 
 const setCursor = OdooEditorLib.setCursor;

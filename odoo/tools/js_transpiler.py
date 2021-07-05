@@ -53,7 +53,7 @@ def transpile_javascript(url, content):
 URL_RE = re.compile(r"""
     /?(?P<module>\S+)    # /module name
     /([\S/]*/)?static/   # ... /static/
-    (?P<type>src|tests)  # src or test file
+    (?P<type>src|tests|lib)  # src, test, or lib file
     (?P<url>/[\S/]*)     # URL (/...)
     """, re.VERBOSE)
 
@@ -64,7 +64,7 @@ def url_to_module_path(url):
     It is used in to be required later. (const { something } = require("<the name>").
     The transpiler transforms the url of the file in the project to this name.
     It takes the module name and add a @ on the start of it, and map it to be the source of the static/src (or
-    static/tests) folder in that module.
+    static/tests, or static/lib) folder in that module.
 
     in: web/static/src/one/two/three.js
     out: @web/one/two/three.js
@@ -82,10 +82,12 @@ def url_to_module_path(url):
             url = url[:-3]
         if match["type"] == "src":
             return "@%s%s" % (match['module'], url)
+        elif match["type"] == "lib":
+            return "@%s/../lib%s" % (match['module'], url)
         else:
             return "@%s/../tests%s" % (match['module'], url)
     else:
-        raise ValueError("The js file %r must be in the folder '/static/src' or '/static/test'" % url)
+        raise ValueError("The js file %r must be in the folder '/static/src' or '/static/lib' or '/static/test'" % url)
 
 
 def wrap_with_odoo_define(module_path, content):
