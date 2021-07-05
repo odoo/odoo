@@ -42,6 +42,19 @@ class Project(models.Model):
             overview.project_overview = True
         (self - overview).project_overview = False
 
+    def action_view_so(self):
+        self.ensure_one()
+        action_window = {
+            "type": "ir.actions.act_window",
+            "res_model": "sale.order",
+            "name": "Sales Order",
+            "views": [[False, "form"]],
+            "context": {"create": False, "show_sale": True},
+            "res_id": self.sale_order_id.id
+        }
+        return action_window
+
+
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
