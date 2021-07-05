@@ -13,7 +13,6 @@ var FormView = require('web.FormView');
 var ListRenderer = require('web.ListRenderer');
 var ListView = require('web.ListView');
 var mixins = require('web.mixins');
-var NotificationService = require('web.NotificationService');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 const { patch, unpatch } = require('web.utils');
@@ -3463,11 +3462,11 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             services: {
-                notification: NotificationService.extend({
+                notification: {
                     notify: function () {
                         throw new Error('should not display a notification');
                     },
-                }),
+                },
             },
             viewOptions: {
                 hasActionMenus: true,
@@ -3511,11 +3510,11 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             services: {
-                notification: NotificationService.extend({
+                notification: {
                     notify: function () {
                         assert.step('notify');
                     },
-                }),
+                },
             },
             session: {
                 active_ids_limit: 4,
@@ -3613,11 +3612,11 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             services: {
-                notification: NotificationService.extend({
+                notification: {
                     notify: function () {
                         throw new Error('should not display a notification');
                     },
-                }),
+                },
             },
             viewOptions: {
                 hasActionMenus: true,
@@ -3664,11 +3663,11 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             services: {
-                notification: NotificationService.extend({
+                notification: {
                     notify: function () {
                         assert.step('notify');
                     },
-                }),
+                },
             },
             session: {
                 active_ids_limit: 4,
@@ -5771,13 +5770,13 @@ QUnit.module('Views', {
                     '<field name="bar"/>' +
                 '</tree>',
             services: {
-                notification: NotificationService.extend({
+                notification: {
                     notify: function (params) {
                         if (params.type === 'danger') {
                             warnings++;
                         }
                     }
-                }),
+                },
             },
         });
 
