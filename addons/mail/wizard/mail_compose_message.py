@@ -130,8 +130,8 @@ class MailComposer(models.TransientModel):
         string='Considers answers as new thread',
         help='Manage answers as new incoming emails instead of replies going to the same thread.')
     reply_to_mode = fields.Selection([
-        ('update', 'Log in the original discussion thread'),
-        ('new', 'Redirect to another email address')],
+        ('update', 'Store email and replies in the chatter of each record'),
+        ('new', 'Collect replies on a specific email address')],
         string='Replies', compute='_compute_reply_to_mode', inverse='_inverse_reply_to_mode',
         help="Original Discussion: Answers go in the original document discussion thread. \n Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n This has an impact on the generated message-id.")
     is_log = fields.Boolean('Log an Internal Note',
