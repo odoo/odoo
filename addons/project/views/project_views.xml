@@ -658,10 +658,10 @@
                                                 <div t-if="record.alias_name.value and record.alias_domain.value" class="text-muted">
                                                     <span class="fa fa-envelope-o mr-2" aria-label="Domain Alias" title="Domain Alias"></span><t t-esc="record.alias_id.value"/>
                                                 </div>
-                                                <div t-if="record.rating_active.raw_value" class="text-muted" title="Percentage of happy ratings over the past 30 days." groups="project.group_project_rating">
+                                                <div t-if="record.rating_active.raw_value" class="text-muted" groups="project.group_project_rating">
                                                     <b>
                                                         <t t-if="record.rating_percentage_satisfaction.value != -1">
-                                                            <i class="fa fa-smile-o" role="img" aria-label="Percentage of satisfaction" title="Percentage of satisfaction"/> <t t-esc="record.rating_percentage_satisfaction.value"/>%
+                                                            <i class="fa fa-smile-o" role="img" aria-label="Average satisfaction rate for the last 30 days." title="Average satisfaction rate for the last 30 days."/> <t t-esc="record.rating_percentage_satisfaction.value"/>%
                                                         </t>
                                                     </b>
                                                 </div>
@@ -1436,7 +1436,7 @@
             action="rating_rating_action_project_report"
             parent="menu_project_report"
             groups="project.group_project_rating"
-            sequence="40"/>
+            sequence="51"/>
 
         <record id="project_view_kanban_inherit_project" model="ir.ui.view">
             <field name="name">project.kanban.inherit.project</field>
