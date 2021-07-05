@@ -29,10 +29,10 @@ export function parseExpr(expr) {
  * Evaluates a python expression
  *
  * @param {string} expr
- * @param {Object} context
+ * @param {Object} [context]
  * @returns {any}
  */
-export function evaluateExpr(expr, context) {
+export function evaluateExpr(expr, context = {}) {
     const ast = parseExpr(expr);
     return evaluate(ast, context);
 }

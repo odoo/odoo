@@ -2,7 +2,7 @@
 
 import { BUILTINS } from "./py_builtin";
 import { PyDate, PyDateTime, PyRelativeDelta, PyTime } from "./py_date";
-import { parseArgs, PY_DICT } from "./py_utils";
+import { parseArgs, PY_DICT, toPyDict } from "./py_utils";
 
 // -----------------------------------------------------------------------------
 // Types
@@ -199,6 +199,16 @@ const DICT = {
  */
 export function evaluate(ast, context = {}) {
     const dicts = new Set();
+    let pyContext;
+    const evalContext = Object.create(context);
+    Object.defineProperty(evalContext, "context", {
+        get() {
+            if (!pyContext) {
+                pyContext = toPyDict(context);
+            }
+            return pyContext;
+        },
+    });
 
     /**
      * @param {AST} ast
@@ -209,8 +219,8 @@ export function evaluate(ast, context = {}) {
             case 1 /* String */:
                 return ast.value;
             case 5 /* Name */:
-                if (ast.value in context) {
-                    return context[ast.value];
+                if (ast.value in evalContext) {
+                    return evalContext[ast.value];
                 } else if (ast.value in BUILTINS) {
                     return BUILTINS[ast.value];
                 } else {
@@ -221,9 +231,9 @@ export function evaluate(ast, context = {}) {
             case 2 /* Boolean */:
                 return ast.value;
             case 6 /* UnaryOperator */:
-                return applyUnaryOp(ast, context);
+                return applyUnaryOp(ast, evalContext);
             case 7 /* BinaryOperator */:
-                return applyBinaryOp(ast, context);
+                return applyBinaryOp(ast, evalContext);
             case 14 /* BooleanOperator */:
                 const left = _evaluate(ast.left);
                 if (ast.op === "and") {
