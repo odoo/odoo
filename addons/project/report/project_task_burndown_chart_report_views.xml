@@ -16,7 +16,7 @@
                 <filter name="filter_date_deadline" date="date_deadline"/>
                 <filter name="filter_date_assign" date="date_assign"/>
                 <filter string="Last Month" invisible="1" name="last_month" domain="[('date','&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
-                <filter string="Open tasks" name="open_tasks" domain="[('stage_id.fold', '=', False), ('stage_id.is_closed', '=', False)]"/>
+                <filter string="Open tasks" name="open_tasks" domain="[('stage_id.fold', '=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Date" name="date" context="{'group_by': 'date'}" />
                     <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}" />
@@ -56,7 +56,11 @@
         <field name="search_view_id" ref="project_task_burndown_chart_report_view_search"/>
         <field name="context">{'search_default_project_id': active_id}</field>
         <field name="domain">[('display_project_id', '!=', False)]</field>
-        <field name="help">
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data yet!
+            </p>
+            <p>Analyze how quickly your team is completing your project's tasks and check if everything is going according to plan.</p>
         </field>
     </record>
 
