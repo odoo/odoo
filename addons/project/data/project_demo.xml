@@ -906,9 +906,9 @@ Send it ASAP, its urgent.</field>
             <field name="rating_template_id" ref="rating_project_request_email_template"/>
         </record>
 
-        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_3')], 5)"/>
-        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_24')], 5)"/>
-        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_8')], 1)"/>
+        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_3')], 5, None, 'Good Job')"/>
+        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_24')], 5, None, 'Great work')"/>
+        <function model="project.task" name="rating_apply" eval="([ref('project.project_task_8')], 1, None, 'Not as good as expected')"/>
 
         <record id="project_milestone_1" model="project.milestone">
             <field name="is_reached" eval="True"/>

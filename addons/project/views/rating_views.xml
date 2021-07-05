@@ -24,6 +24,13 @@
         <field name="inherit_id" ref="rating.rating_rating_view_form"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="edit">0</attribute>
+            </xpath>
+            <field name="resource_ref" position="before">
+                <field name="rated_partner_id" position="move"/>
+                <field name="parent_ref" position="move"/>
+            </field>
             <field name="res_name" position="attributes">
                 <attribute name="string">Task</attribute>
             </field>
@@ -46,8 +53,11 @@
                 <attribute name="readonly">1</attribute>
             </field>
             <div name="rating_image_container" position="replace">
-                <field name="rating_text" string="Rating"/>
+                <field name="rating_text" string="Rating" decoration-danger="rating_text == 'ko'" decoration-warning="rating_text == 'ok'" decoration-success="rating_text == 'top'" widget='badge'/>
             </div>
+            <field name="create_date" position="after">
+                <field name="partner_id" position="move"/>
+            </field>
             <xpath expr="//field[@name='is_internal']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -62,6 +72,9 @@
         <field name="arch" type="xml">
             <xpath expr="//pivot" position="attributes">
                 <attribute name="js_class">project_rating_pivot</attribute>
+            </xpath>
+            <xpath expr="//field[@name='create_date']" position="attributes">
+                <attribute name="invisible">1</attribute>
             </xpath>
         </field>
     </record>
@@ -84,8 +97,24 @@
         <field name="inherit_id" ref="rating.rating_rating_view_search"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='resource']" position="after">
+            <xpath expr="//field[@name='rated_partner_id']" position="after">
+                <field name="parent_res_name" position="move"/>
+                <field name="res_name" position="move"/>
+            </xpath>
+            <xpath expr="//field[@name='parent_res_name']" position="attributes">
+                <attribute name="string">Project</attribute>
+            </xpath>
+            <xpath expr="//field[@name='res_name']" position="attributes">
+                <attribute name="string">Task</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='responsible']" position="after">
+                <filter name="rating_text" position="move"/>
                 <filter string="Project" name="groupby_project" context="{'group_by': 'parent_res_name'}"/>
+                <filter name="resource" position="move"/>
+                <filter name="customer" position="move"/>
+            </xpath>
+            <xpath expr="//filter[@name='resource']" position="attributes">
+                <attribute name="string">Task</attribute>
             </xpath>
             <xpath expr="//filter[@name='responsible']" position="replace"></xpath>
             <xpath expr="/search" position="inside">
@@ -208,7 +237,10 @@
                 Let's wait for your customers to manifest themselves.
             </p>
         </field>
-        <field name="context">{'search_default_rating_last_30_days': 1, 'search_default_responsible': 1}</field>
+        <field name="context">{
+            'search_default_rating_last_30_days': 1,
+            'graph_groupbys': ['rated_partner_id'],
+        }</field>
     </record>
 
     <record id="rating_rating_action_project_report_kanban" model="ir.actions.act_window.view">
