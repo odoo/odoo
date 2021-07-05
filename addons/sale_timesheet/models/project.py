@@ -241,18 +241,6 @@ class Project(models.Model):
             },
         }
 
-    def action_view_so(self):
-        self.ensure_one()
-        action_window = {
-            "type": "ir.actions.act_window",
-            "res_model": "sale.order",
-            "name": "Sales Order",
-            "views": [[False, "form"]],
-            "context": {"create": False, "show_sale": True},
-            "res_id": self.sale_order_id.id
-        }
-        return action_window
-
     # ----------------------------
     #  Project Updates
     # ----------------------------

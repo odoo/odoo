@@ -28,6 +28,15 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(project.act_project_project_2_project_task_all)d']" position="before">
+                <button class="d-none d-md-inline oe_stat_button"
+                        type="object" name="action_view_so" icon="fa-dollar"
+                        attrs="{'invisible': [('sale_order_id', '=', False)]}"
+                        string="Sales Order"
+                        groups="sales_team.group_sale_salesman_all_leads">
+                    <field name="sale_order_id" attrs="{'invisible': True}"/> 
+                </button>
+            </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'always_reload': True}</attribute>
                 <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
