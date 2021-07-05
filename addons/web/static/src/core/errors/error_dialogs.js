@@ -10,13 +10,19 @@ import { capitalize } from "../utils/strings";
 const { hooks } = owl;
 const { useState } = hooks;
 
-const odooExceptionTitleMap = new Map();
-
-odooExceptionTitleMap.set("odoo.exceptions.AccessDenied", _lt("Access Denied"));
-odooExceptionTitleMap.set("odoo.exceptions.AccessError", _lt("Access Error"));
-odooExceptionTitleMap.set("odoo.exceptions.MissingError", _lt("Missing Record"));
-odooExceptionTitleMap.set("odoo.exceptions.UserError", _lt("User Error"));
-odooExceptionTitleMap.set("odoo.exceptions.ValidationError", _lt("Validation Error"));
+export const odooExceptionTitleMap = new Map(
+    Object.entries({
+        "odoo.addons.base.models.ir_mail_server.MailDeliveryException": _lt(
+            "MailDeliveryException"
+        ),
+        "odoo.exceptions.AccessDenied": _lt("Access Denied"),
+        "odoo.exceptions.MissingError": _lt("Missing Record"),
+        "odoo.exceptions.UserError": _lt("User Error"),
+        "odoo.exceptions.ValidationError": _lt("Validation Error"),
+        "odoo.exceptions.AccessError": _lt("Access Error"),
+        "odoo.exceptions.Warning": _lt("Warning")
+    })
+);
 
 // -----------------------------------------------------------------------------
 // Generic Error Dialog
