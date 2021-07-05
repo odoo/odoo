@@ -1040,6 +1040,16 @@ class Task(models.Model):
     repeat_show_week = fields.Boolean(compute='_compute_repeat_visibility')
     repeat_show_month = fields.Boolean(compute='_compute_repeat_visibility')
 
+    # Account analytic
+    analytic_account_id = fields.Many2one('account.analytic.account', ondelete='set null',
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", check_company=True,
+        help="Analytic account to which this task is linked for financial management. "
+             "Use an analytic account to record cost and revenue on your task. "
+             "If empty, the analytic account of the project will be used.")
+    project_analytic_account_id = fields.Many2one('account.analytic.account', string='Project Analytic Account', related='project_id.analytic_account_id')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag',
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", check_company=True)
+
     @property
     def SELF_READABLE_FIELDS(self):
         return PROJECT_TASK_READABLE_FIELDS | self.SELF_WRITABLE_FIELDS
@@ -1978,6 +1988,13 @@ class Task(models.Model):
         for task in self.filtered(lambda t: t.project_privacy_visibility != 'portal'):
             portal_users = task.message_partner_ids.user_ids.filtered('share')
             task.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
+
+    # ---------------------------------------------------
+    # Analytic accounting
+    # ---------------------------------------------------
+    def _get_task_analytic_account_id(self):
+        self.ensure_one()
+        return self.analytic_account_id or self.project_analytic_account_id
 
 class ProjectTags(models.Model):
     """ Tags of project's tasks """
