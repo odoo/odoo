@@ -588,8 +588,22 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      * @private
      * @param {Object} searchQuery
      */
-    _onSearch: function (searchQuery) {
-        this.reload(_.extend({ offset: 0, groupsOffset: 0 }, searchQuery));
+    async _onSearch(searchQuery) {
+        try {
+            await this.reload(_.extend({ offset: 0, groupsOffset: 0 }, searchQuery));
+        } catch (err) {
+            if (
+                err.message &&
+                err.message.data &&
+                err.message.data.name === "odoo.exceptions.UserError"
+            ) {
+                // The new search params are considered the issue of the error
+                // so we revert the last action on the search query (note that
+                // this will trigger another reload).
+                this.searchModel.dispatch("undoLastQueryAction");
+            }
+            throw err;
+        }
     },
     /**
      * Intercepts the 'switch_view' event to add the controllerID into the data,
