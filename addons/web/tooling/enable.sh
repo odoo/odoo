@@ -1,7 +1,7 @@
 #!/bin/bash
 
 script="$0"
-basename="$(dirname $script)"
+basename="$(dirname "$script")"
 
 read -p "Do you want the tooling installed in enterprise too ? [y, n]" willingToInstallToolingInEnterprise
 if [[ $willingToInstallToolingInEnterprise != "n" ]]
@@ -10,30 +10,30 @@ then
     pathToEnterprise=${pathToEnterprise:-../enterprise}
 fi
 
-cp -r $basename/_husky  $basename/../../../.husky
-cp  $basename/_eslintignore  $basename/../../../.eslintignore
-cp  $basename/_prettierignore  $basename/../../../.prettierignore
-cp  $basename/_eslintrc.json  $basename/../../../.eslintrc.json
-cp  $basename/_prettierrc.json  $basename/../../../.prettierrc.json
-cp  $basename/_package.json  $basename/../../../package.json
+cp -r "$basename/_husky"  "$basename/../../../.husky"
+cp  "$basename/_eslintignore"  "$basename/../../../.eslintignore"
+cp  "$basename/_prettierignore"  "$basename/../../../.prettierignore"
+cp  "$basename/_eslintrc.json"  "$basename/../../../.eslintrc.json"
+cp  "$basename/_prettierrc.json"  "$basename/../../../.prettierrc.json"
+cp  "$basename/_package.json"  "$basename/../../../package.json"
 
 if [[ $willingToInstallToolingInEnterprise != "n" ]]
 then
-    cp -r $basename/_husky  $basename/../../../$pathToEnterprise/.husky
-    cp  $basename/_eslintignore  $basename/../../../$pathToEnterprise/.eslintignore
-    cp  $basename/_prettierignore  $basename/../../../$pathToEnterprise/.prettierignore
-    cp  $basename/_eslintrc.json  $basename/../../../$pathToEnterprise/.eslintrc.json
-    cp  $basename/_prettierrc.json  $basename/../../../$pathToEnterprise/.prettierrc.json
-    cp  $basename/_package.json  $basename/../../../$pathToEnterprise/package.json
+    cp -r "$basename/_husky"  "$basename/../../../$pathToEnterprise/.husky"
+    cp  "$basename/_eslintignore"  "$basename/../../../$pathToEnterprise/.eslintignore"
+    cp  "$basename/_prettierignore"  "$basename/../../../$pathToEnterprise/.prettierignore"
+    cp  "$basename/_eslintrc.json"  "$basename/../../../$pathToEnterprise/.eslintrc.json"
+    cp  "$basename/_prettierrc.json"  "$basename/../../../$pathToEnterprise/.prettierrc.json"
+    cp  "$basename/_package.json" "$basename/../../../$pathToEnterprise/package.json"
 fi
 
-cd $basename
+cd "$basename"
 npm install
 cd -
 
 if [[ $willingToInstallToolingInEnterprise != "n" ]]
 then
-    cd $basename/../../../$pathToEnterprise
+    cd "$basename/../../../$pathToEnterprise"
     npm install
     cd -
 fi
