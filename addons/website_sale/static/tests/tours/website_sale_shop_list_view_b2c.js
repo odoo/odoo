@@ -59,7 +59,7 @@ tour.register('shop_list_view_b2c', {
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: 'a:contains(Add to Cart)',
+            trigger: 'a:contains(ADD TO CART)',
         },
             tourUtils.goToCart(),
         {
