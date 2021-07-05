@@ -11,7 +11,6 @@ const fieldRegistryOwl = require('web.field_registry_owl');
 const FormRenderer = require('web.FormRenderer');
 var FormView = require('web.FormView');
 var mixins = require('web.mixins');
-var NotificationService = require('web.NotificationService');
 var pyUtils = require('web.py_utils');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
@@ -3599,7 +3598,7 @@ QUnit.module('Views', {
                         '<group><field name="foo"/></group>' +
                 '</form>',
             services: {
-                notification: NotificationService.extend({
+                notification: {
                     notify: function (params) {
                         if (params.type !== 'danger') {
                             return;
@@ -3609,7 +3608,7 @@ QUnit.module('Views', {
                         assert.strictEqual(params.message, '<ul><li>Foo</li></ul>',
                             "should have a warning with correct message");
                     }
-                }),
+                },
             },
         });
 
@@ -6140,11 +6139,11 @@ QUnit.module('Views', {
                 return result;
             },
             services: {
-                notification: NotificationService.extend({
+                notification: {
                     notify: function (params) {
                         assert.step(params.type);
                     }
-                }),
+                },
             },
         });
 

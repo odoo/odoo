@@ -988,7 +988,7 @@ QUnit.test('rendering without OdooBot has a request (accepted)', async function 
 });
 
 QUnit.test('respond to notification prompt (denied)', async function (assert) {
-    assert.expect(3);
+    assert.expect(4);
 
     await this.start({
         env: {
@@ -1001,6 +1001,15 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
                     },
                 },
             },
+            services: {
+                notification: {
+                    notify() {
+                        assert.step(
+                            "should display a toast notification with the deny confirmation"
+                        );
+                    }
+                }
+            }
         },
     });
 
@@ -1010,11 +1019,10 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
     await afterNextRender(() =>
         document.querySelector('.o_NotificationRequest').click()
     );
-    assert.containsOnce(
-        document.body,
-        '.toast .o_notification_content',
-        "should display a toast notification with the deny confirmation"
-    );
+    assert.verifySteps([
+        "should display a toast notification with the deny confirmation",
+    ]);
+
     assert.containsNone(
         document.body,
         '.o_MessagingMenu_counter',
