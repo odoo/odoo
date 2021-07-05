@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import random
 
 from babel.dates import format_date
 from datetime import date
@@ -352,9 +353,10 @@ class CrmTeam(models.Model):
         locale = self._context.get('lang') or 'en_US'
 
         weeks_in_start_year = int(date(start_date.year, 12, 28).isocalendar()[1]) # This date is always in the last week of ISO years
-        for week in range(0, (end_date.isocalendar()[1] - start_date.isocalendar()[1]) % weeks_in_start_year + 1):
+        week_count = (end_date.isocalendar()[1] - start_date.isocalendar()[1]) % weeks_in_start_year + 1
+        for week in range(week_count):
             short_name = get_week_name(start_date + relativedelta(days=7 * week), locale)
-            values.append({x_field: short_name, y_field: 0})
+            values.append({x_field: short_name, y_field: 0, 'type': 'future' if week + 1 == week_count else 'past'})
 
         for data_item in graph_data:
             index = int((data_item.get('x_value') - start_date.isocalendar()[1]) % weeks_in_start_year)
@@ -362,4 +364,12 @@ class CrmTeam(models.Model):
 
         [graph_title, graph_key] = self._graph_title_and_key()
         color = '#875A7B' if '+e' in version else '#7c7bad'
+
+        # If no actual data available, show some sample data
+        if not graph_data:
+            graph_key = _('Sample data')
+            for value in values:
+                value['type'] = 'o_sample_data'
+                # we use unrealistic values for the sample data
+                value['value'] = random.randint(0, 20)
         return [{'values': values, 'area': True, 'title': graph_title, 'key': graph_key, 'color': color}]
