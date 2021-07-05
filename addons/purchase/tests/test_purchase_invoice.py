@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.tests.common import Form
 
 
 @tagged('post_install', '-at_install')
@@ -229,3 +230,48 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         for line in purchase_order.order_line:
             self.assertEqual(line.qty_to_invoice, 0.0)
             self.assertEqual(line.qty_invoiced, 10)
+
+    def test_vendor_severals_bills_and_multicurrency(self):
+        """
+        This test ensures that, when adding several PO to a bill, if they are expressed with different
+        currency, the amount of each AML is converted to the bill's currency
+        """
+        PurchaseOrderLine = self.env['purchase.order.line']
+        PurchaseBillUnion = self.env['purchase.bill.union']
+        ResCurrencyRate = self.env['res.currency.rate']
+        usd = self.env.ref('base.USD')
+        eur = self.env.ref('base.EUR')
+        purchase_orders = []
+
+        ResCurrencyRate.create({'currency_id': usd.id, 'rate': 1})
+        ResCurrencyRate.create({'currency_id': eur.id, 'rate': 2})
+
+        for currency in [usd, eur]:
+            po = self.env['purchase.order'].with_context(tracking_disable=True).create({
+                'partner_id': self.partner_a.id,
+                'currency_id': currency.id,
+            })
+            pol_prod_order = PurchaseOrderLine.create({
+                'name': self.product_order.name,
+                'product_id': self.product_order.id,
+                'product_qty': 1,
+                'product_uom': self.product_order.uom_id.id,
+                'price_unit': 1000,
+                'order_id': po.id,
+                'taxes_id': False,
+            })
+            po.button_confirm()
+            pol_prod_order.write({'qty_received': 1})
+            purchase_orders.append(po)
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[0].id)
+        move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[1].id)
+        move = move_form.save()
+        amls = move.line_ids.filtered(lambda l: l.account_internal_group == 'expense')
+
+        self.assertEqual(move.amount_total, 1500)
+        self.assertEqual(move.currency_id, usd)
+        self.assertEqual(len(amls), 2)
+        self.assertEqual(amls[0].amount_currency, 1000)
+        self.assertEqual(amls[1].amount_currency, 500)
