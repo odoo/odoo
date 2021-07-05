@@ -7,6 +7,8 @@ var websiteNavbarData = require('website.navbar');
 var wUtils = require('website.utils');
 var tour = require('web_tour.tour');
 
+const { registry } = require("@web/core/registry");
+
 const {qweb, _t} = core;
 
 var enableFlag = 'enable_new_content';
@@ -342,7 +344,10 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
 });
 
-websiteNavbarData.websiteNavbarRegistry.add(NewContentMenu, '.o_new_content_menu');
+registry.category("website_navbar_widgets").add("NewContentMenu", {
+    Widget: NewContentMenu,
+    selector: '.o_new_content_menu',
+});
 
 return NewContentMenu;
 });

@@ -5,6 +5,8 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var websiteNavbarData = require('website.navbar');
 
+const { registry } = require("@web/core/registry");
+
 var _t = core._t;
 
 var MobilePreviewDialog = Dialog.extend({
@@ -59,7 +61,10 @@ var MobileMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
 });
 
-websiteNavbarData.websiteNavbarRegistry.add(MobileMenu, '#mobile-menu');
+registry.category("website_navbar_widgets").add("MobileMenu", {
+    Widget: MobileMenu,
+    selector: '#mobile-menu',
+});
 
 return {
     MobileMenu: MobileMenu,

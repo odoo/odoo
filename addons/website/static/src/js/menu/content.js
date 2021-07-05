@@ -6,8 +6,9 @@ import Dialog from 'web.Dialog';
 import time from 'web.time';
 import weWidgets from 'wysiwyg.widgets';
 import websiteNavbarData from 'website.navbar';
-import websiteRootData from 'website.root';
 import Widget from 'web.Widget';
+
+import { registry } from "@web/core/registry";
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -1112,8 +1113,14 @@ function _clonePage(pageId) {
     });
 }
 
-websiteNavbarData.websiteNavbarRegistry.add(ContentMenu, '#content-menu');
-websiteRootData.websiteRootRegistry.add(PageManagement, '#list_website_pages');
+registry.category("website_navbar_widgets").add("ContentMenu", {
+    Widget: ContentMenu,
+    selector: '#content-menu',
+});
+registry.category("public_root_widgets").add("PageManagement", {
+    Widget: PageManagement,
+    selector: '#list_website_pages',
+});
 
 export default {
     PagePropertiesDialog: PagePropertiesDialog,

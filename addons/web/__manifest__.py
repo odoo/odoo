@@ -198,6 +198,8 @@ This module provides the core of the Odoo Web Client.
 
             ('include', 'web._assets_bootstrap'),
 
+            'web/static/src/core/registry.js',
+
             'web/static/src/legacy/scss/base_frontend.scss',
             'web/static/src/legacy/scss/lazyloader.scss',
             'web/static/src/legacy/scss/navbar_mobile.scss',

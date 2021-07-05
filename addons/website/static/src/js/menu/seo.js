@@ -11,6 +11,8 @@ var weWidgets = require('wysiwyg.widgets');
 var websiteNavbarData = require('website.navbar');
 const { session } = require('@web/session');
 
+const { registry } = require("@web/core/registry");
+
 var _t = core._t;
 
 // This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
@@ -894,7 +896,10 @@ var SeoMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
 });
 
-websiteNavbarData.websiteNavbarRegistry.add(SeoMenu, '#promote-menu');
+registry.category("website_navbar_widgets").add("SeoMenu", {
+    Widget: SeoMenu,
+    selector: '#promote-menu',
+});
 
 return {
     SeoConfigurator: SeoConfigurator,

@@ -4,9 +4,7 @@
  * Provides a way to start JS code for public contents.
  */
 
-import Class from 'web.Class';
 import dom from 'web.dom';
-import mixins from 'web.mixins';
 import session from 'web.session';
 import Widget from 'web.Widget';
 
@@ -19,18 +17,12 @@ import Widget from 'web.Widget';
  * @todo Merge with 'PublicWidget' ?
  */
 var RootWidget = Widget.extend({
-    custom_events: _.extend({}, Widget.prototype.custom_events || {}, {
-        'registry_update': '_onRegistryUpdate',
-        'get_session': '_onGetSession',
-    }),
     /**
      * @constructor
      */
     init: function () {
         this._super.apply(this, arguments);
         this._widgets = [];
-        this._listenToUpdates = false;
-        this._getRegistry().setParent(this);
     },
     /**
      * @override
@@ -40,7 +32,11 @@ var RootWidget = Widget.extend({
         var defs = [this._super.apply(this, arguments)];
 
         defs.push(this._attachComponents());
-        this._listenToUpdates = true;
+        this._getRegistry().on("UPDATE", this, ({ operation, value }) => {
+            if (operation === "add") {
+                this._attachComponent(value);
+            }
+        });
 
         return Promise.all(defs);
     },
@@ -83,7 +79,7 @@ var RootWidget = Widget.extend({
      */
     _attachComponents: function ($from) {
         var self = this;
-        var childInfos = this._getRegistry().get();
+        var childInfos = this._getRegistry().getAll();
         var defs = _.map(childInfos, function (childInfo) {
             return self._attachComponent(childInfo, $from);
         });
@@ -98,71 +94,6 @@ var RootWidget = Widget.extend({
      * @returns {RootWidgetRegistry}
      */
     _getRegistry: function () {},
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Get the curuent session module.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onGetSession: function (event) {
-        if (event.data.callback) {
-            event.data.callback(session);
-        }
-    },
-    /**
-     * Called when the linked registry is updated after this `RootWidget`
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onRegistryUpdate: function (ev) {
-        ev.stopPropagation();
-        if (this._listenToUpdates) {
-            this._attachComponent(ev.data);
-        }
-    },
-});
-
-var RootWidgetRegistry = Class.extend(mixins.EventDispatcherMixin, {
-    /**
-     * @constructor
-     */
-    init: function () {
-        mixins.EventDispatcherMixin.init.call(this);
-        this._registry = [];
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Adds an element to the registry (info of what and how to instantiate).
-     *
-     * @param {function} Widget - the widget class to instantiate
-     * @param {string} selector
-     *        the jQuery selector to use to find the internal DOM element which
-     *        needs to be attached to the instantiated widget
-     */
-    add: function (Widget, selector) {
-        var registryInfo = {
-            Widget: Widget,
-            selector: selector,
-        };
-        this._registry.push(registryInfo);
-        this.trigger_up('registry_update', registryInfo);
-    },
-    /**
-     * Retrieves all the registry elements.
-     */
-    get: function () {
-        return this._registry;
-    },
 });
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -348,7 +279,6 @@ registry._fixAppleCollapse = PublicWidget.extend({
 
 export default {
     RootWidget: RootWidget,
-    RootWidgetRegistry: RootWidgetRegistry,
     Widget: PublicWidget,
     registry: registry,
 };
