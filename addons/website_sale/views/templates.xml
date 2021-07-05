@@ -800,9 +800,9 @@
                             <label t-attf-for="radio_variant_#{variant_id.id}" label-default="label-default" class="custom-control-label font-weight-normal">
                                 <span t-esc="combination_info['display_name']"/>
                                 <t t-set="diff_price" t-value="website.currency_id.compare_amounts(combination_info['price'], template_combination_info['price'])"/>
-                                <span class="badge badge-pill badge-primary" t-if="diff_price != 0">
+                                <span class="badge badge-pill badge-light border" t-if="diff_price != 0">
                                     <span class="sign_badge_price_extra" t-esc="diff_price > 0 and '+' or '-'"/>
-                                    <span t-esc="abs(combination_info['price'] - template_combination_info['price'])" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                    <span t-esc="abs(combination_info['price'] - template_combination_info['price'])" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" class="text-muted font-italic" />
                                 </span>
                             </label>
                         </div>
