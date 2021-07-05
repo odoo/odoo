@@ -6,8 +6,7 @@ import env from 'web.public_env';
 import session from 'web.session';
 import utils from 'web.utils';
 import publicWidget from 'web.public.widget';
-
-var publicRootRegistry = new publicWidget.RootWidgetRegistry();
+import { registry } from '@web/core/registry';
 
 // Load localizations outside the PublicRoot to not wait for DOM ready (but
 // wait for them in PublicRoot)
@@ -134,7 +133,7 @@ var PublicRoot = publicWidget.RootWidget.extend({
      * @override
      */
     _getRegistry: function () {
-        return publicRootRegistry;
+        return registry.category("public_root_widgets");
     },
     /**
      * Creates an PublicWidget instance for each DOM element which matches the
@@ -331,5 +330,4 @@ var PublicRoot = publicWidget.RootWidget.extend({
 
 export default {
     PublicRoot: PublicRoot,
-    publicRootRegistry: publicRootRegistry,
 };

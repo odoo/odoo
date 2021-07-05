@@ -7,7 +7,6 @@ import session from 'web.session';
 import publicRootData from 'web.public.root';
 import "web.zoomodoo";
 import { FullscreenIndication } from '@website/js/widgets/fullscreen_indication';
-var websiteRootRegistry = publicRootData.publicRootRegistry;
 
 var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
     events: _.extend({}, KeyboardNavigationMixin.events, publicRootData.PublicRoot.prototype.events || {}, {
@@ -359,5 +358,4 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
 
 export default {
     WebsiteRoot: WebsiteRoot,
-    websiteRootRegistry: websiteRootRegistry,
 };

@@ -5,9 +5,8 @@ import dom from 'web.dom';
 import publicWidget from 'web.public.widget';
 import concurrency from 'web.concurrency';
 import Widget from 'web.Widget';
-import websiteRootData from 'website.root';
 
-var websiteNavbarRegistry = new publicWidget.RootWidgetRegistry();
+import { registry } from "@web/core/registry";
 
 var WebsiteNavbar = publicWidget.RootWidget.extend({
     xmlDependencies: ['/website/static/src/xml/website.xml'],
@@ -77,7 +76,7 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
      * @override
      */
     _getRegistry: function () {
-        return websiteNavbarRegistry;
+        return registry.category("website_navbar_widgets");
     },
     /**
      * Searches for the automatic widget {@see RootWidget} which can handle that
@@ -281,10 +280,12 @@ var WebsiteNavbarActionWidget = Widget.extend({
     },
 });
 
-websiteRootData.websiteRootRegistry.add(WebsiteNavbar, '#oe_main_menu_navbar');
+registry.category("public_root_widgets").add("WebsiteNavbar", {
+    Widget: WebsiteNavbar,
+    selector: '#oe_main_menu_navbar',
+});
 
 export default {
     WebsiteNavbar: WebsiteNavbar,
-    websiteNavbarRegistry: websiteNavbarRegistry,
     WebsiteNavbarActionWidget: WebsiteNavbarActionWidget,
 };
