@@ -1,10 +1,9 @@
-odoo.define('root.widget', function (require) {
-'use strict';
+/** @odoo-module alias=root.widget */
 
-const AbstractService = require('web.AbstractService');
-const env = require('web.public_env');
-var lazyloader = require('web.public.lazyloader');
-var rootData = require('web.public.root');
+import AbstractService from 'web.AbstractService';
+import env from 'web.public_env';
+import lazyloader from 'web.public.lazyloader';
+import rootData from 'web.public.root';
 
 /**
  * Configure Owl with the public env
@@ -24,10 +23,8 @@ AbstractService.prototype.deployServices(env);
  * been consumed.
  */
 var publicRoot = new rootData.PublicRoot(null);
-return lazyloader.allScriptsLoaded.then(function () {
+export default lazyloader.allScriptsLoaded.then(function () {
     return publicRoot.attachTo(document.body).then(function () {
         return publicRoot;
     });
-});
-
 });

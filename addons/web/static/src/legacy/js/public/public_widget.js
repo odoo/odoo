@@ -1,15 +1,14 @@
-odoo.define('web.public.widget', function (require) {
-'use strict';
+/** @odoo-module alias=web.public.widget */
 
 /**
  * Provides a way to start JS code for public contents.
  */
 
-var Class = require('web.Class');
-var dom = require('web.dom');
-var mixins = require('web.mixins');
-var session = require('web.session');
-var Widget = require('web.Widget');
+import Class from 'web.Class';
+import dom from 'web.dom';
+import mixins from 'web.mixins';
+import session from 'web.session';
+import Widget from 'web.Widget';
 
 /**
  * Specialized Widget which automatically instantiates child widgets to attach
@@ -347,10 +346,9 @@ registry._fixAppleCollapse = PublicWidget.extend({
     },
 });
 
-return {
+export default {
     RootWidget: RootWidget,
     RootWidgetRegistry: RootWidgetRegistry,
     Widget: PublicWidget,
     registry: registry,
 };
-});

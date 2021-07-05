@@ -1,12 +1,11 @@
-odoo.define('web.public.root', function (require) {
-'use strict';
+/** @odoo-module alias=web.public.root */
 
-var ajax = require('web.ajax');
-var dom = require('web.dom');
-const env = require('web.public_env');
-var session = require('web.session');
-var utils = require('web.utils');
-var publicWidget = require('web.public.widget');
+import ajax from 'web.ajax';
+import dom from 'web.dom';
+import env from 'web.public_env';
+import session from 'web.session';
+import utils from 'web.utils';
+import publicWidget from 'web.public.widget';
 
 var publicRootRegistry = new publicWidget.RootWidgetRegistry();
 
@@ -330,8 +329,7 @@ var PublicRoot = publicWidget.RootWidget.extend({
     },
 });
 
-return {
+export default {
     PublicRoot: PublicRoot,
     publicRootRegistry: publicRootRegistry,
 };
-});

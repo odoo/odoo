@@ -1,14 +1,13 @@
-odoo.define('website.contentMenu', function (require) {
-'use strict';
+/** @odoo-module alias=website.contentMenu */
 
-var Class = require('web.Class');
-var core = require('web.core');
-var Dialog = require('web.Dialog');
-var time = require('web.time');
-var weWidgets = require('wysiwyg.widgets');
-var websiteNavbarData = require('website.navbar');
-var websiteRootData = require('website.root');
-var Widget = require('web.Widget');
+import Class from 'web.Class';
+import core from 'web.core';
+import Dialog from 'web.Dialog';
+import time from 'web.time';
+import weWidgets from 'wysiwyg.widgets';
+import websiteNavbarData from 'website.navbar';
+import websiteRootData from 'website.root';
+import Widget from 'web.Widget';
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -1116,11 +1115,10 @@ function _clonePage(pageId) {
 websiteNavbarData.websiteNavbarRegistry.add(ContentMenu, '#content-menu');
 websiteRootData.websiteRootRegistry.add(PageManagement, '#list_website_pages');
 
-return {
+export default {
     PagePropertiesDialog: PagePropertiesDialog,
     ContentMenu: ContentMenu,
     EditMenuDialog: EditMenuDialog,
     MenuEntryDialog: MenuEntryDialog,
     SelectEditMenuDialog: SelectEditMenuDialog,
 };
-});
