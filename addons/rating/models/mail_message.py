@@ -28,12 +28,11 @@ class MailMessage(models.Model):
 
     def message_format(self):
         message_values = super().message_format()
-        ratings = self.env['rating.rating'].sudo().search([('message_id', 'in', self.ids), ('consumed', '=', True)])
+        ratings = self.env['rating.rating'].search([('message_id', 'in', self.ids), ('consumed', '=', True)])
         rating_message_mapping = dict((r.message_id.id, r) for r in ratings)
-        if len(rating_message_mapping) > 0:
-            for vals in message_values:
-                if vals['id'] in rating_message_mapping:
-                    vals.update({
-                        'rating_val': rating_message_mapping[vals['id']].rating,
-                    })
+        for vals in message_values:
+            if vals['id'] in rating_message_mapping:
+                vals.update({
+                    'rating_val': rating_message_mapping[vals['id']].rating,
+                })
         return message_values

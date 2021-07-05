@@ -38,7 +38,7 @@ QUnit.module('thread_preview_tests.js', {
     },
 });
 
-QUnit.test('rating value displayed on the systray', async function (assert) {
+QUnit.test('rating value displayed on the thread preview', async function (assert) {
     assert.expect(3);
     this.data['mail.channel'].records.push({
         id: 11,
@@ -50,21 +50,14 @@ QUnit.test('rating value displayed on the systray', async function (assert) {
         res_id: 11,
     });
     this.data['rating.rating'].records.push({
-        rating: 5,
-        message_id: 21,
-        res_id: 21,
-        partner_id: this.data.currentPartnerId,
         consumed: true,
+        message_id: 21,
+        partner_id: this.data.currentPartnerId,
+        rating: 5,
+        res_id: 21,
     });
-    await this.start({
-        hasMessagingMenu: true,
-    });
+    await this.start({ hasMessagingMenu: true, });
     await afterNextRender(() => document.querySelector('.o_MessagingMenu_toggler').click());
-    assert.containsOnce(
-        document.body,
-        '.o_ThreadPreview',
-        "should have a ThreadNeedactionPreview in the body"
-    );
     assert.strictEqual(
         document.querySelector('.o_ThreadPreview_ratingText').textContent,
         "Rating:",
@@ -74,6 +67,11 @@ QUnit.test('rating value displayed on the systray', async function (assert) {
         document.body,
         '.o_ThreadPreview_ratingImage',
         "should have a rating image in the body"
+    );
+    assert.strictEqual(
+        $('.o_ThreadPreview_ratingImage').attr('data-src'),
+        "/rating/static/src/img/rating_5.png",
+        "should cantain the correct content (Rating:)"
     );
 });
 

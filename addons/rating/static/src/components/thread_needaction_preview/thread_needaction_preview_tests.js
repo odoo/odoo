@@ -39,14 +39,14 @@ QUnit.module('thread_needaction_preview_tests.js', {
     },
 });
 
-QUnit.test('rating value displayed on the systray', async function (assert) {
+QUnit.test('rating value displayed on the thread needaction preview', async function (assert) {
     assert.expect(3);
     this.data['mail.message'].records.push({
         id: 21,
-        model: 'res.partner',
-        needaction: true,
         is_notification: true,
+        model: 'res.partner',
         needaction_partner_ids: [this.data.currentPartnerId],
+        needaction: true,
         res_id: 11,
     });
     this.data['mail.notification'].records.push({
@@ -56,15 +56,13 @@ QUnit.test('rating value displayed on the systray', async function (assert) {
         res_partner_id: this.data.currentPartnerId,
     });
     this.data['rating.rating'].records.push({
-        rating: 5,
-        message_id: 21,
-        res_id: 21,
-        partner_id: this.data.currentPartnerId,
         consumed: true,
+        message_id: 21,
+        partner_id: this.data.currentPartnerId,
+        rating: 5,
+        res_id: 21,
     });
-    await this.start({
-        hasMessagingMenu: true,
-    });
+    await this.start({ hasMessagingMenu: true, });
     await afterNextRender(() => this.afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
@@ -73,11 +71,6 @@ QUnit.test('rating value displayed on the systray', async function (assert) {
             return threadCache.thread.model === 'mail.box' && threadCache.thread.id === 'inbox';
         },
     }));
-    assert.containsOnce(
-        document.body,
-        '.o_ThreadNeedactionPreview',
-        "should have a ThreadNeedactionPreview in the body"
-    );
     assert.strictEqual(
         document.querySelector('.o_ThreadNeedactionPreview_ratingText').textContent,
         "Rating:",
@@ -87,6 +80,11 @@ QUnit.test('rating value displayed on the systray', async function (assert) {
         document.body,
         '.o_ThreadNeedactionPreview_ratingImage',
         "should have a rating image in the body"
+    );
+    assert.strictEqual(
+        $('.o_ThreadNeedactionPreview_ratingImage').attr('data-src'),
+        "/rating/static/src/img/rating_5.png",
+        "should cantain the correct content (Rating:)"
     );
 });
 

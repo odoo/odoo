@@ -104,7 +104,7 @@ QUnit.test('mark as read', async function (assert) {
     );
 });
 
-QUnit.test('rendering of tracking value displayed in the system window', async function (assert) {
+QUnit.test('rendering of tracking value displayed in thread preview', async function (assert) {
     assert.expect(1);
     this.data['mail.channel'].records.push({
         id: 11,

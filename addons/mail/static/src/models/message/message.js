@@ -824,6 +824,7 @@ function factory(dependencies) {
         }),
         trackingValues: one2many('mail.message_tracking_value', {
             inverse: 'message',
+            isCausal: true,
         }),
     };
 

@@ -6,14 +6,6 @@ import MockServer from 'web.MockServer';
 
 MockServer.include({
     //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-
-    //--------------------------------------------------------------------------
     // Private Mocked Routes
     //--------------------------------------------------------------------------
 
@@ -32,7 +24,7 @@ MockServer.include({
                 ['message_id', '=', formatter.id],
             ]);
             if (rating.length > 0) {
-                formatter.rating_val = rating[0].rating;
+                formatter.rating_value = rating[0].rating;
             }
         }
         return messageFormat;

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import MockModels from '@mail/../tests/helpers/mock_models';
+import { MockModels } from '@mail/../tests/helpers/mock_models';
 import { patch } from 'web.utils';
 
 patch(MockModels, 'rating/static/tests/helpers/mock_models.js', {

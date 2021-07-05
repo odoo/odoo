@@ -61,11 +61,27 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {string}
+         */
+         _computeNewValue() {
+           return this._formatMessageTrackingValue(this.fieldType, this.newValue);
+       }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+         _computeOldValue() {
+            return this._formatMessageTrackingValue(this.fieldType, this.oldValue);
+        }
+
+        /**
+         * @private
          * @param {string} fieldType
          * @param {string|boolean|float|number|integer|Array|Object} value
          * @returns {string}
          */
-        static _formatMessageTrackingValue(fieldType, value) {
+         _formatMessageTrackingValue(fieldType, value) {
             /**
              * Maps tracked field type to a JS formatter. Tracking values are
              * not always stored in the same field type as their origin type.
@@ -102,45 +118,24 @@ function factory(dependencies) {
                     return format.integer(value);
                 case 'text':
                     return format.text(value);
+                case 'monetary':
+                    return format.monetary(value, undefined, {
+                        currency: this.currencyId
+                            ? this.env.session.currencies[this.currencyId]
+                            : undefined,
+                        forceString: true,
+                    });
                 default : 
-                    return undefined;
+                    throw new Error("Message tracking value format is not correctly handled");
             }
-        }
-
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeOldValue() {
-            if (this.fieldType == 'monetary') {
-                return format.monetary(this.oldValue, undefined, {
-                    currency: this.currencyId
-                        ? this.env.session.currencies[this.currencyId]
-                        : undefined,
-                    forceString: true,
-                });
-            }
-            return MessageTrackingValue._formatMessageTrackingValue(this.fieldType, this.oldValue);
-        }
-
-        /**
-         * @private
-         * @returns {string}
-         */
-         _computeNewValue() {
-             if (this.fieldType == 'monetary') {
-                return format.monetary(this.newValue, undefined, {
-                    currency: this.currencyId
-                        ? this.env.session.currencies[this.currencyId]
-                        : undefined,
-                    forceString: true,
-                });
-            }
-            return MessageTrackingValue._formatMessageTrackingValue(this.fieldType, this.newValue);
         }
     }
 
     MessageTrackingValue.fields = {
+        /**
+         * Indicate the original field of changed tracking value, such as "Status", "Date".
+         */
+        changedField: attr(),
         /**
          * The formatted string of the chanegd field name, such as "Status", "Date", etc.
          */
@@ -150,21 +145,35 @@ function factory(dependencies) {
                 'changedField',
             ],
         }),
-        changedField: attr(),
         /**
-         * Used when the currency changes as the tracking value.
+         * Used when the currency changes as the tracking value. This only makes sense for field of type monetary.
          */
         currencyId: attr(),
         /**
-         * Indicate the type of the tracking value, such as float, integer, date.
+         * Indicate the type of the tracking value. 
+         * The supported types are: boolean, char, many2one, selection, date, datetime, float, integer, text, monetary.
          */
         fieldType: attr(),
+        /**
+         * Unique identifier for this tracking value message.
+         */
         id: attr({
             required: true,
         }),
+        /**
+         * The id of the message that the tracking value changes linked to.
+         */
         message: many2one('mail.message', {
             inverse: 'trackingValues',
+            required: true,
         }),
+        /**
+         * The new value for the tracking message.
+         */
+        newValue: attr(),
+        /**
+         * The formatted of the new value for the tracking message.
+         */
         newValueAsString: attr({
             compute: '_computeNewValue',
             dependencies: [
@@ -173,7 +182,13 @@ function factory(dependencies) {
                 'newValue',
             ],
         }),
-        newValue: attr(),
+        /**
+         * The old value for the tracking message.
+         */
+        oldValue: attr(),
+        /**
+         * The formatted of the old value for the tracking message.
+         */
         oldValueAsString: attr({
             compute: '_computeOldValue',
             dependencies: [
@@ -182,7 +197,6 @@ function factory(dependencies) {
                 'oldValue',
             ],
         }),
-        oldValue: attr(),
     };
 
     MessageTrackingValue.modelName = 'mail.message_tracking_value';

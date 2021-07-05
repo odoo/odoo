@@ -190,9 +190,9 @@ export class MockModels {
             'mail.tracking.value': {
                 fields: {
                     changed_field: { string: 'Changed field', type: 'char' },
-                    currency_id: { string: 'Currency', type: 'many2one', relation: 'res.currency'},
+                    currency_id: { string: 'Currency', type: 'many2one', relation: 'res.currency' },
                     field_type: { string: 'Field type', type: 'char' },
-                    mail_message_id: { string: 'Message ID', type: 'many2one', relation: 'mail.message'},
+                    mail_message_id: { string: 'Message ID', type: 'many2one', relation: 'mail.message' },
                     new_value: { string: 'New value', type: 'char' },
                     old_value: { string: 'Old value', type: 'char' },
                 },
@@ -209,7 +209,7 @@ export class MockModels {
                 fields: {
                     full_name: { string: 'Name', type: 'char' },
                     name: { string: 'Currency', type: 'char' },
-                    position: { string: 'Symbol Position', type: 'selection', selection: [['after', 'After Amount'], ['before', 'Before Amount']], default: 'after'},
+                    position: { string: 'Symbol Position', type: 'selection', selection: [['after', 'After Amount'], ['before', 'Before Amount']], default: 'after' },
                     rate: { string: 'Current Rate', type: 'float' },
                     symbol: { string: 'Symbol', type: 'char' },
                 },

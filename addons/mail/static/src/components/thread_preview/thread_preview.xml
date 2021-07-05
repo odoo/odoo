@@ -49,7 +49,7 @@
                                 />
                             </t>
                             <span class="o_ThreadPreview_messageBody">
-                                <t t-if="!thread.lastMessage or thread.lastMessage.trackingValues.length == 0">
+                                <t t-if="thread.lastMessage and thread.lastMessage.trackingValues.length == 0">
                                     <t t-esc="inlineLastMessageBody"/>
                                 </t>
                                 <t t-if="thread.lastMessage and thread.lastMessage.trackingValues.length > 0">
@@ -65,7 +65,7 @@
                                             </t>
                                         </span>
                                         <span class="o_ThreadPreview_arrow">
-                                            <div class="o_ThreadPreview_trackingValueSeparator fa fa-long-arrow-right" role="img"/>
+                                            <div class="o_ThreadPreview_trackingValueSeparator fa fa-long-arrow-right mx-1" role="img"/>
                                         </span>
                                         <span class="o_ThreadPreview_trackingValueNewValue">
                                             <t t-if="thread.lastMessage.trackingValues[0].newValueAsString">

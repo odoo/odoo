@@ -3,7 +3,6 @@ import { insert } from '@mail/model/model_field_command';
 import {
     afterEach,
     beforeEach,
-    nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
 
@@ -15,11 +14,10 @@ QUnit.module('message_tracking_value_tests.js', {
         beforeEach(this);
 
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            const { env } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
-            this.widget = widget;
         };
     },
     afterEach() {
@@ -27,8 +25,8 @@ QUnit.module('message_tracking_value_tests.js', {
     },
 });
 
-QUnit.test('model test of tracking value (float type)', async function (assert) {
-    assert.expect(6);
+QUnit.test('model test of changedFieldAsString (not empty)', async function (assert) {
+    assert.expect(1);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -41,16 +39,46 @@ QUnit.test('model test of tracking value (float type)', async function (assert) 
             oldValue: 12.3,
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
     assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Total:");
+});
+
+QUnit.test('model test of changedFieldAsString (empty)', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        trackingValues: insert({
+            changedField: "",
+            fieldType: "float",
+            id: 6,
+            newValue: 45.67,
+            oldValue: 12.3,
+        }),
+    });
+    assert.strictEqual(message.trackingValues[0].changedFieldAsString, ":");
+});
+
+QUnit.test('model test of tracking value (float type)', async function (assert) {
+    assert.expect(2);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        trackingValues: insert({
+            changedField: "Total",
+            fieldType: "float",
+            id: 6,
+            newValue: 45.67,
+            oldValue: 12.3,
+        }),
+    });
     assert.strictEqual(message.trackingValues[0].newValueAsString, "45.67");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "12.30");
 });
 
 QUnit.test('model test of tracking value of type integer: from non-0 to 0', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -63,16 +91,12 @@ QUnit.test('model test of tracking value of type integer: from non-0 to 0', asyn
             oldValue: 1,
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Total:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "0");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "1");
 });
 
 QUnit.test('model test of tracking value of type integer: from 0 to non-0', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -85,16 +109,12 @@ QUnit.test('model test of tracking value of type integer: from 0 to non-0', asyn
             oldValue: 0,
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Total:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "1");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "0");
 });
 
 QUnit.test('model test of tracking value of type float: from non-0 to 0', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -107,16 +127,12 @@ QUnit.test('model test of tracking value of type float: from non-0 to 0', async 
             oldValue: 1,
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Total:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "0.00");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "1.00");
 });
 
 QUnit.test('model test of tracking value of type float: from 0 to non-0', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -129,16 +145,12 @@ QUnit.test('model test of tracking value of type float: from 0 to non-0', async 
             oldValue: 0,
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Total:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "1.00");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "0.00");
 });
 
 QUnit.test('model test of tracking value of type monetary: from non-0 to 0', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -151,16 +163,12 @@ QUnit.test('model test of tracking value of type monetary: from non-0 to 0', asy
             oldValue: 1,
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Total:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "0.00");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "1.00");
 });
 
 QUnit.test('model test of tracking value of type monetary: from 0 to non-0', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -173,16 +181,12 @@ QUnit.test('model test of tracking value of type monetary: from 0 to non-0', asy
             oldValue: 0,
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Total:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "1.00");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "0.00");
 });
 
 QUnit.test('model test of tracking value of type boolean: from true to false', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
     await this.start();
     const message = this.env.models['mail.message'].create({
         id: 11,
@@ -194,16 +198,12 @@ QUnit.test('model test of tracking value of type boolean: from true to false', a
             oldValue: true,
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Is Ready:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "False");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "True");
 });
 
 QUnit.test('model test of tracking value of type boolean: from false to true', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -216,16 +216,12 @@ QUnit.test('model test of tracking value of type boolean: from false to true', a
             oldValue: false,
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Is Ready:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "True");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "False");
 });
 
 QUnit.test('model test of tracking value of type char: from a string to empty string', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -238,16 +234,12 @@ QUnit.test('model test of tracking value of type char: from a string to empty st
             oldValue: "Marc",
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Name:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "Marc");
 });
 
 QUnit.test('model test of tracking value of type char: from empty string to a string', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -260,16 +252,12 @@ QUnit.test('model test of tracking value of type char: from empty string to a st
             oldValue: "",
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Name:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "Marc");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "");
 });
 
 QUnit.test('model test of tracking value of type date: from no date to a set date', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
     await this.start();
 
     const message = this.env.models['mail.message'].create({
@@ -282,16 +270,12 @@ QUnit.test('model test of tracking value of type date: from no date to a set dat
             oldValue: false,
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Deadline:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "12/14/2018");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "");
 });
 
 QUnit.test('model test of tracking value of type date: from a set date to no date', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
     await this.start();
     const message = this.env.models['mail.message'].create({
         id: 11,
@@ -303,16 +287,12 @@ QUnit.test('model test of tracking value of type date: from a set date to no dat
             oldValue: "2018-12-14",
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Deadline:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "12/14/2018");
 });
 
 QUnit.test('model test of tracking value of type datetime: from no date and time to a set date and time', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
     await this.start();
     const message = this.env.models['mail.message'].create({
         id: 11,
@@ -324,16 +304,12 @@ QUnit.test('model test of tracking value of type datetime: from no date and time
             oldValue: false,
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Deadline:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "12/14/2018 13:42:28");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "");
 });
 
 QUnit.test('model test of tracking value of type datetime: from a set date and time to no date and time', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
     await this.start();
     const message = this.env.models['mail.message'].create({
         id: 11,
@@ -345,16 +321,12 @@ QUnit.test('model test of tracking value of type datetime: from a set date and t
             oldValue: "2018-12-14 13:42:28",
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Deadline:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "12/14/2018 13:42:28");
 });
 
 QUnit.test('model test of tracking value of type text: from some text to empty', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
     await this.start();
     const message = this.env.models['mail.message'].create({
         id: 11,
@@ -366,16 +338,12 @@ QUnit.test('model test of tracking value of type text: from some text to empty',
             oldValue: "Marc",
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Name:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "Marc");
 });
 
 QUnit.test('model test of tracking value of type text: from empty to some text', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
     await this.start();
     const message = this.env.models['mail.message'].create({
         id: 11,
@@ -387,16 +355,12 @@ QUnit.test('model test of tracking value of type text: from empty to some text',
             oldValue: "",
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Name:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "Marc");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "");
 });
 
 QUnit.test('model test of tracking value of type selection: from a selection to no selection', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -409,16 +373,12 @@ QUnit.test('model test of tracking value of type selection: from a selection to 
             oldValue: "ok",
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "State:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "ok");
 });
 
 QUnit.test('model test of tracking value of type selection: from no selection to a selection', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -431,16 +391,12 @@ QUnit.test('model test of tracking value of type selection: from no selection to
             oldValue: "",
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "State:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "ok");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "");
 });
 
 QUnit.test('model test of tracking value of type many2one: from having a related record to no related record', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -453,16 +409,12 @@ QUnit.test('model test of tracking value of type many2one: from having a related
             oldValue: "Marc",
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Author:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "Marc");
 });
 
 QUnit.test('model test of tracking value of type many2one: from no related record to having a related record', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -475,16 +427,12 @@ QUnit.test('model test of tracking value of type many2one: from no related recor
             oldValue: "",
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Author:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "Marc");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "");
 });
 
 QUnit.test('model test of tracking value (monetary type)', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     await this.start({
         env: {
@@ -504,10 +452,6 @@ QUnit.test('model test of tracking value (monetary type)', async function (asser
             oldValue: 1000,
         }),
     });
-    assert.ok(this.env.models['mail.message_tracking_value'].findFromIdentifyingData({ id: 6 }));
-    assert.ok(message);
-    assert.strictEqual(this.env.models['mail.message'].findFromIdentifyingData({ id: 11 }), message);
-    assert.strictEqual(message.trackingValues[0].changedFieldAsString, "Revenue:");
     assert.strictEqual(message.trackingValues[0].newValueAsString, "$ 500.00");
     assert.strictEqual(message.trackingValues[0].oldValueAsString, "$ 1000.00");
 });

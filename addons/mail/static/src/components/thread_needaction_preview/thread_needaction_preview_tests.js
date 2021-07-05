@@ -405,8 +405,9 @@ QUnit.test('chat window header should not have unread counter for non-channel th
     );
 });
 
-QUnit.test('rendering of tracking value displayed in the system window', async function (assert) {
+QUnit.test('rendering of tracking value displayed in thread needaction preview', async function (assert) {
     assert.expect(1);
+
     this.data['mail.message'].records.push({
         id: 21,
         model: 'res.partner',
@@ -427,9 +428,7 @@ QUnit.test('rendering of tracking value displayed in the system window', async f
         old_value: 1,
         mail_message_id: 21,
     });
-    await this.start({
-        hasMessagingMenu: true,
-    });
+    await this.start({hasMessagingMenu: true});
     await afterNextRender(() => this.afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
