@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="web.Form.ButtonBox" owl="1" >
+    <div class="oe_button_box o_full">
+        <t t-slot="default" />
+        <Dropdown beforeOpen="beforeOpenDropdown" t-ref="dropdown" togglerClass="'btn oe_stat_button o_button_more'" menuClass="'o_dropdown_more'">
+            More
+            <t t-set-slot="menu">
+                <t t-slot="liWrapped" />
+            </t>
+        </Dropdown>
+    </div>
+</t>
+
+</templates>
