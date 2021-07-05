@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import pytz
+from pytz import UTC
 from datetime import datetime, time
-from dateutil.rrule import rrule, DAILY
 from random import choice
 from string import digits
 from werkzeug.urls import url_encode
 from dateutil.relativedelta import relativedelta
-from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.osv.query import Query
-from odoo.exceptions import ValidationError, AccessError, UserError
+from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools.misc import format_date
 
@@ -438,14 +436,10 @@ class HrEmployeePrivate(models.Model):
         if not self:
             return {}
         self.ensure_one()
-        calendar = self.resource_calendar_id
-        if not calendar:
-            return {}
-        dfrom = datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=pytz.UTC)
-        dto = datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=pytz.UTC)
-
-        works = {d[0].date() for d in calendar._work_intervals_batch(dfrom, dto)[False]}
-        return {fields.Date.to_string(day.date()): (day.date() not in works) for day in rrule(DAILY, dfrom, until=dto)}
+        return self.resource_calendar_id._get_unusual_days(
+            datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=UTC),
+            datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC)
+        )
 
     # ---------------------------------------------------------
     # Messaging

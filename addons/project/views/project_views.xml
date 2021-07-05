@@ -30,6 +30,8 @@
                     <separator/>
                     <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <separator/>
+                    <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>
+                    <separator/>
                     <filter string="Rated Tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
@@ -127,7 +129,6 @@
                             </group>
                             <group>
                                 <field name="fold"/>
-                                <field name="is_closed" groups="base.group_no_one"/>
                                 <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}" groups="base.group_no_one"/>
                             </group>
                         </group>
@@ -691,14 +692,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="o_kanban_card_manage_settings row" groups="project.group_project_manager">
-                                            <div role="menuitem" aria-haspopup="true" class="col-8">
+                                        <div class="o_kanban_card_manage_settings row">
+                                            <div role="menuitem" aria-haspopup="true" class="col-8" groups="project.group_project_manager">
                                                 <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
                                             </div>
                                             <div role="menuitem" class="col-4">
-                                                <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="%(project.project_share_wizard_action)d" type="action">Share</a>
-                                                <!-- [XBO] TODO: remove the name attribute in this a tag in master -->
-                                                <a class="dropdown-item" role="menuitem" type="edit" name="action_view_kanban_project">Edit</a>
+                                                <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="%(project.project_share_wizard_action)d" type="action" groups="project.group_project_manager">Share</a>
+                                                <a class="dropdown-item" role="menuitem" type="edit" groups="project.group_project_manager">Edit</a>
+                                                <a class="dropdown-item" role="menuitem" type="open" groups="!project.group_project_manager">View</a>
                                             </div>
                                         </div>
                                     </div>
@@ -888,11 +889,6 @@
                                 options="{'no_open': True}"
                                 widget="many2many_avatar_user"
                                 domain="[('share', '=', False)]"/>
-                            <field name="parent_id"
-                                domain="[('parent_id', '=', False)]"
-                                attrs="{'invisible' : [('allow_subtasks', '=', False)]}"
-                                groups="base.group_no_one"
-                            />
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
@@ -911,7 +907,7 @@
                             <field name="description" type="html" options="{'collaborative': true}"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
-                            <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id, 'default_partner_id': partner_id}">
+                            <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id, 'default_partner_id': partner_id}" widget="subtasks_one2many">
                                 <tree editable="bottom">
                                     <field name="project_id" invisible="1"/>
                                     <field name="is_closed" invisible="1"/>
@@ -989,6 +985,7 @@
                             <group>
                                 <group>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" context="{'default_partner_id': partner_id}"/>
+                                    <field name="parent_id" domain="[('parent_id', '=', False)]" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="email_from" invisible="1"/>
@@ -1207,8 +1204,10 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="date_deadline" string="Tasks" mode="month" color="user_ids" event_limit="5"
-                          hide_time="true" js_class="project_calendar" event_open_popup="true" quick_add="false">
+                <calendar date_start="date_deadline" string="Tasks" mode="month" 
+                          color="user_ids" event_limit="5" hide_time="true" 
+                          event_open_popup="true" quick_add="false" show_unusual_days="True"
+                          js_class="project_calendar">
                     <field name="project_id" widget="project_private_task" filters="1"/>
                     <field name="user_ids" widget="many2many_avatar_user"/>
                     <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>

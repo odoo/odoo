@@ -92,9 +92,9 @@ class TestSaleService(TestCommonSaleTimesheet):
         # delete timesheets before deleting the task, so as to trigger the error
         # about linked sales order lines and not the one about linked timesheets
         task.timesheet_ids.unlink()
-        # not possible to delete a task linked to a SOL
-        with self.assertRaises(ValidationError):
-            task.unlink()
+        # unlink automatically task from the SOL when deleting the task
+        task.unlink()
+        self.assertFalse(sale_order_line.task_id, "Deleting the task its should automatically unlink the task from SOL.")
 
     def test_timesheet_uom(self):
         """ Test timesheet invoicing and uom conversion """
