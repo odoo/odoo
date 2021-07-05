@@ -242,7 +242,7 @@ var GeneratePriceList = AbstractAction.extend(StandaloneFieldManagerMixin, {
     _onClickPrint: function () {
         const reportName = _.str.sprintf('product.report_pricelist?active_model=%s&active_ids=%s&pricelist_id=%s&quantities=%s',
             this.context.active_model,
-            this.context.active_ids,
+            this.context.active_ids || '',
             this.context.pricelist_id || '',
             this.context.quantities.toString() || '1',
         );
