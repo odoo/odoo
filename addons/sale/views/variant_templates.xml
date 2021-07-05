@@ -133,10 +133,10 @@
         </ul>
     </template>
     <template id="badge_extra_price" name="Badge Extra Price">
-        <span class="badge badge-pill badge-primary" t-if="ptav.price_extra">
+        <span class="badge badge-pill badge-light border" t-if="ptav.price_extra">
         <!-- see note above about price_extra -->
         <span class="sign_badge_price_extra" t-esc="ptav.price_extra > 0 and '+' or '-'"/>
-        <span t-esc="abs(ptav.price_extra)" class="variant_price_extra" style="white-space: nowrap;"
+        <span t-esc="abs(ptav.price_extra)" class="variant_price_extra text-muted font-italic" style="white-space: nowrap;"
             t-options='{
                 "widget": "monetary",
                 "from_currency": product.currency_id,
