@@ -1,13 +1,12 @@
-odoo.define('website.root', function (require) {
-'use strict';
+/** @odoo-module alias=website.root */
 
-const ajax = require('web.ajax');
-const {_t} = require('web.core');
-const KeyboardNavigationMixin = require('web.KeyboardNavigationMixin');
-const session = require('web.session');
-var publicRootData = require('web.public.root');
-require("web.zoomodoo");
-const {FullscreenIndication} = require('@website/js/widgets/fullscreen_indication');
+import ajax from 'web.ajax';
+import { _t } from 'web.core';
+import KeyboardNavigationMixin from 'web.KeyboardNavigationMixin';
+import session from 'web.session';
+import publicRootData from 'web.public.root';
+import "web.zoomodoo";
+import { FullscreenIndication } from '@website/js/widgets/fullscreen_indication';
 var websiteRootRegistry = publicRootData.publicRootRegistry;
 
 var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
@@ -358,8 +357,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
     },
 });
 
-return {
+export default {
     WebsiteRoot: WebsiteRoot,
     websiteRootRegistry: websiteRootRegistry,
 };
-});
