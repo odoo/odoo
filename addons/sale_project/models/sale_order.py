@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.sql import column_exists, create_column
@@ -362,15 +362,31 @@ class SaleOrderLine(models.Model):
         """
         values = super(SaleOrderLine, self)._prepare_invoice_line(**optional_values)
         if not values['analytic_account_id']:
-            if self.project_id.analytic_account_id:
-                values['analytic_account_id'] = self.project_id.analytic_account_id
-            elif self.task_id.project_id.analytic_account_id:
-                values['analytic_account_id'] = self.task_id.project_id.analytic_account_id
+            if self.task_id.analytic_account_id:
+                values['analytic_account_id'] = self.task_id._get_task_analytic_account_id().id
+            elif self.project_id.analytic_account_id:
+                values['analytic_account_id'] = self.project_id.analytic_account_id.id
             elif self.is_service and not self.is_expense:
-                project_analytic_account_id = self.env['project.project'].read_group([
-                    '|', ('sale_line_id', '=', self.id), ('task_ids.sale_line_id', '=', self.id)
+                task_analytic_account_id = self.env['project.task'].read_group([
+                    ('sale_line_id', '=', self.id),
+                    ('analytic_account_id', '!=', False),
                 ], ['analytic_account_id'], ['analytic_account_id'])
-                analytic_account_ids = {rec['analytic_account_id'][0] for rec in project_analytic_account_id}
+                project_analytic_account_id = self.env['project.project'].read_group([
+                    ('analytic_account_id', '!=', False),
+                    '|',
+                        ('sale_line_id', '=', self.id),
+                        '&',
+                            ('tasks.sale_line_id', '=', self.id),
+                            ('tasks.analytic_account_id', '=', False)
+                ], ['analytic_account_id'], ['analytic_account_id'])
+                analytic_account_ids = {rec['analytic_account_id'][0] for rec in (task_analytic_account_id + project_analytic_account_id)}
                 if len(analytic_account_ids) == 1:
                     values['analytic_account_id'] = analytic_account_ids.pop()
+        if self.task_id.analytic_tag_ids:
+            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in self.task_id.analytic_tag_ids]
+        elif self.is_service and not self.is_expense:
+            tag_ids = self.env['account.analytic.tag'].search([
+                ('task_ids.sale_line_id', '=', self.id)
+            ])
+            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in tag_ids]
         return values

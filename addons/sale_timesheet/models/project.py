@@ -347,7 +347,7 @@ class ProjectTask(models.Model):
         return res
 
     sale_order_id = fields.Many2one(domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
-    analytic_account_id = fields.Many2one('account.analytic.account', related='sale_order_id.analytic_account_id')
+    so_analytic_account_id = fields.Many2one(related='sale_order_id.analytic_account_id', string='Sale Order Analytic Account')
     pricing_type = fields.Selection(related="project_id.pricing_type")
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')
     has_multi_sol = fields.Boolean(compute='_compute_has_multi_sol', compute_sudo=True)
@@ -384,11 +384,11 @@ class ProjectTask(models.Model):
         for task in self:
             task.remaining_hours_so = mapped_remaining_hours[task._origin.id]
 
-    @api.depends('analytic_account_id.active')
+    @api.depends('so_analytic_account_id.active')
     def _compute_analytic_account_active(self):
         super()._compute_analytic_account_active()
         for task in self:
-            task.analytic_account_active = task.analytic_account_active or task.analytic_account_id.active
+            task.analytic_account_active = task.analytic_account_active or task.so_analytic_account_id.active
 
     @api.depends('allow_billable')
     def _compute_sale_order_id(self):
@@ -437,4 +437,4 @@ class ProjectTaskRecurrence(models.Model):
 
     @api.model
     def _get_recurring_fields(self):
-        return ['analytic_account_id'] + super(ProjectTaskRecurrence, self)._get_recurring_fields()
+        return ['so_analytic_account_id'] + super(ProjectTaskRecurrence, self)._get_recurring_fields()
