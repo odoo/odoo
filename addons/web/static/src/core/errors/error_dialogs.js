@@ -25,7 +25,7 @@ export class ErrorDialog extends Dialog {
     setup() {
         super.setup();
         this.state = useState({
-            showTraceback: false,
+            showTraceback: false
         });
     }
     onClickClipboard() {
@@ -59,13 +59,9 @@ NetworkErrorDialog.title = _lt("Odoo Network Error");
 // -----------------------------------------------------------------------------
 // RPC Error Dialog
 // -----------------------------------------------------------------------------
-export class RPCErrorDialog extends Dialog {
+export class RPCErrorDialog extends ErrorDialog {
     setup() {
         super.setup();
-        this.title = this.env._t("Odoo Error");
-        this.state = useState({
-            showTraceback: false,
-        });
         this.inferTitle();
         this.traceback = this.props.traceback;
         if (this.props.data && this.props.data.debug) {
@@ -99,7 +95,6 @@ export class RPCErrorDialog extends Dialog {
         );
     }
 }
-RPCErrorDialog.bodyTemplate = "web.ErrorDialogBody";
 
 // -----------------------------------------------------------------------------
 // Warning Dialog
@@ -141,7 +136,7 @@ export class RedirectWarningDialog extends Dialog {
     }
     async onClick() {
         await this.actionService.doAction(this.actionId, {
-            additionalContext: this.additionalContext,
+            additionalContext: this.additionalContext
         });
         this.close();
     }
