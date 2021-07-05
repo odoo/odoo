@@ -84,4 +84,6 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
 
     },
 });
+
+return publicWidget.registry.MailGroup;
 });
