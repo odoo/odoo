@@ -872,7 +872,7 @@ class ResourceResource(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     resource_type = fields.Selection([
         ('user', 'Human'),
-        ('material', 'Material')], string='Resource Type',
+        ('material', 'Material')], string='Type',
         default='user', required=True)
     user_id = fields.Many2one('res.users', string='User', help='Related user name for the resource to manage its access.')
     time_efficiency = fields.Float(
@@ -881,7 +881,7 @@ class ResourceResource(models.Model):
     calendar_id = fields.Many2one(
         "resource.calendar", string='Working Time',
         default=lambda self: self.env.company.resource_calendar_id,
-        required=True,
+        required=True, domain="[('company_id', '=', company_id)]",
         help="Define the schedule of resource")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
