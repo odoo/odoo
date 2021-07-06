@@ -70,7 +70,7 @@ class TestOdoobot(TestMailCommon, TestRecipients):
             answer=("@OdooBot",)
         )
         kwargs['body'] = ''
-        kwargs['partner_ids'] = [self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")]
+        kwargs['partner_ids'] = [self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")]
         self.assertNextMessage(
             channel.message_post(**kwargs),
             sender=self.odoobot,

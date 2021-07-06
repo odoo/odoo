@@ -14,7 +14,7 @@ class Channel(models.Model):
     @api.model
     def init_odoobot(self):
         if self.env.user.odoobot_state in [False, 'not_initialized']:
-            odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
+            odoobot_id = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
             channel_info = self.channel_get([odoobot_id])
             channel = self.browse(channel_info['id'])
             message = _("Hello,<br/>Odoo's chat helps employees collaborate efficiently. I'm here to help you discover its features.<br/><b>Try to send me an emoji</b> <span class=\"o_odoobot_command\">:)</span>")

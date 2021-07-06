@@ -675,7 +675,7 @@ class MailActivity(models.Model):
                     'feedback': feedback,
                     'display_assignee': activity.user_id != self.env.user
                 },
-                subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_activities'),
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_activities'),
                 mail_activity_type_id=activity.activity_type_id.id,
                 attachment_ids=[Command.link(attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
             )
@@ -1103,7 +1103,7 @@ class MailActivityMixin(models.AbstractModel):
             return False
 
         Data = self.env['ir.model.data'].sudo()
-        activity_types_ids = [type_id for type_id in (Data.xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in act_type_xmlids) if type_id]
+        activity_types_ids = [type_id for type_id in (Data._xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in act_type_xmlids) if type_id]
         if not any(activity_types_ids):
             return False
 
@@ -1201,7 +1201,7 @@ class MailActivityMixin(models.AbstractModel):
             return False
 
         Data = self.env['ir.model.data'].sudo()
-        activity_types_ids = [Data.xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in act_type_xmlids]
+        activity_types_ids = [Data._xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in act_type_xmlids]
         activity_types_ids = [act_type_id for act_type_id in activity_types_ids if act_type_id]
         if not any(activity_types_ids):
             return False
@@ -1222,7 +1222,7 @@ class MailActivityMixin(models.AbstractModel):
             return False
 
         Data = self.env['ir.model.data'].sudo()
-        activity_types_ids = [Data.xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in act_type_xmlids]
+        activity_types_ids = [Data._xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in act_type_xmlids]
         activity_types_ids = [act_type_id for act_type_id in activity_types_ids if act_type_id]
         if not any(activity_types_ids):
             return False
@@ -1238,7 +1238,7 @@ class MailActivityMixin(models.AbstractModel):
             return False
 
         Data = self.env['ir.model.data'].sudo()
-        activity_types_ids = [Data.xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in act_type_xmlids]
+        activity_types_ids = [Data._xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in act_type_xmlids]
         activity_types_ids = [act_type_id for act_type_id in activity_types_ids if act_type_id]
         if not any(activity_types_ids):
             return False

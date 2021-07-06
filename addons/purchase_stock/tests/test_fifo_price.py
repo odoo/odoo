@@ -323,7 +323,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
     def test_01_test_fifo(self):
         """" This test ensures that unit price keeps its decimal precision """
 
-        unit_price_precision = self.env['ir.model.data'].xmlid_to_object('product.decimal_price')
+        unit_price_precision = self.env['ir.model.data']._xmlid_to_object('product.decimal_price')
         unit_price_precision.digits = 3
 
         tax = self.env["account.tax"].create({

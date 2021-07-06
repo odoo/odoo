@@ -19,20 +19,20 @@ class TestStockCommon(common.TransactionCase):
         cls.LotObj = cls.env['stock.production.lot']
 
         # Model Data
-        cls.picking_type_in = cls.ModelDataObj.xmlid_to_res_id('stock.picking_type_in')
-        cls.picking_type_out = cls.ModelDataObj.xmlid_to_res_id('stock.picking_type_out')
+        cls.picking_type_in = cls.ModelDataObj._xmlid_to_res_id('stock.picking_type_in')
+        cls.picking_type_out = cls.ModelDataObj._xmlid_to_res_id('stock.picking_type_out')
         cls.env['stock.picking.type'].browse(cls.picking_type_out).reservation_method = 'manual'
-        cls.supplier_location = cls.ModelDataObj.xmlid_to_res_id('stock.stock_location_suppliers')
-        cls.stock_location = cls.ModelDataObj.xmlid_to_res_id('stock.stock_location_stock')
+        cls.supplier_location = cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_suppliers')
+        cls.stock_location = cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_stock')
         pack_location = cls.env.ref('stock.location_pack_zone')
         pack_location.active = True
         cls.pack_location = pack_location.id
         output_location = cls.env.ref('stock.stock_location_output')
         output_location.active = True
         cls.output_location = output_location.id
-        cls.customer_location = cls.ModelDataObj.xmlid_to_res_id('stock.stock_location_customers')
-        cls.categ_unit = cls.ModelDataObj.xmlid_to_res_id('uom.product_uom_categ_unit')
-        cls.categ_kgm = cls.ModelDataObj.xmlid_to_res_id('uom.product_uom_categ_kgm')
+        cls.customer_location = cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_customers')
+        cls.categ_unit = cls.ModelDataObj._xmlid_to_res_id('uom.product_uom_categ_unit')
+        cls.categ_kgm = cls.ModelDataObj._xmlid_to_res_id('uom.product_uom_categ_kgm')
 
         # Product Created A, B, C, D
         cls.productA = cls.ProductObj.create({'name': 'Product A', 'type': 'product'})

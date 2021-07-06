@@ -1066,7 +1066,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         policy set to "Delivered quantities". When cancelling the delivery of such a product, the
         invoice status of the associated SO should be 'Nothing to Invoice'
         """
-        group_auto_done = self.env['ir.model.data'].xmlid_to_object('sale.group_auto_done_setting')
+        group_auto_done = self.env['ir.model.data']._xmlid_to_object('sale.group_auto_done_setting')
         self.env.user.groups_id = [(4, group_auto_done.id)]
 
         product = self.product_a

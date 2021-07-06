@@ -28,7 +28,7 @@ class Partner(models.Model):
 
     def _compute_im_status(self):
         super()._compute_im_status()
-        odoobot_id = self.env['ir.model.data'].xmlid_to_res_id('base.partner_root')
+        odoobot_id = self.env['ir.model.data']._xmlid_to_res_id('base.partner_root')
         odoobot = self.env['res.partner'].browse(odoobot_id)
         if odoobot in self:
             odoobot.im_status = 'bot'

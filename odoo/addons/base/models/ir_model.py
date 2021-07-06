@@ -1912,7 +1912,7 @@ class IrModelData(models.Model):
     # NEW V8 API
     @api.model
     @tools.ormcache('xmlid')
-    def xmlid_lookup(self, xmlid):
+    def _xmlid_lookup(self, xmlid):
         """Low level xmlid lookup
         Return (id, res_model, res_id) or raise ValueError if not found
         """
@@ -1925,26 +1925,26 @@ class IrModelData(models.Model):
         return result
 
     @api.model
-    def xmlid_to_res_model_res_id(self, xmlid, raise_if_not_found=False):
+    def _xmlid_to_res_model_res_id(self, xmlid, raise_if_not_found=False):
         """ Return (res_model, res_id)"""
         try:
-            return self.xmlid_lookup(xmlid)[1:3]
+            return self._xmlid_lookup(xmlid)[1:3]
         except ValueError:
             if raise_if_not_found:
                 raise
             return (False, False)
 
     @api.model
-    def xmlid_to_res_id(self, xmlid, raise_if_not_found=False):
+    def _xmlid_to_res_id(self, xmlid, raise_if_not_found=False):
         """ Returns res_id """
-        return self.xmlid_to_res_model_res_id(xmlid, raise_if_not_found)[1]
+        return self._xmlid_to_res_model_res_id(xmlid, raise_if_not_found)[1]
 
     @api.model
-    def xmlid_to_object(self, xmlid, raise_if_not_found=False):
+    def _xmlid_to_object(self, xmlid, raise_if_not_found=False):
         """ Return a Model object, or ``None`` if ``raise_if_not_found`` is 
         set
         """
-        t = self.xmlid_to_res_model_res_id(xmlid, raise_if_not_found)
+        t = self._xmlid_to_res_model_res_id(xmlid, raise_if_not_found)
         res_model, res_id = t
 
         if res_model and res_id:
@@ -1958,18 +1958,18 @@ class IrModelData(models.Model):
     @api.model
     def _get_id(self, module, xml_id):
         """Returns the id of the ir.model.data record corresponding to a given module and xml_id (cached) or raise a ValueError if not found"""
-        return self.xmlid_lookup("%s.%s" % (module, xml_id))[0]
+        return self._xmlid_lookup("%s.%s" % (module, xml_id))[0]
 
     @api.model
-    def get_object_reference(self, module, xml_id):
+    def _get_object_reference(self, module, xml_id):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached) or raise ValueError if not found"""
-        return self.xmlid_lookup("%s.%s" % (module, xml_id))[1:3]
+        return self._xmlid_lookup("%s.%s" % (module, xml_id))[1:3]
 
     @api.model
     def check_object_reference(self, module, xml_id, raise_on_access_error=False):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached), if and only if the user has the necessary access rights
         to see that object, otherwise raise a ValueError if raise_on_access_error is True or returns a tuple (model found, False)"""
-        model, res_id = self.get_object_reference(module, xml_id)
+        model, res_id = self._get_object_reference(module, xml_id)
         #search on id found in result to check if current user has read access right
         if self.env[model].search([('id', '=', res_id)]):
             return model, res_id
@@ -1983,7 +1983,7 @@ class IrModelData(models.Model):
             If not found, raise a ValueError or return None, depending
             on the value of `raise_exception`.
         """
-        return self.xmlid_to_object("%s.%s" % (module, xml_id), raise_if_not_found=True)
+        return self._xmlid_to_object("%s.%s" % (module, xml_id), raise_if_not_found=True)
 
     def unlink(self):
         """ Regular unlink method, but make sure to clear the caches. """
@@ -2067,7 +2067,7 @@ class IrModelData(models.Model):
         """ Simply mark the given XML id as being loaded, and return the
             corresponding record.
         """
-        record = self.xmlid_to_object(xml_id)
+        record = self._xmlid_to_object(xml_id)
         if record:
             self.pool.loaded_xmlids.add(xml_id)
         return record

@@ -236,7 +236,7 @@ class SendSMS(models.TransientModel):
 
     def _action_send_sms_comment(self, records=None):
         records = records if records is not None else self._get_records()
-        subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
+        subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
         messages = self.env['mail.message']
         for record in records:

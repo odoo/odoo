@@ -666,7 +666,7 @@ form: module.record_id""" % (xml_id,)
     def model_id_get(self, id_str, raise_if_not_found=True):
         if '.' not in id_str:
             id_str = '%s.%s' % (self.module, id_str)
-        return self.env['ir.model.data'].xmlid_to_res_model_res_id(id_str, raise_if_not_found=raise_if_not_found)
+        return self.env['ir.model.data']._xmlid_to_res_model_res_id(id_str, raise_if_not_found=raise_if_not_found)
 
     def _tag_root(self, el):
         for rec in el:

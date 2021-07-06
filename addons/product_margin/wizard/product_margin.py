@@ -24,7 +24,7 @@ class ProductMargin(models.TransientModel):
 
         def ref(module, xml_id):
             proxy = self.env['ir.model.data']
-            return proxy.get_object_reference(module, xml_id)
+            return proxy._get_object_reference(module, xml_id)
 
         model, search_view_id = ref('product', 'product_search_form_view')
         model, graph_view_id = ref('product_margin', 'view_product_margin_graph')

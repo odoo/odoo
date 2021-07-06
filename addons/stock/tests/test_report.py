@@ -12,10 +12,10 @@ class TestReportsCommon(TransactionCase):
         super().setUpClass()
         cls.partner = cls.env['res.partner'].create({'name': 'Partner'})
         cls.ModelDataObj = cls.env['ir.model.data']
-        cls.picking_type_in = cls.env['stock.picking.type'].browse(cls.ModelDataObj.xmlid_to_res_id('stock.picking_type_in'))
-        cls.picking_type_out = cls.env['stock.picking.type'].browse(cls.ModelDataObj.xmlid_to_res_id('stock.picking_type_out'))
-        cls.supplier_location = cls.env['stock.location'].browse(cls.ModelDataObj.xmlid_to_res_id('stock.stock_location_suppliers'))
-        cls.stock_location = cls.env['stock.location'].browse(cls.ModelDataObj.xmlid_to_res_id('stock.stock_location_stock'))
+        cls.picking_type_in = cls.env['stock.picking.type'].browse(cls.ModelDataObj._xmlid_to_res_id('stock.picking_type_in'))
+        cls.picking_type_out = cls.env['stock.picking.type'].browse(cls.ModelDataObj._xmlid_to_res_id('stock.picking_type_out'))
+        cls.supplier_location = cls.env['stock.location'].browse(cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_suppliers'))
+        cls.stock_location = cls.env['stock.location'].browse(cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_stock'))
 
         product_form = Form(cls.env['product.product'])
         product_form.type = 'product'

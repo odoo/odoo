@@ -104,7 +104,7 @@ class TestEventData(TestEventCommon):
         event_type.write({
             'event_type_mail_ids': [(5, 0), (0, 0, {
                 'interval_nbr': 1, 'interval_unit': 'days', 'interval_type': 'before_event',
-                'template_ref': 'mail.template,%i' % self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})
+                'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')})
             ],
             'event_type_ticket_ids': [(5, 0), (0, 0, {'name': 'TestRegistration'})],
         })
@@ -162,7 +162,7 @@ class TestEventData(TestEventCommon):
                     'interval_nbr': 77,
                     'interval_unit': 'days',
                     'interval_type': 'after_event',
-                    'template_ref': 'mail.template,%i' % self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder'),
+                    'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder'),
                 })
             ]
         })
@@ -179,7 +179,7 @@ class TestEventData(TestEventCommon):
                     'notification_type': 'mail',
                     'interval_unit': 'now',
                     'interval_type': 'after_sub',
-                    'template_ref': 'mail.template,%i' % self.env['ir.model.data'].xmlid_to_res_id('event.event_subscription'),
+                    'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription'),
                 })
             ]
         })

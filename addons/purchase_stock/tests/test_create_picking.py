@@ -100,9 +100,9 @@ class TestCreatePicking(common.TestProductCommon):
         following move to MTS in order to be able to link it to a
         manually created purchase order.
         """
-        stock_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_stock')
-        customer_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_customers')
-        picking_type_out = self.env['ir.model.data'].xmlid_to_object('stock.picking_type_out')
+        stock_location = self.env['ir.model.data']._xmlid_to_object('stock.stock_location_stock')
+        customer_location = self.env['ir.model.data']._xmlid_to_object('stock.stock_location_customers')
+        picking_type_out = self.env['ir.model.data']._xmlid_to_object('stock.picking_type_out')
         # route buy should be there by default
         partner = self.env['res.partner'].create({
             'name': 'Jhon'
@@ -238,9 +238,9 @@ class TestCreatePicking(common.TestProductCommon):
         and receipt the picking then try to reserve the delivery
         picking.
         """
-        stock_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_stock')
-        customer_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_customers')
-        picking_type_out = self.env['ir.model.data'].xmlid_to_object('stock.picking_type_out')
+        stock_location = self.env['ir.model.data']._xmlid_to_object('stock.stock_location_stock')
+        customer_location = self.env['ir.model.data']._xmlid_to_object('stock.stock_location_customers')
+        picking_type_out = self.env['ir.model.data']._xmlid_to_object('stock.picking_type_out')
         # route buy should be there by default
         partner = self.env['res.partner'].create({
             'name': 'Jhon'
@@ -383,10 +383,10 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(move2.product_qty, 24)
 
     def create_delivery_order(self):
-        stock_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_stock')
-        customer_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_customers')
+        stock_location = self.env['ir.model.data']._xmlid_to_object('stock.stock_location_stock')
+        customer_location = self.env['ir.model.data']._xmlid_to_object('stock.stock_location_customers')
         unit = self.ref("uom.product_uom_unit")
-        picking_type_out = self.env['ir.model.data'].xmlid_to_object('stock.picking_type_out')
+        picking_type_out = self.env['ir.model.data']._xmlid_to_object('stock.picking_type_out')
         partner = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         supplier_info1 = self.env['product.supplierinfo'].create({
             'name': partner.id,

@@ -251,9 +251,9 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         """Check for done and cancelled moves. Ensure that the RFQ cancellation
         will not impact the delivery state if it's already cancelled.
         """
-        stock_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_stock')
-        customer_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_customers')
-        picking_type_out = self.env['ir.model.data'].xmlid_to_object('stock.picking_type_out')
+        stock_location = self.env['ir.model.data']._xmlid_to_object('stock.stock_location_stock')
+        customer_location = self.env['ir.model.data']._xmlid_to_object('stock.stock_location_customers')
+        picking_type_out = self.env['ir.model.data']._xmlid_to_object('stock.picking_type_out')
 
         partner = self.env['res.partner'].create({
             'name': 'Steve'

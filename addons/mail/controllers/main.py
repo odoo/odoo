@@ -262,7 +262,7 @@ class MailController(http.Controller):
             'mail_failures': request.env['mail.message'].message_fetch_failed(),
             'commands': request.env['mail.channel'].get_mention_commands(),
             'shortcodes': request.env['mail.shortcode'].sudo().search_read([], ['source', 'substitution', 'description']),
-            'menu_id': request.env['ir.model.data'].xmlid_to_res_id('mail.menu_root_discuss'),
+            'menu_id': request.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
             'partner_root': request.env.ref('base.partner_root').sudo().mail_partner_format(),
             'public_partners': [partner.mail_partner_format() for partner in request.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id],
             'current_partner': request.env.user.partner_id.mail_partner_format(),

@@ -76,7 +76,7 @@ class TestSaleMrpProcurement(TransactionCase):
         """
         self.env.ref('stock.route_warehouse0_mto').active = True
         # Create warehouse
-        self.customer_location = self.env['ir.model.data'].xmlid_to_res_id('stock.stock_location_customers')
+        self.customer_location = self.env['ir.model.data']._xmlid_to_res_id('stock.stock_location_customers')
         self.warehouse = self.env['stock.warehouse'].create({
             'name': 'Test Warehouse',
             'code': 'TWH'

@@ -279,7 +279,7 @@ actual arch.
                 xmlid = m.group('xmlid')
                 if '.' not in xmlid:
                     xmlid = '%s.%s' % (view_xml_id.split('.')[0], xmlid)
-                return m.group('prefix') + str(self.env['ir.model.data'].xmlid_to_res_id(xmlid))
+                return m.group('prefix') + str(self.env['ir.model.data']._xmlid_to_res_id(xmlid))
             return re.sub(r'(?P<prefix>[^%])%\((?P<xmlid>.*?)\)[ds]', replacer, arch_fs)
 
         for view in self:
@@ -1246,7 +1246,7 @@ actual arch.
                 try:
                     action_id = int(name)
                 except ValueError:
-                    model, action_id = self.env['ir.model.data'].xmlid_to_res_model_res_id(name, raise_if_not_found=False)
+                    model, action_id = self.env['ir.model.data']._xmlid_to_res_model_res_id(name, raise_if_not_found=False)
                     if not action_id:
                         msg = _("Invalid xmlid %(xmlid)s for button of type action.", xmlid=name)
                         self.handle_view_error(msg, node)
@@ -1452,7 +1452,7 @@ actual arch.
                 for group in expr.replace('!', '').split(','):
                     # further improvement: add all groups to name_manager in
                     # order to batch check them at the end
-                    if not self.env['ir.model.data'].xmlid_to_res_id(group.strip(), raise_if_not_found=False):
+                    if not self.env['ir.model.data']._xmlid_to_res_id(group.strip(), raise_if_not_found=False):
                         msg = "The group %r defined in view does not exist!"
                         self.handle_view_error(msg % group, node, raise_exception=False)
 
@@ -1691,14 +1691,14 @@ actual arch.
         kinds of template values.
 
         This method could return the ID of something that is not a view (when
-        using fallback to `xmlid_to_res_id`).
+        using fallback to `_xmlid_to_res_id`).
         """
         if isinstance(template, int):
             return template
         if '.' not in template:
             raise ValueError('Invalid template id: %r' % template)
         view = self.sudo().search([('key', '=', template)], limit=1)
-        return view and view.id or self.env['ir.model.data'].xmlid_to_res_id(template, raise_if_not_found=True)
+        return view and view.id or self.env['ir.model.data']._xmlid_to_res_id(template, raise_if_not_found=True)
 
     def clear_cache(self):
         """ Deprecated, use `clear_caches` instead. """

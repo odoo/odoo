@@ -39,22 +39,22 @@ class TestMailSchedule(TestEventCommon, MockEmail):
                     (0, 0, {  # right at subscription
                         'interval_unit': 'now',
                         'interval_type': 'after_sub',
-                        'template_ref': 'mail.template,%i' % self.env['ir.model.data'].xmlid_to_res_id('event.event_subscription')}),
+                        'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
                     (0, 0, {  # one day after subscription
                         'interval_nbr': 1,
                         'interval_unit': 'hours',
                         'interval_type': 'after_sub',
-                        'template_ref': 'mail.template,%i' % self.env['ir.model.data'].xmlid_to_res_id('event.event_subscription')}),
+                        'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
                     (0, 0, {  # 1 days before event
                         'interval_nbr': 1,
                         'interval_unit': 'days',
                         'interval_type': 'before_event',
-                        'template_ref': 'mail.template,%i' % self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')}),
+                        'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')}),
                     (0, 0, {  # immediately after event
                         'interval_nbr': 1,
                         'interval_unit': 'hours',
                         'interval_type': 'after_event',
-                        'template_ref': 'mail.template,%i' % self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')}),
+                        'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')}),
                 ]
             })
             self.assertEqual(test_event.create_date, now)

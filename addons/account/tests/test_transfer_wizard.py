@@ -61,7 +61,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         cls.test_currency_account = cls.env['account.account'].create({
             'name': 'test destination account',
             'code': 'test_dest_acc',
-            'user_type_id': cls.env['ir.model.data'].xmlid_to_res_id('account.data_account_type_current_assets'),
+            'user_type_id': cls.env['ir.model.data']._xmlid_to_res_id('account.data_account_type_current_assets'),
             'currency_id': cls.test_currency_3.id,
         })
 
