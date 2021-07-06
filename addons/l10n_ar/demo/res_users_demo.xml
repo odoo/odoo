@@ -2,9 +2,9 @@
 <odoo>
 
     <!-- reset root on main company so that other modules can install without issues -->
-    <!-- <function model="res.users" name="write">
+    <function model="res.users" name="write">
         <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
         <value eval="{'company_id': ref('base.main_company')}"/>
-    </function> -->
+    </function>
 
 </odoo>
