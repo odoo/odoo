@@ -365,7 +365,7 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
 
     def ref(self, xid):
         """ Returns database ID for the provided :term:`external identifier`,
-        shortcut for ``get_object_reference``
+        shortcut for ``_get_object_reference``
 
         :param xid: fully-qualified :term:`external identifier`, in the form
                     :samp:`{module}.{identifier}`

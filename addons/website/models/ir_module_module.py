@@ -420,7 +420,7 @@ class IrModuleModule(models.Model):
     def get_themes_domain(self):
         """Returns the 'ir.module.module' search domain matching all available themes."""
         def get_id(model_id):
-            return self.env['ir.model.data'].xmlid_to_res_id(model_id)
+            return self.env['ir.model.data']._xmlid_to_res_id(model_id)
         return [
             ('category_id', 'not in', [
                 get_id('base.module_category_hidden'),

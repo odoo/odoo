@@ -53,7 +53,7 @@ class Company(models.Model):
                     if tax_amount and domestic_tax not in fpos.tax_ids.tax_src_id:
                         if not foreign_taxes.get(tax_amount, False):
                             tax_group_fid = 'oss_tax_group_%s' % str(tax_amount).replace('.', '_')
-                            if not self.env['ir.model.data'].xmlid_to_object('l10n_eu_service.%s' % tax_group_fid):
+                            if not self.env['ir.model.data']._xmlid_to_object('l10n_eu_service.%s' % tax_group_fid):
                                 self.env['ir.model.data'].create({
                                     'name': tax_group_fid,
                                     'module': 'l10n_eu_service',
@@ -90,7 +90,7 @@ class Company(models.Model):
 
     def _get_oss_account(self):
         self.ensure_one()
-        if not self.env['ir.model.data'].xmlid_to_object('l10n_eu_service.oss_tax_account_company_%s' % self.id):
+        if not self.env['ir.model.data']._xmlid_to_object('l10n_eu_service.oss_tax_account_company_%s' % self.id):
             sales_tax_accounts = self.env['account.tax'].search([
                     ('type_tax_use', '=', 'sale'),
                     ('company_id', '=', self.id)

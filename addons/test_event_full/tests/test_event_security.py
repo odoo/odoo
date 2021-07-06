@@ -94,7 +94,7 @@ class TestEventSecurity(TestEventCommon):
                 'name': 'ManagerEventType',
                 'event_type_mail_ids': [(5, 0), (0, 0, {
                     'interval_nbr': 1, 'interval_unit': 'days', 'interval_type': 'before_event',
-                    'template_ref': 'mail.template,%i' % self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})]
+                    'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')})]
             })
 
     @users('user_eventmanager')
@@ -105,7 +105,7 @@ class TestEventSecurity(TestEventCommon):
             'name': 'ManagerEventType',
             'event_type_mail_ids': [(5, 0), (0, 0, {
                 'interval_nbr': 1, 'interval_unit': 'days', 'interval_type': 'before_event',
-                'template_ref': 'mail.template,%i' % self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})]
+                'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')})]
         })
         event_type.write({'name': 'New Name'})
 

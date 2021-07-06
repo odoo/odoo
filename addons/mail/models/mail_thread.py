@@ -469,7 +469,7 @@ class MailThread(models.AbstractModel):
         """
         self.ensure_one()
         # get the subtype of the comment Message
-        subtype_comment = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
+        subtype_comment = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
 
         # get the ids of the comment and not-comment of the thread
         # TDE check: sudo on mail.message, to be sure all messages are moved ?
@@ -1042,11 +1042,11 @@ class MailThread(models.AbstractModel):
             partner_ids = []
             if not subtype_id:
                 if message_dict.get('is_internal'):
-                    subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
+                    subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
                     if parent_message and parent_message.author_id:
                         partner_ids = [parent_message.author_id.id]
                 else:
-                    subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
+                    subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
 
             post_params = dict(subtype_id=subtype_id, partner_ids=partner_ids, **message_dict)
             # remove computational values not stored on mail.message and avoid warnings when creating it
@@ -1057,7 +1057,7 @@ class MailThread(models.AbstractModel):
                 new_msg = thread.message_notify(**post_params)
             else:
                 # parsing should find an author independently of user running mail gateway, and ensure it is not odoobot
-                partner_from_found = message_dict.get('author_id') and message_dict['author_id'] != self.env['ir.model.data'].xmlid_to_res_id('base.partner_root')
+                partner_from_found = message_dict.get('author_id') and message_dict['author_id'] != self.env['ir.model.data']._xmlid_to_res_id('base.partner_root')
                 thread = thread.with_context(mail_create_nosubscribe=not partner_from_found)
                 new_msg = thread.message_post(**post_params)
 
@@ -1807,9 +1807,9 @@ class MailThread(models.AbstractModel):
         author_id, email_from = self._message_compute_author(author_id, email_from, raise_exception=True)
 
         if subtype_xmlid:
-            subtype_id = self.env['ir.model.data'].xmlid_to_res_id(subtype_xmlid)
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id(subtype_xmlid)
         if not subtype_id:
-            subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
         # automatically subscribe recipients if asked to
         if self._context.get('mail_post_autofollow') and partner_ids:
@@ -1979,7 +1979,7 @@ class MailThread(models.AbstractModel):
             'author_id': author_id,
             'email_from': email_from,
             'partner_ids': partner_ids,
-            'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             'is_internal': True,
             'record_name': False,
             'reply_to': MailThread._notify_get_reply_to(default=email_from, records=None)[False],
@@ -2012,7 +2012,7 @@ class MailThread(models.AbstractModel):
             'message_type': message_type,
             'model': kwargs.get('model', self._name),
             'res_id': self.ids[0] if self.ids else False,
-            'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             'is_internal': True,
             'record_name': False,
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from, records=None)[False],
@@ -2035,7 +2035,7 @@ class MailThread(models.AbstractModel):
             'email_from': email_from,
             'message_type': message_type,
             'model': self._name,
-            'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             'is_internal': True,
             'record_name': False,
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from, records=None)[False],
@@ -2346,7 +2346,7 @@ class MailThread(models.AbstractModel):
                                     tracking_value.get_old_display_value()[0],
                                     tracking_value.get_new_display_value()[0]))
 
-        is_discussion = subtype_id == self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
+        is_discussion = subtype_id == self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
 
         return {
             'message': message,
@@ -2691,7 +2691,7 @@ class MailThread(models.AbstractModel):
         if not self.env.registry.ready:  # Don't send notification during install
             return
 
-        view = self.env['ir.ui.view'].browse(self.env['ir.model.data'].xmlid_to_res_id(template))
+        view = self.env['ir.ui.view'].browse(self.env['ir.model.data']._xmlid_to_res_id(template))
 
         for record in self:
             model_description = self.env['ir.model']._get(record._name).display_name

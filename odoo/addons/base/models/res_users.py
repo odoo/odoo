@@ -281,7 +281,7 @@ class Users(models.Model):
         return ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz']
 
     def _default_groups(self):
-        default_user_id = self.env['ir.model.data'].xmlid_to_res_id('base.default_user', raise_if_not_found=False)
+        default_user_id = self.env['ir.model.data']._xmlid_to_res_id('base.default_user', raise_if_not_found=False)
         return self.env['res.users'].browse(default_user_id).sudo().groups_id if default_user_id else []
 
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True,
@@ -415,7 +415,7 @@ class Users(models.Model):
 
     @api.depends('groups_id')
     def _compute_share(self):
-        user_group_id = self.env['ir.model.data'].xmlid_to_res_id('base.group_user')
+        user_group_id = self.env['ir.model.data']._xmlid_to_res_id('base.group_user')
         internal_users = self.filtered_domain([('groups_id', 'in', [user_group_id])])
         internal_users.share = False
         (self - internal_users).share = True
@@ -1347,7 +1347,7 @@ class UsersView(models.Model):
         for values in vals_list:
             new_vals_list.append(self._remove_reified_groups(values))
         users = super(UsersView, self).create(new_vals_list)
-        group_multi_company_id = self.env['ir.model.data'].xmlid_to_res_id(
+        group_multi_company_id = self.env['ir.model.data']._xmlid_to_res_id(
             'base.group_multi_company', raise_if_not_found=False)
         if group_multi_company_id:
             for user in users:

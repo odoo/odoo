@@ -264,7 +264,7 @@ class WebsiteForm(http.Controller):
                     'message_type': 'comment',
                     'res_id': id_record,
                     'attachment_ids': [(6, 0, orphan_attachment_ids)],
-                    'subtype_id': request.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'),
+                    'subtype_id': request.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
                 }
                 mail_id = request.env['mail.message'].with_user(SUPERUSER_ID).create(values)
         else:

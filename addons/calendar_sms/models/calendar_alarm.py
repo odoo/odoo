@@ -20,6 +20,6 @@ class CalendarAlarm(models.Model):
     def _compute_sms_template_id(self):
         for alarm in self:
             if alarm.alarm_type == 'sms' and not alarm.sms_template_id:
-                alarm.sms_template_id = self.env['ir.model.data'].xmlid_to_res_id('calendar_sms.sms_template_data_calendar_reminder')
+                alarm.sms_template_id = self.env['ir.model.data']._xmlid_to_res_id('calendar_sms.sms_template_data_calendar_reminder')
             elif alarm.alarm_type != 'sms' or not alarm.sms_template_id:
                 alarm.sms_template_id = False
