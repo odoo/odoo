@@ -1228,7 +1228,7 @@ var SnippetsMenu = Widget.extend({
                 lastElement = false;
             });
 
-            if (!$target.closest('we-button, we-toggler, .o_we_color_preview').length) {
+            if (!$target.closest('we-button, we-toggler, we-select, .o_we_color_preview').length) {
                 this._closeWidgets();
             }
             if (!$target.closest('body > *').length) {
