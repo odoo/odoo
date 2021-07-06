@@ -66,6 +66,7 @@ class HolidaysAllocation(models.Model):
     employee_id = fields.Many2one(
         'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employee', index=True, readonly=False, ondelete="restrict", tracking=True,
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
+    employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True)
     active_employee = fields.Boolean('Active Employee', related='employee_id.active', readonly=True)
     manager_id = fields.Many2one('hr.employee', compute='_compute_from_employee_id', store=True, string='Manager')
     notes = fields.Html('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
@@ -429,19 +430,25 @@ class HolidaysAllocation(models.Model):
                         date=allocation.holiday_status_id.validity_stop
                     ))
 
-    @api.model
-    def create(self, values):
+    @api.model_create_multi
+    def create(self, vals_list):
         """ Override to avoid automatic logging of creation """
-        employee_id = values.get('employee_id', False)
-        if not values.get('department_id'):
-            values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
-        holiday = super(HolidaysAllocation, self.with_context(mail_create_nosubscribe=True)).create(values)
-        holiday.add_follower(employee_id)
-        if holiday.validation_type == 'hr':
-            holiday.message_subscribe(partner_ids=(holiday.employee_id.parent_id.user_id.partner_id | holiday.employee_id.leave_manager_id.partner_id).ids)
-        if not self._context.get('import_file'):
-            holiday.activity_update()
-        return holiday
+        for values in vals_list:
+            employee_id = values.get('employee_id', False)
+            if not values.get('department_id'):
+                values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
+        holidays = super(HolidaysAllocation, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        for holiday in holidays:
+            partners_to_subscribe = set()
+            if holiday.employee_id.user_id:
+                partners_to_subscribe.add(holiday.employee_id.user_id.partner_id.id)
+            if holiday.validation_type == 'hr':
+                partners_to_subscribe.add(holiday.employee_id.parent_id.user_id.partner_id.id)
+                partners_to_subscribe.add(holiday.employee_id.leave_manager_id.partner_id.id)
+            holiday.message_subscribe(partner_ids=tuple(partners_to_subscribe))
+            if not self._context.get('import_file'):
+                holiday.activity_update()
+        return holidays
 
     def write(self, values):
         employee_id = values.get('employee_id', False)
