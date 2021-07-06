@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
-from odoo.tools import float_compare, date_utils, email_split, email_re
+from odoo.tools import float_compare, date_utils, email_split, email_re, is_html_empty
 from odoo.tools.misc import formatLang, format_date, get_lang
 
 from datetime import date, timedelta
@@ -144,7 +144,7 @@ class AccountMove(models.Model):
         default=fields.Date.context_today
     )
     ref = fields.Char(string='Reference', copy=False, tracking=True)
-    narration = fields.Text(string='Terms and Conditions')
+    narration = fields.Text(string='Terms and Conditions', compute='_compute_narration', store=True, readonly=False)
     state = fields.Selection(selection=[
             ('draft', 'Draft'),
             ('posted', 'Posted'),
@@ -490,13 +490,6 @@ class AccountMove(models.Model):
             # Reset
             self.invoice_vendor_bill_id = False
             self._recompute_dynamic_lines()
-
-    @api.onchange('move_type')
-    def _onchange_type(self):
-        ''' Onchange made to filter the partners depending of the type. '''
-        if self.is_sale_document(include_receipts=True):
-            if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
-                self.narration = self.company_id.invoice_terms or self.env.company.invoice_terms
 
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):
@@ -3036,6 +3029,20 @@ class AccountMove(models.Model):
         :returns:       A list of tuples (priority, method) where method takes an attachment as parameter.
         """
         return []
+
+    @api.depends('move_type', 'partner_id', 'company_id')
+    def _compute_narration(self):
+        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
+        for move in self.filtered(lambda am: not am.narration):
+            if not use_invoice_terms or not move.is_sale_document(include_receipts=True):
+                move.narration = ''
+            else:
+                if not move.company_id.terms_type == 'html':
+                    narration = move.company_id.invoice_terms if not is_html_empty(move.company_id.invoice_terms) else ''
+                else:
+                    baseurl = self.env.company.get_base_url() + '/terms'
+                    narration = _('Terms & Conditions: %s', baseurl)
+                move.narration = narration
 
 
 class AccountMoveLine(models.Model):
