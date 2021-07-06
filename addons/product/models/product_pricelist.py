@@ -494,6 +494,7 @@ class PricelistItem(models.Model):
             self.percent_price = 0.0
         if self.compute_price != 'formula':
             self.update({
+                'base': 'list_price',
                 'price_discount': 0.0,
                 'price_surcharge': 0.0,
                 'price_round': 0.0,
