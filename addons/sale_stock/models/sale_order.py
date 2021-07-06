@@ -437,6 +437,14 @@ class SaleOrderLine(models.Model):
 
     @api.depends('order_id.state')
     def _compute_invoice_status(self):
+        def check_moves_state(moves):
+            # All moves states are either 'done' or 'cancel', and there is at least one 'done'
+            at_least_one_done = False
+            for move in moves:
+                if move.state not in ['done', 'cancel']:
+                    return False
+                at_least_one_done = at_least_one_done or move.state == 'done'
+            return at_least_one_done
         super(SaleOrderLine, self)._compute_invoice_status()
         for line in self:
             # We handle the following specific situation: a physical product is partially delivered,
@@ -448,7 +456,7 @@ class SaleOrderLine(models.Model):
                     and line.product_id.type in ['consu', 'product']\
                     and line.product_id.invoice_policy == 'delivery'\
                     and line.move_ids \
-                    and all(move.state in ['done', 'cancel'] for move in line.move_ids):
+                    and check_moves_state(line.move_ids):
                 line.invoice_status = 'invoiced'
 
     @api.depends('move_ids')
