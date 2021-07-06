@@ -230,17 +230,12 @@ class AccountEdiDocument(models.Model):
         jobs = self.filtered(lambda d: d.edi_format_id._needs_web_services())._prepare_jobs()
         jobs = jobs[0:job_count or len(jobs)]
         for documents, doc_type in jobs:
-            move_to_cancel = documents.filtered(lambda doc: doc.attachment_id \
-                                                    and doc.state == 'to_cancel' \
-                                                    and doc.move_id.is_invoice(include_receipts=True) \
-                                                    and doc.edi_format_id._is_required_for_invoice(doc.move_id)).move_id
+            move_to_lock = documents.move_id
             attachments_potential_unlink = documents.attachment_id.filtered(lambda a: not a.res_model and not a.res_id)
             try:
                 with self.env.cr.savepoint():
                     self._cr.execute('SELECT * FROM account_edi_document WHERE id IN %s FOR UPDATE NOWAIT', [tuple(documents.ids)])
-                    # Locks the move that will be cancelled.
-                    if move_to_cancel:
-                        self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(move_to_cancel.ids)])
+                    self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(move_to_lock.ids)])
 
                     # Locks the attachments that might be unlinked
                     if attachments_potential_unlink:
