@@ -37,12 +37,6 @@ QUnit.module('LunchKanbanView', {
                 fields: {},
                 records: [],
             },
-            'ir.model.data': {
-                fields: {},
-                xmlid_to_res_id() {
-                    return Promise.resolve(PORTAL_GROUP_ID);
-                },
-            },
             'lunch.location': {
                 fields: {
                     name: {string: 'Name', type: 'char'},
@@ -68,6 +62,7 @@ QUnit.module('LunchKanbanView', {
             username: "Marc Demo",
             wallet: 36.5,
             is_manager: false,
+            group_portal_id: PORTAL_GROUP_ID,
             currency: {
                 symbol: "\u20ac",
                 position: "after"
@@ -78,6 +73,7 @@ QUnit.module('LunchKanbanView', {
             username: "Mitchell Admin",
             wallet: 47.6,
             is_manager: true,
+            group_portal_id: PORTAL_GROUP_ID,
             currency: {
                 symbol: "\u20ac",
                 position: "after"
@@ -212,7 +208,7 @@ QUnit.module('LunchKanbanView', {
         });
 
         QUnit.test('search panel domain location', async function (assert) {
-            assert.expect(20);
+            assert.expect(18);
             let expectedLocation = 1;
             let locationId = this.data['lunch.location'].records[0].id;
             const regularInfos = _.extend({}, this.regularInfos);
@@ -266,7 +262,6 @@ QUnit.module('LunchKanbanView', {
                 '/web/dataset/call_kw/product/search_panel_select_multi_range',
                 '/web/dataset/search_read',
                 '/lunch/infos',
-                '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id',
                 // Click m2o
                 '/web/dataset/call_kw/lunch.location/name_search',
                 // Click new location
@@ -275,14 +270,13 @@ QUnit.module('LunchKanbanView', {
                 '/web/dataset/call_kw/product/search_panel_select_multi_range',
                 '/web/dataset/search_read',
                 '/lunch/infos',
-                '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id',
             ]);
 
             kanban.destroy();
         });
 
         QUnit.test('search panel domain location false: fetch products in all locations', async function (assert) {
-            assert.expect(10);
+            assert.expect(9);
             const regularInfos = _.extend({}, this.regularInfos);
 
             const kanban = await createLunchView({
@@ -324,7 +318,6 @@ QUnit.module('LunchKanbanView', {
                 '/web/dataset/call_kw/product/search_panel_select_multi_range',
                 '/web/dataset/search_read',
                 '/lunch/infos',
-                '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id',
             ])
 
             kanban.destroy();
