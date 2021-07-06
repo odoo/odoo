@@ -936,6 +936,18 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _shouldIgnoreClick(ev) {
+        return !!ev.target.closest('[role="button"]');
+    },
+
+    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -945,7 +957,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      * @private
      */
     _onClick: function (ev) {
-        if (ev.target.closest('[role="button"]')) {
+        if (this._shouldIgnoreClick(ev)) {
             return;
         }
 
@@ -1389,6 +1401,12 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         }
         return this.colorPalette.appendTo(document.createDocumentFragment());
     },
+    /**
+     * @override
+     */
+    _shouldIgnoreClick(ev) {
+        return ev.originalEvent.__isColorpickerClick || this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -1441,17 +1459,6 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _onEnterKey: function () {
         this.close();
-    },
-    /**
-     * @override
-     */
-    _onClick: function (ev) {
-        // Do not close the colorpalette on colorpicker click
-        if (ev.originalEvent.__isColorpickerClick) {
-            ev.stopPropagation();
-            return;
-        }
-        return this._super(...arguments);
     },
 });
 
@@ -1786,6 +1793,12 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _shouldIgnoreClick(ev) {
+        return !!ev.target.closest('.o_we_pager_header') || this._super(...arguments);
+    },
     /**
      * Updates the pager's page number display.
      *
