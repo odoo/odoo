@@ -356,7 +356,7 @@
         <record id="timesheet_23" model="account.analytic.line">
             <field name="name">Technical training</field>
             <field name="employee_id" ref="hr.employee_admin"/>
-            <field name="date" eval="(DateTime.now() + relativedelta(months=-4, days=-10)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="(DateTime.now() + relativedelta(months=-2, days=-10)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">8.00</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="task_id" ref="project_task_internal"/>
@@ -364,7 +364,7 @@
         <record id="timesheet_24" model="account.analytic.line">
             <field name="name">Internal training</field>
             <field name="employee_id" ref="hr.employee_admin"/>
-            <field name="date" eval="(DateTime.now() + relativedelta(months=-4, days=-12)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="(DateTime.now() + relativedelta(months=-2, days=-12)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">8.00</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="task_id" ref="project_task_internal"/>
@@ -372,7 +372,7 @@
         <record id="timesheet_25" model="account.analytic.line">
             <field name="name">Internal discussion</field>
             <field name="employee_id" ref="hr.employee_admin"/>
-            <field name="date" eval="(DateTime.now() + relativedelta(months=-4, days=-13)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="(DateTime.now() + relativedelta(months=-2, days=-13)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">8.00</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="task_id" ref="project_task_internal"/>
@@ -380,7 +380,7 @@
         <record id="timesheet_26" model="account.analytic.line">
             <field name="name">Details improvement</field>
             <field name="employee_id" ref="hr.employee_qdp"/>
-            <field name="date" eval="(DateTime.now() + relativedelta(months=-4, days=-11)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="(DateTime.now() + relativedelta(months=-2, days=-11)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">8.00</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="task_id" ref="project_task_internal"/>
