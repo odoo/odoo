@@ -10,7 +10,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-        
+
         cls.currency_data_3 = cls.setup_multi_currency_data({
             'name': "Umbrella",
             'symbol': '☂',
@@ -91,7 +91,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'ref': 'INV/2017/01/0001 INV/2017/01/0002',
+            'ref': 'INV/2017/00001 INV/2017/00002',
             'payment_method_id': self.inbound_payment_method.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -125,7 +125,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'ref': 'INV/2017/01/0001 INV/2017/01/0002',
+            'ref': 'INV/2017/00001 INV/2017/00002',
             'payment_method_id': self.inbound_payment_method.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -160,7 +160,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'ref': 'INV/2017/01/0001 INV/2017/01/0002',
+            'ref': 'INV/2017/00001 INV/2017/00002',
             'payment_method_id': self.inbound_payment_method.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -203,7 +203,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'ref': 'INV/2017/01/0001 INV/2017/01/0002',
+            'ref': 'INV/2017/00001 INV/2017/00002',
             'payment_method_id': self.inbound_payment_method.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -328,11 +328,11 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
         self.assertRecordValues(payments, [
             {
-                'ref': 'INV/2017/01/0001',
+                'ref': 'INV/2017/00001',
                 'payment_method_id': self.inbound_payment_method.id,
             },
             {
-                'ref': 'INV/2017/01/0002',
+                'ref': 'INV/2017/00002',
                 'payment_method_id': self.inbound_payment_method.id,
             },
         ])

@@ -169,10 +169,10 @@ class TestSequenceMixin(AccountTestInvoicingCommon):
         all_moves.action_post()
         self.assertEqual(entry.name, 'MISC/2016/01/0002')
         self.assertEqual(entry2.name, 'MISC/2016/01/0003')
-        self.assertEqual(invoice.name, 'INV/2016/01/0001')
-        self.assertEqual(invoice2.name, 'INV/2016/01/0002')
-        self.assertEqual(refund.name, 'RINV/2016/01/0001')
-        self.assertEqual(refund2.name, 'RINV/2016/01/0002')
+        self.assertEqual(invoice.name, 'INV/2016/00001')
+        self.assertEqual(invoice2.name, 'INV/2016/00002')
+        self.assertEqual(refund.name, 'RINV/2016/00001')
+        self.assertEqual(refund2.name, 'RINV/2016/00002')
 
     def test_journal_sequence_groupby_compute(self):
         """The grouping optimization is correctly done."""

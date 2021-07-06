@@ -66,7 +66,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                     </GuidelineSpecifiedDocumentContextParameter>
                 </ExchangedDocumentContext>
                 <ExchangedDocument>
-                    <ID>INV/2017/01/0001</ID>
+                    <ID>INV/2017/00001</ID>
                     <TypeCode>380</TypeCode>
                     <IssueDateTime>
                         <DateTimeString format="102">20170101</DateTimeString>
@@ -119,7 +119,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                             <PostalTradeAddress/>
                         </BuyerTradeParty>
                         <BuyerOrderReferencedDocument>
-                            <IssuerAssignedID>INV/2017/01/0001: INV/2017/01/0001</IssuerAssignedID>
+                            <IssuerAssignedID>INV/2017/00001: INV/2017/00001</IssuerAssignedID>
                         </BuyerOrderReferencedDocument>
                     </ApplicableHeaderTradeAgreement>
                     <ApplicableHeaderTradeDelivery/>
