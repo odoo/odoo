@@ -13,6 +13,7 @@
         "account.menu_action_account_bank_journal_form",
         "pos_adyen.menu_pos_adyen_account",
         "payment_odoo.menu_adyen_account",
+        "payment_odoo.root_adyen_menu",
     ];
 
     const { isEnterprise } = odoo.info;
