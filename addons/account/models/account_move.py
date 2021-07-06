@@ -1200,7 +1200,10 @@ class AccountMove(models.Model):
 
     def _get_starting_sequence(self):
         self.ensure_one()
-        starting_sequence = "%s/%04d/%02d/0000" % (self.journal_id.code, self.date.year, self.date.month)
+        if self.journal_id.type == 'sale':
+            starting_sequence = "%s/%04d/00000" % (self.journal_id.code, self.date.year)
+        else:
+            starting_sequence = "%s/%04d/%02d/0000" % (self.journal_id.code, self.date.year, self.date.month)
         if self.journal_id.refund_sequence and self.move_type in ('out_refund', 'in_refund'):
             starting_sequence = "R" + starting_sequence
         return starting_sequence
