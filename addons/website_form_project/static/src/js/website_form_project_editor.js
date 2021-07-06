@@ -27,7 +27,6 @@ FormEditorRegistry.add('create_task', {
         name: 'project_id',
         type: 'many2one',
         relation: 'project.project',
-        required: true,
         string: _t('Project'),
     }],
 });
