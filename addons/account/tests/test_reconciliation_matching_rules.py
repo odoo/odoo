@@ -97,7 +97,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 'line_ids': [
                     (0, 0, {
                         'date': '2020-01-01',
-                        'payment_ref': 'invoice %s-%s-%s' % tuple(invoice_number.split('/')[1:]),
+                        'payment_ref': 'invoice %s-%s' % tuple(invoice_number.split('/')[1:]),
                         'partner_id': cls.partner_1.id,
                         'amount': 100,
                         'sequence': 1,
