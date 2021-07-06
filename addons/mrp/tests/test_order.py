@@ -1830,3 +1830,133 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(move_lines_1), 2)
         self.assertEqual(len(move_lines_2), 2)
         self.assertEqual(len(move_lines_3), 2)
+
+    def test_manufacturing_order_with_work_orders(self):
+        """Test the behavior of a manufacturing order when opening the workorder related to it,
+           as well as the behavior when a backorder is created
+           """
+
+        # create a few work centers
+
+        work_center_1 = self.env['mrp.workcenter'].create({"name": "WC1"})
+
+        work_center_2 = self.env['mrp.workcenter'].create({"name": "WC2"})
+
+        work_center_3 = self.env['mrp.workcenter'].create({"name": "WC3"})
+
+        # create a product, a bom related to it with 3 components and 3 operations
+
+        product = self.env['product.template'].create({"name": "Product"})
+
+        component_1 = self.env['product.template'].create({"name": "Component 1", "type": "product"})
+
+        self.env['stock.quant'].create({
+            "product_id": component_1.product_variant_id.id,
+            "location_id": 8,
+            "inventory_quantity": 100
+        })
+
+        component_2 = self.env['product.template'].create({"name": "Component 2", "type": "product"})
+
+        self.env['stock.quant'].create({
+            "product_id": component_2.product_variant_id.id,
+            "location_id": 8,
+            "inventory_quantity": 100
+        })
+
+        component_3 = self.env['product.template'].create({"name": "Component 3", "type": "product"})
+
+        self.env['stock.quant'].create({
+            "product_id": component_3.product_variant_id.id,
+            "location_id": 8,
+            "inventory_quantity": 100
+        })
+
+        self.env['mrp.bom'].create({
+            "product_tmpl_id": product.id,
+            "product_id": False,
+            "product_qty": 1,
+            "bom_line_ids": [
+                [0, 0, {"product_id": component_1.product_variant_id.id, "product_qty": 1}],
+                [0, 0, {"product_id": component_2.product_variant_id.id, "product_qty": 1}],
+                [0, 0, {"product_id": component_3.product_variant_id.id, "product_qty": 1}]
+            ],
+            "operation_ids": [
+                [0, 0, {"name": "Operation 1", "workcenter_id": work_center_1.id}],
+                [0, 0, {"name": "Operation 2", "workcenter_id": work_center_2.id}],
+                [0, 0, {"name": "Operation 3", "workcenter_id": work_center_3.id}]
+            ]
+        })
+
+        # create a manufacturing order with 10 product to produce
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product.product_variant_id
+        mo_form.product_qty = 10
+        mo = mo_form.save()
+
+        self.assertEqual(mo.state, 'draft')
+
+        mo.action_confirm()
+
+        wo_1 = mo.workorder_ids[0]
+        wo_2 = mo.workorder_ids[1]
+        wo_3 = mo.workorder_ids[2]
+
+        self.assertEqual(mo.state, 'confirmed')
+
+        wo_1.button_start()
+
+        self.assertEqual(mo.state, 'progress')
+
+        wo_1.button_finish()
+
+        wo_2.button_start()
+
+        wo_2.qty_producing = 8
+
+        wo_2.button_finish()
+
+        wo_3.button_start()
+
+        wo_3.qty_producing = 8
+
+        wo_3.button_finish()
+
+        self.assertEqual(mo.state, 'to_close')
+
+        mo.button_mark_done()
+
+        bo = self.env['mrp.production.backorder'].create({
+            "mrp_production_backorder_line_ids": [
+                [0, 0, {"mrp_production_id": mo.id, "to_backorder": True}]
+            ]
+        })
+
+        bo.action_backorder()
+
+        self.assertEqual(mo.state, 'done')
+
+        mo_2 = self.env['mrp.production'].browse(mo.id + 1)
+
+        self.assertEqual(mo_2.state, 'progress')
+
+        wo_4, wo_5, wo_6 = mo_2.workorder_ids
+
+        self.assertEqual(wo_4.state, 'cancel')
+
+        wo_5.button_start()
+
+        self.assertEqual(mo_2.state, 'progress')
+
+        wo_5.button_finish()
+
+        wo_6.button_start()
+
+        wo_6.button_finish()
+
+        self.assertEqual(mo_2.state, 'to_close')
+
+        mo_2.button_mark_done()
+
+        self.assertEqual(mo_2.state, 'done')
