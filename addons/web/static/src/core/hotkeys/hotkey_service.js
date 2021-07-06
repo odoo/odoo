@@ -125,10 +125,9 @@ export const hotkeyService = {
                 reg.callback();
                 dispatched = true;
             }
-
             if (!event.repeat && isAlted) {
                 // Click on all elements having a data-hotkey attribute matching the actual hotkey.
-                const elems = activeElement.querySelectorAll(`[data-hotkey='${hotkey}' i]`);
+                const elems = ui.getVisibleElements(`[data-hotkey='${hotkey}' i]`);
                 for (const el of elems) {
                     // AAB: not sure it is enough, we might need to trigger all events that occur when you actually click
                     el.focus();
