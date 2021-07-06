@@ -476,7 +476,9 @@ class MrpProduction(models.Model):
                 production.state = 'cancel'
             elif all(move.state in ('cancel', 'done') for move in production.move_raw_ids):
                 production.state = 'done'
-            elif production.qty_producing >= production.product_qty:
+            elif production.workorder_ids and all(wo_state in ('done', 'cancel') for wo_state in production.workorder_ids.mapped('state')):
+                production.state = 'to_close'
+            elif not production.workorder_ids and production.qty_producing >= production.product_qty:
                 production.state = 'to_close'
             elif any(wo_state in ('progress', 'done') for wo_state in production.workorder_ids.mapped('state')):
                 production.state = 'progress'
