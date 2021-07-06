@@ -395,6 +395,21 @@ class HrEmployeePrivate(models.Model):
             except AccessError:
                 employee.is_address_home_a_company = False
 
+    def _get_tz(self):
+        # Finds the first valid timezone in his tz, his work hours tz,
+        #  the company calendar tz or UTC and returns it as a string
+        self.ensure_one()
+        return self.tz or\
+               self.resource_calendar_id.tz or\
+               self.company_id.resource_calendar_id.tz or\
+               'UTC'
+
+    def _get_tz_batch(self):
+        # Finds the first valid timezone in his tz, his work hours tz,
+        #  the company calendar tz or UTC
+        # Returns a dict {employee_id: tz}
+        return {emp.id: emp._get_tz() for emp in self}
+
     # ---------------------------------------------------------
     # Business Methods
     # ---------------------------------------------------------
