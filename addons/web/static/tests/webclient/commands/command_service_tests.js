@@ -141,6 +141,7 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
     <div>
       <button title="Aria Stark" data-hotkey="a" t-on-click="onClick" />
       <input title="Bran Stark" type="text" data-hotkey="b" />
+      <button title="Sansa Stark" data-hotkey="b" style="display: none;" />
       <TestComponent />
     </div>
   `;
