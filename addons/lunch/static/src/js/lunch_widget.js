@@ -34,12 +34,11 @@ var LunchWidget = Widget.extend({
         this._super.apply(this, arguments);
 
         this.is_manager = params.is_manager || false;
+        this.group_portal_id = params.group_portal_id || false;
         this.userimage = params.userimage || '';
         this.username = params.username || '';
 
         this.lunchUserField = null;
-
-        this.group_portal_id = undefined;
 
         this.locations = params.locations || [];
         this.userLocation = params.user_location[1] || '';
@@ -57,23 +56,14 @@ var LunchWidget = Widget.extend({
         this.currency = params.currency || session.get_currency(session.company_currency_id);
     },
     willStart: function () {
-        var self = this;
         var superDef = this._super.apply(this, arguments);
 
-        var def = this._rpc({
-            model: 'ir.model.data',
-            method: 'xmlid_to_res_id',
-            kwargs: {xmlid: 'base.group_portal'},
-        }).then(function (id) {
-            self.group_portal_id = id;
-
-            if (self.is_manager) {
-                self.lunchUserField = self._createMany2One('users', 'res.users', self.username, function () {
-                    return [['groups_id', 'not in', [self.group_portal_id]]];
-                });
-            }
-        });
-        return Promise.all([superDef, def]);
+        if (this.is_manager) {
+            this.lunchUserField = this._createMany2One('users', 'res.users', this.username,
+                () => [['groups_id', 'not in', [this.group_portal_id]]]
+            );
+        }
+        return superDef;
     },
     renderElement: function () {
         this._super.apply(this, arguments);
