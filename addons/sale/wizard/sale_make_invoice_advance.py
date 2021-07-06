@@ -119,6 +119,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
         if (self.advance_payment_method == 'percentage' and self.amount <= 0.00) or (self.advance_payment_method == 'fixed' and self.fixed_amount <= 0.00):
             raise UserError(_('The value of the down payment amount must be positive.'))
 
+        if self.advance_payment_method == 'percentage' and self.amount > 100.0:
+            raise UserError(_('Use a fixed amount if you would like to invoice a down payment greater than the Sales Order value'))
+
         amount, name = self._get_advance_details(order)
 
         invoice_vals = self._prepare_invoice_values(order, name, amount, so_line)
