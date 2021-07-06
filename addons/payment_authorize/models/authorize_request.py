@@ -138,7 +138,7 @@ class AuthorizeAPI:
         return self._format_response(response, 'deleteCustomerProfile')
 
     #=== Transaction management ===#
-    def _prepare_transaction_request(self, transaction_type, tx_data, amount, reference):
+    def _prepare_authorization_transaction_request(self, transaction_type, tx_data, amount, reference):
         return {
             'transactionRequest': {
                 'transactionType': transaction_type,
@@ -166,7 +166,7 @@ class AuthorizeAPI:
         tx_data = self._prepare_tx_data(token=token, opaque_data=opaque_data)
         response = self._make_request(
             'createTransactionRequest',
-            self._prepare_transaction_request('authOnlyTransaction', tx_data, amount, reference)
+            self._prepare_authorization_transaction_request('authOnlyTransaction', tx_data, amount, reference)
         )
         return self._format_response(response, 'auth_only')
 
@@ -187,7 +187,7 @@ class AuthorizeAPI:
         tx_data = self._prepare_tx_data(token=token, opaque_data=opaque_data)
         response = self._make_request(
             'createTransactionRequest',
-            self._prepare_transaction_request('authCaptureTransaction', tx_data, amount, reference)
+            self._prepare_authorization_transaction_request('authCaptureTransaction', tx_data, amount, reference)
         )
 
         result = self._format_response(response, 'auth_capture')
