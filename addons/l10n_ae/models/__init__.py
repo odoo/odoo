@@ -1,1 +1,1 @@
-from . import (account_move_line, res_company)
+from . import (account_move_line, account_chart_template)

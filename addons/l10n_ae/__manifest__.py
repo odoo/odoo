@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'U.A.E. - Accounting',
-    'author': 'sal-odoo',
+    'author': 'Tech Receptives',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 United Arab Emirates accounting chart and localization.
@@ -25,5 +25,5 @@ United Arab Emirates accounting chart and localization.
     'demo': [
         'demo/demo_company.xml',
     ],
-    'post_init_hook': 'generate_tax_adjustments_journal',
+    'post_init_hook': 'link_ifrs_accounts_to_ifrs16_journal',
 }
