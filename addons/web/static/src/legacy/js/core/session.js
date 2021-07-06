@@ -374,9 +374,12 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @private
      */
     _configureLocale: function () {
+        // TODO: try to test when re - writing this file in the new system with luxon
+        const dow = (_t.database.parameters.week_start || 0) % 7;
         moment.updateLocale(moment.locale(), {
             week: {
-                dow: (_t.database.parameters.week_start || 0) % 7,
+                dow: dow,
+                doy: 7 + dow - 4 // Note: ISO 8601 week date: https://momentjscom.readthedocs.io/en/latest/moment/07-customization/16-dow-doy/
             },
         });
     },
