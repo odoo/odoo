@@ -78,6 +78,35 @@ QUnit.test("data-hotkey", async (assert) => {
     comp.destroy();
 });
 
+QUnit.test("invisible data-hotkeys are not enabled. ", async (assert) => {
+    assert.expect(3);
+
+    class MyComponent extends Component {
+        onClick() {
+            assert.step("click");
+        }
+    }
+    MyComponent.template = xml`
+        <div>
+        <button t-on-click="onClick" data-hotkey="b" class="myButton"/>
+        </div>
+    `;
+
+    const key = "b";
+    const comp = await mount(MyComponent, { env, target });
+
+    triggerHotkey(key);
+    await nextTick();
+    assert.verifySteps(["click"])
+
+    comp.el.querySelector(".myButton").disabled = true;
+    triggerHotkey(key);
+    await nextTick();
+    assert.verifySteps([], "shouldn't trigger the hotkey of an invisible button");
+
+    comp.destroy();
+});
+
 QUnit.test("hook", async (assert) => {
     const key = "q";
     class TestComponent extends Component {
