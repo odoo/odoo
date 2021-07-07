@@ -181,7 +181,8 @@ class SaleOrderOption(models.Model):
         new_sol = self.env['sale.order.line'].new(values)
         new_sol._onchange_discount()
         self.discount = new_sol.discount
-        self.price_unit = new_sol._get_display_price(product)
+        if self.order_id.pricelist_id and self.order_id.partner_id:
+            self.price_unit = new_sol._get_display_price(product)
         return {'domain': domain}
 
     @api.multi
