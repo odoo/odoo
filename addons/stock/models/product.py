@@ -655,14 +655,14 @@ class ProductTemplate(models.Model):
 
     def _compute_quantities_dict(self):
         # TDE FIXME: why not using directly the function fields ?
-        variants_available = self.with_context(active_test=False).mapped('product_variant_ids')._product_available()
+        variants_available = self.mapped('product_variant_ids')._product_available()
         prod_available = {}
         for template in self:
             qty_available = 0
             virtual_available = 0
             incoming_qty = 0
             outgoing_qty = 0
-            for p in template.with_context(active_test=False).product_variant_ids:
+            for p in template.product_variant_ids:
                 qty_available += variants_available[p.id]["qty_available"]
                 virtual_available += variants_available[p.id]["virtual_available"]
                 incoming_qty += variants_available[p.id]["incoming_qty"]
@@ -770,7 +770,7 @@ class ProductTemplate(models.Model):
 
     # Be aware that the exact same function exists in product.product
     def action_open_quants(self):
-        return self.with_context(active_test=False).product_variant_ids.filtered(lambda p: p.active or p.qty_available != 0).action_open_quants()
+        return self.product_variant_ids.filtered(lambda p: p.active or p.qty_available != 0).action_open_quants()
 
     def action_update_quantity_on_hand(self):
         advanced_option_groups = [
