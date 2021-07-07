@@ -5,6 +5,7 @@ var core = require('web.core');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
+var Time = require('web.time');
 var QWeb = core.qweb;
 
 const { Component } = owl;
@@ -80,7 +81,8 @@ var ActivityMenu = Widget.extend({
         var self = this;
         self._getActivityData().then(function (){
             self._$activitiesPreview.html(QWeb.render('mail.systray.ActivityMenu.Previews', {
-                widget: self
+                widget: self,
+                Time: Time
             }));
         });
     },
