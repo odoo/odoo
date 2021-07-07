@@ -146,3 +146,13 @@ def has_unaccent(cr):
     """
     cr.execute("SELECT proname FROM pg_proc WHERE proname='unaccent'")
     return len(cr.fetchall()) > 0
+
+def has_trigram(cr):
+    """ Test if the database has the a word_similarity function.
+
+    The word_similarity is supposed to be provided by the PostgreSQL built-in
+    pg_trgm module but any similar function will be picked by Odoo.
+
+    """
+    cr.execute("SELECT proname FROM pg_proc WHERE proname='word_similarity'")
+    return len(cr.fetchall()) > 0
