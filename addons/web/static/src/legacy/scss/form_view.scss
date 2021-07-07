@@ -416,6 +416,12 @@ $o-form-label-margin-right: 0px;
                 }
             }
 
+            &:not(:disabled) {
+                > .o_stat_info .o_field_widget, > span .o_field_widget {
+                    cursor: pointer;
+                }
+            }
+
             &:not(:hover) .o_stat_info > .o_hover {
                 display: none !important;
             }
