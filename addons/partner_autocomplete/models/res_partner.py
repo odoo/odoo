@@ -5,8 +5,10 @@ import base64
 import json
 import logging
 import requests
+from psycopg2 import OperationalError
 
 from odoo import api, fields, models, tools, _
+from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
 
@@ -17,6 +19,8 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
 
+    iap_enrich_done = fields.Boolean(string='Enrichment done',
+        help='Whether IAP service for company enrichment based on vat / name / domain has been performed on this company.')
     partner_gid = fields.Integer('Company database ID')
     additional_info = fields.Char('Additional info')
 
@@ -183,115 +187,149 @@ class ResPartner(models.Model):
         return res
 
     def _autocomplete_on_demand(self):
-        batches = [self[index:index + 50] for index in range(0, len(self), 50)]
+        ''' This method perform on demand enrichment on the existing partners, which are not
+        already enriched and are of type company.
+        '''
+        # Filter out company records for which enrichment is yet to be done
+        company_partners = self.filtered(lambda p: p.is_company and not p.iap_enrich_done)
+        # Split self in a list of sub-recordset or 50 records to prevent timeouts
+        batches = [company_partners[index:index + 50] for index in range(0, len(company_partners), 50)]
         partners_with_error = self.env['res.partner']
-        error_message = {}
+        Company = self.env['res.company']
         for partners in batches:
-            for partner in partners:
-                if partner.is_company:
-                    vat_data = partner.read_by_vat(partner.vat)
-                    name_data = partner.autocomplete(partner.name)
-                    if vat_data:
-                        for data in vat_data:
-                            if data:
-                                img = partner._iap_replace_logo({'logo': data['logo']})
-                                partner.write({
-                                    'website': partner.website if partner.website else data['website'],
-                                    'image_1920': partner.image_1920 if partner.image_1920 else img.get('image_1920'),
-                                    'vat': partner.vat,
-                                    'phone': partner.phone if partner.phone else data.get('phone'),
-                                    'street': partner.street if partner.street else data.get('street'),
-                                    'city': partner.city if partner.city else data.get('city'),
-                                    'zip': partner.zip if partner.zip else data.get('zip'),
-                                })
-                    else:
-                        matched = False
-                        for data in name_data:
-                            if data['name'] == partner.name:
-                                matched = True
-                                img = partner._iap_replace_logo({'logo': data['logo']})
-                                partner.write({
-                                    'website': partner.website if partner.website else data['website'],
-                                    'vat': partner.vat if partner.vat else data['vat'],
-                                    'image_1920': partner.image_1920 if partner.image_1920 else img.get('image_1920'),
-                                    'phone': partner.phone if partner.phone else data.get('phone'),
-                                    'street': partner.street if partner.street else data.get('street'),
-                                    'city': partner.city if partner.city else data.get('city'),
-                                    'zip': partner.zip if partner.zip else data.get('zip'),
-                                })
-                                break
-                        if not matched and partner.email:
-                            normalized_email = tools.email_normalize(partner.email)
-                            if normalized_email:
-                                company_domain = normalized_email.split('@')[1]
-                                mail_data = partner.enrich_company(company_domain, partner.partner_gid, '')
-                                if mail_data.get('error'):
-                                    partners_with_error |= partner
-                                    error_message.update({'error_message': mail_data.get('error_message')})
-                                elif mail_data and not mail_data.get('error'):
-                                    img = partner._iap_replace_logo({'logo': mail_data.get('logo')})
-                                    if mail_data.get('child_ids'):
-                                        rec = mail_data['child_ids'][0]
-                                        country = partner._iap_replace_location_codes(rec.get('country_id'))
-                                        result = {
-                                            'name': partner.name,
-                                            'phone': partner.phone if partner.phone else rec.get('phone'),
-                                            'vat': partner.vat if partner.vat else rec.get('vat'),
-                                            'street': partner.street if partner.street else rec.get('street'),
-                                            'city': partner.city if partner.city else rec.get('city'),
-                                            'zip': partner.zip if partner.zip else rec.get('zip'),
-                                            'country_id': partner.country_id if partner.country_id else country.get('id'),
-                                            'image_1920': partner.image_1920 if partner.image_1920 else img.get(
-                                                'image_1920'),
-                                            'additional_info': mail_data.get('additional_info')
-                                        }
-                                        template_values = json.loads(result.get('additional_info'))
-                                        template_values['flavor_text'] = _(
-                                            "Partner created by Odoo Partner Autocomplete Service")
-                                        partner.message_post_with_view(
-                                            'iap_mail.enrich_company',
-                                            values=template_values,
-                                            subtype_id=partner.env.ref('mail.mt_note').id,
-                                        )
-                                        partner.write(result)
-                                    elif not mail_data.get('child_ids') and mail_data.get('additional_info'):
-                                        result = {
-                                            'additional_info': mail_data.get('additional_info'),
-                                            'phone': partner.phone if partner.phone else mail_data.get('phone'),
-                                            'vat': partner.vat if partner.vat else mail_data.get('vat'),
-                                            'street': partner.street if partner.street else mail_data.get('street'),
-                                            'city': partner.city if partner.city else mail_data.get('city'),
-                                            'zip': partner.zip if partner.zip else mail_data.get('zip'),
-                                            'country_id': partner.country_id if partner.country_id else mail_data.get('id'),
-                                            'image_1920': partner.image_1920 if partner.image_1920 else img.get('image_1920'),
-                                        }
-                                        template_values = json.loads(result.get('additional_info'))
-                                        template_values['flavor_text'] = _(
-                                            "Partner created by Odoo Partner Autocomplete Service")
-                                        partner.message_post_with_view(
-                                            'iap_mail.enrich_company',
-                                            values=template_values,
-                                            subtype_id=partner.env.ref('mail.mt_note').id,
-                                        )
-                                        partner.write(result)
+            # Flag to prevent enrichment on further batches if any current batch is interrupted due to no token / not enough credits
+            no_credit_or_token = False
+            with self.env.cr.savepoint():
+                try:
+                    self.env.cr.execute(
+                        "SELECT 1 FROM {} WHERE id in %(partner_ids)s FOR UPDATE NOWAIT".format(self._table),
+                        {'partner_ids': tuple(partners.ids)}, log_exceptions=False)
+                    for partner in partners:
+                        enrich_params = {'website': False, 'partner_gid': False, 'vat': False}
+
+                        # First attempt to get basic details needed for enrichment, with help of VAT
+                        if partner.vat:
+                            vies_vat_data, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_vat', {
+                                'vat': partner.vat,
+                            })
+                            if error:
+                                if error in ['Insufficient Credit', 'No account token']:
+                                    # Since there are no credits left / no token, there is no point to process the other batches
+                                    _logger.info('Batch containing partner ids %s cold not be enriched and failed with exception %s, further batches will not be processed', ', '.join(str(pid) for pid in partners.ids), error)
+                                    no_credit_or_token = True
+                                    break
                                 else:
-                                    partner.message_post_with_view(
-                                        'partner_autocomplete.mail_message_partner_no_data_found',
-                                        subtype_id=partner.env.ref('mail.mt_note').id
-                                    )
+                                    partners_with_error |= partner
+                                    continue
+                            if vies_vat_data:
+                                enrich_params.update({
+                                    'website': vies_vat_data.get('website'),
+                                    'partner_gid': vies_vat_data.get('partner_gid'),
+                                    'vat': vies_vat_data.get('vat'),
+                                })
+
+                        # Second attempt to get basic details needed for enrichment, with help of partner name if vat not available or details not found by vat
+                        if not enrich_params.get('vat') and partner.name:
+                            suggestions, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('search', {
+                                'query': partner.name,
+                            })
+                            if error:
+                                if error in ['Insufficient Credit', 'No account token']:
+                                    # Since there are no credits left / no token, there is no point to process the other batches
+                                    _logger.info('Batch containing partner ids %s cold not be enriched and failed with exception %s, further batches will not be processed', ', '.join(str(pid) for pid in partners.ids), error)
+                                    no_credit_or_token = True
+                                    break
+                                else:
+                                    partners_with_error |= partner
+                                    continue
+                            if suggestions and len(suggestions):
+                                enrich_params.update({
+                                    'website': suggestions[0].get('website'),
+                                    'partner_gid': suggestions[0].get('partner_gid'),
+                                    'vat': suggestions[0].get('vat'),
+                                })
+
+                        # If details like vat and website are still not found in both the attempts,
+                        # try to get the company domain from partner's website or email
+                        if not enrich_params.get('vat') and not enrich_params.get('website'):
+                            company_domain = partner.website and tools.url_domain_extract(partner.website) or tools.email_domain_extract(partner.email)
+                            if company_domain and company_domain not in iap_tools._MAIL_DOMAIN_BLACKLIST:
+                                enrich_params['website'] = company_domain
+
+                        # Finally, perform enrichment if details are enough
+                        if enrich_params.get('website') or enrich_params.get('partner_gid') or enrich_params.get('vat'):
+                            company_data = self.enrich_company(enrich_params['website'], enrich_params['partner_gid'], enrich_params['vat'])
+                            if company_data.get('error'):
+                                if company_data['error_message'] in ['Insufficient Credit', 'No account token']:
+                                    # Since there are no credits left / no token, there is no point to process the other batches
+                                    _logger.info('Batch containing partner ids %s cold not be enriched and failed with exception %s, further batches will not be processed', ', '.join(str(pid) for pid in partners.ids), error)
+                                    no_credit_or_token = True
+                                    break
+                                else:
+                                    partners_with_error |= partner
+                                    continue
                             else:
-                                partner.message_post_with_view(
-                                    'partner_autocomplete.mail_message_partner_no_data_found',
-                                    subtype_id=partner.env.ref('mail.mt_note').id
-                                )
-                        elif not matched:
+                                additional_data = company_data.pop('additional_info', False)
+                                # Keep only truthy values that are not already set on the partner
+                                if not partner.image_1920:
+                                    self._iap_replace_logo(company_data)
+
+                                company_data = {field: value for field, value in company_data.items()
+                                                if field in partner._fields and value and not partner[field]}
+
+                                # for company and childs: from state_id / country_id name_get like to IDs
+                                company_data.update(Company._enrich_extract_m2o_id(company_data, ['state_id', 'country_id']))
+                                if company_data.get('child_ids'):
+                                    company_data['child_ids'] = [
+                                        dict(child_data, **Company._enrich_extract_m2o_id(child_data, ['state_id', 'country_id']))
+                                        for child_data in company_data['child_ids']
+                                    ]
+
+                                # handle o2m values, e.g. {'bank_ids': ['acc_number': 'BE012012012', 'acc_holder_name': 'MyWebsite']}
+                                Company._enrich_replace_o2m_creation(company_data)
+
+                                # update the partner details, and log the note
+                                partner.write(company_data)
+
+                                if additional_data:
+                                    template_values = json.loads(additional_data)
+                                    template_values['flavor_text'] = _("Partner enriched by Odoo Partner Autocomplete Service")
+                                    partner.message_post_with_view(
+                                        'iap_mail.enrich_company',
+                                        values=template_values,
+                                        subtype_id=self.env.ref('mail.mt_note').id,
+                                    )
+                        else:
+                            # simply log a note if could not enrich the partner from available details
                             partner.message_post_with_view(
-                                'partner_autocomplete.mail_message_partner_no_data_found',
-                                subtype_id=partner.env.ref('mail.mt_note').id
+                                'partner_autocomplete.mail_message_partner_enrich_notfound',
+                                subtype_id=self.env.ref('mail.mt_note').id
                             )
+                        # Mark the record as enriched
+                        partner.iap_enrich_done = True
+
+                    # No need to process further batches if there's no enough credit / no token available
+                    if no_credit_or_token:
+                        self.env['bus.bus'].sendone(
+                            (self.env.cr.dbname, 'res.partner', self.env.user.partner_id.id),
+                            {'type': 'simple_notification', 'title': _("Warning"),
+                             'message': _("Enrichment interrupted due to invalid Token / Insufficient Credits. Kindly contact the Administrator.")}
+                        )
+                        break
+                except OperationalError:
+                    _logger.error('A batch of companies could not be enriched :%s', repr(partners))
+                    continue
+            # Commit processed batch to avoid complete rollbacks and therefore losing credits.
+            if not self.env.registry.in_test_mode():
+                self.env.cr.commit()
+
         if partners_with_error:
+            parner_names = '\n'.join(['%s (ID - %s)' % (p.name, p.id) for p in partners_with_error])
+            notif_message = _('Error occurred during enrichment process for these partners:\n\n%s', parner_names)
+            _logger.info(notif_message)
+
             self.env['bus.bus'].sendone(
                 (self.env.cr.dbname, 'res.partner', self.env.user.partner_id.id),
                 {'type': 'simple_notification', 'title': _("Warning"),
-                 'message': _('%s for %s.', error_message.get('error_message'), ', '.join(partners_with_error.mapped('name')))}
+                 'message': notif_message}
             )
