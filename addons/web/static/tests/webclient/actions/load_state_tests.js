@@ -972,6 +972,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         class MyAction extends Component {
             mounted() {
+                assert.step("myAction mounted");
                 browser.location.hash = "#action=__test__client__action__&menu_id=1";
             }
         }
@@ -981,8 +982,7 @@ QUnit.module("ActionManager", (hooks) => {
         browser.location.hash = "#action=myAction";
 
         const webClient = await createWebClient({ serverData });
-        assert.containsOnce(webClient, ".not-here");
-        assert.containsNone(webClient, ".test_client_action");
+        assert.verifySteps(["myAction mounted"]);
 
         await nextTick();
         assert.containsNone(webClient, ".not-here");
@@ -1001,6 +1001,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         class MyAction extends Component {
             mounted() {
+                assert.step("myAction mounted");
                 const newURL = baseURL + "#action=__test__client__action__&menu_id=1";
                 // immediate triggering
                 window.dispatchEvent(new HashChangeEvent("hashchange", { newURL }));
@@ -1011,9 +1012,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         browser.location.hash = "#action=myAction";
         const webClient = await createWebClient({ serverData });
-
-        assert.containsOnce(webClient, ".not-here");
-        assert.containsNone(webClient, ".test_client_action");
+        assert.verifySteps(["myAction mounted"]);
 
         await nextTick();
         assert.containsNone(webClient, ".not-here");
