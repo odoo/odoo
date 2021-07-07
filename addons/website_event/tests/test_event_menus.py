@@ -8,7 +8,7 @@ from odoo.addons.website_event.tests.common import TestWebsiteEventCommon
 from odoo.tests.common import users
 
 
-class TestEventWebsite(TestWebsiteEventCommon):
+class TestEventMenus(TestWebsiteEventCommon):
 
     @users('user_eventmanager')
     def test_menu_management(self):
