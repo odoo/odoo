@@ -873,11 +873,9 @@ class MailThread(models.AbstractModel):
             raise TypeError('message must be an email.message.EmailMessage at this point')
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
-        bounce_alias_static = tools.str2bool(self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias.static", "False"))
         fallback_model = model
 
         # get email.message.Message variables for future processing
-        local_hostname = socket.gethostname()
         message_id = message_dict['message_id']
 
         # compute references to find if message is a reply to an existing thread
@@ -908,20 +906,13 @@ class MailThread(models.AbstractModel):
         rcpt_tos_valid_localparts = [to for to in rcpt_tos_localparts]
 
         # 0. Handle bounce: verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
-        #    Bounce regex: typical form of bounce is bounce_alias+128-crm.lead-34@domain
-        #       group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
+        #    Bounce alias: if any To contains bounce_alias@domain
         #    Bounce message (not alias)
         #       See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
         #        As all MTA does not respect this RFC (googlemail is one of them),
         #       we also need to verify if the message come from "mailer-daemon"
         #    If not a bounce: reset bounce information
-        if bounce_alias and any(email.startswith(bounce_alias) for email in email_to_localparts):
-            bounce_re = re.compile("%s\+(\d+)-?([\w.]+)?-?(\d+)?" % re.escape(bounce_alias), re.UNICODE)
-            bounce_match = bounce_re.search(email_to)
-            if bounce_match:
-                self._routing_handle_bounce(message, message_dict)
-                return []
-        if bounce_alias and bounce_alias_static and any(email == bounce_alias for email in email_to_localparts):
+        if bounce_alias and any(email == bounce_alias for email in email_to_localparts):
             self._routing_handle_bounce(message, message_dict)
             return []
         if message.get_content_type() == 'multipart/report' or email_from_localpart == 'mailer-daemon':

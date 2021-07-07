@@ -45,24 +45,6 @@ class TestMailMail(TestMailCommon):
         mail = self.env['mail.mail'].create(base_values)
         with self.mock_mail_gateway():
             mail.send()
-        self.assertEqual(self._mails[0]['headers']['Return-Path'], '%s+%d@%s' % (self.alias_bounce, mail.id, self.alias_domain))
-
-        # mail on thread-enabled record
-        mail = self.env['mail.mail'].create(dict(base_values, **{
-            'model': self.test_record._name,
-            'res_id': self.test_record.id,
-        }))
-        with self.mock_mail_gateway():
-            mail.send()
-        self.assertEqual(self._mails[0]['headers']['Return-Path'], '%s+%d-%s-%s@%s' % (self.alias_bounce, mail.id, self.test_record._name, self.test_record.id, self.alias_domain))
-
-        # force static addressing on bounce alias
-        self.env['ir.config_parameter'].set_param('mail.bounce.alias.static', True)
-
-        # mail without thread-enabled record
-        mail = self.env['mail.mail'].create(base_values)
-        with self.mock_mail_gateway():
-            mail.send()
         self.assertEqual(self._mails[0]['headers']['Return-Path'], '%s@%s' % (self.alias_bounce, self.alias_domain))
 
         # mail on thread-enabled record
