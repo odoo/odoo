@@ -286,18 +286,6 @@ class Event(models.Model):
             (_('Community'), '/event/%s/community' % slug(self), False, 80, 'community'),
         ]
 
-    def _get_introduction_menu_entries(self):
-        return [self._get_website_menu_entries()[0]]
-
-    def _get_location_menu_entries(self):
-        return [self._get_website_menu_entries()[1]]
-
-    def _get_register_menu_entries(self):
-        return [self._get_website_menu_entries()[2]]
-
-    def _get_community_menu_entries(self):
-        return [self._get_website_menu_entries()[3]]
-
     def _update_website_menus(self, menus_update_by_field=None):
         """ Synchronize event configuration and its menu entries for frontend.
 
@@ -309,15 +297,15 @@ class Event(models.Model):
                 root_menu = self.env['website.menu'].sudo().create({'name': event.name, 'website_id': event.website_id.id})
                 event.menu_id = root_menu
             if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('community_menu')):
-                event._update_website_menu_entry('community_menu', 'community_menu_ids', '_get_community_menu_entries')
+                event._update_website_menu_entry('community_menu', 'community_menu_ids', 'community')
             if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('introduction_menu')):
-                event._update_website_menu_entry('introduction_menu', 'introduction_menu_ids', '_get_introduction_menu_entries')
+                event._update_website_menu_entry('introduction_menu', 'introduction_menu_ids', 'introduction')
             if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('location_menu')):
-                event._update_website_menu_entry('location_menu', 'location_menu_ids', '_get_location_menu_entries')
+                event._update_website_menu_entry('location_menu', 'location_menu_ids', 'location')
             if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('register_menu')):
-                event._update_website_menu_entry('register_menu', 'register_menu_ids', '_get_register_menu_entries')
+                event._update_website_menu_entry('register_menu', 'register_menu_ids', 'register')
 
-    def _update_website_menu_entry(self, fname_bool, fname_o2m, method_name):
+    def _update_website_menu_entry(self, fname_bool, fname_o2m, fmenu_type):
         """ Generic method to create menu entries based on a flag on event. This
         method is a bit obscure, but is due to preparation of adding new menus
         entries and pages for event in a stable version, leading to some constraints
@@ -332,11 +320,12 @@ class Event(models.Model):
         self.ensure_one()
         new_menu = None
 
+        menu_data = [menu_info for menu_info in self._get_website_menu_entries()
+                     if menu_info[4] == fmenu_type]
         if self[fname_bool] and not self[fname_o2m]:
             # menus not found but boolean True: get menus to create
-            for menu_data in getattr(self, method_name)():
-                (name, url, xml_id, menu_sequence, menu_type) = menu_data
-                new_menu = self._create_menu(menu_sequence, name, url, xml_id, menu_type=menu_type)
+            for name, url, xml_id, menu_sequence, menu_type in menu_data:
+                new_menu = self._create_menu(menu_sequence, name, url, xml_id, menu_type)
         elif not self[fname_bool]:
             # will cascade delete to the website.event.menu
             self[fname_o2m].mapped('menu_id').sudo().unlink()
