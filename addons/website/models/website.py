@@ -573,7 +573,7 @@ class Website(models.Model):
         page_url = '/' + slugify(name, max_length=1024, path=True)
         page_url = self.get_unique_path(page_url)
         page_key = slugify(name)
-        result = dict({'url': page_url, 'view_id': False})
+        result = {'url': page_url}
 
         if not name:
             name = 'Home'
@@ -588,6 +588,7 @@ class Website(models.Model):
             'arch': template_record.arch.replace(template, key),
             'name': name,
         })
+        result['view_id'] = view.id
 
         if view.arch_fs:
             view.arch_fs = False
@@ -600,15 +601,16 @@ class Website(models.Model):
                 'view_id': view.id,
                 'track': True,
             })
-            result['view_id'] = view.id
+            result['page_id'] = page.id
         if add_menu:
-            self.env['website.menu'].create({
+            menu = self.env['website.menu'].create({
                 'name': name,
                 'url': page_url,
                 'parent_id': website.menu_id.id,
                 'page_id': page.id,
                 'website_id': website.id,
             })
+            result['menu_id'] = menu.id
         return result
 
     @api.model

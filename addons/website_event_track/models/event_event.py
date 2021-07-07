@@ -73,33 +73,19 @@ class Event(models.Model):
         super(Event, self)._update_website_menus(menus_update_by_field=menus_update_by_field)
         for event in self:
             if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('website_track')):
-                event._update_website_menu_entry('website_track', 'track_menu_ids', '_get_track_menu_entries')
+                event._update_website_menu_entry('website_track', 'track_menu_ids', 'track')
             if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('website_track_proposal')):
-                event._update_website_menu_entry('website_track_proposal', 'track_proposal_menu_ids', '_get_track_proposal_menu_entries')
+                event._update_website_menu_entry('website_track_proposal', 'track_proposal_menu_ids', 'track_proposal')
 
     def _get_menu_type_field_matching(self):
         res = super(Event, self)._get_menu_type_field_matching()
         res['track_proposal'] = 'website_track_proposal'
         return res
 
-    def _get_track_menu_entries(self):
-        """ Method returning menu entries to display on the website view of the
-        event, possibly depending on some options in inheriting modules.
-
-        Each menu entry is a tuple containing :
-          * name: menu item name
-          * url: if set, url to a route (do not use xml_id in that case);
-          * xml_id: template linked to the page (do not use url in that case);
-          * menu_type: key linked to the menu, used to categorize the created
-            website.event.menu;
-        """
+    def _get_website_menu_entries(self):
         self.ensure_one()
-        return [
+        return super(Event, self)._get_website_menu_entries() + [
             (_('Talks'), '/event/%s/track' % slug(self), False, 10, 'track'),
-            (_('Agenda'), '/event/%s/agenda' % slug(self), False, 70, 'track')
+            (_('Agenda'), '/event/%s/agenda' % slug(self), False, 70, 'track'),
+            (_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 15, 'track_proposal')
         ]
-
-    def _get_track_proposal_menu_entries(self):
-        """ See website_event_track._get_track_menu_entries() """
-        self.ensure_one()
-        return [(_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 15, 'track_proposal')]

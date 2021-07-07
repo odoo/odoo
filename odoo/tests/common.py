@@ -136,6 +136,9 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
     # automatically generate a name as "Login (groups)" to ease user comprehension
     if not create_values.get('name'):
         create_values['name'] = '%s (%s)' % (login, groups)
+    # automatically give a password equal to login
+    if not create_values.get('password'):
+        create_values['password'] = login + 'x' * (8 - len(login))
     # generate email if not given as most test require an email
     if 'email' not in create_values:
         if single_email_re.match(login):

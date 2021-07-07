@@ -1,102 +1,21 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+# -*- coding: utf-8 -*-
 
-from datetime import datetime, timedelta
-
-from odoo import fields
-from odoo.addons.website_event.tests.common import TestWebsiteEventCommon
-from odoo.tests.common import users
+from odoo.tests import tagged
+from odoo.tests.common import TransactionCase
 
 
-class TestEventWebsiteTrack(TestWebsiteEventCommon):
+@tagged('post_install', '-at_install')
+class TestWebsiteEvent(TransactionCase):
 
-    def _get_menus(self):
-        return super(TestEventWebsiteTrack, self)._get_menus() | set(['Community', 'Talks', 'Agenda', 'Talk Proposals'])
+    def test_event_app_name(self):
+        website0 = self.env['website'].create({'name': 'Foo'})
+        self.assertEqual(website0.events_app_name, 'Foo Events')
 
-    @users('user_eventmanager')
-    def test_create_menu(self):
-        vals = {
-            'name': 'TestEvent',
-            'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
-            'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
-            'registration_ids': [(0, 0, {
-                'partner_id': self.user_eventuser.partner_id.id,
-                'name': 'test_reg',
-            })],
-            'website_menu': True,
-            'community_menu': True,
-            'website_track': True,
-            'website_track_proposal': True,
-        }
-        if 'exhibitor_menu' in self.env['event.event']:
-            vals['exhibitor_menu'] = False
+        website1 = self.env['website'].create({'name': 'Foo', 'events_app_name': 'Bar Events'})
+        self.assertEqual(website1.events_app_name, 'Bar Events')
 
-        event = self.env['event.event'].create(vals)
-
-        self._assert_website_menus(event)
-
-    @users('user_event_web_manager')
-    def test_menu_management_frontend(self):
-        vals = {
-            'name': 'TestEvent',
-            'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
-            'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
-            'website_menu': True,
-            'community_menu': True,
-            'website_track': True,
-            'website_track_proposal': True,
-        }
-        if 'exhibitor_menu' in self.env['event.event']:
-            vals['exhibitor_menu'] = False
-
-        event = self.env['event.event'].create(vals)
-        self.assertTrue(event.website_track)
-        self.assertTrue(event.website_track_proposal)
-        self._assert_website_menus(event)
-
-        introduction_menu = event.menu_id.child_id.filtered(lambda menu: menu.name == 'Introduction')
-        introduction_menu.unlink()
-        self._assert_website_menus(event, set(['Location', 'Register', 'Community', 'Talks', 'Agenda', 'Talk Proposals']))
-
-        menus = event.menu_id.child_id.filtered(lambda menu: menu.name in ['Agenda', 'Talk Proposals'])
-        menus.unlink()
-        self.assertTrue(event.website_track)
-        self.assertFalse(event.website_track_proposal)
-
-        menus = event.menu_id.child_id.filtered(lambda menu: menu.name in ['Talks'])
-        menus.unlink()
-        self.assertFalse(event.website_track)
-        self.assertFalse(event.website_track_proposal)
-
-        self._assert_website_menus(event, set(['Location', 'Register', 'Community']))
-
-        event.write({'website_track_proposal': True})
-        self.assertFalse(event.website_track)
-        self.assertTrue(event.website_track_proposal)
-        self._assert_website_menus(event, set(['Location', 'Register', 'Community', 'Talk Proposals']))
-
-        event.write({'website_track': True})
-        self.assertTrue(event.website_track)
-        self.assertTrue(event.website_track_proposal)
-        self._assert_website_menus(event, set(['Location', 'Register', 'Community', 'Talks', 'Agenda', 'Talk Proposals']))
-
-    @users('user_eventmanager')
-    def test_write_menu(self):
-        event = self.env['event.event'].create({
-            'name': 'TestEvent',
-            'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
-            'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
-            'website_menu': False,
-        })
-        self.assertFalse(event.menu_id)
-        vals = {
-            'website_menu': True,
-            'community_menu': True,
-            'website_track': True,
-            'website_track_proposal': True,
-        }
-        if 'exhibitor_menu' in self.env['event.event']:
-            vals['exhibitor_menu'] = False
-
-        event.write(vals)
-        self._assert_website_menus(event)
+        website2 = self.env['website'].create({'name': 'Foo'})
+        self.assertEqual(website2.events_app_name, 'Foo Events')
+        website2.write({'name': 'Bar'})
+        self.assertEqual(website2.events_app_name, 'Foo Events')
