@@ -1587,15 +1587,9 @@ class BaseModel(metaclass=MetaModel):
         view = E.calendar(string=self._description)
         view.append(E.field(name=self._rec_name_fallback()))
 
-        if self._date_name not in self._fields:
-            date_found = False
-            for dt in ['date', 'date_start', 'x_date', 'x_date_start']:
-                if dt in self._fields:
-                    self._date_name = dt
-                    break
-            else:
-                raise UserError(_("Insufficient fields for Calendar View!"))
-        view.set('date_start', self._date_name)
+        if not set_first_of([self._date_name, 'date', 'date_start', 'x_date', 'x_date_start'],
+                            self._fields, 'date_start'):
+            raise UserError(_("Insufficient fields for Calendar View!"))
 
         set_first_of(["user_id", "partner_id", "x_user_id", "x_partner_id"],
                      self._fields, 'color')
