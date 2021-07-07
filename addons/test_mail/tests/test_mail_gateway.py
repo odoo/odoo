@@ -778,57 +778,11 @@ class TestMailgateway(TestMailCommon):
         with self.mock_mail_gateway():
             new_recs = self.format_and_process(
                 MAIL_TEMPLATE, self.partner_1.email_formatted,
-                '%s+%s-%s-%s@%s' % (
-                    self.alias_bounce, self.fake_email.id,
-                    self.fake_email.model, self.fake_email.res_id,
-                    self.alias_domain
-                ),
+                '%s@%s' % (self.alias_bounce, self.alias_domain),
                 subject='Should bounce',
             )
         self.assertFalse(new_recs)
         self.assertNotSentEmail()
-
-    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
-    def test_message_route_bounce_if_static_but_still_has_plus_addressing(self):
-        """Incoming email: bounce using bounce alias without plus addressing: keep old behavior."""
-        self.env['ir.config_parameter'].set_param('mail.bounce.alias.static', True)
-        with self.mock_mail_gateway():
-            new_recs = self.format_and_process(
-                MAIL_TEMPLATE, self.partner_1.email_formatted,
-                '%s+%s-%s-%s@%s' % (
-                    self.alias_bounce, self.fake_email.id,
-                    self.fake_email.model, self.fake_email.res_id,
-                    self.alias_domain
-                ),
-                subject='Should bounce',
-            )
-        self.assertFalse(new_recs)
-        self.assertEqual(len(self._mails), 0, 'message_process: incoming bounce produces no mails')
-
-    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
-    def test_message_route_bounce_if_static_without_plus_addressing(self):
-        """Incoming email: bounce using bounce alias without plus addressing: bounce it."""
-        self.env['ir.config_parameter'].set_param('mail.bounce.alias.static', True)
-        with self.mock_mail_gateway():
-            new_recs = self.format_and_process(
-                MAIL_TEMPLATE, self.partner_1.email_formatted,
-                '%s@%s' % (self.alias_bounce, self.alias_domain),
-                subject='Should bounce',
-            )
-        self.assertFalse(new_recs)
-        self.assertEqual(len(self._mails), 0, 'message_process: incoming bounce produces no mails')
-
-    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
-    def test_message_route_no_bounce_if_not_static_without_plus_addressing(self):
-        """Incoming email: bounce using bounce alias without plus addressing: raise as
-        considering as a direct write to bounce alias -> invalid """
-        self.env['ir.config_parameter'].set_param('mail.bounce.alias.static', False)
-        with self.assertRaises(ValueError):
-            self.format_and_process(
-                MAIL_TEMPLATE, self.partner_1.email_formatted,
-                '%s@%s' % (self.alias_bounce, self.alias_domain),
-                subject="Should fail because it is not a bounce and there's no alias",
-            )
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_route_bounce_other_recipients(self):
@@ -836,11 +790,9 @@ class TestMailgateway(TestMailCommon):
         with self.mock_mail_gateway():
             new_recs = self.format_and_process(
                 MAIL_TEMPLATE, self.partner_1.email_formatted,
-                '%s@%s, %s+%s-%s-%s@%s' % (
+                '%s@%s, %s@%s' % (
                     self.alias.alias_name, self.alias_domain,
-                    self.alias_bounce, self.fake_email.id,
-                    self.fake_email.model, self.fake_email.res_id,
-                    self.alias_domain
+                    self.alias_bounce, self.alias_domain
                 ),
                 subject='Should bounce',
             )
@@ -896,7 +848,7 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(self.test_record.message_bounce, 0)
 
         bounced_mail_id = 4442
-        bounce_email_to = '%s+%s-%s-%s@%s' % ('bounce.test', bounced_mail_id, self.test_record._name, self.test_record.id, 'test.com')
+        bounce_email_to = '%s@%s' % ('bounce.test', 'test.com')
         record = self.format_and_process(MAIL_TEMPLATE, self.partner_1.email_formatted, bounce_email_to, subject='Undelivered Mail Returned to Sender')
         self.assertFalse(record)
         # No information found in bounce email -> not possible to do anything except avoiding email
@@ -922,7 +874,7 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(self.test_record.message_bounce, 0)
 
         bounced_mail_id = 4442
-        bounce_email_to = '%s+%s-%s-%s@%s' % ('bounce.test', bounced_mail_id, self.test_record._name, self.test_record.id, 'test.com')
+        bounce_email_to = '%s@%s' % ('bounce.test', 'test.com')
         record = self.format_and_process(test_mail_data.MAIL_BOUNCE, self.partner_1.email_formatted, bounce_email_to, subject='Undelivered Mail Returned to Sender')
         self.assertFalse(record)
         # Missing in reply to message_id -> cannot find original record
@@ -936,7 +888,7 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(self.test_record.message_bounce, 0)
 
         bounced_mail_id = 4442
-        bounce_email_to = '%s+%s-%s-%s@%s' % ('bounce.test', bounced_mail_id, self.test_record._name, self.test_record.id, 'test.com')
+        bounce_email_to = '%s@%s' % ('bounce.test', 'test.com')
         extra = self.fake_email.message_id
         record = self.format_and_process(test_mail_data.MAIL_BOUNCE, self.partner_1.email_formatted, bounce_email_to, subject='Undelivered Mail Returned to Sender', extra=extra)
         self.assertFalse(record)
@@ -950,7 +902,7 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(self.test_record.message_bounce, 0)
 
         bounced_mail_id = 4442
-        bounce_email_to = '%s+%s-%s-%s@%s' % ('bounce.test', bounced_mail_id, self.test_record._name, self.test_record.id, 'test.com')
+        bounce_email_to = '%s@%s' % ('bounce.test', 'test.com')
         extra = self.fake_email.message_id
         record = self.format_and_process(test_mail_data.MAIL_BOUNCE, 'Whatever <what@ever.com>', bounce_email_to, subject='Undelivered Mail Returned to Sender', extra=extra)
         self.assertFalse(record)
