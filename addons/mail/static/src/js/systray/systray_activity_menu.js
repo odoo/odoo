@@ -4,6 +4,7 @@ import { qweb as QWeb } from 'web.core';
 import session  from 'web.session';
 import SystrayMenu from 'web.SystrayMenu';
 import Widget from 'web.Widget';
+import Time from 'web.time';
 
 const { Component } = owl;
 
@@ -78,7 +79,8 @@ var ActivityMenu = Widget.extend({
         var self = this;
         self._getActivityData().then(function (){
             self._$activitiesPreview.html(QWeb.render('mail.systray.ActivityMenu.Previews', {
-                widget: self
+                widget: self,
+                Time: Time
             }));
         });
     },
