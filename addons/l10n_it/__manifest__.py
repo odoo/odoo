@@ -19,12 +19,12 @@ Italian accounting chart and localization.
     'category': 'Accounting/Localizations/Account Charts',
     'website': 'http://www.odoo.com/',
     'data': [
-        'data/l10n_it_chart_data.xml',
+        'data/account_chart_template.xml',
         'data/account.account.template.csv',
+        'data/account_chart_template_accounts.xml',
         'data/account.tax.group.csv',
         'data/account_tax_template.xml',
         'data/account.fiscal.position.template.csv',
-        'data/account.chart.template.csv',
         'data/account_chart_template_data.xml',
     ],
     'demo': [
