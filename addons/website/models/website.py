@@ -301,7 +301,7 @@ class Website(models.Model):
             'description': feature.description,
             'type': feature.type,
             'icon': feature.icon,
-            'website_types_preselection': feature.website_types_preselection,
+            'website_config_preselection': feature.website_config_preselection,
             'module_state': feature.module_id.state,
         } for feature in configurator_features]
         r['logo'] = False
