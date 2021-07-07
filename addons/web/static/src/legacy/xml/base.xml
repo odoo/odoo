@@ -4,7 +4,7 @@
 <!-- Owl Templates -->
 
 <t t-name="web.ControlPanel" owl="1">
-    <div class="o_control_panel">
+    <div class="o_control_panel" data-command-category="actions">
         <div class="o_cp_top">
             <div class="o_cp_top_left">
                 <ol t-if="props.withBreadcrumbs" class="breadcrumb" role="navigation">
@@ -13,6 +13,7 @@
                         t-att-class="{ o_back_button: bc_index === props.breadcrumbs.length - 1 }"
                         t-att-accesskey="bc_last and 'b'"
                         t-on-click.prevent="trigger('breadcrumb-clicked', { controllerID: bc.controllerID })"
+                        title="Previous menu"
                         >
                         <a t-if="bc.title" href="#" t-esc="bc.title"/>
                         <em t-else="" class="text-warning">Unnamed</em>
@@ -159,6 +160,8 @@
             tabindex="-1"
             t-on-click="state.open = !state.open"
             t-on-keydown="_onButtonKeydown"
+            t-att-title="props.hotkeyTitle"
+            t-att-data-hotkey="props.hotkey"
             >
             <i t-if="icon" t-att-class="icon + ' small mr-1'"/>
             <span class="o_dropdown_title" t-esc="title"/>
@@ -545,8 +548,8 @@
                 class="fa fa-chevron-left btn btn-secondary o_pager_previous px-2 rounded-left"
                 t-att-disabled="state.disabled || singlePage"
                 t-att-accesskey="props.withAccessKey ? 'p' : false"
-                aria-label="Previous"
-                title="Previous"
+                aria-label="Previous page"
+                title="Previous page"
                 tabindex="-1"
                 t-on-click="_changeSelection(-1)"
             />
@@ -554,8 +557,8 @@
                 class="fa fa-chevron-right btn btn-secondary o_pager_next px-2 rounded-right"
                 t-att-disabled="state.disabled || singlePage"
                 t-att-accesskey="props.withAccessKey ? 'n' : false"
-                aria-label="Next"
-                title="Next"
+                aria-label="Next page"
+                title="Next page"
                 tabindex="-1"
                 t-on-click="_changeSelection(1)"
             />
@@ -632,12 +635,16 @@
             title="env._t('Print')"
             items="printItems"
             icon="'fa fa-print'"
+            hotkey="'shift+u'"
+            hotkeyTitle="'Printing options'"
         />
         <DropdownMenu t-if="actionItems.length"
             title="env._t('Action')"
             items="actionItems"
             icon="'fa fa-cog'"
             closeOnSelected="true"
+            hotkey="'u'"
+            hotkeyTitle="'Additional actions'"
         />
     </div>
 </t>
@@ -824,14 +831,14 @@
 
 <t t-name="ListView.buttons">
     <div class="o_list_buttons d-flex" role="toolbar" aria-label="Main actions">
-        <button type="button" class="btn btn-primary o_list_button_save" accesskey="s">
+        <button type="button" class="btn btn-primary o_list_button_save" title="Save record" accesskey="s">
             Save
         </button>
-        <button type="button" class="btn btn-secondary o_list_button_discard" accesskey="j">
+        <button type="button" class="btn btn-secondary o_list_button_discard" title="Discard record" accesskey="j">
             Discard
         </button>
         <t t-if="widget.is_action_enabled('create')">
-            <button type="button" class="btn btn-primary o_list_button_add" accesskey="c">
+            <button type="button" class="btn btn-primary o_list_button_add" title="Create record" accesskey="c">
                 Create
             </button>
         </t>
@@ -887,21 +894,21 @@
 <t t-name="FormView.buttons">
     <div class="o_form_buttons_view" role="toolbar" aria-label="Main actions">
         <button t-if="widget.is_action_enabled('edit')" type="button"
-                class="btn btn-primary o_form_button_edit" accesskey="a">
+                class="btn btn-primary o_form_button_edit" title="Edit record" accesskey="a">
             Edit
         </button>
         <button t-if="widget.is_action_enabled('create')" type="button"
-                class="btn btn-secondary o_form_button_create" accesskey="c">
+                class="btn btn-secondary o_form_button_create" title="Create record" accesskey="c">
             Create
         </button>
     </div>
     <div class="o_form_buttons_edit" role="toolbar" aria-label="Main actions">
         <button type="button"
-                class="btn btn-primary o_form_button_save" accesskey="s">
+                class="btn btn-primary o_form_button_save" title="Save record" accesskey="s">
             Save
         </button>
         <button type="button"
-                class="btn btn-secondary o_form_button_cancel" accesskey="j">
+                class="btn btn-secondary o_form_button_cancel" title="Discard record" accesskey="j">
             Discard
         </button>
     </div>

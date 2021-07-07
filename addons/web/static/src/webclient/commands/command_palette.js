@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 import { useAutofocus } from "../../core/autofocus_hook";
 import { isMacOS } from "../../core/browser/feature_detection";
-import { useEffect } from "../../core/effect_hook";
 import { useHotkey } from "../../core/hotkey_hook";
 import { scrollTo } from "../../core/utils/scrolling";
 
@@ -53,37 +52,9 @@ export class CommandPalette extends Component {
         useAutofocus();
 
         this.mouseSelectionActive = false;
-        useEffect(() => {
-            const index = this.state.commands.indexOf(this.state.selectedCommand);
-            const listbox = this.el.querySelector(".o_command_palette_listbox");
-            const command = listbox.querySelector(`#o_command_${index}`);
-            scrollTo(command, listbox);
-        });
-        useHotkey("Enter", () => {
-            this.executeSelectedCommand();
-        });
-        useHotkey(
-            "ArrowUp",
-            () => {
-                this.mouseSelectionActive = false;
-                const index = this.state.commands.indexOf(this.state.selectedCommand);
-                if (index > 0) {
-                    this.selectCommand(index - 1);
-                }
-            },
-            { allowRepeat: true }
-        );
-        useHotkey(
-            "ArrowDown",
-            () => {
-                this.mouseSelectionActive = false;
-                const index = this.state.commands.indexOf(this.state.selectedCommand);
-                if (index < this.state.commands.length - 1) {
-                    this.selectCommand(index + 1);
-                }
-            },
-            { allowRepeat: true }
-        );
+        useHotkey("Enter", () => this.executeSelectedCommand());
+        useHotkey("ArrowUp", () => this.selectCommandAndScrollTo("PREV"), { allowRepeat: true });
+        useHotkey("ArrowDown", () => this.selectCommandAndScrollTo("NEXT"), { allowRepeat: true });
 
         for (const command of this.initialCommands) {
             if (command.hotkey) {
@@ -126,6 +97,24 @@ export class CommandPalette extends Component {
             return;
         }
         this.state.selectedCommand = this.state.commands[index];
+    }
+
+    selectCommandAndScrollTo(type) {
+        // In case the mouse is on the palette command, it avoids the selection
+        // of a command caused by a scroll.
+        this.mouseSelectionActive = false;
+        const index = this.state.commands.indexOf(this.state.selectedCommand);
+        let nextIndex;
+        if (type === "NEXT") {
+            nextIndex = index < this.state.commands.length - 1 ? index + 1 : 0;
+        } else if (type === "PREV") {
+            nextIndex = index > 0 ? index - 1 : this.state.commands.length - 1;
+        }
+        this.selectCommand(nextIndex);
+
+        const listbox = this.el.querySelector(".o_command_palette_listbox");
+        const command = listbox.querySelector(`#o_command_${nextIndex}`);
+        scrollTo(command, listbox);
     }
 
     onCommandClicked(index) {

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "../../core/registry";
+import { capitalize } from "../../core/utils/strings";
 import { CommandPaletteDialog } from "./command_palette_dialog";
 
 /**
@@ -47,12 +48,13 @@ export const commandService = {
 
                 const description =
                     el.title ||
+                    el.dataset.originalTitle || // LEGACY: bootstrap moves title to data-original-title
                     el.placeholder ||
                     (el.innerText &&
                         `${el.innerText.slice(0, 50)}${el.innerText.length > 50 ? "..." : ""}`) ||
                     "no description provided";
                 commands.push({
-                    name: description,
+                    name: capitalize(description.trim().toLowerCase()),
                     hotkey: `${overlayModifier}+${el.dataset.hotkey}`,
                     action: () => {
                         // AAB: not sure it is enough, we might need to trigger all events that occur when you actually click

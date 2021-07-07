@@ -13,6 +13,8 @@
                                 'o-bordered': chatter.hasExternalBorder,
                             }"
                             t-att-disabled="chatter.isDisabled"
+                            title="Send a message"
+                            data-hotkey="m"
                             t-on-click="_onClickSendMessage"
                         >
                             Send message
@@ -25,12 +27,14 @@
                             }"
                             t-att-disabled="chatter.isDisabled"
                             t-on-click="_onClickLogNote"
+                            title="Log a note"
+                            data-hotkey="shift+m"
                         >
                             Log note
                         </button>
                     </t>
                     <t t-if="chatter.hasActivities">
-                        <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity" type="button" t-att-disabled="chatter.isDisabled" t-on-click="_onClickScheduleActivity">
+                        <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity" type="button" t-att-disabled="chatter.isDisabled" t-on-click="_onClickScheduleActivity" title="Schedule an activity" data-hotkey="shift+a">
                             <i class="fa fa-clock-o"/>
                             Schedule activity
                         </button>

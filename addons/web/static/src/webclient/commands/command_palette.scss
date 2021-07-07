@@ -16,7 +16,8 @@
     justify-content: space-between;
     background-color: white;
     border-bottom: 1px solid #ccc;
-    padding: 0.5rem 1em;
+    padding: 0.8rem 1em;
+    font-size: 1.5rem;
 
     input {
       border: none;
@@ -37,8 +38,9 @@
     }
 
     &_empty {
-      padding: 0.7rem 1em;
+      padding: 1rem 1.3em;
       line-height: 1.8em;
+      font-style: italic;
     }
 
     .o_command_category {
@@ -53,18 +55,19 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.2rem 1em;
+      padding: 0.5rem 1.3em;
       position: relative;
       line-height: 1.8em;
+      height: 2.8em;
 
       &.focused {
-        background: $o-gray-200;
+        background: #00a09d26;
       }
 
       kbd {
         background-color: #f4f7f8;
         border-radius: 3px;
-        border: 1px solid #b4b4b4;
+        border: 1px solid #e5e5e5;
         $shadowvalue: 0px 1px 1px rgba(0, 0, 0, 0.2),
           inset 0px -1px 1px 1px rgba(230, 230, 230, 0.8),
           inset 0px 2px 0px 0px rgba(255, 255, 255, 0.8);
