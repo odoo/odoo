@@ -61,19 +61,19 @@
             a {
                 display: none;
             }
-        }
+            @include media-breakpoint-up(md) {
+                &:hover {
+                    cursor: pointer;
+                    transition: background-color .2s linear;
+                    background-color: rgba(0,0,0,.1);
 
-        @include media-breakpoint-up(md) {
-            :hover .o_wesponsor_connect_button {
-                cursor: pointer;
-                transition: background-color .2s linear;
-                background-color: rgba(0,0,0,.1);
-
-                a {
-                    display: inline-block;
+                    a {
+                        display: inline-block;
+                    }
                 }
             }
         }
+
     }
 
     /*

@@ -61,7 +61,7 @@ var ExhibitorConnectClosedDialog = Dialog.extend({
 
 
 publicWidget.registry.eventExhibitorConnect = publicWidget.Widget.extend({
-    selector: '.o_wesponsor_js_connect',
+    selector: '.o_wesponsor_connect_button',
     xmlDependencies: ['/website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml'],
 
     /**

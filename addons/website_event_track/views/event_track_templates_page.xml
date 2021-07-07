@@ -174,12 +174,15 @@
                     <ul class="list-unstyled mb-0">
                         <li t-foreach="tracks_other" t-as="track_other" class="w-100">
                             <a t-if="is_event_user or track_other.is_published"
+                                t-att-data-publish="track_other.website_published and 'on' or 'off'"
                                 class="d-block w-100 h-100 px-2 pt-2 pb-1 text-decoration-none"
                                 t-att-href="track_other.website_url">
                                 <t t-call="website_event_track.event_track_aside_other_track"/>
                             </a>
                             <div t-else="" class="text-muted px-2 pt-2 pb-1">
-                                <t t-call="website_event_track.event_track_aside_other_track"/>
+                                <div t-att-data-publish="track_other.website_published and 'on' or 'off'">
+                                    <t t-call="website_event_track.event_track_aside_other_track"/>
+                                </div>
                             </div>
                         </li>
                     </ul>
@@ -194,6 +197,8 @@
     <div class="d-flex align-items-center">
         <small class="text-muted" t-esc="track_other.partner_name"/>
         <div class="d-inline-block ml-auto o_wesession_track_aside_info text-truncate">
+            <small t-if="not track_other.website_published and user_event_manager"
+                class="badge badge-danger">Unpublished</small>
             <small t-if="track_other.is_track_live and not track_other.is_track_done"
                 class="badge badge-danger">Live</small>
             <small t-elif="track_other.is_track_done"

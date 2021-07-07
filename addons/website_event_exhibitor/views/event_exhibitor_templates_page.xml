@@ -161,7 +161,8 @@
             <ul id="collapse_exhibitor_aside" class="list-unstyled collapse d-lg-block mb-0">
                 <li t-foreach="sponsors_other" t-as="sponsor_other">
                     <a class="row no-gutters px-2 pt-2 pb-1 text-decoration-none"
-                        t-att-href="sponsor_other.website_url">
+                        t-att-href="sponsor_other.website_url"
+                        t-att-data-publish="sponsor_other.website_published and 'on' or 'off'">
                         <div class="col-3 d-flex flex-column align-items-center">
                             <img t-if="sponsor_other.partner_id.country_id"
                             class="mr-2 mb-1 o_wesponsor_aside_logo"
@@ -179,6 +180,9 @@
 
                             </span>
                             <small class="text-muted" t-esc="sponsor_other.subtitle"/>
+                            <div class="d-inline-block float-right" t-if="not sponsor_other.website_published">
+                                <small class="badge badge-danger">Unpublished</small>
+                            </div>
                         </div>
                     </a>
                 </li>

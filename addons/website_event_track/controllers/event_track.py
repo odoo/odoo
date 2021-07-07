@@ -96,7 +96,7 @@ class EventTrackController(http.Controller):
         now_tz = utc.localize(fields.Datetime.now().replace(microsecond=0), is_dst=False).astimezone(timezone(event.date_tz))
         today_tz = now_tz.date()
         event = event.with_context(tz=event.date_tz or 'UTC')
-        tracks_sudo = event.env['event.track'].sudo().search(search_domain, order='date asc')
+        tracks_sudo = event.env['event.track'].sudo().search(search_domain, order='is_published desc, date asc')
         tag_categories = request.env['event.track.tag.category'].sudo().search([])
 
         # filter on wishlist (as post processing due to costly search on is_reminder_on)
