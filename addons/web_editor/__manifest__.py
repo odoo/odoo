@@ -34,8 +34,26 @@ Odoo Web Editor widget.
             'web_editor/static/lib/jQuery.transfo.js',
             'web/static/lib/nearest/jquery.nearest.js',
             'web_editor/static/lib/webgl-image-filter/webgl-image-filter.js',
-            'web_editor/static/lib/odoo-editor/odoo-editor.css',
-            'web_editor/static/lib/odoo-editor/odoo-editor.js',
+
+            # odoo-editor
+            'web_editor/static/lib/odoo-editor/src/style.css',
+            'web_editor/static/lib/odoo-editor/src/OdooEditor.js',
+            'web_editor/static/lib/odoo-editor/src/utils/constants.js',
+            'web_editor/static/lib/odoo-editor/src/utils/sanitize.js',
+            'web_editor/static/lib/odoo-editor/src/utils/serialize.js',
+            'web_editor/static/lib/odoo-editor/src/utils/utils.js',
+            'web_editor/static/lib/odoo-editor/src/tablepicker/TablePicker.js',
+            'web_editor/static/lib/odoo-editor/src/powerbox/patienceDiff.js',
+            'web_editor/static/lib/odoo-editor/src/powerbox/Powerbox.js',
+            'web_editor/static/lib/odoo-editor/src/commands/align.js',
+            'web_editor/static/lib/odoo-editor/src/commands/commands.js',
+            'web_editor/static/lib/odoo-editor/src/commands/deleteBackward.js',
+            'web_editor/static/lib/odoo-editor/src/commands/deleteForward.js',
+            'web_editor/static/lib/odoo-editor/src/commands/enter.js',
+            'web_editor/static/lib/odoo-editor/src/commands/shiftEnter.js',
+            'web_editor/static/lib/odoo-editor/src/commands/shiftTab.js',
+            'web_editor/static/lib/odoo-editor/src/commands/tab.js',
+            'web_editor/static/lib/odoo-editor/src/commands/toggleList.js',
 
             # utils
             'web_editor/static/src/js/wysiwyg/wysiwyg_utils.js',
