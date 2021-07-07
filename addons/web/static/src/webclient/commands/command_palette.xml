@@ -14,7 +14,7 @@
 
         <t t-foreach="categories" t-as="category">
 
-          <div class="o_command_category">
+          <div class="o_command_category" t-att-aria-label="category.label">
 
             <t t-foreach="category.commands" t-as="command">
               <t t-set="commandIndex" t-value="state.commands.indexOf(command)" />
