@@ -357,14 +357,14 @@ const getters = {
 const actions = {
     selectWebsiteType({state}, id) {
         Object.values(state.features).filter((feature) => feature.module_state !== 'installed').forEach((feature) => {
-            feature.selected = feature.website_types_preselection.includes(WEBSITE_TYPES[id].name);
+            feature.selected = feature.website_config_preselection.includes(WEBSITE_TYPES[id].name);
         });
         state.selectedType = id;
     },
     selectWebsitePurpose({state}, id) {
         Object.values(state.features).filter((feature) => feature.module_state !== 'installed').forEach((feature) => {
             // need to check id, since we set to undefined in mount() to avoid the auto next screen on back button
-            feature.selected |= id && feature.website_types_preselection.includes(WEBSITE_PURPOSES[id].name);
+            feature.selected |= id && feature.website_config_preselection.includes(WEBSITE_PURPOSES[id].name);
         });
         state.selectedPurpose = id;
     },
@@ -458,8 +458,8 @@ async function getInitialState() {
     const features = {};
     results.features.forEach(feature => {
         features[feature.id] = Object.assign({}, feature, {selected: feature.module_state === 'installed'});
-        const wtp = features[feature.id].website_types_preselection;
-        features[feature.id].website_types_preselection = wtp ? wtp.split(',') : [];
+        const wtp = features[feature.id].website_config_preselection;
+        features[feature.id].website_config_preselection = wtp ? wtp.split(',') : [];
     });
 
     return Object.assign(r, {
