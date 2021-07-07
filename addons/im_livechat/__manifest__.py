@@ -94,7 +94,7 @@ Help your customers with this chat, and analyse their feedback.
             # Odoo JS Framework
             'web/static/lib/owl/owl.js',
             'web/static/src/legacy/js/promise_extension.js',
-            'web/static/src/js/boot.js',
+            'web/static/src/boot.js',
             'web/static/src/legacy/js/libs/download.js',
             'web/static/src/legacy/js/libs/content-disposition.js',
             'web/static/src/legacy/js/libs/pdfjs.js',
