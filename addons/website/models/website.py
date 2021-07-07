@@ -10,6 +10,7 @@ import re
 import requests
 
 from lxml import etree, html
+from psycopg2 import sql
 from werkzeug import urls
 from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
@@ -17,6 +18,7 @@ from werkzeug.exceptions import NotFound
 from odoo import api, fields, models, tools, http, release
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website.tools import get_unaccent_sql_wrapper, similarity_score, text_from_html
 from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import UserError, AccessError
@@ -1518,10 +1520,19 @@ class Website(models.Model):
             - fuzzy_term: similar word against which results were obtained, indicates there were
                 no results for the initially requested search
         """
-        # TODO find fuzzy term
+        fuzzy_term = False
         search_details = self._search_get_details(search_type, order, options)
-        count, results = self._search_exact(search_details, search, limit, order)
-        return count, results, None
+        if search and options.get('allowFuzzy', True):
+            fuzzy_term = self._search_find_fuzzy_term(search_details, search)
+            if fuzzy_term:
+                count, results = self._search_exact(search_details, fuzzy_term, limit, order)
+                if fuzzy_term == search:
+                    fuzzy_term = False
+            else:
+                count, results = self._search_exact(search_details, search, limit, order)
+        else:
+            count, results = self._search_exact(search_details, search, limit, order)
+        return count, results, fuzzy_term
 
     def _search_exact(self, search_details, search, limit, order):
         """
@@ -1607,3 +1618,162 @@ class Website(models.Model):
                         patch_function(result, data)
             search_detail['results_data'] = results_data
         return search_details
+
+    def _search_find_fuzzy_term(self, search_details, search, limit=1000, word_list=None):
+        """
+        Returns the "closest" match of the search parameter within available words.
+
+        :param search_details: obtained from `_search_get_details()`
+        :param search: search term to which words must be matched against
+        :param limit: maximum number of records fetched per model to build the word list
+        :param word_list: if specified, this list of words is used as possible targets instead of
+            the words contained in the match fields of each involved model
+
+        :return: term on which a search can be performed instead of the initial search
+        """
+        if len(search) < 4 or ' ' in search:
+            return search
+        search = search.lower()
+        words = set()
+        best_score = 0
+        best_word = None
+        enumerate_words = self._trigram_enumerate_words if self.env.registry.has_trigram else self._basic_enumerate_words
+        for word in word_list or enumerate_words(search_details, search, limit):
+            if search in word:
+                return search
+            if word[0] == search[0] and word not in words:
+                similarity = similarity_score(search, word)
+                if similarity > best_score:
+                    best_score = similarity
+                    best_word = word
+                words.add(word)
+        return best_word
+
+    def _trigram_enumerate_words(self, search_details, search, limit):
+        """
+        Browses through all words that need to be compared to the search term.
+        It extracts all words of every field associated to models in the fields_per_model parameter.
+        The search is restricted to a records having the non-zero pg_trgm.word_similarity() score.
+
+        :param search_details: obtained from `_search_get_details()`
+        :param search: search term to which words must be matched against
+        :param limit: maximum number of records fetched per model to build the word list
+        :return: yields words
+        """
+        match_pattern = '\\w{%s,}' % min(4, len(search) - 3)
+        similarity_threshold = 0.3
+        for search_detail in search_details:
+            model_name, fields = search_detail['model'], search_detail['search_fields']
+            model = self.env[model_name]
+            if search_detail.get('requires_sudo'):
+                model = model.sudo()
+            fields = ['arch_db' if field == 'view_id.arch_db' else field for field in fields if field in model or field == 'view_id.arch_db']
+            if model_name == 'website.page':
+                fields.remove('name') # TODO handle ?
+
+            unaccent = get_unaccent_sql_wrapper(self.env.cr)
+            similarities = [sql.SQL("word_similarity({search}, {field})").format(
+                search=unaccent(sql.Placeholder('search')),
+                field=sql.SQL("{table}.{field}").format(
+                    table=sql.Identifier((self.env['ir.ui.view'] if field == 'arch_db' else model)._table),
+                    field=unaccent(sql.Identifier(field))
+                )
+            ) for field in fields]
+            best_similarity = sql.SQL('GREATEST({similarities})').format(
+                similarities=sql.SQL(', ').join(similarities)
+            )
+
+            from_clause = sql.SQL("FROM {table}").format(table=sql.Identifier(model._table))
+            if 'arch_db' in fields:
+                from_clause = sql.SQL("""
+                    {from_clause}
+                    LEFT JOIN {view_table} ON {table}.{view_id} = {view_table}.{id}
+                """).format(
+                    from_clause=from_clause,
+                    table=sql.Identifier(model._table),
+                    view_id=sql.Identifier('view_id'),
+                    view_table=sql.Identifier(self.env['ir.ui.view']._table),
+                    id=sql.Identifier('id'),
+                )
+            query = sql.SQL("""
+                SELECT {table}.{id}, {best_similarity} AS _best_similarity
+                {from_clause}
+                ORDER BY _best_similarity desc
+                LIMIT 1000
+            """).format(
+                table=sql.Identifier(model._table),
+                id=sql.Identifier('id'),
+                best_similarity=best_similarity,
+                from_clause=from_clause,
+            )
+            self.env.cr.execute(query, {'search': search})
+            ids = {row[0] for row in self.env.cr.fetchall() if row[1] >= similarity_threshold}
+            if self.env.lang:
+                similarity = sql.SQL("word_similarity({search}, {field})").format(
+                    search=unaccent(sql.Placeholder('search')),
+                    field=unaccent(sql.Identifier('value'))
+                )
+                names = ['%s,%s' % ((self.env['ir.ui.view'] if field == 'arch_db' else model)._name, field) for field in fields]
+                query = sql.SQL("""
+                    SELECT res_id, {similarity} AS _similarity
+                    FROM ir_translation
+                    WHERE lang = {lang}
+                    AND name = ANY({names})
+                    AND type = 'model'
+                    ORDER BY _similarity desc
+                    LIMIT 1000
+                """).format(
+                    similarity=similarity,
+                    lang=sql.Placeholder('lang'),
+                    names=sql.Placeholder('names'),
+                )
+                self.env.cr.execute(query, {'lang': self.env.lang, 'names' :names, 'search': search})
+                ids.update(row[0] for row in self.env.cr.fetchall() if row[1] >= similarity_threshold)
+            domain = search_detail['base_domain'].copy()
+            domain.append([('id', 'in', list(ids))])
+            domain = AND(domain)
+            records = model.search_read(domain, fields, limit=limit)
+            for record in records:
+                for field, value in record.items():
+                    if isinstance(value, str):
+                        value = value.lower()
+                        if field == 'arch_db':
+                            value = text_from_html(value)
+                        yield from re.findall(match_pattern, value)
+
+    def _basic_enumerate_words(self, search_details, search, limit):
+        """
+        Browses through all words that need to be compared to the search term.
+        It extracts all words of every field associated to models in the fields_per_model parameter.
+
+        :param search_details: obtained from `_search_get_details()`
+        :param search: search term to which words must be matched against
+        :param limit: maximum number of records fetched per model to build the word list
+        :return: yields words
+        """
+        match_pattern = '\\w{%s,}' % min(4, len(search) - 3)
+        first = escape_psql(search[0])
+        for search_detail in search_details:
+            model_name, fields = search_detail['model'], search_detail['search_fields']
+            model = self.env[model_name]
+            if search_detail.get('requires_sudo'):
+                model = model.sudo()
+            domain = search_detail['base_domain'].copy()
+            fields_domain = []
+            fields = ['arch_db' if field == 'view_id.arch_db' else field for field in fields if field in model or field == 'view_id.arch_db']
+            for field in fields:
+                fields_domain.append([(field, '=ilike', '%s%%' % first)])
+                fields_domain.append([(field, '=ilike', '%% %s%%' % first)])
+                fields_domain.append([(field, '=ilike', '%%>%s%%' % first)]) # HTML
+            domain.append(OR(fields_domain))
+            domain = AND(domain)
+            records = model.search_read(domain, fields, limit=1000)
+            for record in records:
+                for field, value in record.items():
+                    if isinstance(value, str):
+                        value = value.lower()
+                        if field == 'arch_db':
+                            value = text_from_html(value)
+                        for word in re.findall(match_pattern, value):
+                            if word[0] == search[0]:
+                                yield word.lower()
