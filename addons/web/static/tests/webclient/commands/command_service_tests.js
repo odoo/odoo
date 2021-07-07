@@ -153,7 +153,7 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
     assert.containsN(target, ".o_command", 2);
     assert.deepEqual(
         [...target.querySelectorAll(".o_command span:first-child")].map((el) => el.textContent),
-        ["Aria Stark", "Bran Stark"]
+        ["Aria stark", "Bran stark"]
     );
 
     // Click on first command
@@ -296,6 +296,51 @@ QUnit.test("can be searched", async (assert) => {
     );
 });
 
+QUnit.test("navigate in the command palette with the arrows", async (assert) => {
+    assert.expect(6);
+
+    testComponent = await mount(TestComponent, { env, target });
+
+    // Register some commands
+    function action() {}
+    const names = ["Cersei", "Jaime", "Tyrion"];
+    for (const name of names) {
+        env.services.command.add(name, action);
+    }
+
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    let focusedCommand = target.querySelector(".o_command.focused");
+    assert.strictEqual(focusedCommand.textContent, names[0]);
+
+    triggerHotkey("arrowdown");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.strictEqual(focusedCommand.textContent, names[1]);
+
+    triggerHotkey("arrowdown");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.strictEqual(focusedCommand.textContent, names[2]);
+
+    triggerHotkey("arrowdown");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.strictEqual(focusedCommand.textContent, names[0]);
+
+    triggerHotkey("arrowup");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.strictEqual(focusedCommand.textContent, names[2]);
+
+    triggerHotkey("arrowup");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.strictEqual(focusedCommand.textContent, names[1]);
+});
+
 QUnit.test("command categories", async (assert) => {
     testComponent = await mount(TestComponent, { env, target });
 
@@ -348,7 +393,7 @@ QUnit.test("data-command-category", async (assert) => {
                 ".o_command_category:nth-of-type(1) .o_command > span:first-child"
             ),
         ].map((el) => el.textContent),
-        ["Robert Baratheon", "Joffrey Baratheon"]
+        ["Robert baratheon", "Joffrey baratheon"]
     );
     assert.deepEqual(
         [
@@ -356,7 +401,7 @@ QUnit.test("data-command-category", async (assert) => {
                 ".o_command_category:nth-of-type(2) .o_command > span:first-child"
             ),
         ].map((el) => el.textContent),
-        ["Aria Stark", "Bran Stark"]
+        ["Aria stark", "Bran stark"]
     );
 });
 

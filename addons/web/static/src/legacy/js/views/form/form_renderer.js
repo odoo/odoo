@@ -1139,7 +1139,7 @@ var FormRenderer = BasicRenderer.extend({
         this.$el.toggleClass('o_form_nosheet', !this.has_sheet);
         if (this.has_sheet) {
             this.$el.children().not('.o_FormRenderer_chatterContainer')
-                .wrapAll($('<div/>', {class: 'o_form_sheet_bg'}));
+                .wrapAll($('<div/>', {class: 'o_form_sheet_bg', 'data-command-category': "app"}));
         }
         this.$el.toggleClass('o_form_editable', this.mode === 'edit');
         this.$el.toggleClass('o_form_readonly', this.mode === 'readonly');
