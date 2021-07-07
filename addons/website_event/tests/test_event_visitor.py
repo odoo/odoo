@@ -4,10 +4,11 @@
 from datetime import datetime, timedelta
 
 from odoo import fields
-from odoo.addons.event.tests.common import TestEventCommon
+from odoo.addons.website_event.tests.common import TestWebsiteEventCommon
 
 
-class TestVisitorEvents(TestEventCommon):
+class TestEventVisitor(TestWebsiteEventCommon):
+
     def test_visitor_events(self):
         event_1 = self.env['event.event'].create({
             'name': 'OtherEvent',
