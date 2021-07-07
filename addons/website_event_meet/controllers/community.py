@@ -23,7 +23,7 @@ class WebsiteEventMeetController(EventCommunityController):
         return search_domain_base
 
     def _sort_event_rooms(self, room):
-        return (room.is_pinned, room.room_last_activity, room.id)
+        return (room.website_published, room.is_pinned, room.room_last_activity, room.id)
 
     # ------------------------------------------------------------
     # MAIN PAGE
@@ -61,7 +61,7 @@ class WebsiteEventMeetController(EventCommunityController):
 
         return {
             # event information
-            "event": event.sudo(),
+            "event": event,
             'main_object': event,
             # rooms
             "meeting_rooms": meeting_rooms,
