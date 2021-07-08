@@ -4,6 +4,7 @@
 import re
 
 from odoo.addons.http_routing.models.ir_http import slugify
+from odoo.addons.website.tools import text_from_html
 from odoo import api, fields, models
 from odoo.tools.safe_eval import safe_eval
 
@@ -11,7 +12,10 @@ from odoo.tools.safe_eval import safe_eval
 class Page(models.Model):
     _name = 'website.page'
     _inherits = {'ir.ui.view': 'view_id'}
-    _inherit = 'website.published.multi.mixin'
+    _inherit = [
+        'website.published.multi.mixin',
+        'website.searchable.mixin',
+    ]
     _description = 'Page'
     _order = 'website_id'
 
@@ -57,14 +61,16 @@ class Page(models.Model):
                 not page.date_publish or page.date_publish < fields.Datetime.now()
             )
 
-    def _is_most_specific_page(self, page_to_test):
-        '''This will test if page_to_test is the most specific page in self.'''
-        pages_for_url = self.sorted(key=lambda p: not p.website_id).filtered(lambda page: page.url == page_to_test.url)
-
-        # this works because pages are _order'ed by website_id
-        most_specific_page = pages_for_url[0]
-
-        return most_specific_page == page_to_test
+    def _get_most_specific_pages(self):
+        ''' Returns the most specific pages in self. '''
+        ids = []
+        previous_page = None
+        # Iterate a single time on the whole list sorted on specific-website first.
+        for page in self.sorted(key=lambda p: (p.url, not p.website_id)):
+            if not previous_page or page.url != previous_page.url:
+                ids.append(page.id)
+            previous_page = page
+        return self.filtered(lambda page: page.id in ids)
 
     def get_page_properties(self):
         self.ensure_one()
@@ -233,15 +239,6 @@ class Page(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        """
-        Returns indications on how to perform the searches
-
-        :param website: website within which the search is done
-        :param order: order in which the results are to be returned
-        :param options: search options
-
-        :return search detail as expected in elements of the result of website._search_get_details()
-        """
         with_description = options['displayDescription']
         # Read access on website.page requires sudo.
         requires_sudo = True
@@ -250,35 +247,41 @@ class Page(models.Model):
             # Rule must be reinforced because of sudo.
             domain.append([('website_published', '=', True)])
 
+        search_fields = ['name', 'url']
         fetch_fields = ['id', 'name', 'url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'url', 'type': 'text'},
         }
         if with_description:
+            search_fields.append('view_id.arch_db')
             fetch_fields.append('arch')
             mapping['description'] = {'name': 'arch', 'type': 'text', 'html': True, 'match': True}
-        def filter_page(search, page, base_pages, all_pages):
-            if not all_pages._is_most_specific_page(page):
-                return False
-            if page in base_pages:
-                return True
-            text = '%s %s' % (page.name, page.url)
-            if with_description:
-                text = '%s %s' % (text, website._search_text_from_html(page.arch))
-            pattern = '|'.join([re.escape(search_term) for search_term in search.split()])
-            return re.findall('(%s)' % pattern, text, flags=re.I) if pattern else False
         return {
             'model': 'website.page',
             'base_domain': domain,
             'requires_sudo': requires_sudo,
-            'search_fields': ['name', 'url'],
-            'secondary_search_fields': ['name', 'url', 'view_id.arch_db'] if with_description else None,
-            'filter_function': filter_page,
+            'search_fields': search_fields,
             'fetch_fields': fetch_fields,
             'mapping': mapping,
             'icon': 'fa-file-o',
         }
+
+    @api.model
+    def _search_fetch(self, search_detail, search, limit, order):
+        with_description = 'description' in search_detail['mapping']
+        results, count = super()._search_fetch(search_detail, search, limit, order)
+        def filter_page(search, page, all_pages):
+            # Search might have matched words in the xml tags and parameters therefore we make
+            # sure the terms actually appear inside the text.
+            text = '%s %s %s' % (page.name, page.url, text_from_html(page.arch))
+            pattern = '|'.join([re.escape(search_term) for search_term in search.split()])
+            return re.findall('(%s)' % pattern, text, flags=re.I) if pattern else False
+        if 'url' not in order:
+            results = results._get_most_specific_pages()
+        if search and with_description:
+            results = results.filtered(lambda result: filter_page(search, result, results))
+        return results, count
 
 
 # this is just a dummy function to be used as ormcache key

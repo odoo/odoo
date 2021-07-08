@@ -23,7 +23,8 @@ class Event(models.Model):
         'event.event',
         'website.seo.metadata',
         'website.published.multi.mixin',
-        'website.cover_properties.mixin'
+        'website.cover_properties.mixin',
+        'website.searchable.mixin',
     ]
 
     def _default_cover_properties(self):
@@ -467,7 +468,6 @@ class Event(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        """See website_page._search_get_detail()"""
         with_description = options['displayDescription']
         with_date = options['displayDetail']
         date = options.get('date', 'all')
@@ -527,16 +527,11 @@ class Event(models.Model):
             mapping['description'] = {'name': 'subtitle', 'type': 'text', 'match': True}
         if with_date:
             mapping['detail'] = {'name': 'range', 'type': 'html'}
-        def patch_event(event, data):
-            begin = self.env['ir.qweb.field.date'].record_to_html(event, 'date_begin', {})
-            end = self.env['ir.qweb.field.date'].record_to_html(event, 'date_end', {})
-            data['range'] = '%s🠖%s' % (begin, end) if begin != end else begin
         return {
             'model': 'event.event',
             'base_domain': domain,
             'search_fields': search_fields,
             'fetch_fields': fetch_fields,
-            'patch_data_function': patch_event if with_date else None,
             'mapping': mapping,
             'icon': 'fa-ticket',
             # for website_event main controller:
@@ -546,3 +541,13 @@ class Event(models.Model):
             'no_date_domain': no_date_domain,
             'no_country_domain': no_country_domain,
         }
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        with_date = 'detail' in mapping
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        if with_date:
+            for event, data in zip(self, results_data):
+                begin = self.env['ir.qweb.field.date'].record_to_html(event, 'date_begin', {})
+                end = self.env['ir.qweb.field.date'].record_to_html(event, 'date_end', {})
+                data['range'] = '%s🠖%s' % (begin, end) if begin != end else begin
+        return results_data
