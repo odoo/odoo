@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import common
 
 
+@common.tagged('post_install', '-at_install')
 class TestReadProgressBar(common.TransactionCase):
     """Test for read_progress_bar"""
 
@@ -42,3 +43,79 @@ class TestReadProgressBar(common.TransactionCase):
 
         self.assertEqual(groups[0][groupby], pg_groups["testWeekGrouping_first"])
         self.assertEqual(groups[1][groupby], pg_groups["testWeekGrouping_second"])
+
+    def test_simple(self):
+        model = self.env['ir.model'].create({
+            'model': 'x_progressbar',
+            'name': 'progress_bar',
+            'field_id': [
+                (0, 0, {
+                    'field_description': 'Country',
+                    'name': 'x_country_id',
+                    'ttype': 'many2one',
+                    'relation': 'res.country',
+                }),
+                (0, 0, {
+                    'field_description': 'State',
+                    'name': 'x_state',
+                    'ttype': 'selection',
+                    'selection': "[('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')]",
+                }),
+            ],
+        })
+
+        c1, c2, c3 = self.env['res.country'].search([], limit=3)
+
+        self.env['x_progressbar'].create([
+            {'x_country_id': c1.id, 'x_state': 'foo'},
+            {'x_country_id': c1.id, 'x_state': 'foo'},
+            {'x_country_id': c1.id, 'x_state': 'foo'},
+            {'x_country_id': c1.id, 'x_state': 'bar'},
+            {'x_country_id': c1.id, 'x_state': 'baz'},
+            {'x_country_id': c2.id, 'x_state': 'foo'},
+            {'x_country_id': c2.id, 'x_state': 'bar'},
+            {'x_country_id': c2.id, 'x_state': 'bar'},
+            {'x_country_id': c2.id, 'x_state': 'baz'},
+            {'x_country_id': c2.id, 'x_state': 'baz'},
+            {'x_country_id': c3.id, 'x_state': 'foo'},
+            {'x_country_id': c3.id, 'x_state': 'foo'},
+            {'x_country_id': c3.id, 'x_state': 'baz'},
+            {'x_country_id': c3.id, 'x_state': 'baz'},
+            {'x_country_id': c3.id, 'x_state': 'baz'},
+        ])
+
+        progress_bar = {
+            'field': 'x_state',
+            'colors': {'foo': 'success', 'bar': 'warning', 'baz': 'danger'},
+        }
+        result = self.env['x_progressbar'].read_progress_bar([], 'x_country_id', progress_bar)
+        self.assertEqual(result, {
+            c1.display_name: {'foo': 3, 'bar': 1, 'baz': 1},
+            c2.display_name: {'foo': 1, 'bar': 2, 'baz': 2},
+            c3.display_name: {'foo': 2, 'bar': 0, 'baz': 3},
+        })
+
+        # add a computed field on model
+        model.write({'field_id': [
+            (0, 0, {
+                'field_description': 'Related State',
+                'name': 'x_state_computed',
+                'ttype': 'selection',
+                'selection': "[('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')]",
+                'compute': "for rec in self: rec['x_state_computed'] = rec.x_state",
+                'depends': 'x_state',
+                'readonly': True,
+                'store': False,
+            }),
+        ]})
+
+        progress_bar = {
+            'field': 'x_state_computed',
+            'colors': {'foo': 'success', 'bar': 'warning', 'baz': 'danger'},
+        }
+        result = self.env['x_progressbar'].read_progress_bar([], 'x_country_id', progress_bar)
+        self.assertEqual(result, {
+            c1.display_name: {'foo': 3, 'bar': 1, 'baz': 1},
+            c2.display_name: {'foo': 1, 'bar': 2, 'baz': 2},
+            c3.display_name: {'foo': 2, 'bar': 0, 'baz': 3},
+        })
