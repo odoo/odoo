@@ -29,9 +29,9 @@
                     <br />
                     <br />
                     <t t-foreach="changes.cancelled" t-as="change">
-                        <div>
+                        <div class="multiprint-flex">
                             <t t-esc="change.qty"/>
-                            <span t-esc="change.name_wrapped[0]" class="pos-receipt-right-align"/>
+                            <span t-esc="change.name_wrapped[0]"/>
                         </div>
                         <t t-call="NameWrapped"/>
                         <t t-if="change.note">
@@ -55,9 +55,9 @@
                 <br />
                 <br />
                 <t t-foreach="changes.new" t-as="change">
-                    <div>
+                    <div class="multiprint-flex">
                         <t t-esc="change.qty"/>
-                        <span t-esc="change.name_wrapped[0]" class="pos-receipt-right-align"/>
+                        <span t-esc="change.name_wrapped[0]"/>
                     </div>
                     <t t-call="NameWrapped"/>
                     <t t-if="change.note">
