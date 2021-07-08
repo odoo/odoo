@@ -539,7 +539,7 @@ class Base(models.AbstractModel):
             else:
                 condition = [('id', 'in', image_element_ids)]
             comodel_domain = AND([comodel_domain, condition])
-        comodel_records = Comodel.search_read(comodel_domain, field_names, limit=limit)
+        comodel_records = Comodel.sudo().search_read(comodel_domain, field_names, limit=limit)
 
         if hierarchize:
             ids = [rec['id'] for rec in comodel_records] if expand else image_element_ids
@@ -550,13 +550,15 @@ class Base(models.AbstractModel):
 
         field_range = {}
         for record in comodel_records:
+            if hierarchize and record['id'] not in ids:
+                continue
             record_id = record['id']
             values = {
                 'id': record_id,
                 'display_name': record['display_name'],
             }
             if hierarchize:
-                values[parent_name] = get_parent_id(record)
+                values[parent_name] = get_parent_id(record) if get_parent_id(record) in ids else False
             if enable_counters:
                 image_element = domain_image.get(record_id)
                 values['__count'] = image_element['__count'] if image_element else 0
