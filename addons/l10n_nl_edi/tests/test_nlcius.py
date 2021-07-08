@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.tests import tagged
+
 from freezegun import freeze_time
 
 
+@tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUBL(AccountEdiTestCommon):
 
     @classmethod
