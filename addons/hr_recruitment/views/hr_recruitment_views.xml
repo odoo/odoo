@@ -90,8 +90,11 @@
                         <field name="application_count" widget="statinfo" string="Other Applications"/>
                     </button>
                     <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object"
-                         help="Schedule interview with this applicant">
-                        <field name="meeting_count" widget="statinfo" string="Meetings"/>
+                         >
+                         <div class="o_field_widget o_stat_info">
+                             <span class="o_stat_value"><field name="meeting_display_text" /></span>
+                             <span class="o_stat_text"><field name="meeting_display_date" readonly="1"/></span>
+                         </div>
                     </button>
                 </div>
                 <widget name="web_ribbon" title="Refused" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
