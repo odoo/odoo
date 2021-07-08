@@ -2046,7 +2046,6 @@ var SnippetsMenu = Widget.extend({
                         return;
                     }
 
-                    self._activateSnippet(false);
                     self._activateInsertionZones($selectorSiblings, $selectorChildren);
 
                     self.getEditableArea().find('.oe_drop_zone').droppable({
