@@ -375,14 +375,14 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <div class="o_kanban_card_header o_kanban_record_top">
+                            <div class="container o_kanban_card_header o_kanban_record_top">
                                 <div class="o_kanban_record_headings o_kanban_card_header_title">
-                                    <strong class="o_primary ml8">
+                                    <strong class="o_primary">
                                         <span><t t-esc="record.production_id.value"/></span> - <span><t t-esc="record.name.value"/></span>
                                     </strong>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
-                                    <h2>
+                                    <h2 class="ml8">
                                         <span t-attf-class="badge #{['pending'].indexOf(record.state.raw_value) > -1 ? 'badge-warning' :['progress'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : ['ready'].indexOf(record.state.raw_value) > -1 ? 'badge-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'badge-success' : 'badge-danger'}">
                                             <t t-esc="record.state.value"/>
                                         </span>
