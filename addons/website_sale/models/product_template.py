@@ -8,7 +8,13 @@ from odoo.osv import expression
 
 
 class ProductTemplate(models.Model):
-    _inherit = ["product.template", "website.seo.metadata", 'website.published.multi.mixin', 'rating.mixin']
+    _inherit = [
+        "product.template",
+        "website.seo.metadata",
+        'website.published.multi.mixin',
+        'website.searchable.mixin',
+        'rating.mixin',
+    ]
     _name = 'product.template'
     _mail_post_access = 'read'
     _check_company_auto = True
@@ -323,7 +329,6 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        """See website_page._search_get_detail()"""
         with_image = options['displayImage']
         with_description = options['displayDescription']
         with_category = options['displayExtraLink']
@@ -367,15 +372,29 @@ class ProductTemplate(models.Model):
             fetch_fields.append('description_sale')
             mapping['description'] = {'name': 'description_sale', 'type': 'text', 'match': True}
         if with_price:
-            mapping['detail'] = {'name': 'price', 'type': 'html'}
-            mapping['detail_strike'] = {'name': 'list_price', 'type': 'html'}
+            mapping['detail'] = {'name': 'price', 'type': 'html', 'display_currency': options['display_currency']}
+            mapping['detail_strike'] = {'name': 'list_price', 'type': 'html', 'display_currency': options['display_currency']}
         if with_category:
             mapping['extra_link'] = {'name': 'category', 'type': 'text', 'match': True}
             mapping['extra_link_url'] = {'name': 'category_url', 'type': 'text'}
-        def patch_product(product, data):
+        return {
+            'model': 'product.template',
+            'base_domain': domains,
+            'search_fields': search_fields,
+            'fetch_fields': fetch_fields,
+            'mapping': mapping,
+            'icon': 'fa-shopping-cart',
+        }
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        with_image = 'image_url' in mapping
+        with_category = 'extra_link' in mapping
+        with_price = 'detail' in mapping
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        for product, data in zip(self, results_data):
             if with_price:
                 combination_info = product._get_combination_info(only_template=True)
-                monetary_options = {'display_currency': options['display_currency']}
+                monetary_options = {'display_currency': mapping['detail']['display_currency']}
                 data['price'] = self.env['ir.qweb.field.monetary'].value_to_html(combination_info['price'], monetary_options)
                 if combination_info['has_discounted_price']:
                     data['list_price'] = self.env['ir.qweb.field.monetary'].value_to_html(combination_info['list_price'], monetary_options)
@@ -385,12 +404,4 @@ class ProductTemplate(models.Model):
                 data['category'] = _('Category: %s', product.public_categ_ids.name)
                 slugs = [slug(category) for category in product.public_categ_ids]
                 data['category_url'] = '/shop/category/%s' % ','.join(slugs)
-        return {
-            'model': 'product.template',
-            'base_domain': domains,
-            'search_fields': search_fields,
-            'fetch_fields': fetch_fields,
-            'patch_data_function': patch_product,
-            'mapping': mapping,
-            'icon': 'fa-shopping-cart',
-        }
+        return results_data

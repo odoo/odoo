@@ -14,7 +14,13 @@ from odoo.tools import html2plaintext
 class Blog(models.Model):
     _name = 'blog.blog'
     _description = 'Blog'
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.multi.mixin', 'website.cover_properties.mixin']
+    _inherit = [
+        'mail.thread',
+        'website.seo.metadata',
+        'website.multi.mixin',
+        'website.cover_properties.mixin',
+        'website.searchable.mixin',
+    ]
     _order = 'name'
 
     name = fields.Char('Blog Name', required=True, translate=True)
@@ -88,7 +94,6 @@ class Blog(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        """See website_page._search_get_detail()"""
         with_description = options['displayDescription']
         search_fields = ['name']
         fetch_fields = ['id', 'name']
@@ -100,19 +105,21 @@ class Blog(models.Model):
             search_fields.append('subtitle')
             fetch_fields.append('subtitle')
             mapping['description'] = {'name': 'subtitle', 'type': 'text', 'match': True}
-        def patch_blog(blog, data):
-            data['url'] = '/blog/%s' % data['id']
         return {
             'model': 'blog.blog',
             'base_domain': [website.website_domain()],
             'search_fields': search_fields,
             'fetch_fields': fetch_fields,
-            'patch_data_function': patch_blog,
             'mapping': mapping,
             'icon': 'fa-rss-square',
             'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
         }
 
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        for data in results_data:
+            data['url'] = '/blog/%s' % data['id']
+        return results_data
 
 class BlogTagCategory(models.Model):
     _name = 'blog.tag.category'
@@ -145,7 +152,8 @@ class BlogTag(models.Model):
 class BlogPost(models.Model):
     _name = "blog.post"
     _description = "Blog Post"
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin', 'website.cover_properties.mixin']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin',
+        'website.cover_properties.mixin', 'website.searchable.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
 
@@ -297,7 +305,6 @@ class BlogPost(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        """See website_page._search_get_detail()"""
         with_description = options['displayDescription']
         with_date = options['displayDetail']
         blog = options.get('blog')

@@ -137,7 +137,10 @@ class Channel(models.Model):
         'mail.thread', 'rating.mixin',
         'mail.activity.mixin',
         'image.mixin',
-        'website.seo.metadata', 'website.published.multi.mixin']
+        'website.seo.metadata',
+        'website.published.multi.mixin',
+        'website.searchable.mixin',
+    ]
     _order = 'sequence, id'
 
     def _default_access_token(self):
@@ -834,7 +837,6 @@ class Channel(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        """See website_page._search_get_detail()"""
         with_description = options['displayDescription']
         with_date = options['displayDetail']
         my = options.get('my')

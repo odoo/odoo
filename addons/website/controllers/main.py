@@ -551,7 +551,7 @@ class Website(Home):
 
         pages = Page.search(domain, order=sort_order)
         if sortby != 'url' or not request.session.debug:
-            pages = pages.filtered(pages._is_most_specific_page)
+            pages = pages._get_most_specific_pages()
         pages_count = len(pages)
 
         step = 50
