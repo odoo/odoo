@@ -26,7 +26,7 @@ class FetchmailServer(models.Model):
     _inherit = 'fetchmail.server'
 
     l10n_it_is_pec = fields.Boolean('PEC server', help="If PEC Server, only mail from '...@pec.fatturapa.it' will be processed.")
-    l10n_it_last_uid = fields.Integer(string='Last message UID', default=1)
+    l10n_it_last_uid = fields.Integer(string='Last message UID IT', default=1)
 
     def _search_edi_invoice(self, att_name, send_state=False):
         """ Search sent l10n_it_edi fatturaPA invoices """
