@@ -497,11 +497,6 @@ td {
     background: rgba(0,0,0,0.2);
     color:#EEE;
 }
-.pos .pos-rightheader .header-button.confirm {
-    background: #359766;
-    color: white;
-    font-weight: bold;
-}
 
 /*  c) The notifications indicator */
 
@@ -3423,6 +3418,19 @@ td {
  display: none;
 }
 
+.cash-move-button {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    font-size: medium;
+    color: white;
+}
+
+.cash-move-button:hover {
+    background: rgb(104,69,95);
+    cursor: pointer;
+}
+
 /* Product Screen Search Bar */
 
 .search-bar-portal {
@@ -3598,49 +3606,6 @@ td {
         flex: 1;
         overflow: visible;
     }
-}
-
-.pos .cashbox-button {
-    height: 54px;
-    width: 54px;
-    font-weight: bold;
-    vertical-align: middle;
-    color: #555555;
-    border-radius: 0;
-    border: none;
-    border-right: 1px solid;
-    border-bottom: 1px solid;
-    border-color: #bfbfbf;
-    transition: all 150ms linear;
-}
-
-.pos  .cashbox-input {
-    line-height: 74px;
-    border: solid 1px rgb(202, 202, 202);
-    border-top-width: 0px;
-    cursor: pointer;
-    background: white;
-    display: flex;
-    justify-content: space-between;
-}
-
-.cashbox-input .input-title {
-    margin-left: 10px;
-    margin-right: 10px;
-    font-weight: bold;
-    font-size: 19px;
-}
-
-.cashbox-input .input-amount {
-    margin-left: 10px;
-    margin-right: 10px;
-    padding-right: 8px;
-}
-
-.cashbox-notes {
-    font-style: italic;
-    font-weight: 350;
-    width: 95%;
 }
 
 /**
