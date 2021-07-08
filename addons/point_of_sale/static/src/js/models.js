@@ -350,6 +350,15 @@ exports.PosModel = Backbone.Model.extend({
             }
        },
     },{
+        model: 'pos.bill',
+        fields: ['name', 'value'],
+        domain: function (self) {
+            return [['id', 'in', self.config.default_bill_ids]];
+        },
+        loaded: function (self, bills) {
+            self.bills = bills;
+        },
+      }, {
         model:  'res.partner',
         label: 'load_partners',
         fields: ['name','street','city','state_id','country_id','vat','lang',
@@ -1516,6 +1525,11 @@ exports.PosModel = Backbone.Model.extend({
                 ? Math.max(0, Math.ceil(Math.log(1.0 / precision) / Math.log(10)))
                 : 0;
         return value.toFixed(decimals);
+    },
+
+    round_decimals_currency(value) {
+        const decimals = this.currency.decimals;
+        return parseFloat(round_di(value, decimals).toFixed(decimals));
     },
 
     /**
