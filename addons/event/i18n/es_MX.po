@@ -954,7 +954,7 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Tu registro</span><br/>\n"
+"                    <span style=\"font-size: 10px;\">Su registro</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        ${object.name}\n"
 "                    </span>\n"
@@ -980,7 +980,7 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
 "                        Hola ${object.name},<br/>\n"
-"                        Nos emociona recordarte que el evento\n"
+"                        Nos emociona recordarle que el evento\n"
 "                        % if is_online:\n"
 "                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
@@ -990,7 +990,7 @@ msgstr ""
 "                    </div>\n"
 "                    <div>\n"
 "                        <br/>\n"
-"                        <strong>Agrega este evento a tu calendario de</strong>\n"
+"                        <strong>Agregue este evento a su calendario de</strong>\n"
 "                        <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text=${object.event_id.name}&amp;dates=${date_begin}/${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" alt=\"alt\" height=\"16\"/> Google</a>\n"
 "                        <a href=\"/event/${slug(object.event_id)}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" alt=\"alt\" height=\"16\"/> iCal/Outlook</a>\n"
 "                        <a href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title=${object.event_id.name}&amp;in_loc=${location}&amp;st=${format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss')}&amp;et=${format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\\'T\\'HHmmss')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
@@ -999,7 +999,7 @@ msgstr ""
 "                        <br/><br/>\n"
 "                    </div>\n"
 "                    <div>\n"
-"                        Confirmamos tu registro y esperamos verte ahí,<br/>\n"
+"                        Confirmamos su registro y esperamos verle ahí,<br/>\n"
 "                        <span style=\"color: #454748;\">\n"
 "                        -- <br/>\n"
 "                        % if event_organizer:\n"
@@ -1084,7 +1084,7 @@ msgstr ""
 "                    % if event_organizer:\n"
 "                    <div>\n"
 "                        <span style=\"font-weight:300;margin:10px 0px\">¿Preguntas sobre este evento?</span>\n"
-"                        <div>Por favor, contacta al organizador:</div>\n"
+"                        <div>Por favor, contacte al organizador:</div>\n"
 "                        <ul>\n"
 "                            <li>${event_organizer.name}</li>\n"
 "                            % if event_organizer.email\n"
@@ -1108,8 +1108,8 @@ msgstr ""
 "                    \n"
 "                    % if is_online:\n"
 "                    <div>\n"
-"                        <strong>Obtén la mejor experiencia móvil.</strong>\n"
-"                        <a href=\"/event\">Instala nuestra aplicación móvil</a>\n"
+"                        <strong>Obtenga la mejor experiencia móvil.</strong>\n"
+"                        <a href=\"/event\">Instale nuestra aplicación móvil</a>\n"
 "                    </div>\n"
 "                    % endif\n"
 "                </td></tr>\n"
@@ -1146,7 +1146,7 @@ msgstr ""
 "        Enviado por <a target=\"_blank\" href=\"${object.company_id.website}\" style=\"color: #875A7B;\">${object.company_id.name}</a>\n"
 "        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "        <br/>\n"
-"        Descubre <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">todos nuestros eventos</a>.\n"
+"        Descubra <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">todos nuestros eventos</a>.\n"
 "        % endif\n"
 "      </td></tr>\n"
 "    </table>\n"
@@ -1200,7 +1200,7 @@ msgstr "Estado de la actividad"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_type_icon
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Ícono de tipo de actividad"
+msgstr "Icono de tipo de actividad"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -2145,7 +2145,7 @@ msgstr "Seguidores (Partners)"
 #: model:ir.model.fields,help:event.field_event_event__activity_type_icon
 #: model:ir.model.fields,help:event.field_event_registration__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Ícono de Font Awesome ej. fa-tasks"
+msgstr "Icono de Font Awesome ej. fa-tasks"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2301,13 +2301,13 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_exception_icon
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_exception_icon
 msgid "Icon"
-msgstr "Ícono"
+msgstr "Icono"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_icon
 #: model:ir.model.fields,help:event.field_event_registration__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Ícono para indicar una actividad de excepción."
+msgstr "Icono para indicar una actividad de excepción."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction
@@ -3478,7 +3478,7 @@ msgid ""
 "This pipeline can be customized on the fly to fit your organizational needs."
 " For example, let's create a new stage."
 msgstr ""
-"Este pipeline puede ser personalizado sobre la marcha para adecuarse a sus "
+"Este flujo puede ser personalizado sobre la marcha para adecuarse a sus "
 "necesidades organizacionales. Por ejemplo, vamos a crear una nueva etapa. "
 
 #. module: event

@@ -461,7 +461,7 @@ class SaleOrder(models.Model):
                 }
             }
 
-    @api.onchange('pricelist_id')
+    @api.onchange('pricelist_id', 'order_line')
     def _onchange_pricelist_id(self):
         if self.order_line and self.pricelist_id and self._origin.pricelist_id != self.pricelist_id:
             self.show_update_pricelist = True
@@ -696,7 +696,7 @@ Reason(s) of this behavior could be:
             invoiceable_lines = order._get_invoiceable_lines(final)
 
             if not any(not line.display_type for line in invoiceable_lines):
-                raise self._nothing_to_invoice_error()
+                continue
 
             invoice_line_vals = []
             down_payment_section_added = False

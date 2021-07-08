@@ -2880,7 +2880,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test("drag and drop on month mode", async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         const calendar = await createCalendarView({
             arch:
@@ -2904,6 +2904,14 @@ QUnit.module('Views', {
         await testUtils.fields.editInput($input, "An event");
         await testUtils.dom.click($('.modal button.btn-primary'));
         await testUtils.nextTick();
+
+        await testUtils.dragAndDrop(
+            calendar.$('.fc-event:contains("event 1")'),
+            calendar.$('.fc-day-grid .fc-row:eq(3) .fc-day-top:eq(1)'),
+            { disableDrop: true },
+        );
+        assert.hasClass(calendar.$('.o_calendar_widget > [data-event-id="1"]'), 'dayGridMonth',
+            "should have dayGridMonth class");
 
         // Move event to another day (on 19 december)
         await testUtils.dragAndDrop(

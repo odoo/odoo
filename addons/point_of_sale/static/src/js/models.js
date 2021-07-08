@@ -2076,9 +2076,9 @@ exports.Orderline = Backbone.Model.extend({
         }
         return taxes;
     },
-    _map_tax_fiscal_position: function(tax) {
+    _map_tax_fiscal_position: function(tax, order = false) {
         var self = this;
-        var current_order = this.pos.get_order();
+        var current_order = order || this.pos.get_order();
         var order_fiscal_position = current_order && current_order.fiscal_position;
         var taxes = [];
 
@@ -2206,7 +2206,7 @@ exports.Orderline = Backbone.Model.extend({
                     else if(tax.amount_type === 'division')
                         incl_division_amount += tax.amount;
                     else if(tax.amount_type === 'fixed')
-                        incl_fixed_amount += quantity * tax.amount
+                        incl_fixed_amount += Math.abs(quantity) * tax.amount
                     else{
                         var tax_amount = self._compute_all(tax, base, quantity);
                         incl_fixed_amount += tax_amount;
@@ -2284,7 +2284,7 @@ exports.Orderline = Backbone.Model.extend({
             var tax = _.detect(taxes, function(t){
                 return t.id === el;
             });
-            product_taxes.push.apply(product_taxes, self._map_tax_fiscal_position(tax));
+            product_taxes.push.apply(product_taxes, self._map_tax_fiscal_position(tax, self.order));
         });
         product_taxes = _.uniq(product_taxes, function(tax) { return tax.id; });
 
@@ -2315,7 +2315,7 @@ exports.Orderline = Backbone.Model.extend({
             var new_included_taxes = [];
             var self = this;
             _(taxes).each(function(tax) {
-                var line_taxes = self._map_tax_fiscal_position(tax);
+                var line_taxes = self._map_tax_fiscal_position(tax, order);
                 if (line_taxes.length && line_taxes[0].price_include){
                     new_included_taxes = new_included_taxes.concat(line_taxes);
                 }

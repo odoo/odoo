@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Mandy Choy <mnc@odoo.com>, 2021
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # Ryan Wu <ryan.wu@dobtor.com>, 2021
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:41+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Ryan Wu <ryan.wu@dobtor.com>, 2021\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +24,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_count
 msgid "# Registrations"
-msgstr "# 註冊"
+msgstr "# 活動報名"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -91,7 +91,7 @@ msgstr "<i class=\"fa fa-ban mr-2\"/>發表"
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-check mr-2\"/>Registered"
-msgstr "<i class=\"fa fa-check mr-2\"/>註冊"
+msgstr "<i class=\"fa fa-check mr-2\"/>活動報名"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -152,6 +152,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-left text-primary mr-2\"/>\n"
 "                            <span>All Events</span>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-left text-primary mr-2\"/>\n"
+"                            <span>所有活動</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -159,6 +161,8 @@ msgid ""
 "<i class=\"fa fa-pencil mr-2\" role=\"img\" aria-label=\"Edit\" title=\"Edit"
 " event registration in backend\"/><em>Configure Event Tickets</em>"
 msgstr ""
+"<i class=\"fa fa-pencil mr-2\" role=\"img\" aria-label=\"Edit\" title=\"Edit"
+" event registration in backend\"/><em>設置活動票券</em>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -188,7 +192,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
 msgid "<span class=\"navbar-brand h4 my-0 mr-auto\">Events</span>"
-msgstr ""
+msgstr "<span class=\"navbar-brand h4 my-0 mr-auto\">活動</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
@@ -225,6 +229,9 @@ msgid ""
 "                            <i class=\"fa fa-check mr-2\"/>Registered\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_wevent_badge badge badge-success ml-3\">\n"
+"                            <i class=\"fa fa-check mr-2\"/>已報名\n"
+"                        </span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -232,11 +239,13 @@ msgid ""
 "<span class=\"py-2\">Tickets</span>\n"
 "                        <span class=\"close d-none\">×</span>"
 msgstr ""
+"<span class=\"py-2\">票卷</span>\n"
+"                        <span class=\"close d-none\">×</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<span class=\"text-dark font-weight-bold align-middle pr-2\">Qty</span>"
-msgstr ""
+msgstr "<span class=\"text-dark font-weight-bold align-middle pr-2\">數量</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -270,7 +279,7 @@ msgstr "關於我們"
 #: model:ir.model.fields,field_description:website_event.field_event_event__menu_register_cta
 #: model:ir.model.fields,field_description:website_event.field_event_type__menu_register_cta
 msgid "Add Register Button"
-msgstr ""
+msgstr "增添報名按鈕"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -291,7 +300,7 @@ msgstr "所有國家"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
 msgid "Ask questions to attendees when registering online"
-msgstr "線上註冊時向參加者提問"
+msgstr "線上報名時向參加者提問"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -330,8 +339,8 @@ msgid ""
 "Check this option to have menus for your event on the\n"
 "                                website: registrations, schedule, map, ..."
 msgstr ""
-"選中此選項可在網站上為您的活動提供 \n"
-" 選單：註冊、日程表、地圖..."
+"勾選此選項可在網站上為您的活動提供 \n"
+" 線上：報名、日程表、地圖..."
 
 #. module: website_event
 #. openerp-web
@@ -540,7 +549,7 @@ msgstr "活動備註"
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_type
 msgid "Event Template"
-msgstr ""
+msgstr "活動模板"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
@@ -798,7 +807,7 @@ msgstr "問題"
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 #, python-format
 msgid "Register"
-msgstr "註冊"
+msgstr "報名"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
@@ -981,7 +990,7 @@ msgstr "未公開"
 #: model_terms:ir.ui.view,arch_db:website_event.event_time
 #, python-format
 msgid "Upcoming Events"
-msgstr ""
+msgstr "即將舉辦的活動"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list

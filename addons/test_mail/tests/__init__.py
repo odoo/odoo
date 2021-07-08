@@ -10,8 +10,9 @@ from . import test_mail_mail
 from . import test_mail_channel
 from . import test_mail_channel_partner
 from . import test_mail_gateway
-from . import test_mail_template
 from . import test_mail_thread_internals
+from . import test_mail_template
+from . import test_mail_tools
 from . import test_message_management
 from . import test_message_post
 from . import test_message_track
