@@ -51,6 +51,7 @@
                 <field name="route_id" options="{'no_create': True, 'no_open': True}"/>
                 <button name="action_stock_replenishment_info" type="object" icon="fa-info" attrs="{'invisible': [('id', '=', False)]}"/>
                 <field name="trigger" optional="hide"/>
+                <field name="group_id" optional="hide" groups="stock.group_adv_location"/>
                 <field name="product_min_qty" optional="show"/>
                 <field name="product_max_qty" optional="show"/>
                 <field name="qty_multiple" optional="hide"/>
@@ -79,6 +80,7 @@
                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                 <field name="route_id" optional="hide"/>
                 <field name="trigger" optional="hide"/>
+                <field name="group_id" optional="hide" groups="stock.group_adv_location"/>
                 <field name="product_min_qty" optional="show"/>
                 <field name="product_max_qty" optional="show"/>
                 <field name="qty_multiple" optional="show"/>
@@ -98,6 +100,7 @@
                 <field name="product_id"/>
                 <field name="trigger"/>
                 <field name="product_category_id"/>
+                <field name="group_id" groups="stock.group_adv_location"/>
                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
                 <filter string="To Reorder" name="filter_to_reorder" domain="[('qty_to_order', '&gt;', 0.0)]"/>
@@ -122,6 +125,7 @@
                 <field name="name" string="Reordering Rule"/>
                 <field name="product_id"/>
                 <field name="trigger"/>
+                <field name="group_id" groups="stock.group_adv_location"/>
                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
