@@ -40,9 +40,6 @@ ActionDialog.props = {
  * The "ActionDialog" class should get exported from this file when the cleaning will occur.
  */
 class LegacyAdaptedActionDialog extends ActionDialog {
-    constructor(...args) {
-        super(...args);
-    }
     setup() {
         super.setup();
         const actionProps = this.props && this.props.actionProps;

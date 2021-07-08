@@ -6,7 +6,14 @@ import core from "web.core";
 import testUtils from "web.test_utils";
 import Widget from "web.Widget";
 import { makeTestEnv } from "../../helpers/mock_env";
-import {hushConsole, legacyExtraNextTick, patchWithCleanup} from "../../helpers/utils";
+import {
+    click,
+    hushConsole,
+    legacyExtraNextTick,
+    makeDeferred,
+    patchWithCleanup,
+    triggerEvents,
+} from "../../helpers/utils";
 import {
     createWebClient,
     doAction,
@@ -97,7 +104,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("properly handle case when action id does not exist", async (assert) => {
         assert.expect(2);
         const webClient = await createWebClient({ serverData });
-        patchWithCleanup(window, {console: hushConsole}, {pure: true});
+        patchWithCleanup(window, { console: hushConsole }, { pure: true });
         patchWithCleanup(webClient.env.services.notification, {
             add(message) {
                 assert.strictEqual(message, "No action with id '4448' could be found");
@@ -545,4 +552,76 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsN(document.body, ".modal .o_form_view", 2);
         }
     );
+
+    QUnit.test("bootstrap tooltip in dialog action auto destroy", async (assert) => {
+        assert.expect(2);
+
+        const mockRPC = (route, args) => {
+            if (route === "/web/dataset/call_button") {
+                return false;
+            }
+        };
+
+        serverData.views["partner,3,form"] = /*xml*/ `
+            <form>
+                <field name="display_name" />
+                <footer>
+                    <button name="echoes" type="object" string="Echoes" help="echoes"/>
+                </footer>
+            </form>
+        `;
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        await doAction(webClient, 25);
+
+        const tooltipProm = makeDeferred();
+        $(webClient.el).one("shown.bs.tooltip", () => {
+            tooltipProm.resolve();
+        });
+
+        triggerEvents(webClient.el, ".modal footer button", ["mouseover", "focusin"]);
+        await tooltipProm;
+        // check on webClient dom
+        assert.containsOnce(webClient.el, ".tooltip");
+        await doAction(webClient, {
+            type: "ir.actions.act_window_close",
+        });
+        // check on the whole DOM
+        assert.containsNone(document.body, ".tooltip");
+    });
+
+    QUnit.test("bootstrap tooltip destroyed on click", async (assert) => {
+        assert.expect(2);
+
+        const mockRPC = (route, args) => {
+            if (route === "/web/dataset/call_button") {
+                return false;
+            }
+        };
+
+        serverData.views["partner,666,form"] = /*xml*/ `
+            <form>
+                <header>
+                    <button name="echoes" type="object" string="Echoes" help="echoes"/>
+                </header>
+                <field name="display_name" />
+            </form>
+        `;
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        await doAction(webClient, 24);
+
+        const tooltipProm = makeDeferred();
+        $(webClient.el).one("shown.bs.tooltip", () => {
+            tooltipProm.resolve();
+        });
+
+        triggerEvents(webClient.el, ".o_form_statusbar button", ["mouseover", "focusin"]);
+        await tooltipProm;
+        // check on webClient DOM
+        assert.containsOnce(webClient.el, ".tooltip");
+        await click(webClient.el, ".o_content");
+        // check on the whole DOM
+        assert.containsNone(document.body, ".tooltip");
+    });
 });

@@ -11,7 +11,7 @@ import { useService } from "../core/service_hook";
 import { ViewNotFoundError } from "../webclient/actions/action_service";
 import { cleanDomFromBootstrap, wrapSuccessOrFail, mapDoActionOptionAPI } from "./utils";
 
-const { Component, tags } = owl;
+const { Component, tags, hooks } = owl;
 
 const warningDialogBodyTemplate = tags.xml`<t t-esc="props.message"/>`;
 
@@ -58,6 +58,9 @@ class ActionAdapter extends ComponentAdapter {
             },
             () => []
         );
+        hooks.useExternalListener(window, "click", () => {
+            cleanDomFromBootstrap();
+        });
     }
 
     get actionId() {
