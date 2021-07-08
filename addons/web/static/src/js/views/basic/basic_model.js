@@ -745,11 +745,11 @@ var BasicModel = AbstractModel.extend({
     _isEmpty(dataPointID) {
         const dataPoint = this.localData[dataPointID];
         if (dataPoint.type === 'list') {
-            const hasRecords = dataPoint.count === 0;
-            if (dataPoint.groupedBy.length) {
-                return dataPoint.data.length > 0 && hasRecords;
+            const isEmpty = dataPoint.count === 0;
+            if (dataPoint.groupedBy.length && !dataPoint.openGroupByDefault) {
+                return dataPoint.data.length > 0 && isEmpty;
             } else {
-                return hasRecords;
+                return isEmpty;
             }
         }
         return false;

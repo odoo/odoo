@@ -658,6 +658,7 @@
 
     SampleServer.MAIN_RECORDSET_SIZE = 16;
     SampleServer.SUB_RECORDSET_SIZE = 5;
+    SampleServer.SEARCH_READ_LIMIT = 7;
     SampleServer.SEARCH_READ_LIMIT = 10;
 
     SampleServer.MAX_FLOAT = 100;
