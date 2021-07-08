@@ -166,8 +166,10 @@ class Applicant(models.Model):
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid')
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing')
     application_count = fields.Integer(compute='_compute_application_count', help='Applications with the same email')
-    meeting_count = fields.Integer(compute='_compute_meeting_count', help='Meeting Count')
     refuse_reason_id = fields.Many2one('hr.applicant.refuse.reason', string='Refuse Reason', tracking=True)
+    meeting_ids = fields.One2many('calendar.event', 'applicant_id', 'Meetings')
+    meeting_display_text = fields.Char(compute='_compute_meeting_display')
+    meeting_display_date = fields.Date(compute='_compute_meeting_display')
 
     @api.depends('date_open', 'date_closed')
     def _compute_day(self):
@@ -197,18 +199,30 @@ class Applicant(models.Model):
             applicant.application_count = application_data_mapped.get(applicant.email_from, 1) - 1
         (self - applicants).application_count = False
 
-    def _compute_meeting_count(self):
-        if self.ids:
-            meeting_data = self.env['calendar.event'].sudo().read_group(
-                [('applicant_id', 'in', self.ids)],
-                ['applicant_id'],
-                ['applicant_id']
-            )
-            mapped_data = {m['applicant_id'][0]: m['applicant_id_count'] for m in meeting_data}
-        else:
-            mapped_data = dict()
-        for applicant in self:
-            applicant.meeting_count = mapped_data.get(applicant.id, 0)
+    @api.depends_context('lang')
+    @api.depends('meeting_ids', 'meeting_ids.start')
+    def _compute_meeting_display(self):
+        applicant_with_meetings = self.filtered('meeting_ids')
+        (self - applicant_with_meetings).write({
+            'meeting_display_text': _('No Meeting'),
+            'meeting_display_date': ''
+        })
+        today = fields.Date.today()
+        for applicant in applicant_with_meetings:
+            count = len(applicant.meeting_ids)
+            dates = applicant.meeting_ids.mapped('start')
+            min_date, max_date = min(dates).date(), max(dates).date()
+            if min_date >= today:
+                applicant.meeting_display_date = min_date
+            else:
+                applicant.meeting_display_date = max_date
+            if count == 1:
+                applicant.meeting_display_text = _('1 Meeting')
+            elif applicant.meeting_display_date >= today:
+                applicant.meeting_display_text = _('Next Meeting')
+            else:
+                applicant.meeting_display_text = _('Last Meeting')
+
 
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment'].read_group(
