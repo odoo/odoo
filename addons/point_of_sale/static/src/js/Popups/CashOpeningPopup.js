@@ -1,10 +1,7 @@
 odoo.define('point_of_sale.CashOpeningPopup', function(require) {
     'use strict';
 
-    const { useState, useRef} = owl.hooks;
-    const { useListener } = require('web.custom_hooks');
-    const NumberBuffer = require('point_of_sale.NumberBuffer');
-    const PosComponent = require('point_of_sale.PosComponent');
+    const { useState, useRef } = owl.hooks;
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
 
@@ -12,52 +9,44 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
     class CashOpeningPopup extends AbstractAwaitablePopup {
         constructor() {
             super(...arguments);
-            this.cashBoxValue = this.env.pos.bank_statement.balance_start || 0;;
-            this.currency = this.env.pos.currency;
+            this.manualInputCashCount = null;
             this.state = useState({
                 notes: "",
+                openingCash: this.env.pos.bank_statement.balance_start || 0,
             });
-            useListener('numpad-click-input', this._updateCashAmount);
-            useListener('update-cash', this._updateCashAmount);
-            this.inputRef = useRef('input');
-            NumberBuffer.use({
-                nonKeyboardInputEvent: 'numpad-click-input',
-                triggerAtInput: 'update-cash',
-                useWithBarcode: false,
-            });
+            this.moneyDetailsRef = useRef('moneyDetails');
         }
-
+        openDetailsPopup() {
+            if (this.moneyDetailsRef.comp.isClosed()){
+                this.moneyDetailsRef.comp.openPopup();
+                this.state.openingCash = 0;
+                this.state.notes = "";
+                if (this.manualInputCashCount) {
+                    this.moneyDetailsRef.comp.reset();
+                }
+            }
+        }
         startSession() {
-            this.env.pos.bank_statement.balance_start = parseFloat(this.cashBoxValue);
+            this.env.pos.bank_statement.balance_start = this.state.openingCash;
             this.env.pos.pos_session.state = 'opened';
             this.rpc({
                    model: 'pos.session',
                     method: 'set_cashbox_pos',
-                    args: [this.env.pos.pos_session.id, parseFloat(this.cashBoxValue), this.state.notes],
+                    args: [this.env.pos.pos_session.id, this.state.openingCash, this.state.notes],
                 });
-            this.trigger('close-popup');
+            this.cancel(); // close popup
         }
-
-        sendInput(value) {
-            this.trigger('numpad-click-input', { value });
-        }
-
-        async _updateCashAmount(event) {
-            let value = event.detail.value ? event.detail.value : event.detail.key
-            if(value !== "Backspace") {
-                if(this.cashBoxValue === 0) {
-                    this.cashBoxValue = value !== "."? value: this.cashBoxValue + value;
-                } else {
-                    this.cashBoxValue += value;
-                }
-            } else {
-                if(this.cashBoxValue.length > 1) {
-                    this.cashBoxValue = this.cashBoxValue.substring(0, this.cashBoxValue.length -1)
-                } else {
-                    this.cashBoxValue = 0;
-                }
+        updateCashOpening(event) {
+            const { total, moneyDetailsNotes } = event.detail;
+            this.state.openingCash = total;
+            if (moneyDetailsNotes) {
+                this.state.notes = moneyDetailsNotes;
             }
-            this.render();
+            this.manualInputCashCount = false;
+        }
+        handleInputChange() {
+            this.manualInputCashCount = true;
+            this.state.notes = "";
         }
     }
 

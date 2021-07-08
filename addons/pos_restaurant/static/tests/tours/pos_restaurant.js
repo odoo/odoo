@@ -15,6 +15,7 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
     FloorScreen.do.clickTable('T5');
 
     // Create first order
+    ProductScreen.do.confirmOpeningPopup();
     ProductScreen.do.clickDisplayedProduct('Coca-Cola');
     ProductScreen.check.selectedOrderlineHas('Coca-Cola');
     ProductScreen.do.clickDisplayedProduct('Water');
