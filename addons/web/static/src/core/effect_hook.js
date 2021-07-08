@@ -4,8 +4,8 @@ const { onMounted, onWillPatch, onPatched, onWillUnmount } = owl.hooks;
 const NO_OP = () => {};
 /**
  * @callback Effect
- * @param {...any} dependencies the dependecies computed by computeDependencies
- * @returns {()=>void)?} a cleanup function that reverses the side
+ * @param {...any} dependencies the dependencies computed by computeDependencies
+ * @returns {void|(()=>void)} a cleanup function that reverses the side
  *      effects of the effect callback.
  */
 
