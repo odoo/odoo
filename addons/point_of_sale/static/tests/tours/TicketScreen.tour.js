@@ -13,6 +13,7 @@ odoo.define('point_of_sale.tour.TicketScreen', function (require) {
 
     startSteps();
 
+    ProductScreen.do.confirmOpeningPopup();
     ProductScreen.do.clickHomeCategory();
     ProductScreen.exec.addOrderline('Desk Pad', '1', '2');
     ProductScreen.do.clickCustomerButton();

@@ -15,6 +15,7 @@ odoo.define('pos_restaurant.tour.SplitBillScreen', function (require) {
     startSteps();
 
     FloorScreen.do.clickTable('T2');
+    ProductScreen.do.confirmOpeningPopup();
     ProductScreen.exec.addOrderline('Water', '5', '2', '10.0');
     ProductScreen.exec.addOrderline('Minute Maid', '3', '2', '6.0');
     ProductScreen.exec.addOrderline('Coca-Cola', '1', '2', '2.0');

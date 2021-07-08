@@ -82,7 +82,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(refund.state, 'paid', "The refund is not marked as paid")
         self.assertTrue(refund.payment_ids.payment_method_id.is_cash_count, msg='There should only be one payment and paid in cash.')
 
-        current_session.action_pos_session_closing_control()
+        total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
+        current_session.post_closing_cash_details(total_cash_payment)
+        current_session.close_session_from_ui()
         self.assertEqual(current_session.state, 'closed', msg='State of current session should be closed.')
 
     def test_order_refund_lots(self):
@@ -601,6 +603,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         current_session = self.pos_config.current_session_id
         num_starting_orders = len(current_session.order_ids)
 
+        current_session.set_cashbox_pos(0, None)
+
         untax, atax = self.compute_tax(self.led_lamp, 0.9)
         carrot_order = {'data':
           {'amount_paid': untax + atax,
@@ -708,7 +712,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(num_starting_orders + 1, len(current_session.order_ids), "Submitted order not encoded")
 
         # I close the session
-        current_session.action_pos_session_closing_control()
+        total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
+        current_session.post_closing_cash_details(total_cash_payment)
+        current_session.close_session_from_ui()
         self.assertEqual(current_session.state, 'closed', "Session was not properly closed")
         self.assertFalse(self.pos_config.current_session_id, "Current session not properly recomputed")
 
@@ -725,7 +731,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(len(rescue_session.order_ids), 2, "Rescue session does not contain both orders")
 
         # I close the rescue session
-        rescue_session.action_pos_session_closing_control()
+        total_cash_payment = sum(rescue_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
+        rescue_session.post_closing_cash_details(total_cash_payment)
+        rescue_session.close_session_from_ui()
         self.assertEqual(rescue_session.state, 'closed', "Rescue session was not properly closed")
 
     def test_order_to_payment_currency(self):
@@ -988,6 +996,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # delete tax
         dummy_50_perc_tax.unlink()
+
+        total_cash_payment = sum(pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
+        pos_session.post_closing_cash_details(total_cash_payment)
 
         # close session (should not fail here)
         # We don't call `action_pos_session_closing_control` to force the failed

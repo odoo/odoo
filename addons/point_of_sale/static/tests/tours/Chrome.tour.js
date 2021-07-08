@@ -12,6 +12,7 @@ odoo.define('point_of_sale.tour.Chrome', function (require) {
     startSteps();
 
     // Order 1 is at Product Screen
+    ProductScreen.do.confirmOpeningPopup();
     ProductScreen.do.clickHomeCategory();
     ProductScreen.exec.addOrderline('Desk Pad', '1', '2', '2.0');
     Chrome.do.clickTicketButton();

@@ -68,6 +68,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.pos_config.open_session_cb(check_coa=False)
         current_session = self.pos_config.current_session_id
         self.cash_journal.loss_account_id = self.account
+        current_session.set_cashbox_pos(0, None)
 
         # I create a PoS order with 1 unit of New product at 450 EUR
         self.pos_order_pos0 = self.PosOrder.create({
@@ -108,7 +109,8 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         # I close the current session to generate the journal entries
         current_session_id = self.pos_config.current_session_id
         current_session_id._check_pos_session_balance()
-        current_session_id.action_pos_session_close()
+        current_session_id.post_closing_cash_details(450.0)
+        current_session_id.close_session_from_ui()
         self.assertEqual(current_session_id.state, 'closed', 'Check that session is closed')
 
         # Check if there is account_move in the order.
@@ -147,6 +149,8 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
         self.pos_config.module_account = True
         self.pos_config.open_session_cb(check_coa=False)
+        pos_session = self.pos_config.current_session_id
+        pos_session.set_cashbox_pos(0, None)
 
         pos_order_values = {
             'company_id': self.company.id,
@@ -186,7 +190,8 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
         # validate the session
         current_session_id = self.pos_config.current_session_id
-        current_session_id.action_pos_session_validate()
+        current_session_id.post_closing_cash_details(7 * 450.0)
+        current_session_id.close_session_from_ui()
 
         # check the anglo saxon move lines
         # with uninvoiced orders, the account_move field of pos.order is empty.
@@ -212,10 +217,6 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
         # Create the customer invoice
         pos_order_pos0.action_pos_order_invoice()
-
-        # validate the session
-        current_session_id = self.pos_config.current_session_id
-        current_session_id.action_pos_session_validate()
 
         # check the anglo saxon move lines
         line = pos_order_pos0.account_move.line_ids.filtered(lambda l: l.debit and l.account_id == self.category.property_account_expense_categ_id)

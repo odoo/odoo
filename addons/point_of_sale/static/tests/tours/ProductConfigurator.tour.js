@@ -10,6 +10,7 @@ odoo.define('point_of_sale.tour.ProductConfigurator', function (require) {
     // when finished, steps can be taken from getSteps
     startSteps();
 
+    ProductScreen.do.confirmOpeningPopup();
     // Go by default to home category
     ProductScreen.do.clickHomeCategory();
 

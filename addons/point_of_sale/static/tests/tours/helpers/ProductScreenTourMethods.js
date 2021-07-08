@@ -140,6 +140,9 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 },
             ];
         }
+        confirmOpeningPopup() {
+            return [{ trigger: '.opening-cash-control .button:contains("Open session")' }];
+        }
     }
 
     class Check {

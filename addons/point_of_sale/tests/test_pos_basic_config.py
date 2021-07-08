@@ -757,39 +757,24 @@ class TestPoSBasicConfig(TestPoSCommon):
 
     def test_cash_register_if_no_order(self):
         # Process one order with product3
-        self.open_new_session()
+        self.open_new_session(0)
         session = self.pos_session
         order_data = self.create_ui_order_data([(self.product3, 1)])
         amount_paid = order_data['data']['amount_paid']
         self.env['pos.order'].create_from_ui([order_data])
-        session.action_pos_session_closing_control()
+        session.post_closing_cash_details(amount_paid)
+        session.close_session_from_ui()
 
         cash_register = session.cash_register_id
         self.assertEqual(cash_register.balance_start, 0)
         self.assertEqual(cash_register.balance_end_real, amount_paid)
 
-        # Open/Close session without any order
-        self.open_new_session()
+        # Open/Close session without any order in cash control
+        self.open_new_session(amount_paid)
         session = self.pos_session
-        session.action_pos_session_closing_control()
+        session.post_closing_cash_details(amount_paid)
+        session.close_session_from_ui()
         cash_register = session.cash_register_id
-        self.assertEqual(cash_register.balance_start, amount_paid)
-        self.assertEqual(cash_register.balance_end_real, amount_paid)
-        self.assertEqual(self.config.last_session_closing_cash, amount_paid)
-
-        # Open/Close session with cash control and without any order
-        self.config.cash_control = True
-        self.open_new_session()
-        session = self.pos_session
-        session.set_cashbox_pos(amount_paid, False)
-        session.action_pos_session_closing_control()
-        self.env['account.bank.statement.cashbox'].create([{
-            'start_bank_stmt_ids': [],
-            'end_bank_stmt_ids': [(4, session.cash_register_id.id,)],
-            'cashbox_lines_ids': [(0, 0, {'number': 1, 'coin_value': amount_paid})],
-            'is_a_template': False
-        }])
-        session.action_pos_session_validate()
         self.assertEqual(cash_register.balance_start, amount_paid)
         self.assertEqual(cash_register.balance_end_real, amount_paid)
         self.assertEqual(self.config.last_session_closing_cash, amount_paid)
@@ -801,10 +786,9 @@ class TestPoSBasicConfig(TestPoSCommon):
             self.config = pos_data['config']
             self.open_new_session()
             session = self.pos_session
-            self.assertEqual(session.cash_register_id.balance_start, pos_data['amount_paid'])
             session.set_cashbox_pos(pos_data['amount_paid'], False)
+            self.assertEqual(session.cash_register_id.balance_start, pos_data['amount_paid'])
 
-        self.config.cash_control = True
         pos01_config = self.config
         pos02_config = pos01_config.copy()
         pos01_data = {'config': pos01_config, 'p_qty': 1, 'amount_paid': 0}
@@ -818,14 +802,8 @@ class TestPoSBasicConfig(TestPoSCommon):
             pos_data['amount_paid'] += order_data['data']['amount_paid']
             self.env['pos.order'].create_from_ui([order_data])
 
-            session.action_pos_session_closing_control()
-            self.env['account.bank.statement.cashbox'].create([{
-                'start_bank_stmt_ids': [],
-                'end_bank_stmt_ids': [(4, session.cash_register_id.id,)],
-                'cashbox_lines_ids': [(0, 0, {'number': 1, 'coin_value': pos_data['amount_paid']})],
-                'is_a_template': False
-            }])
-            session.action_pos_session_validate()
+            session.post_closing_cash_details(pos_data['amount_paid'])
+            session.close_session_from_ui()
 
         open_and_check(pos01_data)
         open_and_check(pos02_data)

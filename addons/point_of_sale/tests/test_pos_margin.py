@@ -385,7 +385,9 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(self.pos_session.order_ids[1].margin_percent, 0)
 
         # close session
-        self.pos_session.action_pos_session_validate()
+        total_cash_payment = sum(self.pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
+        self.pos_session.post_closing_cash_details(total_cash_payment)
+        self.pos_session.close_session_from_ui()
 
         # check margins
         self.assertEqual(self.pos_session.order_ids[0].margin, 26)

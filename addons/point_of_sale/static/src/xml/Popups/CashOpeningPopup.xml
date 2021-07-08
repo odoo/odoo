@@ -1,57 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-
     <t t-name="CashOpeningPopup" owl="1">
         <div role="dialog" class="modal-dialog">
-            <div class="popup popup-confirm">
+            <div class="popup opening-cash-control">
                 <header class="title drag-handle">
-                    Start Cash Drawer
+                    OPENING CASH CONTROL
                 </header>
                 <main class="body">
-                    <div class="cashbox-input">
-                        <span class="input-title">
-                             Starting Cash
-                        </span>
-
-                        <span class="input-amount">
-                            <span t-if="currency.position === 'before'">
-                                <t t-esc="currency.symbol"/><span> </span>
-                            </span>
-                            <t t-esc="cashBoxValue"/>
-                            <span t-if="currency.position === 'after'">
-                                <span> </span><t t-esc="currency.symbol"/>
-                            </span>
-                        </span>
-                    </div><br/>
-                    <textarea style="line-height: 20px;" rows="3"
-                           placeholder="Notes" class="cashbox-input cashbox-notes"
-                           t-model="state.notes" t-ref="input"/><br/><br/>
-                    <div>
-                        <button class="input-button number-char cashbox-button" t-on-click="sendInput('1')">1</button>
-                        <button class="input-button number-char cashbox-button" t-on-click="sendInput('2')">2</button>
-                        <button class="input-button number-char cashbox-button" t-on-click="sendInput('3')">3</button>
-                        <br/>
-                        <button class="input-button number-char cashbox-button" t-on-click="sendInput('4')">4</button>
-                        <button class="input-button number-char cashbox-button" t-on-click="sendInput('5')">5</button>
-                        <button class="input-button number-char cashbox-button" t-on-click="sendInput('6')">6</button>
-                        <br />
-                        <button class="input-button number-char cashbox-button" t-on-click="sendInput('7')">7</button>
-                        <button class="input-button number-char cashbox-button" t-on-click="sendInput('8')">8</button>
-                        <button class="input-button number-char cashbox-button" t-on-click="sendInput('9')">9</button>
-                        <br/>
-                        <button class="input-button number-char cashbox-button" t-on-click="sendInput('.')">.</button>
-                        <button class="input-button number-char cashbox-button" t-on-click="sendInput('0')">0</button>
-                        <button class="input-button number-char cashbox-button" t-on-click="sendInput('Backspace')">
-                            <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png"
-                            width="24" height="21" alt="Backspace" />
-                        </button>
-                    </div><br/>
+                    <div class="opening-cash-section">
+                        <span class="info-title">Opening cash</span>
+                        <div class="cash-input-sub-section" t-on-input="handleInputChange()">
+                            <input class="pos-input" type="number" t-model.number="state.openingCash"/>
+                            <div class="button icon" t-on-click="openDetailsPopup()">
+                                <i class="fa fa-calculator" role="img" title="Open the money details popup"/>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea placeholder="Notes" class="opening-cash-notes" t-model="state.notes"/>
                 </main>
                 <footer class="footer">
-                    <button style="height: 50px; margin: 22px 22px 22px 0px" t-model="state.notes" class="button cashbox-button" t-on-click="startSession()">Start Drawer</button>
+                    <div class="button" t-on-click="startSession()">Open session</div>
                 </footer>
             </div>
+            <MoneyDetailsPopup t-ref="moneyDetails" t-on-money-details-validated="updateCashOpening"/>
         </div>
     </t>
-
 </templates>

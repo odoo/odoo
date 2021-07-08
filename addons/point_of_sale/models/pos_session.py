@@ -49,6 +49,7 @@ class PosSession(models.Model):
     sequence_number = fields.Integer(string='Order Sequence Number', help='A sequence number that is incremented with each order', default=1)
     login_number = fields.Integer(string='Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session', default=0)
 
+    opening_notes = fields.Text(string="Opening Notes")
     cash_control = fields.Boolean(compute='_compute_cash_all', string='Has Cash Control', compute_sudo=True)
     cash_journal_id = fields.Many2one('account.journal', compute='_compute_cash_all', string='Cash Journal', store=True)
     cash_register_id = fields.Many2one('account.bank.statement', compute='_compute_cash_all', string='Cash Register', store=True)
@@ -253,7 +254,7 @@ class PosSession(models.Model):
     def action_pos_session_open(self):
         # second browse because we need to refetch the data from the DB for cash_register_id
         # we only open sessions that haven't already been opened
-        for session in self.filtered(lambda session: session.state in ('new_session', 'opening_control')):
+        for session in self.filtered(lambda session: session.state == 'opening_control'):
             values = {}
             if not session.start_at:
                 values['start_at'] = fields.Datetime.now()
@@ -277,6 +278,18 @@ class PosSession(models.Model):
             session.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
             if not session.config_id.cash_control:
                 return session.action_pos_session_close(balancing_account, amount_to_balance)
+            # If the session is in rescue, we only compute the payments in the cash register
+            # It is not yet possible to close a rescue session through the front end, see `close_session_from_ui`
+            if session.rescue and session.config_id.cash_control:
+                default_cash_payment_method_id = self.payment_method_ids.filtered(lambda pm: pm.type == 'cash')[0]
+                orders = self.order_ids.filtered(lambda o: o.state == 'paid' or o.state == 'invoiced')
+                total_cash = sum(
+                    orders.payment_ids.filtered(lambda p: p.payment_method_id == default_cash_payment_method_id).mapped('amount')
+                ) + self.cash_register_balance_start
+
+                session.cash_register_id.balance_end_real = total_cash
+
+            return session.action_pos_session_validate(balancing_account, amount_to_balance)
 
     def _check_pos_session_balance(self):
         for session in self:
@@ -284,29 +297,16 @@ class PosSession(models.Model):
                 if (statement != session.cash_register_id) and (statement.balance_end != statement.balance_end_real):
                     statement.write({'balance_end_real': statement.balance_end})
 
-    def action_pos_session_validate(self):
+    def action_pos_session_validate(self, balancing_account=False, amount_to_balance=0):
         self._check_pos_session_balance()
-        return self.action_pos_session_close()
+        return self.action_pos_session_close(balancing_account, amount_to_balance)
 
     def action_pos_session_close(self, balancing_account=False, amount_to_balance=0):
         # Session without cash payment method will not have a cash register.
         # However, there could be other payment methods, thus, session still
         # needs to be validated.
         self._check_bank_statement_state()
-        if not self.cash_register_id:
-            return self._validate_session(balancing_account, amount_to_balance)
-
-        if self.cash_control and abs(self.cash_register_difference) > self.config_id.amount_authorized_diff:
-            # Only pos manager can close statements with cash_register_difference greater than amount_authorized_diff.
-            if not self.user_has_groups("point_of_sale.group_pos_manager"):
-                raise UserError(_(
-                    "Your ending balance is too different from the theoretical cash closing (%.2f), "
-                    "the maximum allowed is: %.2f. You can contact your manager to force it."
-                ) % (self.cash_register_difference, self.config_id.amount_authorized_diff))
-            else:
-                return self._warning_balance_closing()
-        else:
-            return self._validate_session(balancing_account, amount_to_balance)
+        return self._validate_session(balancing_account, amount_to_balance)
 
     def _validate_session(self, balancing_account=False, amount_to_balance=0):
         self.ensure_one()
@@ -376,6 +376,142 @@ class PosSession(models.Model):
             'res_id': wizard.id,
             'target': 'new',
             'context': {**self.env.context, 'active_ids': self.ids, 'active_model': 'pos.session'},
+        }
+
+    def close_session_from_ui(self):
+        """Calling this method will try to close the session.
+
+        If successful, it returns {'successful': True}
+        Otherwise, it returns {'successful': False, 'message': str, 'redirect': bool}.
+        'redirect' is a boolean used to know whether we redirect the user to the back end or not.
+        When necessary, error (i.e. UserError, AccessError) is raised which should redirect the user to the back end.
+        """
+        self.ensure_one()
+        # Even if this is called in `post_closing_cash_details`, we need to call this here too for case
+        # where cash_control = False
+        check_closing_session = self._cannot_close_session()
+        if check_closing_session:
+            return check_closing_session
+
+        # For now we won't simply do
+        # self._check_pos_session_balance()
+        # self._check_bank_statement_state()
+        # validate_result = self._validate_session()
+        # because some functions are being used and overridden in other modules...
+        # so we'll try to use the original flow as of now for the moment
+        validate_result = self.action_pos_session_closing_control()
+
+        # If an error is raised, the user will still be redirected to the back end to manually close the session.
+        # If the return result is a dict, this means that normally we have a redirection or a wizard => we redirect the user
+        if isinstance(validate_result, dict):
+            # imbalance accounting entry
+            return {
+                'successful': False,
+                'message': validate_result.get('name'),
+                'redirect': True
+            }
+
+        self.message_post(body='Point of Sale Session ended')
+
+        return {'successful': True}
+
+    def update_closing_control_state_session(self, notes):
+        # Prevent the session to be opened again.
+        self.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
+        self._post_cash_details_message('Closing', self.cash_register_difference, notes)
+
+    def post_closing_cash_details(self, counted_cash):
+        """
+        Calling this method will try store the cash details during the session closing.
+
+        :param counted_cash: float, the total cash the user counted from its cash register
+        If successful, it returns {'successful': True}
+        Otherwise, it returns {'successful': False, 'message': str, 'redirect': bool}.
+        'redirect' is a boolean used to know whether we redirect the user to the back end or not.
+        When necessary, error (i.e. UserError, AccessError) is raised which should redirect the user to the back end.
+        """
+        self.ensure_one()
+        check_closing_session = self._cannot_close_session()
+        if check_closing_session:
+            return check_closing_session
+
+        if not self.cash_register_id:
+            # The user is blocked anyway, this user error is mostly for developers that try to call this function
+            raise UserError(_("There is no cash register in this session."))
+
+        self.cash_register_id.balance_end_real = counted_cash
+
+        # No need to check cash_control because it should be True at this point
+        if self.config_id.set_maximum_difference and abs(self.cash_register_difference) > self.config_id.amount_authorized_diff:
+            if not self.user_has_groups("point_of_sale.group_pos_manager"):
+                # We are not raising this as an error because we want the details to persist.
+                # It will become the starting point on next attempt to close the session.
+                return {
+                    'successful': False,
+                    'message': _(
+                        "Your ending balance is too different from the theoretical cash closing (%.2f), "
+                        "the maximum allowed is: %.2f.\n You can contact your manager to force it."
+                    ) % (self.cash_register_difference, self.config_id.amount_authorized_diff),
+                    'redirect': False
+                }
+
+        return {'successful': True}
+
+    def _cannot_close_session(self):
+        """
+        Add check in this method if you want to return or raise an error when trying to either post cash details
+        or close the session. Raising an error will always redirect the user to the back end.
+        It should return {'successful': False, 'message': str, 'redirect': bool} if we can't close the session
+        """
+        if any(order.state == 'draft' for order in self.order_ids):
+            return {'successful': False, 'message': _("You cannot close the POS when orders are still in draft"), 'redirect': False}
+        if self.state == 'closed':
+            return {'successful': False, 'message': _("This session is already closed."), 'redirect': True}
+
+    def get_closing_control_data(self):
+        self.ensure_one()
+        orders = self.order_ids.filtered(lambda o: o.state == 'paid' or o.state == 'invoiced')
+        payments = orders.payment_ids.filtered(lambda p: p.payment_method_id.type != "pay_later")
+        pay_later_payments = orders.payment_ids - payments
+        cash_payment_method_ids = self.payment_method_ids.filtered(lambda pm: pm.type == 'cash')
+        default_cash_payment_method_id = cash_payment_method_ids[0] if cash_payment_method_ids else None
+        total_default_cash_payment_amount = sum(payments.filtered(lambda p: p.payment_method_id == default_cash_payment_method_id).mapped('amount')) if default_cash_payment_method_id else 0
+        other_payment_method_ids = self.payment_method_ids - default_cash_payment_method_id if default_cash_payment_method_id else self.payment_method_ids
+        cash_in_count = 0
+        cash_out_count = 0
+        cash_in_out_list = []
+        for cash_move in self.cash_register_id.line_ids.sorted('create_date'):
+            if cash_move.amount > 0:
+                cash_in_count += 1
+                name = f'Cash in {cash_in_count}'
+            else:
+                cash_out_count += 1
+                name = f'Cash out {cash_out_count}'
+            cash_in_out_list.append({
+                'name': cash_move.payment_ref if cash_move.payment_ref else name,
+                'amount': cash_move.amount
+            })
+
+        return {
+            'orders_details': {
+                'quantity': len(orders),
+                'amount': sum(orders.mapped('amount_total'))
+            },
+            'payments_amount': sum(payments.mapped('amount')),
+            'pay_later_amount': sum(pay_later_payments.mapped('amount')),
+            'opening_notes': self.opening_notes,
+            'default_cash_details': {
+                'name': default_cash_payment_method_id.name,
+                'amount': self.cash_register_id.balance_start + total_default_cash_payment_amount +
+                                             sum(self.cash_register_id.line_ids.mapped('amount')),
+                'opening': self.cash_register_id.balance_start,
+                'payment_amount': total_default_cash_payment_amount,
+                'moves': cash_in_out_list
+            } if default_cash_payment_method_id else None,
+            'other_payment_methods': [{
+                'name': pm.name,
+                'amount': sum(orders.payment_ids.filtered(lambda p: p.payment_method_id == pm).mapped('amount'))
+            } for pm in other_payment_method_ids]
         }
 
     def _create_picking_at_end_of_session(self):
@@ -1230,23 +1366,29 @@ class PosSession(models.Model):
             'url': self.config_id._get_pos_base_url() + '?config_id=%d' % self.config_id.id,
         }
 
-    def open_cashbox_pos(self):
-        self.ensure_one()
-        action = self.cash_register_id.open_cashbox_id()
-        action['view_id'] = self.env.ref('point_of_sale.view_account_bnk_stmt_cashbox_footer').id
-        action['context']['pos_session_id'] = self.id
-        action['context']['default_pos_id'] = self.config_id.id
-        return action
-
     def set_cashbox_pos(self, cashbox_value, notes):
         self.state = 'opened'
+        self.opening_notes = notes
+        difference = cashbox_value - self.cash_register_id.balance_start
         self.cash_register_id.balance_start = cashbox_value
+        self._post_cash_details_message('Opening', difference, notes)
+
+    def _post_cash_details_message(self, state, difference, notes):
+        message = ""
+        if difference:
+            message = f"{state} difference: " \
+                      f"{self.currency_id.symbol + ' ' if self.currency_id.position == 'before' else ''}" \
+                      f"{self.currency_id.round(difference)} " \
+                      f"{self.currency_id.symbol if self.currency_id.position == 'after' else ''}<br/>"
         if notes:
+            message += notes.replace('\n', '<br/>')
+        if message:
             self.env['mail.message'].create({
-                        'body': notes,
+                        'body': message,
                         'model': 'account.bank.statement',
                         'res_id': self.cash_register_id.id,
                     })
+            self.message_post(body=message)
 
     def action_view_order(self):
         return {
@@ -1277,23 +1419,6 @@ class PosSession(models.Model):
                     )
                 )
 
-    def _warning_balance_closing(self):
-        self.ensure_one()
-
-        context = dict(self._context)
-        context['session_id'] = self.id
-
-        return {
-            'name': _('Balance control'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'closing.balance.confirm.wizard',
-            'views': [(False, 'form')],
-            'type': 'ir.actions.act_window',
-            'context': context,
-            'target': 'new'
-        }
-
     def _check_if_no_draft_orders(self):
         draft_orders = self.order_ids.filtered(lambda order: order.state == 'draft')
         if draft_orders:
@@ -1310,7 +1435,11 @@ class PosSession(models.Model):
             .with_context({'active_model': 'pos.session', 'active_ids': self.ids})\
             .create({'amount': sign * amount, 'name': reason})\
             .run()
-        self.message_post(body='<br/>\n'.join([f"Cash {extras['translatedType']}", f'- Amount: {extras["formattedAmount"]}', f'- Reason: {reason}']))
+        message_content = [f"Cash {extras['translatedType']}", f'- Amount: {extras["formattedAmount"]}']
+        if reason:
+            message_content.append(f'- Reason: {reason}')
+        self.message_post(body='<br/>\n'.join(message_content))
+
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
@@ -1321,11 +1450,3 @@ class ProcurementGroup(models.Model):
         self.env['pos.session']._alert_old_session()
         if use_new_cursor:
             self.env.cr.commit()
-
-class ClosingBalanceConfirm(models.TransientModel):
-    _name = 'closing.balance.confirm.wizard'
-    _description = 'This wizard is used to display a warning message if the manager wants to close a session with a too high difference between real and expected closing balance'
-
-    def confirm_closing_balance(self):
-        current_session =  self.env['pos.session'].browse(self._context['session_id'])
-        return current_session._validate_session()

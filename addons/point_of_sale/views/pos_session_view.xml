@@ -6,20 +6,12 @@
         <field name="arch" type="xml">
             <form string="Point of Sale Session" create="0" edit="0">
                 <header>
-                    <button name="open_cashbox_pos" type="object" string="Open Session"
-                        attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'new_session')]}" class="oe_highlight"
-                         context="{'balance': 'start'}"/>
                     <button name="open_frontend_cb" type="object" string="Continue Selling"
                         attrs="{'invisible' : ['|', ('rescue', '=', True), ('state', 'not in', ['opening_control', 'opened'])]}"/>
-                    <button id="end_session_opened" name="action_pos_session_closing_control" type="object" string="End of Session"
-                        attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}"
-                        class="oe_highlight"/>
-                    <button id="validate_opened" name="action_pos_session_closing_control" type="object" string="Close Session &amp; Post Entries"
-                        attrs="{'invisible' : ['|', ('cash_control', '=', True),('state', '!=', 'opened')]}"
-                        class="oe_highlight"/>
-                    <button id="validate_closing_control" name="action_pos_session_validate" type="object" string="Close Session &amp; Post Entries" states="closing_control"
-                        class="oe_highlight"/>
-
+                    <button id="validate_closing_control" name="action_pos_session_closing_control" type="object" string="Close Session &amp; Post Entries" states="closing_control"
+                            attrs="{'invisible': [ '|', '&amp;',('state', '!=', 'closing_control'), ('rescue', '=', False),
+                                '&amp;',('state', '=', 'closed'), ('rescue', '=', True)]}"
+                    class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="opened,closing_control,closed" nolabel="1" />
                 </header>
                 <sheet>
@@ -76,52 +68,6 @@
                         <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
                         <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
                     </group>
-                    <notebook>
-                        <page string="Cash Control" name="cash_control" attrs="{'invisible' : [('cash_control', '=', False)]}">
-                            <group class="col-md-12" style="margin-left: 140px;">
-                                <group class="col-md-7">
-                                    <div style="margin:0;padding:0;">
-                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['opening_control', 'closed'])]}">
-                                            <field style="text-align:right;margin:0;padding:0;" name="cash_register_total_entry_encoding" widget="monetary" options="{'currency_field': 'currency_id'}" string="+ Transactions"/>
-                                        </group>
-                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', '!=', 'closed')]}">
-                                            <field style="text-align:right;margin:0;padding:0;" name="cash_real_transaction" widget="monetary" options="{'currency_field': 'currency_id'}" string="+ Transactions"/>
-                                        </group>
-                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['opening_control', 'closed'])]}">
-                                            <field style="text-align:right;margin:0;padding:0;" name="cash_register_balance_end" widget="monetary" options="{'currency_field': 'currency_id'}" string="= Expected in Cash"/>
-                                        </group>
-                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', '!=', 'closed')]}">
-                                            <field style="text-align:right;margin:0;padding:0;" name="cash_real_expected" widget="monetary" options="{'currency_field': 'currency_id'}" string="= Expected"/>
-                                        </group>
-                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['opening_control'])]}">
-                                            <field style="text-align:right;margin:0;padding:0;" name="cash_register_balance_end_real" widget="monetary" options="{'currency_field': 'currency_id'}" string="Actual in Cash"/>
-                                        </group>
-                                    </div>
-                                    <div style="margin:0;padding:0;">
-                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['opening_control'])]}">
-                                            <button class="oe_inline oe_link" name="%(action_pos_box_out)d" type="action" attrs="{'invisible' : [('state', '=', 'closed')]}">Cash In/Out</button>
-                                        </group>
-                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
-                                        </group>
-                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
-                                            <button class="oe_inline oe_link" name="open_cashbox_pos" type="object" attrs="{'invisible': [('state', '!=', 'closing_control')]}" context="{'balance': 'close'}">Set Closing Cash</button>
-                                        </group>
-                                    </div>
-                                </group>
-                            </group>
-
-                            <div class="col-md-4" attrs="{'invisible' : [('state', '!=', 'closing_control')]}" style="height: 30px">
-                                <group class="oe_subtotal_footer">
-                                    <field name="cash_register_difference" widget="monetary" options="{'currency_field': 'currency_id'}" decoration-danger="cash_register_difference != 0"/>
-                                </group>
-                            </div>
-                            <div class="col-md-4" attrs="{'invisible' : [('state', '!=', 'closed')]}" style="height: 30px">
-                                <group class="oe_subtotal_footer">
-                                    <field name="cash_real_difference" widget="monetary" options="{'currency_field': 'currency_id'}" decoration-danger="cash_real_difference != 0"/>
-                                </group>
-                            </div>
-                        </page>
-                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="activity_ids"/>
@@ -231,24 +177,6 @@
         <field name="res_model">pos.session</field>
         <field name="icon">fa-tasks</field>
         <field name="delay_count">0</field>
-    </record>
-
-
-    <record model="ir.ui.view" id="closing_balance_confirm">
-        <field name="name">Confirming balance closing</field>
-        <field name="model">closing.balance.confirm.wizard</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form>
-                <group>
-                    <span>There is a difference between the expected and actual closing in cash. Are you sure you want to close the session and post the accounting entries?</span>
-                </group>
-                <footer>
-                    <button name="confirm_closing_balance" string="Confirm" type="object" class="oe_highlight, btn-primary" data-hotkey="q"/>
-                    <button string="Discard" special="cancel" data-hotkey="z" class="oe_highlight, btn-secondary"/>
-                </footer>
-            </form>
-        </field>
     </record>
 
     <menuitem

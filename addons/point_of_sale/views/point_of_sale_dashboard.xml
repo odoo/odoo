@@ -94,9 +94,9 @@
                                     <div class="col-6 o_kanban_primary_left">
                                         <button t-if="record.current_session_state.raw_value === 'opened'" class="btn btn-primary" name="open_ui" type="object">Continue selling</button>
 
-                                        <button t-if="record.current_session_state.raw_value === 'new_session' || record.current_session_state.raw_value === 'opening_control'" class="btn btn-primary" name="open_existing_session_cb" type="object">Open Session</button>
+                                        <button t-if="record.current_session_state.raw_value === 'opening_control'" class="btn btn-primary" name="open_existing_session_cb" type="object">Open Session</button>
 
-                                        <button t-if="_.contains(['opened', 'closing_control'], record.current_session_state.raw_value)" class="btn btn-secondary" name="open_existing_session_cb" type="object">Close</button>
+                                        <button t-if="record.current_session_state.raw_value === 'closing_control'" class="btn btn-secondary" name="open_existing_session_cb" type="object">Close</button>
 
                                         <button t-if="!record.current_session_id.raw_value &amp;&amp; !record.pos_session_username.value" class="btn btn-primary" name="open_session_cb" type="object">New Session</button>
 
@@ -114,7 +114,7 @@
 
                                         <div t-if="record.last_session_closing_date.value" attrs='{"invisible": [("cash_control","=",False)]}' class="row">
                                             <div class="col-6">
-                                                <span>Cash Balance</span>
+                                                <span>Last Closing Cash Balance</span>
                                             </div>
                                             <div class="col-6">
                                                 <span><field name="last_session_closing_cash" widget="monetary"/></span>

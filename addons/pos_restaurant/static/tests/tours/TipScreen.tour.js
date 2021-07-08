@@ -17,6 +17,7 @@ odoo.define('pos_restaurant.tour.TipScreen', function (require) {
     // Create order that is synced when draft.
     // order 1
     FloorScreen.do.clickTable('T2');
+    ProductScreen.do.confirmOpeningPopup();
     ProductScreen.exec.addOrderline('Minute Maid', '1', '2');
     ProductScreen.check.totalAmountIs('2.0');
     Chrome.do.backToFloor();
