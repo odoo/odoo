@@ -4,21 +4,8 @@ import os
 
 from . import lint_case
 
-class OnchangeChecker(ast.NodeVisitor):
-    def visit(self, node):
-        method = 'visit_' + node.__class__.__name__
-        visitor = getattr(self, method, self.generic_visit)
-        return visitor(node)
 
-    def generic_visit(self, node):
-        for field, value in ast.iter_fields(node):
-            if isinstance(value, list):
-                for item in value:
-                    if isinstance(item, ast.AST):
-                        yield from self.visit(item)
-            elif isinstance(value, ast.AST):
-                yield from self.visit(value)
-
+class OnchangeChecker(lint_case.NodeVisitor):
     def matches_onchange(self, node):
         if isinstance(node, ast.Call):
             if isinstance(node.func, ast.Attribute):
@@ -36,6 +23,7 @@ class OnchangeChecker(ast.NodeVisitor):
             if isinstance(n, getattr(ast, 'Str', type(None))) and n.s == 'domain'
             or isinstance(n, getattr(ast, 'Constant', type(None))) and n.value == 'domain'
         ), 1)
+
 
 class TestOnchangeDomains(lint_case.LintCase):
     """ Would ideally have been a pylint module but that's slow as molasses

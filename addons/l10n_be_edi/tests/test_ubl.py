@@ -4,7 +4,7 @@ from odoo.tests import tagged
 from odoo import Command
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nBeEdi(AccountEdiTestCommon):
 
     @classmethod

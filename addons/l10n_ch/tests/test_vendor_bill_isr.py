@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import Form, common
+from odoo.tests import Form, common, tagged
 from odoo.exceptions import ValidationError
 
 
@@ -13,6 +13,7 @@ ISR_REFERENCE_NO_ZEROS = "1 23456 78903"
 ISR_REFERENCE_BAD = "11 11111 11111 11111 11111 11111"
 
 
+@tagged('post_install_l10n', 'post_install', '-at_install')
 class TestVendorBillISR(common.TransactionCase):
     """Check we can encode Vendor bills with ISR references
 

@@ -1,9 +1,11 @@
 # -*- coding:utf-8 -*-
 
+from odoo.tests import tagged
 from odoo.exceptions import UserError
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
+@tagged('post_install_l10n', 'post_install', '-at_install')
 class TestSwissQRCode(AccountTestInvoicingCommon):
     """ Tests the generation of Swiss QR-codes on invoices
     """

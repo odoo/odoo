@@ -1,3 +1,4 @@
+import ast
 import fnmatch
 import os
 j = os.path.join
@@ -20,3 +21,16 @@ class LintCase(BaseCase):
                 for glob in globs:
                     fnames = fnmatch.filter(fnames, glob)
                 yield from fnames
+
+
+class NodeVisitor():
+    """Simple NodeVisitor."""
+
+    def visit(self, node):
+        method = 'visit_' + node.__class__.__name__
+        visitor = getattr(self, method, self.generic_visit)
+        return visitor(node)
+
+    def generic_visit(self, node):
+        for child in ast.iter_child_nodes(node):
+            yield from self.visit(child)

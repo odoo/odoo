@@ -2,12 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import common, Form
+from odoo.tests import tagged
 
 QR_IBAN = 'CH21 3080 8001 2345 6782 7'
 ISR_SUBS_NUMBER = "01-162-8"
 
 
+@tagged('post_install_l10n', 'post_install', '-at_install')
 class TestGenISRReference(AccountTestInvoicingCommon):
     """Check condition of generation of and content of the structured ref"""
 

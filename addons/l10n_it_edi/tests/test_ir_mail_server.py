@@ -8,19 +8,21 @@ from unittest.mock import patch
 import freezegun
 
 from odoo import tools
+from odoo.tests import tagged
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 
 _logger = logging.getLogger(__name__)
 
 
+@tagged('post_install_l10n', 'post_install', '-at_install')
 class PecMailServerTests(AccountEdiTestCommon):
     """ Main test class for the l10n_it_edi vendor bills XML import from a PEC mail account"""
 
     fake_test_content = """<?xml version="1.0" encoding="UTF-8"?>
-        <p:FatturaElettronica versione="FPR12" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" 
-        xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2" 
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        <p:FatturaElettronica versione="FPR12" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+        xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
           <FatturaElettronicaHeader>
             <CessionarioCommittente>

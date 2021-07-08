@@ -4,7 +4,7 @@ from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.tests import tagged, Form
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install_l10n', 'post_install', '-at_install')
 class TestDDT(TestSaleCommon):
 
     @classmethod

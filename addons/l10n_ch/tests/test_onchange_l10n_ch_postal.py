@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import common
+from odoo.tests import tagged
 from odoo.tests.common import Form, TransactionCase
 
 
@@ -11,6 +11,7 @@ CH_POST_IBAN = 'CH09 0900 0000 1000 8060 7'
 CH_POSTAL_ACC = '10-8060-7'
 
 
+@tagged('post_install_l10n', 'post_install', '-at_install')
 class TestOnchangePostal(TransactionCase):
 
     @classmethod
