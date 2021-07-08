@@ -1483,19 +1483,7 @@ class Website(models.Model):
         :param order: order in which the results are to be returned
         :param options: search options
 
-        :return list of objects with:
-            - model: name of the searched model
-            - base_domain: domain within which to perform the search
-            - search_fields: fields within which the search term must be found
-            - secondary_search_fields: optionally performs a second search
-            - filter_function: optionally filters obtained results
-            - fetch_fields: fields from which data must be fetched
-            - patch_data_function: optionally sets additional fields for rendering
-            - mapping: mapping from the results towards the structure used in rendering templates.
-                The mapping is a dict that associates the rendering name of each field
-                to a dict containing the 'name' of the field in the results list and the 'type'
-                that must be used for rendering the value
-            - icon: name of the icon to use if there is no image
+        :return: list of search details obtained from the `website.searchable.mixin`'s `_search_get_detail()`
         """
         result = []
         if search_type in ['pages', 'all']:
@@ -1554,36 +1542,11 @@ class Website(models.Model):
         total_count = 0
         for search_detail in search_details:
             model = self.env[search_detail['model']]
-            fields = search_detail['search_fields']
-            base_domain = search_detail['base_domain']
-            domain = self._search_build_domain(base_domain, search, fields, search_detail.get('search_extra'))
-            if search_detail.get('requires_sudo'):
-                model = model.sudo()
-            results = model.search(
-                domain,
-                limit=limit,
-                order=search_detail.get('order', order)
-            )
-            if search:
-                base_results = results
-                secondary_fields = search_detail.get('secondary_search_fields')
-                if secondary_fields:
-                    domain = self._search_build_domain(base_domain, search, secondary_fields)
-                    results = model.search(
-                        domain,
-                        limit=limit,
-                        order=search_detail.get('order', order)
-                    )
-                    results = results.union(base_results)
-                filter_function = search_detail.get('filter_function')
-                if filter_function:
-                    results = results.filtered(lambda result: filter_function(search, result, base_results, results))
+            results, count = model._search_fetch(search_detail, search, limit, order)
             search_detail['results'] = results
-            count = model.search_count(domain)
             total_count += count
             search_detail['count'] = count
             all_results.append(search_detail)
-
         return total_count, all_results
 
     def _search_render_results(self, search_details, limit):
@@ -1599,23 +1562,9 @@ class Website(models.Model):
         for search_detail in search_details:
             fields = search_detail['fetch_fields']
             results = search_detail['results']
-            results_data = results.read(fields)[:limit]
             icon = search_detail['icon']
             mapping = search_detail['mapping']
-            for result in results_data:
-                result['_fa'] = icon
-                result['_mapping'] = mapping
-            html_fields = [config['name'] for config in mapping.values() if config.get('html')]
-            patch_function = search_detail.get('patch_data_function')
-            if patch_function or html_fields:
-                for result, data in zip(results, results_data):
-                    for html_field in html_fields:
-                        if data[html_field]:
-                            text = self._search_text_from_html(data[html_field])
-                            text = re.sub('\\s+', ' ', text).strip()
-                            data[html_field] = text
-                    if patch_function:
-                        patch_function(result, data)
+            results_data = results._search_render_results(fields, mapping, icon, limit)
             search_detail['results_data'] = results_data
         return search_details
 

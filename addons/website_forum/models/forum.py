@@ -19,7 +19,13 @@ _logger = logging.getLogger(__name__)
 class Forum(models.Model):
     _name = 'forum.forum'
     _description = 'Forum'
-    _inherit = ['mail.thread', 'image.mixin', 'website.seo.metadata', 'website.multi.mixin']
+    _inherit = [
+        'mail.thread',
+        'image.mixin',
+        'website.seo.metadata',
+        'website.multi.mixin',
+        'website.searchable.mixin',
+    ]
     _order = "sequence"
 
     # description and use
@@ -263,7 +269,6 @@ class Forum(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        """See website_page._search_get_detail()"""
         with_description = options['displayDescription']
         search_fields = ['name']
         fetch_fields = ['id', 'name']
@@ -275,25 +280,32 @@ class Forum(models.Model):
             search_fields.append('description')
             fetch_fields.append('description')
             mapping['description'] = {'name': 'description', 'type': 'text', 'match': True}
-        def patch_forum(forum, data):
-            data['website_url'] = forum._compute_website_url()
         return {
             'model': 'forum.forum',
             'base_domain': [website.website_domain()],
             'search_fields': search_fields,
             'fetch_fields': fetch_fields,
-            'patch_data_function': patch_forum,
             'mapping': mapping,
             'icon': 'fa-comments-o',
             'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
         }
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        for forum, data in zip(self, results_data):
+            data['website_url'] = forum._compute_website_url()
+        return results_data
 
 
 class Post(models.Model):
 
     _name = 'forum.post'
     _description = 'Forum Post'
-    _inherit = ['mail.thread', 'website.seo.metadata']
+    _inherit = [
+        'mail.thread',
+        'website.seo.metadata',
+        'website.searchable.mixin',
+    ]
     _order = "is_correct DESC, vote_count DESC, write_date DESC"
 
     name = fields.Char('Title')
@@ -963,7 +975,6 @@ class Post(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        """See website_page._search_get_detail()"""
         with_description = options['displayDescription']
         with_date = options['displayDetail']
         search_fields = ['name']
@@ -1012,20 +1023,24 @@ class Post(models.Model):
         if with_date:
             fetch_fields.append('write_date')
             mapping['detail'] = {'name': 'date', 'type': 'html'}
-        def patch_forum_post(post, data):
-            data['website_url'] = post._compute_website_url()
-            if with_date:
-                data['date'] = self.env['ir.qweb.field.date'].record_to_html(post, 'write_date', {})
         return {
             'model': 'forum.post',
             'base_domain': [domain],
             'search_fields': search_fields,
             'fetch_fields': fetch_fields,
-            'patch_data_function': patch_forum_post,
             'mapping': mapping,
             'icon': 'fa-comment-o',
             'order': order,
         }
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        with_date = 'detail' in mapping
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        for post, data in zip(self, results_data):
+            data['website_url'] = post._compute_website_url()
+            if with_date:
+                data['date'] = self.env['ir.qweb.field.date'].record_to_html(post, 'write_date', {})
+        return results_data
 
 
 class PostReason(models.Model):
