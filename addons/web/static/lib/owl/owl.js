@@ -1464,11 +1464,25 @@
             }
             return result;
         },
+        /**
+         * This method combines the current context with the variables defined in a
+         * scope for use in a slot.
+         *
+         * The implementation is kind of tricky because we want to preserve the
+         * prototype chain structure of the cloned result. So we need to traverse the
+         * prototype chain, cloning each level respectively.
+         */
         combine(context, scope) {
-            const clone = Object.create(context);
+            let clone = context;
+            const scopeStack = [];
             while (!isComponent(scope)) {
-                Object.assign(clone, scope);
+                scopeStack.push(scope);
                 scope = scope.__proto__;
+            }
+            while (scopeStack.length) {
+                let scope = scopeStack.pop();
+                clone = Object.create(clone);
+                Object.assign(clone, scope);
             }
             return clone;
         },
@@ -5530,9 +5544,9 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
     exports.utils = utils;
 
 
-    __info__.version = '1.4.2';
-    __info__.date = '2021-07-07T12:57:07.352Z';
-    __info__.hash = '8083678';
+    __info__.version = '1.4.3';
+    __info__.date = '2021-07-08T09:54:52.593Z';
+    __info__.hash = '9fe2da7';
     __info__.url = 'https://github.com/odoo/owl';
 
 
