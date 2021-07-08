@@ -5,7 +5,7 @@ from odoo.tests import tagged
 from odoo.exceptions import ValidationError
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install_l10n', 'post_install', '-at_install')
 class ISRTest(AccountTestInvoicingCommon):
 
     @classmethod
