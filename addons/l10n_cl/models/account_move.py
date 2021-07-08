@@ -92,7 +92,8 @@ class AccountMove(models.Model):
 
     @api.onchange('journal_id')
     def _l10n_cl_onchange_journal(self):
-        self.l10n_latam_document_type_id = False
+        if self.company_id.country_id.code == 'CL':
+            self.l10n_latam_document_type_id = False
 
     def _post(self, soft=True):
         self._check_document_types_post()
