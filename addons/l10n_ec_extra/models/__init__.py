@@ -8,4 +8,4 @@ from . import l10n_ec_sri_payment
 from . import account_move
 from . import product
 from . import account_journal
-
+from . import l10n_ec_witholding

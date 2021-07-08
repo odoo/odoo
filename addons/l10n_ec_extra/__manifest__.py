@@ -59,6 +59,7 @@ Authors:
         'views/account_move_view.xml',
         'views/account_journal_view.xml',
         'views/product_view.xml',
+        'views/witholding_view.xml',
         'security/ir.model.access.csv'
     ],
     'installable': True,
