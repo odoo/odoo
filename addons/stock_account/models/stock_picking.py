@@ -3,11 +3,13 @@
 
 from ast import literal_eval
 
-from odoo import models
+from odoo import models, fields
 
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
+
+    country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
 
     def action_view_stock_valuation_layers(self):
         self.ensure_one()
@@ -18,4 +20,3 @@ class StockPicking(models.Model):
         context.update(self.env.context)
         context['no_at_date'] = True
         return dict(action, domain=domain, context=context)
-
