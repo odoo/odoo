@@ -11,6 +11,7 @@ odoo.define('pos_coupon.tour.pos_coupon1', function (require) {
 
     startSteps();
 
+    ProductScreen.do.confirmOpeningPopup();
     ProductScreen.do.clickHomeCategory();
 
     // basic order

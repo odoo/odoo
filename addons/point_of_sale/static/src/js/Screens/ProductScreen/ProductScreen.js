@@ -44,7 +44,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         }
         mounted() {
             if(this.env.pos.config.cash_control && this.env.pos.pos_session.state == 'opening_control') {
-                Gui.showPopup('CashOpeningPopup');
+                Gui.showPopup('CashOpeningPopup', {notEscapable: true});
             }
             this.env.pos.on('change:selectedClient', this.render, this);
         }
