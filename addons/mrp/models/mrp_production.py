@@ -1360,8 +1360,9 @@ class MrpProduction(models.Model):
         if not sequence:
             return name
         seq_back = "-" + "0" * (SIZE_BACK_ORDER_NUMERING - 1 - int(math.log10(sequence))) + str(sequence)
-        if re.search("-\\d{%d}$" % SIZE_BACK_ORDER_NUMERING, name):
-            return name[:-SIZE_BACK_ORDER_NUMERING-1] + seq_back
+        regex = re.compile(r"-\d+$")
+        if regex.search(name):
+            return regex.sub(seq_back, name)
         return name + seq_back
 
     def _get_backorder_mo_vals(self):
