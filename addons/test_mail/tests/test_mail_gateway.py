@@ -970,6 +970,55 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         self.assertTrue(incoming_msg.res_id == res_test.id)
 
     # --------------------------------------------------
+    # Gateway / Record synchronization
+    # --------------------------------------------------
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_gateway_values_base64_image(self):
+        """New record with mail that contains base64 inline image."""
+        target_model = "mail.test.field.type"
+        alias = self.env["mail.alias"].create({
+            "alias_name": "base64-lover",
+            "alias_model_id": self.env["ir.model"]._get(target_model).id,
+            "alias_defaults": "{}",
+            "alias_contact": "everyone",
+        })
+        record = self.format_and_process(
+            test_mail_data.MAIL_TEMPLATE_EXTRA_HTML, self.email_from,
+            '%s@%s' % (alias.alias_name, self.alias_catchall),
+            subject='base64 image to alias',
+            target_model=target_model,
+            extra_html='<img src="data:image/png;base64,iV/+OkI=">',
+        )
+        self.assertEqual(record.type, "first")
+        self.assertEqual(len(record.message_ids[0].attachment_ids), 1)
+        self.assertEqual(record.message_ids[0].attachment_ids[0].name, "image0")
+        self.assertEqual(record.message_ids[0].attachment_ids[0].type, "binary")
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_gateway_values_base64_image_walias(self):
+        """New record with mail that contains base64 inline image + default values
+        coming from alias."""
+        target_model = "mail.test.field.type"
+        alias = self.env["mail.alias"].create({
+            "alias_name": "base64-lover",
+            "alias_model_id": self.env["ir.model"]._get(target_model).id,
+            "alias_defaults": "{'type': 'second'}",
+            "alias_contact": "everyone",
+        })
+        record = self.format_and_process(
+            test_mail_data.MAIL_TEMPLATE_EXTRA_HTML, self.email_from,
+            '%s@%s' % (alias.alias_name, self.alias_catchall),
+            subject='base64 image to alias',
+            target_model=target_model,
+            extra_html='<img src="data:image/png;base64,iV/+OkI=">',
+        )
+        self.assertEqual(record.type, "second")
+        self.assertEqual(len(record.message_ids[0].attachment_ids), 1)
+        self.assertEqual(record.message_ids[0].attachment_ids[0].name, "image0")
+        self.assertEqual(record.message_ids[0].attachment_ids[0].type, "binary")
+
+    # --------------------------------------------------
     # Thread formation: mail gateway corner cases
     # --------------------------------------------------
 
