@@ -12,7 +12,7 @@ class TestDDT(TestSaleCommon):
         super().setUpClass(chart_template_ref=chart_template_ref)
         cls.company_data['company'].write({
                         'vat':"IT12345670017",
-                        'country_id': cls.env.ref('base.it'),
+                        'country_id': cls.env.ref('base.it').id,
                         'l10n_it_codice_fiscale': '01234560157',
                         'l10n_it_tax_system': 'RF01',
                         'street': 'Via Giovanni Maria Platina 66',
@@ -27,9 +27,14 @@ class TestDDT(TestSaleCommon):
             'street': 'Piazza Guglielmo Marconi 5',
             'zip': '26100',
             'city': 'Cremona',
-            'country_id': cls.env.ref('base.it'),
+            'country_id': cls.env.ref('base.it').id,
             'vat': 'IT12345670124'
         })
+
+        settings = cls.env['res.config.settings'].create({})
+        if hasattr(settings, 'button_create_proxy_user'):
+            # Needed when `l10n_it_edi_sdiscoop` is installed
+            settings.button_create_proxy_user()
 
 
     def test_ddt_flow(self):
