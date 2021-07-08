@@ -3,11 +3,22 @@
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { dialogService } from "@web/core/dialog/dialog_service";
+import { Dialog } from "@web/core/dialog/dialog";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, makeDeferred, nextTick, triggerHotkey } from "../helpers/utils";
+import {
+    click,
+    getFixture,
+    makeDeferred,
+    nextTick,
+    patchWithCleanup,
+    triggerHotkey,
+} from "../helpers/utils";
 
 const { mount } = owl;
 const serviceRegistry = registry.category("services");
+const mainComponentsRegistry = registry.category("main_components");
 
 let env;
 let parent;
@@ -17,7 +28,6 @@ QUnit.module("Components", (hooks) => {
     hooks.beforeEach(async () => {
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("ui", uiService);
-        env = await makeTestEnv();
         target = getFixture();
     });
     hooks.afterEach(() => {
@@ -29,6 +39,7 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("can be rendered", async (assert) => {
         class Parent extends owl.Component {}
         Parent.template = owl.tags.xml`<Dropdown/>`;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         assert.strictEqual(
             parent.el.outerHTML,
@@ -41,6 +52,7 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("can be rendered (custom tag)", async (assert) => {
         class Parent extends owl.Component {}
         Parent.template = owl.tags.xml`<Dropdown tag="'ged'"/>`;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         assert.strictEqual(
             parent.el.outerHTML,
@@ -53,6 +65,7 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("DropdownItem can be rendered", async (assert) => {
         class Parent extends owl.Component {}
         Parent.template = owl.tags.xml`<DropdownItem>coucou</DropdownItem>`;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         assert.strictEqual(parent.el.outerHTML, '<li class="o_dropdown_item">coucou</li>');
     });
@@ -66,6 +79,7 @@ QUnit.module("Components", (hooks) => {
           </t>
         </Dropdown>
       `;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         await click(parent.el, "button.o_dropdown_toggler");
         assert.hasClass(parent.el, "o_dropdown one");
@@ -90,6 +104,7 @@ QUnit.module("Components", (hooks) => {
             }
         }
         Parent.template = owl.tags.xml`<Dropdown beforeOpen="beforeOpen"/>`;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         await click(parent.el, "button.o_dropdown_toggler");
         assert.verifySteps(["beforeOpen"]);
@@ -112,6 +127,7 @@ QUnit.module("Components", (hooks) => {
             }
         }
         Parent.template = owl.tags.xml`<Dropdown startOpen="true" beforeOpen="beforeOpen"/>`;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         assert.verifySteps(["beforeOpen"]);
         assert.containsOnce(parent.el, "ul.o_dropdown_menu");
@@ -125,10 +141,37 @@ QUnit.module("Components", (hooks) => {
           <Dropdown/>
         </div>
       `;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         await click(parent.el, "button.o_dropdown_toggler");
         assert.containsOnce(parent.el, "ul.o_dropdown_menu");
         await click(parent.el, "div.outside");
+        assert.containsNone(parent.el, "ul.o_dropdown_menu");
+    });
+
+    QUnit.test("close on activeElement change", async (assert) => {
+        class Parent extends owl.Component {
+            setup() {
+                this.dc = mainComponentsRegistry.get("DialogContainer");
+            }
+        }
+        Parent.template = owl.tags.xml`
+            <div>
+                <Dropdown />
+                <t t-component="dc.Component" t-props="dc.props" />
+            </div>
+        `;
+        class CustomDialog extends Dialog {}
+        CustomDialog.title = "Dropdown Killer";
+        serviceRegistry.add("dialog", dialogService);
+        env = await makeTestEnv();
+        parent = await mount(Parent, { env, target });
+        await click(parent.el, "button.o_dropdown_toggler");
+        await nextTick(); // await that the dropdown sets its active element
+        assert.containsOnce(parent.el, "ul.o_dropdown_menu");
+        env.services.dialog.add(CustomDialog);
+        await nextTick(); // await that the dropdown starts to close
+        await nextTick(); // await that the dropdown is closed
         assert.containsNone(parent.el, "ul.o_dropdown_menu");
     });
 
@@ -141,6 +184,7 @@ QUnit.module("Components", (hooks) => {
           </t>
         </Dropdown>
       `;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         await click(parent.el, "button.o_dropdown_toggler");
         await click(parent.el, "ul.o_dropdown_menu li");
@@ -160,6 +204,7 @@ QUnit.module("Components", (hooks) => {
           </t>
         </Dropdown>
       `;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         await click(parent.el, "button.o_dropdown_toggler");
         await click(parent.el, "ul.o_dropdown_menu li");
@@ -178,6 +223,7 @@ QUnit.module("Components", (hooks) => {
           </t>
         </Dropdown>
       `;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         await click(parent.el, "button.o_dropdown_toggler:last-child");
         await click(parent.el, "button.o_dropdown_toggler:last-child");
@@ -198,6 +244,7 @@ QUnit.module("Components", (hooks) => {
           </t>
         </Dropdown>
       `;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         assert.containsN(parent.el, "ul.o_dropdown_menu", 3);
     });
@@ -218,6 +265,7 @@ QUnit.module("Components", (hooks) => {
           </Dropdown>
         </div>
       `;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         await click(parent.el, "button.o_dropdown_toggler:last-child");
         await click(parent.el, "button.o_dropdown_toggler:last-child");
@@ -225,6 +273,50 @@ QUnit.module("Components", (hooks) => {
         assert.containsN(parent.el, "ul.o_dropdown_menu", 3);
         await click(parent.el, "div.outside");
         assert.containsNone(parent.el, "ul.o_dropdown_menu");
+    });
+
+    QUnit.test("multi-level dropdown: close on activeElement change", async (assert) => {
+        patchWithCleanup(Dropdown.prototype, {
+            close() {
+                assert.step("closed");
+                this._super();
+            },
+        });
+        class Parent extends owl.Component {
+            setup() {
+                this.dc = mainComponentsRegistry.get("DialogContainer");
+            }
+        }
+        Parent.template = owl.tags.xml`
+            <div>
+                <Dropdown>
+                    <t t-set-slot="menu">
+                        <Dropdown>
+                            <t t-set-slot="menu">
+                                <Dropdown/>
+                            </t>
+                        </Dropdown>
+                    </t>
+                </Dropdown>
+                <t t-component="dc.Component" t-props="dc.props" />
+            </div>
+        `;
+        class CustomDialog extends Dialog {}
+        CustomDialog.title = "Dropdown Killer";
+        serviceRegistry.add("dialog", dialogService);
+        env = await makeTestEnv();
+        parent = await mount(Parent, { env, target });
+        await click(parent.el, "button.o_dropdown_toggler:last-child");
+        await click(parent.el, "button.o_dropdown_toggler:last-child");
+        await click(parent.el, "button.o_dropdown_toggler:last-child");
+        assert.containsN(parent.el, "ul.o_dropdown_menu", 3);
+        await nextTick(); // await that the dropdowns set their active elements
+        env.services.dialog.add(CustomDialog);
+        assert.verifySteps([]);
+        await nextTick(); // await that the dropdowns start to close
+        await nextTick(); // await that the dropdowns are closed
+        assert.containsNone(parent.el, "ul.o_dropdown_menu");
+        assert.verifySteps(["closed", "closed", "closed"]);
     });
 
     QUnit.test("multi-level dropdown: close on item selection", async (assert) => {
@@ -240,6 +332,7 @@ QUnit.module("Components", (hooks) => {
           </t>
         </Dropdown>
       `;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         await click(parent.el, "button.o_dropdown_toggler:last-child");
         await click(parent.el, "button.o_dropdown_toggler:last-child");
@@ -264,6 +357,7 @@ QUnit.module("Components", (hooks) => {
           </t>
         </Dropdown>
       `;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         // Open the 2-level dropdowns
         await click(parent.el, "button.o_dropdown_toggler:last-child");
@@ -308,6 +402,7 @@ QUnit.module("Components", (hooks) => {
           </t>
         </Dropdown>
       `;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         await click(parent.el, "button.o_dropdown_toggler:last-child");
         await click(parent.el, "button.o_dropdown_toggler:last-child");
@@ -336,7 +431,6 @@ QUnit.module("Components", (hooks) => {
           </t>
         </Dropdown>
     `;
-        env.qweb.addTemplate("recursive.Template", recursiveTemplate);
         class Parent extends owl.Component {
             constructor() {
                 super(...arguments);
@@ -370,6 +464,8 @@ QUnit.module("Components", (hooks) => {
             }
         }
         Parent.template = "recursive.Template";
+        env = await makeTestEnv();
+        env.qweb.addTemplate("recursive.Template", recursiveTemplate);
         parent = await mount(Parent, { env, target });
         assert.deepEqual(
             [...parent.el.querySelectorAll("button,li")].map((el) => el.textContent),
@@ -413,6 +509,7 @@ QUnit.module("Components", (hooks) => {
           <div class="outside">OUTSIDE</div>
         </div>
       `;
+            env = await makeTestEnv();
             parent = await mount(Parent, { env, target });
             // Click on ONE
             const one = parent.el.querySelector(".one");
@@ -460,6 +557,7 @@ QUnit.module("Components", (hooks) => {
           <Dropdown class="bar2" />
         </div>
       `;
+            env = await makeTestEnv();
             parent = await mount(Parent, { env, target });
             // Click on FOO
             await click(parent.el, ".foo button");
@@ -484,6 +582,7 @@ QUnit.module("Components", (hooks) => {
           <Dropdown class="bar2" />
         </div>
       `;
+            env = await makeTestEnv();
             parent = await mount(Parent, { env, target });
             // Click on BAR1
             await click(parent.el, ".bar1 button");
@@ -510,6 +609,7 @@ QUnit.module("Components", (hooks) => {
           <div class="outside">OUTSIDE</div>
         </div>
       `;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         // Click on one
         await click(parent.el, ".one button");
@@ -549,6 +649,7 @@ QUnit.module("Components", (hooks) => {
           </t>
         </Dropdown>
       `;
+        env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         assert.containsNone(parent.el, ".o_dropdown_menu", "menu is closed at start");
 
