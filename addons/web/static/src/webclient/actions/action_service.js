@@ -2,7 +2,6 @@
 
 import { cleanDomFromBootstrap } from "@web/legacy/utils";
 import { browser } from "../../core/browser/browser";
-import { useBus } from "../../core/bus_hook";
 import { makeContext } from "../../core/context";
 import { download } from "../../core/network/download";
 import { evaluateExpr } from "../../core/py_js/py";
@@ -10,6 +9,7 @@ import { registry } from "../../core/registry";
 import { KeepLast } from "../../core/utils/concurrency";
 import { sprintf } from "../../core/utils/strings";
 import { ActionDialog } from "./action_dialog";
+import { ActionController } from "./action_controller";
 
 /** @typedef {number|false} ActionId */
 /** @typedef {Object} ActionDescription */
@@ -31,7 +31,7 @@ import { ActionDialog } from "./action_dialog";
  * @property {ViewType} [viewType]
  */
 
-const { Component, hooks, tags } = owl;
+const { Component } = owl;
 
 const viewRegistry = registry.category("views");
 const actionHandlersRegistry = registry.category("action_handlers");
@@ -68,13 +68,6 @@ export class InvalidButtonParamsError extends Error {}
 
 // regex that matches context keys not to forward from an action to another
 const CTX_KEY_REGEX = /^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|group_by_no_leaf|active_id|active_ids|orderedBy)$/;
-
-// only register this template once for all dynamic classes ControllerComponent
-const ControllerComponentTemplate = tags.xml`<t t-component="Component" t-props="props"
-    registerCallback="registerCallback"
-    t-ref="component"
-    t-on-history-back="onHistoryBack"
-    t-on-controller-title-updated.stop="onTitleUpdated"/>`;
 
 function makeActionManager(env) {
     const keepLast = new KeepLast();
@@ -293,30 +286,6 @@ function makeActionManager(env) {
     }
 
     /**
-     * @param {Action} action
-     * @returns {ActionMode}
-     */
-    function _getActionMode(action) {
-        if (action.target === "new") {
-            // No possible override for target="new"
-            return "new";
-        }
-        if (action.type === "ir.actions.client") {
-            const clientAction = actionRegistry.get(action.tag);
-            if (clientAction.target) {
-                // Target is forced by the definition of the client action
-                return clientAction.target;
-            }
-        }
-        if (controllerStack.some((c) => c.action.target === "fullscreen")) {
-            // Force fullscreen when one of the controllers is set to fullscreen
-            return "fullscreen";
-        }
-        // Default: current
-        return "current";
-    }
-
-    /**
      * @private
      * @returns {SwitchViewParams | null}
      */
@@ -433,127 +402,46 @@ function makeActionManager(env) {
     async function _updateUI(controller, options = {}) {
         let resolve;
         let reject;
-        let dialogCloseResolve;
         const currentActionProm = new Promise((_res, _rej) => {
             resolve = _res;
             reject = _rej;
         });
         const action = controller.action;
 
-        class ControllerComponent extends Component {
-            setup() {
-                this.Component = controller.Component;
-                this.componentRef = hooks.useRef("component");
-                this.registerCallback = null;
-                if (action.target !== "new") {
-                    let beforeLeaveFn;
-                    this.registerCallback = (type, fn) => {
-                        switch (type) {
-                            case "export":
-                                controller.getState = fn;
-                                break;
-                            case "beforeLeave":
-                                beforeLeaveFn = fn;
-                                break;
-                        }
-                    };
-                    useBus(env.bus, "CLEAR-UNCOMMITTED-CHANGES", (callbacks) => {
-                        if (beforeLeaveFn) {
-                            callbacks.push(beforeLeaveFn);
-                        }
-                    });
-                }
-            }
-            catchError(error) {
-                reject(error);
-                cleanDomFromBootstrap();
-                if (action.target === "new") {
-                    // get the dialog service to close the dialog.
-                    throw error;
-                } else {
-                    const lastCt = controllerStack[controllerStack.length - 1];
-                    const info = lastCt ? lastCt.__info__ : {};
-                    env.bus.trigger("ACTION_MANAGER:UPDATE", info);
-                }
-            }
-            mounted() {
-                if (action.target === "new") {
-                    dialogCloseProm = new Promise((_r) => {
-                        dialogCloseResolve = _r;
-                    }).then(() => {
-                        dialogCloseProm = undefined;
-                    });
-                    dialog = nextDialog;
-                } else {
-                    // LEGACY CODE COMPATIBILITY: remove when controllers will be written in owl
-                    // we determine here which actions no longer occur in the nextStack,
-                    // and we manually destroy all their controller's widgets
-                    const nextStackActionIds = nextStack.map((c) => c.action.jsId);
-                    const toDestroy = new Set();
-                    for (const c of controllerStack) {
-                        if (!nextStackActionIds.includes(c.action.jsId)) {
-                            if (c.action.type === "ir.actions.act_window") {
-                                for (const viewType in c.action.controllers) {
-                                    toDestroy.add(c.action.controllers[viewType]);
-                                }
-                            } else {
-                                toDestroy.add(c);
-                            }
-                        }
-                    }
-                    for (const c of toDestroy) {
-                        if (c.exportedState) {
-                            c.exportedState.__legacy_widget__.destroy();
-                        }
-                    }
-                    // END LEGACY CODE COMPATIBILITY
-                    controllerStack = nextStack; // the controller is mounted, commit the new stack
-                    // wait Promise callbacks to be executed
-                    pushState(controller);
-                    browser.sessionStorage.setItem("current_action", action._originalAction);
-                }
-                resolve();
-                env.bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));
-            }
-            willUnmount() {
-                if (action.target === "new" && dialogCloseResolve) {
-                    dialogCloseResolve();
-                }
-            }
-            onHistoryBack() {
-                const previousController = controllerStack[controllerStack.length - 2];
-                if (previousController && !dialogCloseProm) {
-                    restore(previousController.jsId);
-                } else {
-                    _executeCloseAction();
-                }
-            }
-            onTitleUpdated(ev) {
-                controller.title = ev.detail;
-            }
-        }
-        ControllerComponent.template = ControllerComponentTemplate;
-        ControllerComponent.Component = controller.Component;
-
         let nextDialog = {};
+        let removeDialog = null;
         if (action.target === "new") {
             cleanDomFromBootstrap();
+            const { onClose } = dialog;
+            nextDialog = {
+                remove: () => removeDialog(),
+                onClose: onClose || options.onClose,
+            };
             const actionDialogProps = {
                 // TODO add size
-                ActionComponent: ControllerComponent,
-                actionProps: controller.props,
+                ActionComponent: ActionController,
+                actionProps: Object.assign({}, controller.props, {
+                    controller: controller,
+                    reject: reject,
+                    controllerStack: controllerStack,
+                    nextStack: null,
+                    dialogCloseProm: dialogCloseProm,
+                    dialog: dialog,
+                    nextDialog: nextDialog,
+                    executeCloseAction: _executeCloseAction,
+                    resolve: resolve,
+                    restore: restore,
+                }),
             };
             if (action.name) {
                 actionDialogProps.title = action.name;
             }
-
-            const { onClose } = dialog;
             const removeOldDialog = dialog.remove;
             if (removeOldDialog) {
                 dialog = {};
                 removeOldDialog();
             }
-            const removeDialog = env.services.dialog.add(ActionDialog, actionDialogProps, {
+            removeDialog = env.services.dialog.add(ActionDialog, actionDialogProps, {
                 onClose: () => {
                     if (dialog.remove) {
                         if (dialog.onClose) {
@@ -563,10 +451,6 @@ function makeActionManager(env) {
                     }
                 },
             });
-            nextDialog = {
-                remove: removeDialog,
-                onClose: onClose || options.onClose,
-            };
             return currentActionProm;
         }
 
@@ -590,8 +474,19 @@ function makeActionManager(env) {
 
         controller.__info__ = {
             id: ++id,
-            Component: ControllerComponent,
-            componentProps: controller.props,
+            Component: ActionController,
+            componentProps: Object.assign({}, controller.props, {
+                controller: controller,
+                reject: reject,
+                controllerStack: controllerStack,
+                nextStack: nextStack,
+                dialogCloseProm: dialogCloseProm,
+                dialog: dialog,
+                nextDialog: nextDialog,
+                executeCloseAction: _executeCloseAction,
+                resolve: resolve,
+                restore: restore,
+            }),
         };
         env.bus.trigger("ACTION_MANAGER:UPDATE", controller.__info__);
         return Promise.all([currentActionProm, closingProm]).then((r) => r[0]);
@@ -1101,12 +996,7 @@ function makeActionManager(env) {
         }
         // END LEGACY CODE COMPATIBILITY
 
-        newController.props = _getViewProps(
-            view,
-            controller.action,
-            controller.views,
-            props
-        );
+        newController.props = _getViewProps(view, controller.action, controller.views, props);
         controller.action.controllers[viewType] = newController;
         let index;
         if (view.multiRecord) {
@@ -1180,34 +1070,6 @@ function makeActionManager(env) {
         return false;
     }
 
-    function pushState(controller) {
-        const newState = {};
-        const action = controller.action;
-        if (action.id) {
-            newState.action = action.id;
-        } else if (action.type === "ir.actions.client") {
-            newState.action = action.tag;
-        }
-        if (action.context) {
-            const activeId = action.context.active_id;
-            if (activeId) {
-                newState.active_id = `${activeId}`;
-            }
-            const activeIds = action.context.active_ids;
-            // we don't push active_ids if it's a single element array containing
-            // the active_id to make the url shorter in most cases
-            if (activeIds && !(activeIds.length === 1 && activeIds[0] === activeId)) {
-                newState.active_ids = activeIds.join(",");
-            }
-        }
-        if (action.type === "ir.actions.act_window") {
-            const props = controller.props;
-            newState.model = props.resModel;
-            newState.view_type = props.type;
-            newState.id = props.resId ? `${props.resId}` : undefined;
-        }
-        env.services.router.pushState(newState, { replace: true });
-    }
     return {
         doAction,
         doActionButton,
