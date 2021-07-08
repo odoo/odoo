@@ -561,6 +561,7 @@ function makeActionManager(env) {
                         }
                         dialog = {};
                     }
+                    cleanDomFromBootstrap();
                 },
             });
             nextDialog = {
@@ -920,7 +921,6 @@ function makeActionManager(env) {
     }
 
     async function _executeCloseAction(params = {}) {
-        cleanDomFromBootstrap();
         let onClose;
         const removeDialog = dialog.remove;
         if (removeDialog) {
@@ -1101,12 +1101,7 @@ function makeActionManager(env) {
         }
         // END LEGACY CODE COMPATIBILITY
 
-        newController.props = _getViewProps(
-            view,
-            controller.action,
-            controller.views,
-            props
-        );
+        newController.props = _getViewProps(view, controller.action, controller.views, props);
         controller.action.controllers[viewType] = newController;
         let index;
         if (view.multiRecord) {
