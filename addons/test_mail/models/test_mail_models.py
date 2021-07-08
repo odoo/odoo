@@ -63,6 +63,7 @@ class MailTestFull(models.Model):
     datetime = fields.Datetime(default=fields.Datetime.now)
     mail_template = fields.Many2one('mail.template', 'Template')
     customer_id = fields.Many2one('res.partner', 'Customer', track_visibility='onchange', track_sequence=2)
+    type = fields.Char()
     user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', track_sequence=1)
     umbrella_id = fields.Many2one('mail.test', track_visibility='onchange')
 
@@ -81,6 +82,14 @@ class MailTestFull(models.Model):
         if 'umbrella_id' in init_values and self.umbrella_id:
             return 'test_mail.st_mail_test_full_umbrella_upd'
         return super(MailTestFull, self)._track_subtype(init_values)
+
+    @api.model
+    def create(self, vals):
+        # Emulate an addon that alters the creation context, such as `crm`
+        context = dict(self._context or {})
+        if vals.get('type'):
+            context.setdefault('default_type', vals['type'])
+        return super(MailTestFull, self.with_context(context)).create(vals)
 
 
 class MailTestAlias(models.Model):

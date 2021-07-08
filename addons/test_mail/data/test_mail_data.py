@@ -34,6 +34,7 @@ Content-Transfer-Encoding: quoted-printable
  <body style=3D"margin: 0; padding: 0; background: #ffffff;-webkit-text-size-adjust: 100%;">=20
 
   <p>Please call me as soon as possible this afternoon!</p>
+  {extra_html}
 
   <p>--<br/>
      Sylvie

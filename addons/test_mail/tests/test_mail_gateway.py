@@ -424,6 +424,25 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         # No bounce email
         self.assertEqual(len(self._mails), 0)
 
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_process_base64_image_to_alias(self):
+        """New record with mail that contains base64 inline image."""
+        target_model = "mail.test.full"
+        alias = self.env["mail.alias"].create({
+            "alias_name": "base64-lover",
+            "alias_model_id": self.env["ir.model"]._get(target_model).id,
+            "alias_defaults": "{'type': 'lead'}",
+            "alias_contact": "everyone",
+        })
+        record = self.format_and_process(
+            MAIL_TEMPLATE,
+            to='%s@%s' % (alias.alias_name, self.catchall_domain),
+            subject='base64 image to alias',
+            target_model=target_model,
+            extra_html='<img src="data:image/png;base64,iV/+OkI=">',
+        )
+        self.assertEqual(len(record.message_ids[0].attachment_ids), 1)
+
     # --------------------------------------------------
     # Thread formation
     # --------------------------------------------------
@@ -683,7 +702,8 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
                                           subject='FW: Re: 1',
                                           email_from='b.t@example.com',
                                           extra='In-Reply-To: %s' % msg.message_id,
-                                          msg_id=fw_msg_id)
+                                          msg_id=fw_msg_id,
+                                          extra_html='')
         self.env['mail.thread'].message_process(None, fw_message)
         msg_fw = self.env['mail.message'].search([('message_id', '=', fw_msg_id)])
         self.assertEqual(len(msg_fw), 1)
