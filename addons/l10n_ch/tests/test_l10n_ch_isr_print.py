@@ -33,9 +33,14 @@ class ISRTest(AccountTestInvoicingCommon):
             self.assertRecordValues(partner_bank, [expected_vals])
 
         assertBankAccountValid('010391391', 'postal', expected_postal='010391391')
-        assertBankAccountValid('010391394', 'bank')
         assertBankAccountValid('CH6309000000250097798', 'iban', expected_postal='25-9779-8')
         assertBankAccountValid('GR1601101250000000012300695', 'iban', expected_postal=False)
+
+        partner_bank = self.env['res.partner.bank'].create({
+            'acc_number': '010391394',
+            'partner_id': self.partner_a.id,
+        })
+        self.assertNotEqual(partner_bank.acc_type, 'postal')
 
     def test_isr(self):
         isr_bank_account = self.env['res.partner.bank'].create({
