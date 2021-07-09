@@ -77,14 +77,15 @@
                     </group>
                     <notebook>
                         <page string="Contract History" name="contract_history">
-                            <field name="contract_ids" widget="one2many">
+                            <field name="contract_ids" widget="one2many" readonly="0">
                                 <tree string="Current Contracts"
                                       decoration-primary="state == 'open'"
                                       decoration-muted="state == 'close'"
                                       decoration-bf="id == parent.contract_id"
                                       default_order = "date_start desc, state desc"
                                       editable="bottom"
-                                      no_open="1">
+                                      no_open="1"
+                                      create="0" delete="0">
                                     <button name="action_open_contract_form" type="object" icon="fa-external-link"/>
                                     <field name="id" invisible="1"/>
                                     <field name="name" string="Contract Name"/>
