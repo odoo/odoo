@@ -33,8 +33,8 @@
             <xpath expr="//div[@name='send_buttons']" position="inside">
                 <button name="action_send_sms" help="Send SMS to attendees" type="object" string="SMS" icon="fa-mobile"/>
             </xpath>
-            <xpath expr="//field[@name='phone']" position="replace">
-                <field name="phone" widget="phone" options="{'enable_sms': false}"/>
+            <xpath expr="//field[@name='phone']" position="attributes">
+                <attribute name="options">{'enable_sms': false}</attribute>
             </xpath>
         </field>
     </record>
