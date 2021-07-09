@@ -102,10 +102,12 @@ class LunchProduct(models.Model):
         return self.filtered(lambda p: (p.category_id.active and p.supplier_id.active) != p.active).toggle_active()
 
     def toggle_active(self):
-        if self.filtered(lambda product: not product.active and not product.category_id.active):
-            raise UserError(_("The product category is archived. The user have to unarchive the category or change the category of the product."))
-        if self.filtered(lambda product: not product.active and not product.supplier_id.active):
-            raise UserError(_("The product supplier is archived. The user have to unarchive the supplier or change the supplier of the product."))
+        invalid_products = self.filtered(lambda product: not product.active and not product.category_id.active)
+        if invalid_products:
+            raise UserError(_("The following product categories are archived. You should either unarchive the categories or change the category of the product.\n%s", '\n'.join(invalid_products.category_id.mapped('name'))))
+        invalid_products = self.filtered(lambda product: not product.active and not product.supplier_id.active)
+        if invalid_products:
+            raise UserError(_("The following suppliers are archived. You should either unarchive the suppliers or change the supplier of the product.\n%s", '\n'.join(invalid_products.supplier_id.mapped('name'))))
         return super().toggle_active()
 
     def write(self, values):
