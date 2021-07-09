@@ -101,7 +101,8 @@ class LunchAlert(models.Model):
             sendat_tz = pytz.timezone(alert.tz).localize(datetime.combine(
                 fields.Date.context_today(alert, fields.Datetime.now()),
                 float_to_time(alert.notification_time, alert.notification_moment)))
-            lc = alert.cron_id.lastcall
+            cron = alert.cron_id.sudo()
+            lc = cron.lastcall
             if ((
                 lc and sendat_tz.date() <= fields.Datetime.context_timestamp(alert, lc).date()
             ) or (
@@ -110,7 +111,6 @@ class LunchAlert(models.Model):
                 sendat_tz += timedelta(days=1)
             sendat_utc = sendat_tz.astimezone(pytz.UTC).replace(tzinfo=None)
 
-            cron = alert.cron_id.sudo()
             cron.name = f"Lunch: alert chat notification ({alert.name})"
             cron.active = cron_required
             cron.nextcall = sendat_utc
