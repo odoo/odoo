@@ -59,13 +59,9 @@ export class CommandPalette extends Component {
             const command = listbox.querySelector(`#o_command_${index}`);
             scrollTo(command, listbox);
         });
-        useHotkey(
-            "Enter",
-            () => {
-                this.executeSelectedCommand();
-            },
-            { altIsOptional: true }
-        );
+        useHotkey("Enter", () => {
+            this.executeSelectedCommand();
+        });
         useHotkey(
             "ArrowUp",
             () => {
@@ -75,7 +71,7 @@ export class CommandPalette extends Component {
                     this.selectCommand(index - 1);
                 }
             },
-            { altIsOptional: true, allowRepeat: true }
+            { allowRepeat: true }
         );
         useHotkey(
             "ArrowDown",
@@ -86,7 +82,7 @@ export class CommandPalette extends Component {
                     this.selectCommand(index + 1);
                 }
             },
-            { altIsOptional: true, allowRepeat: true }
+            { allowRepeat: true }
         );
 
         for (const command of this.initialCommands) {
@@ -114,14 +110,12 @@ export class CommandPalette extends Component {
     }
 
     getKeysToPress(command) {
-        const { hotkey, hotkeyOptions } = command;
-        const altIsOptional = hotkeyOptions ? hotkeyOptions.altIsOptional : false;
+        const { hotkey } = command;
         let result = hotkey.split("+");
         if (isMacOS()) {
-            result = result.map((x) => x.replace("control", "command"));
-        }
-        if (!altIsOptional) {
-            result = isMacOS() ? ["control", ...result] : ["alt", ...result];
+            result = result
+                .map((x) => x.replace("control", "command"))
+                .map((x) => x.replace("alt", "control"));
         }
         return result.map((key) => key.toUpperCase());
     }

@@ -97,9 +97,7 @@ export function makeLegacyDialogMappingService(legacyEnv) {
 
             function onOpenDialog(dialog) {
                 ui.activateElement(getModalEl(dialog));
-                const remove = hotkey.add("escape", getCloseCallback(dialog), {
-                    altIsOptional: true,
-                });
+                const remove = hotkey.add("escape", getCloseCallback(dialog));
                 dialogHotkeyRemoveMap.set(dialog, remove);
             }
 

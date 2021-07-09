@@ -16,13 +16,9 @@ export class Dialog extends Component {
         }
         this.modalRef = useRef("modal");
         useActiveElement("modal");
-        useHotkey(
-            "escape",
-            () => {
-                this.close();
-            },
-            { altIsOptional: true }
-        );
+        useHotkey("escape", () => {
+            this.close();
+        });
         useSubEnv({ inDialog: true });
         this.close = this.close.bind(this);
         this.contentClass = this.constructor.contentClass;
