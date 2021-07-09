@@ -5,9 +5,6 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='vat']" position="attributes">
-                    <attribute name="string">VAT</attribute>
-                </xpath>
                 <xpath expr="//span[hasclass('o_vat_label')]" position="replace">
                     <span class="o_vat_label">VAT</span>
                 </xpath>
