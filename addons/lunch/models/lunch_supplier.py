@@ -112,7 +112,8 @@ class LunchSupplier(models.Model):
             sendat_tz = pytz.timezone(supplier.tz).localize(datetime.combine(
                 fields.Date.context_today(supplier),
                 float_to_time(supplier.automatic_email_time, supplier.moment)))
-            lc = supplier.cron_id.lastcall
+            cron = supplier.cron_id.sudo()
+            lc = cron.lastcall
             if ((
                 lc and sendat_tz.date() <= fields.Datetime.context_timestamp(supplier, lc).date()
             ) or (
@@ -121,7 +122,6 @@ class LunchSupplier(models.Model):
                 sendat_tz += timedelta(days=1)
             sendat_utc = sendat_tz.astimezone(pytz.UTC).replace(tzinfo=None)
 
-            cron = supplier.cron_id.sudo()
             cron.active = supplier.active and supplier.send_by == 'mail'
             cron.name = f"Lunch: send automatic email to {supplier.name}"
             cron.nextcall = sendat_utc
