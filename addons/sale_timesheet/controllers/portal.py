@@ -31,16 +31,16 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
     def _get_searchbar_inputs(self):
         searchbar_inputs = super()._get_searchbar_inputs()
         searchbar_inputs.update(
-            sol={'input': 'sol', 'label': _('Search in Sales Order Item')},
             so={'input': 'so', 'label': _('Search in Sales Order')},
+            sol={'input': 'sol', 'label': _('Search in Sales Order Item')},
             invoice={'input': 'invoice', 'label': _('Search in Invoice')})
         return searchbar_inputs
 
     def _get_searchbar_groupby(self):
         searchbar_groupby = super()._get_searchbar_groupby()
         searchbar_groupby.update(
-            sol={'input': 'sol', 'label': _('Sales Order Item')},
             so={'input': 'so', 'label': _('Sales Order')},
+            sol={'input': 'sol', 'label': _('Sales Order Item')},
             invoice={'input': 'invoice', 'label': _('Invoice')})
         return searchbar_groupby
 
@@ -63,6 +63,12 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
             so='order_id',
             invoice='timesheet_invoice_id')
         return groupby_mapping
+
+    def _get_searchbar_sortings(self):
+        searchbar_sortings = super()._get_searchbar_sortings()
+        searchbar_sortings.update(
+            sol={'label': _('Sales Order Item'), 'order': 'so_line'})
+        return searchbar_sortings
 
     def _task_get_page_view_values(self, task, access_token, **kwargs):
         values = super()._task_get_page_view_values(task, access_token, **kwargs)
