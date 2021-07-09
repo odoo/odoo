@@ -214,48 +214,6 @@
                     </div>
                     <label for="company_id" groups="base.group_multi_company"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <group>
-                        <group>
-                            <field name="active" invisible="1"/>
-                            <field name="topping_label_1"/>
-                            <field name="topping_quantity_1"/>
-                        </group>
-                        <div>
-                            <field name="topping_ids_1" nolabel="1">
-                                <tree editable="bottom">
-                                    <field name="name"/>
-                                    <field name="currency_id" invisible="1"/>
-                                    <field name="price" widget="monetary"/>
-                                </tree>
-                            </field>
-                        </div>
-                        <group>
-                            <field name="topping_label_2"/>
-                            <field name="topping_quantity_2"/>
-                        </group>
-                        <div>
-                            <field name="topping_ids_2" nolabel="1">
-                                <tree editable="bottom">
-                                    <field name="name"/>
-                                    <field name="currency_id" invisible="1"/>
-                                    <field name="price" widget="monetary"/>
-                                </tree>
-                            </field>
-                        </div>
-                        <group>
-                            <field name="topping_label_3"/>
-                            <field name="topping_quantity_3"/>
-                        </group>
-                        <div>
-                            <field name="topping_ids_3" nolabel="1">
-                                <tree editable="bottom">
-                                    <field name="name"/>
-                                    <field name="currency_id" invisible="1"/>
-                                    <field name="price" widget="monetary"/>
-                                </tree>
-                            </field>
-                        </div>
-                    </group>
                 </sheet>
             </form>
         </field>

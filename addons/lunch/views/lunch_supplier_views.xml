@@ -63,6 +63,51 @@
                             <div class="o_row" attrs="{'invisible': [('send_by', '!=', 'mail')]}"><field name="automatic_email_time" widget="float_time"/> <field name="moment"/></div>
                         </group>
                     </group>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="topping_label_1"/>
+                            <field name="topping_quantity_1"/>
+                        </group>
+                        <div>
+                            <field name="topping_ids_1" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="price" widget="monetary"/>
+                                </tree>
+                            </field>
+                        </div>
+                        <group>
+                            <field name="topping_label_2"/>
+                            <field name="topping_quantity_2"/>
+                        </group>
+                        <div>
+                            <field name="topping_ids_2" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="price" widget="monetary"/>
+                                </tree>
+                            </field>
+                        </div>
+                        <group>
+                            <field name="topping_label_3"/>
+                            <field name="topping_quantity_3"/>
+                        </group>
+                        <div>
+                            <field name="topping_ids_3" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="price" widget="monetary"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </group>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" groups="base.group_user"/>

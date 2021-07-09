@@ -13,8 +13,8 @@ class LunchTopping(models.Model):
     name = fields.Char('Name', required=True)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
-    price = fields.Float('Price', digits='Account', required=True)
-    category_id = fields.Many2one('lunch.product.category', ondelete='cascade')
+    price = fields.Monetary('Price', required=True)
+    supplier_id = fields.Many2one('lunch.supplier', ondelete='cascade')
     topping_category = fields.Integer('Topping Category', help="This field is a technical field", required=True, default=1)
 
     def name_get(self):
