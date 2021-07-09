@@ -2,7 +2,6 @@
 
 import { cleanDomFromBootstrap } from "@web/legacy/utils";
 import { browser } from "../../core/browser/browser";
-import { useBus } from "../../core/bus_hook";
 import { makeContext } from "../../core/context";
 import { download } from "../../core/network/download";
 import { evaluateExpr } from "../../core/py_js/py";
@@ -10,6 +9,7 @@ import { registry } from "../../core/registry";
 import { KeepLast } from "../../core/utils/concurrency";
 import { sprintf } from "../../core/utils/strings";
 import { ActionDialog } from "./action_dialog";
+import { ActionController } from "./action_controller";
 
 /** @typedef {number|false} ActionId */
 /** @typedef {Object} ActionDescription */
@@ -31,7 +31,7 @@ import { ActionDialog } from "./action_dialog";
  * @property {ViewType} [viewType]
  */
 
-const { Component, hooks, tags } = owl;
+const { Component } = owl;
 
 const viewRegistry = registry.category("views");
 const actionHandlersRegistry = registry.category("action_handlers");
@@ -68,13 +68,6 @@ export class InvalidButtonParamsError extends Error {}
 
 // regex that matches context keys not to forward from an action to another
 const CTX_KEY_REGEX = /^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|group_by_no_leaf|active_id|active_ids|orderedBy)$/;
-
-// only register this template once for all dynamic classes ControllerComponent
-const ControllerComponentTemplate = tags.xml`<t t-component="Component" t-props="props"
-    registerCallback="registerCallback"
-    t-ref="component"
-    t-on-history-back="onHistoryBack"
-    t-on-controller-title-updated.stop="onTitleUpdated"/>`;
 
 function makeActionManager(env) {
     const keepLast = new KeepLast();
@@ -420,54 +413,12 @@ function makeActionManager(env) {
         return index;
     }
 
-    /**
-     * Triggers a re-rendering with respect to the given controller.
-     *
-     * @private
-     * @param {Controller} controller
-     * @param {UpdateStackOptions} options
-     * @param {boolean} [options.clearBreadcrumbs=false]
-     * @param {number} [options.index]
-     * @returns {Promise<Number>}
-     */
-    async function _updateUI(controller, options = {}) {
-        let resolve;
-        let reject;
-        let dialogCloseResolve;
-        const currentActionProm = new Promise((_res, _rej) => {
-            resolve = _res;
-            reject = _rej;
-        });
-        const action = controller.action;
-
-        class ControllerComponent extends Component {
-            setup() {
-                this.Component = controller.Component;
-                this.componentRef = hooks.useRef("component");
-                this.registerCallback = null;
-                if (action.target !== "new") {
-                    let beforeLeaveFn;
-                    this.registerCallback = (type, fn) => {
-                        switch (type) {
-                            case "export":
-                                controller.getState = fn;
-                                break;
-                            case "beforeLeave":
-                                beforeLeaveFn = fn;
-                                break;
-                        }
-                    };
-                    useBus(env.bus, "CLEAR-UNCOMMITTED-CHANGES", (callbacks) => {
-                        if (beforeLeaveFn) {
-                            callbacks.push(beforeLeaveFn);
-                        }
-                    });
-                }
-            }
-            catchError(error) {
-                reject(error);
+    function _buildActionControllerCallbacks(options) {
+        return {
+            onCatchError: (error) => {
+                options.reject(error);
                 cleanDomFromBootstrap();
-                if (action.target === "new") {
+                if (options.controller.action.target === "new") {
                     // get the dialog service to close the dialog.
                     throw error;
                 } else {
@@ -475,20 +426,20 @@ function makeActionManager(env) {
                     const info = lastCt ? lastCt.__info__ : {};
                     env.bus.trigger("ACTION_MANAGER:UPDATE", info);
                 }
-            }
-            mounted() {
-                if (action.target === "new") {
+            },
+            onMounted: () => {
+                if (options.controller.action.target === "new") {
                     dialogCloseProm = new Promise((_r) => {
-                        dialogCloseResolve = _r;
+                        options.dialogCloseResolve.promise = _r;
                     }).then(() => {
                         dialogCloseProm = undefined;
                     });
-                    dialog = nextDialog;
+                    dialog = options.nextDialog;
                 } else {
                     // LEGACY CODE COMPATIBILITY: remove when controllers will be written in owl
                     // we determine here which actions no longer occur in the nextStack,
                     // and we manually destroy all their controller's widgets
-                    const nextStackActionIds = nextStack.map((c) => c.action.jsId);
+                    const nextStackActionIds = options.nextStack.map((c) => c.action.jsId);
                     const toDestroy = new Set();
                     for (const c of controllerStack) {
                         if (!nextStackActionIds.includes(c.action.jsId)) {
@@ -507,42 +458,85 @@ function makeActionManager(env) {
                         }
                     }
                     // END LEGACY CODE COMPATIBILITY
-                    controllerStack = nextStack; // the controller is mounted, commit the new stack
+                    controllerStack = options.nextStack; // the controller is mounted, commit the new stack
                     // wait Promise callbacks to be executed
-                    pushState(controller);
-                    browser.sessionStorage.setItem("current_action", action._originalAction);
+                    pushState(options.controller);
+                    browser.sessionStorage.setItem(
+                        "current_action",
+                        options.controller.action._originalAction
+                    );
                 }
-                resolve();
-                env.bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));
-            }
-            willUnmount() {
-                if (action.target === "new" && dialogCloseResolve) {
-                    dialogCloseResolve();
+                options.resolve();
+                env.bus.trigger(
+                    "ACTION_MANAGER:UI-UPDATED",
+                    _getActionMode(options.controller.action)
+                );
+            },
+            onWillUnmount: () => {
+                if (
+                    options.controller.action.target === "new" &&
+                    options.dialogCloseResolve.promise
+                ) {
+                    options.dialogCloseResolve.promise();
                 }
-            }
-            onHistoryBack() {
+            },
+            onHistoryBack: () => {
                 const previousController = controllerStack[controllerStack.length - 2];
                 if (previousController && !dialogCloseProm) {
                     restore(previousController.jsId);
                 } else {
                     _executeCloseAction();
                 }
-            }
-            onTitleUpdated(ev) {
-                controller.title = ev.detail;
-            }
-        }
-        ControllerComponent.template = ControllerComponentTemplate;
-        ControllerComponent.Component = controller.Component;
+            },
+            onTitleUpdated: (ev) => {
+                options.controller.title = ev.detail;
+            },
+        };
+    }
 
+    /**
+     * Triggers a re-rendering with respect to the given controller.
+     *
+     * @private
+     * @param {Controller} controller
+     * @param {UpdateStackOptions} options
+     * @param {boolean} [options.clearBreadcrumbs=false]
+     * @param {number} [options.index]
+     * @returns {Promise<Number>}
+     */
+    async function _updateUI(controller, options = {}) {
+        let resolve;
+        let reject;
+        let dialogCloseResolve = {};
+        let nextStack = [];
         let nextDialog = {};
+        const currentActionProm = new Promise((_res, _rej) => {
+            resolve = _res;
+            reject = _rej;
+        });
+        const action = controller.action;
+        const actionControllerCallbacks = _buildActionControllerCallbacks({
+            controller: controller,
+            dialogCloseResolve: dialogCloseResolve,
+            resolve: () => (resolve ? resolve() : undefined),
+            nextDialog: nextDialog,
+            nextStack: nextStack,
+            reject: (error) => (reject ? reject(error) : undefined),
+        });
+
         if (action.target === "new") {
             cleanDomFromBootstrap();
             const actionDialogProps = {
                 // TODO add size
-                ActionComponent: ControllerComponent,
+                ActionComponent: ActionController,
                 actionProps: controller.props,
             };
+            actionDialogProps.actionProps.actionControllerCallbacks = actionControllerCallbacks;
+            actionDialogProps.actionProps.controller = controller;
+
+            //This is done for LegacyAdaptedActionDialog
+            actionDialogProps.actionProps.isLegacy = controller.Component.isLegacy;
+
             if (action.name) {
                 actionDialogProps.title = action.name;
             }
@@ -563,10 +557,8 @@ function makeActionManager(env) {
                     }
                 },
             });
-            nextDialog = {
-                remove: removeDialog,
-                onClose: onClose || options.onClose,
-            };
+            nextDialog.remove = removeDialog;
+            nextDialog.onClose = onClose || options.onClose;
             return currentActionProm;
         }
 
@@ -584,15 +576,18 @@ function makeActionManager(env) {
         if (options.lazyController) {
             controllerArray.unshift(options.lazyController);
         }
-        const nextStack = controllerStack.slice(0, index).concat(controllerArray);
+        nextStack.length = 0;
+        nextStack.push(...controllerStack.slice(0, index).concat(controllerArray));
         controller.props.breadcrumbs = _getBreadcrumbs(nextStack.slice(0, nextStack.length - 1));
         const closingProm = _executeCloseAction();
 
         controller.__info__ = {
             id: ++id,
-            Component: ControllerComponent,
+            Component: ActionController,
             componentProps: controller.props,
         };
+        controller.__info__.componentProps.actionControllerCallbacks = actionControllerCallbacks;
+        controller.__info__.componentProps.controller = controller;
         env.bus.trigger("ACTION_MANAGER:UPDATE", controller.__info__);
         return Promise.all([currentActionProm, closingProm]).then((r) => r[0]);
     }
@@ -1101,12 +1096,7 @@ function makeActionManager(env) {
         }
         // END LEGACY CODE COMPATIBILITY
 
-        newController.props = _getViewProps(
-            view,
-            controller.action,
-            controller.views,
-            props
-        );
+        newController.props = _getViewProps(view, controller.action, controller.views, props);
         controller.action.controllers[viewType] = newController;
         let index;
         if (view.multiRecord) {

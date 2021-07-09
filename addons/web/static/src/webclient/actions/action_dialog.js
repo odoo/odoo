@@ -50,9 +50,7 @@ class LegacyAdaptedActionDialog extends ActionDialog {
         const actionContext = action && action.context;
         const actionDialogSize = actionContext && actionContext.dialog_size;
         this.size = LEGACY_SIZE_CLASSES[actionDialogSize] || this.constructor.size;
-        const ControllerComponent = this.props && this.props.ActionComponent;
-        const Controller = ControllerComponent && ControllerComponent.Component;
-        this.isLegacy = Controller && Controller.isLegacy;
+        this.isLegacy = actionProps && actionProps.isLegacy;
         useEffect(
             () => {
                 if (this.isLegacy) {
