@@ -1086,6 +1086,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             'pricelist_id': self.env.ref('product.list0').id,
         })
         so.action_confirm()
+        self.assertEqual(so.state, 'done')
         so.picking_ids.action_cancel()
 
         self.assertEqual(so.invoice_status, 'no')
