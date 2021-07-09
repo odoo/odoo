@@ -4,6 +4,8 @@ odoo.define('website.s_timeline_options', function (require) {
 const options = require('web_editor.snippets.options');
 
 options.registry.Timeline = options.Class.extend({
+    displayOverlayOptions: true,
+
     /**
      * @override
      */
