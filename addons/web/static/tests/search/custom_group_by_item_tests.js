@@ -174,7 +174,7 @@ QUnit.module("Search", (hooks) => {
         );
 
         // Button apply
-        assert.containsOnce(controlPanel, ".o_add_custom_group_menu .o_dropdown_menu button");
+        assert.containsOnce(controlPanel, ".o_add_custom_group_menu .o_dropdown_menu .btn");
     });
 
     QUnit.test(

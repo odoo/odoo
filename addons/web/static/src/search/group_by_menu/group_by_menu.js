@@ -2,19 +2,24 @@
 
 import { CustomGroupByItem } from "./custom_group_by_item";
 import { FACET_ICONS, GROUPABLE_TYPES } from "../utils/misc";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { sortBy } from "@web/core/utils/arrays";
 
 const { Component } = owl;
 
 export class GroupByMenu extends Component {
     setup() {
         this.icon = FACET_ICONS.groupBy;
-        this.fields = [];
+        this.dropdownProps = Object.keys(this.props)
+            .filter((key) => key in Dropdown.props)
+            .reduce((obj, key) => ({ ...obj, [key]: this.props[key] }), {});
+        const fields = [];
         for (const [fieldName, field] of Object.entries(this.env.searchModel.searchViewFields)) {
             if (this.validateField(fieldName, field)) {
-                this.fields.push(Object.assign({ name: fieldName }, field));
+                fields.push(Object.assign({ name: fieldName }, field));
             }
         }
-        this.fields.sort(({ string: a }, { string: b }) => (a > b ? 1 : a < b ? -1 : 0));
+        this.fields = sortBy(fields, "string");
     }
 
     /**
@@ -47,7 +52,18 @@ export class GroupByMenu extends Component {
             this.env.searchModel.toggleSearchItem(itemId);
         }
     }
+
+    /**
+     * @param {CustomEvent} ev
+     */
+    onAddCustomGroup(ev) {
+        const { payload: fieldName } = ev.detail;
+        this.env.searchModel.createNewGroupBy(fieldName);
+    }
 }
 
 GroupByMenu.components = { CustomGroupByItem };
 GroupByMenu.template = "web.GroupByMenu";
+GroupByMenu.defaultProps = {
+    showActiveItems: true,
+};

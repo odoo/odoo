@@ -558,7 +558,7 @@ export class SearchModel extends EventBus {
         const saveParams = Object.assign({}, ...fns.map((fn) => fn()));
         saveParams.context = saveParams.context || {};
         const queryContext = this._getContext();
-        const context = makeContext(userContext, saveParams.context, queryContext);
+        const context = makeContext(userContext, queryContext, saveParams.context);
         for (const key in userContext) {
             delete context[key];
         }
@@ -663,6 +663,7 @@ export class SearchModel extends EventBus {
             groupId: firstGroupBy ? firstGroupBy.groupId : this.nextGroupId++,
             groupNumber: this.nextGroupNumber,
             id: this.nextId,
+            custom: true,
         };
         if (["date", "datetime"].includes(fieldType)) {
             this.searchItems[this.nextId] = Object.assign(
@@ -674,7 +675,7 @@ export class SearchModel extends EventBus {
             this.searchItems[this.nextId] = Object.assign({ type: "groupBy" }, preSearchItem);
             this.toggleSearchItem(this.nextId);
         }
-        this.nextGroupNumber++;
+        this.nextGroupNumber++; // FIXME: with this, all subsequent added groups are in different groups (visually)
         this.nextId++;
         this._notify();
     }

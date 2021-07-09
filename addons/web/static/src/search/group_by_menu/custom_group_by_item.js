@@ -11,8 +11,8 @@ export class CustomGroupByItem extends Component {
         }
     }
 
-    onApply() {
-        this.env.searchModel.createNewGroupBy(this.state.fieldName);
+    onApply(ev) {
+        ev.detail.payload = this.state.fieldName;
     }
 }
 

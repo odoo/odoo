@@ -142,7 +142,7 @@ export async function selectGroup(el, fieldName) {
 }
 
 export async function applyGroup(el) {
-    await click(findItem(el, `.o_add_custom_group_menu .o_dropdown_menu button`));
+    await click(findItem(el, `.o_add_custom_group_menu .o_dropdown_menu .btn`));
 }
 
 /** Favorite menu */

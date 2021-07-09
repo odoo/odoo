@@ -2,20 +2,17 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CustomGroupByItem" owl="1">
-        <Dropdown class="o_add_custom_group_menu o_dropdown_inline">
+        <Dropdown tag="'li'" class="o_add_custom_group_menu o_dropdown_inline" t-on-dropdown-item-selected.capture="onApply">
             <t t-set-slot="toggler">
                 Add Custom Group
             </t>
-            <select class="w-auto o_input" t-model="state.fieldName">
-                <option t-foreach="props.fields" t-as="field" t-key="field.name"
-                    t-att-value="field.name"
-                    t-esc="field.string"
-                    />
-            </select>
-            <DropdownItem>
-                <button type="button" class="btn btn-primary" t-on-click="onApply">
-                    Apply
-                </button>
+            <li>
+                <select class="w-auto o_input" t-model="state.fieldName">
+                    <option t-foreach="props.fields" t-as="field" t-key="field.name" t-att-value="field.name" t-esc="field.string" />
+                </select>
+            </li>
+            <DropdownItem class="btn btn-primary">
+                <span>Apply</span>
             </DropdownItem>
         </Dropdown>
     </t>

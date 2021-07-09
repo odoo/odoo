@@ -783,6 +783,7 @@ QUnit.module("Search", (hooks) => {
         model.createNewGroupBy("foo");
         assert.deepEqual(sanitizeSearchItems(model), [
             {
+                custom: true,
                 description: "Foo",
                 fieldName: "foo",
                 fieldType: "char",
@@ -813,6 +814,7 @@ QUnit.module("Search", (hooks) => {
                 type: "groupBy",
             },
             {
+                custom: true,
                 defaultIntervalId: "month",
                 description: "Date",
                 fieldName: "date_field",

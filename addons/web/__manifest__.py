@@ -113,7 +113,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/fields.scss',
             'web/static/src/legacy/scss/file_upload.scss',
             'web/static/src/legacy/scss/views.scss',
-            'web/static/src/legacy/scss/pivot_view.scss',
             'web/static/src/legacy/scss/graph_view.scss',
             'web/static/src/legacy/scss/form_view.scss',
             'web/static/src/legacy/scss/list_view.scss',

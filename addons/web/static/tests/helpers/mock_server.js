@@ -139,6 +139,9 @@ export class MockServer {
         }
         // generate a field_view_get result
         const fields = Object.assign({}, this.models[modelName].fields);
+        for (const fieldName in fields) {
+            fields[fieldName].name = fieldName;
+        }
         // var viewOptions = params.viewOptions || {};
         const fvg = this._fieldsViewGet({ arch, modelName, fields, context: kwargs.context || {} });
         if (kwargs.options.toolbar) {
@@ -730,7 +733,7 @@ export class MockServer {
         let aggregatedFields = [];
         // if no fields have been given, the server picks all stored fields
         if (kwargs.fields.length === 0) {
-            aggregatedFields = Object.keys(this.models[modelName].fields).filter(
+            aggregatedFields = Object.keys(fields).filter(
                 (fieldName) => !groupByFieldNames.includes(fieldName)
             );
         } else {
@@ -785,7 +788,7 @@ export class MockServer {
                 } else if (aggregateFunction === "week") {
                     return `W${date.toFormat("WW yyyy")}`;
                 } else if (aggregateFunction === "quarter") {
-                    return `Q${date.toFormat("q yyyy")}`;
+                    return `Q${date.toFormat("qq yyyy")}`;
                 } else if (aggregateFunction === "year") {
                     return date.toFormat("yyyy");
                 } else {
@@ -845,6 +848,9 @@ export class MockServer {
                     } else if (aggregateFunction === "year") {
                         startDate = parseDate(val, { format: "y" });
                         endDate = startDate.plus({ years: 1 });
+                    } else if (aggregateFunction === "quarter") {
+                        startDate = parseDate(val, { format: "qq yyyy" });
+                        endDate = startDate.plus({ quarters: 1 });
                     } else {
                         startDate = parseDate(val, { format: "MMMM yyyy" });
                         endDate = startDate.plus({ months: 1 });
@@ -1498,7 +1504,7 @@ export class MockServer {
             fieldNames = Object.keys(model.fields);
         }
         fieldNames = [...new Set(fieldNames.concat(["id"]))];
-        let records = this.getRecords(params.model, params.domain || []);
+        let records = this.getRecords(params.model, params.domain || [], params.context);
         if (params.sort) {
             // warning: only consider first level of sort
             params.sort = params.sort.split(",")[0];
