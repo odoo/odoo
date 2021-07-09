@@ -61,57 +61,37 @@ class PaymentTransaction(models.Model):
         if self.acquirer_id.provider != 'ogone':
             return res
 
-        base_url = self.acquirer_id.get_base_url()
-        if self.operation == 'online_redirect':
-            return_url = urls.url_join(base_url, OgoneController._hosted_payment_page_return_url)
-            rendering_values = {
-                'PSPID': self.acquirer_id.ogone_pspid,
-                'ORDERID': self.reference,
-                'AMOUNT': payment_utils.to_minor_currency_units(self.amount, None, 2),
-                'CURRENCY': self.currency_id.name,
-                'LANGUAGE': self.partner_lang or 'en_US',
-                'EMAIL': self.partner_email or '',
-                'OWNERADDRESS': self.partner_address or '',
-                'OWNERZIP': self.partner_zip or '',
-                'OWNERTOWN': self.partner_city or '',
-                'OWNERCTY': self.partner_country_id.code or '',
-                'OWNERTELNO': self.partner_phone or '',
-                'OPERATION': 'SAL',  # direct sale
-                'USERID': self.acquirer_id.ogone_userid,
-                'ACCEPTURL': return_url,
-                'DECLINEURL': return_url,
-                'EXCEPTIONURL': return_url,
-                'CANCELURL': return_url,
-            }
-            if self.tokenize:
-                rendering_values.update({
-                    'ALIAS': payment_utils.singularize_reference_prefix(prefix='ODOO-ALIAS'),
-                    'ALIASUSAGE': _("Storing your payment details is necessary for future use."),
-                })
+        return_url = urls.url_join(self.acquirer_id.get_base_url(), OgoneController._return_url)
+        rendering_values = {
+            'PSPID': self.acquirer_id.ogone_pspid,
+            'ORDERID': self.reference,
+            'AMOUNT': payment_utils.to_minor_currency_units(self.amount, None, 2),
+            'CURRENCY': self.currency_id.name,
+            'LANGUAGE': self.partner_lang or 'en_US',
+            'EMAIL': self.partner_email or '',
+            'OWNERADDRESS': self.partner_address or '',
+            'OWNERZIP': self.partner_zip or '',
+            'OWNERTOWN': self.partner_city or '',
+            'OWNERCTY': self.partner_country_id.code or '',
+            'OWNERTELNO': self.partner_phone or '',
+            'OPERATION': 'SAL',  # direct sale
+            'USERID': self.acquirer_id.ogone_userid,
+            'ACCEPTURL': return_url,
+            'DECLINEURL': return_url,
+            'EXCEPTIONURL': return_url,
+            'CANCELURL': return_url,
+        }
+        if self.tokenize:
             rendering_values.update({
-                'SHASIGN': self.acquirer_id._ogone_generate_signature(
-                    rendering_values, incoming=False
-                ).upper(),
-                'api_url': self.acquirer_id._ogone_get_api_url('hosted_payment_page'),
+                'ALIAS': payment_utils.singularize_reference_prefix(prefix='ODOO-ALIAS'),
+                'ALIASUSAGE': _("Storing your payment details is necessary for future use."),
             })
-        else:  # validation
-            return_url = urls.url_join(base_url, OgoneController._flexcheckout_return_url)
-            rendering_values = {
-                'ACCOUNT_PSPID': self.acquirer_id.ogone_pspid,
-                'ALIAS_ALIASID': payment_utils.singularize_reference_prefix(prefix='ODOO-ALIAS'),
-                'ALIAS_ORDERID': self.reference,
-                'ALIAS_STOREPERMANENTLY': 'Y' if self.tokenize else 'N',
-                'CARD_PAYMENTMETHOD': 'CreditCard',
-                'LAYOUT_LANGUAGE': self.partner_lang,
-                'PARAMETERS_ACCEPTURL': return_url,
-                'PARAMETERS_EXCEPTIONURL': return_url,
-            }
-            rendering_values.update({
-                'SHASIGNATURE_SHASIGN': self.acquirer_id._ogone_generate_signature(
-                    rendering_values, incoming=False, format_keys=True
-                ).upper(),
-                'api_url': self.acquirer_id._ogone_get_api_url('flexcheckout'),
-            })
+        rendering_values.update({
+            'SHASIGN': self.acquirer_id._ogone_generate_signature(
+                rendering_values, incoming=False
+            ).upper(),
+            'api_url': self.acquirer_id._ogone_get_api_url('hosted_payment_page'),
+        })
         return rendering_values
 
     def _send_payment_request(self):
@@ -129,25 +109,8 @@ class PaymentTransaction(models.Model):
         if not self.token_id:
             raise UserError("Ogone: " + _("The transaction is not linked to a token."))
 
-        tree = self._ogone_send_order_request()
-        feedback_data = {
-            'FEEDBACK_TYPE': 'directlink',
-            'ORDERID': tree.get('orderID'),
-            'tree': tree,
-        }
-        _logger.info("entering _handle_feedback_data with data:\n%s", pprint.pformat(feedback_data))
-        self._handle_feedback_data('ogone', feedback_data)
-
-    def _ogone_send_order_request(self, request_3ds_authentication=False):
-        """ Make a new order request to Ogone and return the lxml etree parsed from the response.
-
-        :param bool request_3ds_authentication: Whether a 3DS authentication should be requested if
-                                                necessary to process the payment
-        :return: The lxml etree
-        :raise: ValidationError if the response can not be parsed to an lxml etree
-        """
+        # Make the payment request
         base_url = self.acquirer_id.get_base_url()
-        return_url = urls.url_join(base_url, OgoneController._directlink_return_url)
         data = {
             # DirectLink parameters
             'PSPID': self.acquirer_id.ogone_pspid,
@@ -166,14 +129,8 @@ class PaymentTransaction(models.Model):
             'OPERATION': 'SAL',  # direct sale
             # Alias Manager parameters
             'ALIAS': self.token_id.acquirer_ref,
-            'ALIASPERSISTEDAFTERUSE': 'Y' if self.token_id.active else 'N',
+            'ALIASPERSISTEDAFTERUSE': 'Y',
             'ECI': 9,  # Recurring (from eCommerce)
-            # 3DS parameters
-            'ACCEPTURL': return_url,
-            'DECLINEURL': return_url,
-            'EXCEPTIONURL': return_url,
-            'LANGUAGE': self.partner_lang or 'en_US',
-            'FLAG3D': 'Y' if request_3ds_authentication else 'N',
         }
         data['SHASIGN'] = self.acquirer_id._ogone_generate_signature(data, incoming=False)
 
@@ -181,16 +138,20 @@ class PaymentTransaction(models.Model):
             "making payment request:\n%s",
             pprint.pformat({k: v for k, v in data.items() if k != 'PSWD'})
         )  # Log the payment request data without the password
-        response_content = self.acquirer_id._ogone_make_request('directlink', data)
+        response_content = self.acquirer_id._ogone_make_request(data)
         try:
             tree = objectify.fromstring(response_content)
         except etree.XMLSyntaxError:
             raise ValidationError("Ogone: " + "Received badly structured response from the API.")
+
+        # Handle the feedback data
         _logger.info(
             "received payment request response as an etree:\n%s",
             etree.tostring(tree, pretty_print=True, encoding='utf-8')
         )
-        return tree
+        feedback_data = {'ORDERID': tree.get('orderID'), 'tree': tree}
+        _logger.info("entering _handle_feedback_data with data:\n%s", pprint.pformat(feedback_data))
+        self._handle_feedback_data('ogone', feedback_data)
 
     @api.model
     def _get_tx_from_feedback_data(self, provider, data):
@@ -221,111 +182,49 @@ class PaymentTransaction(models.Model):
 
         :param dict data: The feedback data sent by the provider
         :return: None
-        :raise: ValidationError if inconsistent data were received
         """
         super()._process_feedback_data(data)
         if self.provider != 'ogone':
             return
 
-        feedback_type = data.get('FEEDBACK_TYPE')
-        if feedback_type == 'flexcheckout':
-            self._ogone_tokenize_from_feedback_data(
-                data.get('CARDNUMBER'),
-                data['ALIASID'],
-                not self.tokenize,  # Immediately archive the token if it was not requested
-            )
-        elif feedback_type in ('hosted_payment_page', 'directlink'):
-            if 'tree' in data:
-                data = data['tree']
+        if 'tree' in data:
+            data = data['tree']
 
-            self.acquirer_reference = data.get('PAYID')
-            payment_status = int(data.get('STATUS', '0'))
-            if payment_status in const.PAYMENT_STATUS_MAPPING['pending']:
-                self._set_pending()
-            elif payment_status in const.PAYMENT_STATUS_MAPPING['done']:
-                has_token_data = 'ALIAS' in data
-                if self.tokenize and has_token_data:
-                    self._ogone_tokenize_from_feedback_data(
-                        data.get('CARDNO'), data['ALIAS'], False
-                    )
-                if self.token_id:
-                    self.token_id.verified = True  # Validity of the token has been confirmed
-                self._set_done()
-            elif payment_status in const.PAYMENT_STATUS_MAPPING['cancel']:
-                self._set_canceled()
-            else:  # Classify unknown payment statuses as `error` tx state
-                _logger.info("received data with invalid payment status: %s", payment_status)
-                self._set_error(
-                    "Ogone: " + _("Received data with invalid payment status: %s", payment_status)
-                )
-        else:
-            raise ValidationError(
-                "Ogone: " + _("Received feedback data with unknown type: %s", feedback_type)
+        self.acquirer_reference = data.get('PAYID')
+        payment_status = int(data.get('STATUS', '0'))
+        if payment_status in const.PAYMENT_STATUS_MAPPING['pending']:
+            self._set_pending()
+        elif payment_status in const.PAYMENT_STATUS_MAPPING['done']:
+            has_token_data = 'ALIAS' in data
+            if self.tokenize and has_token_data:
+                self._ogone_tokenize_from_feedback_data(data)
+            self._set_done()
+        elif payment_status in const.PAYMENT_STATUS_MAPPING['cancel']:
+            self._set_canceled()
+        else:  # Classify unknown payment statuses as `error` tx state
+            _logger.info("received data with invalid payment status: %s", payment_status)
+            self._set_error(
+                "Ogone: " + _("Received data with invalid payment status: %s", payment_status)
             )
 
-    def _ogone_tokenize_from_feedback_data(self, card_number, acquirer_ref, is_one_shot_payment):
+    def _ogone_tokenize_from_feedback_data(self, data):
         """ Create a token from feedback data.
 
-        :param str card_number: The obfuscated number of the card
-        :param str acquirer_ref: The acquirer reference of the payment
-        :param bool is_one_shot_payment: Whether the token was created for a one-shot payment
+        :param dict data: The feedback data sent by the provider
         :return: None
         """
-        token_name = card_number or payment_utils.build_token_name()  # Not requested in the backend
+        token_name = data.get('CARDNO') or payment_utils.build_token_name()
         token = self.env['payment.token'].create({
             'acquirer_id': self.acquirer_id.id,
             'name': token_name,  # Already padded with 'X's
             'partner_id': self.partner_id.id,
-            'acquirer_ref': acquirer_ref,
-            'verified': False,  # Set to True as soon as a payment is authorized
-            'active': not is_one_shot_payment,  # Archive immediately if used for one-shot payment
+            'acquirer_ref': data['ALIAS'],
+            'verified': True,  # The payment is authorized, so the payment method is valid
         })
         self.write({
             'token_id': token.id,
             'tokenize': False,
         })
-
-    def _send_refund_request(self):
-        """ Override of payment to send a refund request to Authorize.
-
-        Note: self.ensure_one()
-
-        :return: None
-        :raise: ValidationError if a badly structured response is received
-        """
-        super()._send_refund_request()
-        if self.provider != 'ogone':
-            return
-
-        data = {
-            'PSPID': self.acquirer_id.ogone_pspid,
-            'ORDERID': self.reference,
-            'PAYID': self.acquirer_reference,
-            'USERID': self.acquirer_id.ogone_userid,
-            'PSWD': self.acquirer_id.ogone_password,
-            'AMOUNT': payment_utils.to_minor_currency_units(self.amount, None, 2),
-            'CURRENCY': self.currency_id.name,
-            'OPERATION': 'RFS',  # refund
-        }
-        data['SHASIGN'] = self.acquirer_id._ogone_generate_signature(data, incoming=False)
-
         _logger.info(
-            "making refund request:\n%s",
-            pprint.pformat({k: v for k, v in data.items() if k != 'PSWD'})
-        )  # Log the refund request data without the password
-        response_content = self.acquirer_id._ogone_make_request('maintenancedirect', data)
-        try:
-            tree = objectify.fromstring(response_content)
-        except etree.XMLSyntaxError:
-            raise ValidationError("Ogone: " + "Received badly structured response from the API.")
-        _logger.info(
-            "received refund request response as an etree:\n%s",
-            etree.tostring(tree, pretty_print=True, encoding='utf-8')
+            "created token with id %s for partner with id %s", token.id, self.partner_id.id
         )
-        feedback_data = {
-            'FEEDBACK_TYPE': 'directlink',
-            'ORDERID': tree.get('orderID'),
-            'tree': tree,
-        }
-        _logger.info("entering _handle_feedback_data with data:\n%s", pprint.pformat(feedback_data))
-        self._handle_feedback_data('ogone', feedback_data)
