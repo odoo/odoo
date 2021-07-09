@@ -111,6 +111,7 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/legacy/js/core/rpc.js',
             'web/static/src/legacy/js/core/widget.js',
             'web/static/src/legacy/js/core/registry.js',
+            'web/static/src/session.js',
             'web/static/src/legacy/js/core/session.js',
             'web/static/src/legacy/js/core/concurrency.js',
             'web/static/src/legacy/js/core/utils.js',
