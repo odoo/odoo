@@ -543,16 +543,16 @@ QUnit.module("Components", (hooks) => {
         Parent.template = owl.tags.xml`
         <Dropdown hotkey="'m'" t-on-dropdown-item-selected="onItemSelected">
           <t t-set-slot="menu">
-            <DropdownItem class="item1" payload="{val:1}" />
-            <DropdownItem class="item2" hotkey="'2'" payload="{val:2}" />
-            <DropdownItem class="item3" payload="{val:3}" />
+            <DropdownItem class="item1" payload="{val:1}">item1</DropdownItem>
+            <DropdownItem class="item2" hotkey="'2'" payload="{val:2}">item2</DropdownItem>
+            <DropdownItem class="item3" payload="{val:3}">item3</DropdownItem>
           </t>
         </Dropdown>
       `;
         parent = await mount(Parent, { env, target });
         assert.containsNone(parent.el, ".o_dropdown_menu", "menu is closed at start");
 
-        triggerHotkey("m");
+        triggerHotkey("m", true);
         await nextTick();
         assert.containsOnce(
             parent.el,
@@ -580,7 +580,7 @@ QUnit.module("Components", (hooks) => {
         ];
 
         for (const step of scenarioSteps) {
-            triggerHotkey(step.hotkey, true);
+            triggerHotkey(step.hotkey);
             await nextTick();
             assert.hasClass(
                 parent.el.querySelector(".o_dropdown_menu > .o_dropdown_active"),
@@ -589,12 +589,12 @@ QUnit.module("Components", (hooks) => {
         }
 
         // Select last one activated in previous scenario (item1)
-        triggerHotkey("enter", true);
+        triggerHotkey("enter");
         await nextTick();
         assert.containsNone(parent.el, ".o_dropdown_menu", "menu is closed after item selection");
 
         // Reopen dropdown
-        triggerHotkey("m");
+        triggerHotkey("m", true);
         await nextTick();
         assert.containsOnce(
             parent.el,
@@ -603,12 +603,12 @@ QUnit.module("Components", (hooks) => {
         );
 
         // Select second item through data-hotkey attribute
-        triggerHotkey("2");
+        triggerHotkey("2", true);
         await nextTick();
         assert.containsNone(parent.el, ".o_dropdown_menu", "menu is closed after item selection");
 
         // Reopen dropdown
-        triggerHotkey("m");
+        triggerHotkey("m", true);
         await nextTick();
         assert.containsOnce(
             parent.el,
@@ -617,7 +617,7 @@ QUnit.module("Components", (hooks) => {
         );
 
         // Close dropdown with keynav
-        triggerHotkey("escape", true);
+        triggerHotkey("escape");
         await nextTick();
         assert.containsNone(parent.el, ".o_dropdown_menu", "menu is closed after item selection");
 

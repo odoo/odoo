@@ -29,7 +29,6 @@ export const commandService = {
         let isPaletteOpened = false;
 
         hotkeyService.add("control+k", openPalette, {
-            altIsOptional: true,
             global: true,
         });
 
@@ -38,6 +37,7 @@ export const commandService = {
                 return;
             }
 
+            const overlayModifier = registry.category("services").get("hotkey").overlayModifier;
             const commands = [...registeredCommands.values()];
 
             // Also retrieve all hotkeyables elements
@@ -51,10 +51,9 @@ export const commandService = {
                     (el.innerText &&
                         `${el.innerText.slice(0, 50)}${el.innerText.length > 50 ? "..." : ""}`) ||
                     "no description provided";
-
                 commands.push({
                     name: description,
-                    hotkey: el.dataset.hotkey,
+                    hotkey: `${overlayModifier}+${el.dataset.hotkey}`,
                     action: () => {
                         // AAB: not sure it is enough, we might need to trigger all events that occur when you actually click
                         el.focus();

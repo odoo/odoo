@@ -116,7 +116,6 @@ export class Dropdown extends Component {
                 for (const [hotkey, callback] of Object.entries(hotkeyCallbacks)) {
                     this.hotkeyRemoves.push(
                         this.hotkeyService.add(hotkey, callback, {
-                            altIsOptional: true,
                             allowRepeat: true,
                         })
                     );
