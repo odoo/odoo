@@ -277,7 +277,7 @@ export function makeLegacyCrashManagerService(legacyEnv) {
         start(env) {
             legacyEnv.services.crash_manager = {
                 show_message(message) {
-                    env.services.dialog.open(ErrorDialog, { traceback: message });
+                    env.services.dialog.add(ErrorDialog, { traceback: message });
                 },
                 rpc_error(errorResponse) {
                     // Will be handled by error_service
