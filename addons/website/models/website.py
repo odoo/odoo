@@ -8,7 +8,7 @@ import hashlib
 import requests
 import re
 
-from lxml import etree
+from lxml import etree, html
 from werkzeug import urls
 from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
@@ -370,7 +370,7 @@ class Website(models.Model):
                 try:
                     view_id = self.env['website'].with_context(website_id=website.id).viewref(snippet)
                     if view_id:
-                        el = etree.fromstring(view_id._render(values=cta_data))
+                        el = html.fromstring(view_id._render(values=cta_data))
 
                         # Add the data-snippet attribute to identify the snippet
                         # for compatibility code
