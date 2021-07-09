@@ -27,10 +27,10 @@ class TimesheetCustomerPortal(CustomerPortal):
     def _get_searchbar_inputs(self):
         return {
             'all': {'input': 'all', 'label': _('Search in All')},
-            'project': {'input': 'project', 'label': _('Search in Project')},
-            'name': {'input': 'name', 'label': _('Search in Description')},
             'employee': {'input': 'employee', 'label': _('Search in Employee')},
-            'task': {'input': 'task', 'label': _('Search in Task')}
+            'project': {'input': 'project', 'label': _('Search in Project')},
+            'task': {'input': 'task', 'label': _('Search in Task')},
+            'name': {'input': 'name', 'label': _('Search in Description')},
         }
 
     def _task_get_searchbar_sortings(self):
@@ -67,6 +67,15 @@ class TimesheetCustomerPortal(CustomerPortal):
             'date': 'date'
         }
 
+    def _get_searchbar_sortings(self):
+        return {
+            'date': {'label': _('Newest'), 'order': 'date desc'},
+            'employee': {'label': _('Employee'), 'order': 'employee_id'},
+            'project': {'label': _('Project'), 'order': 'project_id'},
+            'task': {'label': _('Task'), 'order': 'task_id'},
+            'name': {'label': _('Description'), 'order': 'name'},
+        }
+
     @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='none', **kw):
         Timesheet = request.env['account.analytic.line']
@@ -76,10 +85,7 @@ class TimesheetCustomerPortal(CustomerPortal):
         values = self._prepare_portal_layout_values()
         _items_per_page = 100
 
-        searchbar_sortings = {
-            'date': {'label': _('Newest'), 'order': 'date desc'},
-            'name': {'label': _('Description'), 'order': 'name'},
-        }
+        searchbar_sortings = self._get_searchbar_sortings()
 
         searchbar_inputs = self._get_searchbar_inputs()
 
