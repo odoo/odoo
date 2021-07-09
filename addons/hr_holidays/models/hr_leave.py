@@ -729,7 +729,7 @@ class HolidaysRequest(models.Model):
                         pass
 
     def write(self, values):
-        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
 
         if not is_officer:
             if any(hol.date_from.date() < fields.Date.today() for hol in self):
