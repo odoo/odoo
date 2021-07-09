@@ -42,7 +42,7 @@ const TableOfContent = publicWidget.Widget.extend({
         const $mainNavBar = $('#oe_main_menu_navbar');
         position += $mainNavBar.length ? $mainNavBar.outerHeight() : 0;
         position += isHorizontalNavbar ? this.$target.outerHeight() : 0;
-        $().getScrollingElement().scrollspy({target: '.s_table_of_content_navbar', method: 'offset', offset: position + 100});
+        $().getScrollingElement().scrollspy({target: '.s_table_of_content_navbar', method: 'offset', offset: position + 100, alwaysKeepFirstActive: true});
     },
 });
 
