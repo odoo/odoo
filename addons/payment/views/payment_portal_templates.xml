@@ -76,7 +76,7 @@
                     <!-- Manage page -->
                     <div class="row">
                         <div class="col-lg-7">
-                            <t t-if="acquirers" t-call="payment.manage"/>
+                            <t t-if="acquirers or tokens" t-call="payment.manage"/>
                             <div t-else="" class="alert alert-warning">
                                 <p><strong>No suitable payment acquirer could be found.</strong></p>
                                 <p>If you believe that it is an error, please contact the website administrator.</p>
