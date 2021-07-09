@@ -6,11 +6,15 @@ import ListController from "web.ListController";
 import ListView from "web.ListView";
 import { click, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
+import { makeTestEnv } from "../../helpers/mock_env";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
+import makeTestEnvironment from "web.test_env";
 
 import { ClientActionAdapter } from "@web/legacy/action_adapters";
+import { makeLegacyCrashManagerService } from "@web/legacy/utils";
 import { useDebugMenu } from "@web/core/debug/debug_menu";
 import { debugService } from "@web/core/debug/debug_service";
+import { ErrorDialog } from "@web/core/errors/error_dialogs";
 
 import ControlPanel from "web.ControlPanel";
 import core from "web.core";
@@ -79,6 +83,31 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual($(".modal-title").text(), "Warning!!!");
         assert.strictEqual($(".modal-body").text(), "This is a warning...");
     });
+
+    QUnit.test(
+        "legacy crash manager is still properly remapped to error service",
+        async function (assert) {
+            // this test can be removed as soon as the legacy layer is dropped
+            assert.expect(2);
+
+            const legacyEnv = makeTestEnvironment();
+            registry
+                .category("services")
+                .add("legacy_crash_manager", makeLegacyCrashManagerService(legacyEnv))
+                .add("dialog", {
+                    start() {
+                        return {
+                            add(dialogClass, props) {
+                                assert.strictEqual(dialogClass, ErrorDialog);
+                                assert.strictEqual(props.traceback, "BOOM");
+                            },
+                        };
+                    },
+                });
+            await makeTestEnv();
+            legacyEnv.services.crash_manager.show_message("BOOM");
+        }
+    );
 
     QUnit.test("redraw a controller and open debugManager does not crash", async (assert) => {
         assert.expect(11);
