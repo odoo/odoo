@@ -167,9 +167,11 @@ class LunchSupplier(models.Model):
     def toggle_active(self):
         """ Archiving related lunch product """
         res = super().toggle_active()
+        active_suppliers = self.filtered(lambda s: s.active)
+        inactive_suppliers = self - active_suppliers
         Product = self.env['lunch.product'].with_context(active_test=False)
-        all_products = Product.search([('supplier_id', 'in', self.ids)])
-        all_products._sync_active_from_related()
+        Product.search([('supplier_id', 'in', active_suppliers.ids)]).write({'active': True})
+        Product.search([('supplier_id', 'in', inactive_suppliers.ids)]).write({'active': False})
         return res
 
     def _send_auto_email(self):
