@@ -559,18 +559,6 @@ QUnit.test('sidebar: channel rendering with needaction counter', async function 
     );
 });
 
-QUnit.test('sidebar: mailing channel', async function (assert) {
-    assert.expect(1);
-
-    // channel that is expected to be in the sidebar, with proper mass_mailing value
-    this.data['mail.channel'].records.push({ mass_mailing: true });
-    await this.start();
-    assert.containsOnce(
-        document.querySelector(`.o_DiscussSidebar_groupChannel .o_DiscussSidebar_item`),
-        '.fa.fa-envelope-o',
-        "should have an icon to indicate that the channel is a mailing channel"
-    );
-});
 
 QUnit.test('sidebar: public/private channel rendering', async function (assert) {
     assert.expect(5);
@@ -2882,12 +2870,12 @@ QUnit.test('post a simple message', async function (assert) {
     );
 });
 
-QUnit.test('post message on non-mailing channel with "Enter" keyboard shortcut', async function (assert) {
+QUnit.test('post message on channel with "Enter" keyboard shortcut', async function (assert) {
     assert.expect(2);
 
     // channel expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20, mass_mailing: false });
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
         discuss: {
             params: {
@@ -2917,7 +2905,7 @@ QUnit.test('post message on non-mailing channel with "Enter" keyboard shortcut',
     );
 });
 
-QUnit.test('do not post message on non-mailing channel with "SHIFT-Enter" keyboard shortcut', async function (assert) {
+QUnit.test('do not post message on channel with "SHIFT-Enter" keyboard shortcut', async function (assert) {
     // Note that test doesn't assert SHIFT-Enter makes a newline, because this
     // default browser cannot be simulated with just dispatching
     // programmatically crafted events...
@@ -2925,7 +2913,7 @@ QUnit.test('do not post message on non-mailing channel with "SHIFT-Enter" keyboa
 
     // channel expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
         discuss: {
             params: {
@@ -2953,114 +2941,6 @@ QUnit.test('do not post message on non-mailing channel with "SHIFT-Enter" keyboa
         "should still not have any message in channel after pressing 'Shift-Enter' in text input of composer"
     );
 });
-
-QUnit.test('post message on mailing channel with "CTRL-Enter" keyboard shortcut', async function (assert) {
-    assert.expect(2);
-
-    // channel expected to be found in the sidebar
-    // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
-    await this.start({
-        discuss: {
-            params: {
-                default_active_id: 'mail.channel_20',
-            },
-        },
-    });
-    assert.containsNone(
-        document.body,
-        '.o_Message',
-        "should not have any message initially in channel"
-    );
-
-    // insert some HTML in editable
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
-    await afterNextRender(() => {
-        const kevt = new window.KeyboardEvent('keydown', { ctrlKey: true, key: "Enter" });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
-    });
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should now have single message in channel after posting message from pressing 'CTRL-Enter' in text input of composer"
-    );
-});
-
-QUnit.test('post message on mailing channel with "META-Enter" keyboard shortcut', async function (assert) {
-    assert.expect(2);
-
-    // channel expected to be found in the sidebar
-    // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
-    await this.start({
-        discuss: {
-            params: {
-                default_active_id: 'mail.channel_20',
-            },
-        },
-    });
-    assert.containsNone(
-        document.body,
-        '.o_Message',
-        "should not have any message initially in channel"
-    );
-
-    // insert some HTML in editable
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
-    await afterNextRender(() => {
-        const kevt = new window.KeyboardEvent('keydown', { key: "Enter", metaKey: true });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
-    });
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should now have single message in channel after posting message from pressing 'META-Enter' in text input of composer"
-    );
-});
-
-QUnit.test('do not post message on mailing channel with "Enter" keyboard shortcut', async function (assert) {
-    // Note that test doesn't assert Enter makes a newline, because this
-    // default browser cannot be simulated with just dispatching
-    // programmatically crafted events...
-    assert.expect(2);
-
-    // channel expected to be found in the sidebar
-    // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
-    await this.start({
-        discuss: {
-            params: {
-                default_active_id: 'mail.channel_20',
-            },
-        },
-    });
-    assert.containsNone(
-        document.body,
-        '.o_Message',
-        "should not have any message initially in mailing channel"
-    );
-
-    // insert some HTML in editable
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
-    const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
-    document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
-    await nextAnimationFrame();
-    assert.containsNone(
-        document.body,
-        '.o_Message',
-        "should still not have any message in mailing channel after pressing 'Enter' in text input of composer"
-    );
-});
-
 QUnit.test('rendering of inbox message', async function (assert) {
     // AKU TODO: kinda message specific test
     assert.expect(7);

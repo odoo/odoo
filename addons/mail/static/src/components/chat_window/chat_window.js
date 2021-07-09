@@ -36,7 +36,6 @@ export class ChatWindow extends Component {
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 localeTextDirection: this.env.messaging.locale.textDirection,
                 thread,
-                threadMassMailing: thread && thread.mass_mailing,
                 threadModel: thread && thread.model,
             };
         });

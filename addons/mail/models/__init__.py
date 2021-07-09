@@ -17,7 +17,6 @@ from . import mail_thread
 from . import mail_thread_blacklist
 from . import mail_thread_cc
 from . import mail_blacklist
-from . import mail_moderation
 from . import mail_channel_partner
 from . import mail_channel
 from . import mail_template

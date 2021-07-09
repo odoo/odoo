@@ -286,10 +286,6 @@ function factory(dependencies) {
             isCausal: true,
             readonly: true,
         }),
-        /**
-         * Mailbox Moderation.
-         */
-        moderation: one2one('mail.thread'),
         notificationGroupManager: one2one('mail.notification_group_manager', {
             default: create(),
             isCausal: true,
