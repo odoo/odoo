@@ -476,7 +476,6 @@ class PosOrder(models.Model):
             'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
             'ref': self.name,
             'partner_id': self.partner_id.id,
-            'narration': self.note or '',
             # considering partner's sale pricelist's currency
             'currency_id': self.pricelist_id.currency_id.id,
             'invoice_user_id': self.user_id.id,
@@ -487,6 +486,8 @@ class PosOrder(models.Model):
             if self.config_id.cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids))
             else False
         }
+        if self.note:
+            vals.update({'narration': self.note})
         return vals
 
     def action_pos_order_invoice(self):

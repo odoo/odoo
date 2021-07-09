@@ -52,10 +52,6 @@ class AccountMove(models.Model):
 
         res = super(AccountMove, self)._onchange_partner_id()
 
-        # Recompute 'narration' based on 'company.invoice_terms'.
-        if self.move_type == 'out_invoice':
-            self.narration = self.company_id.with_context(lang=self.partner_id.lang or self.env.lang).invoice_terms
-
         return res
 
     @api.onchange('invoice_user_id')

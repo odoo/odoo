@@ -76,6 +76,7 @@ class TestL10nBeEdi(AccountEdiTestCommon):
                 <ID>INV/2017/00001</ID>
                 <IssueDate>2017-01-01</IssueDate>
                 <InvoiceTypeCode>380</InvoiceTypeCode>
+                <Note></Note>
                 <DocumentCurrencyCode>Gol</DocumentCurrencyCode>
                 <AccountingSupplierParty>
                     <Party>
