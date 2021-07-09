@@ -363,12 +363,12 @@
                 <field name="quantity" optional="show" string="On Hand Quantity"/>
                 <field name="product_uom_id" groups="uom.group_uom" string="UoM"/>
                 <field name="inventory_quantity" widget="counted_quantity_widget"/>
-                <field name="inventory_diff_quantity" string="Difference"  attrs="{'invisible': [('inventory_quantity_set', '=', False)]}" decoration-muted="inventory_quantity == 0" decoration-danger="inventory_diff_quantity &lt; 0" decoration-success="inventory_diff_quantity &gt; 0" decoration-bf="inventory_diff_quantity != 0"/>
+                <field name="inventory_diff_quantity" string="Difference"  attrs="{'invisible': [('inventory_quantity_set', '=', False)]}" decoration-muted="inventory_diff_quantity == 0" decoration-danger="inventory_diff_quantity &lt; 0" decoration-success="inventory_diff_quantity &gt; 0" decoration-bf="inventory_diff_quantity != 0"/>
                 <field name="inventory_date" optional="show"/>
                 <field name="user_id" string="User" optional="show"/>
                 <field name='company_id' groups="base.group_multi_company" optional="hide"/>
                 <button name="action_inventory_history" type="object" class="btn btn-link text-info" icon="fa-history" string="History"/>
-                <button name="action_apply_inventory" groups="stock.group_stock_manager" type="object" string="Apply" class="btn btn-link text-success" icon="fa-save" attrs="{'invisible': [('inventory_quantity_set', '=', False)]}"/>
+                <button name="action_apply_inventory" groups="stock.group_stock_manager" type="object" string="Apply" class="btn btn-link" icon="fa-save" attrs="{'invisible': [('inventory_quantity_set', '=', False)]}"/>
                 <button name="action_set_inventory_quantity" type="object" string="Set" class="btn btn-link" icon="fa-bullseye" attrs="{'invisible': [('inventory_quantity_set', '=', True)]}"/>
                 <button name="action_set_inventory_quantity_to_zero" type="object" string="Clear" class="btn text-warning" icon="fa-times" attrs="{'invisible': [('inventory_quantity_set', '=', False)]}"/>
             </tree>
