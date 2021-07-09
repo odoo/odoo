@@ -69,14 +69,14 @@ class Base(models.AbstractModel):
 
         # Workaround to match read_group's infrastructure
         # TO DO in master: harmonize this function and readgroup to allow factorization
+        group_by_name = group_by.partition(':')[0]
         group_by_modifier = group_by.partition(':')[2] or 'month'
-        group_by = group_by.partition(':')[0]
 
-        records_values = self.search_read(domain or [], [progress_bar['field'], group_by])
-        field_type = self._fields[group_by].type
+        records_values = self.search_read(domain or [], [progress_bar['field'], group_by_name])
+        field_type = self._fields[group_by_name].type
 
         for record_values in records_values:
-            group_by_value = record_values[group_by]
+            group_by_value = record_values.pop(group_by_name)
 
             # Again, imitating what _read_group_format_result and _read_group_prepare_data do
             if group_by_value and field_type in ['date', 'datetime']:
@@ -93,8 +93,8 @@ class Base(models.AbstractModel):
                     group_by_value = babel.dates.format_date(
                         group_by_value, format=DISPLAY_DATE_FORMATS[group_by_modifier],
                         locale=locale)
-                record_values[group_by] = group_by_value
 
+            record_values[group_by] = group_by_value
             record_values['__count'] = 1
 
         return records_values
