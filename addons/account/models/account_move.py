@@ -1096,7 +1096,7 @@ class AccountMove(models.Model):
 
         # Group the moves by journal and month
         for move in self:
-            if not highest_name and move == self[0] and not move.posted_before:
+            if not highest_name and move == self[0] and not move.posted_before and move.date:
                 # In the form view, we need to compute a default sequence so that the user can edit
                 # it. We only check the first move as an approximation (enough for new in form view)
                 pass
