@@ -275,7 +275,7 @@ import concurrency from 'web.concurrency';
 import core from 'web.core';
 import dataComparisonUtils from 'web.dataComparisonUtils';
 import Domain from 'web.Domain';
-import mathUtils from 'web.mathUtils';
+import * as mathUtils from '@web/core/utils/arrays';
 import session from 'web.session';
 
 

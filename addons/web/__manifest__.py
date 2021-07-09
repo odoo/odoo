@@ -161,7 +161,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/core/py_utils.js',
             'web/static/src/legacy/js/core/context.js',
             'web/static/src/legacy/js/core/data_comparison_utils.js',
-            'web/static/src/legacy/js/core/math_utils.js',
             'web/static/src/legacy/js/core/misc.js',
             'web/static/src/legacy/js/fields/*',
             'web/static/src/legacy/js/report/utils.js',
