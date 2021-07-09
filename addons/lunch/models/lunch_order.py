@@ -41,12 +41,12 @@ class LunchOrder(models.Model):
     display_toppings = fields.Text('Extras', compute='_compute_display_toppings', store=True)
 
     product_description = fields.Html('Description', related='product_id.description')
-    topping_label_1 = fields.Char(related='product_id.category_id.topping_label_1')
-    topping_label_2 = fields.Char(related='product_id.category_id.topping_label_2')
-    topping_label_3 = fields.Char(related='product_id.category_id.topping_label_3')
-    topping_quantity_1 = fields.Selection(related='product_id.category_id.topping_quantity_1')
-    topping_quantity_2 = fields.Selection(related='product_id.category_id.topping_quantity_2')
-    topping_quantity_3 = fields.Selection(related='product_id.category_id.topping_quantity_3')
+    topping_label_1 = fields.Char(related='product_id.supplier_id.topping_label_1')
+    topping_label_2 = fields.Char(related='product_id.supplier_id.topping_label_2')
+    topping_label_3 = fields.Char(related='product_id.supplier_id.topping_label_3')
+    topping_quantity_1 = fields.Selection(related='product_id.supplier_id.topping_quantity_1')
+    topping_quantity_2 = fields.Selection(related='product_id.supplier_id.topping_quantity_2')
+    topping_quantity_3 = fields.Selection(related='product_id.supplier_id.topping_quantity_3')
     image_1920 = fields.Image(compute='_compute_product_images')
     image_128 = fields.Image(compute='_compute_product_images')
 
@@ -62,10 +62,10 @@ class LunchOrder(models.Model):
 
     @api.depends('category_id')
     def _compute_available_toppings(self):
-        for line in self:
-            line.available_toppings_1 = bool(line.env['lunch.topping'].search_count([('category_id', '=', line.category_id.id), ('topping_category', '=', 1)]))
-            line.available_toppings_2 = bool(line.env['lunch.topping'].search_count([('category_id', '=', line.category_id.id), ('topping_category', '=', 2)]))
-            line.available_toppings_3 = bool(line.env['lunch.topping'].search_count([('category_id', '=', line.category_id.id), ('topping_category', '=', 3)]))
+        for order in self:
+            order.available_toppings_1 = bool(order.env['lunch.topping'].search_count([('supplier_id', '=', order.supplier_id.id), ('topping_category', '=', 1)]))
+            order.available_toppings_2 = bool(order.env['lunch.topping'].search_count([('supplier_id', '=', order.supplier_id.id), ('topping_category', '=', 2)]))
+            order.available_toppings_3 = bool(order.env['lunch.topping'].search_count([('supplier_id', '=', order.supplier_id.id), ('topping_category', '=', 3)]))
 
     def init(self):
         self._cr.execute("""CREATE INDEX IF NOT EXISTS lunch_order_user_product_date ON %s (user_id, product_id, date)"""
