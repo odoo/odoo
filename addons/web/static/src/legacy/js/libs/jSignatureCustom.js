@@ -13,7 +13,7 @@ function _renderImageOnCanvas( data, formattype, rerendercallable ) {
 
     // Odoo override: 
     // If a signature is saved in mobile resolution, when the user tries to sign a document in desktop, the size that is shown is the mobile size, which is strange for the user.
-    // This modifies the library method that adds the image to the canvas, resizing the image to the canvas size.
+    // This modifies the library method that adds the image to the canvas, resizing the image to the canvas size, keeping the image ratio and showing it centered.
     
     var img = new Image()
     // this = Canvas DOM elem. Not jQuery object. Not Canvas's parent div.
@@ -23,10 +23,15 @@ function _renderImageOnCanvas( data, formattype, rerendercallable ) {
         var ctx = c.getContext("2d");
         var oldShadowColor = ctx.shadowColor;
         ctx.shadowColor = "transparent";
+
+        var ratio = ((img.width / img.height) > (c.width / c.height)) ? c.width / img.width : c.height / img.height;
+
         ctx.drawImage( 
-            img, 0, 0
-            , c.width
-            , c.height
+            img,
+            (c.width / 2) - (img.width * ratio / 2),
+            (c.height / 2) - (img.height * ratio / 2)
+            , img.width * ratio
+            , img.height * ratio
         );
         ctx.shadowColor = oldShadowColor;
     };
