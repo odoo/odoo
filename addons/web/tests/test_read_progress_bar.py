@@ -56,6 +56,11 @@ class TestReadProgressBar(common.TransactionCase):
                     'relation': 'res.country',
                 }),
                 (0, 0, {
+                    'field_description': 'Date',
+                    'name': 'x_date',
+                    'ttype': 'date',
+                }),
+                (0, 0, {
                     'field_description': 'State',
                     'name': 'x_state',
                     'ttype': 'selection',
@@ -67,21 +72,24 @@ class TestReadProgressBar(common.TransactionCase):
         c1, c2, c3 = self.env['res.country'].search([], limit=3)
 
         self.env['x_progressbar'].create([
-            {'x_country_id': c1.id, 'x_state': 'foo'},
-            {'x_country_id': c1.id, 'x_state': 'foo'},
-            {'x_country_id': c1.id, 'x_state': 'foo'},
-            {'x_country_id': c1.id, 'x_state': 'bar'},
-            {'x_country_id': c1.id, 'x_state': 'baz'},
-            {'x_country_id': c2.id, 'x_state': 'foo'},
-            {'x_country_id': c2.id, 'x_state': 'bar'},
-            {'x_country_id': c2.id, 'x_state': 'bar'},
-            {'x_country_id': c2.id, 'x_state': 'baz'},
-            {'x_country_id': c2.id, 'x_state': 'baz'},
-            {'x_country_id': c3.id, 'x_state': 'foo'},
-            {'x_country_id': c3.id, 'x_state': 'foo'},
-            {'x_country_id': c3.id, 'x_state': 'baz'},
-            {'x_country_id': c3.id, 'x_state': 'baz'},
-            {'x_country_id': c3.id, 'x_state': 'baz'},
+            # week 21
+            {'x_country_id': c1.id, 'x_date': '2021-05-20', 'x_state': 'foo'},
+            {'x_country_id': c1.id, 'x_date': '2021-05-21', 'x_state': 'foo'},
+            {'x_country_id': c1.id, 'x_date': '2021-05-22', 'x_state': 'foo'},
+            {'x_country_id': c1.id, 'x_date': '2021-05-23', 'x_state': 'bar'},
+            # week 22
+            {'x_country_id': c1.id, 'x_date': '2021-05-24', 'x_state': 'baz'},
+            {'x_country_id': c2.id, 'x_date': '2021-05-25', 'x_state': 'foo'},
+            {'x_country_id': c2.id, 'x_date': '2021-05-26', 'x_state': 'bar'},
+            {'x_country_id': c2.id, 'x_date': '2021-05-27', 'x_state': 'bar'},
+            {'x_country_id': c2.id, 'x_date': '2021-05-28', 'x_state': 'baz'},
+            {'x_country_id': c2.id, 'x_date': '2021-05-29', 'x_state': 'baz'},
+            {'x_country_id': c3.id, 'x_date': '2021-05-30', 'x_state': 'foo'},
+            # week 23
+            {'x_country_id': c3.id, 'x_date': '2021-05-31', 'x_state': 'foo'},
+            {'x_country_id': c3.id, 'x_date': '2021-06-01', 'x_state': 'baz'},
+            {'x_country_id': c3.id, 'x_date': '2021-06-02', 'x_state': 'baz'},
+            {'x_country_id': c3.id, 'x_date': '2021-06-03', 'x_state': 'baz'},
         ])
 
         progress_bar = {
@@ -93,6 +101,14 @@ class TestReadProgressBar(common.TransactionCase):
             c1.display_name: {'foo': 3, 'bar': 1, 'baz': 1},
             c2.display_name: {'foo': 1, 'bar': 2, 'baz': 2},
             c3.display_name: {'foo': 2, 'bar': 0, 'baz': 3},
+        })
+
+        # check date aggregation and format
+        result = self.env['x_progressbar'].read_progress_bar([], 'x_date:week', progress_bar)
+        self.assertEqual(result, {
+            'W21 2021': {'foo': 3, 'bar': 1, 'baz': 0},
+            'W22 2021': {'foo': 2, 'bar': 2, 'baz': 3},
+            'W23 2021': {'foo': 1, 'bar': 0, 'baz': 3},
         })
 
         # add a computed field on model
@@ -118,4 +134,11 @@ class TestReadProgressBar(common.TransactionCase):
             c1.display_name: {'foo': 3, 'bar': 1, 'baz': 1},
             c2.display_name: {'foo': 1, 'bar': 2, 'baz': 2},
             c3.display_name: {'foo': 2, 'bar': 0, 'baz': 3},
+        })
+
+        result = self.env['x_progressbar'].read_progress_bar([], 'x_date:week', progress_bar)
+        self.assertEqual(result, {
+            'W21 2021': {'foo': 3, 'bar': 1, 'baz': 0},
+            'W22 2021': {'foo': 2, 'bar': 2, 'baz': 3},
+            'W23 2021': {'foo': 1, 'bar': 0, 'baz': 3},
         })
