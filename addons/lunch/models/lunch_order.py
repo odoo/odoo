@@ -11,7 +11,7 @@ class LunchOrder(models.Model):
     _order = 'id desc'
     _display_name = 'product_id'
 
-    name = fields.Char(related='product_id.name', string="Product Name", readonly=True)  # to remove
+    name = fields.Char(related='product_id.name', string="Product Name", store=True, readonly=True)
     topping_ids_1 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Extras 1', domain=[('topping_category', '=', 1)])
     topping_ids_2 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Extras 2', domain=[('topping_category', '=', 2)])
     topping_ids_3 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Extras 3', domain=[('topping_category', '=', 3)])
@@ -27,8 +27,7 @@ class LunchOrder(models.Model):
                               states={'new': [('readonly', False)]},
                               default=lambda self: self.env.uid)
     note = fields.Text('Notes')
-    price = fields.Float('Total Price', compute='_compute_total_price', readonly=True, store=True,
-                         digits='Account')
+    price = fields.Monetary('Total Price', compute='_compute_total_price', readonly=True, store=True)
     active = fields.Boolean('Active', default=True)
     state = fields.Selection([('new', 'To Order'),
                               ('ordered', 'Ordered'),
@@ -206,3 +205,6 @@ class LunchOrder(models.Model):
 
     def action_cancel(self):
         self.write({'state': 'cancelled'})
+
+    def action_reset(self):
+        self.write({'state': 'ordered'})

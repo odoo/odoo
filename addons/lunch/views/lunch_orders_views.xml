@@ -46,6 +46,7 @@
                 <field name="company_id" groups="base.group_multi_company"/>
                 <button name="action_confirm" string="Confirm" type="object" icon="fa-check" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
                 <button name="action_cancel" string="Cancel" type="object" icon="fa-times" attrs="{'invisible': [('state', 'in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager"/>
+                <button name="action_reset" string="Reset" type="object" icon="fa-undo" attrs="{'invisible': [('state', '!=', 'cancelled')]}" groups="lunch.group_lunch_manager"/>
             </tree>
         </field>
     </record>
@@ -60,7 +61,8 @@
                 <field name="state"/>
                 <field name="user_id"/>
                 <field name="date"/>
-                <field name="price"/>
+                <field name="company_id"/>
+                <field name="currency_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -181,6 +183,7 @@
         <field name="model">lunch.order</field>
         <field name="arch" type="xml">
             <form>
+                <field name="company_id" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="quantity" invisible="1"/>
                 <field name="product_id" invisible="1"/>
@@ -194,7 +197,7 @@
                     </div>
                     <div class="flex-grow-1 pr-5">
                         <h2><field name="name"/></h2>
-                        <h3 class="pt-3"><field name="price" widget="monetary"/></h3>
+                        <h3 class="pt-3"><field name="price"/></h3>
                     </div>
                 </div>
                 <div class="o_lunch_wizard">
