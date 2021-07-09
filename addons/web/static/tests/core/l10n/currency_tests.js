@@ -2,7 +2,6 @@
 
 import { formatCurrency, parseCurrency } from "@web/core/l10n/currency";
 import { localization } from "@web/core/l10n/localization";
-import { patch, unpatch } from "@web/core/utils/patch";
 import { defaultLocalization } from "../../helpers/mock_services";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { session } from "@web/session";
@@ -13,7 +12,7 @@ QUnit.module("utils", (hooks) => {
     });
     QUnit.module("Currency");
 
-    QUnit.test("format", async (assert) => {
+    QUnit.test("formatCurrency", async (assert) => {
         assert.deepEqual(formatCurrency(1234567.654, 1), "$ 1,234,567.65");
         assert.deepEqual(formatCurrency(1234567.654, 2), "1,234,567.65 €");
         assert.deepEqual(
