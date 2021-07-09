@@ -82,12 +82,11 @@ function factory(dependencies) {
             if (!this.thread) {
                 return;
             }
-            const isMailingList = this.thread.model === 'mail.channel' && this.thread.mass_mailing;
             // Actually in mobile there is a send button, so we need there 'enter' to allow new line.
             // Hence, we want to use a different shortcut 'ctrl/meta enter' to send for small screen
             // size with a non-mailing channel.
             // here send will be done on clicking the button or using the 'ctrl/meta enter' shortcut.
-            if (this.env.messaging.device.isMobile || isMailingList) {
+            if (this.env.messaging.device.isMobile) {
                 return ['ctrl-enter', 'meta-enter'];
             }
             return ['enter'];
@@ -198,9 +197,6 @@ function factory(dependencies) {
     }
 
     ThreadView.fields = {
-        checkedMessages: many2many('mail.message', {
-            related: 'threadCache.checkedMessages',
-        }),
         /**
          * List of component hints. Hints contain information that help
          * components make UI/UX decisions based on their UI state.
@@ -343,7 +339,6 @@ function factory(dependencies) {
                 'device',
                 'deviceIsMobile',
                 'thread',
-                'threadMassMailing',
                 'threadModel',
             ],
         }),
@@ -400,12 +395,6 @@ function factory(dependencies) {
         /**
          * Serves as compute dependency.
          */
-        threadMassMailing: attr({
-            related: 'thread.mass_mailing',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
         threadModel: attr({
             related: 'thread.model',
         }),
@@ -430,9 +419,6 @@ function factory(dependencies) {
         threadViewer: one2one('mail.thread_viewer', {
             inverse: 'threadView',
             readonly: true,
-        }),
-        uncheckedMessages: many2many('mail.message', {
-            related: 'threadCache.uncheckedMessages',
         }),
     };
 

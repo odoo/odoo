@@ -52,11 +52,6 @@
                         </t>
                     </div>
                 </t>
-                <t t-if="composer.thread and composer.thread.model === 'mail.channel' and composer.thread.mass_mailing">
-                    <div class="o_Composer_subject">
-                        <input class="o_Composer_subjectInput" type="text" placeholder="Subject" t-on-input="_onInputSubject" t-ref="subject"/>
-                    </div>
-                </t>
                 <t t-if="props.hasCurrentPartnerAvatar">
                     <div class="o_Composer_sidebarMain">
                         <img class="o_Composer_currentPartnerAvatar rounded-circle" t-att-src="currentPartnerAvatar" alt=""/>
@@ -66,7 +61,6 @@
                     class="o_Composer_coreMain"
                     t-att-class="{
                         'o-composer-is-compact': props.isCompact,
-                        'o-composer-is-extended': composer.thread and composer.thread.mass_mailing,
                     }"
                 >
                     <ComposerTextInput

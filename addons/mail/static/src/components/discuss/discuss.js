@@ -7,8 +7,6 @@ import { Composer } from '@mail/components/composer/composer';
 import { DiscussMobileMailboxSelection } from '@mail/components/discuss_mobile_mailbox_selection/discuss_mobile_mailbox_selection';
 import { DiscussSidebar } from '@mail/components/discuss_sidebar/discuss_sidebar';
 import { MobileMessagingNavbar } from '@mail/components/mobile_messaging_navbar/mobile_messaging_navbar';
-import { ModerationDiscardDialog } from '@mail/components/moderation_discard_dialog/moderation_discard_dialog';
-import { ModerationRejectDialog } from '@mail/components/moderation_reject_dialog/moderation_reject_dialog';
 import { NotificationList } from '@mail/components/notification_list/notification_list';
 import { ThreadView } from '@mail/components/thread_view/thread_view';
 
@@ -21,8 +19,6 @@ const components = {
     DiscussMobileMailboxSelection,
     DiscussSidebar,
     MobileMessagingNavbar,
-    ModerationDiscardDialog,
-    ModerationRejectDialog,
     NotificationList,
     ThreadView,
 };
@@ -34,12 +30,7 @@ export class Discuss extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore((...args) => this._useStoreSelector(...args), {
-            compareDepth: {
-                checkedMessages: 1,
-                uncheckedMessages: 1,
-            },
-        });
+        useStore((...args) => this._useStoreSelector(...args), {});
         this._updateLocalStoreProps();
         /**
          * Reference of the composer. Useful to focus it.
@@ -173,15 +164,10 @@ export class Discuss extends Component {
         const threadView = discuss && discuss.threadView;
         const replyingToMessage = discuss && discuss.replyingToMessage;
         const replyingToMessageOriginThread = replyingToMessage && replyingToMessage.originThread;
-        const checkedMessages = threadView ? threadView.checkedMessages : [];
         return {
-            checkedMessages,
-            checkedMessagesIsModeratedByCurrentPartner: checkedMessages && checkedMessages.some(message => message.isModeratedByCurrentPartner), // for widget
             discuss,
             discussActiveId: discuss && discuss.activeId, // for widget
             discussActiveMobileNavbarTabId: discuss && discuss.activeMobileNavbarTabId,
-            discussHasModerationDiscardDialog: discuss && discuss.hasModerationDiscardDialog,
-            discussHasModerationRejectDialog: discuss && discuss.hasModerationRejectDialog,
             discussIsAddingChannel: discuss && discuss.isAddingChannel,
             discussIsAddingChat: discuss && discuss.isAddingChat,
             discussIsDoFocus: discuss && discuss.isDoFocus,
@@ -200,27 +186,12 @@ export class Discuss extends Component {
             threadPublic: thread && thread.public, // for widget
             threadView,
             threadViewMessagesLength: threadView && threadView.messages.length, // for widget
-            uncheckedMessages: threadView ? threadView.uncheckedMessages : [], // for widget
         };
     }
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onDialogClosedModerationDiscard() {
-        this.discuss.update({ hasModerationDiscardDialog: false });
-    }
-
-    /**
-     * @private
-     */
-    _onDialogClosedModerationReject() {
-        this.discuss.update({ hasModerationRejectDialog: false });
-    }
 
     /**
      * @private

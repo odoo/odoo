@@ -130,7 +130,6 @@ class ImLivechatChannel(models.Model):
             'channel_type': 'livechat',
             'name': ' '.join([visitor_user.display_name if visitor_user else anonymous_name, operator.livechat_username if operator.livechat_username else operator.name]),
             'public': 'private',
-            'email_send': False,
         }
 
     def _open_livechat_mail_channel(self, anonymous_name, previous_operator_id=None, user_id=None, country_id=None):

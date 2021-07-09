@@ -142,44 +142,6 @@ class TestMassMailFeatures(MassMailCommon, CronMixinCase):
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_channel_blacklisted_recipients(self):
-        """ Posting a message on a channel should send one email to all recipients, except the blacklisted ones """
-        test_channel = self.env['mail.channel'].create({
-            'name': 'Test',
-            'description': 'Description',
-            'alias_name': 'test',
-            'public': 'public',
-            'email_send': True,
-        })
-        test_partner = self.env['res.partner'].create({
-            'name': 'Test Partner',
-            'email': 'test@example.com',
-        })
-
-        blacklisted_partner = self.env['res.partner'].create({
-            'name': 'Blacklisted Partner',
-            'email': 'test@black.list',
-        })
-
-        # Set Blacklist
-        self.env['mail.blacklist'].create({
-            'email': 'test@black.list',
-        })
-
-        test_channel._action_add_members(test_partner + blacklisted_partner)
-        with self.mock_mail_gateway():
-            test_channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
-
-        self.assertEqual(len(self._mails), 1, 'Number of mail incorrect. Should be equal to 1.')
-        for email in self._mails:
-            self.assertEqual(
-                set(email['email_to']),
-                set([formataddr((test_partner.name, test_partner.email))]),
-                'email_to incorrect. Should be equal to "%s"' % (
-                    formataddr((test_partner.name, test_partner.email))))
-
-    @users('user_marketing')
-    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mailing_cron_trigger(self):
         """ Technical test to ensure the cron is triggered at the correct
         time """

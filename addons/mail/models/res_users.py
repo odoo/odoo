@@ -25,37 +25,6 @@ class Users(models.Model):
         help="Policy on how to handle Chatter notifications:\n"
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
-    # channel-specific: moderation
-    is_moderator = fields.Boolean(string='Is moderator', compute='_compute_is_moderator')
-    moderation_counter = fields.Integer(string='Moderation count', compute='_compute_moderation_counter')
-    moderation_channel_ids = fields.Many2many(
-        'mail.channel', 'mail_channel_moderator_rel',
-        string='Moderated channels')
-
-    @api.depends('moderation_channel_ids.moderation', 'moderation_channel_ids.moderator_ids')
-    def _compute_is_moderator(self):
-        moderated = self.env['mail.channel'].search([
-            ('id', 'in', self.mapped('moderation_channel_ids').ids),
-            ('moderation', '=', True),
-            ('moderator_ids', 'in', self.ids)
-        ])
-        user_ids = moderated.mapped('moderator_ids')
-        for user in self:
-            user.is_moderator = user in user_ids
-
-    def _compute_moderation_counter(self):
-        self._cr.execute("""
-SELECT channel_moderator.res_users_id, COUNT(msg.id)
-FROM "mail_channel_moderator_rel" AS channel_moderator
-JOIN "mail_message" AS msg
-ON channel_moderator.mail_channel_id = msg.res_id
-    AND channel_moderator.res_users_id IN %s
-    AND msg.model = 'mail.channel'
-    AND msg.moderation_status = 'pending_moderation'
-GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
-        result = dict(self._cr.fetchall())
-        for user in self:
-            user.moderation_counter = result.get(user.id, 0)
 
     @property
     def SELF_READABLE_FIELDS(self):

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="mail_group_send_guidelines">
+            <div>
+                <p>Hello <t t-if="member.partner_id" t-esc="member.partner_id.name"/>,</p>
+                <p>Please find below the guidelines of the <t t-esc="group.name"/> mailing list.</p>
+                <p t-esc="group.moderation_guidelines_msg"/>
+            </div>
+        </template>
+
+        <template id="mail_group_footer" name="Mail Group: Footer">
+            <div>
+                <span>_______________________________________________</span>
+                <span>Mailing-List: <t t-esc="group_url"/></span>
+                <span>Post to: <t t-esc="mailto"/></span>
+                <span>Unsubscribe: <t t-esc="unsub_url"/></span>
+            </div>
+        </template>
+
+        <template id="mail_group_notify_moderation">
+            <div>
+                <p>Hello <t t-esc='record.name'/></p>
+                <p>You have messages to moderate, please go for the proceedings.</p><br/><br/>
+                <div style="text-align: center;">
+                    <a href="/web#action=mail_group.mail_group_message_action" class="o_default_snippet_text">Moderate Messages</a>
+                </div>
+                <p>Thank you!</p>
+            </div>
+        </template>
+    </data>
+
+    <!-- Confirm subscription email -->
+    <record id="mail_template_list_subscribe" model="mail.template">
+        <field name="name">Mail Group: Mailing list subscription</field>
+        <field name="model_id" ref="mail_group.model_mail_group"/>
+        <field name="subject">Confirm subscription to ${object.name}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                Hello,<br/><br/>
+                You have requested to be subscribed to the mailing list <strong>${object.name}</strong>.
+                <br/><br/>
+                To confirm, please visit the following link: <strong t-if="ctx.get('token_url')"><a href="${ctx['token_url']}">${ctx['token_url']}</a></strong>
+                <br/><br/>
+                If this was a mistake or you did not requested this action, please ignore this message.
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <!-- Confirm unsubscription email -->
+    <record id="mail_template_list_unsubscribe" model="mail.template">
+        <field name="name">Mail Group: Mailing list unsubscription</field>
+        <field name="model_id" ref="mail_group.model_mail_group"/>
+        <field name="subject">Confirm unsubscription to ${object.name}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                Hello,<br/><br/>
+                You have requested to be unsubscribed to the mailing list <strong>${object.name}</strong>.
+                <br/><br/>
+                To confirm, please visit the following link: <strong t-if="ctx.get('token_url')"><a href="${ctx['token_url']}">${ctx['token_url']}</a></strong>.
+                <br/><br/>
+                If this was a mistake or you did not requested this action, please ignore this message.
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</odoo>

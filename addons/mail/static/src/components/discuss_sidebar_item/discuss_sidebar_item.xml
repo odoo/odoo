@@ -28,9 +28,6 @@
                     <div class="o_DiscussSidebarItem_item o_DiscussSidebarItem_name" t-att-class="{ 'o-item-unread': thread.localMessageUnreadCounter > 0 }">
                         <t t-esc="thread.displayName"/>
                     </div>
-                    <t t-if="thread.mass_mailing">
-                        <i class="fa fa-envelope-o" title="Messages are sent by email" role="img"/>
-                    </t>
                 </t>
                 <div class="o-autogrow o_DiscussSidebarItem_item"/>
                 <t t-if="thread.model !== 'mail.box'">

@@ -96,9 +96,6 @@
                                     </t>
                                 </div>
                             </t>
-                            <t t-if="message.moderation_status === 'pending_moderation' and !message.isModeratedByCurrentPartner">
-                                <span class="o_Message_moderationPending o-author" title="Your message is pending moderation.">Pending moderation</span>
-                            </t>
                             <t t-if="threadView and message.originThread and message.originThread === threadView.thread and message.notifications.length > 0">
                                 <t t-if="message.failureNotifications.length > 0">
                                     <span class="o_Message_notificationIconClickable o-error" t-on-click="_onClickFailure">
@@ -119,7 +116,7 @@
                                 </t>
                             </t>
                             <div class="o_Message_commands o_Message_headerCommands" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }">
-                                <t t-if="!message.isTemporary and ((message.message_type !== 'notification' and message.originThread and message.originThread.model === 'mail.channel') or !message.isTransient) and message.moderation_status !== 'pending_moderation'">
+                                <t t-if="!message.isTemporary and ((message.message_type !== 'notification' and message.originThread and message.originThread.model === 'mail.channel') or !message.isTransient)">
                                     <span class="o_Message_command o_Message_commandStar o_Message_headerCommand fa"
                                         t-att-class="{
                                             'fa-star': message.isStarred,
@@ -148,19 +145,6 @@
                                 </t>
                             </div>
                         </div>
-                        <t t-if="message.isModeratedByCurrentPartner">
-                            <div class="o_Message_moderationSubHeader">
-                                <t t-if="threadView and props.hasCheckbox and message.hasCheckbox">
-                                    <input class="o_Message_checkbox" type="checkbox" t-att-checked="message.isChecked(threadView.thread, threadView.stringifiedDomain) ? 'checked': ''" t-on-change="_onChangeCheckbox" t-ref="checkbox"/>
-                                </t>
-                                <span class="o_Message_moderationPending">Pending moderation:</span>
-                                <a class="o_Message_moderationAction o-accept" href="#" title="Accept" t-on-click="_onClickModerationAccept">Accept</a>
-                                <a class="o_Message_moderationAction o-reject" href="#" title="Remove message with explanation" t-on-click="_onClickModerationReject">Reject</a>
-                                <a class="o_Message_moderationAction o-discard" href="#" title="Remove message without explanation" t-on-click="_onClickModerationDiscard">Discard</a>
-                                <a class="o_Message_moderationAction o-allow" href="#" title="Add this email address to white list of people" t-on-click="_onClickModerationAllow">Always Allow</a>
-                                <a class="o_Message_moderationAction o-ban" href="#" title="Ban this email address" t-on-click="_onClickModerationBan">Ban</a>
-                            </div>
-                        </t>
                     </t>
                     <div class="o_Message_content" t-ref="content">
                         <div class="o_Message_prettyBody" t-ref="prettyBody"/><!-- message.prettyBody is inserted here from _update() -->
@@ -201,15 +185,6 @@
                         </div>
                     </t>
                 </div>
-                <t t-if="state.hasModerationBanDialog">
-                    <ModerationBanDialog messageLocalIds="[message.localId]" t-on-dialog-closed="_onDialogClosedModerationBan"/>
-                </t>
-                <t t-if="state.hasModerationDiscardDialog">
-                    <ModerationDiscardDialog messageLocalIds="[message.localId]" t-on-dialog-closed="_onDialogClosedModerationDiscard"/>
-                </t>
-                <t t-if="state.hasModerationRejectDialog">
-                    <ModerationRejectDialog messageLocalIds="[message.localId]" t-on-dialog-closed="_onDialogClosedModerationReject"/>
-                </t>
             </t>
         </div>
     </t>

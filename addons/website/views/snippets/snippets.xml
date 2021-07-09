@@ -127,7 +127,7 @@
                     <t t-snippet="website.s_countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg">
                         <keywords>celebration, launch</keywords>
                     </t>
-                    <t id="mail_channel_discussion_group_hook"/>
+                    <t id="mail_group_hook"/>
                     <t id="twitter_favorite_tweets_hook"/>
                     <t t-snippet="website.s_embed_code" t-thumbnail="/website/static/src/img/snippets_thumbs/s_embed_code.svg"/>
                 </div>
@@ -173,7 +173,7 @@
     <xpath expr="//div[@id='snippet_effect']//t[@t-snippet][last()]" position="after">
         <t t-install="website_form" string="Form Builder" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg"/>
         <t id="newsletter_popup_snippet" t-install="mass_mailing" string="Newsletter Popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.svg"/>
-        <t t-install="website_mail_channel" string="Discussion Group" t-thumbnail="/website/static/src/img/snippets_thumbs/s_channel.svg"/>
+        <t t-install="website_mail_group" string="Discussion Group" t-thumbnail="/website/static/src/img/snippets_thumbs/s_group.svg"/>
         <t t-install="website_twitter" string="Twitter Scroller" t-thumbnail="/website/static/src/img/snippets_thumbs/s_twitter_scroll.svg"/>
     </xpath>
     <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">

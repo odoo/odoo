@@ -211,15 +211,11 @@ MockServer.include({
             await nextAnimationFrame();
             const domain = args.args[0] || args.kwargs.domain;
             const limit = args.args[1] || args.kwargs.limit;
-            const moderated_channel_ids = args.args[2] || args.kwargs.moderated_channel_ids;
-            return this._mockMailMessageMessageFetch(domain, limit, moderated_channel_ids);
+            return this._mockMailMessageMessageFetch(domain, limit);
         }
         if (args.model === 'mail.message' && args.method === 'message_format') {
             const ids = args.args[0];
             return this._mockMailMessageMessageFormat(ids);
-        }
-        if (args.model === 'mail.message' && args.method === 'moderate') {
-            return this._mockMailMessageModerate(args);
         }
         if (args.model === 'mail.message' && args.method === 'set_message_done') {
             const ids = args.args[0];
@@ -363,13 +359,6 @@ MockServer.include({
         ]);
         const privateGroupInfos = this._mockMailChannelChannelInfo(privateGroups.map(channel => channel.id));
 
-        const moderation_channel_ids = this._getRecords('mail.channel', [['is_moderator', '=', true]]).map(channel => channel.id);
-        const moderation_counter = this._getRecords('mail.message', [
-            ['model', '=', 'mail.channel'],
-            ['res_id', 'in', moderation_channel_ids],
-            ['moderation_status', '=', 'pending_moderation'],
-        ]).length;
-
         const partnerRoot = this._getRecords(
             'res.partner',
             [['id', '=', this.partnerRootId]],
@@ -411,8 +400,6 @@ MockServer.include({
             mail_failures: mailFailures,
             mention_partner_suggestions: [],
             menu_id: false,
-            moderation_channel_ids,
-            moderation_counter,
             needaction_inbox_counter,
             partner_root: partnerRootFormat,
             public_partners: [publicPartnerFormat],
@@ -699,7 +686,6 @@ MockServer.include({
         // an existing chat.
         const id = this._mockCreate('mail.channel', {
             channel_type: 'chat',
-            mass_mailing: false,
             is_minimized: true,
             is_pinned: true,
             members: [[6, 0, partners_to]],
@@ -789,7 +775,6 @@ MockServer.include({
                 { body, message_type, subtype_xmlid },
             );
         }
-        // moderation_guidelines not handled here for simplicity
         const channelInfo = this._mockMailChannelChannelInfo([channel.id], 'join')[0];
         const notification = [[false, 'res.partner', this.currentPartnerId], channelInfo];
         this._widget.call('bus_service', 'trigger', 'notification', [notification]);
@@ -951,10 +936,6 @@ MockServer.include({
     /**
      * Simulates `message_post` on `mail.channel`.
      *
-     * For simplicity this mock handles a simple case in regard to moderation:
-     * - messages from JS are assumed to be always sent by the current partner,
-     * - moderation white list and black list are not checked.
-     *
      * @private
      * @param {integer} id
      * @param {Object} kwargs
@@ -971,18 +952,11 @@ MockServer.include({
                 { is_pinned: true },
             ]);
         }
-        let moderation_status = 'accepted';
-        if (channel.moderation && ['email', 'comment'].includes(message_type)) {
-            if (!channel.is_moderator) {
-                moderation_status = 'pending_moderation';
-            }
-        }
         const messageId = this._mockMailThreadMessagePost(
             'mail.channel',
             [id],
             Object.assign(kwargs, {
                 message_type,
-                moderation_status,
             }),
             context,
         );
@@ -1120,21 +1094,10 @@ MockServer.include({
      * @private
      * @param {Array[]} domain
      * @param {string} [limit=20]
-     * @param {Object} [moderated_channel_ids]
      * @returns {Object[]}
      */
-    _mockMailMessageMessageFetch(domain, limit = 20, moderated_channel_ids) {
+    _mockMailMessageMessageFetch(domain, limit = 20) {
         let messages = this._getRecords('mail.message', domain);
-        if (moderated_channel_ids) {
-            const mod_messages = this._getRecords('mail.message', [
-                ['model', '=', 'mail.channel'],
-                ['res_id', 'in', moderated_channel_ids],
-                '|',
-                ['author_id', '=', this.currentPartnerId],
-                ['moderation_status', '=', 'pending_moderation'],
-            ]);
-            messages = [...new Set([...messages, ...mod_messages])];
-        }
         // sorted from highest ID to lowest ID (i.e. from youngest to oldest)
         messages.sort(function (m1, m2) {
             return m1.id < m2.id ? 1 : -1;
@@ -1244,40 +1207,6 @@ MockServer.include({
             }
             return response;
         });
-    },
-    /**
-     * Simulates `moderate` on `mail.message`.
-     *
-     * @private
-     */
-    _mockMailMessageModerate(args) {
-        const messageIDs = args.args[0];
-        const decision = args.args[1];
-        const model = this.data['mail.message'];
-        if (decision === 'reject' || decision === 'discard') {
-            model.records = _.reject(model.records, function (rec) {
-                return _.contains(messageIDs, rec.id);
-            });
-            // simulate notification back (deletion of rejected/discarded
-            // message in channel)
-            const dbName = undefined; // useless for tests
-            const notifData = {
-                message_ids: messageIDs,
-                type: "deletion",
-            };
-            const metaData = [dbName, 'res.partner', this.currentPartnerId];
-            const notification = [metaData, notifData];
-            this._widget.call('bus_service', 'trigger', 'notification', [notification]);
-        } else if (decision === 'accept') {
-            // simulate notification back (new accepted message in channel)
-            const messages = this._getRecords('mail.message', [['id', 'in', messageIDs]]);
-            for (const message of messages) {
-                this._mockWrite('mail.message', [[message.id], {
-                    moderation_status: 'accepted',
-                }]);
-                this._mockMailThread_NotifyThread(model, [message.res_id], message.id);
-            }
-        }
     },
     /**
      * Simulates `_message_notification_format` on `mail.message`.

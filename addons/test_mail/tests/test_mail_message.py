@@ -310,12 +310,6 @@ class TestMessageAccess(TestMailCommon):
         # Test: Bert reads the message, ok because linked to a doc he is allowed to read
         self.message.with_user(self.user_employee).read()
 
-    def test_mail_message_access_read_crash_moderation(self):
-        # with self.assertRaises(AccessError):
-        self.message.write({'model': 'mail.channel', 'res_id': self.group_public.id, 'moderation_status': 'pending_moderation'})
-        # Test: Bert reads the message, ok because linked to a doc he is allowed to read
-        self.message.with_user(self.user_employee).read()
-
     # --------------------------------------------------
     # CREATE
     # --------------------------------------------------
@@ -392,23 +386,3 @@ class TestMessageAccess(TestMailCommon):
 
         self.assertTrue(new_mail)
         self.assertEqual(new_msg.parent_id, message)
-
-    # --------------------------------------------------
-    # WRITE
-    # --------------------------------------------------
-
-    def test_mail_message_access_write_moderation(self):
-        """ Only moderators can modify pending messages """
-        self.group_public.write({
-            'email_send': True,
-            'moderation': True,
-            'channel_partner_ids': [(4, self.partner_employee.id)],
-            'moderator_ids': [(4, self.user_employee.id)],
-        })
-        self.message.write({'model': 'mail.channel', 'res_id': self.group_public.id, 'moderation_status': 'pending_moderation'})
-        self.message.with_user(self.user_employee).write({'moderation_status': 'accepted'})
-
-    def test_mail_message_access_write_crash_moderation(self):
-        self.message.write({'model': 'mail.channel', 'res_id': self.group_public.id, 'moderation_status': 'pending_moderation'})
-        with self.assertRaises(AccessError):
-            self.message.with_user(self.user_employee).write({'moderation_status': 'accepted'})

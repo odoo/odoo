@@ -39,11 +39,6 @@ const DiscussWidget = AbstractAction.extend({
         this.$buttons.on('click', '.o_mobile_new_channel', ev => this._onClickMobileNewChannel(ev));
         this.$buttons.on('click', '.o_mobile_new_message', ev => this._onClickMobileNewMessage(ev));
         this.$buttons.on('click', '.o_unstar_all', ev => this._onClickUnstarAll(ev));
-        this.$buttons.on('click', '.o_widget_Discuss_controlPanelButtonSelectAll', ev => this._onClickSelectAll(ev));
-        this.$buttons.on('click', '.o_widget_Discuss_controlPanelButtonUnselectAll', ev => this._onClickUnselectAll(ev));
-        this.$buttons.on('click', '.o_widget_Discuss_controlPanelButtonModeration.o-accept', ev => this._onClickModerationAccept(ev));
-        this.$buttons.on('click', '.o_widget_Discuss_controlPanelButtonModeration.o-discard', ev => this._onClickModerationDiscard(ev));
-        this.$buttons.on('click', '.o_widget_Discuss_controlPanelButtonModeration.o-reject', ev => this._onClickModerationReject(ev));
 
         // control panel attributes
         this.action = action;
@@ -246,41 +241,6 @@ const DiscussWidget = AbstractAction.extend({
                 .find('.o_mobile_new_message')
                 .addClass('o_hidden');
         }
-        // Select All & Unselect All
-        const $selectAll = this.$buttons.find('.o_widget_Discuss_controlPanelButtonSelectAll');
-        const $unselectAll = this.$buttons.find('.o_widget_Discuss_controlPanelButtonUnselectAll');
-
-        if (
-            this.discuss.threadView &&
-            (
-                this.discuss.threadView.checkedMessages.length > 0 ||
-                this.discuss.threadView.uncheckedMessages.length > 0
-            )
-        ) {
-            $selectAll.removeClass('o_hidden');
-            $selectAll.toggleClass('disabled', this.discuss.threadView.uncheckedMessages.length === 0);
-            $unselectAll.removeClass('o_hidden');
-            $unselectAll.toggleClass('disabled', this.discuss.threadView.checkedMessages.length === 0);
-        } else {
-            $selectAll.addClass('o_hidden');
-            $selectAll.addClass('disabled');
-            $unselectAll.addClass('o_hidden');
-            $unselectAll.addClass('disabled');
-        }
-
-        // Moderation Actions
-        const $moderationButtons = this.$buttons.find('.o_widget_Discuss_controlPanelButtonModeration');
-        if (
-            this.discuss.threadView &&
-            this.discuss.threadView.checkedMessages.length > 0 &&
-            this.discuss.threadView.checkedMessages.filter(
-                message => !message.isModeratedByCurrentPartner
-            ).length === 0
-        ) {
-            $moderationButtons.removeClass('o_hidden');
-        } else {
-            $moderationButtons.addClass('o_hidden');
-        }
 
         let title;
         if (this.env.messaging.device.isMobile || !this.discuss.thread) {
@@ -333,48 +293,6 @@ const DiscussWidget = AbstractAction.extend({
     _onClickMobileNewMessage() {
         this.discuss.update({ isAddingChat: true });
     },
-    /**
-     * @private
-     */
-    _onClickModerationAccept() {
-        this.env.models['mail.message'].moderate(
-            this.discuss.threadView.checkedMessages,
-            'accept'
-        );
-    },
-    /**
-     * @private
-     */
-    _onClickModerationDiscard() {
-        this.discuss.update({ hasModerationDiscardDialog: true });
-    },
-    /**
-     * @private
-     */
-    _onClickModerationReject() {
-        this.discuss.update({ hasModerationRejectDialog: true });
-    },
-    /**
-     * @private
-     */
-    _onClickSelectAll() {
-        this.env.models['mail.message'].checkAll(
-            this.discuss.thread,
-            this.discuss.stringifiedDomain
-        );
-    },
-    /**
-     * @private
-     */
-    _onClickUnselectAll() {
-        this.env.models['mail.message'].uncheckAll(
-            this.discuss.thread,
-            this.discuss.stringifiedDomain
-        );
-    },
-    /**
-     * @private
-     */
     _onClickUnstarAll() {
         this.env.models['mail.message'].unstarAll();
     },
