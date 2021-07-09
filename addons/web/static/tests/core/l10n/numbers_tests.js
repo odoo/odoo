@@ -3,6 +3,7 @@
 import { defaultLocalization } from "../../helpers/mock_services";
 import {
     formatFloat,
+    formatInteger,
     humanNumber,
     parseFloat,
     parseFloatTime,
@@ -28,8 +29,7 @@ QUnit.module("utils", (hooks) => {
     QUnit.module("numbers");
 
     QUnit.test("formatFloat", async (assert) => {
-        assert.expect(5);
-
+        assert.strictEqual(formatFloat(false), "");
         assert.strictEqual(formatFloat(1000000), "1,000,000.00");
 
         patchWithCleanup(localization, { grouping: [3, 2, -1] });
@@ -40,12 +40,26 @@ QUnit.module("utils", (hooks) => {
 
         patchWithCleanup(localization, { grouping: [2, 0], decimalPoint: "!", thousandsSep: "@" });
         assert.strictEqual(formatFloat(6000), "60@00!00");
-        assert.strictEqual(formatFloat(false), "");
+
+        const options = { grouping: [3, 2, -1], decimalPoint: "?", thousandsSep: "€" };
+        assert.strictEqual(formatFloat(106500, options), "1€06€500?00");
+    });
+
+    QUnit.test("formatInteger", async (assert) => {
+        assert.strictEqual(formatInteger(false), "");
+        assert.strictEqual(formatInteger(1000000), "1,000,000");
+
+        patchWithCleanup(localization, { grouping: [3, 2, -1] });
+        assert.strictEqual(formatInteger(106500), "1,06,500");
+
+        patchWithCleanup(localization, { grouping: [1, 2, -1], thousandsSep: "@" });
+        assert.strictEqual(formatInteger(106500), "106@50@0");
+
+        const options = { grouping: [2, 0], thousandsSep: "€" };
+        assert.strictEqual(formatInteger(6000, options), "60€00");
     });
 
     QUnit.test("humanNumber", async (assert) => {
-        assert.expect(26);
-
         assert.strictEqual(humanNumber(1020, { decimals: 2, minDigits: 1 }), "1.02k");
         assert.strictEqual(humanNumber(1020000, { decimals: 2, minDigits: 2 }), "1,020k");
         assert.strictEqual(humanNumber(10200000, { decimals: 2, minDigits: 2 }), "10.2M");
@@ -75,8 +89,6 @@ QUnit.module("utils", (hooks) => {
     });
 
     QUnit.test("parseFloat", async (assert) => {
-        assert.expect(10);
-
         assert.strictEqual(parseFloat(""), 0);
         assert.strictEqual(parseFloat("0"), 0);
         assert.strictEqual(parseFloat("100.00"), 100);
@@ -92,8 +104,6 @@ QUnit.module("utils", (hooks) => {
     });
 
     QUnit.test("parseFloatTime", function (assert) {
-        assert.expect(12);
-
         assert.strictEqual(parseFloatTime("0"), 0);
         assert.strictEqual(parseFloatTime("100"), 100);
         assert.strictEqual(parseFloatTime("100.00"), 100);
@@ -110,8 +120,6 @@ QUnit.module("utils", (hooks) => {
     });
 
     QUnit.test("parseInteger", function (assert) {
-        assert.expect(11);
-
         assert.strictEqual(parseInteger(""), 0);
         assert.strictEqual(parseInteger("0"), 0);
         assert.strictEqual(parseInteger("100"), 100);
@@ -129,8 +137,6 @@ QUnit.module("utils", (hooks) => {
     });
 
     QUnit.test("parsePercentage", function (assert) {
-        assert.expect(9);
-
         assert.strictEqual(parsePercentage(""), 0);
         assert.strictEqual(parsePercentage("0"), 0);
         assert.strictEqual(parsePercentage("0.5"), 0.005);
