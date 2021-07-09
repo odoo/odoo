@@ -130,7 +130,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
                         country_id: {string: "Country", type: "integer", searchable: true},
                         comment: {string: "Comment", type: "char", searchable: true},
                         vat: {string: "Vat", type: "char", searchable: true},
-                        is_company: {string: "Is comapny", type: "bool", searchable: true},
+                        is_company: {string: "Is company", type: "bool", searchable: true},
                         partner_gid: {string: "Company data ID", type: "integer", searchable: true},
                     },
                     records: [],
