@@ -189,7 +189,7 @@ class LunchSupplier(models.Model):
             ('supplier_id', '=', self.id),
             ('state', '=', 'ordered'),
             ('date', '=', fields.Date.context_today(self.with_context(tz=self.tz))),
-        ])
+        ], order="user_id, name")
         if not orders:
             return
 
