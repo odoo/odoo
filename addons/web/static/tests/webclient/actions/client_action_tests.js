@@ -12,7 +12,6 @@ import { createWebClient, doAction, getActionManagerServerData } from "./../help
 const { Component, tags } = owl;
 
 let serverData;
-const mainComponentRegistry = registry.category("main_components");
 const actionRegistry = registry.category("actions");
 
 QUnit.module("ActionManager", (hooks) => {
