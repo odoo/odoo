@@ -12,8 +12,8 @@
                     <div class="alert alert-info alert-dismissable mt16 css_non_editable_mode_hidden o_not_editable" t-ignore="True" role="status">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
                         Product: <strong t-esc="line.product_id.name"/>:
-                        this content will appear on the quotation only if this
-                        product is not removed.
+                        the content below will disappear if this
+                        product is removed from the quote.
                     </div>
                     <div t-att-class="'oe_no_empty' if line.website_description else 'oe_no_empty d-print-none'" t-field="line.website_description"/>
                 </t>
