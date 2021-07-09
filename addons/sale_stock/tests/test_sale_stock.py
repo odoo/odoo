@@ -989,3 +989,31 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         wizard.action_cancel()
         self.assertEqual(inv_1.state, 'posted', 'A posted invoice state should remain posted')
         self.assertEqual(inv_2.state, 'cancel', 'A drafted invoice state should be cancelled')
+
+    def test_15_cancel_delivery(self):
+        """
+        Suppose the option "Lock Confirmed Sales" enabled and a product with the invoicing policy set to "Delivered
+        quantities". When cancelling the delivery of such a product, the invoice status of the associated SO should be
+        'Nothing to Invoice'
+        """
+        self.env['ir.config_parameter'].set_param('sale.auto_done_setting', True)
+
+        product = self.product_a
+        partner = self.partner_a
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'partner_invoice_id': partner.id,
+            'partner_shipping_id': partner.id,
+            'order_line': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 2,
+                'product_uom': product.uom_id.id,
+                'price_unit': product.list_price
+            })],
+            'pricelist_id': self.env.ref('product.list0').id,
+        })
+        so.action_confirm()
+        so.picking_ids.action_cancel()
+
+        self.assertEqual(so.invoice_status, 'no')
