@@ -5,7 +5,7 @@ from hashlib import sha1
 
 import requests
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 from .const import VALID_KEYS
@@ -31,37 +31,22 @@ class PaymentAcquirer(models.Model):
     ogone_shakey_out = fields.Char(
         string="SHA Key OUT", size=32, required_if_provider='ogone', groups='base.group_system')
 
-    def _get_validation_amount(self):
-        """ Override of payment to return the amount for Ogone validation operations.
+    @api.model
+    def _get_compatible_acquirers(self, *args, is_validation=False, **kwargs):
+        """ Override of payment to unlist Ogone acquirers for validation operations. """
+        acquirers = super()._get_compatible_acquirers(*args, is_validation=is_validation, **kwargs)
 
-        :return: The validation amount
-        :rtype: float
-        """
-        res = super()._get_validation_amount()
-        if self.provider != 'ogone':
-            return res
+        if is_validation:
+            acquirers = acquirers.filtered(lambda a: a.provider != 'ogone')
 
-        return 1.0
-
-    def _get_redirect_form_view(self, is_validation=False):
-        """ Override of payment to return the FlexCheckout form for validation operations.
-
-        :param bool is_validation: Whether the operation is a validation
-        :return: The redirect form template
-        :rtype: record of `ir.ui.view`
-        """
-        res = super()._get_redirect_form_view()
-        if self.provider != 'ogone' or not is_validation:
-            return res  # self.redirect_form_view_id
-
-        return self.env.ref('payment_ogone.redirect_form_validation')
+        return acquirers
 
     def _ogone_get_api_url(self, api_key):
         """ Return the appropriate URL of the requested API for the acquirer state.
 
         Note: self.ensure_one()
 
-        :param str api_key: The API whose URL to get: 'flexcheckout' or 'directlink'
+        :param str api_key: The API whose URL to get: 'hosted_payment_page' or 'directlink'
         :return: The API URL
         :rtype: str
         """
@@ -70,16 +55,12 @@ class PaymentAcquirer(models.Model):
         if self.state == 'enabled':
             api_urls = {
                 'hosted_payment_page': 'https://secure.ogone.com/ncol/prod/orderstandard_utf8.asp',
-                'flexcheckout': 'https://secure.ogone.com/Tokenization/HostedPage',
                 'directlink': 'https://secure.ogone.com/ncol/prod/orderdirect_utf8.asp',
-                'maintenancedirect': 'https://secure.ogone.com/ncol/prod/maintenancedirect_utf8.asp',
             }
         else:  # 'test'
             api_urls = {
                 'hosted_payment_page': 'https://ogone.test.v-psp.com/ncol/test/orderstandard_utf8.asp',
-                'flexcheckout': 'https://ogone.test.v-psp.com/Tokenization/HostedPage',
                 'directlink': 'https://ogone.test.v-psp.com/ncol/test/orderdirect_utf8.asp',
-                'maintenancedirect': 'https://ogone.test.v-psp.com/ncol/test/maintenancedirect_utf8.asp',
             }
         return api_urls.get(api_key)
 
@@ -110,12 +91,11 @@ class PaymentAcquirer(models.Model):
         shasign = sha1(signing_string.encode()).hexdigest()
         return shasign
 
-    def _ogone_make_request(self, api_key, payload=None, method='POST'):
+    def _ogone_make_request(self, payload=None, method='POST'):
         """ Make a request to one of Ogone APIs.
 
         Note: self.ensure_one()
 
-        :param str api_key: The API to which the request is made: 'flexcheckout' or 'directlink'
         :param dict payload: The payload of the request
         :param str method: The HTTP method of the request
         :return The content of the response
@@ -124,7 +104,7 @@ class PaymentAcquirer(models.Model):
         """
         self.ensure_one()
 
-        url = self._ogone_get_api_url(api_key)
+        url = self._ogone_get_api_url('directlink')
         try:
             response = requests.request(method, url, data=payload, timeout=60)
             response.raise_for_status()
