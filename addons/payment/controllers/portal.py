@@ -157,7 +157,7 @@ class PaymentPortal(portal.CustomerPortal):
         """
         partner = request.env.user.partner_id
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
-            request.env.company.id, partner.id, force_tokenization=True
+            request.env.company.id, partner.id, force_tokenization=True, is_validation=True
         )
         tokens = set(partner.payment_token_ids).union(
             partner.commercial_partner_id.sudo().payment_token_ids

@@ -271,7 +271,8 @@ class PaymentAcquirer(models.Model):
 
     @api.model
     def _get_compatible_acquirers(
-        self, company_id, partner_id, currency_id=None, force_tokenization=False, **kwargs
+        self, company_id, partner_id, currency_id=None, force_tokenization=False,
+        is_validation=False, **kwargs
     ):
         """ Select and return the acquirers matching the criteria.
 
@@ -282,6 +283,7 @@ class PaymentAcquirer(models.Model):
         :param int partner_id: The partner making the payment, as a `res.partner` id
         :param int currency_id: The payment currency if known beforehand, as a `res.currency` id
         :param bool force_tokenization: Whether only acquirers allowing tokenization can be matched
+        :param bool is_validation: Whether the operation is a validation
         :param dict kwargs: Optional data. This parameter is not used here
         :return: The compatible acquirers
         :rtype: recordset of `payment.acquirer`
