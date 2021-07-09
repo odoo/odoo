@@ -55,7 +55,7 @@ QUnit.test("palette dialog can be rendered and closed on outside click", async (
     testComponent = await mount(TestComponent, { env, target });
 
     // invoke command palette through hotkey control+k
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
     assert.containsOnce(target, ".o_command_palette");
 
@@ -99,7 +99,7 @@ QUnit.test("useCommand hook", async (assert) => {
     }
     testComponent = await mount(MyComponent, { env, target });
 
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
     assert.containsOnce(target, ".o_command");
     assert.deepEqual(target.querySelector(".o_command").textContent, "Take the throne");
@@ -108,7 +108,7 @@ QUnit.test("useCommand hook", async (assert) => {
     assert.verifySteps(["Hodor"]);
 
     testComponent.unmount();
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
     assert.containsNone(target, ".o_command");
 });
@@ -119,11 +119,10 @@ QUnit.test("command with hotkey", async (assert) => {
     const hotkey = "a";
     env.services.command.add("test", () => assert.step(hotkey), {
         hotkey,
-        hotkeyOptions: { altIsOptional: true },
     });
     await nextTick();
 
-    triggerHotkey("a", true);
+    triggerHotkey("a");
     await nextTick();
     assert.verifySteps([hotkey]);
 });
@@ -148,7 +147,7 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
     testComponent = await mount(MyComponent, { env, target });
 
     // Open palette
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
 
     assert.containsN(target, ".o_command", 2);
@@ -162,7 +161,7 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
     assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
 
     // Reopen palette
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
 
     // Click on second command
@@ -189,7 +188,6 @@ QUnit.test("access to hotkeys from the command palette", async (assert) => {
     const hotkey = "a";
     env.services.command.add("A", () => assert.step("A"), {
         hotkey,
-        hotkeyOptions: { altIsOptional: true },
     });
 
     class MyComponent extends Component {
@@ -211,7 +209,7 @@ QUnit.test("access to hotkeys from the command palette", async (assert) => {
     testComponent = await mount(MyComponent, { env, target });
 
     // Open palette
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
 
     assert.containsN(target, ".o_command", 3);
@@ -226,20 +224,20 @@ QUnit.test("access to hotkeys from the command palette", async (assert) => {
     assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
 
     // Reopen palette
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
 
     // Trigger the command b
-    triggerHotkey("b");
+    triggerHotkey("b", true);
     await nextTick();
     assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
 
     // Reopen palette
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
 
     // Trigger the command c
-    triggerHotkey("c");
+    triggerHotkey("c", true);
     await nextTick();
     assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
 
@@ -259,7 +257,7 @@ QUnit.test("can be searched", async (assert) => {
     }
 
     // Open palette
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
 
     assert.deepEqual(
@@ -309,7 +307,7 @@ QUnit.test("command categories", async (assert) => {
     env.services.command.add("d", action, { category: "invalid-category" });
 
     // Open palette
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
 
     assert.containsN(target, ".o_command_category", 3);
@@ -340,7 +338,7 @@ QUnit.test("data-command-category", async (assert) => {
     testComponent = await mount(MyComponent, { env, target });
 
     // Open palette
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
 
     assert.containsN(target, ".o_command", 4);
@@ -369,29 +367,36 @@ QUnit.test("display shortcuts correctly for non-MacOS ", async (assert) => {
         },
     });
 
-    testComponent = await mount(TestComponent, { env, target });
+    class MyComponent extends Component {}
+    MyComponent.components = { TestComponent };
+    MyComponent.template = xml`
+    <div>
+      <button title="Click" data-hotkey="f" />
+      <TestComponent />
+    </div>
+  `;
+
+    testComponent = await mount(MyComponent, { env, target });
 
     // Register some commands
     function action() {}
     env.services.command.add("a", action);
-    env.services.command.add("b", action, { hotkey: "b" });
-    env.services.command.add("c", action, { hotkey: "c", hotkeyOptions: { altIsOptional: true } });
+    env.services.command.add("b", action, { hotkey: "alt+b" });
+    env.services.command.add("c", action, { hotkey: "c" });
     env.services.command.add("d", action, {
         hotkey: "control+d",
-        hotkeyOptions: { altIsOptional: true },
     });
     env.services.command.add("e", action, {
-        hotkey: "control+e",
-        hotkeyOptions: { altIsOptional: false },
+        hotkey: "alt+control+e",
     });
 
     // Open palette
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
 
     assert.deepEqual(
         [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
-        ["a", "bALT + B", "cC", "dCONTROL + D", "eALT + CONTROL + E"]
+        ["a", "bALT + B", "cC", "dCONTROL + D", "eALT + CONTROL + E", "ClickALT + F"]
     );
 });
 
@@ -402,28 +407,102 @@ QUnit.test("display shortcuts correctly for MacOS ", async (assert) => {
         },
     });
 
-    testComponent = await mount(TestComponent, { env, target });
+    class MyComponent extends Component {}
+    MyComponent.components = { TestComponent };
+    MyComponent.template = xml`
+        <div>
+        <button title="Click" data-hotkey="f" />
+        <TestComponent />
+        </div>
+    `;
+
+    testComponent = await mount(MyComponent, { env, target });
 
     // Register some commands
     function action() {}
     env.services.command.add("a", action);
-    env.services.command.add("b", action, { hotkey: "b" });
-    env.services.command.add("c", action, { hotkey: "c", hotkeyOptions: { altIsOptional: true } });
+    env.services.command.add("b", action, { hotkey: "alt+b" });
+    env.services.command.add("c", action, { hotkey: "c" });
     env.services.command.add("d", action, {
         hotkey: "control+d",
-        hotkeyOptions: { altIsOptional: true },
     });
     env.services.command.add("e", action, {
-        hotkey: "control+e",
-        hotkeyOptions: { altIsOptional: false },
+        hotkey: "alt+control+e",
     });
 
     // Open palette
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
 
     assert.deepEqual(
         [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
-        ["a", "bCONTROL + B", "cC", "dCOMMAND + D", "eCONTROL + COMMAND + E"]
+        ["a", "bCONTROL + B", "cC", "dCOMMAND + D", "eCONTROL + COMMAND + E", "ClickCONTROL + F"]
+    );
+});
+
+QUnit.test(
+    "display shortcuts correctly for non-MacOS with a new overlayModifier",
+    async (assert) => {
+        patchWithCleanup(browser, {
+            navigator: {
+                platform: "OdooOS",
+            },
+        });
+
+        const hotkeyService = serviceRegistry.get("hotkey");
+        patchWithCleanup(hotkeyService, {
+            overlayModifier: "alt+control",
+        });
+
+        class MyComponent extends Component {}
+        MyComponent.components = { TestComponent };
+        MyComponent.template = xml`
+    <div>
+      <button title="Click" data-hotkey="a" />
+      <TestComponent />
+    </div>
+  `;
+
+        testComponent = await mount(MyComponent, { env, target });
+        // Open palette
+        triggerHotkey("control+k");
+        await nextTick();
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+            ["ClickALT + CONTROL + A"]
+        );
+    }
+);
+
+QUnit.test("display shortcuts correctly for MacOS with a new overlayModifier", async (assert) => {
+    patchWithCleanup(browser, {
+        navigator: {
+            platform: "Mac",
+        },
+    });
+
+    const hotkeyService = serviceRegistry.get("hotkey");
+    patchWithCleanup(hotkeyService, {
+        overlayModifier: "alt+control",
+    });
+
+    class MyComponent extends Component {}
+    MyComponent.components = { TestComponent };
+    MyComponent.template = xml`
+    <div>
+      <button title="Click" data-hotkey="a" />
+      <TestComponent />
+    </div>
+  `;
+
+    testComponent = await mount(MyComponent, { env, target });
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        ["ClickCONTROL + COMMAND + A"]
     );
 });

@@ -10,8 +10,6 @@ import { useEffect } from "./effect_hook";
  * @param {string} hotkey
  * @param {()=>void} callback
  * @param {Object} options additional options
- * @param {boolean} [options.altIsOptional=false]
- *  allow registration to perform even without pressing the ALT key
  * @param {boolean} [options.allowRepeat=false]
  *  allow registration to perform multiple times when hotkey is held down
  * @param {boolean} [options.global=false]

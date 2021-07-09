@@ -61,17 +61,17 @@ QUnit.test("data-hotkey", async (assert) => {
   `;
 
     const key = "b";
-    triggerHotkey(key);
+    triggerHotkey(key, true);
     await nextTick();
 
     const comp = await mount(MyComponent, { env, target });
 
-    triggerHotkey(key);
+    triggerHotkey(key, true);
     await nextTick();
 
     comp.unmount();
 
-    triggerHotkey(key);
+    triggerHotkey(key, true);
     await nextTick();
 
     assert.verifySteps(["click"]);
@@ -93,14 +93,17 @@ QUnit.test("invisible data-hotkeys are not enabled. ", async (assert) => {
     `;
 
     const key = "b";
+    triggerHotkey(key, true);
+    await nextTick();
+
     const comp = await mount(MyComponent, { env, target });
 
-    triggerHotkey(key);
+    triggerHotkey(key, true);
     await nextTick();
-    assert.verifySteps(["click"])
+    assert.verifySteps(["click"]);
 
     comp.el.querySelector(".myButton").disabled = true;
-    triggerHotkey(key);
+    triggerHotkey(key, true);
     await nextTick();
     assert.verifySteps([], "shouldn't trigger the hotkey of an invisible button");
 
@@ -146,13 +149,13 @@ QUnit.test("non-MacOS usability", async (assert) => {
     const key = "q";
 
     // On non-MacOS, ALT is NOT replaced by CONTROL key
-    let removeHotkey = hotkey.add(key, () => assert.step(key), { altIsOptional: false });
+    let removeHotkey = hotkey.add(`alt+${key}`, () => assert.step(`alt+${key}`));
     await nextTick();
 
     let keydown = new KeyboardEvent("keydown", { key, altKey: true });
     window.dispatchEvent(keydown);
     await nextTick();
-    assert.verifySteps([key]);
+    assert.verifySteps([`alt+${key}`]);
 
     keydown = new KeyboardEvent("keydown", { key, ctrlKey: true });
     window.dispatchEvent(keydown);
@@ -162,9 +165,7 @@ QUnit.test("non-MacOS usability", async (assert) => {
     removeHotkey();
 
     // On non-MacOS, CONTROL is NOT replaced by COMMAND key (= metaKey)
-    removeHotkey = hotkey.add(`control+${key}`, () => assert.step(`control+${key}`), {
-        altIsOptional: true,
-    });
+    removeHotkey = hotkey.add(`control+${key}`, () => assert.step(`control+${key}`));
     await nextTick();
 
     keydown = new KeyboardEvent("keydown", { key, ctrlKey: true });
@@ -193,7 +194,7 @@ QUnit.test("MacOS usability", async (assert) => {
     const key = "q";
 
     // On MacOS, ALT is replaced by CONTROL key
-    let removeHotkey = hotkey.add(key, () => assert.step(key), { altIsOptional: false });
+    let removeHotkey = hotkey.add(`alt+${key}`, () => assert.step(`alt+${key}`));
     await nextTick();
 
     let keydown = new KeyboardEvent("keydown", { key, altKey: true });
@@ -204,14 +205,12 @@ QUnit.test("MacOS usability", async (assert) => {
     keydown = new KeyboardEvent("keydown", { key, ctrlKey: true });
     window.dispatchEvent(keydown);
     await nextTick();
-    assert.verifySteps([key]);
+    assert.verifySteps([`alt+${key}`]);
 
     removeHotkey();
 
     // On MacOS, CONTROL is replaced by COMMAND key (= metaKey)
-    removeHotkey = hotkey.add(`control+${key}`, () => assert.step(`control+${key}`), {
-        altIsOptional: true,
-    });
+    removeHotkey = hotkey.add(`control+${key}`, () => assert.step(`control+${key}`));
     await nextTick();
 
     keydown = new KeyboardEvent("keydown", { key, ctrlKey: true });
@@ -227,42 +226,6 @@ QUnit.test("MacOS usability", async (assert) => {
     removeHotkey();
 });
 
-QUnit.test("alt is optional parameter", async (assert) => {
-    const altIsOptionalKey = "a";
-    const altIsRequiredKey = "b";
-    const defaultBehaviourKey = "c";
-    class TestComponent extends Component {
-        setup() {
-            useHotkey(altIsOptionalKey, () => assert.step(altIsOptionalKey), {
-                altIsOptional: true,
-            });
-            useHotkey(altIsRequiredKey, () => assert.step(altIsRequiredKey), {
-                altIsOptional: false,
-            });
-            useHotkey(defaultBehaviourKey, () => assert.step(defaultBehaviourKey));
-        }
-    }
-    TestComponent.template = xml`<div/>`;
-
-    const comp = await mount(TestComponent, { env, target });
-
-    // Dispatch keys without ALT
-    triggerHotkey(altIsOptionalKey, true);
-    triggerHotkey(altIsRequiredKey, true);
-    triggerHotkey(defaultBehaviourKey, true);
-    await nextTick();
-    assert.verifySteps([altIsOptionalKey]);
-
-    // Dispatch keys with ALT
-    triggerHotkey(altIsOptionalKey, false);
-    triggerHotkey(altIsRequiredKey, false);
-    triggerHotkey(defaultBehaviourKey, false);
-    await nextTick();
-    assert.verifySteps([altIsOptionalKey, altIsRequiredKey, defaultBehaviourKey]);
-
-    comp.destroy();
-});
-
 QUnit.test("[data-hotkey] alt is required", async (assert) => {
     const key = "a";
     class TestComponent extends Component {
@@ -274,11 +237,11 @@ QUnit.test("[data-hotkey] alt is required", async (assert) => {
 
     const comp = await mount(TestComponent, { env, target });
 
-    triggerHotkey(key);
+    triggerHotkey(key, true);
     await nextTick();
     assert.verifySteps([key]);
 
-    triggerHotkey(key, true);
+    triggerHotkey(key);
     await nextTick();
     assert.verifySteps([]);
 
@@ -330,11 +293,11 @@ QUnit.test("[data-hotkey] never allow repeat", async (assert) => {
 
     const comp = await mount(TestComponent, { env, target });
 
-    triggerHotkey(key);
+    triggerHotkey(key, true);
     await nextTick();
     assert.verifySteps([key]);
 
-    triggerHotkey(key, false, { repeat: true });
+    triggerHotkey(key, true, { repeat: true });
     await nextTick();
     assert.verifySteps([]);
 
@@ -378,7 +341,7 @@ QUnit.test("component can register many hotkeys", async (assert) => {
     class MyComponent extends Component {
         setup() {
             for (const hotkey of ["a", "b", "c"]) {
-                useHotkey(hotkey, () => assert.step(`callback:${hotkey}`));
+                useHotkey(`alt+${hotkey}`, () => assert.step(`callback:${hotkey}`));
             }
             for (const hotkey of ["d", "e", "f"]) {
                 useHotkey(hotkey, () => assert.step(`callback2:${hotkey}`));
@@ -395,9 +358,9 @@ QUnit.test("component can register many hotkeys", async (assert) => {
   `;
 
     const comp = await mount(MyComponent, { env, target });
-    triggerHotkey("a");
-    triggerHotkey("b");
-    triggerHotkey("c");
+    triggerHotkey("a", true);
+    triggerHotkey("b", true);
+    triggerHotkey("c", true);
     triggerHotkey("d");
     triggerHotkey("e");
     triggerHotkey("f");
@@ -424,7 +387,7 @@ QUnit.test("many components can register same hotkeys", async (assert) => {
     class MyComponent1 extends Component {
         setup() {
             for (const hotkey of hotkeys) {
-                useHotkey(hotkey, () => result.push(`comp1:${hotkey}`));
+                useHotkey(`alt+${hotkey}`, () => result.push(`comp1:${hotkey}`));
             }
         }
         onClick() {
@@ -440,7 +403,7 @@ QUnit.test("many components can register same hotkeys", async (assert) => {
     class MyComponent2 extends Component {
         setup() {
             for (const hotkey of hotkeys) {
-                useHotkey(hotkey, () => result.push(`comp2:${hotkey}`));
+                useHotkey(`alt+${hotkey}`, () => result.push(`comp2:${hotkey}`));
             }
         }
         onClick() {
@@ -455,9 +418,9 @@ QUnit.test("many components can register same hotkeys", async (assert) => {
 
     const comp1 = await mount(MyComponent1, { env, target });
     const comp2 = await mount(MyComponent2, { env, target });
-    triggerHotkey("a");
-    triggerHotkey("b");
-    triggerHotkey("c");
+    triggerHotkey("a", true);
+    triggerHotkey("b", true);
+    triggerHotkey("c", true);
     await nextTick();
 
     assert.deepEqual(result.sort(), [
@@ -499,17 +462,17 @@ QUnit.test("registrations and elements belong to the correct UI owner", async (a
 
     const comp1 = await mount(MyComponent1, { env, target });
     triggerHotkey("a");
-    triggerHotkey("b");
+    triggerHotkey("b", true);
     await nextTick();
 
     const comp2 = await mount(MyComponent2, { env, target });
     triggerHotkey("a");
-    triggerHotkey("b");
+    triggerHotkey("b", true);
     await nextTick();
 
     comp2.unmount();
     triggerHotkey("a");
-    triggerHotkey("b");
+    triggerHotkey("b", true);
     await nextTick();
 
     assert.verifySteps([
@@ -523,4 +486,80 @@ QUnit.test("registrations and elements belong to the correct UI owner", async (a
 
     comp1.destroy();
     comp2.destroy();
+});
+
+QUnit.test("replace the overlayModifier for non-MacOs", async (assert) => {
+    assert.expect(3);
+
+    patchWithCleanup(browser, {
+        navigator: {
+            platform: "OdooOS",
+        },
+    });
+
+    const hotkeyService = serviceRegistry.get("hotkey");
+    patchWithCleanup(hotkeyService, {
+        overlayModifier: "alt+shift",
+    });
+
+    class MyComponent extends Component {
+        onClick() {
+            assert.step("click");
+        }
+    }
+    MyComponent.template = xml`
+        <div>
+        <button t-on-click="onClick" data-hotkey="b"/>
+        </div>
+    `;
+    await mount(MyComponent, { env, target });
+
+    const key = "b";
+    triggerHotkey(`alt+shift+${key}`);
+
+    await nextTick();
+    assert.verifySteps(["click"]);
+
+    triggerHotkey(`alt+${key}`);
+    await nextTick();
+
+    assert.verifySteps([]);
+});
+
+QUnit.test("replace the overlayModifier for MacOs", async (assert) => {
+    assert.expect(3);
+
+    patchWithCleanup(browser, {
+        navigator: {
+            platform: "Mac",
+        },
+    });
+
+    const hotkeyService = serviceRegistry.get("hotkey");
+    patchWithCleanup(hotkeyService, {
+        overlayModifier: "alt+shift",
+    });
+
+    class MyComponent extends Component {
+        onClick() {
+            assert.step("click");
+        }
+    }
+    MyComponent.template = xml`
+        <div>
+        <button t-on-click="onClick" data-hotkey="b"/>
+        </div>
+    `;
+    await mount(MyComponent, { env, target });
+
+    const key = "b";
+    triggerHotkey(`alt+shift+${key}`);
+
+    await nextTick();
+    assert.verifySteps(["click"]);
+
+    triggerHotkey(`alt+${key}`);
+    await nextTick();
+
+    assert.verifySteps([]);
 });
