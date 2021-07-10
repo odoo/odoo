@@ -12,9 +12,9 @@
 # Lorenzo Battistini <lb@takobi.online>, 2020
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2020
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2020
+# David Minneci <david@numeko.it>, 2020
 # Martin Trigaux, 2020
 # Paolo Valier, 2020
-# David Minneci <david@numeko.it>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
@@ -67,7 +67,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Trasferimenti %s: impossibile validare i trasferimenti senza quantità prenotate o completate. Per forzarli, passare alla modalità di modifica e inserire le quantità completate."
+"Trasferimenti %s: impossibile convalidare i trasferimenti senza quantità prenotate o completate. Per forzarli, passare alla modalità di modifica e inserire le quantità completate."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -818,7 +818,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__start_empty
 msgid "Allows to start with an empty inventory."
-msgstr ""
+msgstr "Consente di iniziare con un inventario vuoto."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -1194,7 +1194,7 @@ msgstr "Variazione quantità di prodotto"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__move_id
 msgid "Change to a better name"
-msgstr "Cambiare in un nome migliore"
+msgstr "Cambia il nome con uno migliore"
 
 #. module: stock
 #: code:addons/stock/models/product_strategy.py:0
@@ -1625,7 +1625,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__create_date
@@ -1725,7 +1725,7 @@ msgstr "Elaborazione data"
 #: model:ir.model.fields,help:stock.field_stock_move__date_deadline
 #: model:ir.model.fields,help:stock.field_stock_picking__date_deadline
 msgid "Date Promise to the customer on the top level document (SO/PO)"
-msgstr ""
+msgstr "Data promessa al cliente nel documento di primo livello (OdV/OdA)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__date
@@ -2269,7 +2269,7 @@ msgstr "E-mail inviata al cliente dopo che l'ordine è stato completato."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__start_empty
 msgid "Empty Inventory"
-msgstr ""
+msgstr "Inventario vuoto"
 
 #. module: stock
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
@@ -2359,7 +2359,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__expected
 msgid "Expected"
-msgstr "Attesi"
+msgstr "Atteso"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
@@ -2874,8 +2874,8 @@ msgid ""
 "If the inventory adjustment is not validated, date at which the theoritical quantities have been checked.\n"
 "If the inventory adjustment is validated, date at which the inventory adjustment has been validated."
 msgstr ""
-"Se la rettifica di inventario non è validata, è la data in cui sono state controllate le quantità teoriche.\n"
-"Se la rettifica di inventario è validata, è la data di validazione."
+"Se la rettifica di inventario non è convalidata, è la data in cui sono state controllate le quantità teoriche.\n"
+"Se la rettifica di inventario è convalidata, è la data di convalida."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2949,7 +2949,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_entire_packs
 msgid "If ticked, you will be able to select entire packages to move"
-msgstr "Se abilitata, sarà possibile selezionare colli interi da movimentare"
+msgstr ""
+"Se selezionata, sarà possibile selezionare interi colli da movimentare"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -4129,7 +4130,7 @@ msgstr "Note"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Nothing to check the availability for."
-msgstr "Niente da verificare per la disponibilità."
+msgstr "Nulla da controllare per la disponibilità."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__message_needaction_counter
@@ -4210,7 +4211,7 @@ msgstr "A disposizione:"
 #, python-format
 msgid "Only a stock manager can validate an inventory adjustment."
 msgstr ""
-"Solo un supervisore magazzino può validare una rettifica di inventario."
+"Solo un supervisore magazzino può convalidare una rettifica di inventario."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -4288,7 +4289,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_location__posy
 #: model:ir.model.fields,help:stock.field_stock_location__posz
 msgid "Optional localization details, for information purpose only"
-msgstr "Dettagli di localizzazione facoltativi, solo a scopo informativo"
+msgstr "Dettagli di localizzazione facoltativi, a solo scopo informativo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__returned_move_ids
@@ -4443,7 +4444,7 @@ msgstr "Proprietario :"
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "P&L Qty"
-msgstr "P & L Qty"
+msgstr "Q.tà utili e perdite"
 
 #. module: stock
 #. openerp-web
@@ -6251,7 +6252,7 @@ msgstr "Preferiti"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Start Inventory"
-msgstr "Avvia inventario"
+msgstr "Inizia inventario"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -6571,20 +6572,20 @@ msgid ""
 "picking confirmation (when costing method used is 'average price' or "
 "'real'). Value given in company currency and in product uom."
 msgstr ""
-"Campo tecnico usato per registrare il costo del prodotto indicato "
-"dall'utente durante la conferma di prelievo (quando il metodo di calcolo dei"
-" costi usato è \"prezzo medio\" o \"reale\"). Valore espresso nella valuta "
-"dell'azienda e nell'unità di misura del prodotto. "
+"Campo tecnico usato per registrare il costo del prodotto impostato "
+"dall'utente durante la conferma di un prelievo (quando il metodo usato per "
+"l'imputazione dei costi è \"Prezzo medio\" o \"Reale\"). Valore espresso in "
+"valuta aziendale e nella UdM del prodotto."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__produce_line_ids
 msgid "Technical link to see which line was produced with this. "
-msgstr "Collegamento tecnico che capire quale riga è stata creata con questo."
+msgstr "Collegamento tecnico per capire quale riga ha prodotto."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__consume_line_ids
 msgid "Technical link to see who consumed what. "
-msgstr "Collegamento tecnico che capire chi ha consumato cosa."
+msgstr "Collegamento tecnico per capire chi ha consumato cosa."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__product_tmpl_id
@@ -6680,7 +6681,7 @@ msgstr "La giacenza prevista al"
 #: code:addons/stock/static/src/js/inventory_validate_button_controller.js:0
 #, python-format
 msgid "The inventory has been validated"
-msgstr "L'inventario è stato validato"
+msgstr "L'inventario è stato convalidato"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_name_uniq
@@ -7137,7 +7138,7 @@ msgstr "Tiene traccia dell'ubicazione dei prodotti nel magazzino"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "Track your stock quantities by creating storable products."
-msgstr ""
+msgstr "Tieni traccia delle quantità in giacenza creando prodotti stoccabili."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
@@ -7501,7 +7502,7 @@ msgstr "Convalida inventario"
 #: model:ir.model.fields.selection,name:stock.selection__stock_inventory__state__done
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Validated"
-msgstr "Validato"
+msgstr "Convalidato"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_variant_count
@@ -7584,6 +7585,8 @@ msgstr "In attesa di trasferimenti"
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
 msgid "Want to speed up your inventory counts? Try our Barcode app"
 msgstr ""
+"Vuoi velocizzare i conteggi dell'inventario? Prova la nostra applicazione "
+"per il codice a barre."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -7819,12 +7822,16 @@ msgstr ""
 msgid ""
 "When validating the transfer, the products will be assigned to this owner."
 msgstr ""
+"Durante la convalida del trasferimento, i prodotti vengono assegnati a "
+"questo proprietario."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
 msgid ""
 "When validating the transfer, the products will be taken from this owner."
 msgstr ""
+"Durante la convalida del trasferimento, i prodotti vengono prelevati da "
+"questo proprietario."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional
@@ -7974,8 +7981,8 @@ msgid ""
 "You can't validate the inventory '%s', maybe this inventory has been already"
 " validated or isn't ready."
 msgstr ""
-"Impossibile validare l'inventario \"%s\", forse è già stato validato oppure "
-"non è pronto."
+"Impossibile convalidare l'inventario \"%s\", forse è già stato convalidato "
+"oppure non è pronto."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -8126,9 +8133,9 @@ msgid ""
 "You cannot validate a transfer if no quantities are reserved nor done. To "
 "force the transfer, switch in edit mode and encode the done quantities."
 msgstr ""
-"Impossibile validare un trasferimento senza quantità prenotate o completate."
-" Per forzarlo, passare alla modalità di modifica e inserire le quantità "
-"completate."
+"Impossibile convalidare un trasferimento senza quantità prenotate o "
+"completate. Per forzarlo, passare alla modalità di modifica e inserire le "
+"quantità completate."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0

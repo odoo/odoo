@@ -42,6 +42,7 @@
 # khalid chamakh <elbissat@gmail.com>, 2021
 # Caroline Renson <car@odoo.com>, 2021
 # Luc N, 2021
+# Gwladys Jouble <g.jouble@vieconnect.io>, 2021
 # Alexandra Jubert <aju@odoo.com>, 2021
 # 
 msgid ""
@@ -73,7 +74,7 @@ msgstr ""
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "%(activity_name)s: %(summary)s assigned to you"
-msgstr ""
+msgstr "%(activity_name)s: %(summary)s vous a été attribué"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -93,7 +94,7 @@ msgstr "%(user_name)s vous a invité à suivre un nouveau document."
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "%d Message"
-msgstr ""
+msgstr "Message %d"
 
 #. module: mail
 #. openerp-web
@@ -140,14 +141,14 @@ msgstr "%s créé(e)"
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "%s from %s"
-msgstr ""
+msgstr "%s de%s"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/notification_request/notification_request.js:0
 #, python-format
 msgid "%s has a request"
-msgstr ""
+msgstr "%s a une demande"
 
 #. module: mail
 #. openerp-web
@@ -214,6 +215,8 @@ msgid ""
 "<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
 "warning\">No record for this model</b>"
 msgstr ""
+"<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
+"warning\">Aucun enregistrement pour ce modèle</b>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -272,7 +275,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 
 #. module: mail
 #. openerp-web
@@ -835,7 +838,7 @@ msgstr "Toujours Autoriser"
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
-msgstr ""
+msgstr "Un email est demandé pour trouver_ou_créer du travail"
 
 #. module: mail
 #. openerp-web
@@ -849,7 +852,7 @@ msgstr "Une erreur est survenue lors de l'envoi d'un email."
 #: code:addons/mail/static/src/models/user/user.js:0
 #, python-format
 msgid "An unexpected error occurred during the creation of the chat."
-msgstr ""
+msgstr "Une erreur inattendue s'est produite lors de la création du chat."
 
 #. module: mail
 #. openerp-web
@@ -1051,7 +1054,7 @@ msgstr "Avatar"
 #: code:addons/mail/static/src/components/notification_request/notification_request.xml:0
 #, python-format
 msgid "Avatar of OdooBot"
-msgstr ""
+msgstr "Avatar d'OdooBot"
 
 #. module: mail
 #. openerp-web
@@ -1106,7 +1109,7 @@ msgstr "Date de la Liste Noire"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_blacklist_action
 msgid "Blacklisted Email Addresses"
-msgstr ""
+msgstr "Adresses mail sur liste noire"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__body_html
@@ -1123,7 +1126,7 @@ msgstr "Corps"
 #: code:addons/mail/static/src/widgets/common.xml:0
 #, python-format
 msgid "Bot"
-msgstr ""
+msgstr "Bot"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_bounce
@@ -3022,7 +3025,7 @@ msgstr "Image"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Image is a link"
-msgstr ""
+msgstr "L'image est un lien"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -5643,7 +5646,7 @@ msgstr "Envoyer maintenant"
 #: code:addons/mail/static/src/components/composer_text_input/composer_text_input.js:0
 #, python-format
 msgid "Send a message to followers..."
-msgstr ""
+msgstr "Envoyer un message aux suiveurs..."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
@@ -5739,7 +5742,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__description
 #: model:ir.model.fields,field_description:mail.field_mail_message__description
 msgid "Short description"
-msgstr ""
+msgstr "Courte description"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_shortcode_view_form

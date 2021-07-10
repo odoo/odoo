@@ -15,20 +15,21 @@
 # Nisrine Tagri <nta@odoo.com>, 2020
 # Mustafa Rawi <mustafa@cubexco.com>, 2020
 # amrnegm <amrnegm.01@gmail.com>, 2020
+# Martin Trigaux, 2020
 # hoxhe Aits <hoxhe0@gmail.com>, 2020
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2020
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2020
 # Zuhair Hammadi <zuhair12@gmail.com>, 2020
 # Shaima Safar <shaima.safar@open-inside.com>, 2020
-# Martin Trigaux, 2020
+# Rachid Al Assir <rachidalassir@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Rachid Al Assir <rachidalassir@gmail.com>, 2021\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -350,6 +351,10 @@ msgid ""
 "            - no need to answer the same question twice. Also, please <b>don't forget to vote</b>\n"
 "            - it really helps to select the best questions and answers!"
 msgstr ""
+"<b>حاول أن تكون الإجابة موجزة.</b> إذا أردت التعليق على السؤال أو الإجابة،\n"
+"        <b>استخدم أداة التعليق</b>. تذكر ان بإمكانك دائمًا <b>مراجعة إجاباتك</b>\n"
+"        - لا حاجة لإجابة نفس السؤال مرتين. وفضلًا، <b>لا تنسى التصويت</b>\n"
+"        - فهو يساعد على تحديد أفضل الأسئلة والإجابات!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -568,6 +573,11 @@ msgstr ""
 "</small>"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<span aria-label=\"Close\">×</span>"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span class=\"badge badge-info\">Closed</span>"
 msgstr ""
@@ -639,11 +649,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "<span class=\"text-muted mx-3\">or</span>"
 msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<span>&amp;times;</span>"
-msgstr "<span>&amp;times;</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -742,6 +747,7 @@ msgstr ""
 "الاجتماعي، وتمكين نشر محتوى المنتدى على شبكة التواصل الاجتماعي."
 
 #. module: website_forum
+#. openerp-web
 #: code:addons/website_forum/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
@@ -751,7 +757,7 @@ msgstr "الكل"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "All Forums"
-msgstr ""
+msgstr "كل المنتديات"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -767,7 +773,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "All forums"
-msgstr ""
+msgstr "كل المنتديات"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_bump
@@ -3337,7 +3343,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "Topics"
-msgstr ""
+msgstr "المواضيع"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
