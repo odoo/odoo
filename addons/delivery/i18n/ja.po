@@ -5,11 +5,11 @@
 # Translators:
 # Martin Trigaux, 2019
 # Manami Hashi <manami@roomsfor.hk>, 2019
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2019
+# Shigekazu N. <shigekazu.noka@gmail.com>, 2019
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2019
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2019
 # Tim Siu Lai <tl@roomsfor.hk>, 2019
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2019
 # Ryoko Tsuda <ryoko@quartile.co>, 2020
 # Noma Yuki, 2020
 # 
@@ -1056,6 +1056,16 @@ msgid ""
 msgstr ""
 "同じ貨物に異なる梱包タイプを出荷しています。\n"
 "梱包の種類：%s"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
