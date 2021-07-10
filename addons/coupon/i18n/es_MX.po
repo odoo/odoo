@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +54,7 @@ msgstr "%s%%de descuento en el monto total"
 #: code:addons/coupon/wizard/coupon_generate.py:0
 #, python-format
 msgid "%s, a coupon has been generated for you"
-msgstr "%s, se ha generado un cupón para ti"
+msgstr "%s, se ha generado un cupón para usted"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -69,7 +70,7 @@ msgstr "10% de descuento"
 #: model:product.product,name:coupon.product_product_10_percent_discount
 #: model:product.template,name:coupon.product_product_10_percent_discount_product_template
 msgid "10.0% discount on total amount"
-msgstr "10.0% de descuento en el monto total"
+msgstr "10.0% de descuento en el importe total"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
@@ -114,7 +115,7 @@ msgstr "<span>productos</span>"
 msgid ""
 "<strong style=\"font-size: 55px; color: #875A7B\">get free shipping</strong>"
 msgstr ""
-"<strong style=\"font-size: 55px; color: #875A7B\">obtén envío "
+"<strong style=\"font-size: 55px; color: #875A7B\">reciba envío "
 "gratis</strong>"
 
 #. module: coupon
@@ -224,14 +225,14 @@ msgstr ""
 "        Felicidades ${object.partner_id.name},<br/>\n"
 "        % endif\n"
 "\n"
-"        Aquí está tu recompensa de ${object.program_id.company_id.name}.<br/>\n"
+"        Aquí está su recompensa de ${object.program_id.company_id.name}.<br/>\n"
 "\n"
 "        % if object.program_id.reward_type == 'discount':\n"
 "            % if object.program_id.discount_type == 'fixed_amount':\n"
 "            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
 "                ${'%s' % format_amount(object.program_id.discount_fixed_amount, object.program_id.currency_id)}\n"
 "            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">menos en tu próxima orden</strong><br/>\n"
+"            <strong style=\"font-size: 24px;\">menos en su próxima orden</strong><br/>\n"
 "            %else\n"
 "            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
 "                ${object.program_id.discount_percentage} %\n"
@@ -254,7 +255,7 @@ msgstr ""
 "            </strong>\n"
 "            % else\n"
 "            <br/><strong style=\"font-size: 24px;\">\n"
-"                menos en tu próxima orden\n"
+"                menos en su próxima orden\n"
 "            </strong>\n"
 "            % endif\n"
 "            <br/>\n"
@@ -266,13 +267,13 @@ msgstr ""
 "            <strong style=\"font-size: 24px;\">en tu próxima orden</strong><br/>\n"
 "        % elif object.program_id.reward_type == 'free_shipping':\n"
 "            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
-"                obtén envío gratis\n"
+"                reciba envío gratis\n"
 "            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">en tu próxima orden</strong><br/>\n"
+"            <strong style=\"font-size: 24px;\">en su próxima orden</strong><br/>\n"
 "        % endif\n"
 "    </td></tr>\n"
 "    <tr style=\"margin-top: 16px\"><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
-"        Usa este código promocional\n"
+"        Use este código promocional\n"
 "        % if object.expiration_date:\n"
 "            before ${object.expiration_date}\n"
 "        % endif\n"
@@ -385,7 +386,7 @@ msgid ""
 "Use a code - If the program rules are met, a valid code is mandatory for the reward to be applied\n"
 msgstr ""
 "Aplicado automáticamente - No requiere código. La recompensa se aplica si se cumplen las reglas del programa (Excepto el descuento global o las recompensas de envío gratis, las cuales no son acumulables)\n"
-"Usa un código - Si se cumplen las reglas del programa, es necesario tener un código válido para aplicar la recompensa\n"
+"Use un código - Si se cumplen las reglas del programa, es necesario tener un código válido para aplicar la recompensa\n"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -410,13 +411,13 @@ msgid ""
 "Build up promotion programs to attract more customers with discounts, free products, free delivery, etc.\n"
 "                You can share promotion codes or grant the promotions automatically if some conditions are met."
 msgstr ""
-"Crea programas de promociones para atraer más clientes con descuentos, productos gratis, envíos gratis, etc.\n"
-"                Puedes compartir códigos promocionales u otorgar promociones automáticamente si se cumplen ciertas condiciones."
+"Cree programas de promociones para atraer más clientes con descuentos, productos gratis, envíos gratis, etc.\n"
+"                Puede compartir códigos promocionales u otorgar promociones automáticamente si se cumplen ciertas condiciones."
 
 #. module: coupon
 #: model:coupon.program,name:coupon.3_cabinets_plus_1_free
 msgid "Buy 3 large cabinets, get one for free"
-msgstr "Compra 3 gabinetes grandes, recibe uno gratis"
+msgstr "Compre 3 gabinetes grandes, reciba uno gratis"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
@@ -473,7 +474,7 @@ msgstr "Código de cupón"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_count
 msgid "Coupon Count"
-msgstr "Recuento de cupones"
+msgstr "Número de cupones"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_program
@@ -651,7 +652,7 @@ msgstr "El porcentaje de descuento debe estar entre 1-100"
 #: model:ir.model.fields,field_description:coupon.field_mail_compose_message__display_name
 #: model:ir.model.fields,field_description:coupon.field_report_coupon_report_coupon__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre en pantalla"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_mail_compose_message
@@ -734,7 +735,7 @@ msgid ""
 "Generate and share coupon codes with your customers to get discounts or free"
 " products."
 msgstr ""
-"Genera y comparte códigos de cupones con tus clientes para obtener "
+"Genere y comparta códigos de cupones con sus clientes para obtener "
 "descuentos o productos gratis."
 
 #. module: coupon
@@ -1103,7 +1104,7 @@ msgstr "Seleccionar producto de recompensa"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
 msgid "Send a Coupon"
-msgstr "Envía un cupón"
+msgstr "Enviar un cupón"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
@@ -1238,17 +1239,17 @@ msgstr "Periodo de validez de un cupón tras su generación"
 #: code:addons/coupon/models/coupon_program.py:0
 #, python-format
 msgid "You can not delete a program in active state"
-msgstr "No puedes eliminar un programa en estado activo"
+msgstr "No puede eliminar un programa en estado activo"
 
 #. module: coupon
 #: model:mail.template,report_name:coupon.mail_template_sale_coupon
 msgid "Your Coupon Code"
-msgstr "Tu código de cupón"
+msgstr "Su código de cupón"
 
 #. module: coupon
 #: model:mail.template,subject:coupon.mail_template_sale_coupon
 msgid "Your reward coupon from ${object.program_id.company_id.name} "
-msgstr "Tu código de cupón de ${object.program_id.company_id.name} "
+msgstr "Su código de cupón de ${object.program_id.company_id.name} "
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -1273,4 +1274,4 @@ msgstr "menos en el producto más barato"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "on your next order"
-msgstr "en tu próxima orden"
+msgstr "en su próxima orden"

@@ -1389,7 +1389,7 @@ class IrModelSelection(models.Model):
             except Exception as e:
                 # going through the ORM failed, probably because of an exception
                 # in an override or possibly a constraint.
-                _logger.warning(
+                _logger.runbot(
                     "Could not fulfill ondelete action for field %s.%s, "
                     "attempting ORM bypass...", records._name, fname,
                 )

@@ -11230,7 +11230,7 @@ msgstr "Checksum/SHA1"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__child_ids
 #: model:ir.model.fields,field_description:base.field_ir_cron__child_ids
 msgid "Child Actions"
-msgstr "Azioni figlie"
+msgstr "Azioni secondarie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__child_ids
@@ -14789,6 +14789,12 @@ msgid ""
 "Technical Details:\n"
 "%s"
 msgstr ""
+"File %r non importato, non è valido.\n"
+"\n"
+"Il problema può essere causato da voci duplicate che si riferiscono allo stesso campo. Controllare il contenuto del file che si sta tentando di importare.\n"
+"\n"
+"Dettagli tecnici:\n"
+"%s"
 
 #. module: base
 #: code:addons/base/wizard/base_import_language.py:0
@@ -14799,9 +14805,9 @@ msgid ""
 "Technical Details:\n"
 "%s"
 msgstr ""
-"File %r non importato per formato non conforme o file malformato. (I formati validi sono .csv, .po, .pot)\n"
+"File %r non importato perché non valido o per formato non conforme. (I formati corretti sono .csv, .po, .pot)\n"
 "\n"
-"Dettagli Tecnici:\n"
+"Dettagli tecnici:\n"
 "%s"
 
 #. module: base
@@ -25212,12 +25218,12 @@ msgstr "Inizia configurazione"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "Provincia"
+msgstr "Stato/Provincia"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
 msgid "State Code"
-msgstr "Codice stato"
+msgstr "Codice stato/provincia"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__name
@@ -26365,7 +26371,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_state__code
 msgid "The state code."
-msgstr "Il codice provincia."
+msgstr "Il codice stato/provincia."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0

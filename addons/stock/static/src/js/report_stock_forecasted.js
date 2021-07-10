@@ -26,7 +26,7 @@ const ReplenishReport = clientAction.extend({
         if (this.context.warehouse) {
             this.active_warehouse = {id: this.context.warehouse};
         }
-        this.report_url += `?context=${JSON.stringify(this.context)}`;
+        this.report_url += `?context=${JSON.stringify(this.context)}&force_context_lang=1`;
         this._title = action.name;
     },
 

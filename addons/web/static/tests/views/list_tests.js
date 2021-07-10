@@ -9931,6 +9931,53 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('removing a groupby while adding a line from list', async function (assert) {
+        assert.expect(1);
+
+        let checkUnselectRow = false;
+        testUtils.mock.patch(ListRenderer, {
+            unselectRow(options = {}) {
+                if (checkUnselectRow) {
+                    assert.step('unselectRow');
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree multi_edit="1" editable="bottom">
+                    <field name="display_name"/>
+                    <field name="foo"/>
+                </tree>
+            `,
+            archs: {
+                'foo,false,search': `
+                    <search>
+                        <field name="foo"/>
+                        <group expand="1" string="Group By">
+                            <filter name="groupby_foo" context="{'group_by': 'foo'}"/>
+                        </group>
+                    </search>
+                `,
+            },
+        });
+
+        await cpHelpers.toggleGroupByMenu(list);
+        await cpHelpers.toggleMenuItem(list, 0);
+        // expand group
+        await testUtils.dom.click(list.el.querySelector('th.o_group_name'));
+        await testUtils.dom.click(list.el.querySelector('td.o_group_field_row_add a'));
+        checkUnselectRow = true;
+        await testUtils.dom.click($('.o_searchview_facet .o_facet_remove'));
+        assert.verifySteps([]);
+        testUtils.mock.unpatch(ListRenderer);
+        list.destroy();
+    });
+
     QUnit.test('cell-level keyboard navigation in editable grouped list', async function (assert) {
         assert.expect(56);
 
@@ -10658,6 +10705,45 @@ QUnit.module('Views', {
 
         list.destroy();
         delete fieldRegistry.map.asyncwidget;
+    });
+
+    QUnit.test('open list optional fields dropdown position to right place', async function (assert) {
+        assert.expect(1);
+
+        this.data.bar.fields.name = { string: "Name", type: "char", sortable: true };
+        this.data.bar.fields.foo = { string: "Foo", type: "char", sortable: true };
+        this.data.foo.records[0].o2m = [1, 2];
+
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <form>
+                    <sheet>
+                        <notebook>
+                            <page string="Page 1">
+                                <field name="o2m">
+                                    <tree editable="bottom">
+                                        <field name="display_name"/>
+                                        <field name="foo"/>
+                                        <field name="name" optional="hide"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            res_id: 1,
+        });
+
+        const listWidth = form.el.querySelector('.o_list_view').offsetWidth;
+
+        await testUtils.dom.click(form.el.querySelector('.o_optional_columns_dropdown_toggle'));
+        assert.strictEqual(form.el.querySelector('.o_optional_columns').offsetLeft, listWidth,
+            "optional fields dropdown should opened at right place");
+
+        form.destroy();
     });
 
     QUnit.test('change the viewType of the current action', async function (assert) {

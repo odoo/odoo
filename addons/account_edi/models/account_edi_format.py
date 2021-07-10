@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
-from odoo.exceptions import UserError
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 from odoo.osv import expression
 from odoo.tools import html_escape
@@ -11,6 +10,7 @@ from lxml import etree
 import base64
 import io
 import logging
+import pathlib
 
 _logger = logging.getLogger(__name__)
 
@@ -250,6 +250,31 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return self.env['account.move']
 
+    def _create_invoice_from_binary(self, filename, content, extension):
+        """ Create a new invoice with the data inside a binary file.
+
+        :param filename:  The name of the file.
+        :param content:   The content of the binary file.
+        :param extension: The extensions as a string.
+        :returns:         The created invoice.
+        """
+        # TO OVERRIDE
+        self.ensure_one()
+        return self.env['account.move']
+
+    def _update_invoice_from_binary(self, filename, content, extension, invoice):
+        """ Update an existing invoice with the data inside a binary file.
+
+        :param filename: The name of the file.
+        :param content:  The content of the binary file.
+        :param extension: The extensions as a string.
+        :param invoice:  The invoice to update.
+        :returns:        The updated invoice.
+        """
+        # TO OVERRIDE
+        self.ensure_one()
+        return self.env['account.move']
+
     ####################################################
     # Export Internal methods (not meant to be overridden)
     ####################################################
@@ -290,13 +315,12 @@ class AccountEdiFormat(models.Model):
         """Decodes an xml into a list of one dictionary representing an attachment.
 
         :param filename:    The name of the xml.
-        :param attachment:  The xml as a string.
+        :param content:     The bytes representing the xml.
         :returns:           A list with a dictionary.
         * filename:         The name of the attachment.
         * content:          The content of the attachment.
         * type:             The type of the attachment.
         * xml_tree:         The tree of the xml if type is xml.
-        * pdf_reader:       The pdf_reader if type is pdf.
         """
         to_process = []
         try:
@@ -351,6 +375,24 @@ class AccountEdiFormat(models.Model):
 
         return to_process
 
+    def _decode_binary(self, filename, content):
+        """Decodes any file into a list of one dictionary representing an attachment.
+        This is a fallback for all files that are not decoded by other methods.
+
+        :param filename:    The name of the file.
+        :param content:     The bytes representing the file.
+        :returns:           A list with a dictionary.
+        * filename:         The name of the attachment.
+        * content:          The content of the attachment.
+        * type:             The type of the attachment.
+        """
+        return [{
+            'filename': filename,
+            'extension': ''.join(pathlib.Path(filename).suffixes),
+            'content': content,
+            'type': 'binary',
+        }]
+
     def _decode_attachment(self, attachment):
         """Decodes an ir.attachment and unwrap sub-attachment into a list of dictionary each representing an attachment.
 
@@ -369,6 +411,8 @@ class AccountEdiFormat(models.Model):
             to_process.extend(self._decode_pdf(attachment.name, content))
         elif 'xml' in attachment.mimetype:
             to_process.extend(self._decode_xml(attachment.name, content))
+        else:
+            to_process.extend(self._decode_binary(attachment.name, content))
 
         return to_process
 
@@ -387,6 +431,8 @@ class AccountEdiFormat(models.Model):
                     elif file_data['type'] == 'pdf':
                         res = edi_format._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'])
                         file_data['pdf_reader'].stream.close()
+                    else:
+                        res = edi_format._create_invoice_from_binary(file_data['filename'], file_data['content'], file_data['extension'])
                 except Exception as e:
                     _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
                 if res:
@@ -412,6 +458,8 @@ class AccountEdiFormat(models.Model):
                     elif file_data['type'] == 'pdf':
                         res = edi_format._update_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], invoice)
                         file_data['pdf_reader'].stream.close()
+                    else:  # file_data['type'] == 'binary'
+                        res = edi_format._update_invoice_from_binary(file_data['filename'], file_data['content'], file_data['extension'], invoice)
                 except Exception as e:
                     _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
                 if res:
