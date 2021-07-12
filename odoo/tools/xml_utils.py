@@ -85,4 +85,6 @@ def create_xml_node(parent_node, node_name, node_value=None):
     :param str node_value: value of the created node (optional)
     :rtype: etree._Element
     """
-    return create_xml_node_chain(parent_node, [node_name], node_value)[0]
+    el = etree.SubElement(parent_node, node_name)
+    el.text = node_value
+    return el
