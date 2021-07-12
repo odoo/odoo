@@ -201,6 +201,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         chart_template = chart_template or cls.env.company.chart_template_id
         company = cls.env['res.company'].create({
             'name': company_name,
+            'country_id': chart_template.country_id.id,
             **kwargs,
         })
         cls.env.user.company_ids |= company
@@ -213,6 +214,7 @@ class AccountTestInvoicingCommon(TransactionCase):
 
         return {
             'company': company,
+            'country_id': chart_template.country_id,
             'currency': company.currency_id,
             'default_account_revenue': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
@@ -260,7 +262,8 @@ class AccountTestInvoicingCommon(TransactionCase):
         }
 
     @classmethod
-    def setup_multi_currency_data(cls, default_values={}, rate2016=3.0, rate2017=2.0):
+    def setup_multi_currency_data(cls, default_values=None, rate2016=3.0, rate2017=2.0):
+        default_values = default_values or {}
         foreign_currency = cls.env['res.currency'].create({
             'name': 'Gold Coin',
             'symbol': '☺',
@@ -289,10 +292,14 @@ class AccountTestInvoicingCommon(TransactionCase):
 
     @classmethod
     def setup_armageddon_tax(cls, tax_name, company_data):
+        country_id = company_data['company'].country_id.id
+        tax_group_id = cls.tax_sale_a.tax_group_id.id
         return cls.env['account.tax'].create({
             'name': '%s (group)' % tax_name,
             'amount_type': 'group',
             'amount': 0.0,
+            'country_id': country_id,
+            'tax_group_id': tax_group_id,
             'children_tax_ids': [
                 (0, 0, {
                     'name': '%s (child 1)' % tax_name,
@@ -301,6 +308,8 @@ class AccountTestInvoicingCommon(TransactionCase):
                     'price_include': True,
                     'include_base_amount': True,
                     'tax_exigibility': 'on_invoice',
+                    'country_id': country_id,
+                    'tax_group_id': tax_group_id,
                     'invoice_repartition_line_ids': [
                         (0, 0, {
                             'factor_percent': 100,
@@ -339,6 +348,8 @@ class AccountTestInvoicingCommon(TransactionCase):
                     'amount_type': 'percent',
                     'amount': 10.0,
                     'tax_exigibility': 'on_payment',
+                    'country_id': country_id,
+                    'tax_group_id': tax_group_id,
                     'cash_basis_transition_account_id': cls.safe_copy(company_data['default_account_tax_sale']).id,
                     'invoice_repartition_line_ids': [
                         (0, 0, {
@@ -671,7 +682,8 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
             auto_validate=True
         )
 
-    def make_payment(self, invoice_record, bank_journal, amount=0.0, amount_currency=0.0, currency_id=None, reconcile_param=[]):
+    def make_payment(self, invoice_record, bank_journal, amount=0.0, amount_currency=0.0, currency_id=None, reconcile_param=None):
+        reconcile_param = reconcile_param or []
         bank_stmt = self.env['account.bank.statement'].create({
             'journal_id': bank_journal.id,
             'date': time.strftime('%Y') + '-07-15',
