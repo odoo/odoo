@@ -66,7 +66,12 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
         if (isUnremovable(leftNode)) {
             throw UNREMOVABLE_ROLLBACK_CODE;
         }
-        if (isMediaElement(leftNode)) {
+        if (
+            isMediaElement(leftNode) ||
+            (leftNode.getAttribute &&
+                typeof leftNode.getAttribute('contenteditable') === 'string' &&
+                leftNode.getAttribute('contenteditable').toLowerCase() === 'false')
+        ) {
             leftNode.remove();
             return;
         }
