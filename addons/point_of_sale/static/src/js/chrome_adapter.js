@@ -29,6 +29,8 @@ export class ChromeAdapter extends PopupControllerMixin(PosComponent) {
 
         this.env = owl.Component.env;
         useBus(this.env.qweb, "update", () => this.render());
+        setupResponsivePlugin(this.env);
+
         const chrome = owl.hooks.useRef("chrome");
         owl.hooks.onMounted(async () => {
             // Little trick to avoid displaying the block ui during the POS models loading
@@ -37,7 +39,6 @@ export class ChromeAdapter extends PopupControllerMixin(PosComponent) {
             await chrome.comp.start();
             registry.category("main_components").add("BlockUI", BlockUiFromRegistry);
             configureGui({ component: chrome.comp });
-            setupResponsivePlugin(this.env);
         });
     }
 }
