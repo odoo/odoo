@@ -10,44 +10,44 @@ from odoo.exceptions import AccessError, ValidationError
 @tagged('post_install', '-at_install', 'holidays_attendance')
 class TestHolidaysOvertime(TransactionCase):
 
-    def setUp(self):
-        super().setUp()
-        self.company = self.env['res.company'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company = cls.env['res.company'].create({
             'name': 'SweatChipChop Inc.',
             'hr_attendance_overtime': True,
-            'overtime_start_date': datetime(2021, 1, 1)
+            'overtime_start_date': datetime(2021, 1, 1),
         })
-        self.env.company = self.company
-        self.user = new_test_user(self.env, login='user', groups='base.group_user,hr_attendance.group_hr_attendance', company_id=self.company.id)
-        self.user_manager = new_test_user(self.env, login='manager', groups='base.group_user,hr_holidays.group_hr_holidays_user', company_id=self.company.id)
+        cls.user = new_test_user(cls.env, login='user', groups='base.group_user,hr_attendance.group_hr_attendance', company_id=cls.company.id).with_company(cls.company)
+        cls.user_manager = new_test_user(cls.env, login='manager', groups='base.group_user,hr_holidays.group_hr_holidays_user', company_id=cls.company.id).with_company(cls.company)
 
-        self.manager = self.env['hr.employee'].create({
+        cls.manager = cls.env['hr.employee'].create({
             'name': 'Dominique',
-            'user_id': self.user_manager.id,
-            'company_id': self.company.id,
+            'user_id': cls.user_manager.id,
+            'company_id': cls.company.id,
         })
-        self.employee = self.env['hr.employee'].create({
+        cls.employee = cls.env['hr.employee'].create({
             'name': 'Barnabé',
-            'user_id': self.user.id,
-            'parent_id': self.manager.id,
-            'company_id': self.company.id,
+            'user_id': cls.user.id,
+            'parent_id': cls.manager.id,
+            'company_id': cls.company.id,
         })
 
-        self.leave_type_no_alloc = self.env['hr.leave.type'].create({
+        cls.leave_type_no_alloc = cls.env['hr.leave.type'].create({
             'name': 'Overtime Compensation No Allocation',
-            'company_id': self.company.id,
+            'company_id': cls.company.id,
             'allocation_type': 'no',
             'overtime_deductible': True,
         })
-        self.leave_type_employee_allocation = self.env['hr.leave.type'].create({
+        cls.leave_type_employee_allocation = cls.env['hr.leave.type'].create({
             'name': 'Overtime Compensation Employee Allocation',
-            'company_id': self.company.id,
+            'company_id': cls.company.id,
             'allocation_type': 'fixed_allocation',
             'overtime_deductible': True,
         })
-        self.leave_type_manager_alloc = self.env['hr.leave.type'].create({
+        cls.leave_type_manager_alloc = cls.env['hr.leave.type'].create({
             'name': 'Overtime Compensation Manager Allocation',
-            'company_id': self.company.id,
+            'company_id': cls.company.id,
             'allocation_type': 'fixed',
             'overtime_deductible': True,
         })
