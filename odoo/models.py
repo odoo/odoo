@@ -622,6 +622,7 @@ class BaseModel(metaclass=MetaModel):
                 '_name': name,
                 '_register': False,
                 '_original_module': cls._module,
+                '_inherit': cls._inherit or [],
                 '_inherit_module': {},                  # map parent to introducing module
                 '_inherit_children': OrderedSet(),      # names of children models
                 '_inherits_children': set(),            # names of children models
