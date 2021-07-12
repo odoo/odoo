@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, models, fields, tools, _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr
+from odoo import models, fields
+from odoo.tools import float_repr, html2plaintext
 from odoo.tests.common import Form
 
 from pathlib import PureWindowsPath
@@ -195,6 +195,7 @@ class AccountEdiFormat(models.Model):
             'type_code': 380 if invoice.move_type == 'out_invoice' else 381,
             'payment_means_code': 42 if invoice.journal_id.bank_account_id else 31,
             'bank_account': invoice.partner_bank_id,
+            'note': html2plaintext(invoice.narration) if invoice.narration else False,
             'format_monetary': format_monetary,
             'customer_vals': {'partner': invoice.commercial_partner_id},
             'supplier_vals': {'partner': invoice.company_id.partner_id.commercial_partner_id},
