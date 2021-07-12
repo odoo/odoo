@@ -4,39 +4,39 @@ from datetime import date, datetime
 from odoo.tests import new_test_user
 from odoo.tests.common import tagged, TransactionCase
 
-@tagged('hr_attendance_overtime')
+@tagged('post_install', '-at_install', 'hr_attendance_overtime')
 class TestHrAttendanceOvertime(TransactionCase):
     """ Tests for overtime """
 
-    def setUp(self):
-        super().setUp()
-        self.company = self.env['res.company'].create({
-            'name': 'SweatChopChop Inc.',
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company = cls.env['res.company'].create({
+            'name': 'SweatChipChop Inc.',
             'hr_attendance_overtime': True,
             'overtime_start_date': datetime(2021, 1, 1),
             'overtime_company_threshold': 10,
             'overtime_employee_threshold': 10,
         })
-        self.env.company = self.company
-        self.user = new_test_user(self.env, login='fru', groups='base.group_user,hr_attendance.group_hr_attendance', company_id=self.company.id)
-        self.employee = self.env['hr.employee'].create({
+        cls.user = new_test_user(cls.env, login='fru', groups='base.group_user,hr_attendance.group_hr_attendance', company_id=cls.company.id).with_company(cls.company)
+        cls.employee = cls.env['hr.employee'].create({
             'name': "Marie-Edouard De La Court",
-            'user_id': self.user.id,
-            'company_id': self.company.id,
+            'user_id': cls.user.id,
+            'company_id': cls.company.id,
             'tz': 'UTC',
         })
-        self.other_employee = self.env['hr.employee'].create({
+        cls.other_employee = cls.env['hr.employee'].create({
             'name': 'Yolanda',
-            'company_id': self.company.id,
+            'company_id': cls.company.id,
         })
-        self.jpn_employee = self.env['hr.employee'].create({
+        cls.jpn_employee = cls.env['hr.employee'].create({
             'name': 'Sacha',
-            'company_id': self.company.id,
+            'company_id': cls.company.id,
             'tz': 'Asia/Tokyo',
         })
-        self.honolulu_employee = self.env['hr.employee'].create({
+        cls.honolulu_employee = cls.env['hr.employee'].create({
             'name': 'Susan',
-            'company_id': self.company.id,
+            'company_id': cls.company.id,
             'tz': 'Pacific/Honolulu',
         })
 
