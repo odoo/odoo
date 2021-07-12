@@ -3072,14 +3072,14 @@ class AccountMove(models.Model):
         use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
         for move in self.filtered(lambda am: not am.narration):
             if not use_invoice_terms or not move.is_sale_document(include_receipts=True):
-                move.narration = ''
+                move.narration = False
             else:
                 if not move.company_id.terms_type == 'html':
                     narration = move.company_id.invoice_terms if not is_html_empty(move.company_id.invoice_terms) else ''
                 else:
                     baseurl = self.env.company.get_base_url() + '/terms'
                     narration = _('Terms & Conditions: %s', baseurl)
-                move.narration = narration
+                move.narration = narration or False
 
 
 class AccountMoveLine(models.Model):
