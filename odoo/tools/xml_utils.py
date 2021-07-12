@@ -22,7 +22,7 @@ class odoo_resolver(etree.Resolver):
         """Search url in ``ir.attachment`` and return the resolved content."""
         attachment = self.env['ir.attachment'].search([('name', '=', url)])
         if attachment:
-            return self.resolve_string(base64.b64decode(attachment.datas), context)
+            return self.resolve_string(attachment.raw, context)
 
 
 def _check_with_xsd(tree_or_str, stream, env=None):
