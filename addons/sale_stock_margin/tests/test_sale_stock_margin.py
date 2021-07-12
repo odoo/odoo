@@ -1,11 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
+
 from odoo.tests.common import Form
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
 
 
 class TestSaleStockMargin(TestStockValuationCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestSaleStockMargin, cls).setUpClass()
+        cls.pricelist = cls.env['product.pricelist'].create({'name': 'Simple Pricelist'})
+
     #########
     # UTILS #
     #########
@@ -15,6 +23,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
             'name': 'Sale order',
             'partner_id': self.env.ref('base.partner_admin').id,
             'partner_invoice_id': self.env.ref('base.partner_admin').id,
+            'pricelist_id': self.pricelist.id,
         })
 
     def _create_sale_order_line(self, sale_order, product, quantity, price_unit=0):
@@ -156,3 +165,37 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertAlmostEqual(order_line_1.margin, 34)               # (60 - 43) * 2
         self.assertAlmostEqual(order_line_2.margin, 30)               # (20 - 12.5) * 4
         self.assertAlmostEqual(sale_order.margin, 64)
+
+    def test_so_and_multicurrency(self):
+        ResCurrencyRate = self.env['res.currency.rate']
+        company_currency = self.env.company.currency_id
+        other_currency = self.env.ref('base.EUR') if company_currency == self.env.ref('base.USD') else self.env.ref('base.USD')
+
+        ResCurrencyRate.create({'currency_id': company_currency.id, 'rate': 1})
+        other_currency_rate = ResCurrencyRate.search([('name', '=', fields.Date.today()), ('currency_id', '=', other_currency.id)])
+        if other_currency_rate:
+            other_currency_rate.rate = 2
+        else:
+            ResCurrencyRate.create({'currency_id': other_currency.id, 'rate': 2})
+
+        so = self._create_sale_order()
+        so.pricelist_id = self.env['product.pricelist'].create({
+            'name': 'Super Pricelist',
+            'currency_id': other_currency.id,
+        })
+
+        product = self._create_product()
+        product.standard_price = 100
+        product.list_price = 200
+
+        so_form = Form(so)
+        with so_form.order_line.new() as line:
+            line.product_id = product
+        so = so_form.save()
+        so_line = so.order_line
+
+        self.assertEqual(so_line.purchase_price, 200)
+        self.assertEqual(so_line.price_unit, 400)
+        so.action_confirm()
+        self.assertEqual(so_line.purchase_price, 200)
+        self.assertEqual(so_line.price_unit, 400)
