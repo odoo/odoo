@@ -138,7 +138,7 @@ def exec_pg_command_pipe(name, *args):
 # File paths
 #----------------------------------------------------------
 
-def file_path(file_path, filter_ext=('',)):
+def file_path(p, filter_ext=('',)):
     """Verify that a file exists under a known `addons_path` directory and return its full path.
 
     Examples::
@@ -147,19 +147,19 @@ def file_path(file_path, filter_ext=('',)):
     >>> file_path('hr/static/description/icon.png')
     >>> file_path('hr/static/description/icon.png', filter_ext=('.png', '.jpg'))
 
-    :param str file_path: absolute file path, or relative path within any `addons_path` directory
-    :param list[str] filter_ext: optional list of supported extensions (lowercase, with leading dot)
+    :param str p: absolute file path, or relative path within any `addons_path` directory
+    :param tuple[str] filter_ext: optional list of supported extensions (lowercase, with leading dot)
     :return: the absolute path to the file
     :raise FileNotFoundError: if the file is not found under the known `addons_path` directories
     :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
     """
     root_path = os.path.abspath(config['root_path'])
     addons_paths = odoo.addons.__path__ + [root_path]
-    is_abs = os.path.isabs(file_path)
-    normalized_path = os.path.normpath(os.path.normcase(file_path))
+    is_abs = os.path.isabs(p)
+    normalized_path = os.path.normpath(os.path.normcase(p))
 
     if filter_ext and not normalized_path.lower().endswith(filter_ext):
-        raise ValueError("Unsupported file: " + file_path)
+        raise ValueError("Unsupported file: " + p)
 
     # ignore leading 'addons/' if present, it's the final component of root_path, but
     # may sometimes be included in relative paths
@@ -174,7 +174,7 @@ def file_path(file_path, filter_ext=('',)):
         if fpath.startswith(parent_path) and os.path.exists(fpath):
             return fpath
 
-    raise FileNotFoundError("File not found: " + file_path)
+    raise FileNotFoundError("File not found: " + p)
 
 def file_open(name, mode="r", filter_ext=None):
     """Open a file from within the addons_path directories, as an absolute or relative path.
@@ -188,7 +188,7 @@ def file_open(name, mode="r", filter_ext=None):
 
     :param name: absolute or relative path to a file located inside an addon
     :param mode: file open mode, as for `open()`
-    :param list[str] filter_ext: optional list of supported extensions (lowercase, with leading dot)
+    :param tuple[str] filter_ext: optional list of supported extensions (lowercase, with leading dot)
     :return: file object, as returned by `open()`
     :raise FileNotFoundError: if the file is not found under the known `addons_path` directories
     :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
@@ -209,7 +209,7 @@ def file_open(name, mode="r", filter_ext=None):
 #----------------------------------------------------------
 # iterables
 #----------------------------------------------------------
-def flatten(list):
+def flatten(lst):
     """Flatten a list of elements into a unique list
     Author: Christophe Simonis (christophe@tinyerp.com)
 
@@ -229,7 +229,7 @@ def flatten(list):
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     """
     r = []
-    for e in list:
+    for e in lst:
         if isinstance(e, (bytes, str)) or not isinstance(e, collections.Iterable):
             r.append(e)
         else:
