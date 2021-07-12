@@ -27,6 +27,13 @@ $-editor-messages-margin-x: 2%;
     }
 }
 
+.oe_structure_not_nearest .oe_drop_zone {
+    &:before {
+        opacity: 0.5;
+        line-height: 35px !important;
+    }
+}
+
 .o_editable {
     &:not(:empty), &[data-oe-type] {
         &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):not(.o_editable_no_shadow):not([data-oe-type="image"]):hover,
