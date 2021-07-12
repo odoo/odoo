@@ -28,10 +28,13 @@ from . import mail_template
 
 # discuss
 from . import mail_channel_partner
+from . import mail_channel_rtc_session
 from . import mail_channel
 from . import mail_guest
+from . import mail_ice_server
 from . import mail_shortcode
 from . import res_users_settings
+from . import res_users_settings_volumes
 
 # odoo models
 from . import ir_action_act_window

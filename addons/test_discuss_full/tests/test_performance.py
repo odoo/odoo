@@ -98,7 +98,7 @@ class TestDiscussFullPerformance(TransactionCase):
         self.maxDiff = None
         self.users[0].flush()
         self.users[0].invalidate_cache()
-        with self.assertQueryCount(emp=49):
+        with self.assertQueryCount(emp=50):
             init_messaging = self.users[0].with_user(self.users[0])._init_messaging()
 
         self.assertEqual(init_messaging, {
@@ -734,6 +734,10 @@ class TestDiscussFullPerformance(TransactionCase):
                 'is_discuss_sidebar_category_channel_open': True,
                 'is_discuss_sidebar_category_chat_open': True,
                 'is_discuss_sidebar_category_livechat_open': True,
+                'push_to_talk_key': False,
+                'use_push_to_talk': False,
                 'user_id': (self.users[0].id, 'Ernest Employee'),
+                'voice_active_duration': 0,
+                'volume_settings': [],
             },
         })

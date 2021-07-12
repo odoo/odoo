@@ -2,7 +2,8 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
-import { create } from '@mail/model/model_field_command';
+import { OnChange } from '@mail/model/model_onchange';
+import { create, replace, link, unlink } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 
 const { EventBus } = owl.core;
@@ -147,6 +148,25 @@ function factory(dependencies) {
             this.update({ isNotificationPermissionDefault: this._computeIsNotificationPermissionDefault() });
         }
 
+        /**
+         * @param {String} sessionId
+         */
+        toggleFocusedRtcSession(sessionId) {
+            const rtcSession = this.messaging.models['mail.rtc_session'].findFromIdentifyingData({
+                id: sessionId,
+            });
+            const focusedSessionId = this.focusedRtcSession && this.focusedRtcSession.id;
+            if (!sessionId || focusedSessionId === sessionId || !rtcSession.videoStream) {
+                this.update({ focusedRtcSession: unlink() });
+                return;
+            }
+            this.update({ focusedRtcSession: link(rtcSession) });
+            if (this.userSetting.rtcLayout !== 'tiled') {
+                return;
+            }
+            this.userSetting.update({ rtcLayout: 'sidebar' });
+        }
+
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
@@ -181,12 +201,39 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.partner[]}
+         */
+        _computeRingingThreads() {
+            const threads = this.messaging.models['mail.thread'].all().filter(thread => !!thread.rtcInvitingSession);
+            return replace(threads);
+        }
+
+        /**
+         * @private
          */
         _handleGlobalWindowFocus() {
             this.update({ outOfFocusUnreadMessageCounter: 0 });
             this.env.bus.trigger('set_title_part', {
                 part: '_chat',
             });
+        }
+
+        /**
+         * @private
+         */
+        _onChangeRingingThreads() {
+            if (this.ringingThreads && this.ringingThreads.length > 0) {
+                this.soundEffects.incomingCall.play({ loop: true });
+            } else {
+                this.soundEffects.incomingCall.stop();
+            }
+        }
+
+        /**
+         * @private
+         */
+        _onChangeFocusedRtcSession() {
+            this.mailRtc.filterIncomingVideoTraffic(this.focusedRtcSession && [this.focusedRtcSession.peerToken]);
         }
 
     }
@@ -238,6 +285,9 @@ function factory(dependencies) {
             isCausal: true,
             readonly: true,
         }),
+        focusedRtcSession: one2one('mail.rtc_session', {
+            inverse: 'focusingMessaging',
+        }),
         /**
          * Mailbox History.
          */
@@ -283,6 +333,11 @@ function factory(dependencies) {
             isCausal: true,
             readonly: true,
         }),
+        mailRtc: one2one('mail.rtc', {
+            default: create(),
+            isCausal: true,
+            readonly: true,
+        }),
         /**
          * Determines after how much time in ms a "loading" indicator should be
          * shown. Useful to avoid flicker for almost instant loading.
@@ -323,11 +378,37 @@ function factory(dependencies) {
          */
         publicPartners: many2many('mail.partner'),
         /**
+         * Threads for which the current partner has a pending invitation
+         */
+        ringingThreads: many2many('mail.thread', {
+            compute: '_computeRingingThreads',
+        }),
+        soundEffects: one2one('mail.sound_effects', {
+            default: create(),
+            isCausal: true,
+            readonly: true,
+        }),
+        /**
          * Mailbox Starred.
          */
         starred: one2one('mail.thread'),
+        userSetting: one2one('mail.user_setting', {
+            default: create(),
+            isCausal: true,
+            readonly: true,
+            required: true,
+        }),
     };
-
+    Messaging.onChanges = [
+        new OnChange({
+            dependencies: ['ringingThreads'],
+            methodName: '_onChangeRingingThreads',
+        }),
+        new OnChange({
+            dependencies: ['focusedRtcSession'],
+            methodName: '_onChangeFocusedRtcSession',
+        }),
+    ];
     Messaging.modelName = 'mail.messaging';
 
     return Messaging;
