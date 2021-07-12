@@ -1368,7 +1368,7 @@ def formatLang(env, value, digits=2, grouping=True, monetary=False, dp=None, cur
 
 
 def format_date(env, value, lang_code=False, date_format=False):
-    '''
+    """
         Formats the date in a given format.
 
         :param env: an environment.
@@ -1379,7 +1379,7 @@ def format_date(env, value, lang_code=False, date_format=False):
             default format of the lang.
         :return: date formatted in the specified format.
         :rtype: string
-    '''
+    """
     if not value:
         return ''
     if isinstance(value, str):
@@ -1403,7 +1403,7 @@ def format_date(env, value, lang_code=False, date_format=False):
     return babel.dates.format_date(value, format=date_format, locale=locale)
 
 def parse_date(env, value, lang_code=False):
-    '''
+    """
         Parse the date from a given format. If it is not a valid format for the
         localization, return the original string.
 
@@ -1413,7 +1413,7 @@ def parse_date(env, value, lang_code=False):
             environment context.
         :return: date object from the localized string
         :rtype: datetime.date
-    '''
+    """
     lang = get_lang(env, lang_code)
     locale = babel_locale_parse(lang.code)
     try:
@@ -1464,7 +1464,7 @@ def format_datetime(env, value, tz=False, dt_format='medium', lang_code=False):
     return babel.dates.format_datetime(localized_datetime, dt_format, locale=locale)
 
 
-def format_time(env, value, tz=False, time_format='medium', lang_code=False):
+def format_time(env, value, tz=False, time_format='medium', lang_code=None):
     """ Format the given time (hour, minute and second) with the current user preference (language, format, ...)
 
         :param env:
@@ -1512,17 +1512,19 @@ def format_decimalized_number(number, decimal=1):
     """Format a number to display to nearest metrics unit next to it.
 
     Do not display digits if all visible digits are null.
-    Do not display units higher then "Tera" because most of people don't know what
+    Do not display units higher then "Tera" because most people don't know what
     a "Yotta" is.
 
-    >>> format_decimalized_number(123_456.789)
-    123.5k
-    >>> format_decimalized_number(123_000.789)
-    123k
-    >>> format_decimalized_number(-123_456.789)
-    -123.5k
-    >>> format_decimalized_number(0.789)
-    0.8
+    ::
+
+        >>> format_decimalized_number(123_456.789)
+        123.5k
+        >>> format_decimalized_number(123_000.789)
+        123k
+        >>> format_decimalized_number(-123_456.789)
+        -123.5k
+        >>> format_decimalized_number(0.789)
+        0.8
     """
     for unit in ['', 'k', 'M', 'G']:
         if abs(number) < 1000.0:
@@ -1532,10 +1534,13 @@ def format_decimalized_number(number, decimal=1):
 
 
 def format_decimalized_amount(amount, currency=None):
-    """Format a amount to display the currency and also display the metric unit of the amount.
+    """Format an amount to display the currency and also display the metric unit
+    of the amount.
 
-    >>> format_decimalized_amount(123_456.789, res.currency("$"))
-    $123.5k
+    ::
+
+        >>> format_decimalized_amount(123_456.789, env.ref("base.USD"))
+        $123.5k
     """
     formated_amount = format_decimalized_number(amount)
 
