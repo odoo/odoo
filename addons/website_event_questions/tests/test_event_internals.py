@@ -29,13 +29,13 @@ class TestEventData(TestEventQuestionCommon):
         self.assertEqual(event.specific_question_ids.title, 'Question1')
         self.assertEqual(
             set(event.specific_question_ids.mapped('answer_ids.name')),
-            set(['Q1-Answer1', 'Q1-Answer2']))
+            {'Q1-Answer1', 'Q1-Answer2'})
         self.assertEqual(len(event.general_question_ids), 2)
         self.assertEqual(event.general_question_ids[0].title, 'Question2')
         self.assertEqual(event.general_question_ids[1].title, 'Question3')
         self.assertEqual(
             set(event.general_question_ids[0].mapped('answer_ids.name')),
-            set(['Q2-Answer1', 'Q2-Answer2']))
+            {'Q2-Answer1', 'Q2-Answer2'})
 
     def test_process_attendees_form(self):
         event = self.env['event.event'].create({

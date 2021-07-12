@@ -87,7 +87,7 @@ class TestEventData(TestEventBoothSaleCommon):
         self.assertEqual(event.event_booth_count, 3)
         self.assertEqual(
             set(r['name'] for r in event.event_booth_ids),
-            set(('Custom Standard Booth 2', 'Standard Booth', 'Premium Booth')),
+            {'Custom Standard Booth 2', 'Standard Booth', 'Premium Booth'},
             'Should keep booths with reservation, remove unused ones and add type ones'
         )
         self.assertEqual(event.event_booth_count_available, 2)

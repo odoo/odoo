@@ -358,7 +358,7 @@ class SaleOrder(models.Model):
                     value_found = False
                     for line in lines:
                         # Case 1.
-                        if not len(set(line.tax_id.mapped('id')).symmetric_difference(set([v[1] for v in value['tax_id']]))):
+                        if not set(line.tax_id.mapped('id')).symmetric_difference(v[1] for v in value['tax_id']):
                             value_found = True
                             # Working on Case 3.
                             lines_to_remove -= line

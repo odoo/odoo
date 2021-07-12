@@ -126,7 +126,7 @@ class AccountPaymentRegister(models.TransientModel):
         :param batch_result:    A batch returned by '_get_batches'.
         :return:                A string representing a communication to be set on payment.
         '''
-        labels = set(line.name or line.move_id.ref or line.move_id.name for line in batch_result['lines'])
+        labels = {line.name or line.move_id.ref or line.move_id.name for line in batch_result['lines']}
         return ' '.join(sorted(labels))
 
     @api.model

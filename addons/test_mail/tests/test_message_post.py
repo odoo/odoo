@@ -277,11 +277,11 @@ class TestMessagePost(TestMailCommon, TestRecipients):
 
         # message attachments
         self.assertEqual(len(msg.attachment_ids), 4)
-        self.assertEqual(set(msg.attachment_ids.mapped('res_model')), set([self.test_record._name]))
-        self.assertEqual(set(msg.attachment_ids.mapped('res_id')), set([self.test_record.id]))
-        self.assertEqual(set([base64.b64decode(x) for x in msg.attachment_ids.mapped('datas')]),
-                         set([b'migration test', _attachments[0][1], _attachments[1][1]]))
-        self.assertTrue(set([_attach_1.id, _attach_2.id]).issubset(msg.attachment_ids.ids),
+        self.assertEqual(set(msg.attachment_ids.mapped('res_model')), {self.test_record._name})
+        self.assertEqual(set(msg.attachment_ids.mapped('res_id')), {self.test_record.id})
+        self.assertEqual({base64.b64decode(x) for x in msg.attachment_ids.mapped('datas')},
+                         {b'migration test', _attachments[0][1], _attachments[1][1]})
+        self.assertTrue({_attach_1.id, _attach_2.id}.issubset(msg.attachment_ids.ids),
                         'message_post: mail.message attachments duplicated')
 
         # notification email attachments

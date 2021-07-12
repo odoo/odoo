@@ -237,7 +237,7 @@ class Warehouse(models.Model):
                     # routes, rules, picking types and locations (e.g the reception
                     # steps). The purpose is to write on it in order to let the
                     # write method set the correct field to active or archive.
-                    depends = set([])
+                    depends = set()
                     for rule_item in warehouse._get_global_route_rules_values().values():
                         for depend in rule_item.get('depends', []):
                             depends.add(depend)

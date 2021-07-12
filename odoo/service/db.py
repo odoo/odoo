@@ -384,7 +384,7 @@ def list_dbs(force=False):
         return res
 
     chosen_template = odoo.tools.config['db_template']
-    templates_list = tuple(set(['postgres', chosen_template]))
+    templates_list = tuple({'postgres', chosen_template})
     db = odoo.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         try:

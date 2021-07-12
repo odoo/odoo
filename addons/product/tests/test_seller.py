@@ -48,20 +48,20 @@ class TestSeller(TransactionCase):
         names = self.product_consu.with_context(
             partner_id=self.asustec.id,
         ).name_get()
-        ref = set([x[1] for x in names])
+        ref = {x[1] for x in names}
         self.assertEqual(len(names), 3, "3 vendor references should have been found")
         self.assertEqual(ref, {'[A] Boudin', '[B] Boudin', '[NO] Boudin'}, "Incorrect vendor reference list")
         names = self.product_consu.with_context(
             partner_id=self.asustec.id,
             company_id=company_a.id,
         ).name_get()
-        ref = set([x[1] for x in names])
+        ref = {x[1] for x in names}
         self.assertEqual(len(names), 2, "2 vendor references should have been found")
         self.assertEqual(ref, {'[A] Boudin', '[NO] Boudin'}, "Incorrect vendor reference list")
         names = self.product_consu.with_context(
             partner_id=self.asustec.id,
             company_id=company_b.id,
         ).name_get()
-        ref = set([x[1] for x in names])
+        ref = {x[1] for x in names}
         self.assertEqual(len(names), 2, "2 vendor references should have been found")
         self.assertEqual(ref, {'[B] Boudin', '[NO] Boudin'}, "Incorrect vendor reference list")

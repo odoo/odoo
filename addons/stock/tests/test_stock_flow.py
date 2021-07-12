@@ -401,7 +401,7 @@ class TestStockFlow(TestStockCommon):
         # Check product D done quantity must be 5.0 and 3.0
         movesD = self.MoveObj.search([('product_id', '=', self.productD.id), ('picking_id', '=', back_order_in.id)])
         d_done_qty = [move.product_uom_qty for move in movesD]
-        self.assertEqual(set(d_done_qty), set([8.0]), 'Wrong quantity of moves product D.')
+        self.assertEqual(set(d_done_qty), {8.0}, 'Wrong quantity of moves product D.')
         # Check no back order is created.
         self.assertFalse(self.PickingObj.search([('backorder_id', '=', back_order_in.id)]), "Should not create any back order.")
 

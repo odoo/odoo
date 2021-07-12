@@ -178,7 +178,7 @@ class AccountEdiDocument(models.Model):
 
         documents.edi_format_id.ensure_one()  # All account.edi.document of a job should have the same edi_format_id
         documents.move_id.company_id.ensure_one()  # All account.edi.document of a job should be from the same company
-        if len(set(doc.state for doc in documents)) != 1:
+        if len({doc.state for doc in documents}) != 1:
             raise ValueError('All account.edi.document of a job should have the same state')
 
         edi_format = documents.edi_format_id

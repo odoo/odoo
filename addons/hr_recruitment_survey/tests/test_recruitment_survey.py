@@ -58,7 +58,7 @@ class TestRecruitmentSurvey(common.SingleTransactionCase):
         self.assertEqual(self.job_sysadmin.response_id, answers)
         self.assertEqual(
             set(answers.mapped('email')),
-            set([self.job_sysadmin.email_from]))
+            {self.job_sysadmin.email_from})
 
     def test_print_survey(self):
         # We ensure that response is False because we don't know test order

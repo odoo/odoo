@@ -16,7 +16,7 @@ class AlarmManager(models.AbstractModel):
         if not events_by_alarm:
             return
 
-        event_ids = list(set(event_id for event_ids in events_by_alarm.values() for event_id in event_ids))
+        event_ids = {event_id for event_ids in events_by_alarm.values() for event_id in event_ids}
         events = self.env['calendar.event'].browse(event_ids)
         alarms = self.env['calendar.alarm'].browse(events_by_alarm.keys())
         for event in events:

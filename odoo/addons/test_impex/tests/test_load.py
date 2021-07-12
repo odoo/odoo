@@ -918,7 +918,7 @@ class test_o2m(ImporterCase):
         self.assertEqual(len(result['ids']), 1)
 
         (b,) = self.browse()
-        self.assertEqual(set(values(b.value)), set([63, 64, 65, 66]))
+        self.assertEqual(set(values(b.value)), {63, 64, 65, 66})
 
     def test_multi_subfields(self):
         result = self.import_(['value/str', 'const', 'value/value'], [
@@ -931,7 +931,7 @@ class test_o2m(ImporterCase):
         self.assertEqual(len(result['ids']), 1)
 
         (b,) = self.browse()
-        self.assertEqual(set(values(b.value.sorted())), set([63, 64, 65, 66]))
+        self.assertEqual(set(values(b.value.sorted())), {63, 64, 65, 66})
         self.assertEqual(
             values(b.value.sorted(), 'str'),
             'this is the rhythm'.split())
@@ -959,7 +959,7 @@ class test_o2m(ImporterCase):
         [b] = self.browse()
         self.assertEqual(b.const, 42)
         # automatically forces link between core record and o2ms
-        self.assertEqual(set(values(b.value)), set([109, 262]))
+        self.assertEqual(set(values(b.value)), {109, 262})
         self.assertEqual(values(b.value, field='parent_id'), [b, b])
 
     def test_link(self):
@@ -994,7 +994,7 @@ class test_o2m(ImporterCase):
 
         [b] = self.browse()
         self.assertEqual(b.const, 42)
-        self.assertEqual(set(values(b.value)), set([1, 2]))
+        self.assertEqual(set(values(b.value)), {1, 2})
         self.assertEqual(values(b.value, field='parent_id'), [b, b])
 
     def test_o2m_repeated_with_xids(self):
@@ -1059,8 +1059,8 @@ class test_o2m_multiple(ImporterCase):
         self.assertEqual(len(result['ids']), 1)
 
         [b] = self.browse()
-        self.assertEqual(set(values(b.child1)), set([11, 12, 13, 14]))
-        self.assertEqual(set(values(b.child2)), set([21, 22, 23]))
+        self.assertEqual(set(values(b.child1)), {11, 12, 13, 14})
+        self.assertEqual(set(values(b.child2)), {21, 22, 23})
 
     def test_multi(self):
         result = self.import_(['const', 'child1/value', 'child2/value'], [
@@ -1075,8 +1075,8 @@ class test_o2m_multiple(ImporterCase):
         self.assertEqual(len(result['ids']), 1)
 
         [b] = self.browse()
-        self.assertEqual(set(values(b.child1)), set([11, 12, 13, 14]))
-        self.assertEqual(set(values(b.child2)), set([21, 22, 23]))
+        self.assertEqual(set(values(b.child1)), {11, 12, 13, 14})
+        self.assertEqual(set(values(b.child2)), {21, 22, 23})
 
     def test_multi_fullsplit(self):
         result = self.import_(['const', 'child1/value', 'child2/value'], [
@@ -1093,8 +1093,8 @@ class test_o2m_multiple(ImporterCase):
 
         [b] = self.browse()
         self.assertEqual(b.const, 5)
-        self.assertEqual(set(values(b.child1)), set([11, 12, 13, 14]))
-        self.assertEqual(set(values(b.child2)), set([21, 22, 23]))
+        self.assertEqual(set(values(b.child1)), {11, 12, 13, 14})
+        self.assertEqual(set(values(b.child2)), {21, 22, 23})
 
 
 class test_realworld(SavepointCaseWithUserDemo):

@@ -558,7 +558,7 @@ class TestComposerResultsComment(TestMailComposer):
         ])
         self.assertEqual(len(new_partners), 3)
         self.assertEqual(set(new_partners.mapped('email')),
-                         set(['test.to.1@test.example.com', 'test.to.2@test.example.com', 'test.cc.1@test.example.com'])
+                         {'test.to.1@test.example.com', 'test.to.2@test.example.com', 'test.cc.1@test.example.com'}
                         )
 
         # global outgoing: one mail.mail (all customer recipients, then all employee recipients)
@@ -605,9 +605,9 @@ class TestComposerResultsComment(TestMailComposer):
         # attachments are copied on message and linked to document
         self.assertEqual(
             set(message.attachment_ids.mapped('name')),
-            set(['00.txt', '01.txt', 'TestReport for %s.html' % self.test_record.name])
+            {'00.txt', '01.txt', 'TestReport for %s.html' % self.test_record.name}
         )
-        self.assertEqual(set(message.attachment_ids.mapped('res_model')), set([self.test_record._name]))
+        self.assertEqual(set(message.attachment_ids.mapped('res_model')), {self.test_record._name})
         self.assertEqual(set(message.attachment_ids.mapped('res_id')), set(self.test_record.ids))
         self.assertTrue(all(attach not in message.attachment_ids for attach in attachs), 'Should have copied attachments')
 

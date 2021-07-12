@@ -242,7 +242,7 @@ class MassMailingList(models.Model):
         subscriptions = self.subscription_ids if self else mailing.contact_list_ids.subscription_ids
         opt_out_contacts = subscriptions.filtered(lambda rel: rel.opt_out).mapped('contact_id.email_normalized')
         opt_in_contacts = subscriptions.filtered(lambda rel: not rel.opt_out).mapped('contact_id.email_normalized')
-        opt_out = set(c for c in opt_out_contacts if c not in opt_in_contacts)
+        opt_out = opt_out_contacts - opt_in_contacts
         return opt_out
 
     # ------------------------------------------------------

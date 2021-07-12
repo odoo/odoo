@@ -64,7 +64,7 @@ class AccountInvoiceSend(models.TransientModel):
 
                 # Get the move types of all selected moves and see if there is more than one of them.
                 # If so, we'll display a warning on the next window about it.
-                move_types_set = set(m.type_name for m in moves)
+                move_types_set = {m.type_name for m in moves}
 
                 if len(move_types_set) > 1:
                     move_types = ', '.join(move_types_set)

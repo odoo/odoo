@@ -221,14 +221,14 @@ class TestEventData(TestEventInternalsCommon):
         # verify that mail is linked to the registration
         self.assertEqual(
             set(mail.mapped('mail_registration_ids.registration_id.id')),
-            set([registration.id])
+            {registration.id}
         )
         # start test scenario
         event_form = Form(event)
         # verify that mail is linked to the event in the form
         self.assertEqual(
             set(map(lambda m: m.get('id', None), event_form.event_mail_ids._records)),
-            set([mail.id])
+            {mail.id}
         )
         # switch to an event_type with a mail template which should be computed
         event_form.event_type_id = event_type_mails
@@ -247,7 +247,7 @@ class TestEventData(TestEventInternalsCommon):
         # verify that the mail linked to the registration was kept, and the other removed
         self.assertEqual(
             set(map(lambda m: m.get('id', None), event_form.event_mail_ids._records)),
-            set([mail.id])
+            {mail.id}
         )
 
     @users('user_eventmanager')
@@ -322,21 +322,21 @@ class TestEventData(TestEventInternalsCommon):
         # verify that the ticket is linked to the event in the form
         self.assertEqual(
             set(map(lambda m: m.get('name', None), event_form.event_ticket_ids._records)),
-            set(['Registration Ticket'])
+            {'Registration Ticket'}
         )
         # switch to an event_type with a ticket template which should be computed
         event_form.event_type_id = event_type_tickets
         # verify that both tickets are computed
         self.assertEqual(
             set(map(lambda m: m.get('name', None), event_form.event_ticket_ids._records)),
-            set(['Registration Ticket', 'Default Ticket'])
+            {'Registration Ticket', 'Default Ticket'}
         )
         # switch back to an event_type without default tickets
         event_form.event_type_id = event_type_default
         # verify that the ticket linked to the registration was kept, and the other removed
         self.assertEqual(
             set(map(lambda m: m.get('name', None), event_form.event_ticket_ids._records)),
-            set(['Registration Ticket'])
+            {'Registration Ticket'}
         )
 
     @users('user_eventmanager')

@@ -1872,7 +1872,7 @@ class MrpProduction(models.Model):
             if not lot_ids:
                 continue
             lot_components.setdefault(move.product_id, set()).update(lot_ids)
-        multiple_lot_components = set([p for p, l in lot_components.items() if len(l) != 1])
+        multiple_lot_components = {p for p, l in lot_components.items() if len(l) != 1}
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.act_assign_serial_numbers_production")
         action['context'] = {
             'default_production_id': self.id,

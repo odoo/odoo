@@ -158,19 +158,19 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(len(ticket2_new_reg), 1)
         self.assertEqual(
             set(ticket1_new_reg.mapped('name')),
-            set(['ManualEntry1', 'ManualEntry2'])
+            {'ManualEntry1', 'ManualEntry2'}
         )
         self.assertEqual(
             set(ticket1_new_reg.mapped('email')),
-            set(['manual.email.1@test.example.com', 'manual.email.2@test.example.com'])
+            {'manual.email.1@test.example.com', 'manual.email.2@test.example.com'}
         )
         self.assertEqual(
             set(ticket1_new_reg.mapped('phone')),
-            set(['+32456111111', self.event_customer.phone])
+            {'+32456111111', self.event_customer.phone}
         )
         self.assertEqual(
             set(ticket1_new_reg.mapped('mobile')),
-            set(['+32456222222', self.event_customer.mobile])
+            {'+32456222222', self.event_customer.mobile}
         )
         for field in ['name', 'email', 'phone', 'mobile']:
             self.assertEqual(ticket2_new_reg[field], self.event_customer[field])

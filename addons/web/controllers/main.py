@@ -1242,7 +1242,7 @@ class Session(http.Controller):
     @http.route('/web/session/modules', type='json', auth="user")
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
-        return list(request.env.registry._init_modules | set([module.current_test] if module.current_test else []))
+        return list(request.env.registry._init_modules | {module.current_test} if module.current_test else set())
 
     @http.route('/web/session/save_session_action', type='json', auth="user")
     def save_session_action(self, the_action):

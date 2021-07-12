@@ -38,7 +38,7 @@ BaseCase.setUp = setUp
 # Tools globals
 #----------------------------------------------------------
 
-_MAIL_DOMAIN_BLACKLIST = set([
+_MAIL_DOMAIN_BLACKLIST = {
     # Top 100 email providers on SaaS at 2020-10
     'gmail.com', 'hotmail.com', 'yahoo.com', 'qq.com', 'outlook.com', '163.com', 'yahoo.fr', 'live.com', 'hotmail.fr', 'icloud.com', '126.com',
     'me.com', 'free.fr', 'ymail.com', 'msn.com', 'mail.com', 'orange.fr', 'aol.com', 'wanadoo.fr', 'live.fr', 'mail.ru', 'yahoo.co.in',
@@ -65,13 +65,13 @@ _MAIL_DOMAIN_BLACKLIST = set([
     'prisme.ch', 'bbox.fr', 'orbitalu.com', 'netcourrier.com', 'iinet.net.au',
     # Dummy entries
     'example.com',
-])
+}
 
 # List of country codes for which we should offer state filtering when mining new leads.
 # See crm.iap.lead.mining.request#_compute_available_state_ids() or task-2471703 for more details.
-_STATES_FILTER_COUNTRIES_WHITELIST = set([
+_STATES_FILTER_COUNTRIES_WHITELIST = {
     'AR', 'AU', 'BR', 'CA', 'IN', 'MY', 'MX', 'NZ', 'AE', 'US'
-])
+}
 
 #----------------------------------------------------------
 # Helpers for both clients and proxy

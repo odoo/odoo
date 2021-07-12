@@ -29,7 +29,7 @@ class AccountingTestTemplConsistency(TransactionCase):
         extra_domain = [('name', 'not in', exceptions)] if exceptions else []
         from_fields = self.get_model_fields(model_from, extra_domain=extra_domain).filtered_domain([('modules', '=', 'account')])
 
-        to_fields_set = set([f.name for f in self.get_model_fields(model_to)])
+        to_fields_set = {f.name for f in self.get_model_fields(model_to)}
         for field in from_fields:
             assert field.name in to_fields_set,\
                 'Missing field "%s" from "%s" in model "%s".' % (field.name, model_from, model_to)

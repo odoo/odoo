@@ -45,7 +45,7 @@ class TestMailGroupModeration(TestMailListCommon):
         mail_group_2 = self.env['mail.group'].browse(self.test_group_2.ids)
         self.assertEqual(
             set(mail_group.moderation_rule_ids.mapped('email')),
-            set(['banned_member@test.com'])
+            {'banned_member@test.com'}
         )
 
         moderation_1, moderation_2, moderation_3 = self.env['mail.group.moderation'].create([{
@@ -64,7 +64,7 @@ class TestMailGroupModeration(TestMailListCommon):
 
         self.assertEqual(
             set(mail_group.moderation_rule_ids.mapped('email')),
-            set(['banned_member@test.com', 'std@test.com', 'xss@test.com'])
+            {'banned_member@test.com', 'std@test.com', 'xss@test.com'}
         )
 
         message_1, message_2, message_3 = self.env['mail.group.message'].create([{
@@ -87,7 +87,7 @@ class TestMailGroupModeration(TestMailListCommon):
         self.assertEqual(len(mail_group.moderation_rule_ids), 4, "Should have created only one moderation rule")
         self.assertEqual(
             set(mail_group.moderation_rule_ids.mapped('email')),
-            set(['banned_member@test.com', 'std@test.com', 'xss@test.com', 'bob@test.com'])
+            {'banned_member@test.com', 'std@test.com', 'xss@test.com', 'bob@test.com'}
         )
         self.assertEqual(moderation_1.status, 'allow')
         self.assertEqual(moderation_2.status, 'allow', 'Should have write on the existing moderation rule')

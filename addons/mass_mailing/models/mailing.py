@@ -823,7 +823,7 @@ class MassMailing(models.Model):
         query = query % {'target': target._table, 'mail_field': mail_field}
         params = {'mailing_id': self.id, 'mailing_campaign_id': self.campaign_id.id, 'target_model': self.mailing_model_real}
         self._cr.execute(query, params)
-        seen_list = set(m[0] for m in self._cr.fetchall())
+        seen_list = {m[0] for m in self._cr.fetchall()}
         _logger.info(
             "Mass-mailing %s has already reached %s %s emails", self, len(seen_list), target._name)
         return seen_list
@@ -845,7 +845,7 @@ class MassMailing(models.Model):
             if self.campaign_id and self.ab_testing_enabled:
                 already_mailed = self.campaign_id._get_mailing_recipients()[self.campaign_id.id]
             else:
-                already_mailed = set([])
+                already_mailed = set()
             remaining = set(res_ids).difference(already_mailed)
             if topick > len(remaining) or (len(remaining) > 0 and topick == 0):
                 topick = len(remaining)

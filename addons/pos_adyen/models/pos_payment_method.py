@@ -45,7 +45,7 @@ class PosPaymentMethod(models.Model):
         }
 
     def _is_write_forbidden(self, fields):
-        whitelisted_fields = set(('adyen_latest_response', 'adyen_latest_diagnosis'))
+        whitelisted_fields = {'adyen_latest_response', 'adyen_latest_diagnosis'}
         return super(PosPaymentMethod, self)._is_write_forbidden(fields - whitelisted_fields)
 
     def _adyen_diagnosis_request_data(self, pos_config_name):

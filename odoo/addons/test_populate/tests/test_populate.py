@@ -116,7 +116,7 @@ class TestPopulateValidation(common.TransactionCase):
     def test_populate_factories(self):
         for model in self.env.values():
             factories = model._populate_factories() or []
-            factories_fields = set([field_name for field_name, factory in factories if not field_name.startswith('_')])
+            factories_fields = {field_name for field_name, factory in factories if not field_name.startswith('_')}
             missing = factories_fields - model._fields.keys()
             self.assertFalse(missing, 'Fields %s not found in model %s' % (missing, model._name))
 
@@ -147,7 +147,7 @@ class TestPopulateMissing(common.TransactionCase):
                         and field.store \
                         and field.name not in ('create_uid', 'write_uid', 'write_date', 'create_date', 'id') \
                         and field.type not in ('many2many', 'one2many')
-                electable_fields = set([key for key, field in model._fields.items() if is_electable(field)])
+                electable_fields = {key for key, field in model._fields.items() if is_electable(field)}
                 no_factory_fields = set(electable_fields - factories_fields)
                 if no_factory_fields:
                     _logger.info('Model %s has some undefined field: %s', model._name, no_factory_fields)

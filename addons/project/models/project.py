@@ -109,7 +109,7 @@ class ProjectTaskType(models.Model):
         # retrieves all the projects with a least 1 task in that stage
         # a task can be in a stage even if the project is not assigned to the stage
         readgroup = self.with_context(active_test=False).env['project.task'].read_group([('stage_id', 'in', self.ids)], ['project_id'], ['project_id'])
-        project_ids = list(set([project['project_id'][0] for project in readgroup] + self.project_ids.ids))
+        project_ids = list({project['project_id'][0] for project in readgroup}.union(self.project_ids.ids))
 
         wizard = self.with_context(project_ids=project_ids).env['project.task.type.delete.wizard'].create({
             'project_ids': project_ids,

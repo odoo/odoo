@@ -2897,7 +2897,7 @@ class AccountMove(models.Model):
         move._compute_name()  # because the name is given, we need to recompute in case it is the first invoice of the journal
 
         # Assign followers.
-        all_followers_ids = set(partner.id for partner in followers + senders + partners if is_internal_partner(partner))
+        all_followers_ids = {partner.id for partner in followers + senders + partners if is_internal_partner(partner)}
         move.message_subscribe(list(all_followers_ids))
         return move
 

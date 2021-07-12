@@ -1,0 +1,12 @@
+rules:
+  - id: set-empty
+    languages: [python]
+    severity: ERROR
+    message: an empty set does not need a parameter
+    pattern: set([])
+    fix: set()
+  - id: set-literals
+    languages: [python]
+    severity: WARNING
+    message: Use a set literal or comprehension
+    pattern: set([...])

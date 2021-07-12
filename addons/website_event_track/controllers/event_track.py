@@ -121,11 +121,10 @@ class EventTrackController(http.Controller):
         # organize categories for display: announced, live, soon and day-based
         tracks_announced = tracks_sudo.filtered(lambda track: not track.date)
         tracks_wdate = tracks_sudo - tracks_announced
-        date_begin_tz_all = list(set(
+        date_begin_tz_all = sorted({
             dt.date()
             for dt in self._get_dt_in_event_tz(tracks_wdate.mapped('date'), event)
-        ))
-        date_begin_tz_all.sort()
+        })
         tracks_sudo_live = tracks_wdate.filtered(lambda track: track.is_track_live)
         tracks_sudo_soon = tracks_wdate.filtered(lambda track: not track.is_track_live and track.is_track_soon)
         tracks_by_day = []
@@ -201,8 +200,7 @@ class EventTrackController(http.Controller):
         ])
         tracks_sudo = request.env['event.track'].sudo().search(base_track_domain)
 
-        locations = list(set(track.location_id for track in tracks_sudo))
-        locations.sort(key=lambda x: x.id)
+        locations = sorted({track.location_id for track in tracks_sudo}, key=lambda x: x.id)
 
         # First split day by day (based on start time)
         time_slots_by_tracks = {track: self._split_track_by_days(track, local_tz) for track in tracks_sudo}
@@ -211,8 +209,7 @@ class EventTrackController(http.Controller):
         track_time_slots = set().union(*(time_slot.keys() for time_slot in [time_slots for time_slots in time_slots_by_tracks.values()]))
 
         # extract unique days
-        days = list(set(time_slot.date() for time_slot in track_time_slots))
-        days.sort()
+        days = sorted({time_slot.date() for time_slot in track_time_slots})
 
         # Create the dict that contains the tracks at the correct time_slots / locations coordinates
         tracks_by_days = dict.fromkeys(days, 0)

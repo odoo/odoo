@@ -68,9 +68,9 @@ class TestSurveyInvite(common.TestSurveyCommon):
         self.assertEqual(len(answers), 1)
         self.assertEqual(
             set(answers.mapped('email')),
-            set([self.customer.email]))
+            {self.customer.email})
         self.assertEqual(answers.mapped('partner_id'), self.customer)
-        self.assertEqual(set(answers.mapped('deadline')), set([deadline]))
+        self.assertEqual(set(answers.mapped('deadline')), {deadline})
 
     @users('survey_manager')
     def test_survey_invite_authentication_nosignup(self):
@@ -96,7 +96,7 @@ class TestSurveyInvite(common.TestSurveyCommon):
         self.assertEqual(len(answers), 2)
         self.assertEqual(
             set(answers.mapped('email')),
-            set([self.user_emp.email, self.user_portal.email]))
+            {self.user_emp.email, self.user_portal.email})
         self.assertEqual(answers.mapped('partner_id'), self.user_emp.partner_id | self.user_portal.partner_id)
 
     @users('survey_manager')
@@ -122,7 +122,7 @@ class TestSurveyInvite(common.TestSurveyCommon):
         self.assertEqual(len(answers), 3)
         self.assertEqual(
             set(answers.mapped('email')),
-            set([self.customer.email, self.user_emp.email, self.user_portal.email]))
+            {self.customer.email, self.user_emp.email, self.user_portal.email})
         self.assertEqual(answers.mapped('partner_id'), self.customer | self.user_emp.partner_id | self.user_portal.partner_id)
 
     @users('survey_manager')
@@ -143,7 +143,7 @@ class TestSurveyInvite(common.TestSurveyCommon):
         self.assertEqual(len(answers), 3)
         self.assertEqual(
             set(answers.mapped('email')),
-            set(['test1@example.com', '"Raoulette Vignolette" <test2@example.com>', self.customer.email]))
+            {'test1@example.com', '"Raoulette Vignolette" <test2@example.com>', self.customer.email})
         self.assertEqual(answers.mapped('partner_id'), self.customer)
 
     @users('survey_manager')
@@ -164,7 +164,7 @@ class TestSurveyInvite(common.TestSurveyCommon):
         self.assertEqual(len(answers), 3)
         self.assertEqual(
             set(answers.mapped('email')),
-            set(['test1@example.com', '"Raoulette Vignolette" <test2@example.com>', self.customer.email]))
+            {'test1@example.com', '"Raoulette Vignolette" <test2@example.com>', self.customer.email})
         self.assertEqual(answers.mapped('partner_id'), self.customer)
 
     @users('survey_manager')
@@ -192,7 +192,7 @@ class TestSurveyInvite(common.TestSurveyCommon):
         self.assertEqual(len(answers), 1)
         self.assertEqual(
             set(answers.mapped('email')),
-            set([self.user_emp.email]))
+            {self.user_emp.email})
         self.assertEqual(answers.mapped('partner_id'), self.user_emp.partner_id)
 
     def test_survey_invite_token_by_email_nosignup(self):

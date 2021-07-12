@@ -262,7 +262,7 @@ class TestPortalProject(TestProjectPortalCommon):
         pigs.with_user(self.user_projectuser).read(['user_id'])
         # Test: all project tasks visible
         tasks = self.env['project.task'].with_user(self.user_projectuser).search([('project_id', '=', pigs.id)])
-        test_task_ids = set([self.task_1.id, self.task_2.id, self.task_3.id, self.task_4.id, self.task_5.id, self.task_6.id])
+        test_task_ids = {self.task_1.id, self.task_2.id, self.task_3.id, self.task_4.id, self.task_5.id, self.task_6.id}
         self.assertEqual(set(tasks.ids), test_task_ids,
                          'access rights: project user cannot see all tasks of an employees project')
         # Do: Bert reads project -> crash, no group

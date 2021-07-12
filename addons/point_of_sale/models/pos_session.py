@@ -1213,7 +1213,7 @@ class PosSession(models.Model):
 
     def _get_sale_vals(self, key, amount, amount_converted):
         account_id, sign, tax_keys, base_tag_ids = key
-        tax_ids = set(tax[0] for tax in tax_keys)
+        tax_ids = {tax[0] for tax in tax_keys}
         applied_taxes = self.env['account.tax'].browse(tax_ids)
         title = 'Sales' if sign == 1 else 'Refund'
         name = '%s untaxed' % title

@@ -30,7 +30,7 @@ WHERE notif.notification_type = 'sms' IS TRUE AND notif.notification_status IN (
     AND msg.author_id = %s """, (wizard.model, author_id))
             res = self._cr.fetchall()
             notif_ids = [row[0] for row in res]
-            message_ids = list(set([row[1] for row in res]))
+            message_ids = list({row[1] for row in res})
             if notif_ids:
                 self.env['mail.notification'].browse(notif_ids).sudo().write({'notification_status': 'canceled'})
             if message_ids:

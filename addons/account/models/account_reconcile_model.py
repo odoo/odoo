@@ -819,7 +819,7 @@ class AccountReconcileModel(models.Model):
         candidates, priorities = self._filter_candidates(candidates, aml_ids_to_exclude, reconciled_amls_ids)
 
         st_line_currency = st_line.foreign_currency_id or st_line.currency_id
-        candidate_currencies = set(candidate['aml_currency_id'] for candidate in candidates)
+        candidate_currencies = {candidate['aml_currency_id'] for candidate in candidates}
         kept_candidates = candidates
         if candidate_currencies == {st_line_currency.id}:
             kept_candidates = []

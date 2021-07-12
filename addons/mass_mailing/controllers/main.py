@@ -47,9 +47,9 @@ class MassMailController(http.Controller):
                 # TODO DBE Fixme : Optimise the following to get real opt_out and opt_in
                 opt_out_list_ids = subscription_list_ids.filtered(lambda rel: rel.opt_out).mapped('list_id')
                 opt_in_list_ids = subscription_list_ids.filtered(lambda rel: not rel.opt_out).mapped('list_id')
-                opt_out_list_ids = set([list.id for list in opt_out_list_ids if list not in opt_in_list_ids])
+                opt_out_list_ids = {list.id for list in opt_out_list_ids if list not in opt_in_list_ids}
 
-                unique_list_ids = set([list.list_id.id for list in subscription_list_ids])
+                unique_list_ids = {list.list_id.id for list in subscription_list_ids}
                 list_ids = request.env['mailing.list'].sudo().browse(unique_list_ids)
                 unsubscribed_list = ', '.join(str(list.name) for list in mailing.contact_list_ids if list.is_public)
                 return request.render('mass_mailing.page_unsubscribe', {

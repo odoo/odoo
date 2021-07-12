@@ -283,12 +283,12 @@ class MrpBom(models.Model):
 
         boms_done = [(self, {'qty': quantity, 'product': product, 'original_qty': quantity, 'parent_line': False})]
         lines_done = []
-        V |= set([product.product_tmpl_id.id])
+        V |= {product.product_tmpl_id.id}
 
         bom_lines = []
         for bom_line in self.bom_line_ids:
             product_id = bom_line.product_id
-            V |= set([product_id.product_tmpl_id.id])
+            V |= {product_id.product_tmpl_id.id}
             graph[product.product_tmpl_id.id].append(product_id.product_tmpl_id.id)
             bom_lines.append((bom_line, product, quantity, False))
             product_ids.add(product_id.id)
@@ -313,7 +313,7 @@ class MrpBom(models.Model):
                     graph[current_line.product_id.product_tmpl_id.id].append(bom_line.product_id.product_tmpl_id.id)
                     if bom_line.product_id.product_tmpl_id.id in V and check_cycle(bom_line.product_id.product_tmpl_id.id, {key: False for  key in V}, {key: False for  key in V}, graph):
                         raise UserError(_('Recursion error!  A product with a Bill of Material should not have itself in its BoM or child BoMs!'))
-                    V |= set([bom_line.product_id.product_tmpl_id.id])
+                    V |= {bom_line.product_id.product_tmpl_id.id}
                     if not bom_line.product_id in product_boms:
                         product_ids.add(bom_line.product_id.id)
                 boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': current_line}))

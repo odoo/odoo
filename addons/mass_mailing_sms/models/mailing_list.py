@@ -62,4 +62,4 @@ class MailingList(models.Model):
         subscriptions = self.subscription_ids if self else mailing.contact_list_ids.subscription_ids
         opt_out_contacts = subscriptions.filtered(lambda sub: sub.opt_out).mapped('contact_id')
         opt_in_contacts = subscriptions.filtered(lambda sub: not sub.opt_out).mapped('contact_id')
-        return list(set(c.id for c in opt_out_contacts if c not in opt_in_contacts))
+        return (opt_out_contacts - opt_in_contacts).ids

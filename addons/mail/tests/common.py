@@ -220,7 +220,7 @@ class MockEmail(common.BaseCase):
           ``build_email``;
         """
         for sent_email in self._mails:
-            if set(sent_email['email_to']) == set([email_to]):
+            if set(sent_email['email_to']) == {email_to}:
                 break
         else:
             raise AssertionError('sent mail not found for email_to %s' % (email_to))
@@ -818,7 +818,7 @@ class MailCase(MockEmail):
         bus_notifs = self.env['bus.bus'].sudo().search([('channel', 'in', [json_dump(channel) for channel in channels])])
         if check_unique:
             self.assertEqual(len(bus_notifs), len(channels))
-        self.assertEqual(set(bus_notifs.mapped('channel')), set([json_dump(channel) for channel in channels]))
+        self.assertEqual(set(bus_notifs.mapped('channel')), {json_dump(channel) for channel in channels})
 
         notif_messages = [n.message for n in bus_notifs]
 

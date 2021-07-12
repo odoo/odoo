@@ -129,7 +129,7 @@ class Cloc(object):
     def count_modules(self, env):
         # Exclude standard addons paths
         exclude_heuristic = [odoo.modules.get_module_path(m, display_warning=False) for m in STANDARD_MODULES]
-        exclude_path = set([os.path.dirname(os.path.realpath(m)) for m in exclude_heuristic if m])
+        exclude_path = {os.path.dirname(os.path.realpath(m)) for m in exclude_heuristic if m}
 
         domain = [('state', '=', 'installed')]
         # if base_import_module is present

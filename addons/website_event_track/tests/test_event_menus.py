@@ -11,7 +11,7 @@ from odoo.tests.common import users
 class TestEventWebsiteTrack(OnlineEventCase):
 
     def _get_menus(self):
-        return super(TestEventWebsiteTrack, self)._get_menus() | set(['Talks', 'Agenda', 'Talk Proposals'])
+        return super(TestEventWebsiteTrack, self)._get_menus() | {'Talks', 'Agenda', 'Talk Proposals'}
 
     @users('user_eventmanager')
     def test_create_menu(self):

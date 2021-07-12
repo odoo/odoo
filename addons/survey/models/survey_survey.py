@@ -34,12 +34,12 @@ class Survey(models.Model):
         for digits_count in range(4, 10):
             range_lower_bound = 1 * (10 ** (digits_count - 1))
             range_upper_bound = (range_lower_bound * 10) - 1
-            code_candidates = set([str(random.randint(range_lower_bound, range_upper_bound)) for i in range(20)])
+            code_candidates = {str(random.randint(range_lower_bound, range_upper_bound)) for i in range(20)}
             colliding_codes = self.sudo().search_read(
                 [('session_code', 'in', list(code_candidates))],
                 ['session_code']
             )
-            code_candidates -= set([colliding_code['session_code'] for colliding_code in colliding_codes])
+            code_candidates -= {colliding_code['session_code'] for colliding_code in colliding_codes}
             if code_candidates:
                 return list(code_candidates)[0]
 

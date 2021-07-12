@@ -177,7 +177,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
             })
             mass_convert.action_mass_convert()
 
-        self.assertEqual(set(test_leads.mapped('type')), set(['opportunity']))
+        self.assertEqual(set(test_leads.mapped('type')), {'opportunity'})
         self.assertEqual(len(test_leads.partner_id), len(test_leads))
         # TDE FIXME: strange
         # self.assertEqual(test_leads.team_id, self.sales_team_convert | self.sales_team_1)

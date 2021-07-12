@@ -189,7 +189,7 @@ class EventMailScheduler(models.Model):
             ex_s = exception_to_unicode(exception)
             try:
                 event, template = scheduler.event_id, scheduler.template_ref
-                emails = list(set([event.organizer_id.email, event.user_id.email, template.write_uid.email]))
+                emails = list({event.organizer_id.email, event.user_id.email, template.write_uid.email})
                 subject = _("WARNING: Event Scheduler Error for event: %s", event.name)
                 body = _("""Event Scheduler for:
   - Event: %(event_name)s (%(event_id)s)

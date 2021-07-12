@@ -185,7 +185,7 @@ class MicrosoftSync(models.AbstractModel):
 
         microsoft_ids = [x.seriesMasterId for x in recurrents]
         recurrences = self.env['calendar.recurrence'].search([('microsoft_id', 'in', microsoft_ids)])
-        for recurrent_master_id in set([x.seriesMasterId for x in recurrents]):
+        for recurrent_master_id in {x.seriesMasterId for x in recurrents}:
             recurrence_id = recurrences.filtered(lambda ev: ev.microsoft_id == recurrent_master_id)
             to_update = recurrents.filter(lambda e: e.seriesMasterId == recurrent_master_id)
             for recurrent_event in to_update:

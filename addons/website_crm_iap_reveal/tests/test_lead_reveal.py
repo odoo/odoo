@@ -93,7 +93,7 @@ class TestLeadMine(TestCrmCommon, MockIAPReveal):
             self.env['crm.reveal.view'].search([('reveal_ip', 'in', ['90.80.70.60', '90.80.70.61', '90.80.70.70'])]),
             self.test_views
         )
-        self.assertEqual(set(self.test_views.mapped('reveal_state')), set(['to_process']))
+        self.assertEqual(set(self.test_views.mapped('reveal_state')), {'to_process'})
 
     @users('user_sales_manager')
     def test_reveal_error_jsonrpc_exception(self):
@@ -112,7 +112,7 @@ class TestLeadMine(TestCrmCommon, MockIAPReveal):
             self.env['crm.reveal.view'].search([('reveal_ip', 'in', ['90.80.70.60', '90.80.70.61', '90.80.70.70'])]),
             self.test_views
         )
-        self.assertEqual(set(self.test_views.mapped('reveal_state')), set(['to_process']))
+        self.assertEqual(set(self.test_views.mapped('reveal_state')), {'to_process'})
 
     @users('user_sales_manager')
     def test_reveal_error_no_result(self):
@@ -130,7 +130,7 @@ class TestLeadMine(TestCrmCommon, MockIAPReveal):
             self.env['crm.reveal.view'].search([('reveal_ip', 'in', ['90.80.70.60', '90.80.70.61', '90.80.70.70'])]),
             self.test_views
         )
-        self.assertEqual(set(self.test_views.mapped('reveal_state')), set(['not_found']))
+        self.assertEqual(set(self.test_views.mapped('reveal_state')), {'not_found'})
 
     @users('user_sales_manager')
     def test_reveal(self):

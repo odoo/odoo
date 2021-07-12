@@ -109,7 +109,7 @@ class AutomaticEntryWizard(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
-        if not set(fields) & set(['move_line_ids', 'company_id']):
+        if not set(fields) & {'move_line_ids', 'company_id'}:
             return res
 
         if self.env.context.get('active_model') != 'account.move.line' or not self.env.context.get('active_ids'):

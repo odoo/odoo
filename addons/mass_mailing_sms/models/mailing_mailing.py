@@ -217,8 +217,8 @@ class Mailing(models.Model):
         params = {'mailing_id': self.id, 'target_model': self.mailing_model_real}
         self._cr.execute(query, params)
         query_res = self._cr.fetchall()
-        seen_list = set(number for item in query_res for number in item[1:] if number)
-        seen_ids = set(item[0] for item in query_res)
+        seen_list = {number for item in query_res for number in item[1:] if number}
+        seen_ids = {item[0] for item in query_res}
         _logger.info("Mass SMS %s targets %s: already reached %s SMS", self, target._name, len(seen_list))
         return list(seen_ids), list(seen_list)
 

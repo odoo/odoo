@@ -80,10 +80,10 @@ class configmanager(object):
         }
 
         # Not exposed in the configuration file.
-        self.blacklist_for_save = set([
+        self.blacklist_for_save = {
             'publisher_warranty_url', 'load_language', 'root_path',
             'init', 'save', 'config', 'update', 'stop_after_init', 'dev_mode', 'shell_interface'
-        ])
+        }
 
         # dictionary mapping option destination (keys in self.options) to MyOptions.
         self.casts = {}

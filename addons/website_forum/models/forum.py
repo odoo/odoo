@@ -253,7 +253,7 @@ class Forum(models.Model):
     def get_tags_first_char(self):
         """ get set of first letter of forum tags """
         tags = self.env['forum.tag'].search([('forum_id', '=', self.id), ('posts_count', '>', 0)])
-        return sorted(set([tag.name[0].upper() for tag in tags if len(tag.name)]))
+        return sorted({tag.name[0].upper() for tag in tags if len(tag.name)})
 
     def go_to_website(self):
         self.ensure_one()

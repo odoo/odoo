@@ -3040,7 +3040,7 @@ class TestValidationTools(common.BaseCase):
 
     def test_get_dict_asts(self):
         res = view_validation.get_dict_asts("{'test': False, 'required': [('model', '!=', False)], 'invisible': ['|', ('model', '=', parent.model or need_model), ('need_model', '=', False)]}")
-        self.assertEqual(set(res.keys()), set(['test', 'required', 'invisible']))
+        self.assertEqual(set(res.keys()), {'test', 'required', 'invisible'})
         self.assertIsInstance(res['test'], ast.NameConstant)
         self.assertIsInstance(res['required'], ast.List)
         self.assertIsInstance(res['invisible'], ast.List)

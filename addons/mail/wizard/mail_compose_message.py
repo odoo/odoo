@@ -77,7 +77,7 @@ class MailComposer(models.TransientModel):
 
         if 'active_domain' in self._context:  # not context.get() because we want to keep global [] domains
             result['active_domain'] = '%s' % self._context.get('active_domain')
-        if result.get('composition_mode') == 'comment' and (set(fields) & set(['model', 'res_id', 'partner_ids', 'record_name', 'subject'])):
+        if result.get('composition_mode') == 'comment' and (set(fields) & {'model', 'res_id', 'partner_ids', 'record_name', 'subject'}):
             result.update(self.get_record_data(result))
 
         # when being in new mode, create_uid is not granted -> ACLs issue may arise

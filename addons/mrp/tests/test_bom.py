@@ -11,13 +11,13 @@ class TestBoM(TestMrpCommon):
 
     def test_01_explode(self):
         boms, lines = self.bom_1.explode(self.product_4, 3)
-        self.assertEqual(set([bom[0].id for bom in boms]), set(self.bom_1.ids))
-        self.assertEqual(set([line[0].id for line in lines]), set(self.bom_1.bom_line_ids.ids))
+        self.assertEqual({bom[0].id for bom in boms}, set(self.bom_1.ids))
+        self.assertEqual({line[0].id for line in lines}, set(self.bom_1.bom_line_ids.ids))
 
         boms, lines = self.bom_3.explode(self.product_6, 3)
-        self.assertEqual(set([bom[0].id for bom in boms]), set((self.bom_2 | self.bom_3).ids))
+        self.assertEqual({bom[0].id for bom in boms}, set((self.bom_2 | self.bom_3).ids))
         self.assertEqual(
-            set([line[0].id for line in lines]),
+            {line[0].id for line in lines},
             set((self.bom_2 | self.bom_3).mapped('bom_line_ids').filtered(lambda line: not line.child_bom_id or line.child_bom_id.type != 'phantom').ids))
 
     def test_10_variants(self):
@@ -199,13 +199,13 @@ class TestBoM(TestMrpCommon):
 
         # check product > product_tmpl
         boms, lines = test_bom_2.explode(self.product_7_1, 4)
-        self.assertEqual(set((test_bom_2 | self.bom_2).ids), set([b[0].id for b in boms]))
+        self.assertEqual(set((test_bom_2 | self.bom_2).ids), {b[0].id for b in boms})
         self.assertEqual(set((test_bom_2_l1 | test_bom_2_l4 | self.bom_2.bom_line_ids).ids), set([l[0].id for l in lines]))
 
         # check sequence priority
         test_bom_1.write({'sequence': 1})
         boms, lines = test_bom_2.explode(self.product_7_1, 4)
-        self.assertEqual(set((test_bom_2 | test_bom_1).ids), set([b[0].id for b in boms]))
+        self.assertEqual(set((test_bom_2 | test_bom_1).ids), {b[0].id for b in boms})
         self.assertEqual(set((test_bom_2_l1 | test_bom_2_l4 | test_bom_1.bom_line_ids).ids), set([l[0].id for l in lines]))
 
         # check with another picking_type
@@ -213,7 +213,7 @@ class TestBoM(TestMrpCommon):
         self.bom_2.write({'picking_type_id': tmp_picking_type.id})
         test_bom_2.write({'picking_type_id': tmp_picking_type.id})
         boms, lines = test_bom_2.explode(self.product_7_1, 4)
-        self.assertEqual(set((test_bom_2 | self.bom_2).ids), set([b[0].id for b in boms]))
+        self.assertEqual(set((test_bom_2 | self.bom_2).ids), {b[0].id for b in boms})
         self.assertEqual(set((test_bom_2_l1 | test_bom_2_l4 | self.bom_2.bom_line_ids).ids), set([l[0].id for l in lines]))
 
         #check recursion

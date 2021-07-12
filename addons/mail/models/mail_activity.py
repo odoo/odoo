@@ -565,7 +565,7 @@ class MailActivity(models.Model):
 
     def activity_format(self):
         activities = self.read()
-        mail_template_ids = set([template_id for activity in activities for template_id in activity["mail_template_ids"]])
+        mail_template_ids = {template_id for activity in activities for template_id in activity["mail_template_ids"]}
         mail_template_info = self.env["mail.template"].browse(mail_template_ids).read(['id', 'name'])
         mail_template_dict = dict([(mail_template['id'], mail_template) for mail_template in mail_template_info])
         for activity in activities:

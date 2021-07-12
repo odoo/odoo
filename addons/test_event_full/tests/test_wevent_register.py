@@ -25,15 +25,15 @@ class TestWEventRegister(TestWEventCommon):
         self.assertEqual(len(new_registrations), 2)
         self.assertEqual(
             set(new_registrations.mapped("name")),
-            set(["Raoulette Poiluchette", "Michel Tractopelle"])
+            {"Raoulette Poiluchette", "Michel Tractopelle"}
         )
         self.assertEqual(
             set(new_registrations.mapped("phone")),
-            set(["0456112233", "0456332211"])
+            {"0456112233", "0456332211"}
         )
         self.assertEqual(
             set(new_registrations.mapped("email")),
-            set(["raoulette@example.com", "michel@example.com"])
+            {"raoulette@example.com", "michel@example.com"}
         )
 
         # check visitor stored information

@@ -279,7 +279,7 @@ class TestMailgateway(TestMailCommon):
             self.assertIn('/web/image/%s' % attachment.id, message.body)
         self.assertEqual(
             set(message.attachment_ids.mapped('name')),
-            set(['rosaçée.gif', 'verte!µ.gif', 'orangée.gif']))
+            {'rosaçée.gif', 'verte!µ.gif', 'orangée.gif'})
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_followers(self):

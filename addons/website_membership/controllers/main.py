@@ -99,7 +99,7 @@ class WebsiteMembership(http.Controller):
             count_members = MembershipLine.sudo().search_count(line_domain)
             if offset <= count_members:
                 membership_lines = MembershipLine.sudo().search(line_domain, offset, limit)
-        page_partner_ids = set(m.partner.id for m in membership_lines)
+        page_partner_ids = {m.partner.id for m in membership_lines}
 
         # get google maps localization of partners
         google_map_partner_ids = []

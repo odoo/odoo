@@ -195,7 +195,7 @@ class RecurrenceRule(models.Model):
 
         synced_events = self.calendar_event_ids.filtered(lambda e: e._range() in ranges)
 
-        existing_ranges = set(event._range() for event in synced_events)
+        existing_ranges = {event._range() for event in synced_events}
         ranges_to_create = (event_range for event_range in ranges if event_range not in existing_ranges)
         return synced_events, ranges_to_create
 
@@ -214,7 +214,7 @@ class RecurrenceRule(models.Model):
             event = recurrence.base_event_id or recurrence._get_first_event(include_outliers=False)
             duration = event.stop - event.start
             if specific_values_creation:
-                ranges = set([(x[1], x[2]) for x in specific_values_creation if x[0] == recurrence.id])
+                ranges = {(x[1], x[2]) for x in specific_values_creation if x[0] == recurrence.id}
             else:
                 ranges = recurrence._range_calculation(event, duration)
 
@@ -403,7 +403,7 @@ class RecurrenceRule(models.Model):
         self.ensure_one()
         original_count = self.end_type == 'count' and self.count
         ranges = set(self._get_ranges(event.start, duration))
-        future_events = set((x, y) for x, y in ranges if x.date() >= event.start.date() and y.date() >= event.start.date())
+        future_events = {(x, y) for x, y in ranges if x.date() >= event.start.date() and y.date() >= event.start.date()}
         if original_count and len(future_events) < original_count:
             # Rise count number because some past values will be dismissed.
             self.count = (2*original_count) - len(future_events)
@@ -411,7 +411,7 @@ class RecurrenceRule(models.Model):
             # We set back the occurrence number to its original value
             self.count = original_count
         # Remove ranges of events occurring in the past
-        ranges = set((x, y) for x, y in ranges if x.date() >= event.start.date() and y.date() >= event.start.date())
+        ranges = {(x, y) for x, y in ranges if x.date() >= event.start.date() and y.date() >= event.start.date()}
         return ranges
 
 

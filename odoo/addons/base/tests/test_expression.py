@@ -545,11 +545,11 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual([p1,p2], res.ids, "o2m IN matches any on the right side")
         all_ids = self._search(Partner, []).ids
         res = self._search(Partner, [('user_ids', 'not in', u1a)])
-        self.assertEqual(set(all_ids) - set([p1]), set(res.ids), "o2m NOT IN matches none on the right side")
+        self.assertEqual(set(all_ids) - {p1}, set(res.ids), "o2m NOT IN matches none on the right side")
         res = self._search(Partner, [('user_ids', '!=', 'Dédé Boitaclou')])
-        self.assertEqual(set(all_ids) - set([p1]), set(res.ids), "o2m NOT IN matches none on the right side")
+        self.assertEqual(set(all_ids) - {p1}, set(res.ids), "o2m NOT IN matches none on the right side")
         res = self._search(Partner, [('user_ids', 'not in', [u1b, u2])])
-        self.assertEqual(set(all_ids) - set([p1,p2]), set(res.ids), "o2m NOT IN matches none on the right side")
+        self.assertEqual(set(all_ids) - {p1, p2}, set(res.ids), "o2m NOT IN matches none on the right side")
 
     def test_15_equivalent_one2many_2(self):
         Currency = self.env['res.currency']

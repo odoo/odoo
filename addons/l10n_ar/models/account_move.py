@@ -71,9 +71,9 @@ class AccountMove(models.Model):
         """ Method to get the concept of the invoice considering the type of the products on the invoice """
         self.ensure_one()
         invoice_lines = self.invoice_line_ids.filtered(lambda x: not x.display_type)
-        product_types = set([x.product_id.type for x in invoice_lines if x.product_id])
-        consumable = set(['consu', 'product'])
-        service = set(['service'])
+        product_types = {x.product_id.type for x in invoice_lines if x.product_id}
+        consumable = {'consu', 'product'}
+        service = {'service'}
         # on expo invoice you can mix services and products
         expo_invoice = self.l10n_latam_document_type_id.code in ['19', '20', '21']
 

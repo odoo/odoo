@@ -190,7 +190,7 @@ class CustomerPortal(Controller):
             if not error:
                 values = {key: post[key] for key in self.MANDATORY_BILLING_FIELDS}
                 values.update({key: post[key] for key in self.OPTIONAL_BILLING_FIELDS if key in post})
-                for field in set(['country_id', 'state_id']) & set(values.keys()):
+                for field in {'country_id', 'state_id'} & set(values.keys()):
                     try:
                         values[field] = int(values[field])
                     except:

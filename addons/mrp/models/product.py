@@ -31,7 +31,7 @@ class ProductTemplate(models.Model):
     def _compute_is_kits(self):
         domain = [('product_tmpl_id', 'in', self.ids), ('type', '=', 'phantom')]
         bom_mapping = self.env['mrp.bom'].search_read(domain, ['product_tmpl_id'])
-        kits_ids = set(b['product_tmpl_id'][0] for b in bom_mapping)
+        kits_ids = {b['product_tmpl_id'][0] for b in bom_mapping}
         for template in self:
             template.is_kits = (template.id in kits_ids)
 
@@ -97,8 +97,8 @@ class ProductProduct(models.Model):
                             '&', ('product_id', '=', False),
                                  ('product_tmpl_id', 'in', self.product_tmpl_id.ids)]
         bom_mapping = self.env['mrp.bom'].search_read(domain, ['product_tmpl_id', 'product_id'])
-        kits_template_ids = set([])
-        kits_product_ids = set([])
+        kits_template_ids = set()
+        kits_product_ids = set()
         for bom_data in bom_mapping:
             if bom_data['product_id']:
                 kits_product_ids.add(bom_data['product_id'][0])

@@ -269,7 +269,7 @@ class FSWatcherInotify(FSWatcherBase):
 
     def run(self):
         _logger.info('AutoReload watcher running with inotify')
-        dir_creation_events = set(('IN_MOVED_TO', 'IN_CREATE'))
+        dir_creation_events = {'IN_MOVED_TO', 'IN_CREATE'}
         while self.started:
             for event in self.watcher.event_gen(timeout_s=0, yield_nones=False):
                 (_, type_names, path, filename) = event

@@ -52,7 +52,7 @@ class TestCRMLead(TestCrmCommon):
         # address
         self.assertLeadAddress(lead, False, False, False, False, self.env['res.country.state'], self.country_ref)
         # other contact fields
-        for fname in set(PARTNER_FIELDS_TO_SYNC) - set(['function', 'lang']):
+        for fname in set(PARTNER_FIELDS_TO_SYNC) - {'function', 'lang'}:
             self.assertEqual(lead[fname], self.contact_1[fname], 'No user input -> take from contact for field %s' % fname)
         self.assertEqual(lead.function, 'Parmesan Rappeur', 'User input should take over partner value')
         self.assertEqual(lead.lang_id, self.lang_fr)

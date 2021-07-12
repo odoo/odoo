@@ -283,7 +283,7 @@ class Message(models.Model):
             return ids
 
         pid = self.env.user.partner_id.id
-        author_ids, partner_ids, allowed_ids = set([]), set([]), set([])
+        author_ids, partner_ids, allowed_ids = set(), set(), set()
         model_ids = {}
 
         # check read access rights before checking the actual rules on the given ids
@@ -324,7 +324,7 @@ class Message(models.Model):
     def _find_allowed_model_wise(self, doc_model, doc_dict):
         doc_ids = list(doc_dict)
         allowed_doc_ids = self.env[doc_model].with_context(active_test=False).search([('id', 'in', doc_ids)]).ids
-        return set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
+        return {message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]}
 
     @api.model
     def _find_allowed_doc_ids(self, model_ids):

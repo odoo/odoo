@@ -138,9 +138,7 @@ class TestWiseOperator(TransactionCase):
         pack_ids2 = delivery_order_wise2.move_line_ids
 
         self.assertEqual(pack_ids1.location_id.id, self.shelf2.id)
-        self.assertEqual(set(pack_ids2.mapped('location_id.id')), set([
-            self.shelf1.id,
-            self.shelf2.id]))
+        self.assertEqual(set(pack_ids2.mapped('location_id.id')), {self.shelf1.id, self.shelf2.id})
 
         # put the move lines from delivery_order_wise2 into delivery_order_wise1
         for pack_id2 in pack_ids2:
@@ -150,9 +148,10 @@ class TestWiseOperator(TransactionCase):
         new_move_lines = delivery_order_wise1.move_line_ids.filtered(lambda p: p.qty_done)
         self.assertEqual(sum(new_move_lines.mapped('reserved_qty')), 0)
         self.assertEqual(sum(new_move_lines.mapped('qty_done')), 5)
-        self.assertEqual(set(new_move_lines.mapped('location_id.id')), set([
+        self.assertEqual(set(new_move_lines.mapped('location_id.id')), {
             self.shelf1.id,
-            self.shelf2.id]))
+            self.shelf2.id
+        })
 
         # put the move line from delivery_order_wise1 into delivery_order_wise2
         new_pack_id2 = pack_ids1.copy(default={'picking_id': delivery_order_wise2.id, 'move_id': move2.id})

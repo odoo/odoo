@@ -65,7 +65,7 @@ class Graph(dict):
                 _logger.warning('module %s: not installable, skipped', module)
 
         dependencies = dict([(p, info['depends']) for p, info in packages])
-        current, later = set([p for p, info in packages]), set()
+        current, later = {p for p, info in packages}, set()
 
         while packages and current > later:
             package, info = packages[0]
