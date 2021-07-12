@@ -1430,9 +1430,13 @@ export class OdooEditor extends EventTarget {
         const block = closestBlock(sel.anchorNode);
         for (const [style, tag, isList] of [
             ['paragraph', 'P', false],
+            ['pre', 'PRE', false],
             ['heading1', 'H1', false],
             ['heading2', 'H2', false],
             ['heading3', 'H3', false],
+            ['heading4', 'H4', false],
+            ['heading5', 'H5', false],
+            ['heading6', 'H6', false],
             ['blockquote', 'BLOCKQUOTE', false],
             ['unordered', 'UL', true],
             ['ordered', 'OL', true],
