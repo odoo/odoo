@@ -1482,7 +1482,9 @@ export class OdooEditor extends EventTarget {
             }
         }
         this.updateColorpickerLabels();
+
         const block = closestBlock(sel.anchorNode);
+        let activeLabel = undefined;
         for (const [style, tag, isList] of [
             ['paragraph', 'P', false],
             ['pre', 'PRE', false],
@@ -1505,8 +1507,21 @@ export class OdooEditor extends EventTarget {
                     ? block.tagName === 'LI' && getListMode(block.parentElement) === tag
                     : block.tagName === tag;
                 button.classList.toggle('active', isActive);
+
+                if (!isList && isActive) {
+                    activeLabel = button.textContent;
+                }
             }
         }
+        if (!activeLabel) {
+            // If no element from the text style dropdown was marked as active,
+            // mark the paragraph one as active and use its label.
+            const firstButtonEl = this.toolbar.querySelector('#paragraph');
+            firstButtonEl.classList.add('active');
+            activeLabel = firstButtonEl.textContent;
+        }
+        this.toolbar.querySelector('#style button span').textContent = activeLabel;
+
         const linkNode = getInSelection(this.document, 'a');
         const linkButton = this.toolbar.querySelector('#createLink');
         linkButton && linkButton.classList.toggle('active', linkNode);
