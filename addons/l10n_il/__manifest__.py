@@ -20,7 +20,7 @@ This module consists of:
         'data/account_chart_template_data.xml',
         'data/account_account_tag.xml',
         'data/account.account.template.csv',
-        'data/account_data.xml',
+        'data/account_tax_group.xml',
         'data/account_tax_report_data.xml',
         'data/account_tax_template_data.xml',
         'data/fiscal_templates_data.xml',
