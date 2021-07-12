@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RtcCallParticipantCard" owl="1">
+        <div class="o_RtcCallParticipantCard" t-att-class="{ 'o-is-talking': !props.isMinimized and rtcSession and rtcSession.isTalking and !rtcSession.isMuted }" t-on-contextmenu="_onContextMenu">
+            <t t-if="rtcSession">
+                <div t-if="rtcSession" class="o_RtcCallParticipantCard_container" t-att-class="{'o-minimized': props.isMinimized }" t-att-title="rtcSession.name" t-att-aria-label="rtcSession.name">
+
+                    <t t-if="rtcSession.videoStream">
+                        <RtcVideo t-on-click="_onClickVideo" rtcSessionLocalId="rtcSession.localId"/>
+                    </t>
+                    <t t-else="">
+                        <div class="o_RtcCallParticipantCard_avatar" draggable="false">
+                            <img alt="Avatar"
+                                 t-att-class="{ 'o-is-talking': rtcSession.isTalking and !rtcSession.isMuted }"
+                                 class="o_RtcCallParticipantCard_avatar_image rounded-circle"
+                                 t-att-src="rtcSession.avatarSrc"
+                                 draggable="false"
+                            />
+                        </div>
+                    </t>
+
+                    <!-- overlay -->
+                    <span class="o_RtcCallParticipantCard_overlayBottom">
+                        <t t-if="!props.isMinimized">
+                            <span class="o_RtcCallParticipantCard_name" t-esc="rtcSession.name"/>
+                        </t>
+                        <t t-if="rtcSession.isScreenSharingOn and props.isMinimized and !rtcSession.channel.mailRtc">
+                            <span class="o_RtcCallParticipantCard_liveIndicator badge-pill o-minimized" title="live" aria-label="live">
+                                LIVE
+                            </span>
+                        </t>
+                    </span>
+                    <div class="o_RtcCallParticipantCard_overlayTop">
+                        <t t-if="rtcSession.isMuted">
+                            <span class="o_RtcCallParticipantCard_overlayTop_element" t-att-class="{'o-minimized': props.isMinimized }" title="muted" aria-label="muted">
+                                <i class="fa fa-microphone-slash"/>
+                            </span>
+                        </t>
+                        <t t-if="rtcSession.isDeaf">
+                            <span class="o_RtcCallParticipantCard_overlayTop_element" t-att-class="{'o-minimized': props.isMinimized }" title="deaf" aria-label="deaf">
+                                <i class="fa fa-deaf"/>
+                            </span>
+                        </t>
+                        <t t-if="rtcSession.channel.mailRtc and !rtcSession.mailRtc and !['connected', 'completed'].includes(rtcSession.connectionState)">
+                            <span class="o_RtcCallParticipantCard_overlayTop_element" t-att-title="rtcSession.connectionState">
+                                <i class="fa fa-lg fa-signal o_RtcCallParticipantCard_connectionState"/>
+                            </span>
+                        </t>
+                        <t t-if="rtcSession.isScreenSharingOn and !props.isMinimized and !rtcSession.channel.mailRtc">
+                            <span class="o_RtcCallParticipantCard_liveIndicator badge-pill" title="live" aria-label="live">
+                                LIVE
+                            </span>
+                        </t>
+                    </div>
+
+                    <!-- volume popover -->
+                    <t t-if="!rtcSession.isOwnSession">
+                        <i class="o_RtcCallParticipantCard_volumeMenuAnchor">
+                            <Popover>
+                                <i t-ref="volumeMenuAnchor"/>
+                                <t t-set="opened">
+                                    <input type="range" min="0.0" max="1" step="0.01" t-att-value="rtcSession.volume" t-on-change="_onChangeVolume"/>
+                                </t>
+                            </Popover>
+                        </i>
+                    </t>
+
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

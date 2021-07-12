@@ -22,6 +22,7 @@
         'views/mail_message_views.xml',
         'views/mail_mail_views.xml',
         'views/mail_followers_views.xml',
+        'views/mail_ice_server_views.xml',
         'views/mail_channel_partner_views.xml',
         'views/mail_channel_views.xml',
         'views/mail_shortcode_views.xml',
@@ -60,6 +61,7 @@
             'mail/static/src/components/notification_list/notification_list_item.scss',
             'mail/static/src/js/**/*.js',
             'mail/static/src/utils/*/*.js',
+            ('remove', 'mail/static/src/utils/media_monitoring/threshold_processor.js'),  # only works from AudioWorkletNode
             'mail/static/src/utils/messaging_component.js',
             'mail/static/src/utils/utils.js',
             'mail/static/src/scss/*.scss',

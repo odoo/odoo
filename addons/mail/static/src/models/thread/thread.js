@@ -223,6 +223,12 @@ function factory(dependencies) {
                     ))];
                 }
             }
+            if ('rtc_ringing_partner' in data) {
+                data2.rtcRingingPartner = [['insert', data.rtc_ringing_partner]];
+            }
+            if ('rtc_sessions' in data) {
+                data2.rtcSessions = insert(data.rtc_sessions.map(record => this.messaging.models['mail.rtc_session'].convertData(record)));
+            }
             if ('seen_partners_info' in data) {
                 if (!data.seen_partners_info) {
                     data2.partnerSeenInfos = unlinkAll();
@@ -273,6 +279,22 @@ function factory(dependencies) {
             }
 
             return data2;
+        }
+
+        /**
+         * Client-side ending of the call.
+         */
+        endCall() {
+            if (this.mailRtc) {
+                this.mailRtc.reset();
+                this.messaging.soundEffects.channelLeave.play({ volume: 0.15 });
+                this.messaging.update({ focusedRtcSession: unlink() });
+                this.messaging.userSetting.toggleFullScreen(false);
+            }
+            this.update({
+                rtcRingingPartner: unlink(),
+                mailRtc: unlink(),
+            });
         }
 
         /**
@@ -721,6 +743,94 @@ function factory(dependencies) {
         }
 
         /**
+         * Leaves the current call if there is one, joins the call if the user was
+         * not yet in it.
+         *
+         * @param {Object} options
+         */
+        async toggleCall(options) {
+            const isActiveCall = !!this.mailRtc;
+            if (this.messaging.mailRtc.channel) {
+                await this.messaging.mailRtc.channel.leaveCall();
+            }
+            if (isActiveCall) {
+                return;
+            }
+            await this._joinCall(options);
+        }
+
+        /**
+         * @param {Object} [param0]
+         * @param {boolean} [param0.startWithVideo] whether or not to start the call with the video
+         */
+        async _joinCall({ startWithVideo = false } = {}) {
+            if (this.model !== 'mail.channel') {
+                return;
+            }
+            if (!this.messaging.mailRtc.isClientRtcCompatible) {
+                this.env.services['notification'].notify({
+                    message: this.env._t("Your browser does not support webRTC."),
+                    type: 'warning',
+                });
+                return;
+            }
+            if (this.hasPendingRtcRequest) {
+                return;
+            }
+            this.update({ hasPendingRtcRequest: true });
+            const { rtcSessions, iceServers, sessionId } = await this.async(() => this.env.services.rpc({
+                route: '/mail/channel_call_join',
+                params: {
+                    channel_id: this.id,
+                },
+            }, { shadow: true }));
+            this.update({
+                hasPendingRtcRequest: false,
+                mailRtc: link(this.messaging.mailRtc),
+                rtcRingingPartner: unlink(),
+                rtcSessions: insertAndReplace(rtcSessions.map(record => this.messaging.models['mail.rtc_session'].convertData(record))),
+            });
+            await this.async(() => this.messaging.mailRtc.initSession({
+                currentSessionId: sessionId,
+                iceServers,
+                startWithAudio: true,
+                startWithVideo,
+            }));
+            this.messaging.soundEffects.channelJoin.play();
+        }
+
+        /**
+         * Notifies the server and does the cleanup of the current call.
+         */
+        async leaveCall() {
+            if (this.hasPendingRtcRequest) {
+                return;
+            }
+            await this._leaveCall();
+            this.endCall();
+        }
+
+        /**
+         * @param {Array<Object>} rtcSessions server representation of the current rtc sessions of the channel
+         */
+        updateRtcSessions(rtcSessions) {
+            const oldCount = this.rtcSessions.length;
+            this.update({
+                rtcSessions: insertAndReplace(rtcSessions.map(record => this.messaging.models['mail.rtc_session'].convertData(record)))
+            });
+            if (this.mailRtc) {
+                const newCount = this.rtcSessions.length;
+                if (newCount > oldCount) {
+                    this.messaging.soundEffects.channelJoin.play({ volume: 0.7 });
+                }
+                if (newCount < oldCount) {
+                    this.messaging.soundEffects.memberLeave.play({ volume: 0.7 });
+                }
+            }
+            this.mailRtc && this.mailRtc.filterCallees(this.rtcSessions);
+        }
+
+        /**
          * Returns the text that identifies this thread in a mention.
          *
          * @returns {string}
@@ -1147,6 +1257,7 @@ function factory(dependencies) {
          * Unsubscribe current user from provided channel.
          */
         unsubscribe() {
+            this.leaveCall();
             this.messaging.chatWindowManager.closeThread(this);
             this.unpin();
         }
@@ -1597,6 +1708,14 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {number}
+         */
+        _computeVideoCount() {
+            return this.rtcSessions.filter(session => session.videoStream).length;
+        }
+
+        /**
+         * @private
          * @param {Object} param0
          * @param {boolean} param0.isTyping
          */
@@ -1631,6 +1750,15 @@ function factory(dependencies) {
         }
 
         /**
+         * @private
+         */
+        _onChangeVideoCount() {
+            if (this.videoCount === 0) {
+                this.messaging.userSetting.update({ rtcFilterVideoGrid: false });
+            }
+        }
+
+        /**
          * Handles change of pinned state coming from the server. Useful to
          * clear pending state once server acknowledged the change.
          *
@@ -1641,6 +1769,21 @@ function factory(dependencies) {
             if (this.isServerPinned === this.isPendingPinned) {
                 this.update({ isPendingPinned: clear() });
             }
+        }
+
+        /**
+         * @private
+         */
+        async _leaveCall() {
+            this.update({ hasPendingRtcRequest: true });
+            await this.async(() => this.env.services.rpc({
+                route: '/mail/channel_call_leave',
+                params: {
+                    channel_id: this.id,
+                    session_id: this.mailRtc && this.mailRtc.currentRtcSession.id,
+                },
+            }, { shadow: true }));
+            this.update({ hasPendingRtcRequest: false });
         }
 
         /**
@@ -1844,6 +1987,13 @@ function factory(dependencies) {
             compute: '_computeHasInviteFeature',
         }),
         /**
+         * States whether there is a server request for joining or leaving the RTC session.
+         * TODO Should maybe be on messaging (after messaging env rebase) to lock the rpc across all threads.
+         */
+        hasPendingRtcRequest: attr({
+            default: false,
+        }),
+        /**
          * Determine whether this thread has the seen indicators (V and VV)
          * enabled or not.
          */
@@ -1961,6 +2111,12 @@ function factory(dependencies) {
          */
         localMessageUnreadCounter: attr({
             compute: '_computeLocalMessageUnreadCounter',
+        }),
+        /**
+         * If set, the current thread is the thread that hosts the current RTC call.
+         */
+        mailRtc: one2one('mail.rtc', {
+            inverse: 'channel',
         }),
         /**
          * States the number of members in this thread according to the server.
@@ -2098,6 +2254,14 @@ function factory(dependencies) {
         pendingSeenMessageId: attr(),
         public: attr(),
         /**
+         * The partner that rings the current user
+         */
+        rtcRingingPartner: many2one('mail.partner'),
+        rtcSessions: one2many('mail.rtc_session', {
+            inverse: 'channel',
+            isCausal: true,
+        }),
+        /**
          * Determine the last fold state known by the server, which is the fold
          * state displayed after initialization or when the last pending
          * fold state change was confirmed by the server.
@@ -2166,6 +2330,13 @@ function factory(dependencies) {
             default: '',
         }),
         uuid: attr(),
+        /**
+         * The amount of videos broadcast in the current Rtc call
+         */
+        videoCount: attr({
+            compute: '_computeVideoCount',
+            default: 0,
+        }),
     };
     Thread.onChanges = [
         new OnChange({
@@ -2179,6 +2350,10 @@ function factory(dependencies) {
         new OnChange({
             dependencies: ['serverFoldState'],
             methodName: '_onServerFoldStateChanged',
+        }),
+        new OnChange({
+            dependencies: ['videoCount'],
+            methodName: '_onChangeVideoCount',
         }),
     ];
     Thread.modelName = 'mail.thread';

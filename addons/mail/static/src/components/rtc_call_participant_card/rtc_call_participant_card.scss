@@ -1,0 +1,135 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_RtcCallParticipantCard {
+    padding: map-get($spacers, 1);
+    display: flex;
+    position: relative;
+}
+
+.o_RtcCallParticipantCard_avatar {
+    display: flex;
+    justify-content: center;
+    max-height: 100%;
+    user-select: none;
+}
+
+.o_RtcCallParticipantCard_avatar_image {
+    max-height: 100px;
+    max-width: 100px;
+    border: 5px solid gray('700');
+
+    &.o-is-talking {
+        border: 5px solid darken($o-brand-primary, 5%);
+    }
+}
+
+.o_RtcCallParticipantCard_container {
+    margin: map-get($spacers, 0);
+    width: 100% - map-get($spacers, 0);
+    height: 100% - map-get($spacers, 0);
+    display: flex;
+    position: relative;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.o_RtcCallParticipantCard_liveIndicator {
+    display: flex;
+    margin-inline-end: 5%;
+    align-items: center;
+
+    &.o-minimized {
+        font-size: 0.7rem;
+    }
+}
+
+.o_RtcCallParticipantCard_name {
+    padding: map-get($spacers, 1);
+}
+
+.o_RtcCallParticipantCard_overlayBottom {
+    position: absolute;
+    display: flex;
+    pointer-events: none;
+    margin: map-get($spacers, 1);
+    max-width: 50%;
+    overflow: hidden;
+    bottom: 0;
+}
+
+.o_RtcCallParticipantCard_overlayTop {
+    position: absolute;
+    display: flex;
+    flex-direction: row-reverse;
+    margin: map-get($spacers, 2);
+    right: 0%;
+    top: 0%;
+}
+
+.o_RtcCallParticipantCard_overlayTop_element {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-inline-end: 5%;
+    padding: map-get($spacers, 2);
+
+    &.o-minimized {
+        padding: map-get($spacers, 1);
+    }
+}
+
+.o_RtcCallParticipantCard_volumeMenuAnchor {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_RtcCallParticipantCard {
+    border-radius: $o-mail-rounded-rectangle-border-radius-sm;
+
+    &.o-is-talking {
+        box-shadow: inset 0 0 0 map-get($spacers, 2) darken($o-brand-primary, 5%);
+    }
+}
+
+.o_RtcCallParticipantCard_connectionState {
+    color: theme-color('warning');
+}
+
+.o_RtcCallParticipantCard_container {
+    border-radius: $o-mail-rounded-rectangle-border-radius-sm;
+
+    &:not(.o-minimized) {
+        background-color: $o-brand-secondary;
+    }
+}
+
+.o_RtcCallParticipantCard_liveIndicator {
+    background-color: theme-color('danger');
+    color: white;
+    user-select: none;
+    font-weight: bold;
+}
+
+.o_RtcCallParticipantCard_name {
+    @include text-truncate();
+    color: white;
+    background-color: rgba(black, 0.8);
+    border-radius: $o-mail-rounded-rectangle-border-radius-sm;
+}
+
+.o_RtcCallParticipantCard_overlayTop_element {
+    color: white;
+    border-radius: 50%;
+    background-color: gray('900');
+}
+
+.o_RtcCallParticipantCard_video {
+    cursor: pointer;
+}

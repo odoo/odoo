@@ -37,7 +37,7 @@ function factory(dependencies) {
          * @returns {mail.thread}
          */
         _computeChannel() {
-            return link(this.env.models['mail.thread'].findFromIdentifyingData({
+            return link(this.messaging.models['mail.thread'].findFromIdentifyingData({
                 id: this.channelId,
                 model: 'mail.channel',
             }));

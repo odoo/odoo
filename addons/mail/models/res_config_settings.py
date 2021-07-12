@@ -16,6 +16,19 @@ class ResConfigSettings(models.TransientModel):
     fail_counter = fields.Integer('Fail Mail', readonly=True)
     alias_domain = fields.Char('Alias Domain', help="If you have setup a catch-all email domain redirected to "
                                "the Odoo server, enter the domain name here.", config_parameter='mail.catchall.domain')
+    use_twilio_rtc_servers = fields.Boolean(
+        'Use Twilio ICE servers',
+        help="If you want to use twilio as TURN/STUN server provider",
+        config_parameter='mail.use_twilio_rtc_servers',
+    )
+    twilio_account_sid = fields.Char(
+        'Twilio Account SID',
+        config_parameter='mail.twilio_account_sid',
+    )
+    twilio_account_token = fields.Char(
+        'Twilio Account Auth Token',
+        config_parameter='mail.twilio_account_token',
+    )
 
     @api.model
     def get_values(self):

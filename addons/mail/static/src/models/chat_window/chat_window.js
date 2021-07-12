@@ -246,6 +246,7 @@ function factory(dependencies) {
          */
         _computeThreadViewer() {
             const threadViewerData = {
+                compact: true,
                 hasThreadView: this.hasThreadView,
                 thread: this.thread ? link(this.thread) : unlink(),
             };

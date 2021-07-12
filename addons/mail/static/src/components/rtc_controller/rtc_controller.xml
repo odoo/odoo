@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RtcController" owl="1">
+        <div class="o_RtcController" t-att-class="{ 'o-small': props.small }">
+            <t t-if="messaging.mailRtc">
+                <div class="o_RtcController_buttons">
+                    <t t-if="thread.mailRtc and rtcSession">
+                        <t t-if="rtcSession.isMuted"><t t-set="microphoneTitle">Unmute</t></t>
+                        <t t-else=""><t t-set="microphoneTitle">Mute</t></t>
+                        <button class="o_RtcController_button"
+                            t-att-class="{ 'o-active': !rtcSession.isMuted }"
+                            t-att-aria-label="microphoneTitle"
+                            t-att-title="microphoneTitle"
+                            t-on-click="_onClickMicrophone">
+                            <div class="o_RtcController_button_iconWrapper">
+                                <i class="fa" t-att-class="{
+                                    'fa-lg': !props.small,
+                                    'fa-microphone': !rtcSession.isMuted,
+                                    'fa-microphone-slash': rtcSession.isMuted,
+                                    'text-danger': rtcSession.isMuted,
+                                }"/>
+                            </div>
+                        </button>
+                        <t t-if="rtcSession.isDeaf"><t t-set="headphoneTitle">Undeafen</t></t>
+                        <t t-else=""><t t-set="headphoneTitle">Deafen</t></t>
+                        <button class="o_RtcController_button"
+                            t-att-class="{ 'o-active': !rtcSession.isDeaf }"
+                            t-att-aria-label="headphoneTitle"
+                            t-att-title="headphoneTitle"
+                            t-on-click="_onClickDeafen">
+                            <div class="o_RtcController_button_iconWrapper">
+                                <i class="fa" t-att-class="{
+                                    'fa-lg': !props.small,
+                                    'fa-headphones': !rtcSession.isDeaf,
+                                    'fa-deaf': rtcSession.isDeaf,
+                                    'text-danger': rtcSession.isDeaf,
+                                }"/>
+                            </div>
+                        </button>
+                        <t t-if="messaging.mailRtc.sendUserVideo"><t t-set="cameraTitle">Stop camera</t></t>
+                        <t t-else=""><t t-set="cameraTitle">Turn camera on</t></t>
+                        <button class="o_RtcController_button o_RtcController_videoButton"
+                            t-att-class="{
+                                'o-active': messaging.mailRtc.sendUserVideo,
+                            }"
+                            t-att-aria-label="cameraTitle"
+                            t-att-title="cameraTitle"
+                            t-on-click="_onClickCamera">
+                            <div class="o_RtcController_button_iconWrapper">
+                                <i class="fa fa-video-camera" t-att-class="{ 'fa-lg': !props.small }"/>
+                            </div>
+                        </button>
+                        <t t-if="messaging.mailRtc.sendDisplay"><t t-set="displayTitle">Stop screen sharing</t></t>
+                        <t t-else=""><t t-set="displayTitle">Share screen</t></t>
+                        <button class="o_RtcController_button o_RtcController_videoButton"
+                            t-att-class="{
+                                'o-active': messaging.mailRtc.sendDisplay,
+                            }"
+                            t-att-aria-label="displayTitle"
+                            t-att-title="displayTitle"
+                            t-on-click="_onClickScreen">
+                            <div class="o_RtcController_button_iconWrapper">
+                                <i class="fa fa-desktop" t-att-class="{ 'fa-lg': !props.small }"/>
+                            </div>
+                        </button>
+                        <Popover position="'top'">
+                            <button class="o_RtcController_button"
+                                aria-label="More"
+                                title="More">
+                                <div class="o_RtcController_button_iconWrapper">
+                                    <i class="fa fa-ellipsis-h" t-att-class="{ 'fa-lg': !props.small }"/>
+                                </div>
+                            </button>
+                            <t t-set="opened">
+                                <RtcOptionList/>
+                            </t>
+                        </Popover>
+                    </t>
+                    <t t-if="!thread.mailRtc">
+                        <button class="o_RtcController_button o_RtcController_callToggle"
+                            aria-label="Join Video Call"
+                            title="Join Video Call"
+                            t-att-disabled="thread.hasPendingRtcRequest"
+                            t-on-click="_onClickCallToggleVideo">
+                            <div class="o_RtcController_button_iconWrapper">
+                                <i class="fa fa-video-camera" t-att-class="{ 'fa-lg': !props.small }"/>
+                            </div>
+                        </button>
+                    </t>
+                    <t t-if="thread">
+                        <t t-if="thread.mailRtc"><t t-set="phoneTitle">Disconnect</t></t>
+                        <t t-else=""><t t-set="phoneTitle">Join Call</t></t>
+                        <button class="o_RtcController_button o_RtcController_callToggle"
+                            t-att-aria-label="phoneTitle"
+                            t-att-class="{ 'o-active': !!thread.mailRtc }"
+                            t-att-disabled="thread.hasPendingRtcRequest"
+                            t-att-title="phoneTitle"
+                            t-on-click="_onClickCallToggleAudio">
+                            <div class="o_RtcController_button_iconWrapper">
+                                <i class="fa fa-phone" t-att-class="{ 'fa-lg': !props.small }"/>
+                            </div>
+                        </button>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RtcOptionList" owl="1">
+        <div class="o_RtcOptionList">
+            <button class="o_RtcOptionList_button" t-on-click="_onClickLayout">
+                <i class="o_RtcOptionList_button_icon fa fa-lg fa-th-large"/>
+                <span class="o_RtcOptionList_button_text">Change layout</span>
+            </button>
+            <button class="o_RtcOptionList_button" t-on-click="_onClickFullScreen">
+                <i class="o_RtcOptionList_button_icon fa fa-lg fa-arrows-alt"/>
+                <span class="o_RtcOptionList_button_text">Full screen</span>
+            </button>
+            <button class="o_RtcOptionList_button" t-on-click="_onClickOptions">
+                <i class="o_RtcOptionList_button_icon fa fa-lg fa-cog"/>
+                <span class="o_RtcOptionList_button_text">Settings</span>
+            </button>
+        </div>
+    </t>
+
+</templates>

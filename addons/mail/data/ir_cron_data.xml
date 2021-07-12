@@ -42,5 +42,16 @@
             <field name="state">code</field>
         </record>
 
+        <record id="ir_cron_delete_rtc_sessions" model="ir.cron">
+            <field name="name">RTC Sessions: Delete RTC sessions that haven't been active for 3 minutes</field>
+            <field name="interval_number">2</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="True"/>
+            <field name="model_id" ref="model_mail_rtc_session"/>
+            <field name="code">model._gc_inactive_sessions(max_age_minutes=3)</field>
+            <field name="state">code</field>
+        </record>
+
     </data>
 </odoo>

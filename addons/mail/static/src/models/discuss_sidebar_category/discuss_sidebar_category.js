@@ -23,7 +23,7 @@ function factory(dependencies) {
                 {
                     model: 'mail.user.settings',
                     method: 'set_mail_user_settings',
-                    args: [[this.env.messaging.mailUserSettingsId]],
+                    args: [[this.messaging.mailUserSettingsId]],
                     kwargs: {
                         new_settings: mailUserSettings,
                     },
@@ -37,7 +37,7 @@ function factory(dependencies) {
          */
         async close() {
             this.update({ isPendingOpen: false });
-            await this.env.models['mail.discuss_sidebar_category'].performRpcSetMailUserSettings({
+            await this.messaging.models['mail.discuss_sidebar_category'].performRpcSetMailUserSettings({
                 [this.serverStateKey]: false,
             });
         }
@@ -47,7 +47,7 @@ function factory(dependencies) {
          */
         async open() {
             this.update({ isPendingOpen: true });
-            await this.env.models['mail.discuss_sidebar_category'].performRpcSetMailUserSettings({
+            await this.messaging.models['mail.discuss_sidebar_category'].performRpcSetMailUserSettings({
                 [this.serverStateKey]: true,
             });
         }
@@ -61,7 +61,7 @@ function factory(dependencies) {
          * @returns {mail.discuss_sidebar_category_item | undefined}
          */
         _computeActiveItem() {
-            const thread = this.env.messaging.discuss.thread;
+            const thread = this.messaging.discuss.thread;
             if (thread && this.supportedChannelTypes.includes(thread.channel_type)) {
                 return insertAndReplace({ channelId: thread.id });
             }
@@ -74,7 +74,7 @@ function factory(dependencies) {
          */
         _computeCategoryItems() {
             let channels = this.selectedSortedChannels;
-            const searchValue = this.env.messaging.discuss.sidebarQuickSearchValue;
+            const searchValue = this.messaging.discuss.sidebarQuickSearchValue;
             if (searchValue) {
                 const qsVal = searchValue.toLowerCase();
                 channels = channels.filter(t => {
@@ -111,7 +111,7 @@ function factory(dependencies) {
          * @returns {mail.messaging}
          */
         _computeMessaging() {
-            return link(this.env.messaging);
+            return link(this.messaging);
         }
 
         /**
@@ -119,7 +119,7 @@ function factory(dependencies) {
          * @returns {mail.thread[]}
          */
         _computeSelectedChannels() {
-            return replace(this.env.models['mail.thread'].all(thread =>
+            return replace(this.messaging.models['mail.thread'].all(thread =>
                 thread.model === 'mail.channel' &&
                 thread.isPinned &&
                 this.supportedChannelTypes.includes(thread.channel_type))
@@ -209,10 +209,10 @@ function factory(dependencies) {
         _onAddItemAutocompleteSelect(ev, ui) {
             switch (this.autocompleteMethod) {
                 case 'channel':
-                    this.env.messaging.discuss.handleAddChannelAutocompleteSelect(ev, ui);
+                    this.messaging.discuss.handleAddChannelAutocompleteSelect(ev, ui);
                     break;
                 case 'chat':
-                    this.env.messaging.discuss.handleAddChatAutocompleteSelect(ev, ui);
+                    this.messaging.discuss.handleAddChatAutocompleteSelect(ev, ui);
                     break;
             }
         }
@@ -226,10 +226,10 @@ function factory(dependencies) {
         _onAddItemAutocompleteSource(req, res) {
             switch (this.autocompleteMethod) {
                 case 'channel':
-                    this.env.messaging.discuss.handleAddChannelAutocompleteSource(req, res);
+                    this.messaging.discuss.handleAddChannelAutocompleteSource(req, res);
                     break;
                 case 'chat':
-                    this.env.messaging.discuss.handleAddChatAutocompleteSource(req, res);
+                    this.messaging.discuss.handleAddChatAutocompleteSource(req, res);
                     break;
             }
         }

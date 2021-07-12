@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RtcInvitationCard" owl="1">
+        <div class="o_RtcInvitationCard">
+            <t t-if="thread and thread.rtcRingingPartner">
+                <div class="o_RtcInvitationCard_partner_info">
+                    <img class="o_RtcInvitationCard_partner_info_image rounded-circle"
+                         t-attf-src="/web/image/res.partner/{{ thread.rtcRingingPartner.id }}/avatar_128"
+                         t-on-click="_onCLickAvatar"
+                         alt="Avatar"/>
+                    <span class="o_RtcInvitationCard_partner_info_name" t-esc="thread.rtcRingingPartner.name"/>
+                    <span class="o_RtcInvitationCard_partner_info_text">Incoming Call...</span>
+                </div>
+            </t>
+            <div class="o_RtcInvitationCard_buttonList">
+                <div class="o_RtcInvitationCard_buttonList_button o_RtcInvitationCard_buttonList_refuse"
+                    aria-label="Refuse"
+                    title="Refuse"
+                    t-on-click="_onClickRefuse">
+                    <i class="o_RtcInvitationCard_buttonList_button_icon fa fa-lg fa-times"/>
+                </div>
+                <div class="o_RtcInvitationCard_buttonList_button o_RtcInvitationCard_buttonList_accept"
+                    aria-label="Accept"
+                    title="Accept"
+                    t-on-click="_onClickAccept">
+                    <i class="o_RtcInvitationCard_buttonList_button_icon fa fa-lg fa-phone"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

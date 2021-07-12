@@ -78,6 +78,12 @@ function factory(dependencies) {
 
     ThreadViewer.fields = {
         /**
+         * true if the viewer is in a compact format, like in a chat window.
+         */
+        compact: attr({
+            default: false,
+        }),
+        /**
          * Determines whether this thread viewer has a member list.
          * Only makes sense if this thread is a channel and if the channel is
          * not a chat.

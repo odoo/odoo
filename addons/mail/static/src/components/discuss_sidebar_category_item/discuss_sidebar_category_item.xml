@@ -47,6 +47,9 @@
                     <div class="o_DiscussSidebarCategoryItem_command o_DiscussSidebarCategoryItem_commandUnpin fa fa-times" t-on-click="_onClickUnpin" title="Unpin Conversation" role="img"/>
                 </t>
             </div>
+            <t t-if="categoryItem.channel and categoryItem.channel.rtcSessions.length">
+                <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_callIndicator fa fa-volume-up" t-att-class="{ 'o-is-current-call': categoryItem.channel.mailRtc }"/>
+            </t>
             <t t-if="categoryItem.counter > 0">
                 <div class="o_DiscussSidebarCategoryItem_counter o_DiscussSidebarCategoryItem_item badge badge-pill">
                     <t t-esc="categoryItem.counter"/>

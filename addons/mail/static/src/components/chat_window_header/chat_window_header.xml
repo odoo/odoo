@@ -25,13 +25,21 @@
                 </t>
                 <div class="o-autogrow"/>
                 <div class="o_ChatWindowHeader_item o_ChatWindowHeader_rightArea">
+                    <t t-if="chatWindow.thread and ['channel', 'chat'].includes(chatWindow.thread.channel_type) and chatWindow.thread.rtcSessions.length === 0">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandCamera" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-att-disabled="chatWindow.thread.hasPendingRtcRequest" t-on-click="_onClickCamera" title="Start a VideoCall">
+                            <i class="fa fa-video-camera"/>
+                        </div>
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandPhone" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-att-disabled="chatWindow.thread.hasPendingRtcRequest" t-on-click="_onClickPhone" title="Start a Call">
+                            <i class="fa fa-phone"/>
+                        </div>
+                    </t>
                     <t t-if="chatWindow.thread and chatWindow.thread.isMemberListMakingSense and !chatWindow.isMemberListOpened">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShowMemberList" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"  title="Show Member List" t-on-click="chatWindow.onClickShowMemberList.bind(chatWindow)">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShowMemberList" t-att-class="{ 'o-mobile': messaging.device.isMobile }"  title="Show Member List" t-on-click="chatWindow.onClickShowMemberList.bind(chatWindow)">
                             <i class="fa fa-users"/>
                         </div>
                     </t>
                     <t t-if="chatWindow.thread and chatWindow.thread.isMemberListMakingSense and chatWindow.isMemberListOpened">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandHideMemberList" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" title="Hide Member List" t-on-click="chatWindow.onClickHideMemberList.bind(chatWindow)">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandHideMemberList" t-att-class="{ 'o-mobile': messaging.device.isMobile }" title="Hide Member List" t-on-click="chatWindow.onClickHideMemberList.bind(chatWindow)">
                             <i class="fa fa-users"/>
                         </div>
                     </t>

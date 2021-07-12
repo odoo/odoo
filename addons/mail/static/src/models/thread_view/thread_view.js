@@ -69,6 +69,16 @@ function factory(dependencies) {
 
         /**
          * @private
+         */
+        _computeRtcCallViewer() {
+            if (this.thread && this.thread.model === 'mail.channel' && this.thread.rtcSessions.length > 0) {
+                return create();
+            }
+            return unlink();
+        }
+
+        /**
+         * @private
          * @returns {mail.channel_invitation_form}
          */
         _computeChannelInvitationForm() {
@@ -224,6 +234,9 @@ function factory(dependencies) {
     }
 
     ThreadView.fields = {
+        compact: attr({
+            related: 'threadViewer.compact',
+        }),
         /**
          * States which channel invitation form is operating this thread view.
          * Only applies if this thread is a channel.
@@ -330,6 +343,15 @@ function factory(dependencies) {
         }),
         nonEmptyMessages: many2many('mail.message', {
             related: 'threadCache.nonEmptyMessages',
+        }),
+        /**
+         * Determines the Rtc call viewer of this thread.
+         */
+        rtcCallViewer: one2one('mail.rtc_call_viewer', {
+            compute: '_computeRtcCallViewer',
+            inverse: 'threadView',
+            isCausal: true,
+            readonly: true,
         }),
         /**
          * Determines the keyboard shortcuts that are available to send a message

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.RtcCallViewer" owl="1">
+    <div class="o_RtcCallViewer" t-att-class="{ 'o-fullScreen': userSetting.isRtcCallViewerFullScreen, 'o-minimized': rtcCallViewer and rtcCallViewer.isMinimized }" t-on-click="_onMouseMove" t-on-mousemove="_onMouseMove">
+        <t t-if="rtcCallViewer">
+
+            <!-- used to make the template depend on window size -->
+            <t t-set="sizeChangeListener" t-value="windowSize"/>
+
+            <!-- Call members display -->
+            <div class="o_RtcCallViewer_participantContainer">
+                <t t-if="thread">
+                    <t t-if="rtcCallViewer.layout !== 'tiled'">
+                        <div class="o_RtcCallViewer_mainParticipantContainer">
+                            <t t-if="messaging.focusedRtcSession">
+                                <RtcCallParticipantCard class="o_RtcCallViewer_participantCard o_RtcCallViewer_mainParticipant" rtcSessionLocalId="messaging.focusedRtcSession.localId"/>
+                            </t>
+                        </div>
+                    </t>
+                    <t t-if="rtcCallViewer.layout !== 'spotlight'">
+                        <div
+                            class="o_RtcCallViewer_grid"
+                            t-att-class="{
+                                'o-dynamic-sizing': rtcCallViewer.layout === 'tiled',
+                                'o-sidebar': rtcCallViewer.layout === 'sidebar',
+                            }"
+                            t-ref="tileContainer"
+                            t-attf-style="--height:{{state.tileHeight}}px; --width:{{state.tileWidth}}px; --columns:{{state.columnCount}};"
+                        >
+                            <t t-foreach="thread.rtcSessions" t-as="rtcSession" t-key="'grid_tile_'+rtcSession.localId">
+                                <t t-if="!rtcCallViewer.filterVideoGrid or rtcSession.videoStream">
+                                    <!-- maybe filter focused partner out? -->
+                                    <RtcCallParticipantCard
+                                        class="o_RtcCallViewer_participantCard o_RtcCallViewer_grid_tile"
+                                        t-att-class="{
+                                            'o-dynamic-sizing': rtcCallViewer.layout === 'tiled',
+                                        }"
+                                        isMinimized="rtcCallViewer.isMinimized"
+                                        rtcSessionLocalId="rtcSession.localId"
+                                    />
+                                </t>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+            </div>
+
+            <!-- Buttons -->
+            <t t-if="rtcCallViewer.showOverlay or !userSetting.isRtcCallViewerFullScreen">
+                <t t-if="thread">
+                    <div class="o_RtcCallViewer_controls" t-att-class="{ 'o-floating': userSetting.isRtcCallViewerFullScreen }">
+                        <div class="o_RtcCallViewer_controls_overlay_container" t-on-mousemove="_onMouseMoveOverlay">
+                            <RtcController small="rtcCallViewer.threadView.compact and !userSetting.isRtcCallViewerFullScreen" threadLocalId="thread.localId"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+
+            <!-- Dialogs -->
+            <t t-if="userSetting.rtcConfigurationMenu.isOpen">
+                <Dialog size="'small'" title="'Settings'" t-on-dialog-closed="_onRtcSettingsDialogClosed">
+                    <RtcConfigurationMenu/>
+                    <t t-set-slot="buttons">
+                        <!-- Explicit No buttons -->
+                    </t>
+                </Dialog>
+            </t>
+            <t t-if="userSetting.isRtcLayoutSettingDialogOpen">
+                <Dialog size="'small'" title="'Change rtcCallViewer.layout'" t-on-dialog-closed="_onLayoutSettingsDialogClosed">
+                    <RtcLayoutMenu threadLocalId="thread.localId"/>
+                    <t t-set-slot="buttons">
+                        <!-- Explicit No buttons -->
+                    </t>
+                </Dialog>
+            </t>
+        </t>
+    </div>
+</t>
+
+</templates>

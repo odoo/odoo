@@ -55,6 +55,14 @@
     }
 }
 
+.o_DiscussSidebarCategoryItem_callIndicator {
+    margin-right: $o-mail-discuss-sidebar-scrollbar-width;
+
+    &.o-is-current-call {
+        color: red;
+    }
+}
+
 .o_DiscussSidebarCategoryItem_name {
     @include text-truncate();
     margin-left: 10px;

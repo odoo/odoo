@@ -9,6 +9,9 @@
                 </t>
                 <div class="o_ThreadView_bottomPart">
                     <div class="o_ThreadView_core">
+                        <t t-if="threadView.rtcCallViewer">
+                            <RtcCallViewer localId="threadView.rtcCallViewer.localId"/>
+                        </t>
                         <t t-if="threadView.isLoading and !threadView.threadCache.isLoaded" name="loadingCondition">
                             <div class="o_ThreadView_loading">
                                 <span><i class="o_ThreadView_loadingIcon fa fa-circle-o-notch fa-spin" title="Loading..." role="img"/>Loading...</span>
