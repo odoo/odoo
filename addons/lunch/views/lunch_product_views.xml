@@ -11,6 +11,15 @@
                 <field name="description"/>
                 <separator/>
                 <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+                <filter name="available_today" string="Available Today" domain="[('supplier_id.available_today', '=', True)]"/>
+                <separator/>
+                <filter name="available_on_mon" string="Monday" domain="[('supplier_id.mon', '=', True)]"/>
+                <filter name="available_on_tue" string="Tuesday" domain="[('supplier_id.tue', '=', True)]"/>
+                <filter name="available_on_wed" string="Wednesday" domain="[('supplier_id.wed', '=', True)]"/>
+                <filter name="available_on_thu" string="Thursday" domain="[('supplier_id.thu', '=', True)]"/>
+                <filter name="available_on_fri" string="Friday" domain="[('supplier_id.fri', '=', True)]"/>
+                <filter name="available_on_sat" string="Saturday" domain="[('supplier_id.sat', '=', True)]"/>
+                <filter name="available_on_sun" string="Sunday" domain="[('supplier_id.sun', '=', True)]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_supplier" string="Vendor" context="{'group_by': 'supplier_id'}"/>
                     <filter name="group_by_category" string="Category" context="{'group_by': 'category_id'}"/>
@@ -285,7 +294,8 @@
         <field name="view_mode">kanban,tree</field>
         <field name="view_id" ref="view_lunch_product_kanban_order"/>
         <field name="search_view_id" ref="lunch_product_view_search"/>
-        <field name="domain">[('supplier_id.available_today', '=', True)]</field>
+        <field name="context">{'search_default_available_today': 1}</field>
+        <field name="domain">[]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             There is no product available today
