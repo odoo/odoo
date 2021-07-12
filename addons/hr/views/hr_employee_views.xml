@@ -199,7 +199,10 @@
                                     <group string='Payroll' name="payroll_group">
                                         <field name="job_id"/>
                                     </group>
-                                    <group name="application_group"/>
+                                    <group name="application_group">
+                                        <label name="cost" for="name" invisible="1"/>
+                                        <div name="cost" invisible="1"/>
+                                    </group>
                                 </group>
                             </page>
                         </notebook>
