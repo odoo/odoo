@@ -37,8 +37,8 @@ class ResConfigSettings(models.TransientModel):
         readonly=False, store=True)
     # IAP
     module_crm_iap_mine = fields.Boolean("Generate new leads based on their country, industries, size, etc.")
-    module_crm_iap_lead_website = fields.Boolean("Create Leads/Opportunities from your website's traffic")
     module_crm_iap_enrich = fields.Boolean("Enrich your leads automatically with company data based on their email address.")
+    module_website_crm_iap_reveal = fields.Boolean("Create Leads/Opportunities from your website's traffic")
     lead_enrich_auto = fields.Selection([
         ('manual', 'Enrich leads on demand only'),
         ('auto', 'Enrich all leads automatically'),
