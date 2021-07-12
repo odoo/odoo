@@ -387,7 +387,7 @@ form: module.record_id""" % (xml_id,)
             # Some domains contain references that are only valid at runtime at
             # client-side, so in that case we keep the original domain string
             # as it is. We also log it, just in case.
-            _logger.debug('Domain value (%s) for element with id "%s" does not parse '\
+            _logger.debug('Domain value (%s) for element with id "%s" does not parse '
                 'at server-side, keeping original string, in case it\'s meant for client side only',
                 domain, xml_id or 'n/a', exc_info=True)
         res = {
