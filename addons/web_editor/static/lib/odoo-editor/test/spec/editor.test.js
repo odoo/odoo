@@ -93,6 +93,35 @@ describe('Editor', () => {
                             '<table><tbody><tr><td>[]<br></td><td>abc</td></tr></tbody></table>',
                     });
                 });
+                it('should remove empty unbreakable', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div><div><p>ABC</p></div><div>X[]</div></div>',
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            await deleteBackward(editor);
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: '<div><div><p>AB[]</p></div></div>',
+                    });
+                });
+                it('should remove empty unbreakable (formated)', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<div>
+                                            <div>
+                                                <p>ABC</p>
+                                            </div>
+                                            <div>X[]</div>
+                                        </div>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                            await deleteBackward(editor);
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: `<div>
+                                            <div>
+                                                <p>AB[]</p></div></div>`,
+                    });
+                });
             });
             describe('white spaces', () => {
                 describe('no intefering spaces', () => {
