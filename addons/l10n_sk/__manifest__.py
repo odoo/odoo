@@ -31,7 +31,7 @@ Pre viac informácií kontaktujte info@26house.com alebo navštívte https://www
           'data/account.account.template.csv',
           'data/account.group.template.csv',
           'data/l10n_sk_coa_post_data.xml',
-          'data/account_data.xml',
+          'data/account_tax_group.xml',
           'data/account_tax_data.xml',
           'data/account_fiscal_position_data.xml',
           'data/account_chart_template_data.xml'
