@@ -23,7 +23,7 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
     'data': [
         'security/l10n_in_security.xml',
         'security/ir.model.access.csv',
-        'data/account_data.xml',
+        'data/account_tax_group_data.xml',
         'data/l10n_in_chart_data.xml',
         'data/account.account.template.csv',
         'data/l10n_in_chart_post_data.xml',

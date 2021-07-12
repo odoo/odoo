@@ -57,7 +57,7 @@ please go to http://translations.launchpad.net/openerp-costa-rica.
         'data/l10n_cr_res_partner_title.xml',
         'data/l10n_cr_chart_data.xml',
         'data/account.account.template.csv',
-        'data/account_data.xml',
+        'data/account_tax_group_data.xml',
         'data/account_chart_template_data.xml',
         'data/account_tax_template_data.xml',
         'data/account_chart_template_configure_data.xml',
