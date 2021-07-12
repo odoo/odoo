@@ -1,0 +1,197 @@
+/** @odoo-module **/
+
+import { registerNewModel } from '@mail/model/model_core';
+import { attr, many2one, one2one } from '@mail/model/model_field';
+import { unlink } from '@mail/model/model_field_command';
+
+function factory(dependencies) {
+
+    class RtcCallParticipantCard extends dependencies['mail.model'] {
+
+        /**
+         * @override
+         */
+        _created() {
+            super._created();
+            this.onChangeVolume = this.onChangeVolume.bind(this);
+            this.onClick = this.onClick.bind(this);
+            this.onClickVideo = this.onClickVideo.bind(this);
+        }
+
+        //----------------------------------------------------------------------
+        // Public
+        //----------------------------------------------------------------------
+
+        /**
+         * @param {Event} ev
+         */
+        onChangeVolume(ev) {
+            this.rtcSession && this.rtcSession.setVolume(parseFloat(ev.target.value));
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        async onClick(ev) {
+            if (!this.invitedPartner || this.invitedGuest) {
+                return;
+            }
+            await this.env.services.rpc(({
+                route: '/mail/rtc/channel/cancel_call_invitation',
+                params: {
+                    channel_id: this.channel.id,
+                    partner_ids: this.invitedPartner && [this.invitedPartner.id],
+                    guest_ids: this.invitedGuest && [this.invitedGuest.id],
+                },
+            }));
+            this.channel.update({
+                invitedGuests: this.invitedGuest && unlink(this.invitedGuest),
+                invitedPartners: this.invitedPartner && unlink(this.invitedPartner),
+            });
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        async onClickVideo(ev) {
+            ev.stopPropagation();
+            this.messaging.toggleFocusedRtcSession(this.rtcSession.id);
+        }
+
+        //----------------------------------------------------------------------
+        // Private
+        //----------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.relationalId}`;
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeAvatarUrl() {
+            if (!this.channel) {
+                return;
+            }
+            if (this.rtcSession) {
+                return this.rtcSession.avatarUrl;
+            }
+            if (this.invitedPartner) {
+                return `/mail/channel/${this.channel.id}/partner/${this.invitedPartner.id}/avatar_128`;
+            }
+            if (this.invitedGuest) {
+                return `/mail/channel/${this.channel.id}/guest/${this.invitedGuest.id}/avatar_128`;
+            }
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsMinimized() {
+            const callViewer = this.rtcCallViewerOfMainCard || this.rtcCallViewerOfTile;
+            return callViewer && callViewer.isMinimized;
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsTalking() {
+            return this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isMuted;
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeName() {
+            if (this.rtcSession) {
+                return this.rtcSession.name;
+            }
+            if (this.invitedPartner) {
+                return this.invitedPartner.name;
+            }
+            if (this.invitedGuest) {
+                return this.invitedGuest.name;
+            }
+        }
+
+    }
+
+    RtcCallParticipantCard.fields = {
+        /**
+         * The relative url of the image that represents the card.
+         */
+        avatarUrl: attr({
+            compute: '_computeAvatarUrl',
+        }),
+        /**
+         * The channel of the call.
+         */
+        channel: many2one('mail.thread', {
+            required: true,
+        }),
+        /**
+         * If set, this card represents an invitation of this guest to this call.
+         */
+        invitedGuest: many2one('mail.guest'),
+        /**
+         * If set, this card represents an invitation of this partner to this call.
+         */
+        invitedPartner: many2one('mail.partner'),
+        /**
+         * Determines if this card has to be displayed in a minimized form.
+         */
+        isMinimized: attr({
+            default: false,
+            compute: '_computeIsMinimized',
+        }),
+        /**
+         * Determines if the rtcSession is in a valid "talking" state.
+         */
+        isTalking: attr({
+            default: false,
+            compute: '_computeIsTalking',
+        }),
+        /**
+         * The name of the rtcSession or the invited partner.
+         */
+        name: attr({
+            default: 'Anonymous',
+            compute: '_computeName',
+        }),
+        /**
+         * Unique id for this session provided when instantiated.
+         */
+        relationalId: attr({
+            required: true,
+        }),
+        /**
+         * The callViewer for which this card is the spotlight.
+         */
+        rtcCallViewerOfMainCard: one2one('mail.rtc_call_viewer', {
+            inverse: 'mainParticipantCard',
+        }),
+        /**
+         * The callViewer for which this card is one of the tiles.
+         */
+        rtcCallViewerOfTile: many2one('mail.rtc_call_viewer', {
+            inverse: 'tileParticipantCards',
+        }),
+        /**
+         * If set, this card represents a rtcSession.
+         */
+        rtcSession: many2one('mail.rtc_session'),
+    };
+
+    RtcCallParticipantCard.modelName = 'mail.rtc_call_participant_card';
+
+    return RtcCallParticipantCard;
+}
+
+registerNewModel('mail.rtc_call_participant_card', factory);

@@ -78,6 +78,12 @@ function factory(dependencies) {
 
     ThreadViewer.fields = {
         /**
+         * true if the viewer is in a compact format, like in a chat window.
+         */
+        compact: attr({
+            default: false,
+        }),
+        /**
          * Determines which extra class this thread view component should have.
          */
         extraClass: attr(),

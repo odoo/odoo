@@ -19,6 +19,19 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='mail.restrict.template.rendering',
         help='Users will still be able to render templates.\n'
         'However only Mail Template Editors will be able to create new dynamic templates or modify existing ones.')
+    use_twilio_rtc_servers = fields.Boolean(
+        'Use Twilio ICE servers',
+        help="If you want to use twilio as TURN/STUN server provider",
+        config_parameter='mail.use_twilio_rtc_servers',
+    )
+    twilio_account_sid = fields.Char(
+        'Twilio Account SID',
+        config_parameter='mail.twilio_account_sid',
+    )
+    twilio_account_token = fields.Char(
+        'Twilio Account Auth Token',
+        config_parameter='mail.twilio_account_token',
+    )
 
     @api.model
     def get_values(self):

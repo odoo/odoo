@@ -49,6 +49,17 @@ function factory(dependencies) {
                 const channel = this.messaging.models['mail.thread'].insert(
                     this.messaging.models['mail.thread'].convertData(channelData)
                 );
+                if (this.thread.mailRtc) {
+                    /**
+                     * if we were in a RTC call on the current thread, we move to the new group chat.
+                     * A smoother transfer would be moving the RTC sessions from one channel to
+                     * the other (server-side too), but it would be considerably more complex.
+                     */
+                    await this.async(() => channel.toggleCall({
+                        startWithVideo: !!this.thread.mailRtc.videoTrack,
+                        videoType: this.thread.mailRtc.sendUserVideo ? 'user-video' : 'display',
+                    }));
+                }
                 channel.open();
             } else {
                 await this.env.services.rpc(({
@@ -57,6 +68,7 @@ function factory(dependencies) {
                     args: [[this.thread.id]],
                     kwargs: {
                         partner_ids: this.selectedPartners.map(partner => partner.id),
+                        invite_to_rtc_call: !!this.thread.mailRtc,
                     },
                 }));
             }
