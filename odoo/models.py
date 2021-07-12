@@ -3141,7 +3141,7 @@ class BaseModel(metaclass=MetaModel):
                 description = self.env['ir.model']._get(self._name).name
                 if not self.env.user.has_group('base.group_no_one'):
                     raise AccessError(
-                        _('You do not have enough rights to access the fields "%(fields)s" on %(document_kind)s (%(document_model)s). '\
+                        _('You do not have enough rights to access the fields "%(fields)s" on %(document_kind)s (%(document_model)s). '
                           'Please contact your system administrator.\n\n(Operation: %(operation)s)') % {
                         'fields': ','.join(list(invalid_fields)),
                         'document_kind': description,

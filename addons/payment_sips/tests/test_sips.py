@@ -53,9 +53,9 @@ class SipsTest(SipsCommon):
         return_url = self._build_url(SipsController._return_url)
         notify_url = self._build_url(SipsController._notify_url)
         self.assertEqual(form_inputs['Data'],
-            f'amount=111111|currencyCode=978|merchantId=dummy_mid|normalReturnUrl={return_url}|' \
-            f'automaticResponseUrl={notify_url}|transactionReference={self.reference}|' \
-            f'statementReference={self.reference}|keyVersion={self.sips.sips_key_version}|' \
+            f'amount=111111|currencyCode=978|merchantId=dummy_mid|normalReturnUrl={return_url}|'
+            f'automaticResponseUrl={notify_url}|transactionReference={self.reference}|'
+            f'statementReference={self.reference}|keyVersion={self.sips.sips_key_version}|'
             f'returnContext={json.dumps(dict(reference=self.reference))}'
         )
         self.assertEqual(form_inputs['Seal'],
