@@ -414,7 +414,7 @@ IMPORT_LEGACY_DEFAULT_RE = re.compile(r"""
     import\s+                                           # import
     (?P<identifier>\w+)\s*                              # default variable name
     from\s*                                             # from
-    (?P<path>(?P<quote>["'`])([^@\."'`][^"'`]*)(?P=quote))  # legacy alias file ("addon_name.module_name" or "some/path")
+    (?P<path>(?P<quote>["'`])([^@."'`][^"'`]*)(?P=quote))  # legacy alias file ("addon_name.module_name" or "some/path")
     """, re.MULTILINE | re.VERBOSE)
 
 
@@ -576,7 +576,7 @@ def relative_path_to_module_path(url, path_rel):
 
 ODOO_MODULE_RE = re.compile(r"""
     \s*                                       # some starting space
-    \/(\*|\/).*\s*                            # // or /*
+    /(\*|/).*\s*                            # // or /*
     @odoo-module                              # @odoo-module
     (\s+alias=(?P<alias>[\w.]+))?             # alias=web.AbstractAction (optional)
     (\s+default=(?P<default>False|false|0))?  # default=False or false or 0 (optional)

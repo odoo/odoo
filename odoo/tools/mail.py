@@ -138,14 +138,14 @@ class _Cleaner(clean.Cleaner):
                 sibling.set('data-o-mail-quote', '1')
 
         # html signature (-- <br />blah)
-        signature_begin = re.compile(r"((?:(?:^|\n)[-]{2}[\s]?$))")
+        signature_begin = re.compile(r"((?:^|\n)[-]{2}[\s]?$)")
         if el.text and el.find('br') is not None and re.search(signature_begin, el.text):
             el.set('data-o-mail-quote', '1')
             if el.getparent() is not None:
                 el.getparent().set('data-o-mail-quote-container', '1')
 
         # text-based quotes (>, >>) and signatures (-- Signature)
-        text_complete_regex = re.compile(r"((?:\n[>]+[^\n\r]*)+|(?:(?:^|\n)[-]{2}[\s]?[\r\n]{1,2}[\s\S]+))")
+        text_complete_regex = re.compile(r"((?:\n[>]+[^\n\r]*)+|(?:^|\n)[-]{2}[\s]?[\r\n]{1,2}[\s\S]+)")
         if not el.get('data-o-mail-quote'):
             _tag_matching_regex_in_text(text_complete_regex, el, 'span', {'data-o-mail-quote': '1'})
 
@@ -279,15 +279,15 @@ def is_html_empty(html_content):
     """
     if not html_content:
         return True
-    tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i|font)(?:(?=\s+\w*)[^/>]*|\s*)/?\s*\>')
-    return not bool(re.sub(tag_re, '', html_content).strip())
+    tag_re = re.compile(r'<\s*/?(?:p|div|span|br|b|i|font)(?:(?=\s+\w*)[^/>]*|\s*)/?\s*>')
+    return not bool(tag_re.sub('', html_content).strip())
 
 def html_keep_url(text):
     """ Transform the url into clickable link with <a/> tag """
     idx = 0
     final = ''
-    link_tags = re.compile(r"""(?<!["'])((ftp|http|https):\/\/(\w+:{0,1}\w*@)?([^\s<"']+)(:[0-9]+)?(\/|\/([^\s<"']))?)(?![^\s<"']*["']|[^\s<"']*</a>)""")
-    for item in re.finditer(link_tags, text):
+    link_tags = re.compile(r"""(?<!["'])((ftp|http|https)://(\w+:?\w*@)?([^\s<"']+)(:[0-9]+)?(/([^\s<"'])?)?)(?![^\s<"']*["']|[^\s<"']*</a>)""")
+    for item in link_tags.finditer(text):
         final += text[idx:item.start()]
         final += '<a href="%s" target="_blank" rel="noreferrer noopener">%s</a>' % (item.group(0), item.group(0))
         idx = item.end()

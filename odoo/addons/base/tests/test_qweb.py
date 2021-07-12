@@ -1175,7 +1175,7 @@ class TestQWebStaticXml(TransactionCase):
             # so output is predictable & repeatable
             params = {} if param is None else json.loads(param.text, object_pairs_hook=collections.OrderedDict)
 
-            rec = re.compile(r'\>[ \n\t]*\<')
+            rec = re.compile(r'>[ \n\t]*<')
             result = doc.find('result[@id="{}"]'.format(template)).text
             self.assertEqual(
                 rec.sub('><', qweb._render(template, values=params, load=loader).strip()),

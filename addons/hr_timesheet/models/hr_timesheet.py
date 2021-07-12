@@ -166,7 +166,7 @@ class AccountAnalyticLine(models.Model):
         # custom inheretied view stored in database. Even if normally, no xpath can be done on
         # 'string' attribute.
         for node in doc.xpath("//field[@name='unit_amount'][@widget='timesheet_uom'][not(@string)]"):
-            node.set('string', _('%s Spent') % (re.sub(r'[\(\)]', '', encoding_uom.name or '')))
+            node.set('string', _('%s Spent') % (re.sub(r'[()]', '', encoding_uom.name or '')))
         return etree.tostring(doc, encoding='unicode')
 
     @api.model
