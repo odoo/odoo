@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.1\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 07:29+0000\n"
-"PO-Revision-Date: 2020-12-11 07:29+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-07-12 07:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -63,11 +63,6 @@ msgstr ""
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
 msgid "Check Printing"
-msgstr ""
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_printing_payment_method_selected
-msgid "Check Printing Payment Method Selected"
 msgstr ""
 
 #. module: account_check_printing
@@ -151,13 +146,7 @@ msgid "Created on"
 msgstr ""
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__display_name
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move__display_name
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__display_name
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
-#: model:ir.model.fields,field_description:account_check_printing.field_res_company__display_name
-#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -169,13 +158,7 @@ msgid "Go to the configuration panel"
 msgstr ""
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move__id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__id
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_company__id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__id
 msgid "ID"
 msgstr ""
 
@@ -198,13 +181,7 @@ msgid "Journal Entry"
 msgstr ""
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal____last_update
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move____last_update
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment____last_update
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks____last_update
-#: model:ir.model.fields,field_description:account_check_printing.field_res_company____last_update
-#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -219,19 +196,24 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_manual_sequencing
-msgid "Manual Numbering"
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_id
+msgid ""
+"Manual : Pay or Get paid by any method outside of Odoo.Payment Acquirers : "
+"Each payment acquirer has its own Payment Method. Request a transaction "
+"on/to a card thanks to a payment token saved by the partner when buying or "
+"subscribing online.Check: Pay bills by check and print it from Odoo.Batch "
+"Deposit: Collect several customer checks at once generating and submitting a"
+" batch deposit to your bank. Module account_batch_payment is necessary.SEPA "
+"Credit Transfer : Pay in the SEPA zone by submitting a SEPA Credit Transfer "
+"file to your bank. Module account_sepa is necessarySEPA Direct Debit : Get "
+"paid in the SEPA zone thanks to a mandate your partner will have granted to "
+"you. Module account_sepa is necessary"
 msgstr ""
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_id
-msgid ""
-"Manual: Get paid by cash, check or any other method outside of Odoo.\n"
-"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
-"Check: Pay bill by check and print it from Odoo.\n"
-"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"
-"SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_manual_sequencing
+msgid "Manual Numbering"
 msgstr ""
 
 #. module: account_check_printing
@@ -263,6 +245,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_payment_method
+msgid "Payment Methods"
 msgstr ""
 
 #. module: account_check_printing
@@ -331,6 +318,11 @@ msgid "Print Pre-numbered Checks"
 msgstr ""
 
 #. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_payment_register
+msgid "Register Payment"
+msgstr ""
+
+#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
 msgid "Right Margin"
 msgstr ""
@@ -359,13 +351,6 @@ msgstr ""
 msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
-msgstr ""
-
-#. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
-msgid ""
-"Technical feature used to know whether check printing was enabled as payment"
-" method."
 msgstr ""
 
 #. module: account_check_printing

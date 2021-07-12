@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.3\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-11 09:26+0000\n"
-"PO-Revision-Date: 2021-05-11 09:26+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-07-12 07:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,26 +18,6 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "% On-Time Delivery"
-msgstr ""
-
-#. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:0
-#, python-format
-msgid "<p>Corresponding receipt not found.</p>"
-msgstr ""
-
-#. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:0
-#, python-format
-msgid ""
-"<p>Those dates couldn’t be modified accordingly on the receipt %s which had "
-"already been validated.</p>"
-msgstr ""
-
-#. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:0
-#, python-format
-msgid "<p>Those dates have been updated accordingly on the receipt %s.</p>"
 msgstr ""
 
 #. module: purchase_stock
@@ -156,6 +136,12 @@ msgid "Contact"
 msgstr ""
 
 #. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid "Corresponding receipt not found."
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
 msgid "Created Purchase Order Line"
 msgstr ""
@@ -200,24 +186,6 @@ msgid "Destination Location Type"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_account_move__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_product_product__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_product_template__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_report_stock_report_product_product_replenishment__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_report_stock_report_stock_rule__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_res_company__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_return_picking__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__display_name
 msgid "Display Name"
 msgstr ""
@@ -280,24 +248,6 @@ msgid "Go back to the purchase order to generate the vendor bill."
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_account_move__id
-#: model:ir.model.fields,field_description:purchase_stock.field_product_product__id
-#: model:ir.model.fields,field_description:purchase_stock.field_product_template__id
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__id
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__id
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__id
-#: model:ir.model.fields,field_description:purchase_stock.field_report_stock_report_product_product_replenishment__id
-#: model:ir.model.fields,field_description:purchase_stock.field_report_stock_report_stock_rule__id
-#: model:ir.model.fields,field_description:purchase_stock.field_res_company__id
-#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__id
-#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_return_picking__id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__id
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__id
 msgid "ID"
 msgstr ""
@@ -335,24 +285,6 @@ msgid "Journal Entry"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_account_move____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_product_product____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_product_template____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_report_stock_report_product_product_replenishment____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_report_stock_report_stock_rule____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_res_company____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_res_partner____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_move____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_return_picking____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_rule____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse____last_update
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint____last_update
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report____last_update
 msgid "Last Modified on"
 msgstr ""
@@ -670,6 +602,20 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
 msgid "This will determine operation type of incoming shipment"
+msgstr ""
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"Those dates couldn’t be modified accordingly on the receipt %s which had "
+"already been validated."
+msgstr ""
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid "Those dates have been updated accordingly on the receipt %s."
 msgstr ""
 
 #. module: purchase_stock
