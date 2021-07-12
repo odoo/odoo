@@ -13,4 +13,17 @@
             </xpath>
         </field>
     </record>
+
+    <!--Website visitor actions-->
+    <record id="crm_lead_action_from_visitor" model="ir.actions.act_window">
+        <field name="name">Leads</field>
+        <field name="res_model">crm.lead</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('visitor_ids', 'in', [active_id])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+              No lead linked for this visitor
+            </p>
+        </field>
+    </record>
 </data></odoo>
