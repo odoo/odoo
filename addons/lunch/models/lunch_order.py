@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class LunchOrder(models.Model):
@@ -53,6 +53,7 @@ class LunchOrder(models.Model):
     available_toppings_1 = fields.Boolean(help='Are extras available for this product', compute='_compute_available_toppings')
     available_toppings_2 = fields.Boolean(help='Are extras available for this product', compute='_compute_available_toppings')
     available_toppings_3 = fields.Boolean(help='Are extras available for this product', compute='_compute_available_toppings')
+    display_reorder_button = fields.Boolean(compute='_compute_display_reorder_button')
 
     @api.depends('product_id')
     def _compute_product_images(self):
@@ -66,6 +67,13 @@ class LunchOrder(models.Model):
             order.available_toppings_1 = bool(order.env['lunch.topping'].search_count([('supplier_id', '=', order.supplier_id.id), ('topping_category', '=', 1)]))
             order.available_toppings_2 = bool(order.env['lunch.topping'].search_count([('supplier_id', '=', order.supplier_id.id), ('topping_category', '=', 2)]))
             order.available_toppings_3 = bool(order.env['lunch.topping'].search_count([('supplier_id', '=', order.supplier_id.id), ('topping_category', '=', 3)]))
+
+    @api.depends_context('show_reorder_button')
+    @api.depends('state')
+    def _compute_display_reorder_button(self):
+        show_button = self.env.context.get('show_reorder_button')
+        for order in self:
+            order.display_reorder_button = show_button and order.state == 'confirmed'
 
     def init(self):
         self._cr.execute("""CREATE INDEX IF NOT EXISTS lunch_order_user_product_date ON %s (user_id, product_id, date)"""
@@ -199,6 +207,17 @@ class LunchOrder(models.Model):
             raise ValidationError(_('Product is no longer available.'))
         self.write({'state': 'ordered'})
         self._check_wallet()
+
+    def action_reorder(self):
+        self.ensure_one()
+        if not self.supplier_id.available_today:
+            raise UserError(_('The vendor related to this order is not available today.'))
+        self.copy({
+            'date': fields.Date.context_today(self),
+            'state': 'ordered',
+        })
+        action = self.env['ir.actions.act_window']._for_xml_id('lunch.lunch_order_action')
+        return action
 
     def action_confirm(self):
         self.write({'state': 'confirmed'})

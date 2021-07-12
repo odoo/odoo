@@ -35,7 +35,7 @@
                     <button name="action_confirm" type="object" string="Receive"/>
                 </header>
                 <field name='date'/>
-                <field name='supplier_id' invisible='1'/>
+                <field name='supplier_id'/>
                 <field name='product_id'/>
                 <field name="display_toppings" class="o_text_overflow"/>
                 <field name='note' class="o_text_overflow"/>
@@ -44,6 +44,8 @@
                 <field name='price' sum="Total" string="Price" widget="monetary"/>
                 <field name='state'/>
                 <field name="company_id" groups="base.group_multi_company"/>
+                <field name="display_reorder_button" invisible="1"/>
+                <button name="action_reorder" string="Re-order" type="object" icon="fa-history" attrs="{'invisible': [('display_reorder_button', '=', False)]}" groups="lunch.group_lunch_user"/>
                 <button name="action_confirm" string="Confirm" type="object" icon="fa-check" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
                 <button name="action_cancel" string="Cancel" type="object" icon="fa-times" attrs="{'invisible': [('state', 'in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager"/>
                 <button name="action_reset" string="Reset" type="object" icon="fa-undo" attrs="{'invisible': [('state', '!=', 'cancelled')]}" groups="lunch.group_lunch_manager"/>
@@ -134,7 +136,7 @@
         <field name="res_model">lunch.order</field>
         <field name="view_mode">tree,kanban,pivot</field>
         <field name="search_view_id" ref="lunch_order_view_search"/>
-        <field name="context">{"search_default_is_mine":1, "search_default_group_by_date": 1}</field>
+        <field name="context">{"search_default_is_mine":1, "search_default_group_by_date": 1, 'show_reorder_button': True}</field>
         <field name="help" type="html">
         <p class="o_view_nocontent_empty_folder">
             No previous order found
