@@ -248,9 +248,9 @@ class PortalMailGroup(http.Controller):
         else:
             # For non-logged user, send an email with a token to confirm the action
             if action == 'subscribe':
-                group_sudo._send_subscribe_confirmation_email(email, action)
+                group_sudo._send_subscribe_confirmation_email(email)
             else:
-                group_sudo._send_unsubscribe_confirmation_email(email, action)
+                group_sudo._send_unsubscribe_confirmation_email(email)
             return 'email_sent'
 
     @http.route('/groups/subscribe', type='http', auth='public', website=True)
