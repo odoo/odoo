@@ -16,7 +16,7 @@ Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>
         "base_vat",
     ],
     "data": ['data/l10n_no_chart_data.xml',
-             'data/account_data.xml',
+             'data/account_tax_group_data.xml',
              'data/account_tax_report_data.xml',
              'data/account.account.template.csv',
              'data/account_tax_data.xml',
