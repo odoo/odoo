@@ -33,7 +33,7 @@ def root_factory():
         yield {'__complete': True}
 
 
-def randomize(vals, weights=None, seed=False, formatter=format_str, counter_offset=0):
+def randomize(vals, weights=None, seed=None, formatter=format_str, counter_offset=0):
     """ Return a factory for an iterator of values dicts with pseudo-randomly
     chosen values (among ``vals``) for a field.
 
@@ -54,7 +54,7 @@ def randomize(vals, weights=None, seed=False, formatter=format_str, counter_offs
     return generate
 
 
-def cartesian(vals, weights=None, seed=False, formatter=format_str, then=None):
+def cartesian(vals, weights=None, seed=None, formatter=format_str, then=None):
     """ Return a factory for an iterator of values dicts that combines all ``vals`` for
     the field with the other field values in input.
 
@@ -79,7 +79,7 @@ def cartesian(vals, weights=None, seed=False, formatter=format_str, then=None):
     return generate
 
 
-def iterate(vals, weights=None, seed=False, formatter=format_str, then=None):
+def iterate(vals, weights=None, seed=None, formatter=format_str, then=None):
     """ Return a factory for an iterator of values dicts that picks a value among ``vals``
     for each input.  Once all ``vals`` have been used once, resume as ``then`` or as a
     ``randomize`` generator.
