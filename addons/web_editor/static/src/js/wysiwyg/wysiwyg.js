@@ -603,7 +603,8 @@ const Wysiwyg = Widget.extend({
             await this.snippetsMenu.cleanForSave();
         }
 
-        await this.saveModifiedImages();
+        const editables = this.options.getContentEditableAreas();
+        await this.saveModifiedImages(editables.length ? $(editables) : this.$editable);
         await this._saveViewBlocks();
 
         this.trigger_up('edition_was_stopped');
