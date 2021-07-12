@@ -4,7 +4,7 @@ import { Dialog } from "../core/dialog/dialog";
 import { formatDateTime, parseDateTime } from "../core/l10n/dates";
 import { _lt } from "../core/l10n/translation";
 import { registry } from "../core/registry";
-import { formatMany2one } from "../fields/format";
+import { formatMany2one } from "@web/fields/formatters";
 
 const { hooks, tags } = owl;
 const { useState } = hooks;
