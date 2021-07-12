@@ -207,6 +207,12 @@ class ProductProduct(models.Model):
         for record in self:
             record.can_image_1024_be_zoomed = record.can_image_variant_1024_be_zoomed if record.image_variant_1920 else record.product_tmpl_id.can_image_1024_be_zoomed
 
+    def _get_placeholder_filename(self, field):
+        image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
+        if field in image_fields:
+            return 'product/static/img/placeholder.png'
+        return super()._get_placeholder_filename(field)
+
     def init(self):
         """Ensure there is at most one active variant for each combination.
 
