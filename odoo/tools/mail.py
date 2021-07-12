@@ -123,12 +123,19 @@ class _Cleaner(clean.Cleaner):
         el_id = el.get('id', '') or ''
 
         # gmail or yahoo // # outlook, html // # msoffice
-        if ('gmail_extra' in el_class or 'yahoo_quoted' in el_class) or \
-                (el.tag == 'hr' and ('stopSpelling' in el_class or 'stopSpelling' in el_id)) or \
+        if 'gmail_extra' in el_class or \
+                'divRplyFwdMsg' in el_id or \
                 ('SkyDrivePlaceholder' in el_class or 'SkyDrivePlaceholder' in el_class):
             el.set('data-o-mail-quote', '1')
             if el.getparent() is not None:
                 el.getparent().set('data-o-mail-quote-container', '1')
+
+        if (el.tag == 'hr' and ('stopSpelling' in el_class or 'stopSpelling' in el_id)) or \
+           'yahoo_quoted' in el_class:
+            # Quote all elements after this one
+            el.set('data-o-mail-quote', '1')
+            for sibling in el.itersiblings(preceding=False):
+                sibling.set('data-o-mail-quote', '1')
 
         # html signature (-- <br />blah)
         signature_begin = re.compile(r"((?:(?:^|\n)[-]{2}[\s]?$))")

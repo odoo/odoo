@@ -4,32 +4,34 @@
         <field name="name">mail.group.message.view.list</field>
         <field name="model">mail.group.message</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree sample="1">
                 <field name="create_date" string="Date"/>
                 <field name="author_id"/>
                 <field name="email_from"/>
                 <field name="subject"/>
                 <field name="mail_group_id"/>
                 <field name="moderation_status"/>
+                <field name="is_group_moderated" invisible="1"/>
                 <button name="action_moderate_accept" string="Accept" title="Accept"
                     type="object" class="btn btn-primary"
-                    attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
-                <button name="action_moderate_reject" string="Discard" title="Remove message without explanation"
-                    type="object" class="btn btn-secondary" 
-                    attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
+                    attrs="{'invisible': ['|', ('moderation_status', '!=', 'pending_moderation'), ('is_group_moderated', '=', False)]}"/>
                 <button name="%(mail_group_message_reject_action)d"
                     string="Reject" title="Remove message with explanation"
                     type="action" class="btn btn-secondary"
-                    attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"
-                    context="{'default_mail_group_message_id': id}" />
-                <button name="action_allow" string="Always Allow"
+                    attrs="{'invisible': ['|', ('moderation_status', '!=', 'pending_moderation'), ('is_group_moderated', '=', False)]}"
+                    context="{'default_mail_group_message_id': id, 'default_action': 'reject'}" />
+                <button name="action_moderate_allow" string="Whitelist"
                     title="Add this email address to white list of people and accept all pending messages from the same author."
                     type="object" class="btn btn-secondary"
-                    attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
-                <button name="action_ban" type="object" string="Ban"
-                    title="Ban this email address and reject all pending messages from the same author"
-                    class="btn btn-secondary"
-                    attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
+                    attrs="{'invisible': ['|', ('moderation_status', '!=', 'pending_moderation'), ('is_group_moderated', '=', False)]}"/>
+                <button name="%(mail_group_message_reject_action)d"
+                    string="Ban" title="Ban this email address and reject all pending messages from the same author and send an email to the author"
+                    type="action" class="btn btn-secondary"
+                    attrs="{'invisible': ['|', ('moderation_status', '!=', 'pending_moderation'), ('is_group_moderated', '=', False)]}"
+                    context="{'default_mail_group_message_id': id, 'default_action': 'ban'}" />
+                <button name="action_moderate_accept" string="Send" title="Send"
+                    type="object" class="btn btn-primary"
+                    attrs="{'invisible': ['|', ('moderation_status', '!=', 'pending_moderation'), ('is_group_moderated', '=', True)]}"/>
             </tree>
         </field>
     </record>
@@ -37,27 +39,28 @@
         <field name="name">mail.group.message.view.form</field>
         <field name="model">mail.group.message</field>
         <field name="arch" type="xml">
-            <form string="Group Message">
+            <form string="Group Message" class="o_mail_group_message_form">
                 <header>
                     <button name="action_moderate_accept" string="Accept" title="Accept"
                         type="object" class="btn btn-primary"
-                        attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
-                    <button name="action_moderate_reject" string="Discard" title="Remove message without explanation"
-                        type="object" class="btn btn-secondary"
-                        attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
+                        attrs="{'invisible': ['|', ('moderation_status', '!=', 'pending_moderation'), ('is_group_moderated', '=', False)]}"/>
                     <button name="%(mail_group_message_reject_action)d"
                         string="Reject" title="Remove message with explanation"
                         type="action" class="btn btn-secondary"
-                        attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"
-                        context="{'default_mail_group_message_id': id}" />
-                    <button name="action_allow" string="Always Allow"
+                        attrs="{'invisible': ['|', ('moderation_status', '!=', 'pending_moderation'), ('is_group_moderated', '=', False)]}"
+                        context="{'default_mail_group_message_id': id, 'default_action': 'reject'}" />
+                    <button name="action_moderate_allow" string="Whitelist"
                         title="Add this email address to white list of people and accept all pending messages from the same author."
                         type="object" class="btn btn-secondary"
-                        attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
-                    <button name="action_ban" string="Ban"
-                        title="Ban this email address and reject all pending messages from the same author"
-                        type="object" class="btn btn-secondary"
-                        attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
+                        attrs="{'invisible': [('is_group_moderated', '=', False)]}"/>
+                    <button name="%(mail_group_message_reject_action)d"
+                        string="Ban" title="Ban this email address and reject all pending messages from the same author and send an email to the author"
+                        type="action" class="btn btn-secondary"
+                        attrs="{'invisible': ['|', ('moderation_status', '!=', 'pending_moderation'), ('is_group_moderated', '=', False)]}"
+                        context="{'default_mail_group_message_id': id, 'default_action': 'ban'}" />
+                    <button name="action_moderate_accept" string="Send" title="Send"
+                        type="object" class="btn btn-primary"
+                        attrs="{'invisible': ['|', ('moderation_status', '!=', 'pending_moderation'), ('is_group_moderated', '=', True)]}"/>
                 </header>
                 <sheet>
                     <widget name="web_ribbon" title="Rejected" bg_color="bg-danger"
@@ -67,9 +70,16 @@
                     <group>
                         <field name="mail_message_id" invisible="1"/>
                         <field name="moderation_status" invisible="1"/>
+                        <field name="is_group_moderated" invisible="1"/>
                         <field name="subject"/>
                         <field name="author_id"/>
-                        <field name="email_from"/>
+                        <label for="email_from" string="From"/>
+                        <div>
+                            <field name="email_from" nolabel="1"/>
+                            <span class="oe_read_only ml-2 badge badge-success" attrs="{'invisible': [('author_moderation', '!=', 'allow')]}">Whitelisted</span>
+                            <span class="oe_read_only ml-2 badge badge-danger" attrs="{'invisible': [('author_moderation', '!=', 'ban')]}">Banned</span>
+                            <field name="author_moderation" invisible="1"/>
+                        </div>
                         <field name="mail_group_id"/>
                         <field name="attachment_ids" widget="many2many_binary"/>
                         <field name="body" options="{'style-inline': true}"/>
@@ -98,6 +108,9 @@
         <field name="name">Messages</field>
         <field name="res_model">mail.group.message</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_moderation_status': 'pending_moderation'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No Messages in this list yet!</p>
+            <p>When people send an email to the alias of the list, they will appear here.</p>
+        </field>
     </record>
 </odoo>

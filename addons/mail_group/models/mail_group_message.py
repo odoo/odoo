@@ -3,10 +3,10 @@
 
 import logging
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
-from odoo.tools import email_normalize
+from odoo.tools import email_normalize, append_content_to_html, ustr
 
 _logger = logging.getLogger(__name__)
 
@@ -31,17 +31,19 @@ class MailGroupMessage(models.Model):
     email_from_normalized = fields.Char('Normalized From', compute='_compute_email_from_normalized', store=True)
     body = fields.Html(related='mail_message_id.body', readonly=False)
     subject = fields.Char(related='mail_message_id.subject', readonly=False)
-    # thread
+    # Thread
     mail_group_id = fields.Many2one(
         'mail.group', string='Group',
         required=True, ondelete='cascade')
     mail_message_id = fields.Many2one('mail.message', 'Mail Message', required=True, ondelete='cascade', index=True, copy=False)
     # Parent and children
     group_message_parent_id = fields.Many2one(
-        'mail.group.message', string='Parent', store=True,
-        inverse='_inverse_group_message_parent_id')
+        'mail.group.message', string='Parent', store=True)
     group_message_child_ids = fields.One2many('mail.group.message', 'group_message_parent_id', string='Childs')
     # Moderation
+    author_moderation = fields.Selection([('ban', 'Banned'), ('allow', 'Whitelisted')], string='Author Moderation Status',
+                                         compute='_compute_author_moderation')
+    is_group_moderated = fields.Boolean('Is Group Moderated', related='mail_group_id.moderation')
     moderation_status = fields.Selection(
         [('pending_moderation', 'Pending Moderation'),
          ('accepted', 'Accepted'),
@@ -55,10 +57,19 @@ class MailGroupMessage(models.Model):
         for message in self:
             message.email_from_normalized = email_normalize(message.email_from)
 
-    def _inverse_group_message_parent_id(self):
-        # TDE CHECK: check to remove
+    @api.depends('email_from_normalized', 'mail_group_id')
+    def _compute_author_moderation(self):
+        moderations = self.env['mail.group.moderation'].search([
+            ('mail_group_id', 'in', self.mail_group_id.ids),
+        ])
+        all_emails = set(self.mapped('email_from_normalized'))
+        moderations = {
+            (moderation.mail_group_id, moderation.email): moderation.status
+            for moderation in moderations
+            if moderation.email in all_emails
+        }
         for message in self:
-            message.mail_message_id.parent_id = message.group_message_parent_id.mail_message_id
+            message.author_moderation = moderations.get((message.mail_group_id, message.email_from_normalized), False)
 
     @api.constrains('mail_message_id')
     def _constrains_mail_message_id(self):
@@ -123,17 +134,25 @@ class MailGroupMessage(models.Model):
             'moderator_id': self.env.uid,
         })
 
-    def action_allow(self):
-        self._assert_moderable()
+    def action_moderate_allow(self):
         self._create_moderation_rule('allow')
 
         # Accept all emails of the same authors
         same_author = self._get_pending_same_author_same_group()
         same_author.action_moderate_accept()
 
-    def action_ban(self):
-        self._assert_moderable()
+    def action_moderate_ban(self):
         self._create_moderation_rule('ban')
+
+        # Reject all emails of the same author
+        same_author = self._get_pending_same_author_same_group()
+        same_author.action_moderate_reject()
+
+    def action_moderate_ban_with_comment(self, ban_subject, ban_comment):
+        self._create_moderation_rule('ban')
+
+        if ban_subject or ban_comment:
+            self._moderate_send_reject_email(ban_subject, ban_comment)
 
         # Reject all emails of the same author
         same_author = self._get_pending_same_author_same_group()
@@ -212,8 +231,7 @@ class MailGroupMessage(models.Model):
             if not message.email_from:
                 continue
 
-            # TDE CHECK: markup
-            body_html = tools.append_content_to_html('<div>%s</div>' % tools.ustr(comment), message.body, plaintext=False)
+            body_html = append_content_to_html('<div>%s</div>' % ustr(comment), message.body, plaintext=False)
             body_html = self.env['mail.render.mixin']._replace_local_links(body_html)
             self.env['mail.mail'].sudo().create({
                 'author_id': self.env.user.partner_id.id,

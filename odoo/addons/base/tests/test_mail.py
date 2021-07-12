@@ -196,11 +196,25 @@ class TestSanitizer(BaseCase):
         for ext in test_mail_examples.HOTMAIL_1_OUT:
             self.assertIn(ext, html)
 
+    def test_quote_outlook_html(self):
+        html = html_sanitize(test_mail_examples.QUOTE_OUTLOOK_HTML)
+        for ext in test_mail_examples.QUOTE_OUTLOOK_HTML_IN:
+            self.assertIn(ext, html)
+        for ext in test_mail_examples.QUOTE_OUTLOOK_HTML_OUT:
+            self.assertIn(ext, html)
+
     def test_quote_thunderbird_html(self):
         html = html_sanitize(test_mail_examples.QUOTE_THUNDERBIRD_HTML)
         for ext in test_mail_examples.QUOTE_THUNDERBIRD_HTML_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.QUOTE_THUNDERBIRD_HTML_OUT:
+            self.assertIn(ext, html)
+
+    def test_quote_yahoo_html(self):
+        html = html_sanitize(test_mail_examples.QUOTE_YAHOO_HTML)
+        for ext in test_mail_examples.QUOTE_YAHOO_HTML_IN:
+            self.assertIn(ext, html)
+        for ext in test_mail_examples.QUOTE_YAHOO_HTML_OUT:
             self.assertIn(ext, html)
 
     def test_quote_basic_text(self):

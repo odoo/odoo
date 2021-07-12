@@ -16,6 +16,7 @@
     'data': [
         'data/ir_cron_data.xml',
         'data/mail_templates.xml',
+        'data/mail_template_data.xml',
         'data/res_groups.xml',
         'security/ir.model.access.csv',
         'security/mail_group_security.xml',
@@ -32,7 +33,11 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'mail_group/static/src/*/*',
+            'mail_group/static/src/css/mail_group.scss',
+            'mail_group/static/src/js/*',
+        ],
+        'web.assets_backend': [
+            'mail_group/static/src/css/mail_group_backend.scss',
         ],
     },
     'license': 'LGPL-3',
