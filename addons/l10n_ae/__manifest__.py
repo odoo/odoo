@@ -13,7 +13,7 @@ United Arab Emirates accounting chart and localization.
         'data/l10n_ae_data.xml',
         'data/l10n_ae_chart_data.xml',
         'data/account.account.template.csv',
-        'data/account_data.xml',
+        'data/account_tax_group_data.xml',
         'data/l10n_ae_chart_post_data.xml',
         'data/account_tax_report_data.xml',
         'data/account_tax_template_data.xml',
