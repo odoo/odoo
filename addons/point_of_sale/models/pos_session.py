@@ -111,7 +111,7 @@ class PosSession(models.Model):
             cash_payment_method = session.payment_method_ids.filtered('is_cash_count')[:1]
             if cash_payment_method:
                 total_cash_payment = 0.0
-                result = self.env['pos.payment'].read_group([('session_id', '=', self.id), ('payment_method_id', '=', cash_payment_method.id)], ['amount'], ['session_id'])
+                result = self.env['pos.payment'].read_group([('session_id', '=', session.id), ('payment_method_id', '=', cash_payment_method.id)], ['amount'], ['session_id'])
                 if result:
                     total_cash_payment = result[0]['amount']
                 session.cash_register_total_entry_encoding = session.cash_register_id.total_entry_encoding + (
