@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { decrement, increment, insert, link } from '@mail/model/model_field_command';
+import { decrement, increment, insert, link, unlink } from '@mail/model/model_field_command';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
 import { str_to_datetime } from 'web.time';
@@ -93,6 +93,20 @@ function factory(dependencies) {
                             return this.messaging.models['mail.message'].insert(message.payload);
                         case 'res.users_settings_changed':
                             return this._handleNotificationResUsersSettings(message.payload);
+                        case 'rtc_peer_notification':
+                            return this._handleNotificationRtcPeerToPeer(message.payload);
+                        case 'rtc_incoming_invitation_update':
+                            return this._handleNotificationRtcInvitation(message.payload);
+                        case 'rtc_outgoing_invitation_ended':
+                            return this._handleNotificationRtcInvitationEnded(message.payload);
+                        case 'rtc_sessions_update':
+                            return this._handleNotificationRtcSessionUpdate(message.payload);
+                        case 'rtc_session_ended':
+                            return this._handleNotificationRtcSessionEnded(message.payload);
+                        case 'rtc_session_data_update':
+                            return this._handleNotificationRtcSessionDataUpdate(message.payload);
+                        case 'res_users_settings_volumes_update':
+                            return this._handleNotificationVolumeSettingUpdate(message.payload);
                     }
                 }
                 const [, model, id] = channel;
@@ -426,8 +440,12 @@ function factory(dependencies) {
         /**
          * @private
          * @param {object} settings
+         * @param {boolean} settings.use_push_to_talk
+         * @param {String} settings.push_to_talk_key
+         * @param {number} settings.voice_active_duration
          * @param {boolean} [settings.is_discuss_sidebar_category_channel_open]
          * @param {boolean} [settings.is_discuss_sidebar_category_chat_open]
+         * @param {Object} [payload.volume_settings]
          */
         _handleNotificationResUsersSettings(settings) {
             if ('is_discuss_sidebar_category_channel_open' in settings) {
@@ -440,6 +458,12 @@ function factory(dependencies) {
                     isServerOpen: settings.is_discuss_sidebar_category_chat_open,
                 });
             }
+            this.messaging.userSetting.update({
+                usePushToTalk: settings.use_push_to_talk,
+                pushToTalkKey: settings.push_to_talk_key,
+                voiceActiveDuration: settings.voice_active_duration,
+                volumeSettings: settings.volume_settings && insert(settings.volume_settings.map(volumeSetting => this.messaging.models['mail.volume_setting'].convertData(volumeSetting))),
+            });
         }
 
         /**
@@ -497,6 +521,106 @@ function factory(dependencies) {
             } else if (!type) {
                 return this._handleNotificationPartnerChannel(data);
             }
+        }
+
+        /**
+         * @private
+         * @param {Object} data
+         * @param {string} data.channelId
+         * @param {string} [data.rtcSession]
+         */
+        async _handleNotificationRtcInvitation({ channelId, rtcSession }) {
+            const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({ id: channelId, model: 'mail.channel' });
+            if (!channel) {
+                return;
+            }
+            if (channel.mailRtc) {
+                return;
+            }
+            if (rtcSession) {
+                return channel.update({ rtcInvitingSession: insert(this.messaging.models['mail.rtc_session'].convertData(rtcSession)) });
+            }
+            return channel.update({ rtcInvitingSession: unlink() });
+        }
+
+        /**
+         * @private
+         * @param {Object} data
+         * @param {number} [data.channelId]
+         * @param {number} [data.partnerId]
+         */
+        async _handleNotificationRtcInvitationEnded({ channelId, partnerId, guestId }) {
+            const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({ id: channelId, model: 'mail.channel' });
+            if (!channel) {
+                return;
+            }
+            const partner = partnerId && this.messaging.models['mail.partner'].findFromIdentifyingData({ id: partnerId });
+            const guest = guestId && this.messaging.models['mail.guest'].findFromIdentifyingData({ id: guestId });
+            channel.update({
+                invitedPartners: partner && unlink(partner),
+                invitedGuests: guest && unlink(guest),
+            });
+        }
+
+        /**
+         * @private
+         * @param {Object} data
+         * @param {string} [data.sender]
+         * @param {string} [data.content]
+         */
+        _handleNotificationRtcPeerToPeer({ sender, content }) {
+            this.messaging.mailRtc.handleNotification(sender, content);
+        }
+
+        /**
+         * @private
+         * @param {Object} data
+         * @param {Object} [data.rtcSession]
+         */
+        async _handleNotificationRtcSessionDataUpdate({ rtcSession }) {
+            const rtcSessionModel = this.messaging.models['mail.rtc_session'];
+            rtcSessionModel.insert(rtcSessionModel.convertData(rtcSession));
+        }
+
+        /**
+         * @private
+         * @param {Object} data
+         * @param {Object} [data.volumeSettings]
+         */
+        async _handleNotificationVolumeSettingUpdate({ volumeSettings }) {
+            this.messaging && this.messaging.userSetting.update({
+                volumeSettings: volumeSettings,
+            });
+        }
+
+        /**
+         * @private
+         * @param {Object} data
+         * @param {number} [sessionId]
+         */
+        async _handleNotificationRtcSessionEnded({ sessionId }) {
+            const currentSession = this.messaging.mailRtc.currentRtcSession;
+            if (currentSession && currentSession.id === sessionId) {
+                this.messaging.mailRtc.channel.endCall();
+                this.env.services['notification'].notify({
+                    message: this.env._t("Disconnected from the RTC call by the server"),
+                    type: 'warning',
+                });
+            }
+        }
+
+        /**
+         * @private
+         * @param {Object} data
+         * @param {string} [data.channelId]
+         * @param {Object} [data.rtcSessions]
+         */
+        async _handleNotificationRtcSessionUpdate({ channelId, rtcSessions }) {
+            const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({ id: channelId, model: 'mail.channel' });
+            if (!channel) {
+                return;
+            }
+            channel.updateRtcSessions(rtcSessions);
         }
 
         /**

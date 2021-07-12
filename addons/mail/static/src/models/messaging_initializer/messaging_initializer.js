@@ -220,9 +220,27 @@ function factory(dependencies) {
          * @param {integer} resUsersSettings.id
          * @param {boolean} resUsersSettings.is_discuss_sidebar_category_channel_open
          * @param {boolean} resUsersSettings.is_discuss_sidebar_category_chat_open
+         * @param {boolean} resUsersSettings.use_push_to_talk
+         * @param {String} resUsersSettings.push_to_talk_key
+         * @param {number} resUsersSettings.voice_active_duration
+         * @param {Object} [resUsersSettings.volume_settings]
          */
-        _initResUsersSettings({ id, is_discuss_sidebar_category_channel_open, is_discuss_sidebar_category_chat_open }) {
+        _initResUsersSettings({
+            id,
+            is_discuss_sidebar_category_channel_open,
+            is_discuss_sidebar_category_chat_open,
+            use_push_to_talk,
+            push_to_talk_key,
+            voice_active_duration,
+            volume_settings = [],
+        }) {
             this.messaging.currentUser.update({ resUsersSettingsId: id });
+            this.messaging.userSetting.update({
+                usePushToTalk: use_push_to_talk,
+                pushToTalkKey: push_to_talk_key,
+                voiceActiveDuration: voice_active_duration,
+                volumeSettings: insert(volume_settings.map(volumeSetting => this.messaging.models['mail.volume_setting'].convertData(volumeSetting))),
+            });
             this.messaging.discuss.update({
                 categoryChannel: create({
                     autocompleteMethod: 'channel',

@@ -25,6 +25,14 @@
                 </t>
                 <div class="o-autogrow"/>
                 <div class="o_ChatWindowHeader_item o_ChatWindowHeader_rightArea">
+                    <t t-if="chatWindow.hasCallButtons">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandCamera" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-att-disabled="chatWindow.thread.hasPendingRtcRequest" t-on-click="_onClickCamera" title="Start a Video Call">
+                            <i class="fa fa-video-camera"/>
+                        </div>
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandPhone" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-att-disabled="chatWindow.thread.hasPendingRtcRequest" t-on-click="_onClickPhone" title="Start a Call">
+                            <i class="fa fa-phone"/>
+                        </div>
+                    </t>
                     <t t-if="chatWindow.thread and chatWindow.thread.hasMemberListFeature and !chatWindow.isMemberListOpened">
                         <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShowMemberList" t-att-class="{ 'o-mobile': messaging.device.isMobile }"  title="Show Member List" t-on-click="chatWindow.onClickShowMemberList">
                             <i class="fa fa-users"/>

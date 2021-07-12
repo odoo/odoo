@@ -33,6 +33,7 @@ GLOBAL = ','.join([
         'moment',
         'py',
         'ClipboardJS',
+        'globalThis',
 ])
 
 _logger = logging.getLogger(__name__)

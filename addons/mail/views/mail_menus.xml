@@ -103,6 +103,16 @@
         action="mail_guest_action"
         parent="mail.mail_menu_technical"
         sequence="51"/>
+    <menuitem id="mail_channel_rtc_session_menu"
+        name="RTC sessions"
+        action="mail_channel_rtc_session_action"
+        parent="mail.mail_menu_technical"
+        sequence="52"/>
+    <menuitem id="mail_channel_ice_servers_menu"
+        name="ICE servers"
+        action="action_ice_servers"
+        parent="mail.mail_menu_technical"
+        sequence="53"/>
 
     <!--
         This menuitem will be activated by integrations modules (like github, twitter, ...). It

@@ -27,6 +27,30 @@ class ChannelPartner(models.Model):
     is_minimized = fields.Boolean("Conversation is minimized")
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
     last_interest_dt = fields.Datetime("Last Interest", default=fields.Datetime.now, help="Contains the date and time of the last interesting event that happened in this channel for this partner. This includes: creating, joining, pinning, and new message posted.")
+    rtc_inviting_session_id = fields.Many2one('mail.channel.rtc.session', string='Ringing session')
+
+    def _remove_rtc_invitation(self):
+        """ Removes the invitation to the rtc call and notifies the inviting partner if removed. """
+        notifications = []
+        for record in self:
+            if not record.rtc_inviting_session_id:
+                continue
+            model, record_id = ('mail.guest', record.rtc_inviting_session_id.guest_id.id) if record.rtc_inviting_session_id.guest_id else (
+                'res.partner', record.rtc_inviting_session_id.partner_id.id)
+            payload = {'channelId': record.channel_id.id}
+            if record.partner_id:
+                payload['partnerId'] = record.partner_id.id
+            else:
+                payload['guestId'] = record.guest_id.id
+            notifications.append([
+                (self._cr.dbname, model, record_id),
+                {
+                    'type': 'rtc_outgoing_invitation_ended',
+                    'payload': payload,
+                },
+            ])
+        self.write({'rtc_inviting_session_id': False})
+        self.env['bus.bus'].sendmany(notifications)
 
     def init(self):
         self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS mail_channel_partner_partner_unique ON %s (channel_id, partner_id) WHERE partner_id IS NOT NULL" % self._table)

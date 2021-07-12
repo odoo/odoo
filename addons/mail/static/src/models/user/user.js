@@ -8,18 +8,6 @@ function factory(dependencies) {
 
     class User extends dependencies['mail.model'] {
 
-        /**
-         * @override
-         */
-        _willDelete() {
-            if (this.messaging) {
-                if (this === this.messaging.currentUser) {
-                    this.messaging.update({ currentUser: unlink() });
-                }
-            }
-            return super._willDelete(...arguments);
-        }
-
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------

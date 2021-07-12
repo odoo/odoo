@@ -43,6 +43,9 @@ function factory(dependencies) {
             if ('id' in data) {
                 data2.id = data.id;
             }
+            if ('is_muted' in data) {
+                data2.isMuted = data.is_muted;
+            }
             if ('im_status' in data) {
                 data2.im_status = data.im_status;
             }
@@ -478,6 +481,9 @@ function factory(dependencies) {
         isOnline: attr({
             compute: '_computeIsOnline',
         }),
+        isMuted: attr({
+            default: false,
+        }),
         memberThreads: many2many('mail.thread', {
             inverse: 'members',
         }),
@@ -491,7 +497,13 @@ function factory(dependencies) {
         nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
         }),
+        rtcSessions: one2many('mail.rtc_session', {
+            inverse: 'partner',
+        }),
         user: one2one('mail.user', {
+            inverse: 'partner',
+        }),
+        volumeSetting: one2one('mail.volume_setting', {
             inverse: 'partner',
         }),
     };
