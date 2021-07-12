@@ -1,4 +1,4 @@
-odoo.define('crm_iap_lead.generate_leads_steps', function (require) {
+odoo.define('crm_iap_mine.generate_leads_steps', function (require) {
 "use strict";
 
 var tour = require('web_tour.tour');
@@ -16,7 +16,7 @@ tour.tours.crm_tour.steps.splice(DragOppToWonStepIndex + 1, 0, {
     /**
      * Add some steps between "Drag your opportunity to <b>Won</b> when you get
      * the deal. Congrats !" and "Let’s have a look at an Opportunity." to
-     * include the steps related to the lead generation (crm_iap_lead).
+     * include the steps related to the lead generation (crm_iap_mine).
      * This eases the on boarding for the Lead Generation process.
      *
      */
