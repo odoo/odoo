@@ -28,6 +28,8 @@ export class ChromeAdapter extends Component {
 
         this.env = owl.Component.env;
         useBus(this.env.qweb, "update", () => this.render());
+        setupResponsivePlugin(this.env);
+
         const chrome = owl.hooks.useRef("chrome");
         owl.hooks.onMounted(async () => {
             // Add the pos error handler when the chrome component is available.
@@ -47,7 +49,6 @@ export class ChromeAdapter extends Component {
             configureGui({ component: chrome.comp });
             await chrome.comp.start();
             registry.category("main_components").add("BlockUI", BlockUiFromRegistry);
-            setupResponsivePlugin(this.env);
         });
     }
 }
