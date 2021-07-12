@@ -2,7 +2,7 @@
 import calendar
 import math
 from datetime import date, datetime, time
-from typing import Tuple, TypeVar, Literal, Iterator
+from typing import Tuple, TypeVar, Literal, Iterator, Type
 
 import babel
 import pytz
@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta, weekdays
 
 from .func import lazy
 
+D = TypeVar('D', date, datetime)
 
 __all__ = [
     'date_range',
@@ -20,16 +21,13 @@ __all__ = [
     'get_timedelta',
 ]
 
-def date_type(value):
+def date_type(value: D) -> Type[D]:
     ''' Return either the datetime.datetime class or datetime.date type whether `value` is a datetime or a date.
 
     :param value: A datetime.datetime or datetime.date object.
     :return: datetime.datetime or datetime.date
     '''
     return datetime if isinstance(value, datetime) else date
-
-
-D = TypeVar('D', date, datetime)
 
 
 def get_month(date: D) -> Tuple[D, D]:
@@ -49,7 +47,7 @@ def get_quarter(date: D) -> Tuple[D, D]:
     '''
     quarter_number = get_quarter_number(date)
     month_from = ((quarter_number - 1) * 3) + 1
-    date_from = date_type(date)(date.year, month_from, 1)
+    date_from = date.replace(month=month_from, day=1)
     date_to = date_from + relativedelta(months=2)
     date_to = date_to.replace(day=calendar.monthrange(date_to.year, date_to.month)[1])
     return date_from, date_to
