@@ -155,6 +155,24 @@ X[]
                                                 <p>AB[]</p></div></div>`,
                     });
                 });
+                it('should remove contenteditable="false"', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<div><span contenteditable="false">abc</span>[]def</div>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: `<div>[]def</div>`,
+                    });
+                });
+                it('should remove contenteditable="False"', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<div><span contenteditable="False">abc</span>[]def</div>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: `<div>[]def</div>`,
+                    });
+                });
             });
             describe('white spaces', () => {
                 describe('no intefering spaces', () => {
