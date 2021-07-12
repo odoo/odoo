@@ -26,6 +26,7 @@ You can assign several contracts per employee.
         'report/hr_contract_history_report_views.xml',
         'views/hr_contract_views.xml',
         'views/hr_employee_views.xml',
+        'views/hr_employee_public_views.xml',
         'views/resource_calendar_views.xml',
         'wizard/hr_departure_wizard_views.xml',
     ],
