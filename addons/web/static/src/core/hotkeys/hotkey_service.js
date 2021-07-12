@@ -17,6 +17,8 @@ const NAV_KEYS = [
     "backspace",
     "enter",
     "escape",
+    "tab",
+    "delete",
 ];
 const MODIFIERS = new Set(["alt", "control", "shift"]);
 const AUTHORIZED_KEYS = new Set([...ALPHANUM_KEYS, ...NAV_KEYS]);
