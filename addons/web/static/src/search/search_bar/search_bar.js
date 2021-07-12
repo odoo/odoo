@@ -3,7 +3,7 @@
 import { Domain } from "@web/core/domain";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { parseDate, parseDateTime } from "@web/core/l10n/dates";
-import { parseFloat, parseInteger, parsePercentage } from "@web/core/l10n/numbers";
+import { parseFloat, parseInteger, parsePercentage } from "@web/fields/parsers";
 import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { fuzzyTest } from "@web/core/utils/search";
 

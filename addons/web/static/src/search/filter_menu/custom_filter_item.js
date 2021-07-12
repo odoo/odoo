@@ -4,7 +4,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
 import { parseDate, parseDateTime } from "@web/core/l10n/dates";
-import { parseFloat, parseInteger, parsePercentage } from "@web/core/l10n/numbers";
+import { parseFloat, parseInteger, parsePercentage } from "@web/fields/parsers";
 
 const { Component, hooks } = owl;
 const { useState } = hooks;

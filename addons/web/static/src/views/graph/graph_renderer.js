@@ -2,7 +2,7 @@
 
 import { _lt } from "@web/core/l10n/translation";
 import { BORDER_WHITE, DEFAULT_BG, getColor, hexToRGBA } from "./colors";
-import { formatFloat, humanNumber } from "@web/core/l10n/numbers";
+import { formatFloat } from "@web/fields/formatters";
 import { getMeasureDescription, SEP } from "./graph_model";
 import { sortBy } from "@web/core/utils/arrays";
 import { useAssets } from "@web/core/assets";
@@ -178,13 +178,14 @@ export class GraphRenderer extends Component {
      * @returns {string}
      */
     formatValue(value, allIntegers = true) {
-        if (Math.abs(value) >= 1000) {
-            return humanNumber(value, { decimals: 2, minDigits: 1 });
-        }
-        if (allIntegers) {
+        const largeNumber = Math.abs(value) >= 1000;
+        if (allIntegers && !largeNumber) {
             return String(value);
         }
-        return formatFloat(value, { precision: 2 });
+        if (largeNumber) {
+            return formatFloat(value, { humanReadable: true, decimals: 2, minDigits: 1 });
+        }
+        return formatFloat(value);
     }
 
     /**
