@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.3\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-11 09:26+0000\n"
-"PO-Revision-Date: 2021-05-11 09:26+0000\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-07-12 07:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,54 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: payment_odoo
+#: model:ir.ui.menu,name:payment_odoo.menu_adyen_account
+msgid "Account Configuration"
+msgstr ""
+
+#. module: payment_odoo
+#: model:ir.model.fields,field_description:payment_odoo.field_adyen_transaction__partner_address
+#: model_terms:ir.ui.view,arch_db:payment_odoo.adyen_transaction_view_form
+msgid "Address"
+msgstr ""
+
+#. module: payment_odoo
 #: model:ir.model.fields,field_description:payment_odoo.field_payment_acquirer__odoo_adyen_account_id
 msgid "Adyen Account"
 msgstr ""
 
 #. module: payment_odoo
-#: model:ir.model.fields,field_description:payment_odoo.field_payment_acquirer__odoo_adyen_payout_id
-msgid "Adyen Payout"
+#: model:ir.model.fields,field_description:payment_odoo.field_account_bank_statement_line__adyen_transaction_ids
+#: model:ir.model.fields,field_description:payment_odoo.field_account_move__adyen_transaction_ids
+#: model:ir.model.fields,field_description:payment_odoo.field_account_payment__adyen_transaction_ids
+#: model:ir.model.fields,field_description:payment_odoo.field_payment_transaction__adyen_transaction_ids
+msgid "Adyen Transaction"
+msgstr ""
+
+#. module: payment_odoo
+#: model:ir.model,name:payment_odoo.model_adyen_account
+msgid "Adyen for Platforms Account"
+msgstr ""
+
+#. module: payment_odoo
+#: model:ir.model,name:payment_odoo.model_adyen_transaction
+msgid "Adyen for Platforms Transaction"
+msgstr ""
+
+#. module: payment_odoo
+#: model:ir.ui.menu,name:payment_odoo.menu_adyen_balance
+msgid "Balance"
+msgstr ""
+
+#. module: payment_odoo
+#: model:ir.model.fields,field_description:payment_odoo.field_adyen_transaction__partner_city
+#: model_terms:ir.ui.view,arch_db:payment_odoo.adyen_transaction_view_form
+msgid "City"
+msgstr ""
+
+#. module: payment_odoo
+#: model:ir.model.fields,field_description:payment_odoo.field_adyen_transaction__partner_country_id
+#: model_terms:ir.ui.view,arch_db:payment_odoo.adyen_transaction_view_form
+msgid "Country"
 msgstr ""
 
 #. module: payment_odoo
@@ -31,24 +72,38 @@ msgid "Create an account in 1 minute"
 msgstr ""
 
 #. module: payment_odoo
-#: model:ir.model.fields,field_description:payment_odoo.field_payment_acquirer__display_name
-#: model:ir.model.fields,field_description:payment_odoo.field_payment_token__display_name
-#: model:ir.model.fields,field_description:payment_odoo.field_payment_transaction__display_name
-msgid "Display Name"
+#: model:ir.model.fields,field_description:payment_odoo.field_adyen_transaction__partner_id
+msgid "Customer"
 msgstr ""
 
 #. module: payment_odoo
-#: model:ir.model.fields,field_description:payment_odoo.field_payment_acquirer__id
-#: model:ir.model.fields,field_description:payment_odoo.field_payment_token__id
-#: model:ir.model.fields,field_description:payment_odoo.field_payment_transaction__id
-msgid "ID"
+#: model:ir.model.fields,field_description:payment_odoo.field_adyen_transaction__partner_email
+msgid "Email"
 msgstr ""
 
 #. module: payment_odoo
-#: model:ir.model.fields,field_description:payment_odoo.field_payment_acquirer____last_update
-#: model:ir.model.fields,field_description:payment_odoo.field_payment_token____last_update
-#: model:ir.model.fields,field_description:payment_odoo.field_payment_transaction____last_update
-msgid "Last Modified on"
+#: model_terms:ir.ui.view,arch_db:payment_odoo.adyen_transaction_view_form
+msgid "Invoice(s)"
+msgstr ""
+
+#. module: payment_odoo
+#: model:ir.model.fields,field_description:payment_odoo.field_adyen_transaction__invoice_ids
+msgid "Invoices"
+msgstr ""
+
+#. module: payment_odoo
+#: model:ir.model.fields,field_description:payment_odoo.field_adyen_transaction__invoices_count
+msgid "Invoices Count"
+msgstr ""
+
+#. module: payment_odoo
+#: model:ir.model,name:payment_odoo.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: payment_odoo
+#: model:ir.model.fields,field_description:payment_odoo.field_adyen_transaction__partner_lang
+msgid "Language"
 msgstr ""
 
 #. module: payment_odoo
@@ -58,14 +113,19 @@ msgid "No transaction found matching reference %s."
 msgstr ""
 
 #. module: payment_odoo
+#: model:account.payment.method,name:payment_odoo.payment_method_odoo
+msgid "Odoo"
+msgstr ""
+
+#. module: payment_odoo
 #: model:ir.model.fields.selection,name:payment_odoo.selection__payment_acquirer__provider__odoo
+#: model:ir.ui.menu,name:payment_odoo.root_adyen_menu
 msgid "Odoo Payments"
 msgstr ""
 
 #. module: payment_odoo
-#: code:addons/payment_odoo/models/payment_acquirer.py:0
-#, python-format
-msgid "Odoo Payments is not available in test mode."
+#: model:ir.model.fields,field_description:payment_odoo.field_adyen_transaction__partner_name
+msgid "Partner Name"
 msgstr ""
 
 #. module: payment_odoo
@@ -79,13 +139,29 @@ msgid "Payment Method Type"
 msgstr ""
 
 #. module: payment_odoo
+#: model:ir.model,name:payment_odoo.model_account_payment_method
+msgid "Payment Methods"
+msgstr ""
+
+#. module: payment_odoo
 #: model:ir.model,name:payment_odoo.model_payment_token
 msgid "Payment Token"
 msgstr ""
 
 #. module: payment_odoo
 #: model:ir.model,name:payment_odoo.model_payment_transaction
+#: model:ir.model.fields,field_description:payment_odoo.field_adyen_transaction__payment_transaction_id
 msgid "Payment Transaction"
+msgstr ""
+
+#. module: payment_odoo
+#: model:ir.ui.menu,name:payment_odoo.menu_adyen_transaction
+msgid "Payment Transactions"
+msgstr ""
+
+#. module: payment_odoo
+#: model:ir.model.fields,field_description:payment_odoo.field_adyen_transaction__partner_phone
+msgid "Phone"
 msgstr ""
 
 #. module: payment_odoo
@@ -112,6 +188,12 @@ msgid "Received data with missing payment state."
 msgstr ""
 
 #. module: payment_odoo
+#: model:ir.model.fields,field_description:payment_odoo.field_adyen_transaction__partner_state_id
+#: model_terms:ir.ui.view,arch_db:payment_odoo.adyen_transaction_view_form
+msgid "State"
+msgstr ""
+
+#. module: payment_odoo
 #: model:ir.model.fields,help:payment_odoo.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
 msgstr ""
@@ -120,4 +202,14 @@ msgstr ""
 #: code:addons/payment_odoo/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
+msgstr ""
+
+#. module: payment_odoo
+#: model_terms:ir.ui.view,arch_db:payment_odoo.adyen_transaction_view_form
+msgid "ZIP"
+msgstr ""
+
+#. module: payment_odoo
+#: model:ir.model.fields,field_description:payment_odoo.field_adyen_transaction__partner_zip
+msgid "Zip"
 msgstr ""

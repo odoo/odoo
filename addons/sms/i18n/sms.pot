@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.3\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-11 09:27+0000\n"
-"PO-Revision-Date: 2021-05-11 09:27+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-07-12 07:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -43,6 +43,13 @@ msgstr ""
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "%s invalid recipients"
+msgstr ""
+
+#. module: sms
+#: code:addons/sms/models/sms_sms.py:0
+#, python-format
+msgid ""
+"%s out of the %s selected SMS Text Messages have successfully been resent."
 msgstr ""
 
 #. module: sms
@@ -162,7 +169,6 @@ msgid "Buy credits."
 msgstr ""
 
 #. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Cancel"
@@ -247,6 +253,7 @@ msgid "Default Value"
 msgstr ""
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Discard"
 msgstr ""
@@ -267,15 +274,6 @@ msgid "Dismiss notification for resend by model"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_ir_actions_server__display_name
-#: model:ir.model.fields,field_description:sms.field_ir_model__display_name
-#: model:ir.model.fields,field_description:sms.field_mail_followers__display_name
-#: model:ir.model.fields,field_description:sms.field_mail_message__display_name
-#: model:ir.model.fields,field_description:sms.field_mail_notification__display_name
-#: model:ir.model.fields,field_description:sms.field_mail_thread__display_name
-#: model:ir.model.fields,field_description:sms.field_mail_thread_phone__display_name
-#: model:ir.model.fields,field_description:sms.field_res_partner__display_name
-#: model:ir.model.fields,field_description:sms.field_sms_api__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_composer__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_resend__display_name
@@ -415,15 +413,6 @@ msgid "Help message"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_ir_actions_server__id
-#: model:ir.model.fields,field_description:sms.field_ir_model__id
-#: model:ir.model.fields,field_description:sms.field_mail_followers__id
-#: model:ir.model.fields,field_description:sms.field_mail_message__id
-#: model:ir.model.fields,field_description:sms.field_mail_notification__id
-#: model:ir.model.fields,field_description:sms.field_mail_thread__id
-#: model:ir.model.fields,field_description:sms.field_mail_thread_phone__id
-#: model:ir.model.fields,field_description:sms.field_res_partner__id
-#: model:ir.model.fields,field_description:sms.field_sms_api__id
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__id
 #: model:ir.model.fields,field_description:sms.field_sms_composer__id
 #: model:ir.model.fields,field_description:sms.field_sms_resend__id
@@ -561,15 +550,6 @@ msgid "Language"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_ir_actions_server____last_update
-#: model:ir.model.fields,field_description:sms.field_ir_model____last_update
-#: model:ir.model.fields,field_description:sms.field_mail_followers____last_update
-#: model:ir.model.fields,field_description:sms.field_mail_message____last_update
-#: model:ir.model.fields,field_description:sms.field_mail_notification____last_update
-#: model:ir.model.fields,field_description:sms.field_mail_thread____last_update
-#: model:ir.model.fields,field_description:sms.field_mail_thread_phone____last_update
-#: model:ir.model.fields,field_description:sms.field_res_partner____last_update
-#: model:ir.model.fields,field_description:sms.field_sms_api____last_update
 #: model:ir.model.fields,field_description:sms.field_sms_cancel____last_update
 #: model:ir.model.fields,field_description:sms.field_sms_composer____last_update
 #: model:ir.model.fields,field_description:sms.field_sms_resend____last_update
@@ -851,6 +831,12 @@ msgid "Remove the contextual action of the related model"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_template__render_model
+msgid "Rendering Model"
+msgstr ""
+
+#. module: sms
+#: model:ir.actions.server,name:sms.ir_actions_server_sms_sms_resend
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Resend"
@@ -859,6 +845,11 @@ msgstr ""
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend_recipient
 msgid "Resend Notification"
+msgstr ""
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
+msgid "Retry"
 msgstr ""
 
 #. module: sms
@@ -1133,6 +1124,12 @@ msgid "Sub-model"
 msgstr ""
 
 #. module: sms
+#: code:addons/sms/models/sms_sms.py:0
+#, python-format
+msgid "Success"
+msgstr ""
+
+#. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_preview_action
 msgid "Template Preview"
 msgstr ""
@@ -1148,6 +1145,12 @@ msgid "Templates"
 msgstr ""
 
 #. module: sms
+#: code:addons/sms/models/sms_sms.py:0
+#, python-format
+msgid "The SMS Text Messages could not be resent."
+msgstr ""
+
+#. module: sms
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "The number you're trying to reach is not correctly formatted."
@@ -1157,6 +1160,12 @@ msgstr ""
 #: model:ir.model.fields,help:sms.field_sms_template__model_id
 #: model:ir.model.fields,help:sms.field_sms_template_preview__model_id
 msgid "The type of document this template can be used with"
+msgstr ""
+
+#. module: sms
+#: code:addons/sms/models/sms_sms.py:0
+#, python-format
+msgid "There are no SMS Text Messages to resend."
 msgstr ""
 
 #. module: sms
@@ -1227,6 +1236,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids_count
 msgid "Visible records count"
+msgstr ""
+
+#. module: sms
+#: code:addons/sms/models/sms_sms.py:0
+#, python-format
+msgid "Warning"
 msgstr ""
 
 #. module: sms

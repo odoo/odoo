@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.2\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 14:29+0000\n"
-"PO-Revision-Date: 2021-02-18 14:29+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-07-12 07:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -128,7 +128,7 @@ msgid ""
 "                                Accept invitation\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        % set website_url = object.env['ir.config_parameter'].sudo().get_param('web.base.url')\n"
+"                        % set website_url = object.get_base_url()\n"
 "                        Your Odoo domain is: <b><a href=\"${website_url}\">${website_url}</a></b><br/>\n"
 "                        Your sign in email is: <b><a href=\"/web/login?login=${object.email}\" target=\"_blank\">${object.email}</a></b><br/><br/>\n"
 "                        Never heard of Odoo? It’s an all-in-one business software loved by 3+ million users. It will considerably improve your experience at work and increase your productivity.\n"
@@ -373,6 +373,26 @@ msgid "Another user is already registered using this email address."
 msgstr ""
 
 #. module: auth_signup
+#: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
+msgid "Auth Signup: Odoo Account Created"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.set_password_email
+msgid "Auth Signup: Odoo Connection"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.reset_password_email
+msgid "Auth Signup: Reset Password"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
+msgid "Auth Signup: Unregistered Users"
+msgstr ""
+
+#. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Authentication Failed."
@@ -442,14 +462,6 @@ msgid "Default Access Rights"
 msgstr ""
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_ir_http__display_name
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner__display_name
-#: model:ir.model.fields,field_description:auth_signup.field_res_users__display_name
-msgid "Display Name"
-msgstr ""
-
-#. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
 msgstr ""
@@ -471,25 +483,9 @@ msgid "HTTP Routing"
 msgstr ""
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_ir_http__id
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__id
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner__id
-#: model:ir.model.fields,field_description:auth_signup.field_res_users__id
-msgid "ID"
-msgstr ""
-
-#. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_ir_http____last_update
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner____last_update
-#: model:ir.model.fields,field_description:auth_signup.field_res_users____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: auth_signup

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.3\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-11 09:26+0000\n"
-"PO-Revision-Date: 2021-05-11 09:26+0000\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-07-12 07:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -54,37 +54,6 @@ msgid "4812"
 msgstr ""
 
 #. module: survey
-#: model:mail.template,body_html:survey.mail_template_certification
-msgid ""
-"<?xml version=\"1.0\"?>\n"
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
-"                    <table style=\"width:600px;margin:5px auto;\">\n"
-"                        <tbody>\n"
-"                            <tr><td>\n"
-"                                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
-"                                <a href=\"/\"><img src=\"/logo.png?company=${object.survey_id.create_uid.company_id.id}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
-"                            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
-"                                    Certification: ${object.survey_id.display_name}\n"
-"                            </td></tr>\n"
-"                        </tbody>\n"
-"                    </table>\n"
-"                    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
-"                        <tbody>\n"
-"                            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
-"                                <p>Dear <span>${object.partner_id.name or 'participant'}</span></p>\n"
-"                                <p>\n"
-"                                    Here is, in attachment, your certification document for\n"
-"                                        <strong>${object.survey_id.display_name}</strong>\n"
-"                                </p>\n"
-"                                <p>Congratulations for succeeding the test!</p>\n"
-"                            </td></tr>\n"
-"                        </tbody>\n"
-"                    </table>\n"
-"                </div>\n"
-"            "
-msgstr ""
-
-#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
 msgid ""
@@ -103,6 +72,36 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
 msgid "<br/>by"
+msgstr ""
+
+#. module: survey
+#: model:mail.template,body_html:survey.mail_template_certification
+msgid ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
+"                <a href=\"/\"><img src=\"/logo.png?company=${object.survey_id.create_uid.company_id.id}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    Certification: ${object.survey_id.display_name}\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>Dear <span>${object.partner_id.name or 'participant'}</span></p>\n"
+"                <p>\n"
+"                    Here is, in attachment, your certification document for\n"
+"                        <strong>${object.survey_id.display_name}</strong>\n"
+"                </p>\n"
+"                <p>Congratulations for succeeding the test!</p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 msgstr ""
 
 #. module: survey
@@ -650,6 +649,11 @@ msgid "Badge"
 msgstr ""
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__can_edit_body
+msgid "Can Edit Body"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Cancel"
 msgstr ""
@@ -876,7 +880,9 @@ msgid "Copied !"
 msgstr ""
 
 #. module: survey
+#. openerp-web
 #: code:addons/survey/models/survey_user.py:0
+#: code:addons/survey/static/src/js/survey_result.js:0
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_is_correct
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 #, python-format
@@ -1037,6 +1043,11 @@ msgid "Deadline"
 msgstr ""
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__null_value
+msgid "Default Value"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,help:survey.field_gamification_challenge__challenge_category
 msgid "Define the visibility of the challenge through menus"
 msgstr ""
@@ -1071,9 +1082,6 @@ msgid "Display"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_gamification_badge__display_name
-#: model:ir.model.fields,field_description:survey.field_gamification_challenge__display_name
-#: model:ir.model.fields,field_description:survey.field_res_partner__display_name
 #: model:ir.model.fields,field_description:survey.field_survey_invite__display_name
 #: model:ir.model.fields,field_description:survey.field_survey_question__display_name
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__display_name
@@ -1153,6 +1161,11 @@ msgid "Existing emails"
 msgstr ""
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__model_object_field
+msgid "Field"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 msgid "Filter question"
 msgstr ""
@@ -1163,6 +1176,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 #, python-format
 msgid "Final Leaderboard"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_invite__copyvalue
+msgid ""
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
 msgstr ""
 
 #. module: survey
@@ -1246,9 +1266,6 @@ msgid "Has Message"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_gamification_badge__id
-#: model:ir.model.fields,field_description:survey.field_gamification_challenge__id
-#: model:ir.model.fields,field_description:survey.field_res_partner__id
 #: model:ir.model.fields,field_description:survey.field_survey_invite__id
 #: model:ir.model.fields,field_description:survey.field_survey_question__id
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__id
@@ -1372,7 +1389,9 @@ msgid ""
 msgstr ""
 
 #. module: survey
+#. openerp-web
 #: code:addons/survey/models/survey_user.py:0
+#: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
 msgid "Incorrect"
 msgstr ""
@@ -1445,9 +1464,11 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_gamification_badge____last_update
-#: model:ir.model.fields,field_description:survey.field_gamification_challenge____last_update
-#: model:ir.model.fields,field_description:survey.field_res_partner____last_update
+#: model:ir.model.fields,field_description:survey.field_survey_invite__lang
+msgid "Language"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite____last_update
 #: model:ir.model.fields,field_description:survey.field_survey_question____last_update
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer____last_update
@@ -1523,6 +1544,11 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
 msgid "Login required"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__template_id
+msgid "Mail Template"
 msgstr ""
 
 #. module: survey
@@ -1675,6 +1701,11 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__matrix_subtype__multiple
 msgid "Multiple choices per row"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__my_activity_date_deadline
+msgid "My Activity Deadline"
 msgstr ""
 
 #. module: survey
@@ -1844,6 +1875,20 @@ msgid "Open Session Manager"
 msgstr ""
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_invite__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_invite__null_value
+msgid "Optional value to use if the target field is empty"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Options"
@@ -1865,7 +1910,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
-msgid "Overall Performance %.2f%s"
+msgid "Overall Performance"
 msgstr ""
 
 #. module: survey
@@ -1884,14 +1929,16 @@ msgid "Partial"
 msgstr ""
 
 #. module: survey
+#. openerp-web
 #: code:addons/survey/models/survey_user.py:0
+#: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
 msgid "Partially"
 msgstr ""
 
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_user_input_invite
-msgid "Participate to ${object.survey_id.title} survey"
+msgid "Participate to ${object.survey_id.display_name} survey"
 msgstr ""
 
 #. module: survey
@@ -1925,8 +1972,20 @@ msgid "Percentage"
 msgstr ""
 
 #. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey_result.js:0
+#, python-format
+msgid "Performance by Section"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
 msgid "Pie Graph"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__copyvalue
+msgid "Placeholder Expression"
 msgstr ""
 
 #. module: survey
@@ -2046,6 +2105,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_count
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Registered"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__render_model
+msgid "Rendering Model"
 msgstr ""
 
 #. module: survey
@@ -2234,6 +2298,13 @@ msgid "See results"
 msgstr ""
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_invite__model_object_field
+msgid ""
+"Select target field from the related document model.\n"
+"If it is a relationship field you will be able to select a target field at the destination of the relationship."
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__questions_selection
 #: model:ir.model.fields,field_description:survey.field_survey_survey__questions_selection
 msgid "Selection"
@@ -2347,6 +2418,16 @@ msgid ""
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__sub_model_object_field
+msgid "Sub-field"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_invite__sub_object
+msgid "Sub-model"
 msgstr ""
 
 #. module: survey
@@ -2493,6 +2574,16 @@ msgstr ""
 #. module: survey
 #: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
 msgid "Survey: Clean test answers"
+msgstr ""
+
+#. module: survey
+#: model:mail.template,name:survey.mail_template_user_input_invite
+msgid "Survey: Invite"
+msgstr ""
+
+#. module: survey
+#: model:mail.template,name:survey.mail_template_certification
+msgid "Survey: Send certification by email"
 msgstr ""
 
 #. module: survey
@@ -2821,9 +2912,17 @@ msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
 
 #. module: survey
+#. openerp-web
 #: code:addons/survey/models/survey_user.py:0
+#: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
 msgid "Unanswered"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey_user.py:0
+#, python-format
+msgid "Uncategorized"
 msgstr ""
 
 #. module: survey
@@ -2844,11 +2943,6 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Upcoming Activities"
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_invite__template_id
-msgid "Use template"
 msgstr ""
 
 #. module: survey
@@ -2933,6 +3027,20 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__website_message_ids
 msgid "Website communication history"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_invite__sub_model_object_field
+msgid ""
+"When a relationship field is selected as first field, this field lets you "
+"select the target field within the destination document model (sub-model)."
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_invite__sub_object
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
 msgstr ""
 
 #. module: survey
@@ -3049,6 +3157,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_modern
 msgid "of achievement"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
+msgid "or press CTRL+Enter"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
+msgid "or press Enter"
 msgstr ""
 
 #. module: survey

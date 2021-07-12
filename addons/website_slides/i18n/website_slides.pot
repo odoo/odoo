@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.3\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-11 09:26+0000\n"
-"PO-Revision-Date: 2021-05-11 09:26+0000\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-07-12 07:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1024,6 +1024,7 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__visibility
+#: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_visibility
 msgid ""
 "Applied directly as ACLs. Allow to hide channels and their content for non "
 "members."
@@ -1100,6 +1101,8 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_partner_action
+#: model:ir.actions.act_window,name:website_slides.slide_channel_partner_action_report
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_report_attendees
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Attendees"
@@ -1146,6 +1149,11 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_comment
 msgid "Can Comment"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__can_edit_body
+msgid "Can Edit Body"
 msgstr ""
 
 #. module: website_slides
@@ -1216,7 +1224,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__channel_id
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_search
 msgid "Channel"
 msgstr ""
 
@@ -1253,6 +1261,11 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel_tag
 msgid "Channel/Course Tag"
+msgstr ""
+
+#. module: website_slides
+#: model:mail.template,name:website_slides.mail_template_slide_channel_invite
+msgid "Channel: Invite by email"
 msgstr ""
 
 #. module: website_slides
@@ -1416,24 +1429,26 @@ msgid "Company Course Count"
 msgstr ""
 
 #. module: website_slides
-#: model:gamification.badge,description:website_slides.badge_data_course
 #: model:gamification.challenge,name:website_slides.badge_data_course_challenge
+#: model_terms:gamification.badge,description:website_slides.badge_data_course
 msgid "Complete a course"
 msgstr ""
 
 #. module: website_slides
-#: model:gamification.badge,description:website_slides.badge_data_profile
 #: model:gamification.challenge,name:website_slides.badge_data_profile_challenge
+#: model_terms:gamification.badge,description:website_slides.badge_data_profile
 msgid "Complete your profile"
 msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__completed
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_search
 msgid "Completed"
 msgstr ""
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
+#: model:mail.template,name:website_slides.mail_template_channel_completed
 #, python-format
 msgid "Completed Course"
 msgstr ""
@@ -1474,6 +1489,7 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll
+#: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_enroll
 msgid "Condition to enroll: everyone, on invite, on payment (sale bridge)."
 msgstr ""
 
@@ -1527,7 +1543,6 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_partner
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Contact"
 msgstr ""
 
@@ -1644,6 +1659,11 @@ msgid "Course Groups"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
+msgid "Course Name"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_form
 msgid "Course Tag"
 msgstr ""
@@ -1689,6 +1709,7 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__channel_type
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_type
 msgid "Course type"
 msgstr ""
 
@@ -1791,6 +1812,11 @@ msgid "Custom HTML content for slides of type 'Web Page'."
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__null_value
+msgid "Default Value"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_gamification_challenge__challenge_category
 msgid "Define the visibility of the challenge through menus"
 msgstr ""
@@ -1870,12 +1896,6 @@ msgid "Display"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__display_name
-#: model:ir.model.fields,field_description:website_slides.field_ir_http__display_name
-#: model:ir.model.fields,field_description:website_slides.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:website_slides.field_res_groups__display_name
-#: model:ir.model.fields,field_description:website_slides.field_res_partner__display_name
-#: model:ir.model.fields,field_description:website_slides.field_res_users__display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__display_name
@@ -1889,7 +1909,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag__display_name
-#: model:ir.model.fields,field_description:website_slides.field_website__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -2015,6 +2034,7 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__partner_email
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Email"
 msgstr ""
 
@@ -2072,7 +2092,13 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_enroll
 msgid "Enroll Policy"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
+msgid "Enrolled On"
 msgstr ""
 
 #. module: website_slides
@@ -2150,6 +2176,11 @@ msgid "Failed to install \"%s\"."
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__model_object_field
+msgid "Field"
+msgstr ""
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/controllers/main.py:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
@@ -2160,6 +2191,13 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Filter &amp; order"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_invite__copyvalue
+msgid ""
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
 msgstr ""
 
 #. module: website_slides
@@ -2202,6 +2240,7 @@ msgstr ""
 
 #. module: website_slides
 #: code:addons/website_slides/models/res_partner.py:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 #, python-format
 msgid "Followed Courses"
@@ -2250,8 +2289,8 @@ msgid "Generate revenues thanks to your courses"
 msgstr ""
 
 #. module: website_slides
-#: model:gamification.badge,description:website_slides.badge_data_certification
 #: model:gamification.challenge,name:website_slides.badge_data_certification_challenge
+#: model_terms:gamification.badge,description:website_slides.badge_data_certification
 msgid "Get a certification"
 msgstr ""
 
@@ -2305,6 +2344,7 @@ msgid "Group"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Group By"
 msgstr ""
@@ -2367,12 +2407,6 @@ msgid "How to upload your videos ?"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__id
-#: model:ir.model.fields,field_description:website_slides.field_ir_http__id
-#: model:ir.model.fields,field_description:website_slides.field_res_config_settings__id
-#: model:ir.model.fields,field_description:website_slides.field_res_groups__id
-#: model:ir.model.fields,field_description:website_slides.field_res_partner__id
-#: model:ir.model.fields,field_description:website_slides.field_res_users__id
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__id
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__id
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__id
@@ -2386,7 +2420,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__id
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag__id
-#: model:ir.model.fields,field_description:website_slides.field_website__id
 msgid "ID"
 msgstr ""
 
@@ -2611,12 +2644,16 @@ msgid "Know yourself"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_gamification_challenge____last_update
-#: model:ir.model.fields,field_description:website_slides.field_ir_http____last_update
-#: model:ir.model.fields,field_description:website_slides.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:website_slides.field_res_groups____last_update
-#: model:ir.model.fields,field_description:website_slides.field_res_partner____last_update
-#: model:ir.model.fields,field_description:website_slides.field_res_users____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__lang
+msgid "Language"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
+msgid "Last Action On"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer____last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel____last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite____last_update
@@ -2630,7 +2667,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner____last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource____last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag____last_update
-#: model:ir.model.fields,field_description:website_slides.field_website____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -2739,6 +2775,11 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__link
 msgid "Link"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__template_id
+msgid "Mail Template"
 msgstr ""
 
 #. module: website_slides
@@ -2864,6 +2905,11 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Most popular courses"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__my_activity_date_deadline
+msgid "My Activity Deadline"
 msgstr ""
 
 #. module: website_slides
@@ -3143,6 +3189,20 @@ msgid "Only JPG, PNG, PDF, files types are supported"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_invite__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_invite__null_value
+msgid "Optional value to use if the target field is empty"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Options"
 msgstr ""
@@ -3164,6 +3224,11 @@ msgstr ""
 msgid ""
 "People already took this quiz. To keep course progression it should not be "
 "deleted."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__copyvalue
+msgid "Placeholder Expression"
 msgstr ""
 
 #. module: website_slides
@@ -3233,6 +3298,12 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Please fill in this field"
+msgstr ""
+
+#. module: website_slides
+#: code:addons/website_slides/wizard/slide_channel_invite.py:0
+#, python-format
+msgid "Please select at least one recipient."
 msgstr ""
 
 #. module: website_slides
@@ -3439,8 +3510,8 @@ msgid "Rating of %s"
 msgstr ""
 
 #. module: website_slides
-#: model:gamification.badge,description:website_slides.badge_data_karma
 #: model:gamification.challenge,name:website_slides.badge_data_karma_challenge
+#: model_terms:gamification.badge,description:website_slides.badge_data_karma
 msgid "Reach 2000 XP"
 msgstr ""
 
@@ -3467,8 +3538,8 @@ msgid "Refuse Access"
 msgstr ""
 
 #. module: website_slides
-#: model:gamification.badge,description:website_slides.badge_data_register
 #: model:gamification.challenge,name:website_slides.badge_data_register_challenge
+#: model_terms:gamification.badge,description:website_slides.badge_data_register
 msgid "Register to the platform"
 msgstr ""
 
@@ -3494,6 +3565,11 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Remove this answer"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__render_model
+msgid "Rendering Model"
 msgstr ""
 
 #. module: website_slides
@@ -3534,6 +3610,7 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__user_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_user_id
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "Responsible"
 msgstr ""
@@ -3552,6 +3629,7 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_id
+#: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_website_id
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_id
 msgid "Restrict publishing to this website."
 msgstr ""
@@ -3720,6 +3798,13 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "Select page to start with"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_invite__model_object_field
+msgid ""
+"Select target field from the related document model.\n"
+"If it is a relationship field you will be able to select a target field at the destination of the relationship."
 msgstr ""
 
 #. module: website_slides
@@ -3893,8 +3978,18 @@ msgid "Slide / Partner decorated m2m"
 msgstr ""
 
 #. module: website_slides
+#: model:mail.template,name:website_slides.slide_template_published
+msgid "Slide Published"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
 msgid "Slide Question's Answer"
+msgstr ""
+
+#. module: website_slides
+#: model:mail.template,name:website_slides.slide_template_shared
+msgid "Slide Shared"
 msgstr ""
 
 #. module: website_slides
@@ -3977,6 +4072,16 @@ msgid ""
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__sub_model_object_field
+msgid "Sub-field"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__sub_object
+msgid "Sub-model"
 msgstr ""
 
 #. module: website_slides
@@ -4373,11 +4478,6 @@ msgid "Uploading document ..."
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__template_id
-msgid "Use template"
-msgstr ""
-
-#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
 msgid "Used to categorize and filter displayed channels/courses"
 msgstr ""
@@ -4448,6 +4548,7 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__visibility
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_visibility
 msgid "Visibility"
 msgstr ""
 
@@ -4503,6 +4604,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_website
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_website_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_id
 msgid "Website"
 msgstr ""
@@ -4569,6 +4671,20 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "What does"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_invite__sub_model_object_field
+msgid ""
+"When a relationship field is selected as first field, this field lets you "
+"select the target field within the destination document model (sub-model)."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_invite__sub_object
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
 msgstr ""
 
 #. module: website_slides

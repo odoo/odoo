@@ -4,16 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.3\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-11 09:26+0000\n"
-"PO-Revision-Date: 2021-05-11 09:26+0000\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-07-12 07:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
+#: model:ir.model.fields,field_description:calendar.field_res_users__meeting_count
+msgid "# Meetings"
+msgstr ""
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
@@ -133,18 +139,6 @@ msgid ""
 "                % if not object.event_id.allday and object.event_id.duration\n"
 "                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
 "                % endif\n"
-"                % if not is_online and object.event_id.description :\n"
-"                    <li>Description: ${object.event_id.description}</li>\n"
-"                % elif is_online and object.event_id.description:\n"
-"                    % set splitted_description = object.event_id.description_to_html_lines()\n"
-"                    <li>Description:\n"
-"                        <ul>\n"
-"                            % for description_line in splitted_description:\n"
-"                            <li>${description_line | safe}</li>\n"
-"                            % endfor\n"
-"                        </ul>\n"
-"                    </li>\n"
-"                % endif\n"
 "                <li>Attendees\n"
 "                <ul>\n"
 "                % for attendee in object.event_id.attendee_ids:\n"
@@ -162,6 +156,10 @@ msgid ""
 "                <li>Join Video Call: <a href=\"${object.event_id.videocall_location}\" target=\"_blank\">${object.event_id.videocall_location}</a></li>\n"
 "                % endif\n"
 "            </ul>\n"
+"            % if not is_html_empty(object.event_id.description):\n"
+"                <p><strong>Description of the event</strong></p>\n"
+"                ${object.event_id.description | safe}\n"
+"            % endif\n"
 "        </td>\n"
 "    </tr></table>\n"
 "    <br/>\n"
@@ -252,18 +250,6 @@ msgid ""
 "                % if not object.event_id.allday and object.event_id.duration\n"
 "                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
 "                % endif\n"
-"                % if not is_online and object.event_id.description :\n"
-"                    <li>Description: ${object.event_id.description}</li>\n"
-"                % elif is_online and object.event_id.description:\n"
-"                    % set splitted_description = object.event_id.description_to_html_lines()\n"
-"                    <li>Description:\n"
-"                        <ul>\n"
-"                            % for description_line in splitted_description:\n"
-"                            <li>${description_line | safe}</li>\n"
-"                            % endfor\n"
-"                        </ul>\n"
-"                    </li>\n"
-"                % endif\n"
 "                <li>Attendees\n"
 "                <ul>\n"
 "                % for attendee in object.event_id.attendee_ids:\n"
@@ -281,6 +267,10 @@ msgid ""
 "                <li>Join Video Call: <a href=\"${object.event_id.videocall_location}\" target=\"_blank\">${object.event_id.videocall_location}</a></li>\n"
 "                % endif\n"
 "            </ul>\n"
+"            % if not is_html_empty(object.event_id.description):\n"
+"                <p><strong>Description of the event</strong></p>\n"
+"                ${object.event_id.description | safe}\n"
+"            % endif\n"
 "        </td>\n"
 "    </tr></table>\n"
 "    <br/>\n"
@@ -351,18 +341,6 @@ msgid ""
 "                % if not object.event_id.allday and object.event_id.duration\n"
 "                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
 "                % endif\n"
-"                % if not is_online and object.event_id.description :\n"
-"                    <li>Description: ${object.event_id.description}</li>\n"
-"                % elif is_online and object.event_id.description:\n"
-"                    % set splitted_description = object.event_id.description_to_html_lines()\n"
-"                    <li>Description:\n"
-"                        <ul>\n"
-"                            % for description_line in splitted_description:\n"
-"                            <li>${description_line | safe}</li>\n"
-"                            % endfor\n"
-"                        </ul>\n"
-"                    </li>\n"
-"                % endif\n"
 "                <li>Attendees\n"
 "                <ul>\n"
 "                % for attendee in object.event_id.attendee_ids:\n"
@@ -380,6 +358,10 @@ msgid ""
 "                <li>Join Video Call: <a href=\"${object.event_id.videocall_location}\" target=\"_blank\">${object.event_id.videocall_location}</a></li>\n"
 "                % endif\n"
 "            </ul>\n"
+"            % if not is_html_empty(object.event_id.description):\n"
+"                <p><strong>Description of the event</strong></p>\n"
+"                ${object.event_id.description | safe}\n"
+"            % endif\n"
 "        </td>\n"
 "    </tr></table>\n"
 "    <br/>\n"
@@ -390,6 +372,13 @@ msgid ""
 "    % endif\n"
 "</div>\n"
 "            "
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_partner_kanban_view
+msgid ""
+"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
+"title=\"Meetings\"/>"
 msgstr ""
 
 #. module: calendar
@@ -607,10 +596,37 @@ msgid "Calendar Meeting"
 msgstr ""
 
 #. module: calendar
+#: model:mail.template,name:calendar.calendar_template_meeting_changedate
+msgid "Calendar: Date updated"
+msgstr ""
+
+#. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
 #: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
+msgstr ""
+
+#. module: calendar
+#: model:mail.template,name:calendar.calendar_template_meeting_invitation
+msgid "Calendar: Meeting Invitation"
+msgstr ""
+
+#. module: calendar
+#: model:mail.template,name:calendar.calendar_template_meeting_reminder
+msgid "Calendar: Reminder"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
+msgid ""
+"Check if the organizer is alone in the event, i.e. if the organizer is the only one that hasn't declined\n"
+"        the event (only if the organizer is not the only attendee)"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__partner_checked
+msgid "Checked"
 msgstr ""
 
 #. module: calendar
@@ -743,18 +759,11 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__display_name
-#: model:ir.model.fields,field_description:calendar.field_ir_http__display_name
-#: model:ir.model.fields,field_description:calendar.field_mail_activity__display_name
-#: model:ir.model.fields,field_description:calendar.field_mail_activity_mixin__display_name
-#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__display_name
-#: model:ir.model.fields,field_description:calendar.field_res_partner__display_name
-#: model:ir.model.fields,field_description:calendar.field_res_users__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -910,7 +919,7 @@ msgstr ""
 #. module: calendar
 #: code:addons/calendar/models/mail_activity.py:0
 #, python-format
-msgid "Feedback: "
+msgid "Feedback: %(feedback)s"
 msgstr ""
 
 #. module: calendar
@@ -997,18 +1006,11 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__id
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__id
-#: model:ir.model.fields,field_description:calendar.field_ir_http__id
-#: model:ir.model.fields,field_description:calendar.field_mail_activity__id
-#: model:ir.model.fields,field_description:calendar.field_mail_activity_mixin__id
-#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__id
-#: model:ir.model.fields,field_description:calendar.field_res_partner__id
-#: model:ir.model.fields,field_description:calendar.field_res_users__id
 msgid "ID"
 msgstr ""
 
@@ -1083,6 +1085,11 @@ msgid "Is the Event Highlighted"
 msgstr ""
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__is_organizer_alone
+msgid "Is the Organizer Alone"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1097,18 +1104,11 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm____last_update
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager____last_update
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee____last_update
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts____last_update
 #: model:ir.model.fields,field_description:calendar.field_calendar_event____last_update
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type____last_update
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence____last_update
-#: model:ir.model.fields,field_description:calendar.field_ir_http____last_update
-#: model:ir.model.fields,field_description:calendar.field_mail_activity____last_update
-#: model:ir.model.fields,field_description:calendar.field_mail_activity_mixin____last_update
-#: model:ir.model.fields,field_description:calendar.field_mail_activity_type____last_update
-#: model:ir.model.fields,field_description:calendar.field_res_partner____last_update
-#: model:ir.model.fields,field_description:calendar.field_res_users____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -1213,9 +1213,12 @@ msgstr ""
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_notify
+#: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_ids
+#: model:ir.model.fields,field_description:calendar.field_res_users__meeting_ids
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
+#: model_terms:ir.ui.view,arch_db:calendar.view_partners_form
 msgid "Meetings"
 msgstr ""
 
@@ -1232,11 +1235,6 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__minutes
 msgid "Minutes"
-msgstr ""
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "Misc"
 msgstr ""
 
 #. module: calendar
@@ -1401,6 +1399,12 @@ msgid "Options"
 msgstr ""
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+msgid "Organizer"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
 msgid "Participant"
 msgstr ""
@@ -1511,15 +1515,8 @@ msgid "Repeat x times"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Responsible"
-msgstr ""
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
-msgid "Responsible Contact"
 msgstr ""
 
 #. module: calendar
@@ -1542,6 +1539,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__sat
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__sat
 msgid "Saturday"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
+msgid "Scheduled by"
 msgstr ""
 
 #. module: calendar
@@ -1748,6 +1750,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
 #, python-format
 msgid "This event"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_contacts__partner_checked
+msgid ""
+"This field is used to know if the partner is checked in the filter of the "
+"calendar view for the user_id."
 msgstr ""
 
 #. module: calendar

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.3\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-11 09:25+0000\n"
-"PO-Revision-Date: 2021-05-11 09:25+0000\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-07-12 07:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,6 +48,15 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/mail_alias.py:0
+#, python-format
+msgid ""
+"<p>Hi,<br/>\n"
+"Your document has not been created because your email address is not recognized.<br/>\n"
+"Please send emails with the email address recorded on your employee information, or contact your HR manager.</p>"
 msgstr ""
 
 #. module: hr
@@ -164,6 +173,11 @@ msgid "Action Needed"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+msgid "Activation Trigger"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
 #: model:ir.model.fields,field_description:hr.field_hr_employee__active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__active
@@ -184,6 +198,11 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_form
 msgid "Activity"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__deadline_type
+msgid "Activity Deadline"
 msgstr ""
 
 #. module: hr
@@ -212,10 +231,25 @@ msgid "Activity Type Icon"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
+msgid "Activity by"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_plan_action
+msgid "Add a new plan"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_plan_activity_type_action
+msgid "Add a new planning activity"
 msgstr ""
 
 #. module: hr
@@ -253,7 +287,6 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
-#: model:ir.model.fields,field_description:hr.field_mail_alias_mixin__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
 msgstr ""
@@ -301,6 +334,16 @@ msgid "Archived"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan__trigger_offboarding__employee_archive
+msgid "Archived Employee"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__deadline_type__plan_active
+msgid "At plan's activation"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
@@ -336,6 +379,36 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Available"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1920
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1920
+msgid "Avatar"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1024
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1024
+msgid "Avatar 1024"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_128
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_128
+msgid "Avatar 128"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_256
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_256
+msgid "Avatar 256"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_512
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_512
+msgid "Avatar 512"
 msgstr ""
 
 #. module: hr
@@ -471,10 +544,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__company_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
+msgid "Company Country"
 msgstr ""
 
 #. module: hr
@@ -528,6 +608,11 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Country"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_code
+msgid "Country Code"
 msgstr ""
 
 #. module: hr
@@ -593,9 +678,29 @@ msgid "Date of Birth"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__deadline_days
+msgid "Days Deadline"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__deadline_type__trigger_offset
+msgid "Days after activation trigger"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_plan_activity_type_check_deadline_days
+msgid "Days deadline must be positive."
+msgstr ""
+
+#. module: hr
 #: code:addons/hr/models/hr_departure_reason.py:0
 #, python-format
 msgid "Default departure reasons cannot be deleted."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__deadline_type__default
+msgid "Default value"
 msgstr ""
 
 #. module: hr
@@ -693,7 +798,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee__display_name
-#: model:ir.model.fields,field_description:hr.field_hr_employee_base__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
@@ -701,14 +805,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__display_name
-#: model:ir.model.fields,field_description:hr.field_ir_ui_menu__display_name
-#: model:ir.model.fields,field_description:hr.field_mail_alias__display_name
-#: model:ir.model.fields,field_description:hr.field_mail_channel__display_name
-#: model:ir.model.fields,field_description:hr.field_res_company__display_name
-#: model:ir.model.fields,field_description:hr.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:hr.field_res_partner__display_name
-#: model:ir.model.fields,field_description:hr.field_res_users__display_name
-#: model:ir.model.fields,field_description:hr.field_resource_resource__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -760,6 +856,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__employee_id
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__employee
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__employee
@@ -780,6 +877,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_count
 msgid "Employee Count"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan__trigger_onboarding__employee_creation
+msgid "Employee Creation"
 msgstr ""
 
 #. module: hr
@@ -983,6 +1085,13 @@ msgid "HR Departments"
 msgstr ""
 
 #. module: hr
+#: model:ir.actions.server,name:hr.ir_cron_data_check_work_permit_validity_ir_actions_server
+#: model:ir.cron,cron_name:hr.ir_cron_data_check_work_permit_validity
+#: model:ir.cron,name:hr.ir_cron_data_check_work_permit_validity
+msgid "HR Employee: check work permit validity"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
@@ -993,15 +1102,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_message
 #: model:ir.model.fields,field_description:hr.field_hr_job__has_message
 msgid "Has Message"
-msgstr ""
-
-#. module: hr
-#: code:addons/hr/models/mail_alias.py:0
-#, python-format
-msgid ""
-"Hi,<br/>\n"
-"Your document has not been created because your email address is not recognized.<br/>\n"
-"Please send emails with the email address recorded on your employee information, or contact your HR manager."
 msgstr ""
 
 #. module: hr
@@ -1040,7 +1140,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__id
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__id
-#: model:ir.model.fields,field_description:hr.field_hr_employee_base__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr.field_hr_job__id
@@ -1048,14 +1147,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__id
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__id
-#: model:ir.model.fields,field_description:hr.field_ir_ui_menu__id
-#: model:ir.model.fields,field_description:hr.field_mail_alias__id
-#: model:ir.model.fields,field_description:hr.field_mail_channel__id
-#: model:ir.model.fields,field_description:hr.field_res_company__id
-#: model:ir.model.fields,field_description:hr.field_res_config_settings__id
-#: model:ir.model.fields,field_description:hr.field_res_partner__id
-#: model:ir.model.fields,field_description:hr.field_res_users__id
-#: model:ir.model.fields,field_description:hr.field_resource_resource__id
 msgid "ID"
 msgstr ""
 
@@ -1107,6 +1198,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1920
 msgid "Image"
 msgstr ""
 
@@ -1236,7 +1328,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee____last_update
-#: model:ir.model.fields,field_description:hr.field_hr_employee_base____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_job____last_update
@@ -1244,14 +1335,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_work_location____last_update
-#: model:ir.model.fields,field_description:hr.field_ir_ui_menu____last_update
-#: model:ir.model.fields,field_description:hr.field_mail_alias____last_update
-#: model:ir.model.fields,field_description:hr.field_mail_channel____last_update
-#: model:ir.model.fields,field_description:hr.field_res_company____last_update
-#: model:ir.model.fields,field_description:hr.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:hr.field_res_partner____last_update
-#: model:ir.model.fields,field_description:hr.field_res_users____last_update
-#: model:ir.model.fields,field_description:hr.field_resource_resource____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -1350,6 +1433,13 @@ msgid "Manager of employee %s is not set."
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan__trigger_offboarding__manual
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan__trigger_onboarding__manual
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan__trigger_other__manual
+msgid "Manual"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1392,6 +1482,11 @@ msgid "Messages"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: hr
 #. openerp-web
 #: code:addons/hr/static/src/xml/hr_templates.xml:0
 #, python-format
@@ -1402,6 +1497,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__name
 #: model:ir.model.fields,field_description:hr.field_hr_plan__name
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible_id
 msgid "Name"
 msgstr ""
 
@@ -1532,8 +1628,18 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan__plan_type__offboarding
+msgid "Offboarding"
+msgstr ""
+
+#. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan__plan_type__onboarding
+msgid "Onboarding"
 msgstr ""
 
 #. module: hr
@@ -1542,13 +1648,9 @@ msgid "Only Employee"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1920
-msgid "Original Image"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__other
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan__plan_type__other
 #: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__other
 msgid "Other"
 msgstr ""
@@ -1614,6 +1716,12 @@ msgid "Plan"
 msgstr ""
 
 #. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "Plan %s has been launched."
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 msgid "Plan Name"
 msgstr ""
@@ -1648,7 +1756,6 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
-#: model:ir.model.fields,help:hr.field_mail_alias_mixin__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_channel__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
@@ -1836,11 +1943,6 @@ msgid "Responsible"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible_id
-msgid "Responsible Person"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
 msgid "Responsible User"
 msgstr ""
@@ -2025,6 +2127,13 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+
+#. module: hr
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "The PIN must be a sequence of digits."
@@ -2071,6 +2180,12 @@ msgstr ""
 msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "The work permit of %(employee)s expires at %(date)s."
 msgstr ""
 
 #. module: hr
@@ -2127,6 +2242,31 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__trainee
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__trainee
 msgid "Trainee"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan__trigger
+msgid "Trigger"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan__trigger_offboarding
+msgid "Trigger Offboarding"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan__trigger_onboarding
+msgid "Trigger Onboarding"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan__trigger_other
+msgid "Trigger Other"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan__plan_type
+msgid "Type"
 msgstr ""
 
 #. module: hr
@@ -2225,6 +2365,14 @@ msgid "Warning"
 msgstr ""
 
 #. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"Warning ! The step \"%(name)s: %(summary)s\" assigned to %(responsible)s "
+"could not be started because: \"%(error)s\""
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__widower
 msgid "Widower"
 msgstr ""
@@ -2302,15 +2450,26 @@ msgid "Work Organization"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__has_work_permit
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Permit"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_expiration_date
+msgid "Work Permit Expiration Date"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
 #: model:ir.model.fields,field_description:hr.field_res_users__permit_no
 msgid "Work Permit No"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_scheduled_activity
+msgid "Work Permit Scheduled Activity"
 msgstr ""
 
 #. module: hr

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.3\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-11 09:27+0000\n"
-"PO-Revision-Date: 2021-05-11 09:27+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-07-12 07:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -30,108 +30,6 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "%s has refused the challenge"
-msgstr ""
-
-#. module: gamification
-#: model:mail.template,body_html:gamification.email_template_badge_received
-msgid ""
-"<?xml version=\"1.0\"?>\n"
-"<table border=\"0\" cellpadding=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" width=\"590\" cellpadding=\"0\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
-"<tbody>\n"
-"    <!-- HEADER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Your Badge</span><br/>\n"
-"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
-"                        ${object.badge_id.name}\n"
-"                    </span>\n"
-"                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img src=\"/logo.png?company=${object.user_id.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.user_id.company_id.name}\"/>\n"
-"                </td></tr>\n"
-"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- CONTENT -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
-"                    <div>\n"
-"                        Congratulations ${object.user_id.name} !<br/>\n"
-"                        You just received badge <strong>${object.badge_id.name}</strong> !<br/>\n"
-"                        % if object.badge_id.description\n"
-"                            <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 560px; margin-top: 5px;\">\n"
-"                            <tbody><tr>\n"
-"                                <td valign=\"center\">\n"
-"                                    <img src=\"/web/image/gamification.badge/${object.badge_id.id}/image_128/80x80\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
-"                                </td>\n"
-"                                <td valign=\"center\">\n"
-"                                    <cite>${object.badge_id.description}</cite>\n"
-"                                </td>\n"
-"                            </tr></tbody>\n"
-"                            </table>\n"
-"                        % endif\n"
-"                        <br/>\n"
-"                        % if object.sender_id\n"
-"                            This badge was granted by <strong>${object.sender_id.name}</strong>.\n"
-"                        % endif\n"
-"                        <br/>\n"
-"                        % if object.comment\n"
-"                            ${object.comment}\n"
-"                        % endif\n"
-"                        <br/><br/>\n"
-"                        Thank you,\n"
-"                        % if object.sender_id.signature:\n"
-"                            <br/>\n"
-"                            ${object.sender_id.signature | safe}\n"
-"                        % endif\n"
-"                    </div>\n"
-"                </td></tr>\n"
-"                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- FOOTER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; font-size: 12px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"middle\" align=\"left\">\n"
-"                    ${object.user_id.company_id.name}\n"
-"                </td></tr>\n"
-"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
-"                    ${object.user_id.company_id.phone}\n"
-"                    % if object.user_id.company_id.email\n"
-"                        | <a href=\"'mailto:%s' % ${object.user_id.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${object.user_id.company_id.email}</a>\n"
-"                    % endif\n"
-"                    % if object.user_id.company_id.website\n"
-"                        | <a href=\"'%s' % ${object.user_id.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                        ${object.user_id.company_id.website}\n"
-"                    </a>\n"
-"                    % endif\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"</tbody>\n"
-"</table>\n"
-"</td></tr>\n"
-"<!-- POWERED BY -->\n"
-"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
-"      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
-"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=gamification\" style=\"color: #875A7B;\">Odoo</a>\n"
-"      </td></tr>\n"
-"    </table>\n"
-"</td></tr>\n"
-"</table>"
 msgstr ""
 
 #. module: gamification
@@ -255,6 +153,107 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "<span class=\"o_stat_text\">Users</span>"
+msgstr ""
+
+#. module: gamification
+#: model:mail.template,body_html:gamification.email_template_badge_received
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" width=\"590\" cellpadding=\"0\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Your Badge</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.badge_id.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${object.user_id.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.user_id.company_id.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        Congratulations ${object.user_id.name} !<br/>\n"
+"                        You just received badge <strong>${object.badge_id.name}</strong> !<br/>\n"
+"                        % if not is_html_empty(object.badge_id.description)\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 560px; margin-top: 5px;\">\n"
+"                            <tbody><tr>\n"
+"                                <td valign=\"center\">\n"
+"                                    <img src=\"/web/image/gamification.badge/${object.badge_id.id}/image_128/80x80\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"                                </td>\n"
+"                                <td valign=\"center\">\n"
+"                                    <cite>${object.badge_id.description}</cite>\n"
+"                                </td>\n"
+"                            </tr></tbody>\n"
+"                            </table>\n"
+"                        % endif\n"
+"                        <br/>\n"
+"                        % if object.sender_id\n"
+"                            This badge was granted by <strong>${object.sender_id.name}</strong>.\n"
+"                        % endif\n"
+"                        <br/>\n"
+"                        % if object.comment\n"
+"                            ${object.comment}\n"
+"                        % endif\n"
+"                        <br/><br/>\n"
+"                        Thank you,\n"
+"                        % if object.sender_id.signature:\n"
+"                            <br/>\n"
+"                            ${object.sender_id.signature | safe}\n"
+"                        % endif\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; font-size: 12px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${object.user_id.company_id.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    ${object.user_id.company_id.phone}\n"
+"                    % if object.user_id.company_id.email\n"
+"                        | <a href=\"'mailto:%s' % ${object.user_id.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${object.user_id.company_id.email}</a>\n"
+"                    % endif\n"
+"                    % if object.user_id.company_id.website\n"
+"                        | <a href=\"'%s' % ${object.user_id.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                        ${object.user_id.company_id.website}\n"
+"                    </a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=gamification\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>"
 msgstr ""
 
 #. module: gamification
@@ -712,6 +711,11 @@ msgid ""
 msgstr ""
 
 #. module: gamification
+#: model:mail.template,name:gamification.simple_report_template
+msgid "Challenge: Simple Challenge Report Progress"
+msgstr ""
+
+#. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
 #: model:ir.ui.menu,name:gamification.gamification_challenge_menu
 #: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
@@ -924,7 +928,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__display_name
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__display_name
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__display_name
-#: model:ir.model.fields,field_description:gamification.field_res_users__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -1177,6 +1180,11 @@ msgid "Goal definitions"
 msgstr ""
 
 #. module: gamification
+#: model:mail.template,name:gamification.email_template_goal_reminder
+msgid "Goal: Reminder for Goal Update"
+msgstr ""
+
+#. module: gamification
 #: model:ir.actions.act_window,name:gamification.goal_list_action
 #: model:ir.ui.menu,name:gamification.gamification_goal_menu
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1281,7 +1289,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__id
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__id
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__id
-#: model:ir.model.fields,field_description:gamification.field_res_users__id
 msgid "ID"
 msgstr ""
 
@@ -1419,7 +1426,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard____last_update
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank____last_update
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking____last_update
-#: model:ir.model.fields,field_description:gamification.field_res_users____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -1643,7 +1649,7 @@ msgid "No monthly sending limit"
 msgstr ""
 
 #. module: gamification
-#: model:gamification.badge,description:gamification.badge_problem_solver
+#: model_terms:gamification.badge,description:gamification.badge_problem_solver
 msgid "No one can solve challenges like you do."
 msgstr ""
 
@@ -1842,6 +1848,11 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reached when current value is"
+msgstr ""
+
+#. module: gamification
+#: model:mail.template,name:gamification.email_template_badge_received
+msgid "Received Badge"
 msgstr ""
 
 #. module: gamification
@@ -2438,6 +2449,11 @@ msgid "User domain"
 msgstr ""
 
 #. module: gamification
+#: model:mail.template,name:gamification.mail_template_data_new_rank_reached
+msgid "User: New rank reached"
+msgstr ""
+
+#. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_current_rank_users
 #: model:ir.model,name:gamification.model_res_users
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_ids
@@ -2474,7 +2490,7 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: model:gamification.badge,description:gamification.badge_idea
+#: model_terms:gamification.badge,description:gamification.badge_idea
 msgid "With your brilliant ideas, you are an inspiration to others."
 msgstr ""
 
@@ -2508,7 +2524,7 @@ msgid "You can still grant"
 msgstr ""
 
 #. module: gamification
-#: model:gamification.badge,description:gamification.badge_good_job
+#: model_terms:gamification.badge,description:gamification.badge_good_job
 msgid "You did great at your job."
 msgstr ""
 
@@ -2525,7 +2541,7 @@ msgid "You have already sent this badge too many time this month."
 msgstr ""
 
 #. module: gamification
-#: model:gamification.badge,description:gamification.badge_hidden
+#: model_terms:gamification.badge,description:gamification.badge_hidden
 msgid "You have found the hidden badge"
 msgstr ""
 

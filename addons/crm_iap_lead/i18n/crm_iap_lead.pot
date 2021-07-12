@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.3\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-11 09:26+0000\n"
-"PO-Revision-Date: 2021-05-11 09:26+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-07-12 07:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -40,6 +40,14 @@ msgstr ""
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid ""
+"<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Your "
+"request did not return any result (no credits were used). Try removing some "
+"filters.</span>"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "<span class=\"col-md-6\">Extra contacts per Company</span>"
 msgstr ""
 
@@ -59,13 +67,28 @@ msgid "Automobiles & Components"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_157
-msgid "Banks"
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__available_state_ids
+msgid "Available State"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_69_157
+msgid "Banks & Insurance"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "Buy credits."
 msgstr ""
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_1
 msgid "CEO"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_industry
+msgid "CRM IAP Lead Industry"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -115,7 +138,7 @@ msgid "Construction Materials"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_30
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_30_155
 msgid "Consumer Discretionary"
 msgstr ""
 
@@ -125,7 +148,7 @@ msgid "Consumer Durables & Apparel"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_150
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_150_151
 msgid "Consumer Services"
 msgstr ""
 
@@ -179,23 +202,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__display_name
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_151
-msgid "Diversified Consumer Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_158
-msgid "Diversified Financial Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_159
-msgid "Diversified Financials"
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_158_159
+msgid "Diversified Financials & Financial Services"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -216,15 +228,19 @@ msgid "Email"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_156
-msgid "Energy Equipment & Services"
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_138_156
+msgid "Energy & Utilities "
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__error
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__error
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Error"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__error_type
+msgid "Error Type"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -238,12 +254,7 @@ msgid "Filter on Size"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_153
-msgid "Food & Staples Retailing"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_154
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_153_154
 msgid "Food, Beverage & Tobacco"
 msgstr ""
 
@@ -288,11 +299,7 @@ msgid "Helper methods for crm_iap_lead modules"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_155
-msgid "Household & Personal Products"
-msgstr ""
-
-#. module: crm_iap_lead
+#: model:mail.template,name:crm_iap_lead.lead_generation_no_credits
 #: model:mail.template,subject:crm_iap_lead.lead_generation_no_credits
 msgid "IAP Lead Generation Notification"
 msgstr ""
@@ -303,18 +310,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__id
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__id
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__id
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__id
 msgid "ID"
 msgstr ""
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_168
 msgid "Independent Power and Renewable Electricity Producers"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_146
-msgid "Industrials"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -328,13 +329,13 @@ msgid "Industry"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_industry
-msgid "Industry Tag"
+#: model:ir.model.constraint,message:crm_iap_lead.constraint_crm_iap_lead_industry_name_uniq
+msgid "Industry name already exists!"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_69
-msgid "Insurance"
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__error_type__credits
+msgid "Insufficient Credits"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -343,7 +344,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority____last_update
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -409,6 +409,11 @@ msgid "Leads"
 msgstr ""
 
 #. module: crm_iap_lead
+#: model:ir.model.fields,help:crm_iap_lead.field_crm_iap_lead_mining_request__available_state_ids
+msgid "List of available states based on selected countries"
+msgstr ""
+
+#. module: crm_iap_lead
 #. openerp-web
 #: code:addons/crm_iap_lead/static/src/js/tours/crm_iap_lead.js:0
 #, python-format
@@ -444,6 +449,11 @@ msgstr ""
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "New"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__error_type__no_result
+msgid "No Result"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -532,7 +542,7 @@ msgid "Retry"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__reveal_id
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__reveal_ids
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__reveal_id
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__reveal_id
 msgid "Reveal"
@@ -566,14 +576,14 @@ msgid "Salesperson"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_164
-msgid "Semiconductors & Semiconductor Equipment"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__seniority_id
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__contact_filter_type__seniority
 msgid "Seniority"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__sequence
+msgid "Sequence"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -602,11 +612,6 @@ msgid "Submit"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:ir.model.constraint,message:crm_iap_lead.constraint_crm_iap_lead_industry_name_uniq
-msgid "Tag name already exists!"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__tag_ids
 msgid "Tags"
 msgstr ""
@@ -624,6 +629,11 @@ msgstr ""
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_149
 msgid "Telecommunication Services"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,help:crm_iap_lead.field_crm_iap_lead_industry__reveal_ids
+msgid "The list of reveal_ids for this industry, separated with ','"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -652,11 +662,6 @@ msgid ""
 msgstr ""
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_138
-msgid "Utilities"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "What do you need ?"
 msgstr ""
@@ -670,7 +675,13 @@ msgstr ""
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "Your request did not return any result. No credits were used."
+msgid "You do not have enough credits to submit this request."
+msgstr ""
+
+#. module: crm_iap_lead
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "Your request could not be executed: %s"
 msgstr ""
 
 #. module: crm_iap_lead

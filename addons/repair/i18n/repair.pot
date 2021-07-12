@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.3\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-11 09:26+0000\n"
-"PO-Revision-Date: 2021-05-11 09:26+0000\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-07-12 07:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -64,7 +64,6 @@ msgstr ""
 #. module: repair
 #: model:mail.template,body_html:repair.mail_template_repair_quotation
 msgid ""
-"<?xml version=\"1.0\"?>\n"
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
 "        Hello ${object.partner_id.name},<br/>\n"
@@ -360,15 +359,11 @@ msgid "Dest. Location"
 msgstr ""
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_account_move__display_name
-#: model:ir.model.fields,field_description:repair.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_fee__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_line__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_order__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_tags__display_name
-#: model:ir.model.fields,field_description:repair.field_stock_move__display_name
-#: model:ir.model.fields,field_description:repair.field_stock_traceability_report__display_name
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__display_name
 msgid "Display Name"
 msgstr ""
@@ -461,15 +456,11 @@ msgid "History"
 msgstr ""
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_account_move__id
-#: model:ir.model.fields,field_description:repair.field_account_move_line__id
 #: model:ir.model.fields,field_description:repair.field_repair_fee__id
 #: model:ir.model.fields,field_description:repair.field_repair_line__id
 #: model:ir.model.fields,field_description:repair.field_repair_order__id
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__id
 #: model:ir.model.fields,field_description:repair.field_repair_tags__id
-#: model:ir.model.fields,field_description:repair.field_stock_move__id
-#: model:ir.model.fields,field_description:repair.field_stock_traceability_report__id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__id
 msgid "ID"
 msgstr ""
@@ -585,15 +576,11 @@ msgid "Journal Item"
 msgstr ""
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_account_move____last_update
-#: model:ir.model.fields,field_description:repair.field_account_move_line____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_fee____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_line____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_order____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_tags____last_update
-#: model:ir.model.fields,field_description:repair.field_stock_move____last_update
-#: model:ir.model.fields,field_description:repair.field_stock_traceability_report____last_update
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair____last_update
 msgid "Last Modified on"
 msgstr ""
@@ -658,6 +645,11 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__move_id
 msgid "Move created by the repair order"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__my_activity_date_deadline
+msgid "My Activity Deadline"
 msgstr ""
 
 #. module: repair
@@ -948,6 +940,11 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Quotation #:"
+msgstr ""
+
+#. module: repair
+#: model:mail.template,name:repair.mail_template_repair_quotation
+msgid "Repair Quotation: Send by email"
 msgstr ""
 
 #. module: repair

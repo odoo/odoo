@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.1\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 07:29+0000\n"
-"PO-Revision-Date: 2020-12-11 07:29+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-07-12 07:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,24 +31,13 @@ msgid "Create a task in sales order's project"
 msgstr ""
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_product_product__display_name
-#: model:ir.model.fields,field_description:sale_project.field_product_template__display_name
-#: model:ir.model.fields,field_description:sale_project.field_project_project__display_name
-#: model:ir.model.fields,field_description:sale_project.field_project_task__display_name
-#: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence__display_name
-#: model:ir.model.fields,field_description:sale_project.field_sale_order__display_name
-#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__display_name
-msgid "Display Name"
-msgstr ""
-
-#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
 msgid "Display project"
 msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
-msgid "Don't create task"
+msgid "Don't create a task"
 msgstr ""
 
 #. module: sale_project
@@ -62,30 +51,8 @@ msgid "Generated Task"
 msgstr ""
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_product_product__id
-#: model:ir.model.fields,field_description:sale_project.field_product_template__id
-#: model:ir.model.fields,field_description:sale_project.field_project_project__id
-#: model:ir.model.fields,field_description:sale_project.field_project_task__id
-#: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence__id
-#: model:ir.model.fields,field_description:sale_project.field_sale_order__id
-#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__id
-msgid "ID"
-msgstr ""
-
-#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
 msgid "Is a Service"
-msgstr ""
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_product_product____last_update
-#: model:ir.model.fields,field_description:sale_project.field_product_template____last_update
-#: model:ir.model.fields,field_description:sale_project.field_project_project____last_update
-#: model:ir.model.fields,field_description:sale_project.field_project_task____last_update
-#: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence____last_update
-#: model:ir.model.fields,field_description:sale_project.field_sale_order____last_update
-#: model:ir.model.fields,field_description:sale_project.field_sale_order_line____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: sale_project
@@ -185,6 +152,13 @@ msgid "Sales Order Item"
 msgstr ""
 
 #. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
+msgid ""
+"Sales Order Item to which the time spent on this task will be added, in "
+"order to be invoiced to your customer."
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
 msgid "Sales Order Line"
 msgstr ""
@@ -198,7 +172,6 @@ msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
-#: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
 msgid ""
 "Sales order item to which the project is linked. Link the timesheet entry to"
 " the sales order item defined on the project. Only applies on tasks without "
@@ -305,12 +278,6 @@ msgstr ""
 msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
-msgstr ""
-
-#. module: sale_project
-#: model:ir.model.constraint,message:sale_project.constraint_project_project_sale_order_required_if_sale_line
-msgid ""
-"The project should be linked to a sale order to select a sale order item."
 msgstr ""
 
 #. module: sale_project

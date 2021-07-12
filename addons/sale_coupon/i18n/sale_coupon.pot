@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.3\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-11 09:27+0000\n"
-"PO-Revision-Date: 2021-05-11 09:27+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-07-12 07:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -214,11 +214,7 @@ msgid "Discount: %s"
 msgstr ""
 
 #. module: sale_coupon
-#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__display_name
-#: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__display_name
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__display_name
-#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__display_name
-#: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -246,11 +242,7 @@ msgid "Global discounts are not cumulative."
 msgstr ""
 
 #. module: sale_coupon
-#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__id
-#: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__id
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__id
-#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__id
-#: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__id
 msgid "ID"
 msgstr ""
 
@@ -260,11 +252,7 @@ msgid "Is a program reward line"
 msgstr ""
 
 #. module: sale_coupon
-#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon____last_update
-#: model:ir.model.fields,field_description:sale_coupon.field_coupon_program____last_update
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code____last_update
-#: model:ir.model.fields,field_description:sale_coupon.field_sale_order____last_update
-#: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -455,6 +443,11 @@ msgstr ""
 #. module: sale_coupon
 #: model:mail.template,subject:sale_coupon.mail_template_sale_coupon
 msgid "Your reward coupon from ${object.program_id.company_id.name} "
+msgstr ""
+
+#. module: sale_coupon
+#: model:mail.template,name:sale_coupon.mail_template_sale_coupon
+msgid "[Sales] Coupon: Send by Email"
 msgstr ""
 
 #. module: sale_coupon
