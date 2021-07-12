@@ -17,7 +17,7 @@
         'data/mail_template_data.xml',
         'data/ir_sequence_data.xml',
         'security/ir.model.access.csv',
-        'views/crm_lead_view.xml',
+        'views/crm_lead_views.xml',
         'views/crm_iap_lead_views.xml',
         'views/res_config_settings_views.xml',
         'views/mail_templates.xml',
@@ -25,10 +25,10 @@
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            'crm_iap_lead/static/src/js/**/*',
+            'crm_iap_mine/static/src/js/**/*',
         ],
         'web.assets_qweb': [
-            'crm_iap_lead/static/src/xml/**/*',
+            'crm_iap_mine/static/src/xml/**/*',
         ],
     },
     'license': 'LGPL-3',
