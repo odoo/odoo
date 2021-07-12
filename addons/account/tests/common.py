@@ -260,7 +260,8 @@ class AccountTestInvoicingCommon(TransactionCase):
         }
 
     @classmethod
-    def setup_multi_currency_data(cls, default_values={}, rate2016=3.0, rate2017=2.0):
+    def setup_multi_currency_data(cls, default_values=None, rate2016=3.0, rate2017=2.0):
+        default_values = default_values or {}
         foreign_currency = cls.env['res.currency'].create({
             'name': 'Gold Coin',
             'symbol': '☺',
@@ -672,7 +673,8 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
             auto_validate=True
         )
 
-    def make_payment(self, invoice_record, bank_journal, amount=0.0, amount_currency=0.0, currency_id=None, reconcile_param=[]):
+    def make_payment(self, invoice_record, bank_journal, amount=0.0, amount_currency=0.0, currency_id=None, reconcile_param=None):
+        reconcile_param = reconcile_param or []
         bank_stmt = self.env['account.bank.statement'].create({
             'journal_id': bank_journal.id,
             'date': time.strftime('%Y') + '-07-15',
