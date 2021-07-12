@@ -1695,6 +1695,10 @@ def set_safe_image_headers(headers, content):
     is safe to do, as well as `X-Content-Type-Options: nosniff` so that if the
     file is of an unsafe type, it is not interpreted as that type if the
     `Content-type` header was already set to a different mimetype
+
+    :param headers: a headers dict or list of pairs
+    :param content: image content, decoded
+    :rtype: list[(str, str)]
     """
     headers = werkzeug.datastructures.Headers(headers)
     safe_types = {'image/jpeg', 'image/png', 'image/gif', 'image/x-icon'}
