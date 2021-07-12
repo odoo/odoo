@@ -56,7 +56,8 @@ var PrinterMixin = {
                 onrendered: function (canvas) {
                     $('.pos-receipt-print').empty();
                     resolve(self.process_canvas(canvas));
-                } 
+                },
+                letterRendering: true,
             })
         });
         return promise;
