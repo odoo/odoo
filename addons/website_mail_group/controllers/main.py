@@ -7,12 +7,20 @@ from odoo.http import request
 
 
 class WebsiteMailGroup(http.Controller):
-    @http.route('/groups/is_member', type='json', auth='public', website=True)
-    def groups_is_member(self, group_id=0, email=None, **kw):
+    @http.route('/group/is_member', type='json', auth='public', website=True)
+    def group_is_member(self, group_id=0, email=None, **kw):
         """Return the email of the member if found, otherwise None."""
         group = request.env['mail.group'].browse(int(group_id)).exists()
         if not group:
             return
+
+        token = kw.get('token')
+
+        if token and token != group._generate_group_access_token():
+            return
+
+        if token:
+            group = group.sudo()
 
         try:
             group.check_access_rights('read')
@@ -21,7 +29,7 @@ class WebsiteMailGroup(http.Controller):
             return
 
         if not request.env.user._is_public():
-            email = request.env.user.email
+            email = request.env.user.email_normalized
             partner_id = request.env.user.partner_id.id
         else:
             partner_id = None

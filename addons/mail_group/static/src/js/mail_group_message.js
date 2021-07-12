@@ -2,8 +2,6 @@ odoo.define('mail_group.mail_group_message', function (require) {
 'use strict';
 
 const publicWidget = require('web.public.widget');
-const core = require('web.core');
-const _t = core._t;
 
 publicWidget.registry.MailGroupMessage = publicWidget.Widget.extend({
     selector: '.o_mg_message',
@@ -21,11 +19,10 @@ publicWidget.registry.MailGroupMessage = publicWidget.Widget.extend({
         // And add a button "Read more" to show the mention of the parent email
         const body = this.$el.find('.card-body').first();
         const quoted = body.find('*[data-o-mail-quote]');
-        const readMore = $('<button class="btn btn-link"/>').text(_t('Read more'));
+        const readMore = $('<button class="btn btn-light btn-sm ml-1"/>').text('. . .');
         quoted.first().before(readMore);
-        quoted.addClass('d-none');
         readMore.on('click', () => {
-            quoted.toggleClass('d-none');
+            quoted.toggleClass('visible');
         });
 
         return this._super.apply(this, arguments);
@@ -43,7 +40,7 @@ publicWidget.registry.MailGroupMessage = publicWidget.Widget.extend({
         ev.preventDefault();
         ev.stopPropagation();
         const $link = $(ev.currentTarget);
-        const $container = $link.parents('div').first();
+        const $container = $link.closest('.o_mg_link_parent');
         $container.find('.o_mg_link_hide').first().addClass('d-none');
         $container.find('.o_mg_link_show').first().removeClass('d-none');
         $container.find('.o_mg_link_content').first().removeClass('d-none');
@@ -56,7 +53,7 @@ publicWidget.registry.MailGroupMessage = publicWidget.Widget.extend({
         ev.preventDefault();
         ev.stopPropagation();
         const $link = $(ev.currentTarget);
-        const $container = $link.parents('div').first();
+        const $container = $link.closest('.o_mg_link_parent');
         $container.find('.o_mg_link_hide').first().removeClass('d-none');
         $container.find('.o_mg_link_show').first().addClass('d-none');
         $container.find('.o_mg_link_content').first().addClass('d-none');
@@ -76,11 +73,13 @@ publicWidget.registry.MailGroupMessage = publicWidget.Widget.extend({
             if (!data) {
                 return;
             }
-            const $threadContainer = $link.parents('.o_mg_replies').first().find('ul.list-unstyled');
+            const $threadContainer = $link.parents('.o_mg_replies').first().find('ul.list-unstyled').first();
             if ($threadContainer) {
-                const $lastMsg = $threadContainer.find('li.media').last();
-                $(data).find('li.media').insertAfter($lastMsg);
-                $(data).find('.o_mg_read_more').parent().appendTo($threadContainer);
+                const $data = $(data);
+                const $lastMsg = $threadContainer.children('li.media').last();
+                const $newMessages = $data.find('ul.list-unstyled').first().children('li.media');
+                $newMessages.insertAfter($lastMsg);
+                $data.find('.o_mg_read_more').parent().appendTo($threadContainer);
             }
             const $showMore = $link.parent();
             $showMore.remove();

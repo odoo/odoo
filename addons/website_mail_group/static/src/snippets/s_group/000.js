@@ -6,7 +6,7 @@ const _t = core._t;
 const MailGroup = require('mail_group.mail_group');
 
 MailGroup.include({
-    willStart: async function () {
+    start: async function () {
         await this._super(...arguments);
 
         // Can not be done in the template of the snippets
@@ -14,10 +14,11 @@ MailGroup.include({
         // for the first time, we make a RPC call to setup the widget properly
         const email = (new URL(document.location.href)).searchParams.get('email');
         const response = await this._rpc({
-            route: '/groups/is_member',
+            route: '/group/is_member',
             params: {
-                'group_id': this.$target.data('id'),
+                'group_id': this.mailgroupId,
                 'email': email,
+                'token': this.token,
             },
         });
 
@@ -30,7 +31,7 @@ MailGroup.include({
         this.$el.removeClass('d-none');
 
         const userEmail = response.email;
-        const isMember = response.is_member;
+        this.isMember = response.is_member;
 
         if (userEmail && userEmail.length) {
             const emailInput = this.$el.find('.o_mg_subscribe_email');
@@ -38,11 +39,11 @@ MailGroup.include({
             emailInput.attr('readonly', 1);
         }
 
-        if (isMember) {
-            this.$target.find('.o_mg_subscribe_btn').text(_t('Unsubscribe'));
+        if (this.isMember) {
+            this.$target.find('.o_mg_subscribe_btn').text(_t('Unsubscribe')).removeClass('btn-primary').addClass('btn-outline-primary');
         }
 
-        this.$el.data('isMember', isMember);
+        this.$el.data('isMember', this.isMember);
     },
 });
 
