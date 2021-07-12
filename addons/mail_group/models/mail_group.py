@@ -493,7 +493,7 @@ class MailGroup(models.Model):
         )
         _logger.info('Subscription email sent to %s.', email)
 
-    def _send_unsubscribe_confirmation_email(self, email, action):
+    def _send_unsubscribe_confirmation_email(self, email):
         """Send an email to the given address to subscribe / unsubscribe to the mailing list."""
         self.ensure_one()
         confirm_action_url = self._generate_action_url(email, 'unsubscribe')
