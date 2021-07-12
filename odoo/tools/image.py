@@ -4,9 +4,9 @@ import base64
 import binascii
 import io
 
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps as _
 # We can preload Ico too because it is considered safe
-from PIL import IcoImagePlugin
+from PIL import IcoImagePlugin as _
 
 from random import randrange
 
@@ -347,9 +347,9 @@ def average_dominant_color(colors, mitigate=175, max_margin=140):
 
     for color in colors:
         rgb = color[1]
-        if (rgb[0] < dominant_rgb[0] + margins[0] and rgb[0] > dominant_rgb[0] - margins[0] and
-            rgb[1] < dominant_rgb[1] + margins[1] and rgb[1] > dominant_rgb[1] - margins[1] and
-                rgb[2] < dominant_rgb[2] + margins[2] and rgb[2] > dominant_rgb[2] - margins[2]):
+        if (dominant_rgb[0] - margins[0] < rgb[0] < dominant_rgb[0] + margins[0] and
+                dominant_rgb[1] - margins[1] < rgb[1] < dominant_rgb[1] + margins[1] and
+                dominant_rgb[2] - margins[2] < rgb[2] < dominant_rgb[2] + margins[2]):
             dominant_set.append(color)
         else:
             remaining.append(color)
