@@ -15,6 +15,7 @@
         'views/res_partner_views.xml',
         'views/stock_warehouse_views.xml',
         'views/stock_move_views.xml',
+        'views/stock_quant_views.xml',
         'views/stock_picking_views.xml',
         'views/supplier_info_views.xml',
         'views/product_views.xml',
