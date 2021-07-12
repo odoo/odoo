@@ -178,7 +178,7 @@ export const hotkeyService = {
         /**
          * Remove all the hotkey overlays.
          */
-        function removeHotkeyOverlays() {
+        function removeHotkeyOverlays(event) {
             if (!overlaysVisible) {
                 return;
             }
@@ -186,6 +186,7 @@ export const hotkeyService = {
                 overlay.remove();
             }
             overlaysVisible = false;
+            event.preventDefault();
         }
 
         /**
