@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.3\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-11 09:32+0000\n"
-"PO-Revision-Date: 2021-05-11 09:32+0000\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-07-12 07:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -196,28 +196,6 @@ msgid "45 Days"
 msgstr ""
 
 #. module: account
-#: model:mail.template,body_html:account.mail_template_data_payment_receipt
-msgid ""
-"<?xml version=\"1.0\"?>\n"
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear ${object.partner_id.name}<br/><br/>\n"
-"        Thank you for your payment.\n"
-"        Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting\n"
-"        to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.\n"
-"        <br/><br/>\n"
-"        Do not hesitate to contact us if you have any questions.\n"
-"        <br/><br/>\n"
-"        Best regards,\n"
-"        % if user.signature:\n"
-"            <br/>\n"
-"            ${user.signature | safe}\n"
-"        % endif\n"
-"    </p>\n"
-"</div>\n"
-msgstr ""
-
-#. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
@@ -292,6 +270,27 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 "            "
+msgstr ""
+
+#. module: account
+#: model:mail.template,body_html:account.mail_template_data_payment_receipt
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear ${object.partner_id.name}<br/><br/>\n"
+"        Thank you for your payment.\n"
+"        Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting\n"
+"        to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Do not hesitate to contact us if you have any questions.\n"
+"        <br/><br/>\n"
+"        Best regards,\n"
+"        % if user.signature:\n"
+"            <br/>\n"
+"            ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 msgstr ""
 
 #. module: account
@@ -553,6 +552,22 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "<span class=\"o_form_label\">of the month</span>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                                        Balance\n"
+"                                    </span>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                                        Taxes\n"
+"                                    </span>"
 msgstr ""
 
 #. module: account
@@ -1157,11 +1172,6 @@ msgid "Account Number"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Account Options"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_id
 msgid "Account Payable"
@@ -1316,6 +1326,11 @@ msgid "Account on which to post the tax amount"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_account__group_id
+msgid "Account prefixes can determine account groups."
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
 msgid "Account report with payment lines"
 msgstr ""
@@ -1414,6 +1429,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_finance_entries
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_form_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Accounting"
 msgstr ""
@@ -1438,6 +1454,11 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Accounting Entries"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Accounting Import"
 msgstr ""
 
 #. module: account
@@ -1491,6 +1512,8 @@ msgid "Action"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__message_needaction
+#: model:ir.model.fields,field_description:account.field_account_account_template__message_needaction
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_needaction
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_needaction
 #: model:ir.model.fields,field_description:account.field_account_journal__message_needaction
@@ -1890,6 +1913,13 @@ msgid "Allows to tag analytic entries and to manage analytic distributions"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_config_settings__module_l10n_fr_fec_import
+msgid ""
+"Allows you to import FEC files.\n"
+"-This installs the l10n_fr_fec_import module."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows you to use the analytic accounting."
 msgstr ""
@@ -2198,13 +2228,6 @@ msgid "Analytics"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_invoice_send__no_auto_thread
-msgid ""
-"Answers do not go in the original document discussion thread. This has an "
-"impact on the generated message-id."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_exigible
 msgid "Appears in VAT report"
 msgstr ""
@@ -2231,6 +2254,11 @@ msgid "Apply"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Apply VAT of the EU country to which goods and services are delivered."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__auto_apply
 msgid "Apply automatically this fiscal position."
@@ -2252,11 +2280,6 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__vat_required
 msgid "Apply only if partner has a VAT number."
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Apply right VAT rates for digital products sold in EU"
 msgstr ""
 
 #. module: account
@@ -2299,16 +2322,6 @@ msgid "Associated Account Templates"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_journal__at_least_one_inbound
-msgid "At Least One Inbound"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_journal__at_least_one_outbound
-msgid "At Least One Outbound"
-msgstr ""
-
-#. module: account
 #: code:addons/account/populate/res_company.py:0
 #, python-format
 msgid ""
@@ -2323,6 +2336,8 @@ msgid "Attach a file"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__message_attachment_count
+#: model:ir.model.fields,field_description:account.field_account_account_template__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_journal__message_attachment_count
@@ -2409,7 +2424,9 @@ msgid "Automatic sequence"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__available_payment_method_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__available_payment_method_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__available_payment_method_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__available_payment_method_ids
 msgid "Available Payment Method"
 msgstr ""
@@ -2871,6 +2888,11 @@ msgid "CUST"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__can_edit_body
+msgid "Can Edit Body"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_edit_wizard
 msgid "Can Edit Wizard"
 msgstr ""
@@ -2962,23 +2984,25 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_tax_report_line_form
-msgid "Carry over lines"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_tax_report_line__carry_over_condition_method
-msgid "Carry over method"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_tax_report_line__carry_over_destination_line_id
-msgid "Carry over to"
+#: code:addons/account/models/account_tax_report.py:0
+#, python-format
+msgid "Carryover Lines For %s"
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__carryover_line_ids
+#: model_terms:ir.ui.view,arch_db:account.account_tax_report_line_form
 msgid "Carryover lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_report_line__carry_over_condition_method
+msgid "Carryover method"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_report_line__carry_over_destination_line_id
+msgid "Carryover to"
 msgstr ""
 
 #. module: account
@@ -3319,6 +3343,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_incoterms__code
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_method_code
 #: model:ir.model.fields,field_description:account.field_account_payment_method__code
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__code
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__code
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Code"
@@ -3420,6 +3445,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__company_id
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__company_id
 #: model:ir.model.fields,field_description:account.field_account_payment__company_id
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__company_id
 #: model:ir.model.fields,field_description:account.field_account_payment_register__company_id
 #: model:ir.model.fields,field_description:account.field_account_payment_term__company_id
 #: model:ir.model.fields,field_description:account.field_account_print_journal__company_id
@@ -3468,6 +3494,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__company_id
 #: model:ir.model.fields,help:account.field_account_journal__company_id
+#: model:ir.model.fields,help:account.field_account_payment_method_line__company_id
 msgid "Company related to this journal"
 msgstr ""
 
@@ -3569,6 +3596,11 @@ msgid "Connect"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_force_new
+msgid "Considers answers as new thread"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__tax_scope__consu
 msgid "Consumable"
 msgstr ""
@@ -3657,7 +3689,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__country_id
 #: model:ir.model.fields,field_description:account.field_account_tax__country_id
 #: model:ir.model.fields,field_description:account.field_account_tax_carryover_line__tax_report_country_id
+#: model:ir.model.fields,field_description:account.field_account_tax_group__country_id
 #: model:ir.model.fields,field_description:account.field_account_tax_report__country_id
+#: model_terms:ir.ui.view,arch_db:account.account_tax_group_view_search
 msgid "Country"
 msgstr ""
 
@@ -3901,6 +3935,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__create_uid
 #: model:ir.model.fields,field_description:account.field_account_payment__create_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_method__create_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__create_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_register__create_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_term__create_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__create_uid
@@ -3965,6 +4000,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__create_date
 #: model:ir.model.fields,field_description:account.field_account_payment__create_date
 #: model:ir.model.fields,field_description:account.field_account_payment_method__create_date
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__create_date
 #: model:ir.model.fields,field_description:account.field_account_payment_register__create_date
 #: model:ir.model.fields,field_description:account.field_account_payment_term__create_date
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__create_date
@@ -4061,6 +4097,11 @@ msgid "Credit journal items that are matched with this journal item."
 msgstr ""
 
 #. module: account
+#: model:mail.template,name:account.email_template_edi_credit_note
+msgid "Credit note: Send by email"
+msgstr ""
+
+#. module: account
 #: model:mail.template,report_name:account.email_template_edi_credit_note
 msgid ""
 "Credit_note_${(object.name or '').replace('/','_')}${object.state == 'draft'"
@@ -4152,6 +4193,11 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
 msgid "Current Assets"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__current_balance
+msgid "Current Balance"
 msgstr ""
 
 #. module: account
@@ -4518,6 +4564,11 @@ msgid "Default Terms and Conditions as a Web page"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__null_value
+msgid "Default Value"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__date_stop
 msgid "Default end date for this Analytic Account."
 msgstr ""
@@ -4736,10 +4787,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_tag__display_name
 #: model:ir.model.fields,field_description:account.field_account_account_template__display_name
 #: model:ir.model.fields,field_description:account.field_account_account_type__display_name
-#: model:ir.model.fields,field_description:account.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:account.field_account_analytic_default__display_name
-#: model:ir.model.fields,field_description:account.field_account_analytic_line__display_name
-#: model:ir.model.fields,field_description:account.field_account_analytic_tag__display_name
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__display_name
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__display_name
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__display_name
@@ -4771,6 +4819,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__display_name
 #: model:ir.model.fields,field_description:account.field_account_payment__display_name
 #: model:ir.model.fields,field_description:account.field_account_payment_method__display_name
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__display_name
 #: model:ir.model.fields,field_description:account.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:account.field_account_payment_term__display_name
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_name
@@ -4794,24 +4843,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__display_name
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm__display_name
 #: model:ir.model.fields,field_description:account.field_account_unreconcile__display_name
-#: model:ir.model.fields,field_description:account.field_base_document_layout__display_name
 #: model:ir.model.fields,field_description:account.field_cash_box_out__display_name
-#: model:ir.model.fields,field_description:account.field_digest_digest__display_name
-#: model:ir.model.fields,field_description:account.field_ir_actions_report__display_name
-#: model:ir.model.fields,field_description:account.field_product_category__display_name
-#: model:ir.model.fields,field_description:account.field_product_product__display_name
-#: model:ir.model.fields,field_description:account.field_product_template__display_name
-#: model:ir.model.fields,field_description:account.field_report_account_report_hash_integrity__display_name
-#: model:ir.model.fields,field_description:account.field_report_account_report_invoice__display_name
-#: model:ir.model.fields,field_description:account.field_report_account_report_invoice_with_payments__display_name
-#: model:ir.model.fields,field_description:account.field_report_account_report_journal__display_name
-#: model:ir.model.fields,field_description:account.field_res_company__display_name
-#: model:ir.model.fields,field_description:account.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:account.field_res_currency__display_name
-#: model:ir.model.fields,field_description:account.field_res_partner__display_name
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__display_name
-#: model:ir.model.fields,field_description:account.field_res_users__display_name
-#: model:ir.model.fields,field_description:account.field_sequence_mixin__display_name
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__display_name
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_name
 msgid "Display Name"
@@ -4891,6 +4923,11 @@ msgstr ""
 msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Documentation"
 msgstr ""
 
 #. module: account
@@ -5032,7 +5069,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_service
-msgid "EU Digital Goods VAT"
+msgid "EU Intra-community Distance Selling"
 msgstr ""
 
 #. module: account
@@ -5069,6 +5106,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm__email_alias
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Email Alias"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_mail_thread
+msgid "Email Thread"
 msgstr ""
 
 #. module: account
@@ -5263,6 +5305,11 @@ msgid "External Reference"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "FEC Import"
+msgstr ""
+
+#. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
 msgid "FREE ALONGSIDE SHIP"
 msgstr ""
@@ -5314,10 +5361,22 @@ msgid "Federal States"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__model_object_field
+msgid "Field"
+msgstr ""
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Fill in the details of the line."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_send__copyvalue
+msgid ""
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
 msgstr ""
 
 #. module: account
@@ -5495,6 +5554,8 @@ msgid "Follow Customer Payments"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__message_follower_ids
+#: model:ir.model.fields,field_description:account.field_account_account_template__message_follower_ids
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_follower_ids
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_follower_ids
 #: model:ir.model.fields,field_description:account.field_account_journal__message_follower_ids
@@ -5504,6 +5565,8 @@ msgid "Followers"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__message_partner_ids
+#: model:ir.model.fields,field_description:account.field_account_account_template__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_journal__message_partner_ids
@@ -5730,6 +5793,7 @@ msgid "Group"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_tax_group_view_search
 #: model_terms:ir.ui.view,arch_db:account.account_tax_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_form_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -5771,6 +5835,8 @@ msgid "Has Accounting Entries"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__has_message
+#: model:ir.model.fields,field_description:account.field_account_account_template__has_message
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__has_message
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_message
 #: model:ir.model.fields,field_description:account.field_account_journal__has_message
@@ -5835,10 +5901,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_tag__id
 #: model:ir.model.fields,field_description:account.field_account_account_template__id
 #: model:ir.model.fields,field_description:account.field_account_account_type__id
-#: model:ir.model.fields,field_description:account.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:account.field_account_analytic_default__id
-#: model:ir.model.fields,field_description:account.field_account_analytic_line__id
-#: model:ir.model.fields,field_description:account.field_account_analytic_tag__id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__id
@@ -5870,6 +5933,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__id
 #: model:ir.model.fields,field_description:account.field_account_payment__id
 #: model:ir.model.fields,field_description:account.field_account_payment_method__id
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__id
 #: model:ir.model.fields,field_description:account.field_account_payment_register__id
 #: model:ir.model.fields,field_description:account.field_account_payment_term__id
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__id
@@ -5893,24 +5957,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__id
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm__id
 #: model:ir.model.fields,field_description:account.field_account_unreconcile__id
-#: model:ir.model.fields,field_description:account.field_base_document_layout__id
 #: model:ir.model.fields,field_description:account.field_cash_box_out__id
-#: model:ir.model.fields,field_description:account.field_digest_digest__id
-#: model:ir.model.fields,field_description:account.field_ir_actions_report__id
-#: model:ir.model.fields,field_description:account.field_product_category__id
-#: model:ir.model.fields,field_description:account.field_product_product__id
-#: model:ir.model.fields,field_description:account.field_product_template__id
-#: model:ir.model.fields,field_description:account.field_report_account_report_hash_integrity__id
-#: model:ir.model.fields,field_description:account.field_report_account_report_invoice__id
-#: model:ir.model.fields,field_description:account.field_report_account_report_invoice_with_payments__id
-#: model:ir.model.fields,field_description:account.field_report_account_report_journal__id
-#: model:ir.model.fields,field_description:account.field_res_company__id
-#: model:ir.model.fields,field_description:account.field_res_config_settings__id
-#: model:ir.model.fields,field_description:account.field_res_currency__id
-#: model:ir.model.fields,field_description:account.field_res_partner__id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__id
-#: model:ir.model.fields,field_description:account.field_res_users__id
-#: model:ir.model.fields,field_description:account.field_sequence_mixin__id
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__id
 #: model:ir.model.fields,field_description:account.field_validate_account_move__id
 msgid "ID"
@@ -5939,6 +5986,10 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_account__message_needaction
+#: model:ir.model.fields,help:account.field_account_account__message_unread
+#: model:ir.model.fields,help:account.field_account_account_template__message_needaction
+#: model:ir.model.fields,help:account.field_account_account_template__message_unread
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_needaction
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_unread
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__message_needaction
@@ -5953,6 +6004,10 @@ msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_account__message_has_error
+#: model:ir.model.fields,help:account.field_account_account__message_has_sms_error
+#: model:ir.model.fields,help:account.field_account_account_template__message_has_error
+#: model:ir.model.fields,help:account.field_account_account_template__message_has_sms_error
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_has_error
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_has_sms_error
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__message_has_error
@@ -6065,6 +6120,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"If you sell goods and services to customers in a foreign EU country, you "
+"must charge VAT based on the delivery address. This rule applies regardless "
+"of where you are located."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
 msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
@@ -6080,16 +6143,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid ""
-"If you're selling digital goods to customers in the EU, you must charge VAT "
-"based on your customers' locations. This rule applies regardless of you are "
-"located. Digital goods are defined in the legislation as broadcasting, "
-"telecommunications, and services that are electronically supplied instead of"
-" shipped. Gift cards sent online are not included in the definition."
-msgstr ""
-
-#. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
 msgid "Immediate Payment"
 msgstr ""
@@ -6097,6 +6150,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_qif
 msgid "Import .qif files"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_fr_fec_import
+msgid "Import FEC files"
 msgstr ""
 
 #. module: account
@@ -6112,6 +6170,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_camt
 msgid "Import in CAMT.053 format"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Import your accounting data from FEC"
 msgstr ""
 
 #. module: account
@@ -6196,7 +6259,7 @@ msgid "Inbound"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_journal__inbound_payment_method_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__inbound_payment_method_line_ids
 msgid "Inbound Payment Methods"
 msgstr ""
 
@@ -6237,16 +6300,6 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Incoming Payments"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_journal__payment_debit_account_id
-msgid ""
-"Incoming payments entries triggered by invoices/refunds will be posted on "
-"the Outstanding Receipts Account and displayed as blue lines in the bank "
-"reconciliation widget. During the reconciliation process, concerned "
-"transactions will be reconciled with entries on the Outstanding Receipts "
-"Account instead of the receivable account."
 msgstr ""
 
 #. module: account
@@ -6592,6 +6645,11 @@ msgid "Invoice/Bill Date"
 msgstr ""
 
 #. module: account
+#: model:mail.template,name:account.email_template_edi_invoice
+msgid "Invoice: Send by email"
+msgstr ""
+
+#. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
 msgid ""
 "Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
@@ -6690,6 +6748,8 @@ msgid "Is Between"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
+#: model:ir.model.fields,field_description:account.field_account_account_template__message_is_follower
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_is_follower
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_is_follower
 #: model:ir.model.fields,field_description:account.field_account_journal__message_is_follower
@@ -6802,6 +6862,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__journal_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__journal_id
 #: model:ir.model.fields,field_description:account.field_account_payment__journal_id
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__journal_id
 #: model:ir.model.fields,field_description:account.field_account_payment_register__journal_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__journal_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__linked_journal_id
@@ -6951,7 +7012,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_users__journal_item_count
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_pivot
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
@@ -7140,6 +7200,11 @@ msgid "Label on Invoices"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__lang
+msgid "Language"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Last Entry"
 msgstr ""
@@ -7154,10 +7219,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_tag____last_update
 #: model:ir.model.fields,field_description:account.field_account_account_template____last_update
 #: model:ir.model.fields,field_description:account.field_account_account_type____last_update
-#: model:ir.model.fields,field_description:account.field_account_analytic_account____last_update
 #: model:ir.model.fields,field_description:account.field_account_analytic_default____last_update
-#: model:ir.model.fields,field_description:account.field_account_analytic_line____last_update
-#: model:ir.model.fields,field_description:account.field_account_analytic_tag____last_update
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard____last_update
 #: model:ir.model.fields,field_description:account.field_account_bank_statement____last_update
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox____last_update
@@ -7189,6 +7251,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile____last_update
 #: model:ir.model.fields,field_description:account.field_account_payment____last_update
 #: model:ir.model.fields,field_description:account.field_account_payment_method____last_update
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line____last_update
 #: model:ir.model.fields,field_description:account.field_account_payment_register____last_update
 #: model:ir.model.fields,field_description:account.field_account_payment_term____last_update
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line____last_update
@@ -7212,24 +7275,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill____last_update
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm____last_update
 #: model:ir.model.fields,field_description:account.field_account_unreconcile____last_update
-#: model:ir.model.fields,field_description:account.field_base_document_layout____last_update
 #: model:ir.model.fields,field_description:account.field_cash_box_out____last_update
-#: model:ir.model.fields,field_description:account.field_digest_digest____last_update
-#: model:ir.model.fields,field_description:account.field_ir_actions_report____last_update
-#: model:ir.model.fields,field_description:account.field_product_category____last_update
-#: model:ir.model.fields,field_description:account.field_product_product____last_update
-#: model:ir.model.fields,field_description:account.field_product_template____last_update
-#: model:ir.model.fields,field_description:account.field_report_account_report_hash_integrity____last_update
-#: model:ir.model.fields,field_description:account.field_report_account_report_invoice____last_update
-#: model:ir.model.fields,field_description:account.field_report_account_report_invoice_with_payments____last_update
-#: model:ir.model.fields,field_description:account.field_report_account_report_journal____last_update
-#: model:ir.model.fields,field_description:account.field_res_company____last_update
-#: model:ir.model.fields,field_description:account.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:account.field_res_currency____last_update
-#: model:ir.model.fields,field_description:account.field_res_partner____last_update
-#: model:ir.model.fields,field_description:account.field_res_partner_bank____last_update
-#: model:ir.model.fields,field_description:account.field_res_users____last_update
-#: model:ir.model.fields,field_description:account.field_sequence_mixin____last_update
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard____last_update
 #: model:ir.model.fields,field_description:account.field_validate_account_move____last_update
 msgid "Last Modified on"
@@ -7271,6 +7317,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__write_uid
 #: model:ir.model.fields,field_description:account.field_account_payment__write_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_method__write_uid
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__write_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_register__write_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_term__write_uid
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__write_uid
@@ -7335,6 +7382,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__write_date
 #: model:ir.model.fields,field_description:account.field_account_payment__write_date
 #: model:ir.model.fields,field_description:account.field_account_payment_method__write_date
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__write_date
 #: model:ir.model.fields,field_description:account.field_account_payment_register__write_date
 #: model:ir.model.fields,field_description:account.field_account_payment_term__write_date
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__write_date
@@ -7413,6 +7461,11 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Less Payment"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "Let empty to use the default outstanding account"
 msgstr ""
 
 #. module: account
@@ -7549,6 +7602,8 @@ msgid "Mail Activity Type"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__message_main_attachment_id
+#: model:ir.model.fields,field_description:account.field_account_account_template__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_journal__message_main_attachment_id
@@ -7568,6 +7623,13 @@ msgid "Main currency of your company"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_send__reply_to_force_new
+msgid ""
+"Manage answers as new incoming emails instead of replies going to the same "
+"thread."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.menu,name:account.account_management_menu
 #: model:ir.ui.menu,name:account.account_reports_management_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries_management
@@ -7581,30 +7643,40 @@ msgid "Manual"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_journal__inbound_payment_method_ids
+#: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_line_ids
 msgid ""
-"Manual: Get paid by cash, check or any other method outside of Odoo.\n"
-"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
-"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
+"Manual : Pay by any method outside of Odoo.Check: Pay bills by check and "
+"print it from Odoo.SEPA Credit Transfer : Pay in the SEPA zone by submitting"
+" a SEPA Credit Transfer file to your bank. Module account_sepa is necessary"
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_method_id
 #: model:ir.model.fields,help:account.field_account_payment_register__payment_method_id
 msgid ""
-"Manual: Get paid by cash, check or any other method outside of Odoo.\n"
-"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
-"Check: Pay bill by check and print it from Odoo.\n"
-"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"
-"SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
+"Manual : Pay or Get paid by any method outside of Odoo.Payment Acquirers : "
+"Each payment acquirer has its own Payment Method. Request a transaction "
+"on/to a card thanks to a payment token saved by the partner when buying or "
+"subscribing online.Check: Pay bills by check and print it from Odoo.Batch "
+"Deposit: Collect several customer checks at once generating and submitting a"
+" batch deposit to your bank. Module account_batch_payment is necessary.SEPA "
+"Credit Transfer : Pay in the SEPA zone by submitting a SEPA Credit Transfer "
+"file to your bank. Module account_sepa is necessarySEPA Direct Debit : Get "
+"paid in the SEPA zone thanks to a mandate your partner will have granted to "
+"you. Module account_sepa is necessary"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_ids
+#: model:ir.model.fields,help:account.field_account_journal__inbound_payment_method_line_ids
 msgid ""
-"Manual:Pay bill by cash or any other method outside of Odoo.\n"
-"Check:Pay bill by check and print it from Odoo.\n"
-"SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
+"Manual :Get paid by any method outside of Odoo.Payment Acquirers : Each "
+"payment acquirer has its own Payment Method. Request a transaction on/to a "
+"card thanks to a payment token saved by the partner when buying or "
+"subscribing online.Batch Deposit: Collect several customer checks at once "
+"generating and submitting a batch deposit to your bank. Module "
+"account_batch_payment is necessary.SEPA Direct Debit : Get paid in the SEPA "
+"zone thanks to a mandate your partner will have granted to you. Module "
+"account_sepa is necessary"
 msgstr ""
 
 #. module: account
@@ -7744,6 +7816,8 @@ msgid "Memo:"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__message_has_error
+#: model:ir.model.fields,field_description:account.field_account_account_template__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_journal__message_has_error
@@ -7771,17 +7845,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__message_ids
+#: model:ir.model.fields,field_description:account.field_account_account_template__message_ids
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_ids
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_ids
 #: model:ir.model.fields,field_description:account.field_account_journal__message_ids
 #: model:ir.model.fields,field_description:account.field_account_move__message_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__message_ids
 msgid "Messages"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "Methods"
 msgstr ""
 
 #. module: account
@@ -7885,6 +7956,14 @@ msgid "Multi-Currencies"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__my_activity_date_deadline
+#: model:ir.model.fields,field_description:account.field_account_journal__my_activity_date_deadline
+#: model:ir.model.fields,field_description:account.field_account_move__my_activity_date_deadline
+#: model:ir.model.fields,field_description:account.field_account_payment__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "My Invoices"
@@ -7898,6 +7977,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_group_template__name
 #: model:ir.model.fields,field_description:account.field_account_incoterms__name
 #: model:ir.model.fields,field_description:account.field_account_payment_method__name
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__name
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__name
 #: model:ir.model.fields,field_description:account.field_account_root__name
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_name
@@ -8015,6 +8095,11 @@ msgid "No attachment was provided"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_tax_report_line_form
+msgid "No carryover"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -8039,11 +8124,6 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "No possible action found with the selected lines."
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_send__no_auto_thread
-msgid "No threading for answers"
 msgstr ""
 
 #. module: account
@@ -8199,6 +8279,8 @@ msgid "Number"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__message_needaction_counter
+#: model:ir.model.fields,field_description:account.field_account_account_template__message_needaction_counter
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_needaction_counter
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_needaction_counter
 #: model:ir.model.fields,field_description:account.field_account_journal__message_needaction_counter
@@ -8218,6 +8300,8 @@ msgid "Number of entries related to this model"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__message_has_error_counter
+#: model:ir.model.fields,field_description:account.field_account_account_template__message_has_error_counter
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_has_error_counter
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_has_error_counter
 #: model:ir.model.fields,field_description:account.field_account_journal__message_has_error_counter
@@ -8227,6 +8311,8 @@ msgid "Number of errors"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_account__message_needaction_counter
+#: model:ir.model.fields,help:account.field_account_account_template__message_needaction_counter
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_needaction_counter
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__message_needaction_counter
 #: model:ir.model.fields,help:account.field_account_journal__message_needaction_counter
@@ -8236,6 +8322,8 @@ msgid "Number of messages which requires an action"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
+#: model:ir.model.fields,help:account.field_account_account_template__message_has_error_counter
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_has_error_counter
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__message_has_error_counter
 #: model:ir.model.fields,help:account.field_account_journal__message_has_error_counter
@@ -8252,6 +8340,8 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_account__message_unread_counter
+#: model:ir.model.fields,help:account.field_account_account_template__message_unread_counter
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_unread_counter
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__message_unread_counter
 #: model:ir.model.fields,help:account.field_account_journal__message_unread_counter
@@ -8518,8 +8608,22 @@ msgid "Optional tags you may want to assign for custom reporting"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_send__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__code
 msgid "Optional unique code to refer to this line in total formulas"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_send__null_value
+msgid "Optional value to use if the target field is empty"
 msgstr ""
 
 #. module: account
@@ -8562,6 +8666,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Original Currency"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_send__reply_to_mode
+msgid ""
+"Original Discussion: Answers go in the original document discussion thread. \n"
+" Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n"
+" This has an impact on the generated message-id."
 msgstr ""
 
 #. module: account
@@ -8613,7 +8725,7 @@ msgid "Outbound"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_journal__outbound_payment_method_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__outbound_payment_method_line_ids
 msgid "Outbound Payment Methods"
 msgstr ""
 
@@ -8628,19 +8740,14 @@ msgid "Outgoing mail server"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_journal__payment_credit_account_id
-msgid ""
-"Outgoing payments entries triggered by bills/credit notes will be posted on "
-"the Outstanding Payments Account and displayed as blue lines in the bank "
-"reconciliation widget. During the reconciliation process, concerned "
-"transactions will be reconciled with entries on the Outstanding Payments "
-"Account instead of the payable account."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_account_output_categ_id
 #: model:ir.model.fields,field_description:account.field_res_company__property_stock_account_output_categ_id
 msgid "Output Account for Stock Valuation"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__outstanding_account_id
+msgid "Outstanding Account"
 msgstr ""
 
 #. module: account
@@ -8650,9 +8757,13 @@ msgid "Outstanding Payments"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_journal__payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 msgid "Outstanding Payments Account"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "Outstanding Payments accounts"
 msgstr ""
 
 #. module: account
@@ -8662,9 +8773,13 @@ msgid "Outstanding Receipts"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_journal__payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 msgid "Outstanding Receipts Account"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "Outstanding Receipts accounts"
 msgstr ""
 
 #. module: account
@@ -8897,6 +9012,11 @@ msgid "Payment"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__payment_account_id
+msgid "Payment Account"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment Communications"
 msgstr ""
@@ -8938,6 +9058,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_method_id
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__payment_method_id
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_method_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payment Method"
@@ -8945,6 +9066,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_method
+#: model:ir.model,name:account.model_account_payment_method_line
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment Methods"
 msgstr ""
 
@@ -8963,6 +9086,11 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Receipt:"
+msgstr ""
+
+#. module: account
+#: model:mail.template,name:account.mail_template_data_payment_receipt
+msgid "Payment Receipt: Send by email"
 msgstr ""
 
 #. module: account
@@ -9006,6 +9134,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_type
 #: model:ir.model.fields,field_description:account.field_account_payment_method__payment_type
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__payment_type
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_type
 msgid "Payment Type"
 msgstr ""
@@ -9016,42 +9145,42 @@ msgid "Payment term explanation for the customer..."
 msgstr ""
 
 #. module: account
-#: model:account.payment.term,note:account.account_payment_term_15days
+#: model_terms:account.payment.term,note:account.account_payment_term_15days
 msgid "Payment terms: 15 Days"
 msgstr ""
 
 #. module: account
-#: model:account.payment.term,note:account.account_payment_term_2months
+#: model_terms:account.payment.term,note:account.account_payment_term_2months
 msgid "Payment terms: 2 Months"
 msgstr ""
 
 #. module: account
-#: model:account.payment.term,note:account.account_payment_term_21days
+#: model_terms:account.payment.term,note:account.account_payment_term_21days
 msgid "Payment terms: 21 Days"
 msgstr ""
 
 #. module: account
-#: model:account.payment.term,note:account.account_payment_term_30days
+#: model_terms:account.payment.term,note:account.account_payment_term_30days
 msgid "Payment terms: 30 Days"
 msgstr ""
 
 #. module: account
-#: model:account.payment.term,note:account.account_payment_term_advance_60days
+#: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
 msgstr ""
 
 #. module: account
-#: model:account.payment.term,note:account.account_payment_term_45days
+#: model_terms:account.payment.term,note:account.account_payment_term_45days
 msgid "Payment terms: 45 Days"
 msgstr ""
 
 #. module: account
-#: model:account.payment.term,note:account.account_payment_term_end_following_month
+#: model_terms:account.payment.term,note:account.account_payment_term_end_following_month
 msgid "Payment terms: End of Following Month"
 msgstr ""
 
 #. module: account
-#: model:account.payment.term,note:account.account_payment_term_immediate
+#: model_terms:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment terms: Immediate Payment"
 msgstr ""
 
@@ -9066,11 +9195,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #, python-format
 msgid "Payments"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "Payments Configuration"
 msgstr ""
 
 #. module: account
@@ -9136,6 +9260,11 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Period"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__copyvalue
+msgid "Placeholder Expression"
 msgstr ""
 
 #. module: account
@@ -9825,8 +9954,18 @@ msgid "Related Document Model"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__related_taxes_amount
+msgid "Related Taxes Amount"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__render_model
+msgid "Rendering Model"
 msgstr ""
 
 #. module: account
@@ -9860,15 +9999,20 @@ msgid "Replacement Tax"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_invoice_send__reply_to
-msgid ""
-"Reply email address. Setting the reply_to bypasses the automatic thread "
-"creation."
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_mode
+msgid "Replies"
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to
-msgid "Reply-To"
+msgid "Reply To"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_send__reply_to
+msgid ""
+"Reply email address. Setting the reply_to bypasses the automatic thread "
+"creation."
 msgstr ""
 
 #. module: account
@@ -10163,6 +10307,8 @@ msgid "SEPA Direct Debit (SDD)"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__message_has_sms_error
+#: model:ir.model.fields,field_description:account.field_account_account_template__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_account_journal__message_has_sms_error
@@ -10317,6 +10463,11 @@ msgid "Search Fiscal Positions"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_tax_group_view_search
+msgid "Search Group"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Search Invoice"
 msgstr ""
@@ -10377,11 +10528,6 @@ msgstr ""
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Securisation of %s - %s"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Security"
 msgstr ""
 
 #. module: account
@@ -10463,10 +10609,22 @@ msgid "Select here the kind of valuation related to this payment terms line."
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_send__model_object_field
+msgid ""
+"Select target field from the related document model.\n"
+"If it is a relationship field you will be able to select a target field at the destination of the relationship."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
 "for such taxes on a given account during reconciliation."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__selected_payment_method_codes
+msgid "Selected Payment Method Codes"
 msgstr ""
 
 #. module: account
@@ -10581,7 +10739,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_journal__sequence
 #: model:ir.model.fields,field_description:account.field_account_journal_group__sequence
 #: model:ir.model.fields,field_description:account.field_account_move_line__sequence
-#: model:ir.model.fields,field_description:account.field_account_payment_method__sequence
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__sequence
 #: model:ir.model.fields,field_description:account.field_account_payment_term__sequence
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__sequence
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__sequence
@@ -10867,6 +11025,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Some payment methods supposed to be unique already exists somewhere else.\n"
+"(%s)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
 msgid "Sometimes called BIC or Swift."
 msgstr ""
@@ -11070,6 +11236,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__string_to_hash
 #: model:ir.model.fields,field_description:account.field_account_payment__string_to_hash
 msgid "String To Hash"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__sub_model_object_field
+msgid "Sub-field"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__sub_object
+msgid "Sub-model"
 msgstr ""
 
 #. module: account
@@ -11522,6 +11698,7 @@ msgid "TaxCloud"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
 #: model:account.tax.group,name:account.tax_group_taxes
 #: model:ir.actions.act_window,name:account.action_tax_form
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_ids
@@ -11532,6 +11709,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
+#, python-format
 msgid "Taxes"
 msgstr ""
 
@@ -11738,6 +11916,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_journal__selected_payment_method_codes
+msgid "Technical field used to hide or show payment method options if needed."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_payment__hide_payment_method
 #: model:ir.model.fields,help:account.field_account_payment_register__hide_payment_method
 msgid ""
@@ -11903,6 +12086,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__terms_type
 #: model:ir.model.fields,field_description:account.field_res_config_settings__terms_type
 msgid "Terms & Conditions format"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Terms & Conditions: %s"
 msgstr ""
 
 #. module: account
@@ -12115,6 +12304,11 @@ msgid "The code of the account must be unique per company !"
 msgstr ""
 
 #. module: account
+#: model:ir.model.constraint,message:account.constraint_account_payment_method_name_code_unique
+msgid "The combination code/payment type already exists!"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12125,6 +12319,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_tax_group__country_id
+msgid "The country for which this tax group is applicable."
 msgstr ""
 
 #. module: account
@@ -12715,6 +12914,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "The tax group must have the same country_id as the tax using it."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_report_line_ids
 msgid "The tax report lines using this tag"
 msgstr ""
@@ -12853,6 +13058,13 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
+"This adds a menu item in the Accounting Configuration menu to import FEC "
+"files."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the"
 " master budgets and the budgets are defined, the project managers can set "
 "the planned amount on each analytic account."
@@ -12885,6 +13097,14 @@ msgstr ""
 msgid ""
 "This entry contains some tax from an unallowed country. Please check its "
 "fiscal position and your tax configuration."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"This entry has been duplicated from <a href=# data-oe-model=account.move "
+"data-oe-id=%(id)d>%(title)s</a>"
 msgstr ""
 
 #. module: account
@@ -13366,6 +13586,8 @@ msgid "Unposted Journal Items"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__message_unread
+#: model:ir.model.fields,field_description:account.field_account_account_template__message_unread
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_unread
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_unread
 #: model:ir.model.fields,field_description:account.field_account_journal__message_unread
@@ -13375,6 +13597,8 @@ msgid "Unread Messages"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__message_unread_counter
+#: model:ir.model.fields,field_description:account.field_account_account_template__message_unread_counter
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_unread_counter
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_unread_counter
 #: model:ir.model.fields,field_description:account.field_account_journal__message_unread_counter
@@ -13523,11 +13747,6 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_payment_method__sequence
-msgid "Used to order Methods in the form view"
 msgstr ""
 
 #. module: account
@@ -13761,6 +13980,8 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__website_message_ids
+#: model:ir.model.fields,field_description:account.field_account_account_template__website_message_ids
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__website_message_ids
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__website_message_ids
 #: model:ir.model.fields,field_description:account.field_account_journal__website_message_ids
@@ -13770,12 +13991,28 @@ msgid "Website Messages"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_account__website_message_ids
+#: model:ir.model.fields,help:account.field_account_account_template__website_message_ids
 #: model:ir.model.fields,help:account.field_account_bank_statement__website_message_ids
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__website_message_ids
 #: model:ir.model.fields,help:account.field_account_journal__website_message_ids
 #: model:ir.model.fields,help:account.field_account_move__website_message_ids
 #: model:ir.model.fields,help:account.field_account_payment__website_message_ids
 msgid "Website communication history"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_send__sub_model_object_field
+msgid ""
+"When a relationship field is selected as first field, this field lets you "
+"select the target field within the destination document model (sub-model)."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_send__sub_object
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
 msgstr ""
 
 #. module: account
@@ -13987,7 +14224,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You can't create a new payment without an outstanding payments/receipts "
-"account set on the %s journal."
+"account set either on the company or the %s payment method in the %s "
+"journal."
 msgstr ""
 
 #. module: account
@@ -14417,6 +14655,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"

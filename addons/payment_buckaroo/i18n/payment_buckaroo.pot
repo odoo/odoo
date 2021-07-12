@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.3\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-11 09:26+0000\n"
-"PO-Revision-Date: 2021-05-11 09:26+0000\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-07-12 07:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,6 +16,15 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"An error occured during processing of your payment (code %s). Please try "
+"again."
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:account.payment.method,name:payment_buckaroo.payment_method_buckaroo
 #: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_acquirer__provider__buckaroo
 msgid "Buckaroo"
 msgstr ""
@@ -26,27 +35,9 @@ msgid "Buckaroo Secret Key"
 msgstr ""
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__display_name
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction__display_name
-msgid "Display Name"
-msgstr ""
-
-#. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__id
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction__id
-msgid "ID"
-msgstr ""
-
-#. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Invalid shasign: received %(sign)s, computed %(check)s"
-msgstr ""
-
-#. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer____last_update
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: payment_buckaroo
@@ -58,6 +49,11 @@ msgstr ""
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_acquirer
 msgid "Payment Acquirer"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:ir.model,name:payment_buckaroo.model_account_payment_method
+msgid "Payment Methods"
 msgstr ""
 
 #. module: payment_buckaroo
@@ -106,4 +102,10 @@ msgstr ""
 #. module: payment_buckaroo
 #: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
 msgid "Website Key"
+msgstr ""
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Your payment was refused (code %s). Please try again."
 msgstr ""
