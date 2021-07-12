@@ -328,7 +328,7 @@ export class OdooEditor extends EventTarget {
         // Rollback if node.ouid changed. This ensures that nodes never change
         // unbreakable ancestors.
         node.ouid = node.ouid || getOuid(node, true);
-        if (testunbreak) {
+        if (testunbreak && !(node.nodeType === Node.TEXT_NODE && !node.length)) {
             const ouid = getOuid(node);
             if (!this._toRollback && ouid && ouid !== node.ouid) {
                 this._toRollback = UNBREAKABLE_ROLLBACK_CODE;

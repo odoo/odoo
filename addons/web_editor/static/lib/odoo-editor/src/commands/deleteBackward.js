@@ -1,6 +1,5 @@
 /** @odoo-module **/
 import { UNBREAKABLE_ROLLBACK_CODE, UNREMOVABLE_ROLLBACK_CODE } from '../utils/constants.js';
-
 import {
     boundariesOut,
     childNodeIndex,
@@ -66,9 +65,6 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
         const leftNode = this.childNodes[offset - 1];
         if (isUnremovable(leftNode)) {
             throw UNREMOVABLE_ROLLBACK_CODE;
-        }
-        if (isUnbreakable(leftNode)) {
-            throw UNBREAKABLE_ROLLBACK_CODE;
         }
         if (isMediaElement(leftNode)) {
             leftNode.remove();
