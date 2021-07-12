@@ -125,7 +125,7 @@ def create_xml_node_chain(first_parent_node, nodes_list, last_node_value=None):
     in `nodes_list`, under the given node `first_parent_node`.
 
     :param etree._Element first_parent_node: parent of the created tree/chain
-    :param iterable[str] nodes_list: tag names to be created
+    :param Iterable[str] nodes_list: tag names to be created
     :param str last_node_value: if specified, set the last node's text to this value
     :returns: the list of created nodes
     :rtype: list[etree._Element]
