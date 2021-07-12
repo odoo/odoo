@@ -9,7 +9,7 @@
     'depends': [
         'iap_crm',
         'iap_mail',
-        'crm_iap_lead',
+        'crm_iap_mine',
         'website'
     ],
     'data': [

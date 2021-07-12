@@ -4,7 +4,7 @@ from odoo import api, models
 
 class CRMHelpers(models.Model):
     _name = 'crm.iap.lead.helpers'
-    _description = 'Helper methods for crm_iap_lead modules'
+    _description = 'Helper methods for crm_iap_mine modules'
 
     @api.model
     def notify_no_more_credit(self, service_name, model_name, notification_parameter):
@@ -15,7 +15,7 @@ class CRMHelpers(models.Model):
         already_notified = self.env['ir.config_parameter'].sudo().get_param(notification_parameter, False)
         if already_notified:
             return
-        mail_template = self.env.ref('crm_iap_lead.lead_generation_no_credits')
+        mail_template = self.env.ref('crm_iap_mine.lead_generation_no_credits')
         iap_account = self.env['iap.account'].search([('service_name', '=', service_name)], limit=1)
         # Get the email address of the creators of the records
         res = self.env[model_name].search_read([], ['create_uid'])
