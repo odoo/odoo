@@ -8,16 +8,6 @@ from odoo.tools import mute_logger
 
 
 class TestMailGroupMessage(TestMailListCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestMailGroupMessage, cls).setUpClass()
-        cls.test_group_member_5_emp_2 = cls.env['mail.group.member'].create({
-            'partner_id': cls.user_employee_2.partner_id.id,
-            'mail_group_id': cls.test_group.id,
-        })
-        cls.user_portal = cls._create_portal_user()
-
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail_group.models.mail_group_message')
     def test_email_duplicated(self):
         """ Test gateway does not accept two times same incoming email """
@@ -52,7 +42,7 @@ class TestMailGroupMessage(TestMailListCommon):
                 subject='Test subject', target_model='mail.group')
 
         mails = self.env['mail.mail'].search([('subject', '=', 'Test subject')])
-        self.assertEqual(len(mails), 4)
+        self.assertEqual(len(mails), len(self.test_group.member_ids) - 1)
         self.assertNotIn(self.test_group_member_1.email, mails.mapped('email_to'), 'Should not have send the email to the original author')
 
     @mute_logger('odoo.addons.base.models.ir_rule')

@@ -17,7 +17,9 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
     start: function () {
         this.mailgroupId = this.$target.data('id');
         this.isMember = this.$target.data('isMember') || false;
-        this.token = (new URL(document.location.href)).searchParams.get('token');
+        const searchParams = (new URL(document.location.href)).searchParams;
+        this.token = searchParams.get('token');
+        this.forceUnsubscribe = searchParams.has('unsubscribe');
         return this._super.apply(this, arguments);
     },
 
@@ -40,13 +42,12 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
 
         this.$target.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
 
-        let action = this.isMember ? 'unsubscribe' : 'subscribe';
+        const action = (this.isMember || this.forceUnsubscribe) ? 'unsubscribe' : 'subscribe';
 
         const response = await this._rpc({
-            route: '/groups/subscription',
+            route: '/group/' + action,
             params: {
                 'group_id': this.mailgroupId,
-                'action': action,
                 'email': email,
                 'token': this.token,
             },
@@ -56,26 +57,28 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
 
         if (response === 'added') {
             this.isMember = true;
-            this.$target.find('.o_mg_subscribe_btn').text(_t('Unsubscribe'));
+            this.$target.find('.o_mg_subscribe_btn').text(_t('Unsubscribe')).removeClass('btn-primary').addClass('btn-outline-primary');
         } else if (response === 'removed') {
             this.isMember = false;
-            this.$target.find('.o_mg_subscribe_btn').text(_t('Subscribe'));
+            this.$target.find('.o_mg_subscribe_btn').text(_t('Subscribe')).removeClass('btn-outline-primary').addClass('btn-primary');
         } else if (response === 'email_sent') {
             // The confirmation email has been sent
             this.$target.html(
                 $('<div class="o_mg_alert alert alert-success" role="alert"/>')
-                .text(_t('An email with the instructions has been sent.'))
+                .text(_t('An email with instructions has been sent.'))
             );
         } else if (response === 'is_already_member') {
             this.isMember = true;
-            this.$target.find('.o_mg_subscribe_btn').text(_t('Unsubscribe'));
+            this.$target.find('.o_mg_subscribe_btn').text(_t('Unsubscribe')).removeClass('btn-primary').addClass('btn-outline-primary');
             this.$target.find('.o_mg_subscribe_form').before(
                 $('<div class="o_mg_alert alert alert-warning" role="alert"/>')
                 .text(_t('This email is already subscribed.'))
             );
         } else if (response === 'is_not_member') {
-            this.isMember = false;
-            this.$target.find('.o_mg_subscribe_btn').text(_t('Subscribe'));
+            if (!this.forceUnsubscribe) {
+                this.isMember = false;
+                this.$target.find('.o_mg_subscribe_btn').text(_t('Subscribe'));
+            }
             this.$target.find('.o_mg_subscribe_form').before(
                 $('<div class="o_mg_alert alert alert-warning" role="alert"/>')
                 .text(_t('This email is not subscribed.'))

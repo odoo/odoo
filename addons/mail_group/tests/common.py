@@ -76,3 +76,5 @@ class TestMailListCommon(TestMailCommon):
             'moderation_status': 'rejected',
             'email_from': '"Alice" <alice@test.com>',
         })
+
+        cls.user_portal = cls._create_portal_user()

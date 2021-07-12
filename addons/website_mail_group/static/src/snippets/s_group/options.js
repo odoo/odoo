@@ -34,9 +34,10 @@ options.registry.Group = options.Class.extend({
         // if the current user has access to the group
         this.$target.addClass('d-none');
 
-        const emailInput = this.$el.find('.o_mg_subscribe_email');
+        const emailInput = this.$target.find('.o_mg_subscribe_email');
         emailInput.val('');
         emailInput.removeAttr('readonly');
+        this.$target.find('.o_mg_subscribe_btn').text(_t('Subscribe'));
     },
 
     //--------------------------------------------------------------------------

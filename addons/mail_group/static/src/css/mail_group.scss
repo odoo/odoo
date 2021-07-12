@@ -2,7 +2,11 @@
     width: 120px;
 }
 
-.ribbon {
+.o_mg_page_description {
+    background-image: url(/mail_group/static/src/img/mail_group_portal.jpg);
+}
+
+.o_mg_ribbon {
     right: 0;
     width: 120px;
     height: 120px;
@@ -23,4 +27,18 @@
         overflow: hidden;
         user-select: none;
     }
+}
+
+.o_mg_message *[data-o-mail-quote]:not(.visible)  {
+    // Hide the quotation of the parent email in the body
+    // The "visible" class with be toggled in JS
+    display: none!important;
+}
+
+.o_mg_attachment {
+    width: 120px;
+}
+
+.o_mg_message {
+    min-width: 250px;
 }

@@ -13,18 +13,16 @@ from odoo.tools import mute_logger
 
 @tagged('mail_group_moderation')
 class TestMailGroupModeration(TestMailListCommon):
-
     @classmethod
     def setUpClass(cls):
         super(TestMailGroupModeration, cls).setUpClass()
 
-        # Test group: members, moderation
         cls.test_group_2 = cls.env['mail.group'].create({
-            'access_mode': 'public',
+            'access_mode': 'members',
             'alias_name': 'test.mail.group.2',
             'moderation': True,
             'moderator_ids': [Command.link(cls.user_employee.id)],
-            'name': 'Another test group',
+            'name': 'Test group 2',
         })
 
     @mute_logger('odoo.sql_db')
@@ -112,10 +110,8 @@ class TestMailGroupModeration(TestMailListCommon):
 
     @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.base.models.ir_model')
     def test_moderation_rule_security(self):
-        user_portal = self._create_portal_user()
-
         with self.assertRaises(AccessError, msg='Portal should not have access to moderation rules'):
-            self.env['mail.group.moderation'].with_user(user_portal).browse(self.moderation.ids).email
+            self.env['mail.group.moderation'].with_user(self.user_portal).browse(self.moderation.ids).email
 
         self.test_group.write({
             'moderator_ids': [(4, self.user_admin.id), (3, self.user_employee.id)]
@@ -138,11 +134,11 @@ class TestModeration(TestMailListCommon):
 
         # Test group: members, moderation
         cls.test_group_2 = cls.env['mail.group'].create({
-            'access_mode': 'public',
+            'access_mode': 'members',
             'alias_name': 'test.mail.group.2',
             'moderation': True,
-            'moderator_ids': [Command.link(cls.user_employee_2.id)],
-            'name': 'Another test group',
+            'moderator_ids': [Command.link(cls.user_employee.id)],
+            'name': 'Test group 2',
         })
         cls.test_group_2_member_emp = cls.env['mail.group.member'].create({
             'partner_id': cls.user_employee_2.partner_id.id,
@@ -206,10 +202,10 @@ class TestModeration(TestMailListCommon):
     @users('employee')
     def test_moderation_flow_allow(self):
         """ Unknown email sends email on moderated group, test allow """
-        mail_group = self.env['mail.group'].browse(self.test_group.ids)
+        mail_group = self.test_group
         mail_group_2_as2 = self.env['mail.group'].with_user(self.user_employee_2).browse(self.test_group_2.ids)
         self.assertEqual(len(mail_group.mail_group_message_ids), 3)
-        self.assertEqual(len(mail_group_2_as2.mail_group_message_ids), 1)
+        group_2_message_count = len(mail_group_2_as2.mail_group_message_ids)
 
         with self.mock_mail_gateway():
             self.format_and_process(
@@ -235,7 +231,7 @@ class TestModeration(TestMailListCommon):
 
         # Create a moderation rule to always accept this email address
         with self.mock_mail_gateway():
-            new_email_message.action_allow()
+            new_email_message.action_moderate_allow()
 
         self.assertEqual(new_email_message.moderation_status, 'accepted', 'Should have accepted the message')
         self.assertEqual(old_email_message.moderation_status, 'accepted', 'Should have accepted the old message of the same author')
@@ -285,7 +281,7 @@ class TestModeration(TestMailListCommon):
             self.test_group_2_msg_1_pending.moderation_status, 'pending_moderation',
             'Should not have accepted message in the other group')
         self.assertEqual(
-            len(mail_group_2_as2.mail_group_message_ids), 1,
+            len(mail_group_2_as2.mail_group_message_ids), group_2_message_count,
             'Should never have created message in the other group')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail_group.models.mail_group_message', 'odoo.models.unlink')
@@ -311,7 +307,7 @@ class TestModeration(TestMailListCommon):
 
         # ban and check moderation rule has been
         with self.mock_mail_gateway():
-            new_email_message.action_ban()
+            new_email_message.action_moderate_ban()
 
         self.assertEqual(old_email_message.moderation_status, 'rejected')
         self.assertEqual(new_email_message.moderation_status, 'rejected')
@@ -395,7 +391,7 @@ class TestModeration(TestMailListCommon):
             self.assertMailMailWEmails([email], 'outgoing',
                                        content="Test guidelines group",
                                        fields_values={
-                                        'email_from': self.env.company.catchall_formatted,
+                                        'email_from': self.env.company.email_formatted,
                                         'subject': 'Guidelines of group %s' % mail_group.name,
                                        })
 
@@ -415,6 +411,6 @@ class TestModeration(TestMailListCommon):
         self.assertMailMailWEmails(['"New Member" <new.member@test.com>'], 'outgoing',
                                    content="Test guidelines group",
                                    fields_values={
-                                    'email_from': self.env.company.catchall_formatted,
+                                    'email_from': self.env.company.email_formatted,
                                     'subject': 'Guidelines of group %s' % mail_group.name,
                                    })

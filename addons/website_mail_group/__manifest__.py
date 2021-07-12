@@ -11,6 +11,8 @@
     'data': [
         'views/snippets/s_group.xml',
         'views/snippets/snippets.xml',
+        'views/mail_group_views.xml',
+        'views/website_mail_group_menus.xml',
     ],
     'assets': {
         'website.assets_wysiwyg': [
