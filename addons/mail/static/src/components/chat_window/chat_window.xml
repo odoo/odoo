@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChatWindow" owl="1">
-        <div class="o_ChatWindow" tabindex="0" t-att-data-visible-index="chatWindow ? chatWindow.visibleIndex : undefined"
+        <div class="o_ChatWindow bg-white" tabindex="0" t-att-data-visible-index="chatWindow ? chatWindow.visibleIndex : undefined"
             t-att-class="{
                 'o-focused': chatWindow and chatWindow.isFocused,
                 'o-folded': chatWindow and chatWindow.isFolded,
@@ -20,7 +20,10 @@
                     t-on-o-clicked="_onClickedHeader"
                     t-ref="header"
                 />
-                <t t-if="chatWindow.threadView">
+                <t t-if="chatWindow.thread and chatWindow.thread.isMemberListMakingSense and chatWindow.isMemberListOpened">
+                    <ChannelMemberList channelLocalId="chatWindow.thread.localId" class="bg-white"/>
+                </t>
+                <t t-if="chatWindow.threadView and !chatWindow.isMemberListOpened">
                     <ThreadView
                         class="o_ChatWindow_thread"
                         composerAttachmentsDetailsMode="'card'"

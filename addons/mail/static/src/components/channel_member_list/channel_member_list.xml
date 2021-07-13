@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChannelMemberList" owl="1">
+        <div class="o_ChannelMemberList bg-light">
+            <t t-if="channel.orderedOnlineMembers.length > 0">
+                <t t-call="mail.ChannelMemberList_memberList">
+                    <t t-set="members" t-value="channel.orderedOnlineMembers"/>
+                    <t t-set="title">Online</t>
+                </t>
+            </t>
+            <t t-if="channel.orderedOfflineMembers.length > 0">
+                <t t-call="mail.ChannelMemberList_memberList">
+                    <t t-set="members" t-value="channel.orderedOfflineMembers"/>
+                    <t t-set="title">Offline</t>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="mail.ChannelMemberList_memberList" owl="1">
+        <h6 class="m-2"><t t-esc="title"/> - <t t-esc="members.length"/></h6>
+        <t t-foreach="members" t-as="member" t-key="member.localId">
+            <div class="o_ChannelMemberList_member">
+                <div class="o_ChannelMemberList_avatarContainer" t-on-click="channel.onClickMemberAvatar(member)">
+                    <img class="o_ChannelMemberList_avatar" t-att-src="member.avatarUrl" alt="Avatar"/>
+                    <t t-if="member.im_status and member.im_status !== 'im_partner'">
+                        <PartnerImStatusIcon
+                            class="o_ChannelMemberList_partnerImStatusIcon"
+                            t-att-class="{
+                                'o-mobile': messaging.device.isMobile,
+                            }"
+                            partnerLocalId="member.localId"
+                        />
+                    </t>
+                </div>
+                <div class="o_ChannelMemberList_avatarNameSeparator"/>
+                <span class="o_ChannelMemberList_name" t-on-click="channel.onClickMemberName(member)">
+                    <t t-esc="member.nameOrDisplayName"/>
+                </span>
+            </div>
+        </t>
+    </t>
+
+</templates>

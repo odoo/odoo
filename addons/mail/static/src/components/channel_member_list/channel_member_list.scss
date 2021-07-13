@@ -1,0 +1,70 @@
+.o_ChannelMemberList {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.o_ChannelMemberList_member {
+    display: flex;
+    align-items: center;
+    margin: map-get($spacers, 1) map-get($spacers, 3);
+
+    &:first-child {
+        margin-top: map-get($spacers, 3);
+    }
+
+    &:last-child {
+        margin-bottom: map-get($spacers, 3);
+    }
+}
+
+.o_ChannelMemberList_avatarContainer {
+    flex: 0 0 auto;
+    position: relative;
+    width: 32px;
+    height: 32px;
+}
+
+.o_ChannelMemberList_avatar {
+    @extend .rounded-circle;
+    width: map-get($sizes, 100);
+    height: map-get($sizes, 100);
+    object-fit: cover;
+}
+
+.o_ChannelMemberList_avatarNameSeparator {
+    min-width: map-get($spacers, 2);
+}
+
+.o_ChannelMemberList_partnerImStatusIcon {
+    @include o-position-absolute($bottom: 0, $right: 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:not(.o-mobile) {
+        font-size: x-small;
+    }
+}
+
+.o_ChannelMemberList_name {
+    flex: 1 1 auto;
+    min-width: 0;
+    @include text-truncate();
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ChannelMemberList_avatarContainer {
+    cursor: pointer;
+}
+
+.o_ChannelMemberList_name {
+    cursor: pointer;
+}
+
+.o_ChannelMemberList_partnerImStatusIcon {
+    color: theme-color('light'); // same as background of parent
+}

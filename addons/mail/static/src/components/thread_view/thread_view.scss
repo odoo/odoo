@@ -6,11 +6,35 @@
     display: flex;
     position: relative;
     flex-flow: column;
-    overflow: auto;
+    min-height: 0;
+}
+
+.o_ThreadView_bottomPart {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.o_ThreadView_channelMemberList {
+    flex: 0 0 auto;
+    width: $o-mail-chat-sidebar-width;
 }
 
 .o_ThreadView_composer {
     flex: 0 0 auto;
+}
+
+.o_ThreadView_core {
+    display: flex;
+    min-width: 0;
+    flex-flow: column;
+    flex: 1 1 auto;
+}
+
+.o_ThreadView_coreChannelMemberListSeparator {
+    flex: 0 0 auto;
+    width: $border-width;
+    height: map-get($sizes, 100);
 }
 
 .o_ThreadView_alertLoadingFailed {
@@ -43,7 +67,10 @@
 
 .o_ThreadView {
     background-color: gray('100');
+}
 
+.o_ThreadView_coreChannelMemberListSeparator {
+    background-color: $border-color;
 }
 
 .o_ThreadView_loadingIcon {

@@ -3,6 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
 import { clear, create, link, unlink, update } from '@mail/model/model_field_command';
+import { markEventHandled } from '@mail/utils/utils';
 
 function factory(dependencies) {
 
@@ -106,6 +107,22 @@ function factory(dependencies) {
             }
             const lastVisible = this.manager.lastVisible;
             this.manager.swap(this, lastVisible);
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickHideMemberList(ev) {
+            markEventHandled(ev, 'ChatWindow.onClickHideMemberList');
+            this.update({ isMemberListOpened: false });
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickShowMemberList(ev) {
+            markEventHandled(ev, 'ChatWindow.onClickShowMemberList');
+            this.update({ isMemberListOpened: true });
         }
 
         /**
@@ -355,6 +372,13 @@ function factory(dependencies) {
          * Determines whether `this` is folded.
          */
         isFolded: attr({
+            default: false,
+        }),
+        /**
+         * Determines whether the member list of this chat window is opened.
+         * Only makes sense if this thread isMemberListMakingSense is true.
+         */
+        isMemberListOpened: attr({
             default: false,
         }),
         /**

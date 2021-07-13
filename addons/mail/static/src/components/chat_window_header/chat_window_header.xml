@@ -25,6 +25,16 @@
                 </t>
                 <div class="o-autogrow"/>
                 <div class="o_ChatWindowHeader_item o_ChatWindowHeader_rightArea">
+                    <t t-if="chatWindow.thread and chatWindow.thread.isMemberListMakingSense and !chatWindow.isMemberListOpened">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShowMemberList" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"  title="Show Member List" t-on-click="chatWindow.onClickShowMemberList.bind(chatWindow)">
+                            <i class="fa fa-users"/>
+                        </div>
+                    </t>
+                    <t t-if="chatWindow.thread and chatWindow.thread.isMemberListMakingSense and chatWindow.isMemberListOpened">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandHideMemberList" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" title="Hide Member List" t-on-click="chatWindow.onClickHideMemberList.bind(chatWindow)">
+                            <i class="fa fa-users"/>
+                        </div>
+                    </t>
                     <t t-if="chatWindow.hasShiftPrev">
                         <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftPrev" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="_onClickShiftPrev" t-att-title="shiftPrevText">
                             <!-- this is reversed automatically when language is rtl -->

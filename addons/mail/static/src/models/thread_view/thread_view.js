@@ -262,6 +262,13 @@ function factory(dependencies) {
             related: 'composer.hasFocus',
         }),
         /**
+         * Determines whether this thread viewer has a member list.
+         * Only makes sense if thread.isMemberListMakingSense is true.
+         */
+        hasMemberList: attr({
+            related: 'threadViewer.hasMemberList',
+        }),
+        /**
          * Determines whether this thread view has a top bar.
          */
         hasTopbar: attr({
@@ -278,6 +285,13 @@ function factory(dependencies) {
          */
         isLoading: attr({
             default: false,
+        }),
+        /**
+         * Determines whether the member list of this thread is opened.
+         * Only makes sense if isMemberListMakingSense and hasMemberList are true.
+         */
+        isMemberListOpened: attr({
+            default: true,
         }),
         /**
          * States whether `this` is aware of `this.threadCache` currently
