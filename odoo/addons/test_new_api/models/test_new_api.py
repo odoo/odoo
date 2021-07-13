@@ -477,6 +477,17 @@ class Payment(models.Model):
     _inherits = {'test_new_api.move': 'move_id'}
 
     move_id = fields.Many2one('test_new_api.move', required=True, ondelete='cascade')
+    all_lines_visible = fields.Boolean(compute='_compute_all_lines_visible', store=True)
+    ref = fields.Char('Reference')
+
+    @api.depends('move_id.line_ids.visible')
+    def _compute_all_lines_visible(self):
+        for payment in self:
+            payment.all_lines_visible = 0 == sum(not line.visible for line in payment.move_id.line_ids)
+
+    def search(self, *args, **kwargs):
+        # extend to allow patching
+        return super().search(*args, **kwargs)
 
 
 class CompanyDependent(models.Model):

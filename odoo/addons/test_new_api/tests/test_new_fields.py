@@ -10,6 +10,7 @@ from datetime import date, datetime, time
 import io
 from PIL import Image
 import psycopg2
+from unittest.mock import patch
 
 from odoo import models, fields
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -1726,6 +1727,29 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(new_line.move_id, move)
         self.assertEqual(new_move.quantity, 3)
         self.assertEqual(move.quantity, 2)
+
+    def test_41_search_in_compute(self):
+        """ Check recomputation of fields on new records. """
+        with patch('odoo.addons.test_new_api.models.test_new_api.Payment.search') as payment_mock:
+            # TODO: mocking does work (i.e. changes search method), but it
+            # doesn't register calls so, instead of using assert_not_called we
+            # simply return wrong value (default value) and get error "Mixing
+            # apples and oranges". Test does work (catch the problem), but it
+            # raises not informative error
+
+            #payment_mock.return_value = self.env['test_new_api.payment']
+            move = self.env['test_new_api.move'].create({
+                'line_ids': [
+                    (0, 0, {
+                        'visible': True,
+                        'quantity': 1,
+                    })
+                ],
+            })
+            payment_mock.search.assert_not_called()
+        self.assertEqual(move.quantity, 1)
+        payment = self.env['test_new_api.payment'].create({'move_id': move.id})
+        self.assertEqual(payment.all_lines_visible, True)
 
     def test_41_new_one2many(self):
         """ Check command on one2many field on new record. """
