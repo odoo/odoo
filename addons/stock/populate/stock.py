@@ -286,15 +286,50 @@ class StockWarehouseOrderpoint(models.Model):
         ]
 
 
+class StockQuant(models.Model):
+    _inherit = 'stock.quant'
+
+    _populate_sizes = {'small': 100, 'medium': 5000, 'large': 20000}
+    _populate_dependencies = ['stock.location', 'product.product']
+
+    def _populate_factories(self):
+
+        product_ids = self.env['product.product'].search([
+            ('id', 'in', self.env.registry.populated_models['product.product']),
+            ('type', '=', 'product'),
+            ('tracking', '=', 'none')
+        ]).ids
+        locations = self.env['stock.location'].search([
+            ('id', 'in', self.env.registry.populated_models['stock.location']),
+            ('usage', '=', 'internal'),
+        ])
+
+        return [
+            ('location_id', populate.randomize(locations.ids)),
+            ('product_id', populate.randomize(product_ids)),
+            ('inventory_quantity', populate.randint(0, 100)),
+        ]
+
+    def _populate(self, size):
+        res = super(StockQuant, self.with_context(inventory_move=True))._populate(size)
+
+        _logger.info("Apply %d inventories line", len(res))
+        res.action_apply_inventory()
+
+        return res
+
 class PickingType(models.Model):
     _inherit = 'stock.picking.type'
 
-    _populate_sizes = {'small': 10, 'medium': 30, 'large': 200}
+    _populate_sizes = {'small': 9, 'medium': 30, 'large': 200}
     _populate_dependencies = ['stock.location']
 
     def _populate_factories(self):
         company_ids = self.env.registry.populated_models['res.company'][:COMPANY_NB_WITH_STOCK]
+        warehouses = self.env['stock.warehouse'].browse(self.env.registry.populated_models['stock.warehouse'])
         internal_locations = self.env['stock.location'].search([('company_id', 'in', company_ids), ('usage', '=', 'internal')])
+        in_warehouse_locations = self.env['stock.location'].search([('id', 'child_of', warehouses.lot_stock_id.ids)])
+        internal_locations &= in_warehouse_locations
 
         def get_name(values, counter, random):
             return "%d-%s-%d" % (values['company_id'], values['code'], counter)
@@ -307,7 +342,6 @@ class PickingType(models.Model):
             for values in iterator:
 
                 locations_company = locations_by_company[values['company_id']]
-                # TODO : choice only location child of warehouse.lot_stock_id
                 inter_location = random.choice(locations_company)
                 values['warehouse_id'] = inter_location.warehouse_id.id
                 if values['code'] == 'internal':

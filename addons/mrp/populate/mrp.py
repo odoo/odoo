@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from datetime import datetime, timedelta
 from collections import defaultdict
 
 from odoo import models
@@ -295,6 +296,7 @@ class MrpProduction(models.Model):
         return productions
 
     def _populate_factories(self):
+        now = datetime.now()
         company_ids = self.env.registry.populated_models['res.company'][:COMPANY_NB_WITH_STOCK]
 
         products = self.env['product.product'].browse(self.env.registry.populated_models['product.product'])
@@ -349,6 +351,11 @@ class MrpProduction(models.Model):
             picking_type = self.env['stock.picking.type'].browse(values['picking_type_id'])
             return picking_type.default_location_dest_id.id
 
+        def get_date_planned_start(values, counter, random):
+            # 95.45 % of picking scheduled between (-10, 30) days and follow a gauss distribution (only +-15% picking is late)
+            delta = random.gauss(10, 10)
+            return now + timedelta(days=delta)
+
         return [
             ('company_id', populate.iterate(company_ids)),
             ('bom_id', populate.compute(get_bom_id)),
@@ -357,6 +364,7 @@ class MrpProduction(models.Model):
             ('product_uom_id', populate.compute(get_product_uom_id)),
             ('product_qty', populate.randint(1, 10)),
             ('picking_type_id', populate.compute(get_picking_type_id)),
+            ('date_planned_start', populate.compute(get_date_planned_start)),
             ('location_src_id', populate.compute(get_location_src_id)),
             ('location_dest_id', populate.compute(get_location_dest_id)),
             ('priority', populate.iterate(['0', '1'], [0.95, 0.05])),
