@@ -113,7 +113,7 @@ class PecMailServerTests(AccountEdiTestCommon):
             invoices = self._create_invoice(self.signed_invoice_content, self.signed_invoice_filename)
             self.assertRecordValues(invoices, [{
                 'company_id': self.company.id,
-                'name': 'BILL/2020/04/0001',
+                'name': 'BILL/2014/12/0001',
                 'invoice_date': datetime.date(2014, 12, 18),
                 'ref': '01234567890',
             }])

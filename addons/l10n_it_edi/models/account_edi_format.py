@@ -4,14 +4,13 @@
 from odoo import api, models, fields, _
 from odoo.tests.common import Form
 from odoo.exceptions import UserError
-from odoo.tools import float_repr
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
+from odoo.osv.expression import OR, AND
 
 from lxml import etree
-from datetime import date, datetime
+from datetime import datetime
 import re
 import logging
-import base64
 
 
 _logger = logging.getLogger(__name__)
@@ -289,7 +288,15 @@ class AccountEdiFormat(models.Model):
                 partner = elements and self.env['res.partner'].search(['&', ('vat', 'ilike', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
                 if not partner:
                     elements = tree.xpath('//CedentePrestatore//CodiceFiscale')
-                    partner = elements and self.env['res.partner'].search(['&', ('l10n_it_codice_fiscale', '=', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
+                    if elements:
+                        codice = elements[0].text
+                        domains = [[('l10n_it_codice_fiscale', '=', codice)]]
+                        if re.match(r'^[0-9]{11}$', codice):
+                            domains.append([('l10n_it_codice_fiscale', '=', 'IT' + codice)])
+                        elif re.match(r'^IT[0-9]{11}$', codice):
+                            domains.append([('l10n_it_codice_fiscale', '=', self.env['res.partner']._l10n_it_normalize_codice_fiscale(codice))])
+                        partner = elements and self.env['res.partner'].search(
+                            AND([OR(domains), OR([[('company_id', '=', company.id)], [('company_id', '=', False)]])]), limit=1)
                 if not partner:
                     elements = tree.xpath('//DatiTrasmissione//Email')
                     partner = elements and self.env['res.partner'].search(['&', '|', ('email', '=', elements[0].text), ('l10n_it_pec_email', '=', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
@@ -595,4 +602,5 @@ class AccountEdiFormat(models.Model):
                 new_invoice.message_post(body=message)
 
             invoices += new_invoice
+
         return invoices
