@@ -98,6 +98,15 @@ var PortalComposer = publicWidget.Widget.extend({
             self.$sendButton.prop('disabled', false);
         });
     },
+    _prepareAttachmentData: function (file) {
+        return {
+            'name': file.name,
+            'file': file,
+            'res_id': this.options.res_id,
+            'res_model': this.options.res_model,
+            'access_token': this.options.token,
+        };
+    },
     /**
      * @private
      * @returns {Promise}
@@ -109,13 +118,7 @@ var PortalComposer = publicWidget.Widget.extend({
 
         return Promise.all(_.map(this.$fileInput[0].files, function (file) {
             return new Promise(function (resolve, reject) {
-                var data = {
-                    'name': file.name,
-                    'file': file,
-                    'res_id': self.options.res_id,
-                    'res_model': self.options.res_model,
-                    'access_token': self.options.token,
-                };
+                var data = self._prepareAttachmentData(file);
                 ajax.post('/portal/attachment/add', data).then(function (attachment) {
                     attachment.state = 'pending';
                     self.attachments.push(attachment);

@@ -144,6 +144,9 @@ var PortalChatter = publicWidget.Widget.extend({
         this.messageFetch();
         this._reloadComposer();
     },
+    _createComposerWidget: function () {
+        return new portalComposer.PortalComposer(this, this.options);
+    },
     /**
      * Destroy current composer widget and initialize and insert new widget
      *
@@ -154,7 +157,7 @@ var PortalChatter = publicWidget.Widget.extend({
             this._composer.destroy();
         }
         if (this.options.display_composer) {
-            this._composer = new portalComposer.PortalComposer(this, this.options);
+            this._composer = this._createComposerWidget();
             await this._composer.appendTo(this.$('.o_portal_chatter_composer'));
         }
     },
