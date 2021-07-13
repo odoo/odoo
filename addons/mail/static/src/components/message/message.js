@@ -64,7 +64,7 @@ export class Message extends Component {
                 notifications: message ? message.notifications.map(notif => notif.__state) : [],
                 originThread,
                 originThreadModel: originThread && originThread.model,
-                originThreadName: originThread && originThread.name,
+                originThreadDisplayName: originThread && originThread.displayName,
                 originThreadUrl: originThread && originThread.url,
                 partnerRoot,
                 thread,

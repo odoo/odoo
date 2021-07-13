@@ -636,8 +636,8 @@ function factory(dependencies) {
                 !thread.isTemporary &&
                 thread.model === 'mail.channel' &&
                 thread.channel_type === 'channel' &&
-                thread.name &&
-                cleanSearchTerm(thread.name).includes(cleanedSearchTerm)
+                thread.displayName &&
+                cleanSearchTerm(thread.displayName).includes(cleanedSearchTerm)
             )];
         }
 
