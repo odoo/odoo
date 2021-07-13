@@ -2,31 +2,23 @@
 
 import { Popover } from "@web/core/popover/popover";
 import { registerCleanup } from "../../helpers/cleanup";
-import { getFixture, patchWithCleanup } from "../../helpers/utils";
+import { getFixture } from "../../helpers/utils";
 
 const { mount } = owl;
 
 let fixture;
 let popoverTarget;
 
-function computePositioningDataTest(popover, target) {
-    const rect = target.getBoundingClientRect();
-    const top = Math.floor(rect.top);
-    const left = Math.floor(rect.left);
-    return {
-        top: { name: "top", top, left },
-        bottom: { name: "bottom", top: top + 10, left },
-        left: { name: "left", top: top + 10, left },
-        right: { name: "right", top: top + 10, left: left + 10 },
-    };
-}
+const positionClassMap = {
+    top: "o-popper-position--tm",
+    right: "o-popper-position--rm",
+    bottom: "o-popper-position--bm",
+    left: "o-popper-position--lm",
+};
 
-function pointsTo(popover, element, position) {
-    const hasCorrectClass = popover.classList.contains(`o_popover_${position}`);
-    const expectedPosition = Popover.computePositioningData(popover, element)[position];
-    const correctLeft = parseFloat(popover.style.left) === expectedPosition.left;
-    const correctTop = parseFloat(popover.style.top) === expectedPosition.top;
-    return hasCorrectClass && correctLeft && correctTop;
+function pointsTo(popover, position) {
+    const hasCorrectClass = popover.classList.contains(positionClassMap[position]);
+    return hasCorrectClass;
 }
 
 QUnit.module("Popover", {
@@ -39,10 +31,6 @@ QUnit.module("Popover", {
 
         registerCleanup(() => {
             fixture.removeChild(popoverTarget);
-        });
-
-        patchWithCleanup(Popover, {
-            computePositioningData: computePositioningDataTest,
         });
     },
 });
@@ -64,7 +52,7 @@ QUnit.test("popover is rendered nearby target (default)", async (assert) => {
     });
 
     const popoverEl = fixture.querySelector(".o_popover");
-    assert.ok(pointsTo(popoverEl, popoverTarget, "bottom"));
+    assert.ok(pointsTo(popoverEl, "bottom"));
     popover.destroy();
 });
 
@@ -75,7 +63,7 @@ QUnit.test("popover is rendered nearby target (bottom)", async (assert) => {
     });
 
     const popoverEl = fixture.querySelector(".o_popover");
-    assert.ok(pointsTo(popoverEl, popoverTarget, "bottom"));
+    assert.ok(pointsTo(popoverEl, "bottom"));
     popover.destroy();
 });
 
@@ -86,7 +74,7 @@ QUnit.test("popover is rendered nearby target (top)", async (assert) => {
     });
 
     const popoverEl = fixture.querySelector(".o_popover");
-    assert.ok(pointsTo(popoverEl, popoverTarget, "top"));
+    assert.ok(pointsTo(popoverEl, "top"));
     popover.destroy();
 });
 
@@ -97,7 +85,7 @@ QUnit.test("popover is rendered nearby target (left)", async (assert) => {
     });
 
     const popoverEl = fixture.querySelector(".o_popover");
-    assert.ok(pointsTo(popoverEl, popoverTarget, "left"));
+    assert.ok(pointsTo(popoverEl, "left"));
     popover.destroy();
 });
 
@@ -108,6 +96,6 @@ QUnit.test("popover is rendered nearby target (right)", async (assert) => {
     });
 
     const popoverEl = fixture.querySelector(".o_popover");
-    assert.ok(pointsTo(popoverEl, popoverTarget, "right"));
+    assert.ok(pointsTo(popoverEl, "right"));
     popover.destroy();
 });
