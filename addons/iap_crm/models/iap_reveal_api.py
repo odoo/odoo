@@ -100,7 +100,8 @@ class IapRevealAPI(models.AbstractModel):
 
     @api.model
     def _get_lead_vals_from_response(self, iap_response_data):
-        company_data = iap_response_data['company_data']
+        # reveal gives different key name compared to mine
+        company_data = iap_response_data.get('company_data') or iap_response_data.get('reveal_data')
         country = self.env['res.country'].search([('code', '=', company_data['country_code'])])
         emails = iter(company_data['email'] or [])
         phones = iter(company_data['phone_numbers'] or [])

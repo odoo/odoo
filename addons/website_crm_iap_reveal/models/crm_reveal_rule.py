@@ -8,8 +8,7 @@ import re
 from dateutil.relativedelta import relativedelta
 
 import odoo
-from odoo import api, fields, models, tools, _
-from odoo.addons.iap.tools import iap_tools
+from odoo import api, exceptions, fields, models, tools, _
 from odoo.addons.crm.models import crm_stage
 from odoo.exceptions import ValidationError
 
@@ -221,19 +220,24 @@ class CRMRevealRule(models.Model):
         _logger.info('Start Reveal Lead Generation')
         self.env['crm.reveal.view']._clean_reveal_views()
         self._unlink_unrelevant_reveal_view()
-        reveal_views = self._get_reveal_views_to_process()
+        ip_to_rules = self._get_reveal_views_to_process()
         view_count = 0
-        while reveal_views:
-            view_count += len(reveal_views)
-            server_payload = self._prepare_iap_payload(dict(reveal_views))
-            enough_credit = self._perform_reveal_service(server_payload)
+        while ip_to_rules:
+            view_count += len(ip_to_rules)
+            credit_error, response_data = self._iap_reveal_send_request(dict(ip_to_rules))
+            if response_data:
+                self._iap_reveal_create_leads_from_response(response_data)
+            if not credit_error:
+                self._iap_reveal_update_views_from_response(ip_to_rules, response_data)
+
             if autocommit:
                 # auto-commit for batch processing
                 self._cr.commit()
-            if enough_credit:
-                reveal_views = self._get_reveal_views_to_process()
+
+            if not credit_error:
+                ip_to_rules = self._get_reveal_views_to_process()
             else:
-                reveal_views = False
+                ip_to_rules = False
         _logger.info('End Reveal Lead Generation - %s views processed', view_count)
 
     @api.model
@@ -271,7 +275,7 @@ class CRMRevealRule(models.Model):
         self.env.cr.execute(query, [batch_limit])
         return self.env.cr.fetchall()
 
-    def _prepare_iap_payload(self, pgv):
+    def _iap_reveal_prepare_payload(self, pgv):
         """ This will prepare the page view and returns payload
             Payload sample
             {
@@ -326,93 +330,83 @@ class CRMRevealRule(models.Model):
             rule_payload[rule.id] = data
         return rule_payload
 
-    def _perform_reveal_service(self, server_payload):
-        result = False
-        account_token = self.env['iap.account'].get('reveal')
-        params = {
-            'account_token': account_token.account_token,
-            'data': server_payload
-        }
-        result = self._iap_contact_reveal(params, timeout=300)
-
-        all_ips, done_ips = list(server_payload['ips'].keys()), []
-        for res in result.get('reveal_data', []):
-            done_ips.append(res['ip'])
-            if not res.get('not_found'):
-                lead = self._create_lead_from_response(res)
-                self.env['crm.reveal.view'].search([('reveal_ip', '=', res['ip'])]).unlink()
-            else:
-                views = self.env['crm.reveal.view'].search([('reveal_ip', '=', res['ip'])])
-                views.write({'reveal_state': 'not_found'})
-                views.flush()
-
-        if result.get('credit_error'):
-            self.env['crm.iap.lead.helpers'].notify_no_more_credit('reveal', self._name, 'reveal.already_notified')
-            return False
+    def _iap_reveal_send_request(self, ip_to_rules):
+        server_payload = self._iap_reveal_prepare_payload(ip_to_rules)
+        try:
+            response = self.env['iap.reveal.api']._request_reveal(server_payload)
+        except Exception as e:
+            raise exceptions.UserError(_("Your request could not be executed: %s", e))
         else:
-            # avoid loops if IAP return result is broken: otherwise some IP may create loops
-            views = self.env['crm.reveal.view'].search([
-                ('reveal_ip', 'in', [ip for ip in all_ips if ip not in done_ips])
-            ])
-            views.write({'reveal_state': 'not_found'})
-            views.flush()
+            credit_error, response_data = response['credit_error'], response['reveal_data']
+
+        if credit_error:
+            self.env['crm.iap.lead.helpers'].notify_no_more_credit('reveal', self._name, 'reveal.already_notified')
+        else:
             # reset notified parameter to re-send credit notice if appears again
             self.env['ir.config_parameter'].sudo().set_param('reveal.already_notified', False)
-        return True
+        return credit_error, response_data
 
-    def _iap_contact_reveal(self, params, timeout=300):
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT) + '/iap/clearbit/1/reveal'
-        return iap_tools.iap_jsonrpc(endpoint, params=params, timeout=timeout)
+    def _iap_reveal_create_leads_from_response(self, response_data):
+        rule_ids = [
+            iap_payload['rule_id']
+            for iap_payload in response_data
+            if not iap_payload.get('not_found') and iap_payload.get('rule_id') and iap_payload['clearbit_id']
+        ]
+        rule_ids_to_rule = dict((rule.id, rule) for rule in self.browse(rule_ids))
 
-    def _create_lead_from_response(self, result):
-        """ This method will get response from service and create the lead accordingly """
-        if result['rule_id']:
-            rule = self.browse(result['rule_id'])
-        else:
-            # Not create a lead if the information match no rule
-            # If there is no match, the service still returns all informations
-            # in order to let custom code use it.
-            return False
-        if not result['clearbit_id']:
-            return False
-        already_created_lead = self.env['crm.lead'].search([('reveal_id', '=', result['clearbit_id'])])
-        if already_created_lead:
-            _logger.info('Existing lead for this clearbit_id [%s]', result['clearbit_id'])
-            # Does not create a lead if the reveal_id is already known
-            return False
-        lead_vals = rule._lead_vals_from_response(result)
+        clearbit_ids = [iap_payload['clearbit_id'] for iap_payload in response_data]
+        existing_leads = self.env['crm.lead'].search([('reveal_id', 'in', clearbit_ids)])
 
-        lead = self.env['crm.lead'].create(lead_vals)
+        lead_vals_list, template_vals_list = [], []
+        for iap_payload in response_data:
+            rule = rule_ids_to_rule.get(iap_payload['rule_id'])
+            if not rule:
+                continue
+            if not iap_payload.get('clearbit_id'):
+                continue
+            if iap_payload['clearbit_id'] in existing_leads.mapped('reveal_id'):
+                _logger.info('Existing lead for this clearbit_id [%s]', iap_payload['clearbit_id'])
+                continue
 
-        template_values = result['reveal_data']
-        template_values.update({
-            'flavor_text': _("Opportunity created by Odoo Lead Generation"),
-            'people_data': result.get('people_data'),
-        })
-        lead.message_post_with_view(
-            'iap_mail.enrich_company',
-            values=template_values,
-            subtype_id=self.env.ref('mail.mt_note').id
-        )
+            lead_vals = self.env['iap.reveal.api']._get_lead_vals_from_response(iap_payload)
+            lead_vals.update({
+                'priority': rule.priority,
+                'reveal_ip': iap_payload['ip'],
+                'reveal_rule_id': rule.id,
+                'referred': _('Website Visitor'),
+                'reveal_iap_credits': iap_payload['credit'],
+                'tag_ids': [(6, 0, rule.tag_ids.ids)],
+                'type': rule.lead_type,
+                'team_id': rule.team_id.id,
+                'user_id': rule.user_id.id,
+            })
+            if rule.suffix:
+                lead_vals['name'] = '%s - %s' % (lead_vals['name'], rule.suffix)
+            lead_vals_list.append(lead_vals)
 
-        return lead
+            template_vals = iap_payload['reveal_data']
+            template_vals.update({
+                'flavor_text': _("Opportunity created by Odoo Lead Generation"),
+                'people_data': iap_payload.get('people_data'),
+            })
+            template_vals_list.append(template_vals)
 
-    # Methods responsible for format response data in to valid odoo lead data
-    def _lead_vals_from_response(self, result):
-        self.ensure_one()
-        company_data = result['reveal_data']
-        people_data = result.get('people_data')
-        lead_vals = self.env['crm.iap.lead.helpers'].lead_vals_from_response(self.lead_type, self.team_id.id, self.tag_ids.ids, self.user_id.id, company_data, people_data)
+        leads = self.env['crm.lead'].create(lead_vals_list)
+        for lead, template_values in zip(leads, template_vals_list):
+            lead.message_post_with_view(
+                'iap_mail.enrich_company',
+                values=template_values,
+                subtype_id=self.env.ref('mail.mt_note').id
+            )
 
-        lead_vals.update({
-            'priority': self.priority,
-            'reveal_ip': result['ip'],
-            'reveal_rule_id': self.id,
-            'referred': 'Website Visitor',
-            'reveal_iap_credits': result['credit'],
-        })
+        return leads
 
-        if self.suffix:
-            lead_vals['name'] = '%s - %s' % (lead_vals['name'], self.suffix)
+    def _iap_reveal_update_views_from_response(self, ip_to_rules, response_data):
+        all_ips = [ip_to_rule[0] for ip_to_rule in ip_to_rules]
+        done_ips = [iap_payload['ip'] for iap_payload in response_data if not iap_payload.get('not_found')]
+        notfound_ips = [ip for ip in all_ips if ip not in done_ips]
 
-        return lead_vals
+        self.env['crm.reveal.view'].search([('reveal_ip', 'in', done_ips)]).unlink()
+        notfound = self.env['crm.reveal.view'].search([('reveal_ip', 'in', notfound_ips)])
+        notfound.write({'reveal_state': 'not_found'})
+        notfound.flush()
