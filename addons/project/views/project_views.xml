@@ -217,7 +217,7 @@
         </record>
 
         <record id="open_task_type_form" model="ir.actions.act_window">
-            <field name="name">Stages</field>
+            <field name="name">Task Stages</field>
             <field name="res_model">project.task.type</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="task_type_tree"/>
@@ -231,7 +231,7 @@
         </record>
 
         <record id="open_task_type_form_domain" model="ir.actions.act_window">
-            <field name="name">Stages</field>
+            <field name="name">Task Stages</field>
             <field name="res_model">project.task.type</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="domain">[('project_ids','=', project_id)]</field>
@@ -266,6 +266,7 @@
                     <header>
                         <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight" groups="project.group_project_manager"
                         attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
+                        <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" groups="project.group_project_stages"/>
                     </header>
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
@@ -322,6 +323,9 @@
                         <group>
                             <field name="label_tasks" string="Name of the tasks"/>
                             <field name="partner_id" widget="res_partner_many2one"/>
+                        </group>
+                        <group>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         </group>
                     </group>
                     <notebook>
@@ -415,11 +419,11 @@
                             </div>
                         </page>
                     </notebook>
-
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" options="{'post_refresh':True}" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>
-                    </div>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" options="{'post_refresh':True}" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>
+                    <field name="message_ids"/>
+                </div>
                 </form>
             </field>
         </record>
@@ -433,16 +437,21 @@
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Customer" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="analytic_account_id"/>
+                    <field name="stage_id" groups="project.group_project_stages"/>
+                    <field name="tag_ids"/>
                     <filter string="My Favorites" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <separator/>
                     <filter string="Followed" name="followed_by_me" domain="[('message_is_follower', '=', True)]"/>
                     <filter string="My Projects" name="own_projects" domain="[('user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter string="Open" name="open" domain="[('stage_id.fold', '=', False)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Project Manager" name="Manager" context="{'group_by': 'user_id'}"/>
                         <filter string="Customer" name="Partner" context="{'group_by': 'partner_id'}"/>
                         <filter string="Status" name="status" context="{'group_by': 'last_update_status'}"/>
+                        <filter string="Stage" name="groupby_stage" context="{'group_by': 'stage_id'}" groups="project.group_project_stages"/>
                     </group>
                 </search>
             </field>
@@ -464,7 +473,9 @@
                     <field name="date" optional="hide" string="Deadline" widget="remaining_days"/>
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
                     <field name="last_update_color" invisible="1"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                     <field name="last_update_status" string="Status" optional="show" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
+                    <field name="stage_id" options="{'no_open': True}" optional="show"/>
                 </tree>
             </field>
         </record>
@@ -569,6 +580,8 @@
                     <field name="privacy_visibility"/>
                     <field name="last_update_color"/>
                     <field name="last_update_status"/>
+                    <field name="tag_ids"/>
+                    <progressbar field="last_update_status" colors='{"on_track": "success", "off_track": "danger", "on_hold": "muted", "at_risk": "warning"}'/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon oe_kanban_content oe_kanban_card">
@@ -593,6 +606,7 @@
                                                         </t>
                                                     </b>
                                                 </div>
+                                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -660,6 +674,7 @@
             </field>
         </record>
 
+        <!-- Please update both act_window when modifying one (open_view_project_all or open_view_project_all_group_stage) as one or the other is used in the menu menu_project_config -->
         <record id="open_view_project_all" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
@@ -668,6 +683,24 @@
             <field name="view_id" ref="view_project_kanban"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="target">main</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No projects found. Let's create one!
+                </p><p>
+                    Projects regroup tasks on the same topic, and each has its dashboard.
+                </p>
+            </field>
+        </record>
+
+        <record id="open_view_project_all_group_stage" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.project</field>
+            <field name="domain">[]</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="view_id" ref="view_project_kanban"/>
+            <field name="search_view_id" ref="view_project_project_filter"/>
+            <field name="target">main</field>
+            <field name="context">{'search_default_groupby_stage': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No projects found. Let's create one!
@@ -1202,9 +1235,12 @@
         <!-- Menu item for project -->
         <menuitem id="menu_tasks_config" name="GTD" parent="menu_project_config" sequence="2"/>
 
-        <menuitem action="open_task_type_form" id="menu_project_config_project" name="Stages" parent="menu_project_config" sequence="10" groups="base.group_no_one"/>
+        <menuitem action="project_project_stage_configure" id="menu_project_config_project_stage" name="Project Stages" parent="menu_project_config" sequence="9" groups="project.group_project_stages"/>
+
+        <menuitem action="open_task_type_form" id="menu_project_config_project" name="Task Stages" parent="menu_project_config" sequence="10" groups="base.group_no_one"/>
 
         <menuitem action="open_view_project_all" id="menu_projects" name="Projects" parent="menu_main_pm" sequence="1"/>
+        <menuitem action="open_view_project_all_group_stage" id="menu_projects_group_stage" name="Projects" parent="menu_main_pm" sequence="1" groups="project.group_project_stages"/>
         <menuitem action="open_view_project_all_config" id="menu_projects_config" name="Projects" parent="menu_project_config" sequence="5"/>
 
         <!-- User Form -->
