@@ -57,7 +57,7 @@ export class Composer extends Component {
                 threadChannelType: thread && thread.channel_type, // for livechat override
                 threadDisplayName: thread && thread.displayName,
                 threadModel: thread && thread.model,
-                threadName: thread && thread.name,
+                threadDisplayName: thread && thread.displayName,
             };
         }, {
             compareDepth: {
