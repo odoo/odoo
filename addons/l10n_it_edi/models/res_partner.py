@@ -1,8 +1,11 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
+
+import re
+
 
 class ResPartner(models.Model):
     _name = 'res.partner'
@@ -26,3 +29,21 @@ class ResPartner(models.Model):
             "CHECK(l10n_it_pa_index IS NULL OR LENGTH(l10n_it_pa_index) >= 6)",
             "PA index must have between 6 and 7 characters."),
     ]
+
+    @api.model
+    def _l10n_it_normalize_codice_fiscale(self, codice):
+        if re.match(r'^IT[0-9]{11}$', codice):
+            return codice[2:13]
+        return codice
+
+    @api.onchange('vat')
+    def _l10n_it_onchange_vat(self):
+        if not self.l10n_it_codice_fiscale:
+            self.l10n_it_codice_fiscale = self._l10n_it_normalize_codice_fiscale(self.vat)
+
+    @api.constrains('l10n_it_codice_fiscale')
+    def validate_codice_fiscale(self):
+        p = re.compile(r'^([A-Za-z]{6}[0-9]{2}[A-Za-z]{1}[0-9]{2}[A-Za-z]{1}[0-9]{3}[A-Za-z]{1}$)|([0-9]{11})|(IT[0-9]{11})$')
+        for record in self:
+            if record.l10n_it_codice_fiscale and not p.match(record.l10n_it_codice_fiscale):
+                raise UserError(_("Invalid Codice Fiscale '%s': should be like 'MRTMTT91D08F205J' for physical person and '12345678901' or 'IT12345678901' for businesses.", record.l10n_it_codice_fiscale))
