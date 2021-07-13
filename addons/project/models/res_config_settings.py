@@ -11,6 +11,7 @@ class ResConfigSettings(models.TransientModel):
     module_hr_timesheet = fields.Boolean(string="Task Logs")
     group_subtask_project = fields.Boolean("Sub-tasks", implied_group="project.group_subtask_project")
     group_project_rating = fields.Boolean("Customer Ratings", implied_group='project.group_project_rating')
+    group_project_stages = fields.Boolean("Project Stages", implied_group="project.group_project_stages")
     group_project_recurring_tasks = fields.Boolean("Recurring Tasks", implied_group="project.group_project_recurring_tasks")
     group_project_task_dependencies = fields.Boolean("Task Dependencies", implied_group="project.group_project_task_dependencies")
 
@@ -50,5 +51,9 @@ class ResConfigSettings(models.TransientModel):
         if task_dep_change_subtype_id.hidden != (not self['group_project_task_dependencies']):
             task_dep_change_subtype_id.hidden = not self['group_project_task_dependencies']
             project_task_dep_change_subtype_id.hidden = not self['group_project_task_dependencies']
+        # Hide Project Stage Changed mail subtype according to the settings
+        project_stage_change_mail_type = self.env.ref('project.mt_project_stage_change')
+        if project_stage_change_mail_type.hidden == self['group_project_stages']:
+            project_stage_change_mail_type.hidden = not self['group_project_stages']
 
         super(ResConfigSettings, self).set_values()
