@@ -13,6 +13,12 @@ class ProductTemplate(models.Model):
         'pos.category', string='Point of Sale Category',
         help="Category used in the Point of Sale.")
 
+    show_root_category = fields.Boolean( # Adicionado pela Multidados
+        string='Show in Root Category',
+        help='Check if you want this product to appear in the Point of Sale root category.',
+        default=False,
+    )
+
     @api.multi
     def unlink(self):
         product_ctx = dict(self.env.context or {}, active_test=False)
@@ -29,6 +35,13 @@ class ProductTemplate(models.Model):
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
+
+    show_root_category = fields.Boolean( # Adicionado pela Multidados
+        string='Show in Root Category',
+        help='Check if you want this product to appear in the Point of Sale root category.',
+        related='product_tmpl_id.show_root_category',
+        store=True,
+    )
 
     @api.multi
     def unlink(self):

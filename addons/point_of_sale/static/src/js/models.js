@@ -23,12 +23,12 @@ var round_pr = utils.round_precision;
 var exports = {};
 
 // The PosModel contains the Point Of Sale's representation of the backend.
-// Since the PoS must work in standalone ( Without connection to the server ) 
-// it must contains a representation of the server's PoS backend. 
+// Since the PoS must work in standalone ( Without connection to the server )
+// it must contains a representation of the server's PoS backend.
 // (taxes, product list, configuration options, etc.)  this representation
-// is fetched and stored by the PosModel at the initialisation. 
-// this is done asynchronously, a ready deferred alows the GUI to wait interactively 
-// for the loading to be completed 
+// is fetched and stored by the PosModel at the initialisation.
+// this is done asynchronously, a ready deferred alows the GUI to wait interactively
+// for the loading to be completed
 // There is a single instance of the PosModel for each Front-End instance, it is usually called
 // 'pos' and is available to all widgets extending PosWidget.
 
@@ -89,7 +89,7 @@ exports.PosModel = Backbone.Model.extend({
 
         // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
         // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched.
-        // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
+        // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used.
         this.ready = this.load_server_data().then(function(){
             return self.after_load_server_data();
         });
@@ -369,7 +369,7 @@ exports.PosModel = Backbone.Model.extend({
         // todo remove list_price in master, it is unused
         fields: ['display_name', 'list_price', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id',
                  'barcode', 'default_code', 'to_weight', 'uom_id', 'description_sale', 'description',
-                 'product_tmpl_id','tracking'],
+                 'product_tmpl_id','tracking', 'show_root_category'],
         order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
         domain: [['sale_ok','=',true],['available_in_pos','=',true]],
         context: function(self){ return { display_default_code: false }; },
@@ -1177,7 +1177,7 @@ exports.load_fields = function(model_name, fields) {
 
 // Loads openerp models at the point of sale startup.
 // load_models take an array of model loader declarations.
-// - The models will be loaded in the array order. 
+// - The models will be loaded in the array order.
 // - If no openerp model name is provided, no server data
 //   will be loaded, but the system can be used to preprocess
 //   data before load.
@@ -1193,9 +1193,9 @@ exports.load_fields = function(model_name, fields) {
 // models: [{
 //  model: [string] the name of the openerp model to load.
 //  label: [string] The label displayed during load.
-//  fields: [[string]|function] the list of fields to be loaded. 
+//  fields: [[string]|function] the list of fields to be loaded.
 //          Empty Array / Null loads all fields.
-//  order:  [[string]|function] the models will be ordered by 
+//  order:  [[string]|function] the models will be ordered by
 //          the provided fields
 //  domain: [domain|function] the domain that determines what
 //          models need to be loaded. Null loads everything
@@ -1204,7 +1204,7 @@ exports.load_fields = function(model_name, fields) {
 //  context: [Dict|function] the openerp context for the model read
 //  condition: [function] do not load the models if it evaluates to
 //             false.
-//  loaded: [function(self,model)] this function is called once the 
+//  loaded: [function(self,model)] this function is called once the
 //          models have been loaded, with the data as second argument
 //          if the function returns a deferred, the next model will
 //          wait until it resolves before loading.
@@ -1336,7 +1336,7 @@ exports.Product = Backbone.Model.extend({
 var orderline_id = 1;
 
 // An orderline represent one element of the content of a client's shopping cart.
-// An orderline contains a product, its quantity, its price, discount. etc. 
+// An orderline contains a product, its quantity, its price, discount. etc.
 // An Order contains zero or more Orderlines.
 exports.Orderline = Backbone.Model.extend({
     initialize: function(attr,options){
@@ -1570,7 +1570,7 @@ exports.Orderline = Backbone.Model.extend({
         }
         return price;
     },
- 
+
     merge: function(orderline){
         this.order.assert_editable();
         this.set_quantity(this.get_quantity() + orderline.get_quantity());
@@ -1979,8 +1979,8 @@ var PaymentlineCollection = Backbone.Collection.extend({
     model: exports.Paymentline,
 });
 
-// An order more or less represents the content of a client's shopping cart (the OrderLines) 
-// plus the associated payment information (the Paymentlines) 
+// An order more or less represents the content of a client's shopping cart (the OrderLines)
+// plus the associated payment information (the Paymentlines)
 // there is always an active ('selected') order in the Pos, a new one is created
 // automaticaly once an order is completed and sent to the server.
 exports.Order = Backbone.Model.extend({

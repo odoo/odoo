@@ -56,6 +56,7 @@
                 <group name="pos" string="Point Of Sale">
                     <group>
                         <field name="available_in_pos"/>
+                        <field name="show_root_category"/>
                         <field name="pos_categ_id" attrs="{'invisible': [('available_in_pos', '=', False)]}" string="Category"/>
                         <field name="to_weight" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
                     </group>
