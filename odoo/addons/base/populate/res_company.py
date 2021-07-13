@@ -17,6 +17,9 @@ class Partner(models.Model):
     }
 
     def _populate_factories(self):
+        # Activate currency to avoid fail iterator
+        (self.env.ref('base.USD') | self.env.ref('base.EUR')).active = True
+
         # remaining: paperformat_id, parent_id, partner_id, favicon, font, report_header, external_report_layout_id, report_footer
         def get_name(values=None, counter=0, **kwargs):
             return 'company_%s_%s' % (counter, self.env['res.currency'].browse(values['currency_id']).name)
