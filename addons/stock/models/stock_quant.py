@@ -153,18 +153,6 @@ class StockQuant(models.Model):
             quant.inventory_quantity = quant.inventory_quantity_auto_apply
         self.action_apply_inventory()
 
-    def _search_on_hand(self, operator, value):
-        """Handle the "on_hand" filter, indirectly calling `_get_domain_locations`."""
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise UserError(_('Operation not supported'))
-        domain_loc = self.env['product.product']._get_domain_locations()[0]
-        quant_ids = [l['id'] for l in self.env['stock.quant'].search_read(domain_loc, ['id'])]
-        if (operator == '!=' and value is True) or (operator == '=' and value is False):
-            domain_operator = 'not in'
-        else:
-            domain_operator = 'in'
-        return [('id', domain_operator, quant_ids)]
-
     @api.model
     def create(self, vals):
         """ Override to handle the "inventory mode" and create a quant as
@@ -865,12 +853,11 @@ class StockQuant(models.Model):
         if target_action:
             action['id'] = target_action.id
 
-        if self.env.context.get('inventory_mode') and self.user_has_groups('stock.group_stock_manager'):
+        form_view = self.env.ref('stock.view_stock_quant_form_editable').id
+        if self.user_has_groups('stock.group_stock_manager'):
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree_inventory_editable').id
-            form_view = self.env.ref('stock.view_stock_quant_form_editable').id
         else:
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree').id
-            form_view = self.env.ref('stock.view_stock_quant_form').id
         action.update({
             'views': [
                 (action['view_id'], 'list'),

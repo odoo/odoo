@@ -6,7 +6,7 @@ from odoo import api, fields, models, _
 
 class StockInventoryAdjustmentName(models.TransientModel):
     _name = 'stock.inventory.adjustment.name'
-    _description = 'Inventory Adjustment Name'
+    _description = 'Inventory Adjustment Reference / Reason'
 
     def default_get(self, fields_list):
         res = super().default_get(fields_list=fields_list)
