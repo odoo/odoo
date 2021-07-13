@@ -79,43 +79,6 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_stock_quant_form">
-        <field name="name">stock.quant.form</field>
-        <field name="model">stock.quant</field>
-        <field eval="10" name="priority"/>
-        <field name="arch" type="xml">
-            <form string="Inventory Valuation" create="false" edit="false" delete="false">
-                <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" icon="fa-exchange" type="object" name="action_view_stock_moves" string="Product Moves"/>
-                    </div>
-                    <group>
-                        <group>
-                            <field name="product_id"/>
-                            <field name="location_id" options="{'no_create': True}"/>
-                            <field name="lot_id" groups="stock.group_production_lot"/>
-                            <field name="package_id" groups="stock.group_tracking_lot"/>
-                            <field name="owner_id" groups="stock.group_tracking_owner"/>
-                        </group>
-                        <group>
-                            <label for="quantity" string="Quantity On Hand"/>
-                            <div class="o_row">
-                                <field name="quantity"/>
-                                <field name="product_uom_id" groups="uom.group_uom"/>
-                            </div>
-                            <label for="reserved_quantity" string="Quantity Reserved"/>
-                            <div class="o_row">
-                                <field name="reserved_quantity"/>
-                                <field name="product_uom_id" groups="uom.group_uom"/>
-                            </div>
-                            <field name="in_date" attrs="{'invisible': [('lot_id', '=', False)]}" groups="stock.group_production_lot"/>
-                        </group>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
     <!-- Inventory Report + Update Quantity (via product) view -->
     <record model="ir.ui.view" id="view_stock_quant_tree_editable">
         <field name="name">stock.quant.tree.editable</field>
