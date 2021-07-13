@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from . import sequence_mixin
+from . import account_business_mixin
 from . import partner
 from . import res_partner_bank
 from . import account_account_tag

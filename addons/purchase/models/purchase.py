@@ -20,24 +20,20 @@ from odoo.tools.misc import formatLang, get_lang
 
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin', 'account.business.mixin']
     _description = "Purchase Order"
     _order = 'priority desc, id desc'
 
     @api.depends('order_line.price_total')
     def _amount_all(self):
         for order in self:
-            amount_untaxed = amount_tax = 0.0
-            for line in order.order_line:
-                line._compute_amount()
-                amount_untaxed += line.price_subtotal
-                amount_tax += line.price_tax
-            currency = order.currency_id or order.partner_id.property_purchase_currency_id or self.env.company.currency_id
-            order.update({
-                'amount_untaxed': currency.round(amount_untaxed),
-                'amount_tax': currency.round(amount_tax),
-                'amount_total': amount_untaxed + amount_tax,
-            })
+            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+            tax_results = order_lines._compute_taxes()
+            totals = tax_results['totals'][order.currency_id]
+
+            order.amount_untaxed = totals['amount_untaxed']
+            order.amount_tax = totals['amount_tax']
+            order.amount_total = totals['amount_untaxed'] + totals['amount_tax']
 
     @api.depends('state', 'order_line.qty_to_invoice')
     def _get_invoiced(self):
@@ -141,6 +137,30 @@ class PurchaseOrder(models.Model):
     receipt_reminder_email = fields.Boolean('Receipt Reminder Email', related='partner_id.receipt_reminder_email', readonly=False)
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', related='partner_id.reminder_date_before_receipt', readonly=False)
 
+    # -------------------------------------------------------------------------
+    # INHERIT account.business.mixin
+    # -------------------------------------------------------------------------
+
+    def _get_business_values(self):
+        # OVERRIDE
+        vals = super()._get_business_values()
+
+        vals.update({
+            'date': self.date_order,
+            'fiscal_position': self.fiscal_position_id,
+            'partner': self.partner_id,
+            'delivery_partner': self.dest_address_id,
+            'currency': self.currency_id,
+            'document_type': 'purchase',
+            'company': self.company_id,
+        })
+
+        return vals
+
+    # -------------------------------------------------------------------------
+    # MISC
+    # -------------------------------------------------------------------------
+
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
         for order in self:
@@ -200,15 +220,10 @@ class PurchaseOrder(models.Model):
         return result
 
     @api.depends('order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
-    def  _compute_tax_totals_json(self):
-        def compute_taxes(order_line):
-            return order_line.taxes_id._origin.compute_all(**order_line._prepare_compute_all_values())
-
-        account_move = self.env['account.move']
+    def _compute_tax_totals_json(self):
         for order in self:
-            tax_lines_data = account_move._prepare_tax_lines_data_for_totals_from_object(order.order_line, compute_taxes)
-            tax_totals = account_move._get_tax_totals(order.partner_id, tax_lines_data, order.amount_total, order.amount_untaxed, order.currency_id)
-            order.tax_totals_json = json.dumps(tax_totals)
+            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+            order.tax_totals_json = json.dumps(order_lines._prepare_tax_totals_json(recompute_taxes=True))
 
     @api.onchange('date_planned')
     def onchange_date_planned(self):
@@ -291,25 +306,14 @@ class PurchaseOrder(models.Model):
 
     @api.onchange('partner_id', 'company_id')
     def onchange_partner_id(self):
-        # Ensures all properties and fiscal positions
-        # are taken with the company of the order
-        # if not defined, with_company doesn't change anything.
+        self.fiscal_position_id = self._get_default_partner_fiscal_position()
+        self.payment_term_id = self._get_default_partner_payment_terms()
+
         self = self.with_company(self.company_id)
         if not self.partner_id:
-            self.fiscal_position_id = False
-            self.currency_id = self.env.company.currency_id.id
+            self.currency_id = self.env.company.currency_id
         else:
-            self.fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id)
-            self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
-            self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
-        return {}
-
-    @api.onchange('fiscal_position_id', 'company_id')
-    def _compute_tax_id(self):
-        """
-        Trigger the recompute of the taxes if the fiscal position is changed on the PO.
-        """
-        self.order_line._compute_tax_id()
+            self.currency_id = self.partner_id.property_purchase_currency_id or self.env.company.currency_id
 
     @api.onchange('partner_id')
     def onchange_partner_id_warning(self):
@@ -855,6 +859,7 @@ class PurchaseOrder(models.Model):
 
 class PurchaseOrderLine(models.Model):
     _name = 'purchase.order.line'
+    _inherit = ['account.business.mixin']
     _description = 'Purchase Order Line'
     _order = 'order_id, sequence, id'
 
@@ -864,7 +869,14 @@ class PurchaseOrderLine(models.Model):
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     date_planned = fields.Datetime(string='Delivery Date', index=True,
         help="Delivery date expected from vendor. This date respectively defaults to vendor pricelist lead time then today's date.")
-    taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
+    taxes_id = fields.Many2many(
+        comodel_name='account.tax',
+        string="Taxes",
+        context={'active_test': False},
+        store=True,
+        readonly=False,
+        compute='_compute_tax_ids',
+    )
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True)
@@ -914,38 +926,65 @@ class PurchaseOrderLine(models.Model):
             "Forbidden values on non-accountable purchase order line"),
     ]
 
+    # -------------------------------------------------------------------------
+    # INHERIT account.business.mixin
+    # -------------------------------------------------------------------------
+
+    def _get_business_values(self):
+        # OVERRIDE
+        return {
+            **self.order_id._get_business_values(),
+            **super()._get_business_values(),
+            'product': self.product_id,
+            'product_uom': self.product_uom,
+            'taxes': self.taxes_id,
+            'price_unit': self.price_unit,
+            'quantity': self.product_qty,
+            'price_subtotal': self.price_subtotal,
+        }
+
+    def _get_default_product_seller(self):
+        self.ensure_one()
+        if self.product_id:
+            return self.product_id._select_seller(
+                partner_id=self.partner_id,
+                quantity=self.product_qty,
+                date=self.order_id.date_order and self.order_id.date_order.date(),
+                uom_id=self.product_uom,
+                params={'order_id': self.order_id},
+            )
+        else:
+            return self.env['product.supplierinfo']
+
+    def _get_default_product_price_unit(self):
+        # OVERRIDE
+        # Manage custom seller.
+        default_seller = self._get_default_product_seller()
+        if default_seller:
+            return default_seller.price, default_seller.currency_id, default_seller.product_uom
+        else:
+            return super()._get_default_product_price_unit()
+
+    # -------------------------------------------------------------------------
+    # MISC
+    # -------------------------------------------------------------------------
+
+    @api.depends('product_id', 'order_id.company_id', 'order_id.fiscal_position_id')
+    def _compute_tax_ids(self):
+        for line in self:
+            line.taxes_id = line._get_default_taxes()
+
     @api.depends('product_qty', 'price_unit', 'taxes_id')
     def _compute_amount(self):
         for line in self:
-            taxes = line.taxes_id.compute_all(**line._prepare_compute_all_values())
+            tax_results = line._compute_taxes()
+            amount_untaxed = tax_results['totals'][line.currency_id]['amount_untaxed']
+            amount_tax = tax_results['totals'][line.currency_id]['amount_tax']
             line.update({
-                'price_tax': taxes['total_included'] - taxes['total_excluded'],
-                'price_total': taxes['total_included'],
-                'price_subtotal': taxes['total_excluded'],
+                'price_subtotal': amount_untaxed,
+                'price_tax': amount_tax,
+                'price_total': amount_untaxed + amount_tax,
             })
-
-    def _prepare_compute_all_values(self):
-        # Hook method to returns the different argument values for the
-        # compute_all method, due to the fact that discounts mechanism
-        # is not implemented yet on the purchase orders.
-        # This method should disappear as soon as this feature is
-        # also introduced like in the sales module.
-        self.ensure_one()
-        return {
-            'price_unit': self.price_unit,
-            'currency': self.order_id.currency_id,
-            'quantity': self.product_qty,
-            'product': self.product_id,
-            'partner': self.order_id.partner_id,
-        }
-
-    def _compute_tax_id(self):
-        for line in self:
-            line = line.with_company(line.company_id)
-            fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id.get_fiscal_position(line.order_id.partner_id.id)
-            # filter taxes by company
-            taxes = line.product_id.supplier_taxes_id.filtered(lambda r: r.company_id == line.env.company)
-            line.taxes_id = fpos.map_tax(taxes)
 
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'qty_received', 'product_uom_qty', 'order_id.state')
     def _compute_qty_invoiced(self):
@@ -1093,7 +1132,7 @@ class PurchaseOrderLine(models.Model):
         if not self.product_id:
             return
 
-        self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
+        self.product_uom = self.product_id.uom_po_id or self._get_default_product_uom()
         product_lang = self.product_id.with_context(
             lang=get_lang(self.env, self.partner_id.lang).code,
             partner_id=self.partner_id.id,
@@ -1101,15 +1140,11 @@ class PurchaseOrderLine(models.Model):
         )
         self.name = self._get_product_purchase_description(product_lang)
 
-        self._compute_tax_id()
-
     @api.onchange('product_id')
     def onchange_product_id_warning(self):
         if not self.product_id or not self.env.user.has_group('purchase.group_warning_purchase'):
             return
         warning = {}
-        title = False
-        message = False
 
         product_info = self.product_id
 
@@ -1125,48 +1160,11 @@ class PurchaseOrderLine(models.Model):
 
     @api.onchange('product_qty', 'product_uom')
     def _onchange_quantity(self):
-        if not self.product_id:
-            return
-        params = {'order_id': self.order_id}
-        seller = self.product_id._select_seller(
-            partner_id=self.partner_id,
-            quantity=self.product_qty,
-            date=self.order_id.date_order and self.order_id.date_order.date(),
-            uom_id=self.product_uom,
-            params=params)
-
+        seller = self._get_default_product_seller()
         if seller or not self.date_planned:
             self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
-        # If not seller, use the standard price. It needs a proper currency conversion.
-        if not seller:
-            po_line_uom = self.product_uom or self.product_id.uom_po_id
-            price_unit = self.env['account.tax']._fix_tax_included_price_company(
-                self.product_id.uom_id._compute_price(self.product_id.standard_price, po_line_uom),
-                self.product_id.supplier_taxes_id,
-                self.taxes_id,
-                self.company_id,
-            )
-            if price_unit and self.order_id.currency_id and self.order_id.company_id.currency_id != self.order_id.currency_id:
-                price_unit = self.order_id.company_id.currency_id._convert(
-                    price_unit,
-                    self.order_id.currency_id,
-                    self.order_id.company_id,
-                    self.date_order or fields.Date.today(),
-                )
-
-            self.price_unit = price_unit
-            return
-
-        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, self.product_id.supplier_taxes_id, self.taxes_id, self.company_id) if seller else 0.0
-        if price_unit and seller and self.order_id.currency_id and seller.currency_id != self.order_id.currency_id:
-            price_unit = seller.currency_id._convert(
-                price_unit, self.order_id.currency_id, self.order_id.company_id, self.date_order or fields.Date.today())
-
-        if seller and self.product_uom and seller.product_uom != self.product_uom:
-            price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
-
-        self.price_unit = price_unit
+        self.price_unit = self._get_default_price_unit()
 
     @api.onchange('product_id', 'product_qty', 'product_uom')
     def _onchange_suggest_packaging(self):
@@ -1281,7 +1279,7 @@ class PurchaseOrderLine(models.Model):
     def _prepare_add_missing_fields(self, values):
         """ Deduce missing required fields from the onchange """
         res = {}
-        onchange_fields = ['name', 'price_unit', 'product_qty', 'product_uom', 'taxes_id', 'date_planned']
+        onchange_fields = ['name', 'price_unit', 'product_qty', 'product_uom', 'date_planned']
         if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
             line = self.new(values)
             line.onchange_product_id()

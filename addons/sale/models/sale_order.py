@@ -15,7 +15,7 @@ from odoo.tools import float_is_zero, html_keep_url, is_html_empty
 
 class SaleOrder(models.Model):
     _name = "sale.order"
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin', 'account.business.mixin']
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
     _check_company_auto = True
@@ -33,21 +33,19 @@ class SaleOrder(models.Model):
     def _get_default_require_payment(self):
         return self.env.company.portal_confirmation_pay
 
-    @api.depends('order_line.price_total')
+    @api.depends('order_line.price_subtotal', 'order_line.price_tax', 'order_line.price_total')
     def _amount_all(self):
         """
         Compute the total amounts of the SO.
         """
         for order in self:
-            amount_untaxed = amount_tax = 0.0
-            for line in order.order_line:
-                amount_untaxed += line.price_subtotal
-                amount_tax += line.price_tax
-            order.update({
-                'amount_untaxed': amount_untaxed,
-                'amount_tax': amount_tax,
-                'amount_total': amount_untaxed + amount_tax,
-            })
+            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+            tax_results = order_lines._compute_taxes()
+            totals = tax_results['totals'][order.currency_id]
+
+            order.amount_untaxed = totals['amount_untaxed']
+            order.amount_tax = totals['amount_tax']
+            order.amount_total = totals['amount_untaxed'] + totals['amount_tax']
 
     @api.depends('order_line.invoice_lines')
     def _get_invoiced(self):
@@ -119,14 +117,6 @@ class SaleOrder(models.Model):
     @api.model
     def _get_default_team(self):
         return self.env['crm.team']._get_default_team_id()
-
-    @api.onchange('fiscal_position_id')
-    def _compute_tax_id(self):
-        """
-        Trigger the recompute of the taxes if the fiscal position is changed on the SO.
-        """
-        for order in self:
-            order.order_line._compute_tax_id()
 
     def _search_invoice_ids(self, operator, value):
         if operator == 'in' and value:
@@ -279,6 +269,30 @@ class SaleOrder(models.Model):
         ('date_order_conditional_required', "CHECK( (state IN ('sale', 'done') AND date_order IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),
     ]
 
+    # -------------------------------------------------------------------------
+    # INHERIT account.business.mixin
+    # -------------------------------------------------------------------------
+
+    def _get_business_values(self):
+        # OVERRIDE
+        vals = super()._get_business_values()
+
+        vals.update({
+            'date': self.date_order,
+            'fiscal_position': self.fiscal_position_id,
+            'partner': self.partner_id,
+            'delivery_partner': self.partner_shipping_id,
+            'currency': self.currency_id or self.company_id.currency_id,
+            'document_type': 'sale',
+            'company': self.company_id,
+        })
+
+        return vals
+
+    # -------------------------------------------------------------------------
+    # MISC
+    # -------------------------------------------------------------------------
+
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
         for order in self:
@@ -331,16 +345,9 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed')
     def _compute_tax_totals_json(self):
-        def compute_taxes(order_line):
-            price = order_line.price_unit * (1 - (order_line.discount or 0.0) / 100.0)
-            order = order_line.order_id
-            return order_line.tax_id._origin.compute_all(price, order.currency_id, order_line.product_uom_qty, product=order_line.product_id, partner=order.partner_shipping_id)
-
-        account_move = self.env['account.move']
         for order in self:
-            tax_lines_data = account_move._prepare_tax_lines_data_for_totals_from_object(order.order_line, compute_taxes)
-            tax_totals = account_move._get_tax_totals(order.partner_id, tax_lines_data, order.amount_total, order.amount_untaxed, order.currency_id)
-            order.tax_totals_json = json.dumps(tax_totals)
+            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+            order.tax_totals_json = json.dumps(order_lines._prepare_tax_totals_json(recompute_taxes=True))
 
     @api.onchange('expected_date')
     def _onchange_expected_date(self):
@@ -387,8 +394,7 @@ class SaleOrder(models.Model):
         """
         Trigger the change of fiscal position when the shipping address is modified.
         """
-        self.fiscal_position_id = self.env['account.fiscal.position'].with_company(self.company_id).get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
-        return {}
+        self.fiscal_position_id = self._get_default_partner_fiscal_position()
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
@@ -400,24 +406,15 @@ class SaleOrder(models.Model):
         - Delivery address
         - Sales Team
         """
-        if not self.partner_id:
-            self.update({
-                'partner_invoice_id': False,
-                'partner_shipping_id': False,
-                'fiscal_position_id': False,
-            })
-            return
-
         self = self.with_company(self.company_id)
 
-        addr = self.partner_id.address_get(['delivery', 'invoice'])
+        self.partner_invoice_id = self._get_default_invoicing_partner()
+        self.partner_shipping_id = self._get_default_delivery_partner()
+        self.fiscal_position_id = self._get_default_partner_fiscal_position()
+        self.payment_term_id = self._get_default_partner_payment_terms()
+
         partner_user = self.partner_id.user_id or self.partner_id.commercial_partner_id.user_id
-        values = {
-            'pricelist_id': self.partner_id.property_product_pricelist and self.partner_id.property_product_pricelist.id or False,
-            'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
-            'partner_invoice_id': addr['invoice'],
-            'partner_shipping_id': addr['delivery'],
-        }
+        values = {'pricelist_id': self.partner_id.property_product_pricelist.id}
         user_id = partner_user.id
         if not self.env.context.get('not_self_saleperson'):
             user_id = user_id or self.env.context.get('default_user_id', self.env.uid)
@@ -447,6 +444,7 @@ class SaleOrder(models.Model):
     def _onchange_partner_id_warning(self):
         if not self.partner_id:
             return
+
         partner = self.partner_id
 
         # If partner has no warning, check its company

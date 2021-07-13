@@ -348,10 +348,6 @@ class Website(models.Model):
                     values['pricelist_id'] = pricelist_id
                     update_pricelist = True
 
-            # if fiscal position, update the order lines taxes
-            if sale_order.fiscal_position_id:
-                sale_order._compute_tax_id()
-
             # if values, then make the SO update
             if values:
                 sale_order.write(values)

@@ -85,11 +85,13 @@ tour.stepUtils.showAppsMenuItem(),
     extra_trigger: '.oe_advanced_configurator_modal',
     run: 'click'
 }, {
+    // (2 * 600) + (2 * 16.50) + (2 * 12.00) = 1200.00
     content: "verify SO final price excluded",
-    trigger: 'span[name="Untaxed Amount"]:contains("1,257.00")',
+    trigger: 'span[name="Untaxed Amount"]:contains("1,200.00")',
 }, {
+    // (2 * 600 * 0.15) = 180.00
     content: "verify SO final price included",
-    trigger: 'span[name="amount_total"]:contains("1,437.00")',
+    trigger: 'span[name="amount_total"]:contains("1,380.00")',
 }
 ]);
 

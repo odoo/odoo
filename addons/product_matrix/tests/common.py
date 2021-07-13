@@ -49,3 +49,6 @@ class TestMatrixCommon(common.HttpCase):
                 .search([('product_attribute_value_id.name', '=', pav_name)])
         get_ptav('PAV12').price_extra = 50
         get_ptav('PAV31').price_extra = -25
+
+        self.env.company.account_sale_tax_id = None
+        self.env.company.account_purchase_tax_id = None

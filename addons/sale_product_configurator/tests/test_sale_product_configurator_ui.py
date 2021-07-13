@@ -21,6 +21,8 @@ class TestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
                 'compute_price': 'formula'
             })]
         })
+        self.env.company.account_sale_tax_id = None
+        self.env.company.account_purchase_tax_id = None
 
     def test_01_product_configurator(self):
         # To be able to test the product configurator, admin user must have access to "variants" feature, so we give him the right group for that

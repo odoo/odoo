@@ -526,7 +526,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         ], self.move_vals)
 
         move_form = Form(self.invoice)
-        with move_form.line_ids.edit(2) as line_form:
+        with move_form.invoice_line_ids.edit(0) as line_form:
             # Reset field except the discount that becomes 100%.
             # /!\ The modification is made on the accounting tab.
             line_form.quantity = 1
@@ -570,14 +570,14 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_in_invoice_line_onchange_accounting_fields_1(self):
         move_form = Form(self.invoice)
-        with move_form.line_ids.edit(2) as line_form:
+        with move_form.line_ids.edit(1) as line_form:
             # Custom debit on the first product line.
             line_form.debit = 3000
-        with move_form.line_ids.edit(3) as line_form:
+        with move_form.line_ids.edit(2) as line_form:
             # Custom credit on the second product line. Credit should be reset by onchange.
             # /!\ It's a negative line.
             line_form.credit = 500
-        with move_form.line_ids.edit(0) as line_form:
+        with move_form.line_ids.edit(3) as line_form:
             # Custom debit on the first tax line.
             line_form.debit = 800
         with move_form.line_ids.edit(4) as line_form:

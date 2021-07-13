@@ -49,7 +49,6 @@ class PosOrder(models.Model):
                     'discount': line.discount,
                     'sequence': sale_lines and sale_lines[-1].sequence + 1 or 10,
                 })
-                sale_line._compute_tax_id()
                 line.sale_order_line_id = sale_line
 
             so_lines = order.lines.mapped('sale_order_line_id')

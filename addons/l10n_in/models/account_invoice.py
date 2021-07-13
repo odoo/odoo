@@ -50,36 +50,6 @@ class AccountMove(models.Model):
             return self.env.ref('l10n_in.state_in_ot')
         return partner.state_id
 
-
-    @api.model
-    def _get_tax_grouping_key_from_tax_line(self, tax_line):
-        # OVERRIDE to group taxes also by product.
-        res = super()._get_tax_grouping_key_from_tax_line(tax_line)
-        if tax_line.move_id.journal_id.company_id.account_fiscal_country_id.code == 'IN':
-            res['product_id'] = tax_line.product_id.id
-            res['product_uom_id'] = tax_line.product_uom_id.id
-        return res
-
-    @api.model
-    def _get_tax_grouping_key_from_base_line(self, base_line, tax_vals):
-        # OVERRIDE to group taxes also by product.
-        res = super()._get_tax_grouping_key_from_base_line(base_line, tax_vals)
-        if base_line.move_id.journal_id.company_id.account_fiscal_country_id.code == 'IN':
-            res['product_id'] = base_line.product_id.id
-            res['product_uom_id'] = base_line.product_uom_id.id
-        return res
-
-    @api.model
-    def _get_tax_key_for_group_add_base(self, line):
-        # DEPRECATED: TO BE REMOVED IN MASTER
-        tax_key = super(AccountMove, self)._get_tax_key_for_group_add_base(line)
-
-        tax_key += [
-            line.product_id.id,
-            line.product_uom_id.id,
-        ]
-        return tax_key
-
     def _l10n_in_get_shipping_partner(self):
         """Overwrite in sale"""
         self.ensure_one()

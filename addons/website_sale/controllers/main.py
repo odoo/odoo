@@ -927,7 +927,6 @@ class WebsiteSale(http.Controller):
             return redirection
 
         order.onchange_partner_shipping_id()
-        order.order_line._compute_tax_id()
         request.session['sale_last_order_id'] = order.id
         request.website.sale_get_order(update_pricelist=True)
         extra_step = request.website.viewref('website_sale.extra_info_option')

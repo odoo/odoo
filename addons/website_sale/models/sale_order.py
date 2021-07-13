@@ -234,12 +234,6 @@ class SaleOrder(models.Model):
 
             # create the line
             order_line = SaleOrderLineSudo.create(values)
-
-            try:
-                order_line._compute_tax_id()
-            except ValidationError as e:
-                # The validation may occur in backend (eg: taxcloud) but should fail silently in frontend
-                _logger.debug("ValidationError occurs during tax compute. %s" % (e))
             if add_qty:
                 add_qty -= 1
 

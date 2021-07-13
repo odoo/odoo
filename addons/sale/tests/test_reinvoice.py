@@ -58,7 +58,6 @@ class TestReInvoice(TestSaleCommon):
         sale_order_line2.product_id_change()
 
         self.sale_order.onchange_partner_id()
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         # create invoice lines and validate it
@@ -140,7 +139,6 @@ class TestReInvoice(TestSaleCommon):
             'order_id': self.sale_order.id,
         })
         sale_order_line2.product_id_change()
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         # create invoice lines and validate it
@@ -208,7 +206,6 @@ class TestReInvoice(TestSaleCommon):
             'price_unit': self.company_data['product_delivery_no'].list_price,
             'order_id': self.sale_order.id,
         })
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         # create invoice lines and validate it
@@ -248,7 +245,6 @@ class TestReInvoice(TestSaleCommon):
         so_line2.product_id_change()
 
         self.sale_order.onchange_partner_id()
-        self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
         for line in self.sale_order.order_line:

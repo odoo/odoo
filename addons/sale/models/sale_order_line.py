@@ -12,6 +12,7 @@ from odoo.tools import float_is_zero, float_compare, float_round
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
+    _inherit = ['account.business.mixin']
     _description = 'Sales Order Line'
     _order = 'order_id, sequence, id'
     _check_company_auto = True
@@ -58,12 +59,14 @@ class SaleOrderLine(models.Model):
         Compute the amounts of the SO line.
         """
         for line in self:
-            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
+            tax_results = line._compute_taxes()
+            totals = list(tax_results['totals'].values())[0]
+            amount_untaxed = totals['amount_untaxed']
+            amount_tax = totals['amount_tax']
             line.update({
-                'price_tax': taxes['total_included'] - taxes['total_excluded'],
-                'price_total': taxes['total_included'],
-                'price_subtotal': taxes['total_excluded'],
+                'price_subtotal': amount_untaxed,
+                'price_tax': amount_tax,
+                'price_total': amount_untaxed + amount_tax,
             })
             if self.env.context.get('import_file', False) and not self.env.user.user_has_groups('account.group_account_manager'):
                 line.tax_id.invalidate_cache(['invoice_repartition_line_ids'], [line.tax_id.id])
@@ -134,14 +137,6 @@ class SaleOrderLine(models.Model):
     def _compute_price_reduce_taxexcl(self):
         for line in self:
             line.price_reduce_taxexcl = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
-
-    def _compute_tax_id(self):
-        for line in self:
-            line = line.with_company(line.company_id)
-            fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id.get_fiscal_position(line.order_partner_id.id)
-            # If company_id is set, always filter taxes by the company
-            taxes = line.product_id.taxes_id.filtered(lambda t: t.company_id == line.env.company)
-            line.tax_id = fpos.map_tax(taxes)
 
     @api.model
     def _prepare_add_missing_fields(self, values):
@@ -243,7 +238,14 @@ class SaleOrderLine(models.Model):
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
 
     price_reduce = fields.Float(compute='_compute_price_reduce', string='Price Reduce', digits='Product Price', store=True)
-    tax_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
+    tax_id = fields.Many2many(
+        comodel_name='account.tax',
+        string="Taxes",
+        context={'active_test': False},
+        store=True,
+        readonly=False,
+        compute='_compute_tax_ids',
+    )
     price_reduce_taxinc = fields.Monetary(compute='_compute_price_reduce_taxinc', string='Price Reduce Tax inc', store=True)
     price_reduce_taxexcl = fields.Monetary(compute='_compute_price_reduce_taxexcl', string='Price Reduce Tax excl', store=True)
 
@@ -313,6 +315,51 @@ class SaleOrderLine(models.Model):
 
     product_packaging_id = fields.Many2one('product.packaging', string='Packaging', default=False, domain="[('sales', '=', True), ('product_id','=',product_id)]", check_company=True)
     product_packaging_qty = fields.Float('Packaging Quantity')
+
+    # -------------------------------------------------------------------------
+    # INHERIT account.business.mixin
+    # -------------------------------------------------------------------------
+
+    def _get_business_values(self):
+        # OVERRIDE
+        return {
+            **self.order_id._get_business_values(),
+            **super()._get_business_values(),
+            'product': self.product_id,
+            'product_uom': self.product_uom,
+            'taxes': self.tax_id,
+            'price_unit': self.price_unit,
+            'quantity': self.product_uom_qty,
+            'discount': self.discount,
+            'price_subtotal': self.price_subtotal,
+        }
+
+    def _get_default_product_price_unit(self):
+        # OVERRIDE
+        # The price_unit, currency and uom are already managed by the pricelist.
+        order = self.order_id
+        if order.pricelist_id and order.partner_id:
+            product = self.product_id.with_context(
+                lang=self.order_id.partner_id.lang,
+                partner=self.order_id.partner_id,
+                quantity=self.product_uom_qty,
+                date=self.order_id.date_order,
+                pricelist=self.order_id.pricelist_id.id,
+                uom=self.product_uom.id,
+                fiscal_position=self.order_id.fiscal_position_id,
+            )
+            return self._get_display_price(product), order.currency_id, self.product_uom
+        else:
+            return super()._get_default_product_price_unit()
+
+    # -------------------------------------------------------------------------
+    # MISC
+    # -------------------------------------------------------------------------
+
+    @api.depends('product_id', 'order_id.company_id', 'order_id.fiscal_position_id')
+    def _compute_tax_ids(self):
+        for line in self:
+            line.tax_id = line._get_default_taxes()
 
     @api.depends('state')
     def _compute_product_uom_readonly(self):
@@ -598,9 +645,11 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def product_id_change(self):
-        if not self.product_id:
+        product = self.product_id
+        if not product:
             return
-        valid_values = self.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
+
+        valid_values = product.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
         # remove the is_custom values that don't belong to this template
         for pacv in self.product_custom_attribute_value_ids:
             if pacv.custom_product_template_attribute_value_id not in valid_values:
@@ -611,27 +660,10 @@ class SaleOrderLine(models.Model):
             if ptav._origin not in valid_values:
                 self.product_no_variant_attribute_value_ids -= ptav
 
-        vals = {}
-        if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
-            vals['product_uom'] = self.product_id.uom_id
-            vals['product_uom_qty'] = self.product_uom_qty or 1.0
-
-        product = self.product_id.with_context(
-            lang=get_lang(self.env, self.order_id.partner_id.lang).code,
-            partner=self.order_id.partner_id,
-            quantity=vals.get('product_uom_qty') or self.product_uom_qty,
-            date=self.order_id.date_order,
-            pricelist=self.order_id.pricelist_id.id,
-            uom=self.product_uom.id
-        )
-
-        vals.update(name=self.get_sale_order_line_multiline_description_sale(product))
-
-        self._compute_tax_id()
-
+        self.name = self.get_sale_order_line_multiline_description_sale(product)
+        self.product_uom = self._get_default_product_uom()
         if self.order_id.pricelist_id and self.order_id.partner_id:
-            vals['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
-        self.update(vals)
+            self.price_unit = self._get_default_price_unit()
 
         if product.sale_line_warn != 'no-message':
             if product.sale_line_warn == 'block':
@@ -646,20 +678,8 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
-        if not self.product_uom or not self.product_id:
-            self.price_unit = 0.0
-            return
         if self.order_id.pricelist_id and self.order_id.partner_id:
-            product = self.product_id.with_context(
-                lang=self.order_id.partner_id.lang,
-                partner=self.order_id.partner_id,
-                quantity=self.product_uom_qty,
-                date=self.order_id.date_order,
-                pricelist=self.order_id.pricelist_id.id,
-                uom=self.product_uom.id,
-                fiscal_position=self.env.context.get('fiscal_position')
-            )
-            self.price_unit = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
+            self.price_unit = self._get_default_price_unit()
 
     def name_get(self):
         result = []

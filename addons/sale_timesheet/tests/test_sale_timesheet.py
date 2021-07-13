@@ -41,6 +41,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'product_uom': self.product_order_timesheet4.uom_id.id,
             'price_unit': self.product_order_timesheet4.list_price,
             'order_id': sale_order.id,
+            'tax_id': [],
         })
         so_line_ordered_global_project = self.env['sale.order.line'].create({
             'name': self.product_order_timesheet2.name,
@@ -49,6 +50,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'product_uom': self.product_order_timesheet2.uom_id.id,
             'price_unit': self.product_order_timesheet2.list_price,
             'order_id': sale_order.id,
+            'tax_id': [],
         })
         so_line_ordered_project_only.product_id_change()
         so_line_ordered_global_project.product_id_change()
@@ -117,6 +119,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'product_uom': self.product_order_timesheet3.uom_id.id,
             'price_unit': self.product_order_timesheet3.list_price,
             'order_id': sale_order.id,
+            'tax_id': [],
         })
 
         self.assertEqual(sale_order.invoice_status, 'to invoice', 'Sale Timesheet: Adding a new service line (so line) should put the SO in "to invocie" state.')
@@ -179,6 +182,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'product_uom': self.product_delivery_timesheet2.uom_id.id,
             'price_unit': self.product_delivery_timesheet2.list_price,
             'order_id': sale_order.id,
+            'tax_id': [],
         })
         so_line_deliver_task_project = self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet3.name,
@@ -187,6 +191,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'product_uom': self.product_delivery_timesheet3.uom_id.id,
             'price_unit': self.product_delivery_timesheet3.list_price,
             'order_id': sale_order.id,
+            'tax_id': [],
         })
         so_line_deliver_global_project.product_id_change()
         so_line_deliver_task_project.product_id_change()

@@ -739,3 +739,11 @@ class AccountTaxRepartitionLine(models.Model):
     def _onchange_repartition_type(self):
         if self.repartition_type == 'base':
             self.account_id = None
+
+    def _get_business_tax_account(self):
+        self.ensure_one()
+        tax = self.tax_id
+        if tax.tax_exigibility == 'on_payment':
+            return tax.cash_basis_transition_account_id
+        else:
+            return self.account_id

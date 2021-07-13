@@ -8,6 +8,11 @@ from odoo.tests import tagged
 
 class TestSaleProductAttributeValueCommon(TestProductAttributeValueCommon):
 
+    def setUp(self):
+        super().setUp()
+        self.env.company.account_sale_tax_id = False
+        self.env.company.account_purchase_tax_id = False
+
     @classmethod
     def _setup_currency(cls, currency_ratio=2):
         """Get or create a currency. This makes the test non-reliant on demo.

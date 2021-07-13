@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
+
 class AccountMove(models.Model):
     _name = 'account.move'
     _inherit = ['account.move', 'utm.mixin']
@@ -24,17 +25,28 @@ class AccountMove(models.Model):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Delivery address for current invoice.")
 
+    # -------------------------------------------------------------------------
+    # INHERIT account.business.mixin
+    # -------------------------------------------------------------------------
+
+    def _get_business_values(self):
+        # OVERRIDE
+        vals = super()._get_business_values()
+
+        vals['delivery_partner'] = self.partner_shipping_id
+
+        return vals
+
+    # -------------------------------------------------------------------------
+    # MISC
+    # -------------------------------------------------------------------------
+
     @api.onchange('partner_shipping_id', 'company_id')
     def _onchange_partner_shipping_id(self):
         """
         Trigger the change of fiscal position when the shipping address is modified.
         """
-        delivery_partner_id = self._get_invoice_delivery_partner_id()
-        fiscal_position = self.env['account.fiscal.position'].with_company(self.company_id).get_fiscal_position(
-            self.partner_id.id, delivery_id=delivery_partner_id)
-
-        if fiscal_position:
-            self.fiscal_position_id = fiscal_position
+        self.fiscal_position_id = self._get_default_partner_fiscal_position()
 
     def unlink(self):
         downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
@@ -47,12 +59,8 @@ class AccountMove(models.Model):
     def _onchange_partner_id(self):
         # OVERRIDE
         # Recompute 'partner_shipping_id' based on 'partner_id'.
-        addr = self.partner_id.address_get(['delivery'])
-        self.partner_shipping_id = addr and addr.get('delivery')
-
-        res = super(AccountMove, self)._onchange_partner_id()
-
-        return res
+        self.partner_shipping_id = self._get_default_delivery_partner()
+        return super()._onchange_partner_id()
 
     @api.onchange('invoice_user_id')
     def onchange_user_id(self):
@@ -114,8 +122,3 @@ class AccountMove(models.Model):
         for (order, name) in todo:
             order.message_post(body=_("Invoice %s paid", name))
         return res
-
-    def _get_invoice_delivery_partner_id(self):
-        # OVERRIDE
-        self.ensure_one()
-        return self.partner_shipping_id.id or super(AccountMove, self)._get_invoice_delivery_partner_id()

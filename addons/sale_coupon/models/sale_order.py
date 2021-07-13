@@ -500,18 +500,16 @@ class SaleOrderLine(models.Model):
                 related_program_lines |= line.order_id.order_line.filtered(lambda l: l.product_id.id == related_program.discount_line_product_id.id) - line
         return super(SaleOrderLine, self | related_program_lines).unlink()
 
-    def _compute_tax_id(self):
-        reward_lines = self.filtered('is_reward_line')
-        super(SaleOrderLine, self - reward_lines)._compute_tax_id()
+    @api.depends('is_reward_line')
+    def _compute_tax_ids(self):
+        # OVERRIDE
         # Discount reward line is split per tax, the discount is set on the line but not on the product
         # as the product is the generic discount line.
         # In case of a free product, retrieving the tax on the line instead of the product won't affect the behavior.
+        reward_lines = self.filtered('is_reward_line')
         for line in reward_lines:
-            line = line.with_company(line.company_id)
-            fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id.get_fiscal_position(line.order_partner_id.id)
-            # If company_id is set, always filter taxes by the company
-            taxes = line.tax_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
-            line.tax_id = fpos.map_tax(taxes)
+            line.tax_id = line.tax_id
+        super(SaleOrderLine, self - reward_lines)._compute_tax_ids()
 
     def _get_display_price(self, product):
         # A product created from a promotion does not have a list_price.
