@@ -46,6 +46,9 @@ export function patchWithCleanup(obj, patchValue, options) {
     });
 }
 
+/**
+ * @returns {HTMLElement}
+ */
 export function getFixture() {
     if (QUnit.config.debug) {
         return document.body;
