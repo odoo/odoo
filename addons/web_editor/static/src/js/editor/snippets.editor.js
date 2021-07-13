@@ -31,21 +31,25 @@ $.extend($.expr[':'], {
     },
 });
 
-function firstChild (node) {
-    while (node.firstChild) { node = node.firstChild; }
+function firstChild(node) {
+    while (node.firstChild) {
+        node = node.firstChild;
+    }
     return node;
-};
-function lastChild (node) {
-    while (node.lastChild) { node = node.lastChild; }
+}
+function lastChild(node) {
+    while (node.lastChild) {
+        node = node.lastChild;
+    }
     return node;
-};
-function nodeLength (node) {
+}
+function nodeLength(node) {
     if (node.nodeType === Node.TEXT_NODE) {
         return node.nodeValue.length;
     } else {
         return node.childNodes.length;
     }
-};
+}
 
 
 $.fn.extend({
@@ -251,7 +255,9 @@ var SnippetEditor = Widget.extend({
         // Before actually destroying a snippet editor, notify the parent
         // about it so that it can update its list of alived snippet editors.
         this.trigger_up('snippet_editor_destroyed');
-        if (this.$optionsSection) this.$optionsSection.remove();
+        if (this.$optionsSection) {
+            this.$optionsSection.remove();
+        }
         this._super(...arguments);
         this.$target.removeData('snippet-editor');
         this.$target.off('.snippet_editor');
@@ -761,7 +767,7 @@ var SnippetEditor = Widget.extend({
         this._dropSiblings = {
             prev: self.$target.prev()[0],
             next: self.$target.next()[0],
-        }
+        };
         self.size = {
             width: self.$target.width(),
             height: self.$target.height()
@@ -1303,9 +1309,10 @@ var SnippetsMenu = Widget.extend({
         });
         this.$document.on('keyup.snippets_menu', function () {
             const selection = document.getSelection();
-            if (!Selection.rangeCount) return;
+            if (!Selection.rangeCount) {
+                return;
+            }
             const range = selection.getRangeAt(0);
-            const text =  $(range.startContainer).closest('.o_default_snippet_text');
             $(range.startContainer).closest('.o_default_snippet_text').removeClass('o_default_snippet_text');
         });
         const refreshSnippetEditors = _.debounce(() => {
@@ -1383,7 +1390,9 @@ var SnippetsMenu = Widget.extend({
             }
             this.$window.off('.snippets_menu');
             this.$document.off('.snippets_menu');
-            this.$scrollingElement && this.$scrollingElement[0].removeEventListener('scroll', this._onScrollingElementScroll, {capture: true});
+            if (this.$scrollingElement) {
+                this.$scrollingElement[0].removeEventListener('scroll', this._onScrollingElementScroll, {capture: true});
+            }
         }
         core.bus.off('deactivate_snippet', this, this._onDeactivateSnippet);
         $(document.body).off('click', this._checkEditorToolbarVisibilityCallback);
@@ -1444,7 +1453,9 @@ var SnippetsMenu = Widget.extend({
      * Updates the cover dimensions of the current snippet editor.
      */
     updateCurrentSnippetEditorOverlay: function () {
-        if (this.snippetEditorDragging) return;
+        if (this.snippetEditorDragging) {
+            return;
+        }
         for (const snippetEditor of this.snippetEditors) {
             if (snippetEditor.$target.closest('body').length) {
                 snippetEditor.cover();
@@ -1919,7 +1930,7 @@ var SnippetsMenu = Widget.extend({
             var exclude = $style.data('exclude') || '';
             var target = $style.data('target');
             var noCheck = $style.data('no-check');
-            var optionID = $style.data('js') || $style.data('option-name');  // used in tour js as selector
+            var optionID = $style.data('js') || $style.data('option-name'); // used in tour js as selector
             var option = {
                 'option': optionID,
                 'base_selector': selector,
@@ -2244,9 +2255,9 @@ var SnippetsMenu = Widget.extend({
                         colorCustomizedURL.searchParams.forEach((value, key) => {
                             const match = key.match(/^c([1-5])$/);
                             if (match) {
-                                colorCustomizedURL.searchParams.set(key, getCSSVariableValue(`o-color-${match[1]}`))
+                                colorCustomizedURL.searchParams.set(key, getCSSVariableValue(`o-color-${match[1]}`));
                             }
-                        })
+                        });
                         dynamicSvg.src = colorCustomizedURL.pathname + colorCustomizedURL.search;
                     });
 
@@ -3027,25 +3038,25 @@ var SnippetsMenu = Widget.extend({
     /**
      * On click on discard button.
      */
-    _onDiscardClick: function() {
+    _onDiscardClick: function () {
         this.trigger_up('request_cancel');
     },
     /**
      * Preview on mobile.
      */
-    _onMobilePreviewClick: async function() {
+    _onMobilePreviewClick: async function () {
         throw new Error('implement me');
     },
     /**
      * Undo..
      */
-    _onUndo: async function() {
+    _onUndo: async function () {
         this.options.wysiwyg.undo();
     },
     /**
      * Redo.
      */
-    _onRedo: async function() {
+    _onRedo: async function () {
         this.options.wysiwyg.redo();
     },
     /**
