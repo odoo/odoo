@@ -148,6 +148,10 @@ class Project(models.Model):
         action['context'] = "{'default_res_model': '%s','default_res_id': %d}" % (self._name, self.id)
         return action
 
+    def _default_stage_id(self):
+        # Since project stages are order by sequence first, this should fetch the one with the lowest sequence number.
+        return self.env['project.project.stage'].search([], limit=1)
+
     def _compute_is_favorite(self):
         for project in self:
             project.is_favorite = self.env.user in project.favorite_user_ids
@@ -166,6 +170,10 @@ class Project(models.Model):
 
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
+
+    @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
+        return self.env['project.project.stage'].search([], order=order)
 
     name = fields.Char("Name", index=True, required=True, tracking=True, translate=True)
     description = fields.Html()
@@ -230,6 +238,7 @@ class Project(models.Model):
     allow_subtasks = fields.Boolean('Sub-tasks', default=lambda self: self.env.user.has_group('project.group_subtask_project'))
     allow_recurring_tasks = fields.Boolean('Recurring Tasks', default=lambda self: self.env.user.has_group('project.group_project_recurring_tasks'))
     allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'))
+    tag_ids = fields.Many2many('project.tags', relation='project_project_project_tags_rel', string='Tags')
 
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
@@ -249,6 +258,10 @@ class Project(models.Model):
         ('monthly', 'Once a Month'),
         ('quarterly', 'Quarterly'),
         ('yearly', 'Yearly')], 'Rating Frequency', required=True, default='monthly')
+
+    # Not `required` since this is an option to enable in project settings.
+    stage_id = fields.Many2one('project.project.stage', string='Stage', ondelete='restrict', groups="project.group_project_stages",
+        tracking=True, index=True, copy=False, default=_default_stage_id, group_expand='_read_group_stage_ids')
 
     update_ids = fields.One2many('project.update', 'project_id')
     last_update_id = fields.Many2one('project.update', string='Last Update')
@@ -468,6 +481,27 @@ class Project(models.Model):
         return values
 
     # ---------------------------------------------------
+    # Mail gateway
+    # ---------------------------------------------------
+
+    def _track_template(self, changes):
+        res = super()._track_template(changes)
+        project = self[0]
+        if self.user_has_groups('project.group_project_stages') and 'stage_id' in changes and project.stage_id.mail_template_id:
+            res['stage_id'] = (project.stage_id.mail_template_id, {
+                'auto_delete_message': True,
+                'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+                'email_layout_xmlid': 'mail.mail_notification_light',
+            })
+        return res
+
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+        if 'stage_id' in init_values:
+            return self.env.ref('project.mt_project_stage_change')
+        return super()._track_subtype(init_values)
+
+    # ---------------------------------------------------
     #  Actions
     # ---------------------------------------------------
 
@@ -506,6 +540,13 @@ class Project(models.Model):
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
         action_context['search_default_project_id'] = self.id
         return dict(action, context=action_context)
+
+    @api.model
+    def _action_open_all_projects(self):
+        action = self.env['ir.actions.act_window']._for_xml_id(
+            'project.open_view_project_all' if not self.user_has_groups('project.group_project_stages') else
+            'project.open_view_project_all_group_stage')
+        return action
 
     # ---------------------------------------------
     #  PROJECT UPDATES

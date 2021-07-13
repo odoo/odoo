@@ -38,6 +38,13 @@
         <field name="hidden" eval="True"/>
     </record>
     <!-- Project-related subtypes for messaging / Chatter -->
+    <record id="mt_project_stage_change" model="mail.message.subtype">
+        <field name="name">Project Stage Changed</field>
+        <field name="sequence">9</field>
+        <field name="res_model">project.project</field>
+        <field name="default" eval="False"/>
+        <field name="hidden" eval="True"/>
+    </record>
     <record id="mt_project_task_new" model="mail.message.subtype">
         <field name="name">Task Created</field>
         <field name="sequence">10</field>
