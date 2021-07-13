@@ -12,6 +12,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
     const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
     const { Dialog: WowlDialog } = require("@web/core/dialog/dialog");
     const { getFixture, nextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
+    const { createWebClient, doAction } = require("@web/../tests/webclient/helpers");
 
     const { Component, tags, useState, mount } = owl;
     const EscapeKey = { key: 'Escape', keyCode: 27, which: 27 };
@@ -401,5 +402,108 @@ odoo.define('web.owl_dialog_tests', function (require) {
         parent.destroy();
         frontEndModal.destroy();
         backEndModal.destroy();
+    });
+
+    QUnit.test("remove tabindex on inactive dialog", async (assert) => {
+        const serverData = {
+            actions: {
+                1: {
+                    id: 1,
+                    flags: { initialDate: new Date(2020, 6, 13) },
+                    name: "Test",
+                    res_model: "event",
+                    type: "ir.actions.act_window",
+                    views: [[false, "calendar"]],
+                },
+                2: {
+                    id: 2,
+                    name: "Test",
+                    res_model: "event",
+                    target: "new",
+                    type: "ir.actions.act_window",
+                    views: [[2, "form"]],
+                },
+            },
+            models: {
+                event: {
+                    fields: {
+                        id: { type: "integer" },
+                        display_name: { type: "char" },
+                        start: { type: "date" },
+                    },
+                    records: [{ id: 1, display_name: "Event 1", start: "2020-07-13" }],
+                    methods: {
+                        async check_access_rights() {
+                            return true;
+                        },
+                        async get_formview_id() {
+                            return false;
+                        },
+                    },
+                },
+            },
+            views: {
+                "event,false,calendar": `<calendar date_start="start" event_open_popup="true" />`,
+                "event,false,search": `<search />`,
+                "event,false,form": `
+                    <form><sheet>
+                        <field name="display_name" />
+                        <button type="action" name="2">Click me</button>
+                    </sheet></form>
+                `,
+                "event,2,form": `<form><sheet><field name="display_name" /></sheet></form>`,
+            },
+        };
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+
+        await testUtils.dom.click(webClient.el.querySelector(`.fc-event[data-event-id="1"]`));
+        await testUtils.dom.click(webClient.el.querySelector(`.o_cw_popover_edit`));
+
+        assert.containsNone(webClient.el, ".o_dialog");
+        assert.containsOnce(webClient.el, ".modal");
+        assert.containsOnce(webClient.el, ".modal[tabindex='-1']");
+
+        assert.strictEqual(
+            webClient.el.querySelector(`.o_field_widget[name="display_name"]`).value,
+            "Event 1"
+        );
+        await testUtils.fields.editInput(
+            webClient.el.querySelector(`.o_field_widget[name="display_name"]`),
+            "legacy"
+        );
+        assert.strictEqual(
+            webClient.el.querySelector(`.o_field_widget[name="display_name"]`).value,
+            "legacy"
+        );
+
+        await testUtils.dom.click(webClient.el.querySelector(`button[name="2"]`));
+        assert.containsOnce(webClient.el, ".o_dialog");
+        assert.containsN(webClient.el, ".modal", 2);
+        assert.containsOnce(webClient.el, ".modal:not([tabindex='-1'])");
+        assert.containsOnce(webClient.el, ".o_dialog .modal[tabindex='-1']");
+
+        assert.strictEqual(
+            webClient.el.querySelector(`.o_dialog .o_field_widget[name="display_name"]`).value,
+            ""
+        );
+        await testUtils.fields.editInput(
+            webClient.el.querySelector(`.o_dialog .o_field_widget[name="display_name"]`),
+            "wowl"
+        );
+        assert.strictEqual(
+            webClient.el.querySelector(`.o_dialog .o_field_widget[name="display_name"]`).value,
+            "wowl"
+        );
+
+        await testUtils.dom.click(webClient.el.querySelector(`.o_dialog .modal-header .close`));
+        assert.containsNone(webClient.el, ".o_dialog");
+        assert.containsOnce(webClient.el, ".modal");
+        assert.containsOnce(webClient.el, ".modal[tabindex='-1']");
+
+        await testUtils.dom.click(webClient.el.querySelector(`.modal-header .close`));
+        assert.containsNone(webClient.el, ".o_dialog");
+        assert.containsNone(webClient.el, ".modal");
     });
 });
