@@ -3,7 +3,7 @@
 
 from odoo import exceptions
 from odoo.addons.crm.tests.common import TestCrmCommon
-from odoo.addons.crm_iap_mine.tests.common import MockIAPReveal
+from odoo.addons.iap_crm.tests.common import MockIAPReveal
 from odoo.tests.common import users
 
 

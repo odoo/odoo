@@ -1,20 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-
 from odoo import api, fields, models, _
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import UserError
 
-_logger = logging.getLogger(__name__)
-
-DEFAULT_ENDPOINT = 'https://iap-services.odoo.com'
-
 MAX_LEAD = 200
-
 MAX_CONTACT = 5
-
 CREDIT_PER_COMPANY = 1
 CREDIT_PER_CONTACT = 1
 
@@ -24,10 +16,7 @@ class CRMLeadMiningRequest(models.Model):
     _description = 'CRM Lead Mining Request'
 
     def _default_lead_type(self):
-        if self.env.user.has_group('crm.group_use_lead'):
-            return 'lead'
-        else:
-            return 'opportunity'
+        return 'lead' if self.env.user.has_group('crm.group_use_lead') else 'opportunity'
 
     def _default_country_ids(self):
         return self.env.user.company_id.country_id
@@ -191,19 +180,23 @@ class CRMLeadMiningRequest(models.Model):
         sub_title = _('Generate new leads based on their country, industry, size, etc.')
         return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
 
-    def _prepare_iap_payload(self):
+    def _iap_mine_prepare_payload(self):
         """
         This will prepare the data to send to the server
         """
         self.ensure_one()
-        payload = {'lead_number': self.lead_number,
-                   'search_type': self.search_type,
-                   'countries': self.country_ids.mapped('code')}
+        payload = {
+            'lead_number': self.lead_number,
+            'search_type': self.search_type,
+            'countries': self.country_ids.mapped('code')
+        }
         if self.state_ids:
             payload['states'] = self.state_ids.mapped('code')
         if self.filter_on_size:
-            payload.update({'company_size_min': self.company_size_min,
-                            'company_size_max': self.company_size_max})
+            payload.update({
+                'company_size_min': self.company_size_min,
+                'company_size_max': self.company_size_max
+            })
         if self.industry_ids:
             # accumulate all reveal_ids (separated by ',') into one list
             # eg: 3 records with values: "175,176", "177" and "190,191"
@@ -215,75 +208,74 @@ class CRMLeadMiningRequest(models.Model):
             ]
             payload['industry_ids'] = all_industry_ids
         if self.search_type == 'people':
-            payload.update({'contact_number': self.contact_number,
-                            'contact_filter_type': self.contact_filter_type})
+            payload.update({
+                'contact_number': self.contact_number,
+                'contact_filter_type': self.contact_filter_type
+            })
             if self.contact_filter_type == 'role':
-                payload.update({'preferred_role': self.preferred_role_id.reveal_id,
-                                'other_roles': self.role_ids.mapped('reveal_id')})
+                payload.update({
+                    'preferred_role': self.preferred_role_id.reveal_id,
+                    'other_roles': self.role_ids.mapped('reveal_id')
+                })
             elif self.contact_filter_type == 'seniority':
                 payload['seniority'] = self.seniority_id.reveal_id
         return payload
 
-    def _perform_request(self):
-        """
-        This will perform the request and create the corresponding leads.
-        The user will be notified if he hasn't enough credits.
-        """
+    def _iap_mine_send_request(self):
+        self.ensure_one()
         self.error_type = False
-        server_payload = self._prepare_iap_payload()
-        reveal_account = self.env['iap.account'].get('reveal')
-        dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
-        params = {
-            'account_token': reveal_account.account_token,
-            'dbuuid': dbuuid,
-            'data': server_payload
-        }
+        server_payload = self._iap_mine_prepare_payload()
         try:
-            response = self._iap_contact_mining(params, timeout=300)
-            if not response.get('data'):
-                self.error_type = 'no_result'
-                return False
-
-            return response['data']
+            response = self.env['iap.reveal.api']._request_mine(server_payload)
         except iap_tools.InsufficientCreditError as e:
+            credit_error, response_data = True, []
+        except Exception as e:
+            raise UserError(_("Your request could not be executed: %s", e))
+        else:
+            credit_error, response_data = response['credit_error'], response['data']
+
+        if credit_error:
             self.error_type = 'credits'
             self.state = 'error'
             return False
-        except Exception as e:
-            raise UserError(_("Your request could not be executed: %s", e))
+        if not response_data:
+            self.error_type = 'no_result'
+            return False
+        return response_data
 
-    def _iap_contact_mining(self, params, timeout=300):
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT) + '/iap/clearbit/1/lead_mining_request'
-        return iap_tools.iap_jsonrpc(endpoint, params=params, timeout=timeout)
-
-    def _create_leads_from_response(self, result):
-        """ This method will get the response from the service and create the leads accordingly """
+    def _iap_mine_create_leads_from_response(self, response_data):
         self.ensure_one()
-        lead_vals_list = []
-        messages_to_post = {}
-        for data in result:
-            lead_vals_list.append(self._lead_vals_from_response(data))
+        lead_vals_list = [
+            self.env['iap.reveal.api']._get_lead_vals_from_response(iap_payload)
+            for iap_payload in response_data
+        ]
+        rule_vals = {
+            'lead_mining_request_id': self.id,
+            'tag_ids': [(6, 0, self.tag_ids.ids)],
+            'team_id': self.team_id.id,
+            'type': self.lead_type,
+            'user_id': self.user_id.id,
+        }
+        for lead_vals in lead_vals_list:
+            lead_vals.update(**rule_vals)
 
-            template_values = data['company_data']
+        messages_to_post = {}
+        for iap_payload in response_data:
+            template_values = iap_payload['company_data']
             template_values.update({
                 'flavor_text': _("Opportunity created by Odoo Lead Generation"),
-                'people_data': data.get('people_data'),
+                'people_data': iap_payload.get('people_data'),
             })
-            messages_to_post[data['company_data']['clearbit_id']] = template_values
+            messages_to_post[iap_payload['company_data']['clearbit_id']] = template_values
+
         leads = self.env['crm.lead'].create(lead_vals_list)
         for lead in leads:
             if messages_to_post.get(lead.reveal_id):
-                lead.message_post_with_view('iap_mail.enrich_company', values=messages_to_post[lead.reveal_id], subtype_id=self.env.ref('mail.mt_note').id)
-
-    # Methods responsible for format response data into valid odoo lead data
-    @api.model
-    def _lead_vals_from_response(self, data):
-        self.ensure_one()
-        company_data = data.get('company_data')
-        people_data = data.get('people_data')
-        lead_vals = self.env['crm.iap.lead.helpers'].lead_vals_from_response(self.lead_type, self.team_id.id, self.tag_ids.ids, self.user_id.id, company_data, people_data)
-        lead_vals['lead_mining_request_id'] = self.id
-        return lead_vals
+                lead.message_post_with_view(
+                    'iap_mail.enrich_company',
+                    values=messages_to_post[lead.reveal_id],
+                    subtype_id=self.env.ref('mail.mt_note').id
+                )
 
     def action_draft(self):
         self.ensure_one()
@@ -294,10 +286,11 @@ class CRMLeadMiningRequest(models.Model):
         self.ensure_one()
         if self.name == _('New'):
             self.name = self.env['ir.sequence'].next_by_code('crm.iap.lead.mining.request') or _('New')
-        results = self._perform_request()
 
-        if results:
-            self._create_leads_from_response(results)
+        self.error_type = False
+        response_data = self._iap_mine_send_request()
+        if response_data:
+            self._iap_mine_create_leads_from_response(response_data)
             self.state = 'done'
             if self.lead_type == 'lead':
                 return self.action_get_lead_action()
@@ -316,9 +309,8 @@ class CRMLeadMiningRequest(models.Model):
                 'res_id': self.id,
                 'context': dict(self.env.context, edit=True, form_view_initial_mode='edit')
             }
-        else:
-            # will reload the form view and show the error message on top
-            return False
+        # will reload the form view and show the error message on top
+        return False
 
     def action_get_lead_action(self):
         self.ensure_one()

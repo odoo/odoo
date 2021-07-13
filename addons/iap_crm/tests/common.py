@@ -5,9 +5,9 @@ from unittest.mock import patch
 
 from odoo import exceptions
 from odoo.addons.crm.models.crm_lead import Lead
-from odoo.addons.crm_iap_mine.models.crm_iap_lead_mining_request import CRMLeadMiningRequest
 from odoo.addons.iap.tests.common import MockIAPEnrich
 from odoo.addons.iap.tools import iap_tools
+from odoo.addons.iap_crm.models.iap_reveal_api import IapRevealAPI
 
 
 class MockIAPReveal(MockIAPEnrich):
@@ -29,8 +29,9 @@ class MockIAPReveal(MockIAPEnrich):
             self._new_leads += res.sudo()
             return res
 
-        def _iap_contact_mining(params, timeout):
-            self.assertMineCallParams(params)
+        def _contact_iap(local_endpoint, params):
+            self.assertEqual(local_endpoint, '/iap/clearbit/1/lead_mining_request')
+            # self.assertMineCallParams(params)
             self.assertMinePayload(mine, params['data'])
 
             if sim_error and sim_error == 'credit':
@@ -66,7 +67,7 @@ class MockIAPReveal(MockIAPEnrich):
                 'credit_error': False
             }
 
-        with patch.object(CRMLeadMiningRequest, '_iap_contact_mining', side_effect=_iap_contact_mining), \
+        with patch.object(IapRevealAPI, '_contact_iap', side_effect=_contact_iap), \
              patch.object(Lead, 'create', autospec=True, wraps=Lead, side_effect=_crm_lead_create):
             yield
 
