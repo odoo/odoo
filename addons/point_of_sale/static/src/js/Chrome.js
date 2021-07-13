@@ -385,6 +385,18 @@ odoo.define('point_of_sale.Chrome', function(require) {
         _replaceCrashmanager() {
             var self = this;
             CrashManager.include({
+                show_warning: function (error) {
+                    if (self.env.pos) {
+                        // self == this component
+                        self.showPopup('ErrorPopup', {
+                            title: error.data.title.toString(),
+                            body: error.data.message,
+                        });
+                    } else {
+                        // this == CrashManager instance
+                        this._super(error);
+                    }
+                },
                 show_error: function (error) {
                     if (self.env.pos) {
                         // self == this component
