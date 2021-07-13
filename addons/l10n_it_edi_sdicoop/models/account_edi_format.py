@@ -253,7 +253,7 @@ class AccountEdiFormat(models.Model):
         if not company.l10n_it_codice_fiscale:
             raise UserError(_('Please fill your codice fiscale to be able to receive invoices from FatturaPA'))
 
-        return company.l10n_it_codice_fiscale
+        return self.env['res.partner']._l10n_it_normalize_codice_fiscale(company.l10n_it_codice_fiscale)
 
     def _l10n_it_edi_upload(self, files, proxy_user):
         '''Upload files to fatturapa.
