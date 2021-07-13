@@ -105,6 +105,7 @@ class ReSequenceWizard(models.TransientModel):
                 # compute the new values period by period
                 for move in period_recs:
                     new_values[move.id] = {
+                        'id': move.id,
                         'current_name': move.name,
                         'state': move.state,
                         'date': format_date(self.env, move.date),
