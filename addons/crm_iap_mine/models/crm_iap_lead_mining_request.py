@@ -184,7 +184,13 @@ class CRMLeadMiningRequest(models.Model):
     def _onchange_company_size_max(self):
         if self.company_size_max < self.company_size_min:
             self.company_size_max = self.company_size_min
-    
+
+    @api.model
+    def get_empty_list_help(self, help):
+        help_title = _('Create a Lead Mining Request')
+        sub_title = _('Generate new leads based on their country, industry, size, etc.')
+        return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
+
     def _prepare_iap_payload(self):
         """
         This will prepare the data to send to the server
@@ -275,12 +281,6 @@ class CRMLeadMiningRequest(models.Model):
         lead_vals = self.env['crm.iap.lead.helpers'].lead_vals_from_response(self.lead_type, self.team_id.id, self.tag_ids.ids, self.user_id.id, company_data, people_data)
         lead_vals['lead_mining_request_id'] = self.id
         return lead_vals
-
-    @api.model
-    def get_empty_list_help(self, help):
-        help_title = _('Create a Lead Mining Request')
-        sub_title = _('Generate new leads based on their country, industry, size, etc.')
-        return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
 
     def action_draft(self):
         self.ensure_one()
