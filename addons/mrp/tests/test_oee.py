@@ -68,4 +68,4 @@ class TestOee(TestMrpCommon):
 
         # Check overall equipment effectiveness
         computed_oee = round(((productive_time_in_hour * 100.0)/(productive_time_in_hour + blocked_time_in_hour)), 2)
-        self.assertEqual(self.workcenter_1.oee, computed_oee, "Wrong oee on workcenter.")
+        self.assertEqual(self.workcenter_1.oee_float, computed_oee, "Wrong oee on workcenter.")

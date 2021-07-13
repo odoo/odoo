@@ -58,7 +58,8 @@ class MrpWorkcenter(models.Model):
     productive_time = fields.Float(
         'Productive Time', compute='_compute_productive_time',
         help='Productive hours over the last month', digits=(16, 2))
-    oee = fields.Float(compute='_compute_oee', help='Overall Equipment Effectiveness, based on the last month')
+    oee_integer = fields.Integer(compute='_compute_oee_integer', help='Overall Equipment Effectiveness, based on the last month')
+    oee_float = fields.Float(compute='_compute_oee_float', help='Overall Equipment Effectiveness, based on the last month')
     oee_target = fields.Float(string='OEE Target', help="Overall Effective Efficiency Target in percentage", default=90)
     performance = fields.Integer('Performance', compute='_compute_performance', help='Performance over the last month')
     workcenter_load = fields.Float('Work Center Load', compute='_compute_workorder_count')
@@ -147,13 +148,18 @@ class MrpWorkcenter(models.Model):
         for workcenter in self:
             workcenter.productive_time = count_data.get(workcenter.id, 0.0) / 60.0
 
+    @api.depends('oee_float')
+    def _compute_oee_integer(self):
+        for order in self:
+            order.oee_integer = int(round(order.oee_float, 0))
+
     @api.depends('blocked_time', 'productive_time')
-    def _compute_oee(self):
+    def _compute_oee_float(self):
         for order in self:
             if order.productive_time:
-                order.oee = round(order.productive_time * 100.0 / (order.productive_time + order.blocked_time), 2)
+                order.oee_float = round(order.productive_time * 100.0 / (order.productive_time + order.blocked_time), 2)
             else:
-                order.oee = 0.0
+                order.oee_float = 0.0
 
     def _compute_performance(self):
         wo_data = self.env['mrp.workorder'].read_group([

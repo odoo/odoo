@@ -79,9 +79,9 @@
                 <field name="date_planned_finished" optional="hide"/>
                 <field name="date_start" optional="hide" readonly="1"/>
                 <field name="date_finished" optional="hide" readonly="1"/>
-                <field name="duration_expected" widget="float_time"/>
+                <field name="duration_expected" widget="float_time" sum="expected duration"/>
                 <field name="duration" widget="mrp_time_counter"
-                  attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}"/>
+                  attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}" sum="real duration"/>
                 <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')" attrs="{'invisible': [('production_state', 'in', ('draft', 'done'))]}"/>
                 <button name="button_start" type="object" string="Start" class="btn-success"
                   attrs="{'invisible': ['|', '|', '|', ('production_state','in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('state', '=', 'done'), ('is_user_working', '!=', False)]}"/>

@@ -127,8 +127,8 @@ class MrpBom(models.Model):
                 self.product_id = False
             for line in self.bom_line_ids:
                 line.bom_product_template_attribute_value_ids = False
-            if self.product_tmpl_id.bom_count != 0:  # add a reference to the bom if there is already a bom for this product
-                self.code = "{0} (copy) {1}".format(str(self.product_tmpl_id.name), self.product_tmpl_id.bom_count)
+            if self.product_tmpl_id.bom_count:  # add a reference to the bom if there is already a bom for this product
+                self.code = _("%s (copy) %s" % (str(self.product_tmpl_id.name), self.product_tmpl_id.bom_count))
 
     def copy(self, default=None):
         res = super().copy(default)

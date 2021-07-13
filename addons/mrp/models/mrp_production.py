@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import float_compare, float_round, float_is_zero, format_datetime
+from odoo.tools import float_compare, float_round, float_is_zero, format_datetime, date_utils
 from odoo.tools.misc import format_date
 
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
@@ -65,9 +65,7 @@ class MrpProduction(models.Model):
     def _get_default_date_planned_start(self):
         if self.env.context.get('default_date_deadline'):
             return fields.Datetime.to_datetime(self.env.context.get('default_date_deadline'))
-        regex_to_round_up = re.compile("[0-9]+-[0-9]+-[0-9]+T[0-9]+")
-        datetime_rounded_by_hour = regex_to_round_up.match(datetime.datetime.now().isoformat()).group()
-        return datetime.datetime.strptime(datetime_rounded_by_hour, "%Y-%m-%dT%H") + datetime.timedelta(hours=1)
+        return fields.Datetime.to_string(datetime.datetime.now().replace(minute=0, second=0, microsecond=0) + datetime.timedelta(hours=1))
 
     @api.model
     def _get_default_is_locked(self):
@@ -317,19 +315,12 @@ class MrpProduction(models.Model):
     @api.depends('workorder_ids.duration_expected')
     def _compute_production_duration_expected(self):
         for production in self:
-            duration_expected = 0
-            for workorder in production.workorder_ids:
-                duration_expected += workorder.duration_expected
-            production.production_duration_expected = duration_expected
-
+            production.production_duration_expected = sum(production.workorder_ids.mapped('duration_expected'))
 
     @api.depends('workorder_ids.duration')
     def _compute_production_real_duration(self):
         for production in self:
-            real_duration = 0
-            for workorder in production.workorder_ids:
-                real_duration += workorder.duration
-            production.production_real_duration = real_duration
+            production.production_real_duration = sum(production.workorder_ids.mapped('duration'))
 
     @api.depends("workorder_ids.date_planned_start", "workorder_ids.date_planned_finished")
     def _compute_is_planned(self):
