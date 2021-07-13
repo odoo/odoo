@@ -26,7 +26,6 @@
                                 <PartnerImStatusIcon
                                     class="o_Message_partnerImStatusIcon"
                                     t-att-class="{
-                                        'o-message-not-discussion': !(message.is_discussion or message.is_notification),
                                         'o-message-selected': isSelected,
                                         'o_Message_partnerImStatusIcon-mobile': env.messaging.device.isMobile,
                                     }"
