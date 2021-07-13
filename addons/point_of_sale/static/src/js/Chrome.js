@@ -413,7 +413,43 @@ odoo.define('point_of_sale.Chrome', function(require) {
             }
 
             this._disableBackspaceBack();
+<<<<<<< HEAD
             chromeInstance = this;
+=======
+            this._replaceCrashmanager();
+        }
+        // replaces the error handling of the existing crashmanager which
+        // uses jquery dialog to display the error, to use the pos popup
+        // instead
+        _replaceCrashmanager() {
+            var self = this;
+            CrashManager.include({
+                show_warning: function (error) {
+                    if (self.env.pos) {
+                        // self == this component
+                        self.showPopup('ErrorPopup', {
+                            title: error.data.title.toString(),
+                            body: error.data.message,
+                        });
+                    } else {
+                        // this == CrashManager instance
+                        this._super(error);
+                    }
+                },
+                show_error: function (error) {
+                    if (self.env.pos) {
+                        // self == this component
+                        self.showPopup('ErrorTracebackPopup', {
+                            title: error.type,
+                            body: error.message + '\n' + error.data.debug + '\n',
+                        });
+                    } else {
+                        // this == CrashManager instance
+                        this._super(error);
+                    }
+                },
+            });
+>>>>>>> 7a1899b3dea... temp
         }
         // prevent backspace from performing a 'back' navigation
         _disableBackspaceBack() {
