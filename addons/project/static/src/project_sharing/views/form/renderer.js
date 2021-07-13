@@ -1,16 +1,20 @@
 /** @odoo-module **/
 
 import FormRenderer from 'web.FormRenderer';
-import { PortalChatter } from 'portal.chatter';
+import Chatter from '@project/project_sharing/components/chatter';
+import { session } from '@web/session';
 
 export default FormRenderer.extend({
     _makeChatterContainerComponent() {
         const props = this._makeChatterContainerProps();
-        this._chatterContainerComponent = new PortalChatter(this, props);
+        this._chatterContainerComponent = new Chatter(this, props);
     },
     _makeChatterContainerProps() {
+        // FIXME: perhaps check if we have a parent in the window ?
+        // Call the parent window to get the url displayed in the browser since we are in an iframe
+        const query = new URLSearchParams(window.parent.location.search);
         return {
-            token: '',
+            token: query.get('access_token') || '',
             res_model: 'project.task',
             pid: '',
             hash: '',
@@ -18,6 +22,7 @@ export default FormRenderer.extend({
             pager_step: 10,
             allow_composer: true,
             two_columns: false,
+            project_sharing_id: session.project_id,
         };
     },
     _makeChatterContainerTarget() {
