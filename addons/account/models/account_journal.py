@@ -429,6 +429,21 @@ class AccountJournal(models.Model):
             raise ValidationError(_("Some payment methods supposed to be unique already exists somewhere else.\n"
                                     "(%s)", ', '.join([method.display_name for method in methods])))
 
+    @api.constrains('active')
+    def _check_auto_post_draft_entries(self):
+        for journal in self:
+            pending_moves = self.env['account.move'].search([
+                ('journal_id', '=', journal.id),
+                ('state', '=', 'draft')
+            ], limit=1)
+
+            if pending_moves:
+                raise ValidationError(_("You can not archive a journal containing draft journal entries.\n\n"
+                                        "To proceed:\n"
+                                        "1/ click on the top-right button 'Journal Entries' from this journal form\n"
+                                        "2/ then filter on 'Draft' entries\n"
+                                        "3/ select them all and post or delete them through the action menu"))
+
     @api.onchange('type')
     def _onchange_type(self):
         self.refund_sequence = self.type in ('sale', 'purchase')
