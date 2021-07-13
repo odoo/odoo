@@ -85,5 +85,23 @@
             <field name="model_id" ref="model_fleet_vehicle"/>
             <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
         </record>
+        <record id="ir_rule_fleet_odometer" model="ir.rule">
+            <field name="name">Fleet odometer: Multi Company</field>
+            <field name="model_id" ref="model_fleet_vehicle_odometer"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('vehicle_id.company_id', '=', False), ('vehicle_id.company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="ir_rule_fleet_log_services" model="ir.rule">
+            <field name="name">Fleet log services: Multi Company</field>
+            <field name="model_id" ref="model_fleet_vehicle_log_services"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="ir_rule_fleet_log_contract" model="ir.rule">
+            <field name="name">Fleet log contract: Multi Company</field>
+            <field name="model_id" ref="model_fleet_vehicle_log_contract"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
     </data>
 </odoo>
