@@ -22,12 +22,13 @@
     ],
     'installable': True,
     'data': [
+        # security.xml first, data.xml need the group to exist (checking it)
+        'security/website_security.xml',
+        'security/ir.model.access.csv',
         'data/ir_asset.xml',
         'data/mail_mail_data.xml',
         'data/website_data.xml',
         'data/website_visitor_cron.xml',
-        'security/website_security.xml',
-        'security/ir.model.access.csv',
         'data/digest_data.xml',
         'views/assets.xml',
         'views/website_templates.xml',

@@ -21,12 +21,14 @@ FormEditorRegistry.add('send_mail', {
         custom: true,
         required: true,
         fillWith: 'name',
-        name: 'Your Name',
+        name: 'name',
+        string: 'Your Name',
     }, {
         type: 'tel',
         custom: true,
         fillWith: 'phone',
-        name: 'Phone Number',
+        name: 'phone',
+        string: 'Phone Number',
     }, {
         type: 'email',
         modelRequired: true,
@@ -37,7 +39,8 @@ FormEditorRegistry.add('send_mail', {
         type: 'char',
         custom: true,
         fillWith: 'commercial_company_name',
-        name: 'Your Company',
+        name: 'company',
+        string: 'Your Company',
     }, {
         type: 'char',
         modelRequired: true,
@@ -47,7 +50,8 @@ FormEditorRegistry.add('send_mail', {
         type: 'text',
         custom: true,
         required: true,
-        name: 'Your Question',
+        name: 'description',
+        string: 'Your Question',
     }],
     fields: [{
         name: 'email_to',

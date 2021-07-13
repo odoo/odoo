@@ -23,7 +23,16 @@
     </template>
     <template id="website.contactus" name="Contact Us">
         <t t-call="website.layout">
-            <span class="hidden" data-for="contactus_form" t-att-data-values="{'email_to': res_company.email}"/>
+            <t t-set="logged_partner" t-value="request.env['website.visitor']._get_visitor_from_request().partner_id"/>
+            <t t-set="contactus_form_values" t-value="{
+                'email_to': res_company.email,
+                'name': request.params.get('name', ''),
+                'phone': request.params.get('phone', ''),
+                'email_from': request.params.get('email_from', ''),
+                'company': request.params.get('company', ''),
+                'subject': request.params.get('subject', ''),
+            }"/>
+            <span class="hidden" data-for="contactus_form" t-att-data-values="contactus_form_values"/>
             <div id="wrap" class="oe_structure oe_empty">
                 <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
                     <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
@@ -42,7 +51,7 @@
                                 </p>
                                 <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
                                     <div class="container">
-                                        <form id="contactus_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+                                        <form id="contactus_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you" data-pre-fill="true">
                                             <div class="s_website_form_rows row s_col_no_bgcolor">
                                                 <div class="form-group col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="char" data-name="Field">
                                                     <div class="row s_col_no_resize s_col_no_bgcolor">
@@ -51,7 +60,7 @@
                                                             <span class="s_website_form_mark"> *</span>
                                                         </label>
                                                         <div class="col-sm">
-                                                            <input id="contact1" type="text" class="form-control s_website_form_input" name="Name" required="" data-fill-with="name"/>
+                                                            <input id="contact1" type="text" class="form-control s_website_form_input" name="name" required="" data-fill-with="name"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -61,14 +70,14 @@
                                                             <span class="s_website_form_label_content">Phone Number</span>
                                                         </label>
                                                         <div class="col-sm">
-                                                            <input id="contact2" type="tel" class="form-control s_website_form_input" name="Phone" data-fill-with="phone"/>
+                                                            <input id="contact2" type="tel" class="form-control s_website_form_input" name="phone" data-fill-with="phone"/>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="email" data-name="Field">
                                                     <div class="row s_col_no_resize s_col_no_bgcolor">
                                                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact3">
-                                                            <span class="s_website_form_label_content">Email</span>
+                                                            <span class="s_website_form_label_content">Your Email</span>
                                                             <span class="s_website_form_mark"> *</span>
                                                         </label>
                                                         <div class="col-sm">
@@ -82,7 +91,7 @@
                                                             <span class="s_website_form_label_content">Your Company</span>
                                                         </label>
                                                         <div class="col-sm">
-                                                            <input id="contact4" type="text" class="form-control s_website_form_input" name="Partner Name" data-fill-with="commercial_company_name"/>
+                                                            <input id="contact4" type="text" class="form-control s_website_form_input" name="company" data-fill-with="commercial_company_name"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -103,7 +112,7 @@
                                                             <span class="s_website_form_label_content">Your Question</span>
                                                         </label>
                                                         <div class="col-sm">
-                                                            <textarea id="contact6" class="form-control s_website_form_input" name="Description" required=""></textarea>
+                                                            <textarea id="contact6" class="form-control s_website_form_input" name="description" required=""></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
