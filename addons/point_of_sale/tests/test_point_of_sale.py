@@ -8,8 +8,8 @@ class TestPointOfSale(TransactionCase):
     def setUp(self):
         super(TestPointOfSale, self).setUp()
 
-        # ignore pre-existing pricelists for the purpose of this test
-        self.env["product.pricelist"].search([]).write({"active": False})
+        # force pre-existing pricelists to be last for the purpose of this test
+        self.env["product.pricelist"].search([]).write({"sequence": 50})
 
         self.currency = self.env.ref("base.USD")
         self.company1 = self.env["res.company"].create({

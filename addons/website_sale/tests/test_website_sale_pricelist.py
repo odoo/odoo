@@ -213,7 +213,14 @@ class TestWebsitePriceListAvailable(TransactionCase):
                 'website_sale_current_pl': website_sale_current_pl,
             },
         })
-        return self.env['website']._get_pricelist_available(request, show_visible)
+        return self.env['website']._get_pricelist_available(request, show_visible).filtered(
+            lambda p: p.id not in self.existing_pricelists)
+
+    def assert_equals_pricelists(self, pricelist_1, pricelist_2, msg=None):
+        self.assertEqual(
+            pricelist_1.filtered(lambda p: p.id not in self.existing_pricelists),
+            pricelist_2.filtered(lambda p: p.id not in self.existing_pricelists),
+            msg)
 
     def setUp(self):
         super(TestWebsitePriceListAvailable, self).setUp()
@@ -224,8 +231,8 @@ class TestWebsitePriceListAvailable(TransactionCase):
         self.website = Website.browse(1)
         self.website2 = Website.create({'name': 'Website 2'})
 
-        # Remove existing pricelists and create new ones
-        existing_pricelists = Pricelist.search([])
+        # Create new pricelists and ignore existing ones
+        self.existing_pricelists = Pricelist.search([]).ids
         self.backend_pl = Pricelist.create({
             'name': 'Backend Pricelist',
             'website_id': False,
@@ -270,7 +277,6 @@ class TestWebsitePriceListAvailable(TransactionCase):
             'name': 'Website 2 Pricelist',
             'website_id': self.website2.id,
         })
-        existing_pricelists.write({'active': False})
 
         simulate_frontend_context(self)
 
@@ -344,19 +350,19 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         self.website1_be_pl += self.env.user.partner_id.property_product_pricelist
 
         pls = self.get_pricelist_available(country_code=self.BE.code)
-        self.assertEqual(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned, and the partner pl")
+        self.assert_equals_pricelists(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned, and the partner pl")
 
     def test_get_pricelist_available_geoip2(self):
         # Test get all available pricelists with geoip and a partner pricelist (ir.property) not website compliant
         self.env.user.partner_id.property_product_pricelist = self.backend_pl
         pls = self.get_pricelist_available(country_code=self.BE.code)
-        self.assertEqual(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned as partner pl is not website compliant")
+        self.assert_equals_pricelists(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned as partner pl is not website compliant")
 
     def test_get_pricelist_available_geoip3(self):
         # Test get all available pricelists with geoip and a partner pricelist (ir.property) website compliant (but not geoip compliant)
         self.env.user.partner_id.property_product_pricelist = self.w1_pl_code_select
         pls = self.get_pricelist_available(country_code=self.BE.code)
-        self.assertEqual(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned, but not the partner pricelist as it is website compliant but not GeoIP compliant.")
+        self.assert_equals_pricelists(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned, but not the partner pricelist as it is website compliant but not GeoIP compliant.")
 
     def test_get_pricelist_available_geoip4(self):
         # Test get all available with geoip and visible pricelists + promo pl
@@ -366,7 +372,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
 
         current_pl = self.w1_pl_code
         pls = self.get_pricelist_available(country_code=self.BE.code, show_visible=True, website_sale_current_pl=current_pl.id)
-        self.assertEqual(pls, pls_to_return + current_pl, "Only pricelists for BE, accessible en website and selectable should be returned. It should also return the applied promo pl")
+        self.assert_equals_pricelists(pls, pls_to_return + current_pl, "Only pricelists for BE, accessible en website and selectable should be returned. It should also return the applied promo pl")
 
 
 @tagged('post_install', '-at_install')

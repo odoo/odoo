@@ -20,3 +20,4 @@ from . import stock_picking
 from . import stock_warehouse
 from . import pos_payment
 from . import pos_payment_method
+from . import product_pricelist
