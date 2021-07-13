@@ -313,6 +313,10 @@ odoo.define('web.Popover', function (require) {
         position: 'bottom',
     };
     Popover.props = {
+        popoverClass: {
+            type: String,
+            optional: true,
+        },
         position: {
             type: String,
             validate: (p) => ['top', 'bottom', 'left', 'right'].includes(p),
