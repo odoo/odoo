@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo>
-    <record id="crm_iap_opportunity_tree" model="ir.ui.view">
-        <field name="name">crm.opportunity.inherited.tree</field>
+    <record id="crm_lead_view_tree_opportunity" model="ir.ui.view">
+        <field name="name">crm.lead.view.tree.opportunity.inherit.iap.mine</field>
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_tree_view_oppor" />
         <field name="arch" type="xml">
@@ -12,8 +12,8 @@
         </field>
     </record>
 
-    <record id="crm_iap_opportunity_kanban" model="ir.ui.view">
-        <field name="name">crm.opportunity.inherited.kanban</field>
+    <record id="crm_lead_view_kanban_opportunity" model="ir.ui.view">
+        <field name="name">crm.lead.view.kanban.inherit.iap.mine</field>
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_kanban_view_leads" />
         <field name="arch" type="xml">
@@ -23,8 +23,8 @@
         </field>
     </record>
 
-    <record id="crm_iap_lead_tree" model="ir.ui.view">
-        <field name="name">crm.lead.inherited.tree</field>
+    <record id="crm_lead_view_tree_lead" model="ir.ui.view">
+        <field name="name">crm.lead.view.tree.lead.inherit.iap.mine</field>
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_tree_view_leads" />
         <field name="arch" type="xml">
@@ -34,8 +34,8 @@
         </field>
     </record>
 
-    <record id="crm_iap_lead_kanban" model="ir.ui.view">
-        <field name="name">crm.lead.inherited.kanban</field>
+    <record id="crm_lead_view_kanban_lead" model="ir.ui.view">
+        <field name="name">crm.lead.view.kanban.lead.inherit.iap.mine</field>
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.view_crm_lead_kanban" />
         <field name="arch" type="xml">
