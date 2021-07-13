@@ -446,6 +446,21 @@ $o-we-sidebar-content-field-toggle-control-shadow: 0 2px 3px 0 $o-we-bg-darkest 
 // Edited content
 //------------------------------------------------------------------------------
 
+// Useful to force null values (in website, null values set by the user
+// are removed to act as "removing the user custo and resetting to theme
+// default": ideally, we should review that system to actually removing the
+// custos in that case instead of setting a null value but this cannot be
+// migrated at the moment).
+@function o-map-force-nulls($map) {
+    $-map: ();
+    @each $key, $value in $map {
+        $-map: map-merge($-map, (
+            $key: if($value == 'NULL', null, $value),
+        ));
+    }
+    @return $-map;
+}
+
 $o-support-13-0-color-system: false !default;
 
 $o-checklist-margin-left: 20px;
@@ -482,10 +497,6 @@ $o-color-palettes: (
         'o-color-3': #F8F9FA,
         'o-color-4': #FFFFFF,
         'o-color-5': #343a40,
-
-        'menu': 2,
-        'footer': 2,
-        'copyright': 5,
     ),
 ) !default;
 $o-color-palette-name: 'base-1' !default;

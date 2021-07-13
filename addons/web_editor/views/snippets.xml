@@ -123,10 +123,12 @@
 <template id="snippet_options_background_color_widget">
     <we-colorpicker title="Color"
                     data-name="bg_color_opt"
+                    t-att-data-select-color-combination="'' if with_color_combinations else None"
                     data-select-style=""
                     data-css-property="background-color"
                     data-color-prefix="bg-"
-                    t-att-data-with-combinations="with_color_combinations and 'true' or None"
+                    t-att-data-with-combinations="with_color_combinations and 'selectColorCombination' or None"
+                    t-att-data-with-gradients="with_gradients and 'true' or None"
                     t-att-data-css-compatible="css_compatible and 'true' or None"/>
 </template>
 
@@ -144,13 +146,6 @@
                            data-toggle-bg-image="true"
                            data-no-preview="true">
                     <i class="fa fa-fw fa-camera"/>
-                </we-button>
-                <we-button title="Filter"
-                           data-name="bg_filter_toggle_opt"
-                           data-dependencies="bg_image_toggle_opt"
-                           data-toggle-bg-filter="true"
-                           data-no-preview="true">
-                    <i class="fa fa-fw fa-paint-brush"/>
                 </we-button>
                 <we-button title="Shape"
                            data-toggle-bg-shape="true"
@@ -210,15 +205,22 @@
         </div>
 
         <!-- Color filter -->
-        <div data-option-name="colorFilter"
+        <div t-att-data-js="with_colors and with_color_combinations and 'ColoredLevelBackground' or 'BackgroundToggler'"
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-colorpicker string="⌙ Color filter"
-                            data-select-style="true"
-                            data-css-property="background-color"
+            <t t-set="color_filter_dependencies" t-valuef="bg_image_toggle_opt"/>
+            <!-- &emsp; -->
+            <we-colorpicker string=" ⌙ Color filter"
+                            t-att-data-dependencies="color_filter_dependencies"
+                            data-name="bg_filter_opt"
+                            data-select-filter-color=""
                             data-color-prefix="bg-"
-                            data-apply-to=".o_we_bg_filter"/>
+                            data-opacity="0.5"
+                            data-with-gradients="1"
+                            data-selected-tab="gradients"
+                            data-excluded="theme, common"
+            />
         </div>
 
         <div data-js="BackgroundShape" string="Shape"

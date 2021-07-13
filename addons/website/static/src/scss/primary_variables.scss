@@ -6,10 +6,14 @@
 $o-base-color-palette: map-merge($o-base-color-palette, (
     'body': $o-portal-default-body-bg,
     'menu': 1, // o_cc1
+    'menu-custom': null,
     'menu-border-color': null, // Default to classes used on the template
-    'header-boxed': '200',
+    'header-boxed': null,
+    'header-boxed-custom': '200',
     'footer': 5, // o_cc5
-    'copyright': 'black-15',
+    'footer-custom': null,
+    'copyright': null,
+    'copyright-custom': null,
 ));
 
 // By default, all user color palette values are null. Each null value is
@@ -42,6 +46,14 @@ $o-theme-figcaption-opacity: 0.6;
 
 $o-color-palettes: map-merge($o-color-palettes,
     (
+        'base-1': map-merge(map-get($o-color-palettes, 'base-1'), (
+            'copyright-custom': 'black-15',
+        )),
+        'base-2': map-merge(map-get($o-color-palettes, 'base-2'), (
+            'menu': 2,
+            'footer': 2,
+            'copyright': 5,
+        )),
         'generic-1': (
             'o-color-1': #984c46,
             'o-color-2': #23323b,
@@ -51,6 +63,7 @@ $o-color-palettes: map-merge($o-color-palettes,
 
             'menu': 3,
             'footer': 3,
+            'copyright-custom': 'black-15',
         ),
         'generic-2': (
             'o-color-1': #B99932,
@@ -68,6 +81,8 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-color-3': #fdf8ef,
             'o-color-4': #FFFFFF,
             'o-color-5': #212c39,
+
+            'copyright-custom': 'black-15',
         ),
         'generic-4': (
             'o-color-1': #6E7993,
@@ -77,6 +92,7 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-color-5': #313347,
 
             'menu': 5,
+            'copyright-custom': 'black-15',
         ),
         'generic-5': (
             'o-color-1': #F7CF41,
@@ -87,6 +103,7 @@ $o-color-palettes: map-merge($o-color-palettes,
 
             'menu': 3,
             'footer': 3,
+            'copyright-custom': 'black-15',
         ),
         'generic-6': (
             'o-color-1': #45859A,
@@ -139,6 +156,7 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-color-5': #000000,
 
             'menu': 5,
+            'copyright-custom': 'black-15',
         ),
         'generic-10': (
             'o-color-1': #b56355,
@@ -148,6 +166,7 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-color-5': #343733,
 
             'footer': 2,
+            'copyright-custom': 'black-15',
         ),
         'generic-11': (
             'o-color-1': #01ACAB,
@@ -157,6 +176,7 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-color-5': #000000,
 
             'footer': 1,
+            'copyright-custom': 'black-15',
         ),
         'generic-12': (
             'o-color-1': #926190,
@@ -172,6 +192,8 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-cc5-headings': 'o-color-4',
             'o-cc5-link': 'o-color-4',
             'o-cc5-text': rgba(#fff, .6),
+
+            'copyright-custom': 'black-15',
         ),
         'generic-13': (
             'o-color-1': #478FA2,
@@ -240,6 +262,7 @@ $o-color-palettes: map-merge($o-color-palettes,
 
             'menu': 5,
             'footer': 5,
+            'copyright-custom': 'black-15',
         ),
         'anelusia-1': (
             'o-color-1': #000000,
@@ -284,6 +307,8 @@ $o-color-palettes: map-merge($o-color-palettes,
 
             'o-cc5-link': #218bdf,
             'o-cc5-btn-primary': #218bdf,
+
+            'copyright-custom': 'black-15',
         ),
         'anelusia-4': (
             'o-color-1': #dc143c,
@@ -291,6 +316,8 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-color-3': #faf7e1,
             'o-color-4': #ffffff,
             'o-color-5': #222222,
+
+            'copyright-custom': 'black-15',
         ),
         'anelusia-5': (
             'o-color-1': #32c0c9,
@@ -300,6 +327,7 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-color-5': #2e2e2e,
 
             'footer': 1,
+            'copyright-custom': 'black-15',
         ),
         'anelusia-6': (
             'o-color-1': #e27b92,
@@ -313,6 +341,7 @@ $o-color-palettes: map-merge($o-color-palettes,
 
             'menu': 2,
             'footer': 2,
+            'copyright-custom': 'black-15',
         ),
         'artists-1': (
             'o-color-1': #ab44ff,
@@ -324,6 +353,7 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-cc5-text': 'o-color-3',
 
             'menu': 5,
+            'copyright-custom': 'black-15',
         ),
         'artists-2': (
             'o-color-1': #1ad68f,
@@ -333,6 +363,7 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-color-5': #000000,
 
             'menu': 2,
+            'copyright-custom': 'black-15',
         ),
         'artists-3': (
             'o-color-1': #007882,
@@ -355,6 +386,7 @@ $o-color-palettes: map-merge($o-color-palettes,
 
             'menu': 2,
             'footer': 2,
+            'copyright-custom': 'black-15',
         ),
         'artists-5': (
             'o-color-1': #f48847,
@@ -364,6 +396,7 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-color-5': #000000,
 
             'footer': 3,
+            'copyright-custom': 'black-15',
         ),
         'artists-6': (
             'o-color-1': #95d2e5,
@@ -374,6 +407,7 @@ $o-color-palettes: map-merge($o-color-palettes,
 
             'menu': 2,
             'footer': 2,
+            'copyright-custom': 'black-15',
         ),
         'avantgarde-1': (
             'o-color-1': #ee4980,
@@ -403,6 +437,7 @@ $o-color-palettes: map-merge($o-color-palettes,
 
             'menu': 4,
             'footer': 4,
+            'copyright-custom': 'black-15',
         ),
         'avantgarde-3': (
             'o-color-1': #f08e80,
@@ -465,6 +500,8 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-cc2-headings': 'o-color-2',
             'o-cc3-headings': 'o-color-3',
             'o-cc5-headings': 'o-color-1',
+
+            'copyright-custom': 'black-15',
         ),
         'avantgarde-7': (
             'o-color-1': #f48847,
@@ -475,6 +512,8 @@ $o-color-palettes: map-merge($o-color-palettes,
 
             'o-cc2-headings': 'o-color-1',
             'o-cc5-headings': 'o-color-1',
+
+            'copyright-custom': 'black-15',
         ),
         'avantgarde-8': (
             'o-color-1': #278f84,
@@ -485,6 +524,8 @@ $o-color-palettes: map-merge($o-color-palettes,
 
             'o-cc2-headings': 'o-color-1',
             'o-cc5-headings': 'o-color-1',
+
+            'copyright-custom': 'black-15',
         ),
         'beauty-1': (
             'o-color-1': #df699c,
@@ -553,6 +594,8 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-color-5': #112625,
 
             'o-cc2-link': 'o-color-5',
+
+            'copyright-custom': 'black-15',
         ),
         'bewise-1': (
             'o-color-1': #162238,
@@ -861,7 +904,7 @@ $o-color-palettes: map-merge($o-color-palettes,
 
             'header': 1,
             'footer': 3,
-            'copyright': 'black-15',
+            'copyright-custom': 'black-15',
         ),
         'enark-1': (
             'o-color-1': #7b97af,
@@ -873,6 +916,8 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-cc1-text': 'o-color-2',
             'o-cc1-btn-primary': 'o-color-2',
             'o-cc5-link': 'o-color-4',
+
+            'copyright-custom': 'black-15',
         ),
         'enark-2': (
             'o-color-1': #41cb7a,
@@ -936,7 +981,7 @@ $o-color-palettes: map-merge($o-color-palettes,
             'body': 'black-15',
             'menu': 1,
             'footer': 5,
-            'copyright': 'black-25',
+            'copyright-custom': 'black-25',
         ),
         'graphene-2': (
             'o-color-1': #c8a47e,
@@ -950,6 +995,8 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-cc3-headings': 'o-color-4',
             'o-cc4-headings': 'o-color-5',
             'o-cc5-text': #b2b2b2,
+
+            'copyright-custom': 'black-15',
         ),
         'graphene-3': (
             'o-color-1': #39588e,
@@ -962,6 +1009,7 @@ $o-color-palettes: map-merge($o-color-palettes,
 
             'menu': 2,
             'footer': 2,
+            'copyright-custom': 'black-15',
         ),
         'graphene-4': (
             'o-color-1': #f48747,
@@ -971,6 +1019,7 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-color-5': #282d30,
 
             'menu': 5,
+            'copyright-custom': 'black-15',
         ),
         'kea-1': (
             'o-color-1': #e991a3,
@@ -1137,6 +1186,8 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-color-3': #f5f5f5,
             'o-color-4': #ffffff,
             'o-color-5': #111111,
+
+            'copyright-custom': 'black-15',
         ),
         'monglia-2': (
             'o-color-1': #8f8747,
@@ -1144,6 +1195,8 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-color-3': #f0ecdb,
             'o-color-4': #ffffff,
             'o-color-5': #21263a,
+
+            'copyright-custom': 'black-15',
         ),
         'monglia-3': (
             'o-color-1': #c0ce75,
@@ -1151,6 +1204,8 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-color-3': #dedede,
             'o-color-4': #ffffff,
             'o-color-5': #3e3e3e,
+
+            'copyright-custom': 'black-15',
         ),
         'monglia-4': (
             'o-color-1': #1ad68f,
@@ -1158,6 +1213,8 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-color-3': #cfcfcf,
             'o-color-4': #ffffff,
             'o-color-5': #000000,
+
+            'copyright-custom': 'black-15',
         ),
         'monglia-5': (
             'o-color-1': #c5ca60,
@@ -1506,6 +1563,7 @@ $o-color-palettes: map-merge($o-color-palettes,
             'o-cc5-link': #70c7cf,
 
             'menu': 5,
+            'copyright-custom': 'black-15',
         ),
         'treehouse-1': (
             'o-color-1': #68b581,
@@ -1868,6 +1926,12 @@ $o-base-website-values-palette: (
     'navbar-font': null,
     'buttons-font': null,
 
+    // Gradients
+    'menu-gradient': null,
+    'header-boxed-gradient': null,
+    'footer-gradient': null,
+    'copyright-gradient': null,
+
     'header-template': 'default', // 'default' / 'hamburger' / 'vertical' / 'sidebar'
     'header-font-size': null, // Default to BS (normal font-size)
     'header-links-style': 'default', // 'default' / 'fill' / 'outline' / 'pills' / 'block' / 'border-bottom'
@@ -1984,4 +2048,12 @@ $o-theme-font-configs: (
 @mixin o-tag-left() {
     @include o-position-absolute($top: 0, $left: 0);
     padding: 0.25rem 1rem;
+};
+
+@mixin o-add-gradient($key) {
+    $-gradient: o-website-value($key);
+    @if $-gradient {
+        background-color: rgba(0, 0, 0, 0);
+        background-image: $-gradient;
+    }
 };

@@ -67,7 +67,7 @@ $o-website-values-palettes: append($o-website-values-palettes, $-actual-user-web
 
 // Enable last website values palette, which is now the user customized one
 $o-website-values-palette-number: length($o-website-values-palettes);
-$o-website-values: $-actual-user-website-values-palette !default;
+$o-website-values: o-map-force-nulls($-actual-user-website-values-palette) !default;
 @function o-website-value($key) {
     @return map-get($o-website-values, $key);
 }
@@ -134,6 +134,27 @@ $o-has-customized-colors:
 // palette.
 $-palette-default: map-get($o-color-palettes, $o-color-palette-name) or ();
 $-actual-user-color-palette: map-merge($-palette-default, o-map-omit($o-user-color-palette));
+// Compatibility with old values in old names
+@each $name, $custom-name in (
+    // Each of those values were either a number for a color combination, a
+    // string for a color name or a color. Now they should only be a number for
+    // a color combination and the other value types for the color name/value
+    // are handled by another variable. That variable can also contain a string
+    // for a color gradient.
+    'menu': 'menu-custom',
+    'header-boxed': 'header-boxed-custom',
+    'footer': 'footer-custom',
+    'copyright': 'copyright-custom'
+) {
+    $-base-value: map-get($-actual-user-color-palette, $name);
+    @if $-base-value and $-base-value != 'NULL' and type-of($-base-value) != 'number' {
+        $-base-custom-value: map-get($-actual-user-color-palette, $custom-name);
+        $-actual-user-color-palette: map-merge($-actual-user-color-palette, (
+            $name: 1,
+            $custom-name: $-base-custom-value or $-base-value,
+        ));
+    }
+}
 $o-color-palettes: map-merge($o-color-palettes, ('user-palette': $-actual-user-color-palette));
 
 // Gray palette
@@ -174,6 +195,7 @@ $-actual-user-theme-color-palette: map-remove($-actual-user-theme-color-palette,
     'secondary'
 );
 $o-theme-color-palettes: map-merge($o-theme-color-palettes, ('user-palette': $-actual-user-theme-color-palette));
+
 // ---
 
 // Enable last color and theme color palettes, which are now the user customized

@@ -55,12 +55,6 @@ tour.register('snippet_empty_parent_autoremove', {
         trigger: '#wrap .s_banner .o_we_shape',
         run: () => null,
     },
-    wTourUtils.changeOption('ColoredLevelBackground', 'Filter'),
-    {
-        content: "Check that background-filter is present",
-        trigger: '#wrap .s_banner .o_we_bg_filter',
-        run: () => null,
-    },
     {
         content: "Click on first column",
         trigger: '#wrap .s_banner .row > :first-child',
