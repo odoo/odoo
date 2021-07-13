@@ -190,8 +190,8 @@
             <i class="fa fa-fw fa-film"/>
         </we-button>
     </xpath>
-    <xpath expr="//we-button[@data-toggle-bg-filter]" position="attributes">
-        <attribute name="data-dependencies" add="bg_video_toggler_opt" separator=","/>
+    <xpath expr="//t[@t-set='color_filter_dependencies']" position="after">
+        <t t-set="color_filter_dependencies" t-valuef="#{color_filter_dependencies}, bg_video_toggler_opt"/>
     </xpath>
     <xpath expr="//div[@data-js='BackgroundOptimize']" position="after">
         <!-- Parallax -->
@@ -384,6 +384,7 @@
         <t t-set="with_colors" t-value="True"/>
         <t t-set="with_images" t-value="True"/>
         <t t-set="css_compatible" t-value="True"/>
+        <t t-set="with_gradients" t-value="True"/>
     </t>
     <div data-js="Carousel"
          data-selector="section"
@@ -481,6 +482,7 @@
         <t t-set="with_colors" t-value="True"/>
         <t t-set="with_images" t-value="True"/>
         <t t-set="with_color_combinations" t-value="True"/>
+        <t t-set="with_gradients" t-value="True"/>
     </t>
 
     <t t-call="web_editor.snippet_options_background_options">
@@ -489,6 +491,7 @@
         <t t-set="with_colors" t-value="True"/>
         <t t-set="with_images" t-value="False"/>
         <t t-set="with_color_combinations" t-value="True"/>
+        <t t-set="with_gradients" t-value="True"/>
     </t>
 
     <t t-call="web_editor.snippet_options_background_options">
@@ -552,7 +555,8 @@
          data-selector="[data-oe-expression='res_company.partner_id']"
          data-no-check="true"/>
 
-    <div data-selector="#wrapwrap > header"
+    <div data-js="WebsiteLevelColor"
+         data-selector="#wrapwrap > header"
          data-no-check="true"
          groups="website.group_website_designer">
         <we-select string="Template" data-variable="header-template" data-reload="/">
@@ -628,10 +632,18 @@
 
         <we-row string="Colors">
             <we-colorpicker data-customize-website-color="" data-color="menu"
-                            data-with-combinations="true"/>
+                            data-customize-website-layer2-color="" data-layer-color="menu-custom" data-layer-gradient="menu-gradient"
+                            data-no-bundle-reload="true"
+                            data-null-value="'NULL'"
+                            data-with-combinations="customizeWebsiteColor"
+                            data-with-gradients="true"/>
             <we-colorpicker data-dependencies="header_boxed_opt"
                             data-customize-website-color="" data-color="header-boxed"
-                            data-with-combinations="true"/>
+                            data-customize-website-layer2-color="" data-layer-color="header-boxed-custom" data-layer-gradient="header-boxed-gradient"
+                            data-no-bundle-reload="true"
+                            data-null-value="'NULL'"
+                            data-with-combinations="customizeWebsiteColor"
+                            data-with-gradients="true"/>
         </we-row>
     </div>
 
@@ -834,7 +846,8 @@
     </div>
 
     <!-- Footer - Colors & Layouts -->
-    <div data-selector="#wrapwrap > footer"
+    <div data-js="WebsiteLevelColor"
+         data-selector="#wrapwrap > footer"
          data-no-check="true"
          groups="website.group_website_designer">
 
@@ -878,7 +891,11 @@
         <!-- Colors -->
         <we-colorpicker string="Colors"
                         data-customize-website-color="" data-color="footer"
-                        data-with-combinations="true"/>
+                        data-customize-website-layer2-color="" data-layer-color="footer-custom" data-layer-gradient="footer-gradient"
+                        data-no-bundle-reload="true"
+                        data-null-value="'NULL'"
+                        data-with-combinations="customizeWebsiteColor"
+                        data-with-gradients="true"/>
         <we-select string="Slideout Effect" data-variable="footer-effect" data-reload="/">
             <we-button string="Regular"
                        data-customize-website-views=""
@@ -941,12 +958,17 @@
     </div>
 
     <!-- Copyright -->
-    <div data-selector=".o_footer_copyright"
+    <div data-js="WebsiteLevelColor"
+         data-selector=".o_footer_copyright"
          data-no-check="true"
          groups="website.group_website_designer">
         <we-colorpicker string="Colors"
                         data-customize-website-color="" data-color="copyright"
-                        data-with-combinations="true"/>
+                        data-customize-website-layer2-color="" data-layer-color="copyright-custom" data-layer-gradient="copyright-gradient"
+                        data-no-bundle-reload="true"
+                        data-null-value="'NULL'"
+                        data-with-combinations="customizeWebsiteColor"
+                        data-with-gradients="true"/>
         <we-select string="Language Selector" data-reload="/">
             <we-button data-name="language_selector_none_opt"
                        data-customize-website-views="">None</we-button>
@@ -985,6 +1007,7 @@
         <we-row string="Background" class="o_we_full_row">
             <t t-call="web_editor.snippet_options_background_color_widget">
                 <t t-set="with_color_combinations" t-value="True"/>
+                <t t-set="with_gradients" t-value="True"/>
             </t>
             <we-button-group class="ml-auto">
                 <we-imagepicker title="Image" data-background="" data-button-style="true"/>

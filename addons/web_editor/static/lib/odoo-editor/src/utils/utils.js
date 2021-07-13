@@ -1216,6 +1216,15 @@ export function isShrunkBlock(blockEl) {
     return isEmptyBlock(blockEl) && !blockEl.querySelector('br');
 }
 
+/**
+ * @param {string} [value]
+ * @returns {boolean}
+ */
+export function isColorGradient(value) {
+    // FIXME duplicated in @web_editor/utils.js
+    return value && value.includes('-gradient(');
+}
+
 //------------------------------------------------------------------------------
 // DOM Modification
 //------------------------------------------------------------------------------

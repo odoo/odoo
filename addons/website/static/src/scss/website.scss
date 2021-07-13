@@ -136,7 +136,8 @@ $-seen-urls: ();
             }
 
             // Vertical alignment when top-menu has visually "no background"
-            @if o-color('menu') == o-color('body') {
+            $-menu-color: o-color('menu-custom') or o-color('menu');
+            @if (not $-menu-color or $-menu-color == o-color('body')) {
                 > header {
                     .navbar, .container {
                         padding-left: 0;
@@ -226,9 +227,12 @@ $-seen-urls: ();
     // Note: this only works because navbar-light is defined before navbar-dark,
     // we may want to use a safest way when possible.
     @include o-apply-colors('menu');
-    @if (color-yiq(o-color('menu')) != $yiq-text-dark) {
+    @include o-apply-colors('menu-custom');
+    $-menu-color: o-color('menu-custom') or o-color('menu');
+    @if ($-menu-color and color-yiq($-menu-color) != $yiq-text-dark) {
         @extend .navbar-dark;
     }
+    @include o-add-gradient('menu-gradient');
 }
 
 $-header-nav-link-height: $nav-link-height;
@@ -258,9 +262,14 @@ $-header-nav-link-height: $nav-link-height;
 
 .o_footer {
     @include o-apply-colors('footer');
+    @include o-apply-colors('footer-custom');
+    @include o-add-gradient('footer-gradient');
 
     .o_footer_copyright {
-        @include o-apply-colors('copyright', $background: o-color('footer'));
+        $-footer-color: o-color('footer-custom') or o-color('footer');
+        @include o-apply-colors('copyright', $background: $-footer-color);
+        @include o-apply-colors('copyright-custom', $background: $-footer-color);
+        @include o-add-gradient('copyright-gradient');
     }
 }
 
@@ -286,7 +295,7 @@ h6 {
 }
 
 // Texts
-font[style*='background'],
+font[style*='background']:not(.text-gradient),
 font[class*='bg-'] {
     padding: 2px 6px 4px;
 }
@@ -946,7 +955,8 @@ header {
                 }
                 min-width: 250px;
                 margin: 0 !important;
-                background-color: o-color('menu');
+                background-color: o-color('menu-custom') or o-color('menu');
+                @include o-add-gradient('menu-gradient');
                 transition: transform $-transition-duration cubic-bezier(.694, .0482, .335, 1);
 
                 @if $-hamburger-center {
@@ -1102,6 +1112,8 @@ header {
 } @else if o-website-value('header-template') == 'boxed' {
     #wrapwrap:not(.o_header_overlay) .o_header_boxed_background {
         @include o-apply-colors('header-boxed');
+        @include o-apply-colors('header-boxed-custom');
+        @include o-add-gradient('header-boxed-gradient');
     }
 } @else if o-website-value('header-template') == 'centered_logo' {
     header .o_header_centered_logo {
@@ -1280,8 +1292,8 @@ header {
 // Footer scrolltop button
 @if o-website-value('footer-scrolltop') {
     #o_footer_scrolltop {
-        $-footer-color: o-color('footer');
-        $-copyright-color: o-color('copyright');
+        $-footer-color: o-color('footer-custom') or o-color('footer');
+        $-copyright-color: o-color('copyright-custom') or o-color('copyright');
         $-copyright-color: mix(rgba($-copyright-color, 1.0), $-footer-color, percentage(alpha($-copyright-color)));
 
         box-sizing: content-box;
@@ -1290,6 +1302,7 @@ header {
         border: 0;
         padding: 0;
         @include o-apply-colors('footer', $with-extras: false, $background: $-footer-color);
+        @include o-apply-colors('footer-custom', $with-extras: false, $background: $-footer-color);
         text-decoration: none;
 
         @if $-footer-color == $-copyright-color {

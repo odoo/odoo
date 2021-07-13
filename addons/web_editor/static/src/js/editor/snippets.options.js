@@ -12,6 +12,8 @@ const weUtils = require('web_editor.utils');
 const {
     normalizeColor,
     getBgImageURL,
+    backgroundImageCssToParts,
+    backgroundImagePartsToCss,
     DEFAULT_PALETTE,
 } = weUtils;
 var weWidgets = require('wysiwyg.widgets');
@@ -480,6 +482,13 @@ const UserValueWidget = Widget.extend({
             const uniqArr = arr.filter((v, i, arr) => i === arr.indexOf(v));
             this._methodsParams.optionsPossibleValues[methodName] = uniqArr;
         }
+
+        // Method names come from the widget's dataset whose keys' order cannot
+        // be relied on. We explicitely sort them by alphabetical order allowing
+        // consistent behavior, while relying on order for such methods should
+        // not be done when possible (the methods should be independent from
+        // each other when possible).
+        this._methodsNames.sort();
     },
     /**
      * @param {boolean} [previewMode=false]
@@ -1329,7 +1338,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     open: function () {
         if (this.colorPalette.setSelectedColor) {
-            this.colorPalette.setSelectedColor(this._value);
+            this.colorPalette.setSelectedColor(this._ccValue, this._value);
         } else {
             // TODO review in master, this does async stuff. Maybe the open
             // method should now be async. This is not really robust as the
@@ -1363,14 +1372,23 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @override
      */
     getValue: function (methodName) {
-        if (typeof this._previewColor === 'string') {
-            return this._previewColor;
-        }
-        if (typeof this._customColorValue === 'string') {
-            return this._customColorValue;
-        }
+        const isCCMethod = (this._methodsParams.withCombinations === methodName);
         let value = this._super(...arguments);
+        if (isCCMethod) {
+            value = this._ccValue;
+        } else if (typeof this._customColorValue === 'string') {
+            value = this._customColorValue;
+        }
+
+        // TODO strange there is some processing below for the normal value but
+        // not for the preview value? To check in older stable versions as well.
+        if (typeof this._previewColor === 'string') {
+            return isCCMethod ? this._previewCC : this._previewColor;
+        }
+
         if (value) {
+            // TODO probably something to be done to handle gradients properly
+            // in this code.
             const useCssColor = this.options.dataAttributes.hasOwnProperty('useCssColor');
             const cssCompatible = this.options.dataAttributes.hasOwnProperty('cssCompatible');
             if ((useCssColor || cssCompatible) && !ColorpickerWidget.isCSSColor(value)) {
@@ -1393,33 +1411,45 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @override
      */
     isActive: function () {
-        return !weUtils.areCssValuesEqual(this._value, 'rgba(0, 0, 0, 0)');
+        return !!this._ccValue
+            || !weUtils.areCssValuesEqual(this._value, 'rgba(0, 0, 0, 0)');
     },
     /**
      * Updates the color preview + re-render the whole color palette widget.
      *
      * @override
      */
-    async setValue(color) {
-        await this._super(...arguments);
+    async setValue(color, methodName, ...rest) {
+        // The colorpicker widget can hold two values: a color combination and
+        // a normal color or a gradient. The base `_value` will hold the normal
+        // color or the gradient value. The color combination one will be
+        // available in `_ccValue`.
+        const isCCMethod = (this._methodsParams.withCombinations === methodName);
+        // Always call _super but don't change _value if meant for the CC value.
+        await this._super(isCCMethod ? this._value : color, methodName, ...rest);
+        if (isCCMethod) {
+            this._ccValue = color;
+        }
 
         await this._colorPaletteRenderPromise;
 
         const classes = weUtils.computeColorClasses(this.colorPalette.getColorNames());
         this.colorPreviewEl.classList.remove(...classes);
         this.colorPreviewEl.style.removeProperty('background-color');
-
+        this.colorPreviewEl.style.removeProperty('background-image');
+        if (this._ccValue) {
+            this.colorPreviewEl.classList.add('o_cc', `o_cc${this._ccValue}`);
+        }
         if (this._value) {
             if (ColorpickerWidget.isCSSColor(this._value)) {
                 this.colorPreviewEl.style.backgroundColor = this._value;
-            } else if (weUtils.isColorCombinationName(this._value)) {
-                this.colorPreviewEl.classList.add('o_cc', `o_cc${this._value}`);
-            } else {
+            } else if (!weUtils.isColorGradient(this._value)) {
                 this.colorPreviewEl.classList.add(`bg-${this._value}`);
+            } else {
+                this.colorPreviewEl.style.backgroundImage = this._value;
             }
         }
     },
-
 
     //--------------------------------------------------------------------------
     // Private
@@ -1431,13 +1461,20 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _renderColorPalette: function () {
         const options = {
+            selectedCC: this._ccValue,
             selectedColor: this._value,
         };
         if (this.options.dataAttributes.excluded) {
             options.excluded = this.options.dataAttributes.excluded.replace(/ /g, '').split(',');
         }
+        if (this.options.dataAttributes.opacity) {
+            options.opacity = this.options.dataAttributes.opacity;
+        }
         if (this.options.dataAttributes.withCombinations) {
             options.withCombinations = !!this.options.dataAttributes.withCombinations;
+        }
+        if (this.options.dataAttributes.withGradients) {
+            options.withGradients = !!this.options.dataAttributes.withGradients;
         }
         if (this.options.dataAttributes.selectedTab) {
             options.selectedTab = this.options.dataAttributes.selectedTab;
@@ -1479,9 +1516,13 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @param {Event} ev
      */
     _onColorPicked: function (ev) {
+        this._previewCC = false;
         this._previewColor = false;
         this._customColorValue = false;
+
+        this._ccValue = ev.data.ccValue;
         this._value = ev.data.color;
+
         this._onUserValueChange(ev);
     },
     /**
@@ -1491,6 +1532,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @param {Event} ev
      */
     _onColorHovered: function (ev) {
+        this._previewCC = ev.data.ccValue;
         this._previewColor = ev.data.color;
         this._onUserValuePreview(ev);
     },
@@ -1501,6 +1543,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @param {Event} ev
      */
     _onColorLeft: function (ev) {
+        this._previewCC = false;
         this._previewColor = false;
         this._onUserValueReset(ev);
     },
@@ -3031,31 +3074,42 @@ const SnippetOptionWidget = Widget.extend({
             this.$target.trigger('background-color-event', previewMode);
         }
 
-        const cssProps = weUtils.CSS_SHORTHANDS[params.cssProperty] || [params.cssProperty];
+        // Always reset the inline style first to not put inline style on an
+        // element which already have this style through css stylesheets.
+        let cssProps = weUtils.CSS_SHORTHANDS[params.cssProperty] || [params.cssProperty];
         for (const cssProp of cssProps) {
-            // Always reset the inline style first to not put inline style on an
-            // element which already have this style through css stylesheets.
             this.$target[0].style.setProperty(cssProp, '');
         }
         if (params.extraClass) {
             this.$target.removeClass(params.extraClass);
         }
+        // Plain color and gradient are mutually exclusive as background so in
+        // case we edit a background-color we also have to reset the gradient
+        // part of the background-image property (the opposite is handled by the
+        // fact that editing a gradient as background is done by calling this
+        // method with background-color as property too, so it is automatically
+        // reset anyway).
+        let bgImageParts = undefined;
+        if (params.cssProperty === 'background-color') {
+            const styles = getComputedStyle(this.$target[0]);
+            bgImageParts = backgroundImageCssToParts(styles['background-image']);
+            delete bgImageParts.gradient;
+            const combined = backgroundImagePartsToCss(bgImageParts);
+            this.$target[0].style.setProperty('background-image', '');
+            applyCSS.call(this, 'background-image', combined, styles);
+        }
 
         // Only allow to use a color name as a className if we know about the
         // other potential color names (to remove) and if we know about a prefix
         // (otherwise we suppose that we should use the actual related color).
+        // Note: color combinations classes are handled by a dedicated method,
+        // as they can be combined with normal classes.
         if (params.colorNames && params.colorPrefix) {
-            const classes = weUtils.computeColorClasses(params.colorNames, params.colorPrefix);
+            const colorNames = params.colorNames.filter(name => !weUtils.isColorCombinationName(name));
+            const classes = weUtils.computeColorClasses(colorNames, params.colorPrefix);
             this.$target[0].classList.remove(...classes);
 
-            if (weUtils.isColorCombinationName(widgetValue)) {
-                // Those are the special color combinations classes. Just have
-                // to add it (and adding the potential extra class) then leave.
-                this.$target[0].classList.add('o_cc', `o_cc${widgetValue}`, params.extraClass);
-                _restoreTransitions();
-                return;
-            }
-            if (params.colorNames.includes(widgetValue)) {
+            if (colorNames.includes(widgetValue)) {
                 const originalCSSValue = window.getComputedStyle(this.$target[0])[cssProps[0]];
                 const className = params.colorPrefix + widgetValue;
                 this.$target[0].classList.add(className);
@@ -3074,12 +3128,29 @@ const SnippetOptionWidget = Widget.extend({
             }
         }
 
+        const styles = window.getComputedStyle(this.$target[0]);
+
         // At this point, the widget value is either a property/color name or
         // an actual css property value. If it is a property/color name, we will
         // apply a css variable as style value.
         const htmlPropValue = weUtils.getCSSVariableValue(widgetValue);
         if (htmlPropValue) {
             widgetValue = `var(--${widgetValue})`;
+        }
+
+        // In case of background-color edition, we could receive a gradient, in
+        // which case the value has to be combined with the potential background
+        // image (real image).
+        if (params.cssProperty === 'background-color' && weUtils.isColorGradient(widgetValue)) {
+            cssProps = ['background-image'];
+            bgImageParts.gradient = widgetValue;
+            widgetValue = backgroundImagePartsToCss(bgImageParts);
+
+            // Also force the background-color to transparent as otherwise it
+            // won't act as a "gradient replacing the color combination
+            // background" but be applied over it (which would be the opposite
+            // of what happens when editing the background color).
+            applyCSS.call(this, 'background-color', 'rgba(0, 0, 0, 0)', styles);
         }
 
         // replacing ', ' by ',' to prevent attributes with internal space separators from being split:
@@ -3102,7 +3173,6 @@ const SnippetOptionWidget = Widget.extend({
             }
         }
 
-        const styles = window.getComputedStyle(this.$target[0]);
         let hasUserValue = false;
         for (let i = cssProps.length - 1; i > 0; i--) {
             hasUserValue = applyCSS.call(this, cssProps[i], values.pop(), styles) || hasUserValue;
@@ -3122,6 +3192,22 @@ const SnippetOptionWidget = Widget.extend({
         }
 
         _restoreTransitions();
+    },
+    /**
+     * Sets a color combination.
+     *
+     * @see this.selectClass for parameters
+     */
+    async selectColorCombination(previewMode, widgetValue, params) {
+        if (params.colorNames) {
+            const names = params.colorNames.filter(weUtils.isColorCombinationName);
+            const classes = weUtils.computeColorClasses(names);
+            this.$target[0].classList.remove(...classes);
+
+            if (widgetValue) {
+                this.$target[0].classList.add('o_cc', `o_cc${widgetValue}`);
+            }
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -3398,10 +3484,15 @@ const SnippetOptionWidget = Widget.extend({
                 return attrValue || params.attributeDefaultValue || '';
             }
             case 'selectStyle': {
+                let usedCC = undefined;
                 if (params.colorPrefix && params.colorNames) {
                     for (const c of params.colorNames) {
                         const className = weUtils.computeColorClasses([c], params.colorPrefix)[0];
                         if (this.$target[0].classList.contains(className)) {
+                            if (weUtils.isColorCombinationName(c)) {
+                                usedCC = c;
+                                continue;
+                            }
                             return c;
                         }
                     }
@@ -3414,6 +3505,18 @@ const SnippetOptionWidget = Widget.extend({
                 const _restoreTransitions = () => this.$target[0].classList.remove('o_we_force_no_transition');
 
                 const styles = window.getComputedStyle(this.$target[0]);
+
+                if (params.cssProperty === 'background-color') {
+                    // Check if there is a gradient, in that case this is the
+                    // value to be returned, we normally not allow color and
+                    // gradient at the same time (the option would remove one
+                    // if editing the other).
+                    const parts = backgroundImageCssToParts(styles['background-image']);
+                    if (parts.gradient) {
+                        return parts.gradient;
+                    }
+                }
+
                 const cssProps = weUtils.CSS_SHORTHANDS[params.cssProperty] || [params.cssProperty];
                 const cssValues = cssProps.map(cssProp => {
                     let value = styles[cssProp].trim();
@@ -3438,7 +3541,44 @@ const SnippetOptionWidget = Widget.extend({
 
                 _restoreTransitions();
 
-                return cssValues.join(' ');
+                const value = cssValues.join(' ');
+
+                if (params.cssProperty === 'background-color' && params.withCombinations) {
+                    if (usedCC) {
+                        const ccValue = weUtils.getCSSVariableValue(`o-cc${usedCC}-bg`).trim();
+                        if (weUtils.areCssValuesEqual(value, ccValue)) {
+                            // Prevent to consider that a color is used as CC
+                            // override in case that color is the same as the
+                            // one used in that CC.
+                            return '';
+                        }
+                    } else {
+                        const rgba = ColorpickerWidget.convertCSSColorToRgba(value);
+                        if (rgba && rgba.opacity < 0.001) {
+                            // Prevent to consider a transparent color is
+                            // applied as background unless it is to override a
+                            // CC. Simply allows to add a CC on a transparent
+                            // snippet in the first place.
+                            return '';
+                        }
+                    }
+                }
+
+                return value;
+            }
+            case 'selectColorCombination': {
+                if (params.colorNames) {
+                    for (const c of params.colorNames) {
+                        if (!weUtils.isColorCombinationName(c)) {
+                            continue;
+                        }
+                        const className = weUtils.computeColorClasses([c])[0];
+                        if (this.$target[0].classList.contains(className)) {
+                            return c;
+                        }
+                    }
+                }
+                return '';
             }
         }
     },
@@ -5038,7 +5178,10 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
      * @override
      */
     _applyImage(img) {
-        this.$target.css('background-image', `url('${img.getAttribute('src')}')`);
+        const parts = backgroundImageCssToParts(this.$target.css('background-image'));
+        parts.url = `url('${img.getAttribute('src')}')`;
+        const combined = backgroundImagePartsToCss(parts);
+        this.$target.css('background-image', combined);
     },
 
     //--------------------------------------------------------------------------
@@ -5060,20 +5203,6 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
 });
 
 registry.BackgroundToggler = SnippetOptionWidget.extend({
-    /**
-     * @override
-     */
-    start() {
-        this.$target.on('content_changed.BackgroundToggler', this._onExternalUpdate.bind(this));
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this._super(...arguments);
-        this.$target.off('.BackgroundToggler');
-    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -5086,6 +5215,7 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
      */
     toggleBgImage(previewMode, widgetValue, params) {
         if (!widgetValue) {
+            this.$target.find('> .o_we_bg_filter').remove();
             // TODO: use setWidgetValue instead of calling background directly when possible
             const [bgImageWidget] = this._requestUserValueWidgets('bg_image_opt');
             const bgImageOpt = bgImageWidget.getParent();
@@ -5108,23 +5238,39 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
         return shapeOption._toggleShape();
     },
     /**
-     * Toggles background filter on or off.
+     * Sets a color filter.
      *
      * @see this.selectClass for parameters
      */
-    toggleBgFilter(previewMode, widgetValue, params) {
-        if (widgetValue) {
-            const bgFilterEl = document.createElement('div');
-            bgFilterEl.classList.add('o_we_bg_filter', 'bg-black-50');
+    async selectFilterColor(previewMode, widgetValue, params) {
+        // Find the filter element.
+        let filterEl = this.$target[0].querySelector(':scope > .o_we_bg_filter');
+
+        // If the filter would be transparent, remove it / don't create it.
+        const rgba = widgetValue && ColorpickerWidget.convertCSSColorToRgba(widgetValue);
+        if (!widgetValue || rgba && rgba.opacity < 0.001) {
+            if (filterEl) {
+                filterEl.remove();
+            }
+            return;
+        }
+
+        // Create the filter if necessary.
+        if (!filterEl) {
+            filterEl = document.createElement('div');
+            filterEl.classList.add('o_we_bg_filter');
             const lastBackgroundEl = this._getLastPreFilterLayerElement();
             if (lastBackgroundEl) {
-                $(lastBackgroundEl).after(bgFilterEl);
+                $(lastBackgroundEl).after(filterEl);
             } else {
-                this.$target.prepend(bgFilterEl);
+                this.$target.prepend(filterEl);
             }
-        } else {
-            this.$target.find('.o_we_bg_filter').remove();
         }
+
+        // Apply the color on the filter.
+        const obj = createPropertyProxy(this, '$target', $(filterEl));
+        params.cssProperty = 'background-color';
+        return this.selectStyle.call(obj, previewMode, widgetValue, params);
     },
 
     //--------------------------------------------------------------------------
@@ -5141,13 +5287,19 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
                 const bgImageOpt = bgImageWidget.getParent();
                 return !!bgImageOpt._computeWidgetState('background', bgImageWidget.getMethodsParams('background'));
             }
-            case 'toggleBgFilter': {
-                return this._hasBgFilter();
-            }
             case 'toggleBgShape': {
                 const [shapeWidget] = this._requestUserValueWidgets('bg_shape_opt');
                 const shapeOption = shapeWidget.getParent();
                 return !!shapeOption._computeWidgetState('shape', shapeWidget.getMethodsParams('shape'));
+            }
+            case 'selectFilterColor': {
+                const filterEl = this.$target[0].querySelector(':scope > .o_we_bg_filter');
+                if (!filterEl) {
+                    return '';
+                }
+                const obj = createPropertyProxy(this, '$target', $(filterEl));
+                params.cssProperty = 'background-color';
+                return this._computeWidgetState.call(obj, 'selectStyle', params);
             }
         }
         return this._super(...arguments);
@@ -5157,32 +5309,6 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
      */
     _getLastPreFilterLayerElement() {
         return null;
-    },
-    /**
-     * @private
-     * @returns {Boolean}
-     */
-    _hasBgFilter() {
-        return !!this.$target.find('> .o_we_bg_filter').length;
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onExternalUpdate() {
-        if (this._hasBgFilter()
-                && !this._getLastPreFilterLayerElement()
-                && !getBgImageURL(this.$target)) {
-            // No 'pre-filter' background layout anymore and no more background
-            // image: remove the background filter option.
-            // TODO there probably is a better system to implement to do that
-            const widget = this._requestUserValueWidgets('bg_filter_toggle_opt')[0];
-            widget.enable();
-        }
     },
 });
 
@@ -5235,14 +5361,14 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
                 this.previousSrc = currentSrc;
                 break;
             case 'reset':
-                this.$target.css('background-image', `url('${this.previousSrc}')`);
+                this._setBackground(this.previousSrc);
                 return;
         }
         const newURL = new URL(currentSrc, window.location.origin);
         newURL.searchParams.set(params.colorName, normalizeColor(widgetValue));
         const src = newURL.pathname + newURL.search;
         await loadImage(src);
-        this.$target.css('background-image', `url('${src}')`);
+        this._setBackground(src);
         if (!previewMode) {
             this.previousSrc = src;
         }
@@ -5313,13 +5439,16 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      * @param {string} backgroundURL
      */
     _setBackground(backgroundURL) {
+        const parts = backgroundImageCssToParts(this.$target.css('background-image'));
         if (backgroundURL) {
-            this.$target.css('background-image', `url('${backgroundURL}')`);
+            parts.url = `url('${backgroundURL}')`;
             this.$target.addClass('oe_img_bg o_bg_img_center');
         } else {
-            this.$target.css('background-image', '');
+            delete parts.url;
             this.$target.removeClass('oe_img_bg o_bg_img_center');
         }
+        const combined = backgroundImagePartsToCss(parts);
+        this.$target.css('background-image', combined);
     },
 });
 

@@ -206,3 +206,13 @@ class TestUi(odoo.tests.HttpCase):
     def test_10_website_conditional_visibility(self):
         self.start_tour('/', 'conditional_visibility_1', login='admin')
         self.start_tour('/', 'conditional_visibility_2', login='admin')
+
+    def test_11_website_snippet_background_edition(self):
+        self.env['ir.attachment'].create({
+            'public': True,
+            'type': 'url',
+            'url': '/web/image/123/test.png',
+            'name': 'test.png',
+            'mimetype': 'image/png',
+        })
+        self.start_tour('/', 'snippet_background_edition', login='admin')

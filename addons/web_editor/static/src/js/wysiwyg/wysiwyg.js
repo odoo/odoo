@@ -14,6 +14,7 @@ const snippetsEditor = require('web_editor.snippet.editor');
 const Toolbar = require('web_editor.toolbar');
 const weWidgets = require('wysiwyg.widgets');
 const wysiwygUtils = require('@web_editor/js/wysiwyg/wysiwyg_utils');
+const weUtils = require('web_editor.utils');
 
 var _t = core._t;
 
@@ -393,7 +394,10 @@ const Wysiwyg = Widget.extend({
                     },
                 });
                 if (isBackground) {
-                    $(el).css('background-image', `url('${newAttachmentSrc}')`);
+                    const parts = weUtils.backgroundImageCssToParts($(el).css('background-image'));
+                    parts.url = `url('${newAttachmentSrc}')`;
+                    const combined = weUtils.backgroundImagePartsToCss(parts);
+                    $(el).css('background-image', combined);
                     delete el.dataset.bgSrc;
                 } else {
                     el.setAttribute('src', newAttachmentSrc);
@@ -832,10 +836,19 @@ const Wysiwyg = Widget.extend({
                     const targetElement = targetNode && targetNode.nodeType === Node.ELEMENT_NODE
                         ? targetNode
                         : targetNode && targetNode.parentNode;
+                    const backgroundImage = $(targetElement).css('background-image');
+                    let backgroundGradient = false;
+                    if (weUtils.isColorGradient(backgroundImage)) {
+                        const textGradient = targetElement.classList.contains('text-gradient');
+                        if (eventName === "foreColor" && textGradient || eventName !== "foreColor" && !textGradient) {
+                            backgroundGradient = backgroundImage;
+                        }
+                    }
                     colorpicker = new ColorPaletteWidget(this, {
                         excluded: ['transparent_grayscale'],
                         $editable: $(this.odooEditor.editable), // Our parent is the root widget, we can't retrieve the editable section from it...
-                        selectedColor: $(targetElement).css(eventName === "foreColor" ? 'color' : 'backgroundColor'),
+                        selectedColor: backgroundGradient || $(targetElement).css(eventName === "foreColor" ? 'color' : 'backgroundColor'),
+                        withGradients: true,
                     });
                     colorpicker.on('custom_color_picked color_picked', null, ev => {
                         this._processAndApplyColor(eventName, ev.data.color);
@@ -869,7 +882,7 @@ const Wysiwyg = Widget.extend({
     _processAndApplyColor: function (eventName, color) {
         if (!color) {
             color = 'inherit';
-        } else if (!ColorpickerWidget.isCSSColor(color)) {
+        } else if (!ColorpickerWidget.isCSSColor(color) && !weUtils.isColorGradient(color)) {
             color = (eventName === "foreColor" ? 'text-' : 'bg-') + color;
         }
         this.odooEditor.execCommand('applyColor', color, eventName === 'foreColor' ? 'color' : 'backgroundColor', this.lastMediaClicked);
@@ -880,6 +893,9 @@ const Wysiwyg = Widget.extend({
     },
     _colorToHex: function (color) {
         if (color.startsWith('#')) {
+            return color;
+        } else if (weUtils.isColorGradient(color)) {
+            // return gradient the way it is: updateColorpickerLabels will handle it
             return color;
         } else {
             let rgbColor;

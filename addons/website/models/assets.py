@@ -35,6 +35,13 @@ class Assets(models.AbstractModel):
                 'warning': 'null',
                 'danger': 'null',
             })
+            # Also reset gradients which are in the "website" values palette
+            self.make_scss_customization('/website/static/src/scss/options/user_values.scss', {
+                'menu-gradient': 'null',
+                'header-boxed-gradient': 'null',
+                'footer-gradient': 'null',
+                'copyright-gradient': 'null',
+            })
 
         custom_url = self.make_custom_asset_file_url(url, 'web.assets_common')
         updatedFileContent = self.get_asset_content(custom_url) or self.get_asset_content(url)

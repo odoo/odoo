@@ -34,6 +34,10 @@ const ColorPaletteWidget = Widget.extend({
      * @param {boolean} [options.resetButton=true] Whether to display or not the reset button.
      * @param {string[]} [options.excluded=[]] Sections not to display.
      * @param {string[]} [options.excludeSectionOf] Extra section to exclude: the one containing the named color.
+     * @param {boolean} [options.withCombinations=false] Enable color combinations selection.
+     * @param {float} [options.opacity=1] Specify a default opacity (predefined gradients & color).
+     * @param {string} [options.selectedTab='theme-colors'] Tab initially selected.
+     * @param {boolean} [options.withGradients=false] Enable gradient selection.
      * @param {JQuery} [options.$editable=$()] Editable content from which the custom colors are retrieved.
      */
     init: function (parent, options) {
@@ -46,9 +50,10 @@ const ColorPaletteWidget = Widget.extend({
             excludeSectionOf: null,
             $editable: $(),
             withCombinations: false,
+            opacity: 1,
             selectedTab: 'theme-colors',
+            withGradients: false,
         }, options || {});
-
         this.selectedColor = '';
         this.resetButton = this.options.resetButton;
         this.withCombinations = this.options.withCombinations;
@@ -69,6 +74,10 @@ const ColorPaletteWidget = Widget.extend({
                 'transparent_grayscale',
                 'common_grays',
             ],
+        },
+        {
+            id: 'gradients',
+            pickers: this.options.withGradients ? ['predefined_gradients'] : [],
         }];
 
         this.sections = {};
@@ -118,15 +127,18 @@ const ColorPaletteWidget = Widget.extend({
                         pickerEl.dataset.name = 'custom';
                         break;
                     default:
-                        pickerEl = colorpickerEl.querySelector(`[data-name="${pickerId}"]`).cloneNode(true);
+                        pickerEl = colorpickerEl.querySelector(`[data-name="${pickerId}"]`);
+                        pickerEl = pickerEl && pickerEl.cloneNode(true);
                 }
-                sectionEl.appendChild(pickerEl);
+                if (pickerEl) {
+                    sectionEl.appendChild(pickerEl);
 
-                if (!this.options.excluded.includes(pickerId)) {
-                    sectionIsEmpty = false;
+                    if (!this.options.excluded.includes(pickerId)) {
+                        sectionIsEmpty = false;
+                    }
+
+                    this.pickers[pickerId] = pickerEl;
                 }
-
-                this.pickers[pickerId] = pickerEl;
             });
 
             // If the section is empty, hide it and
@@ -140,6 +152,16 @@ const ColorPaletteWidget = Widget.extend({
             }
             this.sections[tab.id] = sectionEl;
         });
+
+        // Predefined gradient opacity
+        if (this.options.withGradients && this.options.opacity !== 1) {
+            this.pickers['predefined_gradients'].querySelectorAll('button').forEach(elem => {
+                let gradient = elem.dataset.color;
+                gradient = gradient.replaceAll(/rgba?(\(\s*\d+\s*,\s*\d+\s*,\s*\d+)(?:\s*,.+?)?\)/g,
+                    `rgba$1, ${this.options.opacity})`);
+                elem.dataset.color = gradient.replaceAll(/\s+/g, '');
+            });
+        }
 
         // Switch to the correct tab
         const selectedButtonIndex = this.tabs.map(tab => tab.id).indexOf(this.options.selectedTab);
@@ -183,6 +205,9 @@ const ColorPaletteWidget = Widget.extend({
         this.colorToColorNames = {};
         this.el.querySelectorAll('button[data-color]').forEach(elem => {
             const colorName = elem.dataset.color;
+            if (weUtils.isColorGradient(colorName)) {
+                return;
+            }
             const $color = $(elem);
             const isCCName = weUtils.isColorCombinationName(colorName);
             if (isCCName) {
@@ -199,6 +224,9 @@ const ColorPaletteWidget = Widget.extend({
 
         // Select selected Color and build customColors.
         // If no color is selected selectedColor is an empty string (transparent is interpreted as no color)
+        if (this.options.selectedCC) {
+            this.selectedCC = this.options.selectedCC;
+        }
         if (this.options.selectedColor) {
             let selectedColor = this.options.selectedColor;
             if (compatibilityColorNames.includes(selectedColor)) {
@@ -218,12 +246,14 @@ const ColorPaletteWidget = Widget.extend({
             if (defaultColor && !ColorpickerWidget.isCSSColor(defaultColor)) {
                 defaultColor = weUtils.getCSSVariableValue(defaultColor, this.style);
             }
+            if (!defaultColor && this.options.opacity !== 1) {
+                defaultColor = 'rgba(0, 0, 0, ' + this.options.opacity + ')';
+            }
             this.colorPicker = new ColorpickerWidget(this, {
                 defaultColor: defaultColor,
             });
             await this.colorPicker.appendTo(this.sections['custom-colors']);
         }
-
         return res;
     },
     /**
@@ -233,12 +263,33 @@ const ColorPaletteWidget = Widget.extend({
         return this.colorNames;
     },
     /**
-     * Sets the currently selected color
+     * Gets the currently selected colors.
      *
+     * @returns {Object} ccValue and color (plain color or gradient).
+     */
+    getSelectedColors() {
+        return {
+            ccValue: this.selectedCC,
+            color: this.selectedColor,
+        };
+    },
+    /**
+     * Sets the currently selected colors
+     *
+     * @param {string|number} ccValue
      * @param {string} color rgb[a]
      */
-    setSelectedColor: function (color) {
-        this._selectColor({color: color});
+    setSelectedColor: function (ccValue, color) {
+        if (color === 'rgba(0, 0, 0, 0)' && this.options.opacity !== 1) {
+            color = 'rgba(0, 0, 0, ' + this.options.opacity + ')';
+        }
+        this._selectColor({
+            ccValue: ccValue,
+            color: color,
+        });
+        // This is called on open, restore default tab selection
+        const selectedButtonIndex = this.tabs.map(tab => tab.id).indexOf(this.options.selectedTab);
+        this._selectTabFromButton(this.el.querySelectorAll('button')[selectedButtonIndex]);
     },
 
     //--------------------------------------------------------------------------
@@ -330,18 +381,30 @@ const ColorPaletteWidget = Widget.extend({
      */
     _getButtonInfo: function (buttonEl) {
         const bgColor = buttonEl.style.backgroundColor;
-        return {
-            color: bgColor ? ColorpickerWidget.normalizeCSSColor(bgColor) : buttonEl.dataset.color || '',
+        const value = buttonEl.dataset.color || (bgColor && bgColor !== 'initial' ? ColorpickerWidget.normalizeCSSColor(bgColor) : '') || '';
+        const info = {
             target: buttonEl,
         };
+        if (!value) {
+            info.ccValue = '';
+            info.color = '';
+        } else if (weUtils.isColorCombinationName(value)) {
+            info.ccValue = value;
+        } else {
+            info.color = value;
+        }
+        return info;
     },
     /**
      * Set the selectedColor and trigger an event
      *
-     * @param {Object} color
+     * @param {Object} colorInfo
+     * @param {string} [colorInfo.ccValue]
+     * @param {string} [colorInfo.color]
      * @param {string} [eventName]
      */
     _selectColor: function (colorInfo, eventName) {
+        this.selectedCC = colorInfo.ccValue;
         this.selectedColor = colorInfo.color = this.colorToColorNames[colorInfo.color] || colorInfo.color;
         if (eventName) {
             this.trigger_up(eventName, colorInfo);
@@ -353,15 +416,18 @@ const ColorPaletteWidget = Widget.extend({
         }
     },
     /**
-     * Mark the selected color
+     * Marks the selected colors.
      *
      * @private
      */
     _markSelectedColor: function () {
-        this.el.querySelectorAll('button.selected').forEach(el => el.classList.remove('selected'));
-        const buttonToSelectEls = this.el.querySelectorAll(`button[data-color="${this.selectedColor}"], button[style*="background-color:${this.selectedColor};"]`);
-        for (const buttonToSelectEl of buttonToSelectEls) {
-            buttonToSelectEl.classList.add('selected');
+        for (const buttonEl of this.el.querySelectorAll('button')) {
+            // TODO buttons should only be search by data-color value
+            // instead of style but seems necessary for custom colors right
+            // now...
+            const value = buttonEl.dataset.color || buttonEl.style.backgroundColor;
+            buttonEl.classList.toggle('selected', value
+                && (this.selectedCC === value || weUtils.areCssValuesEqual(this.selectedColor, value)));
         }
     },
     /**
@@ -370,7 +436,10 @@ const ColorPaletteWidget = Widget.extend({
      * @private
      * @param {HTMLElement} buttonEl
      */
-     _selectTabFromButton(buttonEl) {
+    _selectTabFromButton(buttonEl) {
+        this.el.querySelectorAll('.o_we_colorpicker_switch_pane_btn').forEach(el => {
+            el.classList.remove('active');
+        });
         buttonEl.classList.add('active');
         this.el.querySelectorAll('.o_colorpicker_sections').forEach(el => {
             el.classList.toggle('d-none', el.dataset.colorTab !== buttonEl.dataset.target);
@@ -389,7 +458,7 @@ const ColorPaletteWidget = Widget.extend({
      */
     _onColorButtonClick: function (ev) {
         const buttonEl = ev.currentTarget;
-        const colorInfo = this._getButtonInfo(buttonEl);
+        const colorInfo = Object.assign(this.getSelectedColors(), this._getButtonInfo(buttonEl));
         this._selectColor(colorInfo, 'color_picked');
     },
     /**
@@ -400,7 +469,7 @@ const ColorPaletteWidget = Widget.extend({
      */
     _onColorButtonEnter: function (ev) {
         ev.stopPropagation();
-        this.trigger_up('color_hover', this._getButtonInfo(ev.currentTarget));
+        this.trigger_up('color_hover', Object.assign(this.getSelectedColors(), this._getButtonInfo(ev.currentTarget)));
     },
     /**
      * Called when a color button is left the data color is the color currently selected.
@@ -410,10 +479,9 @@ const ColorPaletteWidget = Widget.extend({
      */
     _onColorButtonLeave: function (ev) {
         ev.stopPropagation();
-        this.trigger_up('color_leave', {
-            color: this.selectedColor,
+        this.trigger_up('color_leave', Object.assign(this.getSelectedColors(), {
             target: ev.target,
-        });
+        }));
     },
     /**
      * Called when an update is made on the colorpicker.
@@ -422,10 +490,10 @@ const ColorPaletteWidget = Widget.extend({
      * @param {Event} ev
      */
     _onColorPickerPreview: function (ev) {
-        this.trigger_up('color_hover', {
+        this.trigger_up('color_hover', Object.assign(this.getSelectedColors(), {
             color: ev.data.cssColor,
             target: this.colorPicker.el,
-        });
+        }));
     },
     /**
      * Called when a color is selected on the colorpicker (mouseup).
@@ -434,10 +502,10 @@ const ColorPaletteWidget = Widget.extend({
      * @param {Event} ev
      */
     _onColorPickerSelect: function (ev) {
-        this._selectColor({
+        this._selectColor(Object.assign(this.getSelectedColors(), {
             color: ev.data.cssColor,
             target: this.colorPicker.el,
-        }, 'custom_color_picked');
+        }), 'custom_color_picked');
     },
     /**
      * @private
@@ -445,9 +513,6 @@ const ColorPaletteWidget = Widget.extend({
      */
     _onSwitchPaneButtonClick(ev) {
         ev.stopPropagation();
-        this.el.querySelectorAll('.o_we_colorpicker_switch_pane_btn').forEach(el => {
-            el.classList.remove('active');
-        });
         this._selectTabFromButton(ev.currentTarget);
     },
 });

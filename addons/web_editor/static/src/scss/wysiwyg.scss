@@ -117,8 +117,15 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     }
 
     // Specific elements
-    #colorInputButtonGroup label:last-of-type .btn {
-        margin: 0 1px 0 -1px;
+    #colorInputButtonGroup {
+        label:last-of-type .btn {
+            margin: 0 1px 0 -1px;
+        }
+
+        .note-back-color-preview.dropup .dropdown-menu {
+            // Highlight palette alignment
+            left: -52px;
+        }
     }
     .oe-tablepicker {
         margin: 1px 2px -8px 2px !important;

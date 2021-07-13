@@ -22,6 +22,7 @@ import {
     getListMode,
     getOuid,
     insertText,
+    isColorGradient,
     nodeSize,
     preserveCursor,
     setCursor,
@@ -999,27 +1000,73 @@ export class OdooEditor extends EventTarget {
         }
     }
 
+    /**
+     * Displays the text colors (foreground ink and background highlight)
+     * based on the current text cursor position. For gradients, displays
+     * the average color of the gradient.
+     *
+     * @param {object} [params]
+     * @param {string} [params.foreColor] - forces the 'foreColor' in the
+     *     toolbar instead of determining it from the cursor position
+     * @param {string} [params.hiliteColor] - forces the 'hiliteColor' in the
+     *     toolbar instead of determining it from the cursor position
+     */
     updateColorpickerLabels(params = {}) {
-        const foreColor = params.foreColor || rgbToHex(document.queryCommandValue('foreColor'));
+        function hexFromColor(color) {
+            if (isColorGradient(color)) {
+                // For gradients, compute the average color
+                color = color.match(/gradient(.*)/)[0];
+                let r = 0, g = 0, b = 0, count = 0;
+                for (const entry of color.matchAll(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)/g)) {
+                    count++;
+                    r += parseInt(entry[1], 10);
+                    g += parseInt(entry[2], 10);
+                    b += parseInt(entry[3], 10);
+                }
+                color = `rgb(${Math.round(r / count)}, ${Math.round(g / count)}, ${Math.round(b / count)})`;
+            }
+            return rgbToHex(color);
+        }
+        let foreColor = params.foreColor;
+        let hiliteColor = params.hiliteColor;
+
+        // Determine colors at cursor position
+        const sel = this.document.getSelection();
+        if (sel.rangeCount && (!foreColor || !hiliteColor)) {
+            const endContainer = closestElement(sel.getRangeAt(0).endContainer);
+            const computedStyle = getComputedStyle(endContainer);
+            const backgroundImage = computedStyle.backgroundImage;
+            const hasGradient = isColorGradient(backgroundImage);
+            const hasTextGradientClass = endContainer.classList.contains('text-gradient');
+            if (!foreColor) {
+                if (hasGradient && hasTextGradientClass) {
+                    foreColor = backgroundImage;
+                } else {
+                    foreColor = document.queryCommandValue('foreColor');
+                }
+            }
+            if (!hiliteColor) {
+                if (hasGradient && !hasTextGradientClass) {
+                    hiliteColor = backgroundImage;
+                } else {
+                    hiliteColor = computedStyle.backgroundColor;
+                }
+            }
+        }
+
+        // display colors in toolbar buttons
+        foreColor = hexFromColor(foreColor);
         this.toolbar.style.setProperty('--fore-color', foreColor);
         const foreColorInput = this.toolbar.querySelector('#foreColor input');
         if (foreColorInput) {
             foreColorInput.value = foreColor;
         }
 
-        let hiliteColor = params.hiliteColor;
-        if (!hiliteColor) {
-            const sel = this.document.getSelection();
-            if (sel.rangeCount) {
-                const endContainer = closestElement(sel.getRangeAt(0).endContainer);
-                const hiliteColorRgb = getComputedStyle(endContainer).backgroundColor;
-                hiliteColor = rgbToHex(hiliteColorRgb);
-            }
-        }
+        hiliteColor = hexFromColor(hiliteColor);
         this.toolbar.style.setProperty('--hilite-color', hiliteColor);
         const hiliteColorInput = this.toolbar.querySelector('#hiliteColor input');
         if (hiliteColorInput) {
-            hiliteColorInput.value = hiliteColor.length <= 7 ? hiliteColor : rgbToHex(hiliteColor);
+            hiliteColorInput.value = hiliteColor.length <= 7 ? hiliteColor : hexFromColor(hiliteColor);
         }
     }
 

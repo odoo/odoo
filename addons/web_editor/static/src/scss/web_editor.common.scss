@@ -787,3 +787,11 @@ section, .oe_img_bg, [data-oe-shape-data] {
 .o_we_bg_filter {
     @extend %o-we-background-layer;
 }
+
+// Gradient
+// TODO should be in the editor lib since it is handled there... but could not
+// find the right place for it.
+.text-gradient {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
