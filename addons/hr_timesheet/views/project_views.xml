@@ -240,10 +240,24 @@
                 <field name="partner_id" position="after">
                     <field name="allow_timesheets" invisible="1"/>
                     <field name="timesheet_ids" invisible="1"/>
+                    <field name="total_timesheet_time" invisible="1"/>
+                    <field name="remaining_hours" invisible="1"/>
+                    <field name="has_planned_hours_tasks" invisible="1"/>
+                    <field name="encode_uom_in_days" invisible="1"/>
                 </field>
                 <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
                     <div role="menuitem" t-if="record.allow_timesheets.raw_value and record.timesheet_ids.raw_value.length" groups="hr_timesheet.group_hr_timesheet_user">
                         <a name="%(act_hr_timesheet_line_by_project)d" type="action">Timesheets</a>
+                    </div>
+                </xpath>
+                <xpath expr="//div[hasclass('o_project_kanban_boxes')]" position="after">
+                    <t t-set="badge" t-value=""/>
+                    <t t-set="badge" t-value="'badge-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
+                    <t t-set="title" t-value="'Remaining days'" t-if="record.encode_uom_in_days.raw_value"/>
+                    <t t-set="title" t-value="'Remaining hours'" t-else=""/>
+                    <div t-if="record.has_planned_hours_tasks.raw_value"
+                        t-attf-class="oe_kanban_align badge {{ badge }}" t-att-title="title">
+                        <field name="remaining_hours" widget="timesheet_uom"/>
                     </div>
                 </xpath>
             </field>
@@ -326,6 +340,10 @@
         </record>
 
         <record id="project.open_view_project_all" model="ir.actions.act_window">
+            <field name="domain">[('is_internal_project', '=', False)]</field>
+        </record>
+
+        <record id="project.open_view_project_all_group_stage" model="ir.actions.act_window">
             <field name="domain">[('is_internal_project', '=', False)]</field>
         </record>
 

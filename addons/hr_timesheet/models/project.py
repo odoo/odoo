@@ -28,6 +28,9 @@ class Project(models.Model):
         help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.")
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days')
     is_internal_project = fields.Boolean(compute='_compute_is_internal_project', search='_search_is_internal_project')
+    remaining_hours = fields.Float(compute='_compute_remaining_hours', string='Remaining Invoiced Time', compute_sudo=True)
+    has_planned_hours_tasks = fields.Boolean(compute='_compute_remaining_hours', compute_sudo=True,
+        help="True if any of the project's task has a set planned hours")
 
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
@@ -59,6 +62,22 @@ class Project(models.Model):
         else:
             operator_new = 'not inselect'
         return [('id', operator_new, (query, ()))]
+
+    @api.depends('allow_timesheets', 'task_ids.planned_hours', 'task_ids.remaining_hours')
+    def _compute_remaining_hours(self):
+        group_read = self.env['project.task'].read_group(
+            domain=[('planned_hours', '!=', False), ('project_id', 'in', self.filtered('allow_timesheets').ids),
+                     '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)],
+            fields=['planned_hours:sum', 'remaining_hours:sum'], groupby='project_id')
+        group_per_project_id = {group['project_id'][0]: group for group in group_read}
+        for project in self:
+            group = group_per_project_id.get(project.id)
+            if group:
+                project.remaining_hours = group.get('remaining_hours')
+                project.has_planned_hours_tasks = bool(group.get('planned_hours'))
+            else:
+                project.remaining_hours = 0
+                project.has_planned_hours_tasks = False
 
     @api.constrains('allow_timesheets', 'analytic_account_id')
     def _check_allow_timesheet(self):

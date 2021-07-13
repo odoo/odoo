@@ -70,6 +70,22 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="project_stages">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_project_stages"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_project_stages"/>
+                                    <div class="text-muted">
+                                        Track the progress of your projects
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('group_project_stages', '=', False)]}">
+                                        <div class="mt8">
+                                            <button name="%(project.project_project_stage_configure)d" icon="fa-arrow-right" type="action" string="Configure Stages" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <h2>Time Management</h2>
                         <div class="row mt16 o_settings_container" name="project_time">
