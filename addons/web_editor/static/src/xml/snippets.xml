@@ -51,12 +51,17 @@
                 <span>Theme</span>
             </button>
             <button type="button" tabindex="2" class="o_we_colorpicker_switch_pane_btn" data-target="custom-colors">
-                <span>Custom</span>
+                <span>Solid</span>
             </button>
-            <button t-if="widget.resetButton" type="button" class="my-1 ml-auto o_we_color_btn o_colorpicker_reset">
-                <t t-if="widget.withCombinations">None</t>
-                <t t-else="">Reset</t>
+            <button type="button" tabindex="3" class="o_we_colorpicker_switch_pane_btn" data-target="gradients">
+                <span>Gradient</span>
             </button>
+            <t t-if="widget.resetButton">
+                <t t-set="trash_title"><t t-if="widget.withCombinations">None</t><t t-else="">Reset</t></t>
+                <button type="button" class="my-1 ml-auto o_we_color_btn o_colorpicker_reset" t-att-title="trash_title">
+                    <i class="fa fa-trash"/>
+                </button>
+            </t>
         </div>
         <div class="o_colorpicker_sections pt-2 px-2 pb-3 bg-black-25" data-color-tab="color-combinations">
             <!-- List all Presets -->
@@ -68,6 +73,7 @@
         </div>
         <div class="o_colorpicker_sections py-3 px-2 bg-black-25" data-color-tab="theme-colors"/>
         <div class="o_colorpicker_sections py-3 px-2 bg-black-25" data-color-tab="custom-colors"/>
+        <div class="o_colorpicker_sections py-3 px-2 bg-black-25" data-color-tab="gradients"/>
     </div>
     <t t-name="web_editor.colorpalette.combination.btn">
         <button type="button" class="o_we_color_btn o_we_color_combination_btn"

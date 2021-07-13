@@ -384,6 +384,7 @@ options.Class.include({
     custom_events: _.extend({}, options.Class.prototype.custom_events || {}, {
         'google_fonts_custo_request': '_onGoogleFontsCustoRequest',
     }),
+    specialCheckAndReloadMethodsNames: ['customizeWebsiteViews', 'customizeWebsiteVariable', 'customizeWebsiteColor'],
 
     //--------------------------------------------------------------------------
     // Options
@@ -422,19 +423,27 @@ options.Class.include({
         }
         for (const widget of widgets) {
             const methodsNames = widget.getMethodsNames();
-            if (!methodsNames.includes('customizeWebsiteViews')
-                    && !methodsNames.includes('customizeWebsiteVariable')
-                    && !methodsNames.includes('customizeWebsiteColor')) {
+            const specialMethodsNames = [];
+            for (const methodName of methodsNames) {
+                if (this.specialCheckAndReloadMethodsNames.includes(methodName)) {
+                    specialMethodsNames.push(methodName);
+                }
+            }
+            if (!specialMethodsNames.length) {
                 continue;
             }
-            let paramsReload = false;
-            if (widget.getMethodsParams('customizeWebsiteViews').reload
-                    || widget.getMethodsParams('customizeWebsiteVariable').reload
-                    || widget.getMethodsParams('customizeWebsiteColor').reload) {
-                paramsReload = true;
+            const isDebugAssets = config.isDebug('assets');
+            let paramsReload = isDebugAssets;
+            if (!isDebugAssets) {
+                for (const methodName of specialMethodsNames) {
+                    if (widget.getMethodsParams(methodName).reload) {
+                        paramsReload = true;
+                        break;
+                    }
+                }
             }
-            if (paramsReload || config.isDebug('assets')) {
-                return (config.isDebug('assets') ? _t("It appears you are in debug=assets mode, all theme customization options require a page reload in this mode.") : true);
+            if (paramsReload) {
+                return (isDebugAssets ? _t("It appears you are in debug=assets mode, all theme customization options require a page reload in this mode.") : true);
             }
         }
         return false;
@@ -498,7 +507,7 @@ options.Class.include({
                 }
         }
 
-        if (params.reload || config.isDebug('assets')) {
+        if (params.reload || config.isDebug('assets') || params.noBundleReload) {
             // Caller will reload the page, nothing needs to be done anymore.
             return;
         }
@@ -543,7 +552,7 @@ options.Class.include({
                 }
             }
         }
-        return this._makeSCSSCusto(url, finalColors);
+        return this._makeSCSSCusto(url, finalColors, params.nullValue);
     },
     /**
      * @private
@@ -551,7 +560,7 @@ options.Class.include({
     _customizeWebsiteVariable: async function (value, params) {
         return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', {
             [params.variable]: value,
-        });
+        }, params.nullValue);
     },
     /**
      * @private
@@ -582,12 +591,12 @@ options.Class.include({
     /**
      * @private
      */
-    _makeSCSSCusto: async function (url, values) {
+    _makeSCSSCusto: async function (url, values, defaultValue = 'null') {
         return this._rpc({
             route: '/website/make_scss_custo',
             params: {
                 'url': url,
-                'values': _.mapObject(values, v => v || 'null'),
+                'values': _.mapObject(values, v => v || defaultValue),
             },
         });
     },
@@ -700,6 +709,7 @@ options.registry.BackgroundToggler.include({
      */
     toggleBgVideo(previewMode, widgetValue, params) {
         if (!widgetValue) {
+            this.$target.find('> .o_we_bg_filter').remove();
             // TODO: use setWidgetValue instead of calling background directly when possible
             const [bgVideoWidget] = this._requestUserValueWidgets('bg_video_opt');
             const bgVideoOpt = bgVideoWidget.getParent();
@@ -1946,6 +1956,54 @@ options.registry.collapse = options.Class.extend({
     },
 });
 
+options.registry.WebsiteLevelColor = options.Class.extend({
+    specialCheckAndReloadMethodsNames: options.Class.prototype.specialCheckAndReloadMethodsNames
+        .concat(['customizeWebsiteLayer2Color']),
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    async customizeWebsiteLayer2Color(previewMode, widgetValue, params) {
+        if (previewMode) {
+            return;
+        }
+        params.color = params.layerColor;
+        params.variable = params.layerGradient;
+        let color = undefined;
+        let gradient = undefined;
+        if (weUtils.isColorGradient(widgetValue)) {
+            color = '';
+            gradient = widgetValue;
+        } else {
+            color = widgetValue;
+            gradient = '';
+        }
+        await this.customizeWebsiteVariable(previewMode, gradient, params);
+        params.noBundleReload = false;
+        return this.customizeWebsiteColor(previewMode, color, params);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        if (methodName === 'customizeWebsiteLayer2Color') {
+            params.variable = params.layerGradient;
+            const gradient = await this._computeWidgetState('customizeWebsiteVariable', params);
+            if (gradient) {
+                return gradient.substring(1, gradient.length - 1); // Unquote
+            }
+            params.color = params.layerColor;
+            return this._computeWidgetState('customizeWebsiteColor', params);
+        }
+        return this._super(...arguments);
+    },
+});
+
 options.registry.HeaderNavbar = options.Class.extend({
     /**
      * Particular case: we want the option to be associated on the header navbar
@@ -2633,10 +2691,23 @@ options.registry.CoverProperties = options.Class.extend({
             name: 'bg_color_opt',
             onSuccess: _widget => colorPickerWidget = _widget,
         });
-        const color = colorPickerWidget._value;
-        const isCSSColor = ColorpickerWidget.isCSSColor(color);
-        this.$target[0].dataset.bgColorClass = isCSSColor ? '' : weUtils.computeColorClasses([color])[0];
-        this.$target[0].dataset.bgColorStyle = isCSSColor ? `background-color: ${color};` : '';
+        // TODO there is probably a better way and this should be refactored to
+        // use more standard colorpicker+imagepicker structure
+        const ccValue = colorPickerWidget._ccValue;
+        const colorOrGradient = colorPickerWidget._value;
+        const isGradient = weUtils.isColorGradient(colorOrGradient);
+        const isCSSColor = !isGradient && ColorpickerWidget.isCSSColor(colorOrGradient);
+        const colorNames = [];
+        if (ccValue) {
+            colorNames.push(ccValue);
+        }
+        if (!isGradient && !isCSSColor) {
+            colorNames.push(colorOrGradient);
+        }
+        this.$target[0].dataset.bgColorClass = weUtils.computeColorClasses(colorNames).join(' ');
+        this.$target[0].dataset.bgColorStyle =
+            isCSSColor ? `background-color: ${colorOrGradient};` :
+            isGradient ? `background-color: rgba(0, 0, 0, 0); background-image: ${colorOrGradient};` : '';
     },
 
     //--------------------------------------------------------------------------

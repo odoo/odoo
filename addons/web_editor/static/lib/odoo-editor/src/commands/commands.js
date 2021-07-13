@@ -18,6 +18,7 @@ import {
     insertText,
     isBlock,
     isBold,
+    isColorGradient,
     isContentTextNode,
     isShrunkBlock,
     isVisible,
@@ -138,11 +139,25 @@ function align(editor, mode) {
 function colorElement(element, color, mode) {
     const newClassName = element.className
         .replace(mode === 'color' ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX, '')
+        .replace(/\btext-gradient\b/g, '') // cannot be combined with setting a background
         .replace(/\s+/, ' ');
     element.className !== newClassName && (element.className = newClassName);
+    element.style['background-image'] = '';
+    if (mode === 'backgroundColor') {
+        element.style['background'] = '';
+    }
     if (color.startsWith('text') || color.startsWith('bg-')) {
         element.style[mode] = '';
-        element.className += ' ' + color;
+        element.classList.add(color);
+    } else if (isColorGradient(color)) {
+        element.style[mode] = '';
+        if (mode === 'color') {
+            element.style['background'] = '';
+            element.style['background-image'] = color;
+            element.classList.add('text-gradient');
+        } else {
+            element.style['background-image'] = color;
+        }
     } else {
         element.style[mode] = color;
     }
@@ -160,6 +175,17 @@ function hasColor(element, mode) {
     const style = element.style;
     const parent = element.parentNode;
     const classRegex = mode === 'color' ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX;
+    if (isColorGradient(style['background-image'])) {
+        if (element.classList.contains('text-gradient')) {
+            if (mode === 'color') {
+                return true;
+            }
+        } else {
+            if (mode !== 'color') {
+                return true;
+            }
+        }
+    }
     return (
         (style[mode] && style[mode] !== 'inherit' && style[mode] !== parent.style[mode]) ||
         (classRegex.test(element.className) &&
