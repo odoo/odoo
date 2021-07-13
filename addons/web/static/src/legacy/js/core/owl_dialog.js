@@ -199,6 +199,7 @@ odoo.define('web.OwlDialog', function (require) {
                     // Legacy dialog
                     activeDialog.$modal[0];
                 activeDialogEl.classList.add('o_inactive_modal');
+                activeDialogEl.removeAttribute("tabindex");
             }
             // Push dialog
             this.displayed.push(dialog);
@@ -224,6 +225,7 @@ odoo.define('web.OwlDialog', function (require) {
                     // Legacy dialog
                     lastDialog.$modal[0];
                 modalEl.classList.remove('o_inactive_modal');
+                modalEl.setAttribute("tabindex", "-1");
             } else {
                 document.body.classList.remove('modal-open');
             }
