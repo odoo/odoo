@@ -1,16 +1,15 @@
 /** @odoo-module **/
 
-import { registry } from "../core/registry";
 import { useService } from "../core/service_hook";
 import { useBus } from "../core/bus_hook";
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
 import { useEffect } from "@web/core/effect_hook";
-import { ErrorHandler, NotUpdatable } from "../core/utils/components";
+import { NotUpdatable } from "../core/utils/components";
+import { MainComponentsContainer } from "../core/main_components_container";
 
 const { Component, hooks } = owl;
 const { useExternalListener } = hooks;
-const mainComponentRegistry = registry.category("main_components");
 
 export class WebClient extends Component {
     setup() {
@@ -20,7 +19,6 @@ export class WebClient extends Component {
         this.router = useService("router");
         this.user = useService("user");
         useService("legacy_service_provider");
-        this.Components = mainComponentRegistry.getEntries();
         this.title.setParts({ zopenerp: "Odoo" }); // zopenerp is easy to grep
         useBus(this.env.bus, "ROUTE_CHANGE", this.loadRouterState);
         useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", (mode) => {
@@ -41,19 +39,6 @@ export class WebClient extends Component {
         // the chat window and dialog services listen to 'web_client_ready' event in
         // order to initialize themselves:
         this.env.bus.trigger("WEB_CLIENT_READY");
-    }
-
-    handleComponentError(error, C) {
-        // remove the faulty component
-        this.Components.splice(this.Components.indexOf(C), 1);
-        /**
-         * we rethrow the error to notify the user something bad happened.
-         * We do it after a tick to make sure owl can properly finish its
-         * rendering
-         */
-        Promise.resolve().then(() => {
-            throw error;
-        });
     }
 
     async loadRouterState() {
@@ -115,5 +100,10 @@ export class WebClient extends Component {
         }
     }
 }
-WebClient.components = { ActionContainer, NavBar, ErrorHandler, NotUpdatable };
+WebClient.components = {
+    ActionContainer,
+    NavBar,
+    NotUpdatable,
+    MainComponentsContainer,
+};
 WebClient.template = "web.WebClient";
