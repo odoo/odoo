@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="crm_iap_lead_mining_request_form" model="ir.ui.view">
-        <field name="name">crm.iap.lead.mining.request.form</field>
+    <record id="crm_iap_lead_mining_request_view_form" model="ir.ui.view">
+        <field name="name">crm.iap.lead.mining.request.view.form</field>
         <field name="model">crm.iap.lead.mining.request</field>
         <field name="arch" type="xml">
             <form>
@@ -107,8 +107,8 @@
         </field>
     </record>
 
-    <record id="crm_iap_lead_mining_request_tree" model="ir.ui.view">
-        <field name="name">crm.iap.lead.mining.request.tree</field>
+    <record id="crm_iap_lead_mining_request_view_tree" model="ir.ui.view">
+        <field name="name">crm.iap.lead.mining.request.view.tree</field>
         <field name="model">crm.iap.lead.mining.request</field>
         <field name="arch" type="xml">
             <tree>
@@ -124,8 +124,8 @@
         </field>
     </record>
 
-    <record id="crm_iap_lead_mining_request_search" model="ir.ui.view">
-        <field name="name">crm.iap.lead.mining.request.search</field>
+    <record id="crm_iap_lead_mining_request_view_search" model="ir.ui.view">
+        <field name="name">crm.iap.lead.mining.request.view.search</field>
         <field name="model">crm.iap.lead.mining.request</field>
         <field name="arch" type="xml">
             <search string="Lead Mining Request">
@@ -153,18 +153,4 @@
         <field name="res_model">crm.iap.lead.mining.request</field>
         <field name="view_mode">tree,form</field>
     </record>
-
-    <!-- This menu is display in CRM app when crm_iap_lead is installed-->
-    <menuitem
-        id="crm_menu_lead_generation"
-        name="Lead Generation"
-        parent="crm.crm_menu_config"
-        sequence="20"/>
-
-    <menuitem
-        id="crm_iap_lead_mining_request_menu_action"
-        action="crm_iap_lead_mining_request_action"
-        parent="crm_menu_lead_generation"
-        sequence="0"/>
-
 </odoo>
