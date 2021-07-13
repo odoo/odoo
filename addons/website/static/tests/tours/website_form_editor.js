@@ -285,9 +285,9 @@ odoo.define('website.tour.form_editor', function (require) {
             content:  "Try to send empty form",
             extra_trigger:  "form[data-model_name='mail.mail']" +
                             "[data-success-page='/contactus-thank-you']" +
-                            ":has(.s_website_form_field:has(label:contains('Your Name')):has(input[type='text'][name='Your Name'][required]))" +
-                            ":has(.s_website_form_field:has(label:contains('Email')):has(input[type='email'][name='email_from'][required]))" +
-                            ":has(.s_website_form_field:has(label:contains('Your Question')):has(textarea[name='Your Question'][required]))" +
+                            ":has(.s_website_form_field:has(label:contains('Your Name')):has(input[type='text'][name='name'][required]))" +
+                            ":has(.s_website_form_field:has(label:contains('Your Email')):has(input[type='email'][name='email_from'][required]))" +
+                            ":has(.s_website_form_field:has(label:contains('Your Question')):has(textarea[name='description'][required]))" +
                             ":has(.s_website_form_field:has(label:contains('Subject')):has(input[type='text'][name='subject'][required]))" +
                             ":has(.s_website_form_field:has(label:contains('Test Date')):has(input[type='text'][name='date'][required]))" +
                             ":has(.s_website_form_field:has(label:contains('Awesome Label')):hidden)" +
@@ -376,7 +376,7 @@ odoo.define('website.tour.form_editor', function (require) {
         },
         {
             content:  "Complete Your Name field",
-            trigger:  "input[name='Your Name']",
+            trigger:  "input[name='name']",
             run:      "text chhagan"
         },
         {
@@ -391,7 +391,7 @@ odoo.define('website.tour.form_editor', function (require) {
         },
         {
             content:  "Complete Your Question field",
-            trigger:  "textarea[name='Your Question']",
+            trigger:  "textarea[name='description']",
             run:      "text magan"
         },
         {

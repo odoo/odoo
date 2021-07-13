@@ -56,7 +56,7 @@
     </t>
 
     <t t-name="website.form_label_content">
-        <t t-if="field.custom" t-set="field.string" t-value="field.name"/>
+        <t t-if="field.custom and !field.string" t-set="field.string" t-value="field.name"/>
         <span class="s_website_form_label_content" t-esc="field.string"/>
         <t t-if="field.required or field.modelRequired">
             <span class="s_website_form_mark" t-if="field.formatInfo.requiredMark" t-esc="' ' + field.formatInfo.mark"/>

@@ -2,17 +2,14 @@
 <odoo>
         <template id="contactus_form" name="Contact Form (Opportunity)" inherit_id="website.contactus" customize_show="True">
             <xpath expr="//span[@data-for='contactus_form']" position="before">
-                <t t-set="logged_partner" t-value="request.env['website.visitor']._get_visitor_from_request().partner_id"/>
-            </xpath>
-            <xpath expr="//span[@data-for='contactus_form']" position="attributes">
-                <attribute name="t-att-data-values">{
-                    'contact_name': request.params.get('contact_name', logged_partner.name if logged_partner else ''),
-                    'phone': request.params.get('phone', logged_partner.phone if logged_partner and logged_partner.phone else ''),
-                    'email_from': request.params.get('email_from', logged_partner.email if logged_partner else ''),
-                    'partner_name': request.params.get('partner_name', logged_partner.commercial_company_name if logged_partner else ''),
+                <t t-set="contactus_form_values" t-value="dict(contactus_form_values, **{
+                    'contact_name': request.params.get('contact_name', ''),
+                    'phone': request.params.get('phone', ''),
+                    'email_from': request.params.get('email_from', ''),
+                    'partner_name': request.params.get('partner_name', ''),
                     'name': request.params.get('name', ''),
                     'description': request.params.get('description', ''),
-                }</attribute>
+                })"/>
             </xpath>
 		</template>
 
