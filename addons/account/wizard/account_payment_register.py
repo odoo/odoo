@@ -289,9 +289,7 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 wizard.partner_bank_id = False
 
-    @api.depends('payment_type',
-                 'journal_id.inbound_payment_method_line_ids',
-                 'journal_id.outbound_payment_method_line_ids')
+    @api.depends('payment_type', 'journal_id')
     def _compute_payment_method_line_fields(self):
         for wizard in self:
             wizard.available_payment_method_line_ids = wizard.journal_id._get_available_payment_method_lines(wizard.payment_type)
@@ -303,9 +301,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.hide_payment_method_line = len(wizard.available_payment_method_line_ids) == 1 \
                                                   and wizard.available_payment_method_line_ids.code == 'manual'
 
-    @api.depends('payment_type',
-                 'journal_id.inbound_payment_method_line_ids',
-                 'journal_id.outbound_payment_method_line_ids')
+    @api.depends('payment_type', 'journal_id')
     def _compute_payment_method_line_id(self):
         for wizard in self:
             if wizard.payment_type == 'inbound':
