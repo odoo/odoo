@@ -13,7 +13,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import float_compare, frozendict, split_every
+from odoo.tools import add, float_compare, frozendict, split_every
 
 _logger = logging.getLogger(__name__)
 
@@ -306,8 +306,10 @@ class StockWarehouseOrderpoint(models.Model):
         to_refill = defaultdict(float)
         all_product_ids = []
         all_warehouse_ids = []
+        # Take 3 months since it's the max for the forecast report
+        to_date = add(fields.date.today(), months=3)
         qty_by_product_warehouse = self.env['report.stock.quantity'].read_group(
-            [('date', '=', fields.date.today()), ('state', '=', 'forecast')],
+            [('date', '=', to_date), ('state', '=', 'forecast')],
             ['product_id', 'product_qty', 'warehouse_id'],
             ['product_id', 'warehouse_id'], lazy=False)
         for group in qty_by_product_warehouse:
