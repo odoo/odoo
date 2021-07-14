@@ -11,7 +11,7 @@
                 </div>
                 <div class="o_NotificationGroup_content">
                     <div class="o_NotificationGroup_header">
-                        <span class="o_NotificationGroup_name">
+                        <span class="o_NotificationGroup_name text-truncate">
                             <t t-esc="group.res_model_name"/>
                         </span>
                         <span class="o_NotificationGroup_counter">
@@ -25,7 +25,7 @@
                         </t>
                     </div>
                     <div class="o_NotificationGroup_core">
-                        <span class="o_NotificationGroup_coreItem o_NotificationGroup_inlineText">
+                        <span class="o_NotificationGroup_coreItem o_NotificationGroup_inlineText text-truncate">
                             <t t-if="group.notification_type === 'email'">
                                 An error occurred when sending an email.
                             </t>
