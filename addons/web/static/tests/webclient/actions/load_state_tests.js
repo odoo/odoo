@@ -935,7 +935,7 @@ QUnit.module("ActionManager", (hooks) => {
     );
 
     QUnit.test("initial action crashes", async (assert) => {
-        assert.expect(7);
+        assert.expect(8);
 
         const handler = (ev) => {
             // need to preventDefault to remove error from console (so python test pass)
@@ -963,10 +963,13 @@ QUnit.module("ActionManager", (hooks) => {
 
         const webClient = await createWebClient({ serverData });
         assert.verifySteps(["clientAction setup"]);
+        await nextTick();
+        assert.containsOnce(webClient, ".o_dialog_error");
+        await click(webClient.el, ".modal-header .close");
+        assert.containsNone(webClient, ".o_dialog_error");
         await click(webClient.el, "nav .o_navbar_apps_menu .o_dropdown_toggler ");
         assert.containsN(webClient, ".o_dropdown_item.o_app", 3);
         assert.containsNone(webClient, ".o_menu_brand");
-        assert.containsOnce(webClient, ".o_dialog_error");
         assert.strictEqual(webClient.el.querySelector(".o_action_manager").innerHTML, "");
         assert.deepEqual(webClient.env.services.router.current.hash, {
             action: "__test__client__action__",
