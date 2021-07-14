@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_fleet_convert_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.fleet.convert.wizard.view.form</field>
+        <field name="model">hr.fleet.convert.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Convert Fleet">
+                <sheet>
+                    <group>
+                        <field name="fleet_id" widget="many2one_fleet_category" options="{'no_open': True}"/>
+                    </group>
+                    <field name="line_ids">
+                        <tree decoration-danger="invalid_driver" decoration-warning="invalid_future_driver"
+                            create="false" delete="false" editable="bottom">
+                            <field name="invalid_driver" invisible="1"/>
+                            <field name="invalid_future_driver" invisible="1"/>
+                            <field name="convert_wizard_id" invisible="1"/>
+                            <field name="vehicle_id" invisible="1"/>
+                            <field name="vehicle_name" string="Vehicle"/>
+                            <field name="license_plate"/>
+                            <field name="driver_id" options="{'no_open': True}"/>
+                            <field name="future_driver_id" options="{'no_open': True}"/>
+                            <field name="employee_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="future_employee_id" options="{'no_create': True, 'no_open': True}"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="action_validate" string="Apply" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_fleet_convert_wizard_action" model="ir.actions.act_window">
+        <field name="name">Convert Fleet</field>
+        <field name="res_model">hr.fleet.convert.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_fleet_category"/>
+        <field name="binding_view_types">form</field>
+        <field name="groups_id" eval="[(4, ref('base.group_no_one'))]"/>
+    </record>
+</odoo>

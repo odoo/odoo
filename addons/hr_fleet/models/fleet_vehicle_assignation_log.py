@@ -7,6 +7,8 @@ from odoo import fields, models
 class FleetVehicleAssignationLog(models.Model):
     _inherit = 'fleet.vehicle.assignation.log'
 
+    driver_employee_id = fields.Many2one('hr.employee', 'Driver (Employee)')
+    fleet_is_internal = fields.Boolean(related='vehicle_id.fleet_is_internal')
     attachment_number = fields.Integer('Number of Attachments', compute='_compute_attachment_number')
 
     def _compute_attachment_number(self):

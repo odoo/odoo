@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_category_action" model="ir.actions.act_window">
+        <field name="name">Fleets</field>
+        <field name="res_model">fleet.category</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="context">{'search_default_my_favorites': 1}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new fleet
+          </p><p>
+            Manage multiple fleets!
+          </p>
+        </field>
+    </record>
+
+    <menuitem action="fleet_category_action" parent="fleet_vehicles"
+        id="fleet_fleet_menu" groups="fleet_group_user" sequence="0"/>
+
+    <record id="fleet_category_view_form" model="ir.ui.view">
+        <field name="name">fleet.category.view.form</field>
+        <field name="model">fleet.category</field>
+        <field name="arch" type="xml">
+            <form string="Fleet" delete="0">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <h1><field name="name"/></h1>
+                    <group>
+                        <field name="active" invisible="1"/>
+                        <group>
+                            <field name="description"/>
+                            <field name="manager_id"/>
+                        </group>
+                        <group>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="company_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="fleet_category_view_kanban" model="ir.ui.view">
+        <field name="name">fleet.category.view.kanban</field>
+        <field name="model">fleet.category</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard" sample="1">
+                <field name="color"/>
+                <field name="is_favorite"/>
+                <field name="name"/>
+                <field name="bike_count"/>
+                <field name="car_count"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_fleet_category_kanban">
+                            <div class="o_dropdown_kanban dropdown" groups="fleet.fleet_group_manager">
+                                <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <span class="fa fa-ellipsis-v"/>
+                                </a>
+                                <div class="dropdown-menu" role="menu" groups="fleet.fleet_group_manager">
+                                    <a t-if="widget.editable" class="dropdown-item" role="menuitem" type="edit">Edit</a>
+                                    <a t-if="widget.editable" role="menuitem" class="dropdown-item" name="toggle_active" type="object">
+                                        <t t-if="record.active.raw_value">Archive</t>
+                                        <t t-if="!record.active.raw_value">Restore</t>
+                                    </a>
+                                    <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                    <div role="separator" class="dropdown-divider"/>
+                                    <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                                </div>
+                            </div>
+                            <!-- mb-4 to give some space for the footer-->
+                            <div class="o_kanban_card_content mb-4">
+                                <div class="o_primary col-9">
+                                    <h2><strong><field name="name"/></strong></h2>
+                                </div>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="description"/>
+                            </div>
+                            <!-- margin to try to align with the content -->
+                            <div class="oe_kanban_content position-absolute fixed-bottom mr-2 ml-3 mb-2 o_kanban_fleet_category_footer">
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                    <a class="oe_kanban_fleet_vehicle" name="action_view_vehicles" type="object"/>
+                                    <strong>
+                                        <t t-if="record.car_count.raw_value > 0">
+                                            <field name="car_count"/>
+                                            <i class="fa fa-car" role="img" aria-label="car" title="Car Icon"/>
+                                        </t>
+                                        <t t-if="record.bike_count.raw_value > 0">
+                                            <field name="bike_count"/>
+                                            <i class="fa fa-bicycle" role="img" aria-label="bicycle" title="Bike Icon"/>
+                                        </t>
+                                    </strong>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field class="o_fleet_avatar_user" name="manager_id" widget="many2one_avatar_user"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="o_right"><field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1"/></span>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="fleet_category_view_search" model="ir.ui.view">
+        <field name="name">fleet.category.view.search</field>
+        <field name="model">fleet.category</field>
+        <field name="arch" type="xml">
+            <search string="Search Fleet">
+                <field name="name" string="Fleet"/>
+                <field name="manager_id" string="Fleet Manager"/>
+                <filter string="My Favorites" name="my_favorites" domain="[('favorite_user_ids', 'in', uid)]"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+</odoo>
