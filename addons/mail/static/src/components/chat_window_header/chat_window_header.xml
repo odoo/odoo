@@ -15,7 +15,7 @@
                         threadLocalId="chatWindow.thread.localId"
                     />
                 </t>
-                <div class="o_ChatWindowHeader_item o_ChatWindowHeader_name" t-att-title="chatWindow.name">
+                <div class="o_ChatWindowHeader_item o_ChatWindowHeader_name text-truncate" t-att-title="chatWindow.name">
                     <t t-esc="chatWindow.name"/>
                 </div>
                 <t t-if="chatWindow.thread and chatWindow.thread.localMessageUnreadCounter > 0">

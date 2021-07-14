@@ -13,16 +13,12 @@
     // because no shrink, ensure it cannot overflow with a max-width
     flex: 0 0 auto;
     max-width: map-get($sizes, 100);
-    overflow: hidden;
     padding-inline-end: map-get($spacers, 2);
-    text-overflow: ellipsis;
 }
 
 .o_ComposerSuggestion_part2 {
     // shrink part 2 to properly ensure it cannot overflow
     flex: 0 1 auto;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .o_ComposerSuggestion_partnerImStatusIcon {

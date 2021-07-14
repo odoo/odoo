@@ -23,9 +23,7 @@
     overflow: auto;
 
     &::placeholder {
-        white-space: nowrap;
-        overflow-x: hidden;
-        text-overflow: ellipsis;
+        @include text-truncate();
     }
 
     &.o-composer-is-compact {

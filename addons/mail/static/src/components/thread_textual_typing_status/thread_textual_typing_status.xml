@@ -6,7 +6,7 @@
             <t t-if="thread and thread.orderedOtherTypingMembers.length > 0">
                 <ThreadTypingIcon animation="'pulse'" size="'medium'"/>
                 <span class="o_ThreadTextualTypingStatus_separator"/>
-                <span t-esc="thread.typingStatusText"/>
+                <span class="text-truncate" t-esc="thread.typingStatusText"/>
             </t>
         </div>
     </t>

@@ -63,17 +63,17 @@
                     <t t-if="!props.isSquashed">
                         <div class="o_Message_header">
                             <t t-if="message.author">
-                                <div class="o_Message_authorName o_Message_authorRedirect o_redirect" t-on-click="_onClickAuthorName" title="Open profile">
+                                <div class="o_Message_authorName o_Message_authorRedirect o_redirect text-truncate" t-on-click="_onClickAuthorName" title="Open profile">
                                     <t t-esc="message.author.nameOrDisplayName"/>
                                 </div>
                             </t>
                             <t t-elif="message.email_from">
-                                <a class="o_Message_authorName" t-attf-href="mailto:{{ message.email_from }}?subject=Re: {{ message.subject ? message.subject : '' }}">
+                                <a class="o_Message_authorName text-truncate" t-attf-href="mailto:{{ message.email_from }}?subject=Re: {{ message.subject ? message.subject : '' }}">
                                     <t t-esc="message.email_from"/>
                                 </a>
                             </t>
                             <t t-else="">
-                                <div class="o_Message_authorName">
+                                <div class="o_Message_authorName text-truncate">
                                     Anonymous
                                 </div>
                             </t>
