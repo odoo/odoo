@@ -213,6 +213,9 @@ class Base(models.AbstractModel):
                         group_by_value, format=DISPLAY_DATE_FORMATS[group_by_modifier],
                         locale=locale)
 
+            if field_type == 'many2many' and isinstance(group_by_value, list):
+                group_by_value = str(tuple(group_by_value)) or False
+
             record_values[group_by] = group_by_value
             record_values['__count'] = 1
 
