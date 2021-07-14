@@ -26,9 +26,11 @@ const ActivityView = BasicView.extend({
     /**
      * @override
      */
-    init: function () {
+    init: function (viewInfo, params) {
         this._super.apply(this, arguments);
 
+        const { search_view_id } = params.action || {};
+        this.controllerParams.searchViewId = search_view_id ? search_view_id[0] : false;
         this.loadParams.type = 'list';
         // limit makes no sense in this view as we display all records having activities
         this.loadParams.limit = false;
