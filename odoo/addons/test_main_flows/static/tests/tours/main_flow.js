@@ -677,7 +677,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Inventory Ove
     position: "bottom"
 }, {
     mobile: true,
-    trigger: ".o_menu_sections li:contains('Reordering Rules')",
+    trigger: ".o_menu_sections li.o_dropdown_item:not(.o_dropdown):contains('Reordering Rules')",
     content: _t("Click on Product Section"),
     position: "bottom"
 }, {
@@ -822,7 +822,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Manufacturing
     position: "bottom",
 }, {
     mobile: true,
-    trigger: ".o_menu_sections li:contains('Manufacturing Orders')",
+    trigger: ".o_menu_sections li.o_dropdown_item:contains('Manufacturing Orders')",
     content: _t("Let's go to manufacturing order."),
     position: "bottom"
 }, {
