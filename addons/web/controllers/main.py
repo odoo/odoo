@@ -120,7 +120,7 @@ def serialize_exception(f):
 
 def abort_and_redirect(url):
     r = request.httprequest
-    response = request.redirect(url, 302)
+    response = werkzeug.utils.redirect(url, 302)
     response = r.app.get_response(r, response, explicit_session=False)
     werkzeug.exceptions.abort(response)
 
