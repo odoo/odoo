@@ -32,6 +32,7 @@ var ActivityController = BasicController.extend({
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
         this.title = params.title;
+        this.searchViewId = params.searchViewId;
     },
 
     //--------------------------------------------------------------------------
@@ -59,6 +60,7 @@ var ActivityController = BasicController.extend({
         var state = this.model.get(this.handle);
         new ViewDialogs.SelectCreateDialog(this, {
             res_model: state.model,
+            searchViewId: this.searchViewId,
             domain: this.model.originalDomain,
             title: _.str.sprintf(_t("Search: %s"), this.title),
             no_create: !this.activeActions.create,
