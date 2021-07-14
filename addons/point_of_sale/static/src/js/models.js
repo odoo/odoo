@@ -1922,11 +1922,13 @@ exports.Orderline = Backbone.Model.extend({
             var taxes_ids = product.taxes_id;
             var taxes =  this.pos.taxes;
             var product_taxes = [];
+            var self = this;
 
             _(taxes_ids).each(function(el){
-                product_taxes.push(_.detect(taxes, function(t){
+                var tax = _.detect(taxes, function(t) {
                     return t.id === el;
-                }));
+                });
+                product_taxes.push.apply(product_taxes, self._map_tax_fiscal_position(tax, self.order));
             });
 
             var all_taxes = this.pos.compute_all(product_taxes, price_unit, 1, this.pos.currency.rounding);
