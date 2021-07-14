@@ -26,6 +26,7 @@ class LunchOrder(models.Model):
     user_id = fields.Many2one('res.users', 'User', readonly=True,
                               states={'new': [('readonly', False)]},
                               default=lambda self: self.env.uid)
+    lunch_location_id = fields.Many2one('lunch.location', default=lambda self: self.env.user.last_lunch_location_id)
     note = fields.Text('Notes')
     price = fields.Monetary('Total Price', compute='_compute_total_price', readonly=True, store=True)
     active = fields.Boolean('Active', default=True)
@@ -149,9 +150,6 @@ class LunchOrder(models.Model):
                 })
                 if matching_lines:
                     lines_to_deactivate |= line
-                    # YTI TODO Try to batch it, be careful there might be multiple matching
-                    # lines for the same order hence quantity should not always be
-                    # line.quantity, but rather a sum
                     matching_lines.update_quantity(line.quantity)
             lines_to_deactivate.write({'active': False})
             return super(LunchOrder, self - lines_to_deactivate).write(values)
@@ -205,7 +203,11 @@ class LunchOrder(models.Model):
     def action_order(self):
         if self.filtered(lambda line: not line.product_id.active):
             raise ValidationError(_('Product is no longer available.'))
-        self.write({'state': 'ordered'})
+        self.write({
+            'state': 'ordered',
+        })
+        for order in self:
+            order.lunch_location_id = order.user_id.last_lunch_location_id
         self._check_wallet()
 
     def action_reorder(self):

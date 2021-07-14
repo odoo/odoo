@@ -423,6 +423,7 @@
             <field name="state">new</field>
             <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="quantity">1</field>
+            <field name="lunch_location_id" ref="location_office_3"/>
         </record>
 
         <record model="lunch.order" id="order_line_2">
@@ -433,6 +434,7 @@
             <field name="state">confirmed</field>
             <field name="supplier_id" ref="supplier_pizza_inn"/>
             <field name="quantity">1</field>
+            <field name="lunch_location_id" ref="location_office_3"/>
         </record>
 
         <record model="lunch.order" id="order_line_3">
@@ -443,6 +445,7 @@
             <field name="state">cancelled</field>
             <field name="supplier_id" ref="supplier_coin_gourmand"/>
             <field name="quantity">1</field>
+            <field name="lunch_location_id" ref="location_office_3"/>
         </record>
 
         <record model="lunch.order" id="order_line_4">
@@ -453,6 +456,7 @@
             <field name="state">confirmed</field>
             <field name="supplier_id" ref="supplier_coin_gourmand"/>
             <field name="quantity">1</field>
+            <field name="lunch_location_id" ref="location_office_3"/>
         </record>
 
         <record model="lunch.order" id="order_line_5">
@@ -462,6 +466,7 @@
             <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
             <field name="state">confirmed</field>
             <field name="supplier_id" ref="supplier_pizza_inn"/>
+            <field name="lunch_location_id" ref="location_office_2"/>
         </record>
     </data>
 </odoo>
