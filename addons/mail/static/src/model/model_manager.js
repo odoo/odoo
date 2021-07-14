@@ -639,6 +639,7 @@ class ModelManager {
         // method, and it shouldn't be needed to manually remove
         // _toComputeFields and _toUpdateAfters, but it is not possible until
         // related are also properly unlinked during `set`
+        this._createdRecords.delete(record);
         this._toComputeFields.delete(record);
         this._toUpdateAfters.delete(record);
         delete Model.__records[record.localId];
