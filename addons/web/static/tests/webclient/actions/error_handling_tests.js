@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 import { registerCleanup } from "../../helpers/cleanup";
-import { click, patchWithCleanup } from "../../helpers/utils";
+import { click, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { errorService } from "@web/core/errors/error_service";
 
 const { Component, tags } = owl;
@@ -73,6 +72,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(webClient, ".my_button");
 
         await click(document.querySelector(".my_button"));
+        await nextTick();
         assert.containsOnce(webClient, ".my_button");
         assert.containsOnce(webClient, ".o_dialog_error");
     });
