@@ -7,9 +7,8 @@ import domUtils from 'web.dom';
 
 import { legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
-import { patch, unpatch } from 'web.utils';
-import { registry } from "@web/core/registry";
 import { session } from '@web/session';
+import { click } from "@web/../tests/helpers/utils";
 
 let serverData;
 
@@ -619,6 +618,72 @@ QUnit.test("Activity view: on_destroy_callback doesn't crash", async function (a
     ]);
 
     activity.destroy();
+});
+
+QUnit.test("Schedule activity dialog uses the same search view as activity view", async function (assert) {
+    assert.expect(8);
+    serverData.models.task.records = [];
+    serverData.views = {
+        "task,false,activity": `
+            <activity string="Task">
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </activity>
+        `,
+        "task,false,list": `<list><field name="foo"/></list>`,
+        "task,false,search": `<search/>`,
+        'task,1,search': `<search/>`,
+    };
+
+    function mockRPC(route, args) {
+        if (args.method === "load_views") {
+            assert.step(JSON.stringify(args.kwargs.views));
+        } 
+    }
+
+    const webClient = await createWebClient({ serverData, mockRPC, legacyParams: {withLegacyMockServer: true} });
+
+    // open an activity view (with default search arch)
+    await doAction(webClient, {
+        name: 'Dashboard',
+        res_model: 'task',
+        type: 'ir.actions.act_window',
+        views: [[false, 'activity']],
+    });
+
+    assert.verifySteps([
+        '[[false,"activity"],[false,"search"]]',
+    ])
+
+    // click on "Schedule activity"
+    await click(webClient.el.querySelector(".o_activity_view .o_record_selector"));
+
+    assert.verifySteps([
+        '[[false,"list"],[false,"search"]]',
+    ])
+
+    // open an activity view (with search arch 1)
+    await doAction(webClient, {
+        name: 'Dashboard',
+        res_model: 'task',
+        type: 'ir.actions.act_window',
+        views: [[false, 'activity']],
+        search_view_id: [1,"search"],
+    });
+
+    assert.verifySteps([
+        '[[false,"activity"],[1,"search"]]',
+    ])
+
+    // click on "Schedule activity"
+    await click(webClient.el.querySelector(".o_activity_view .o_record_selector"));
+
+    assert.verifySteps([
+        '[[false,"list"],[1,"search"]]',
+    ])
 });
 
 });
