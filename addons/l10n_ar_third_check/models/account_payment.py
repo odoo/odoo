@@ -167,10 +167,9 @@ class AccountPayment(models.Model):
     def reset_check_ids(self):
         self.check_id = False
 
-    # TODO improve this, actually is harcoded to argentina the 8 digits number
     @api.onchange('check_number')
     def _onchange_check_number(self):
-        for rec in self:
+        for rec in self.filtered(lambda x: x.journal_id.company_id.country_id.code == "AR"):
             try:
                 if rec.check_number:
                     rec.check_number = '%08d' % int(rec.check_number)
