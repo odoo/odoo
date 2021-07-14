@@ -27,6 +27,9 @@
                     context="{'show_check_number': True}"
                 />
             </field>
+            <field name="check_number" position="attributes">
+                <attribute name="force_save">1</attribute>
+            </field>
             <field name="check_payment_date" position="after">
                 <field name="check_number" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')], 'readonly': [('state', '!=', 'draft')]}"/>
                 <field name="third_check_issue_date" string="Check Issue Date" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
@@ -46,7 +49,7 @@
         <field name="model">account.payment</field>
         <field name="priority">110</field>
         <field name="mode">primary</field>
-        <field name="inherit_id" ref="account_check_printing.view_account_check_tree"/>
+        <field name="inherit_id" ref="l10n_latam_manual_check.view_account_check_tree"/>
         <field name="arch" type="xml">
             <field name="is_matched" position="replace"/>
             <field name="journal_id" position="replace">
@@ -62,7 +65,7 @@
         <field name="name">Third Checks</field>
         <field name="res_model">account.payment</field>
         <field name="view_mode">tree,form,calendar,graph,pivot</field>
-        <field name="view_id" ref="account_check.view_account_third_check_tree"/>
+        <field name="view_id" ref="l10n_ar_third_check.view_account_third_check_tree"/>
         <field name="domain">[('payment_method_code', '=', 'new_third_checks')]</field>
         <!-- <field name="context">{'search_default_state':'holding','default_type':'third_check', 'search_default_groupby_journal_id': 1}</field> -->
     </record>
