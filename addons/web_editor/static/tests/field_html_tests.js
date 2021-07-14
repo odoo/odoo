@@ -168,7 +168,7 @@ QUnit.module('web_editor', {}, function () {
                 "should have applied the style correctly");
 
             await testUtils.form.clickEdit(form);
-            await testUtils.nextTick();
+            await new Promise((resolve)=>setTimeout(resolve, 100));
             $field = form.$('.oe_form_field[name="body"]');
             assert.strictEqual($field.find('.note-editable').html(),
                 '<p>toto toto toto</p><p>tata</p>',
@@ -191,7 +191,7 @@ QUnit.module('web_editor', {}, function () {
             });
             // check that there is no error on clicking Edit
             await testUtils.form.clickEdit(form);
-            await testUtils.nextTick();
+            await new Promise((resolve)=>setTimeout(resolve, 100));
             assert.containsOnce(form, '.o_form_editable');
 
             form.destroy();
@@ -222,7 +222,7 @@ QUnit.module('web_editor', {}, function () {
             }, true);
 
             await testUtils.form.clickEdit(form);
-            await testUtils.nextTick();
+            await new Promise((resolve)=>setTimeout(resolve, 100));
             await testUtils.dom.click(form.$('.o_form_button_save'));
 
             form.destroy();
@@ -440,7 +440,7 @@ QUnit.module('web_editor', {}, function () {
                 "should have rendered a div with correct content in readonly");
 
             await testUtils.form.clickEdit(form);
-            await testUtils.nextTick();
+            await new Promise((resolve)=>setTimeout(resolve, 100));
             $field = form.$('.oe_form_field[name="body"]');
             // the dialog load some xml assets
             const defLinkDialog = testUtils.makeTestPromise();
@@ -488,7 +488,7 @@ QUnit.module('web_editor', {}, function () {
                 "should have rendered a div with correct content in readonly");
 
             await testUtils.form.clickEdit(form);
-            await testUtils.nextTick();
+            await new Promise((resolve)=>setTimeout(resolve, 100));
             $field = form.$('.oe_form_field[name="body"]');
             // the dialog load some xml assets
             const defLinkDialog = testUtils.makeTestPromise();
@@ -536,7 +536,7 @@ QUnit.module('web_editor', {}, function () {
                 "should have rendered a div with correct content in readonly");
 
             await testUtils.form.clickEdit(form);
-            await testUtils.nextTick();
+            await new Promise((resolve)=>setTimeout(resolve, 100));
             $field = form.$('.oe_form_field[name="body"]');
             // the dialog load some xml assets
             const defLinkDialog = testUtils.makeTestPromise();
@@ -585,7 +585,7 @@ QUnit.module('web_editor', {}, function () {
                 "should have rendered a div with correct content in readonly");
 
             await testUtils.form.clickEdit(form);
-            await testUtils.nextTick();
+            await new Promise((resolve)=>setTimeout(resolve, 100));
             $field = form.$('.oe_form_field[name="body"]');
             // the dialog load some xml assets
             const defLinkDialog = testUtils.makeTestPromise();
@@ -615,7 +615,7 @@ QUnit.module('web_editor', {}, function () {
                 "the link should be created with the right format");
 
             await testUtils.form.clickEdit(form);
-            await testUtils.nextTick();
+            await new Promise((resolve)=>setTimeout(resolve, 100));
 
             $field = form.$('.oe_form_field[name="body"]');
             pText = $field.find('.note-editable a').eq(0).contents()[0];
