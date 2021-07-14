@@ -1,0 +1,57 @@
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+    <div class="oe_span12">
+      <p class="oe_mt32">
+		The module allows to use url in Binary fields (e.g. in product images). It provides the possibility for uploading files to external storage (ftp, s3, some web server, etc) and uses url instead of transfer binary data between odoo server and client that, in turn, allows to reduce the load on server.<br/>
+		E.g., for uploading files to S3 you can use our module ir_attachment_s3: <a href="https://apps.odoo.com/apps/modules/14.0/ir_attachment_s3/" target="_blank">https://apps.odoo.com/apps/modules/14.0/ir_attachment_s3/</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="oe_container oe_dark">
+  <div class="oe_row oe_spaced">
+	<div class="oe_span12">
+	  <h3 class="oe_slogan">How it works</h3>
+	  <p class="oe_mt32">
+	    As an example go to <em>Sales &rarr; Products</em> menu and open or create new item. Upload any image to the product.
+	  </p>
+	  <div class="oe_demo oe_picture oe_screenshot">
+		<img src="prod_image.png"/>
+	  </div>
+	</div>
+  </div>
+</section>
+
+<section class="oe_container">
+ <div class="oe_row oe_spaced">
+	<div class="oe_span12">
+	  <p class="oe_mt32">
+		Then
+		<ul>
+		<li>Go to <em>Settings &rarr; Database Structure &rarr; Attachments</em> menu.</li>
+		<li>Add custom filter: <em>Resource Field is set</em></li>
+		<li>Switch to list view and open the created attachment items: image_128, image_256, image_512, image_1024, image_1920</li>
+	  </p>
+	  <div class="oe_demo oe_picture oe_screenshot">
+		<img src="custom_filter.png">
+	  </div>
+	  <div class="oe_demo oe_picture oe_screenshot">
+		<img src="attach_list.png">
+	  </div>
+	</div>
+ </div>
+</section>
+
+<section class="oe_container">
+ <div class="oe_row oe_spaced">
+	<div class="oe_span12">
+	  <p class="oe_mt32">
+		In the form that appears change 'Type' to URL and set url in the 'Url' field. As a result you can see related image in your product.
+	  </p>
+	  <div class="oe_demo oe_picture oe_screenshot">
+		<img src="attach_url.png">
+	  </div>
+	</div>
+ </div>
+</section>

@@ -1,0 +1,225 @@
+
+<section class="container">
+    <div class="row">
+        <div class="col-md-offset-1 col-md-8 mb64 mt64">
+            <div class="">
+                <h2 class="display-3">S3 Attachment Storage</h2>
+                <h4 class="text-default">Upload attachments on Amazon S3</h4>
+                <p class="text-default mt16">Version: v<b>14.0</b>.3.0.0</p>
+            </div>
+        </div>
+        <div class="col-md-3 text-right">
+            <p>
+                <img src="https://itpp.dev/images/favicon.png"/>
+                <br/>Tested and maintained by
+                <br/><b>IT Projects Labs</b>
+                <br/>Assitance: <a href="mailto:help@itpp.dev">help@itpp.dev</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+
+          	<p class="oe_mt32">
+				Features:
+				<ul>
+				<li>
+					The module allows to upload the attachments in Amazon S3 automatically without storing them in Odoo database. It will allow to reduce the load on your server. Attachments will be uploaded on S3 depending on the condition you specified in Odoo settings. So you can choose and manage which type of attachments should be uploaded on S3.
+				</li>
+				<li>
+					It is useful in cases where your database was crashed, because you will be able to easily restore all attachments from external storage at any time.
+				</li>
+				<li>
+					The possibility to use one external storage for any number of databases.
+				</li>
+				</ul>
+			  	It should be noted that the module works with any kind of attachments.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+  <div class="oe_row oe_spaced">
+	<div class="oe_span12">
+	  <h3 class="oe_slogan">How it works</h3>
+	  <p class="oe_mt32">
+		E.g., go to <em>Sales &rarr; Products</em> menu and open an item. Upload any images to the product.
+	  </p>
+	  <div class="oe_demo oe_picture oe_screenshot">
+		<img src="product_images1.png"/>
+	  </div>
+	</div>
+  </div>
+</section>
+
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+	<div class="oe_span12">
+	  <p class="oe_mt32">
+		At this moment in the <em>Settings &rarr; Database Structure &rarr; Attachments</em> menu the attachments will be created with the corresponding URL.
+	  </p>
+	  <div class="oe_demo oe_picture oe_screenshot">
+		<img src="s3_url.png?1"/>
+	  </div>
+	</div>
+  </div>
+</section>
+
+<section class="oe_container oe_dark">
+  <div class="oe_row oe_spaced">
+	<div class="oe_span12">
+	  <p class="oe_mt32">
+		Then open Amazon S3 bucket and see uploaded attachments.
+	  </p>
+	  <div class="oe_demo oe_picture oe_screenshot">
+		<img src="bucket.png"/>
+	  </div>
+	</div>
+  </div>
+</section>
+
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+      <div class="oe_span12">
+        <p class="oe_mt32">
+          The attachments will be loaded to Odoo DB from S3 server by using URL and they will not be stored in your DB.
+        </p>
+      </div>
+	  <div class="oe_span6">
+        <div class="oe_row_img oe_centered">
+          <img class="oe_demo oe_picture oe_screenshot" src="s3_pic1.png"/>
+        </div>
+      </div>
+      <div class="oe_span6">
+        <div class="oe_row_img oe_centered">
+          <img class="oe_demo oe_picture oe_screenshot" src="s3_pic2.png"/>
+        </div>
+      </div>
+  </div>
+</section>
+
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+	  <div class="oe_span6">
+        <div class="oe_row_img oe_centered">
+          <img class="oe_demo oe_picture oe_screenshot" src="s3_pic1_url.png?1"/>
+        </div>
+      </div>
+      <div class="oe_span6">
+        <div class="oe_row_img oe_centered">
+          <img class="oe_demo oe_picture oe_screenshot" src="s3_pic2_url.png?1"/>
+        </div>
+      </div>
+  </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+      <div class="oe_span12">
+		<h3 class="oe_slogan">Configuration</h3>
+        <p class="oe_mt32">
+          Before using you need to make some configuration:
+		  <ul>
+				<li>Install boto3 library and get credentials for it by using this quickstart instruction <a href="https://boto3.readthedocs.io/en/latest/guide/quickstart.html" target="_blank">https://boto3.readthedocs.io/en/latest/guide/quickstart.html</a> </li>
+				<li>Grant access to your S3 bucket using this instruction <a href="http://mikeferrier.com/2011/10/27/granting-access-to-a-single-s3-bucket-using-amazon-iam" target="_blank">http://mikeferrier.com/2011/10/27/granting-access-to-a-single-s3-bucket-using-amazon-iam</a> and set bucket as public</li>
+				<li>
+				  Enable technical features <a href="https://odoo-development.readthedocs.io/en/latest/odoo/usage/technical-features.html" target="_blank">https://odoo-development.readthedocs.io/en/latest/odoo/usage/technical-features.html</a>
+				</li>
+				<li>
+				  Open menu <em>Settings &rarr; Technical &rarr; Database Structure &rarr; S3 Settings</em> and specify the following parameters: <br/>
+				  - <code>s3.bucket</code>: the name of your bucket (e.g. mybucket) <br/>
+				  - <code>s3.condition</code>: only the attachments that meet the condition will be sent to S3 (e.g. <code>[('res_model', 'in', ['product.image'])]</code>) - it is actually the way of specifying the models with <code>fields.Binary</code> fields that should be stored on S3 instead of local file storage or db. Don't specify anything if you want to store all your attachment data from <code>fields.Binary</code> and also ordinary attachments on S3. <br/>
+				  - <code>s3.access_key_id</code>: S3 access key ID <br/>
+				  - <code>s3.secret_key</code>: S3 secret access key
+				</li>
+				<li>Click on <code>Upload existing attachments</code> if you want to upload attachments you had before installation the module</li>
+			  </ul>
+			</p>
+		<div class="oe_demo oe_picture oe_screenshot">
+		  <img src="s3_config.png?2"/>
+		</div>
+	  </div>
+    </div>
+</section>
+
+
+
+<section class="container text-center">
+    <div class="mt-4 mb-3">
+        <h2>Let our expertise work for you!</h2>
+        <h4 class="d-none d-md-block">(Doors and windows below are clickable)</h4>
+        <div class="mb32 d-md-none">
+            <ul class="list-unstyled">
+                <li><a target="_blank" href="https://apps.odoo.com/apps/browse?repo_maintainer_id=59928">All modules</a></li>
+                <li><a target="_blank" href="https://apps.odoo.com/apps/browse?price=Free&order=Downloads&repo_maintainer_id=59928">Free Modules</a></li>
+                <li><a target="_blank" href="https://apps.odoo.com/apps/modules/category/Point%20of%20Sale/browse?repo_maintainer_id=59928">All POS modules</a></li>
+                <li><a target="_blank" href="https://apps.odoo.com/apps/modules/category/Discuss/browse?repo_maintainer_id=59928">All Mail modules</a></li>
+                <li><a target="_blank" href="https://apps.odoo.com/apps/modules/category/Website/browse?repo_maintainer_id=59928">All Website modules</a></li>
+                <li><a target="_blank" href="https://apps.odoo.com/apps/modules/category/eCommerce/browse?repo_maintainer_id=59928">All eCommerce modules</a></li>
+                <li><a target="_blank" href="https://apps.odoo.com/apps/modules/browse?search=sync+studio&repo_maintainer_id=59928">Sync Studio</a></li>
+                <li><a target="_blank" href="https://apps.odoo.com/apps/modules/14.0/openapi/">REST API</a></li>
+                <li><a target="_blank" href="https://apps.odoo.com/apps/modules/14.0/base_automation_webhook/">Webhooks</a></li>
+                <li><a target="_blank" href="https://apps.odoo.com/apps/modules/14.0/pos_product_available/">POS: show product qty</a></li>
+                <li><a target="_blank" href="https://apps.odoo.com/apps/modules/14.0/web_login_background/">Web Login Background</a></li>
+            </ul>
+        </div>
+        <div class="mb64 d-none d-xl-block">
+            <img class="img img-responsive" src="https://itpp.dev/images/apps/;-)/itpp-labs-1100.jpg" usemap="#itpp-xl" />
+            <map name="itpp-xl">
+                <area alt="Free Modules" target="_blank" href="https://apps.odoo.com/apps/browse?price=Free&order=Downloads&repo_maintainer_id=59928" shape="rect" class="" coords="900,220,1080,625" />
+                <area alt="Sync Studio" target="_blank" href="https://apps.odoo.com/apps/modules/browse?search=sync+studio&repo_maintainer_id=59928" shape="rect" class="" coords="552,186,721,274" />
+                <area alt="REST API" target="_blank" href="https://apps.odoo.com/apps/modules/14.0/openapi/" shape="rect" class="" coords="646,279,720,365" />
+                <area alt="Webhooks" target="_blank" href="https://apps.odoo.com/apps/modules/14.0/base_automation_webhook/" shape="rect" class="" coords="646,370,720,458" />
+                <area alt="POS: show product qty" target="_blank" href="https://apps.odoo.com/apps/modules/14.0/pos_product_available/" shape="rect" class="" coords="82,373,251,459" />
+                <area alt="All modules" target="_blank" href="https://apps.odoo.com/apps/browse?repo_maintainer_id=59928" shape="rect" class="" coords="326,267,381,456" />
+                <area alt="All POS modules" target="_blank" href="https://apps.odoo.com/apps/modules/category/Point%20of%20Sale/browse?repo_maintainer_id=59928" shape="rect" class="" coords="82,191,154,276" />
+                <area alt="All Mail modules" target="_blank" href="https://apps.odoo.com/apps/modules/category/Discuss/browse?repo_maintainer_id=59928" shape="rect" class="" coords="82,282,155,368" />
+                <area alt="All Website modules" target="_blank" href="https://apps.odoo.com/apps/modules/category/Website/browse?repo_maintainer_id=59928" shape="rect" class="" coords="176,282,250,368" />
+                <area alt="All eCommerce modules" target="_blank" href="https://apps.odoo.com/apps/modules/category/eCommerce/browse?repo_maintainer_id=59928" shape="rect" class="" coords="175,189,250,275" />
+                <area alt="Ivan Yelizariev" target="_blank" href="https://apps.odoo.com/apps/modules/browse?search=Ivan+Yelizariev&repo_maintainer_id=59928" shape="rect" class="" coords="554,280,625,456" />
+                <area alt="Web Login Background" target="_blank" href="https://apps.odoo.com/apps/modules/14.0/web_login_background/" shape="rect" class="" coords="420,267,477,456" />
+            </map>
+        </div>
+        <div class="mb64 d-none d-lg-block d-xl-none">
+            <img class="img img-responsive" src="https://itpp.dev/images/apps/;-)/itpp-labs-930.jpg" usemap="#itpp-lg" />
+            <map name="itpp-lg">
+                <area alt="Free Modules" target="_blank" href="https://apps.odoo.com/apps/browse?price=Free&order=Downloads&repo_maintainer_id=59928" shape="rect" class="" coords="760,186,913,528" />
+                <area alt="Sync Studio" target="_blank" href="https://apps.odoo.com/apps/modules/browse?search=sync+studio&repo_maintainer_id=59928" shape="rect" class="" coords="466,157,609,231" />
+                <area alt="REST API" target="_blank" href="https://apps.odoo.com/apps/modules/14.0/openapi/" shape="rect" class="" coords="546,235,608,308" />
+                <area alt="Webhooks" target="_blank" href="https://apps.odoo.com/apps/modules/14.0/base_automation_webhook/" shape="rect" class="" coords="546,312,608,387" />
+                <area alt="POS: show product qty" target="_blank" href="https://apps.odoo.com/apps/modules/14.0/pos_product_available/" shape="rect" class="" coords="69,315,212,388" />
+                <area alt="All modules" target="_blank" href="https://apps.odoo.com/apps/browse?repo_maintainer_id=59928" shape="rect" class="" coords="275,225,322,385" />
+                <area alt="All POS modules" target="_blank" href="https://apps.odoo.com/apps/modules/category/Point%20of%20Sale/browse?repo_maintainer_id=59928" shape="rect" class="" coords="69,161,130,233" />
+                <area alt="All Mail modules" target="_blank" href="https://apps.odoo.com/apps/modules/category/Discuss/browse?repo_maintainer_id=59928" shape="rect" class="" coords="69,238,131,311" />
+                <area alt="All Website modules" target="_blank" href="https://apps.odoo.com/apps/modules/category/Website/browse?repo_maintainer_id=59928" shape="rect" class="" coords="148,238,211,311" />
+                <area alt="All eCommerce modules" target="_blank" href="https://apps.odoo.com/apps/modules/category/eCommerce/browse?repo_maintainer_id=59928" shape="rect" class="" coords="147,159,211,232" />
+                <area alt="Ivan Yelizariev" target="_blank" href="https://apps.odoo.com/apps/modules/browse?search=Ivan+Yelizariev&repo_maintainer_id=59928" shape="rect" class="" coords="468,236,528,385" />
+                <area alt="Web Login Background" target="_blank" href="https://apps.odoo.com/apps/modules/14.0/web_login_background/" shape="rect" class="" coords="355,225,403,385" />
+            </map>
+        </div>
+        <div class="mb64 d-lg-none">
+            <img class="img img-responsive" src="https://itpp.dev/images/apps/;-)/itpp-labs-690.jpg" usemap="#itpp-md" />
+            <map name="itpp-md">
+                <area alt="Free Modules" target="_blank" href="https://apps.odoo.com/apps/browse?price=Free&order=Downloads&repo_maintainer_id=59928" shape="rect" class="" coords="564,138,677,392" />
+                <area alt="Sync Studio" target="_blank" href="https://apps.odoo.com/apps/modules/browse?search=sync+studio&repo_maintainer_id=59928" shape="rect" class="" coords="346,116,452,171" />
+                <area alt="REST API" target="_blank" href="https://apps.odoo.com/apps/modules/14.0/openapi/" shape="rect" class="" coords="405,175,451,228" />
+                <area alt="Webhooks" target="_blank" href="https://apps.odoo.com/apps/modules/14.0/base_automation_webhook/" shape="rect" class="" coords="405,232,451,287" />
+                <area alt="POS: show product qty" target="_blank" href="https://apps.odoo.com/apps/modules/14.0/pos_product_available/" shape="rect" class="" coords="51,233,157,287" />
+                <area alt="All modules" target="_blank" href="https://apps.odoo.com/apps/browse?repo_maintainer_id=59928" shape="rect" class="" coords="204,167,238,286" />
+                <area alt="All POS modules" target="_blank" href="https://apps.odoo.com/apps/modules/category/Point%20of%20Sale/browse?repo_maintainer_id=59928" shape="rect" class="" coords="51,119,96,173" />
+                <area alt="All Mail modules" target="_blank" href="https://apps.odoo.com/apps/modules/category/Discuss/browse?repo_maintainer_id=59928" shape="rect" class="" coords="51,176,97,230" />
+                <area alt="All Website modules" target="_blank" href="https://apps.odoo.com/apps/modules/category/Website/browse?repo_maintainer_id=59928" shape="rect" class="" coords="110,176,156,230" />
+                <area alt="All eCommerce modules" target="_blank" href="https://apps.odoo.com/apps/modules/category/eCommerce/browse?repo_maintainer_id=59928" shape="rect" class="" coords="109,118,156,172" />
+                <area alt="Ivan Yelizariev" target="_blank" href="https://apps.odoo.com/apps/modules/browse?search=Ivan+Yelizariev&repo_maintainer_id=59928" shape="rect" class="" coords="347,175,392,286" />
+                <area alt="Web Login Background" target="_blank" href="https://apps.odoo.com/apps/modules/14.0/web_login_background/" shape="rect" class="" coords="263,167,299,286" />
+            </map>
+        </div>
+    </div>
+</section>
+

@@ -1,0 +1,127 @@
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+
+          	<p class="oe_mt32">
+				Features:
+				<ul>
+				<li>
+					The module allows to upload the attachments in Amazon S3 automatically without storing them in Odoo database. It will allow to reduce the load on your server. Attachments will be uploaded on S3 depending on the condition you specified in Odoo settings. So you can choose and manage which type of attachments should be uploaded on S3.
+				</li>
+				<li>
+					It is useful in cases where your database was crashed, because you will be able to easily restore all attachments from external storage at any time.
+				</li>
+				<li>
+					The possibility to use one external storage for any number of databases.
+				</li>
+				</ul>
+			  	It should be noted that the module works with any kind of attachments.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+  <div class="oe_row oe_spaced">
+	<div class="oe_span12">
+	  <h3 class="oe_slogan">How it works</h3>
+	  <p class="oe_mt32">
+		E.g., go to <em>Sales &rarr; Products</em> menu and open an item. Upload any images to the product.
+	  </p>
+	  <div class="oe_demo oe_picture oe_screenshot">
+		<img src="product_images1.png"/>
+	  </div>
+	</div>
+  </div>
+</section>
+
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+	<div class="oe_span12">
+	  <p class="oe_mt32">
+		At this moment in the <em>Settings &rarr; Database Structure &rarr; Attachments</em> menu the attachments will be created with the corresponding URL.
+	  </p>
+	  <div class="oe_demo oe_picture oe_screenshot">
+		<img src="s3_url.png?1"/>
+	  </div>
+	</div>
+  </div>
+</section>
+
+<section class="oe_container oe_dark">
+  <div class="oe_row oe_spaced">
+	<div class="oe_span12">
+	  <p class="oe_mt32">
+		Then open Amazon S3 bucket and see uploaded attachments.
+	  </p>
+	  <div class="oe_demo oe_picture oe_screenshot">
+		<img src="bucket.png"/>
+	  </div>
+	</div>
+  </div>
+</section>
+
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+      <div class="oe_span12">
+        <p class="oe_mt32">
+          The attachments will be loaded to Odoo DB from S3 server by using URL and they will not be stored in your DB.
+        </p>
+      </div>
+	  <div class="oe_span6">
+        <div class="oe_row_img oe_centered">
+          <img class="oe_demo oe_picture oe_screenshot" src="s3_pic1.png"/>
+        </div>
+      </div>
+      <div class="oe_span6">
+        <div class="oe_row_img oe_centered">
+          <img class="oe_demo oe_picture oe_screenshot" src="s3_pic2.png"/>
+        </div>
+      </div>
+  </div>
+</section>
+
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+	  <div class="oe_span6">
+        <div class="oe_row_img oe_centered">
+          <img class="oe_demo oe_picture oe_screenshot" src="s3_pic1_url.png?1"/>
+        </div>
+      </div>
+      <div class="oe_span6">
+        <div class="oe_row_img oe_centered">
+          <img class="oe_demo oe_picture oe_screenshot" src="s3_pic2_url.png?1"/>
+        </div>
+      </div>
+  </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+      <div class="oe_span12">
+		<h3 class="oe_slogan">Configuration</h3>
+        <p class="oe_mt32">
+          Before using you need to make some configuration:
+		  <ul>
+				<li>Install boto3 library and get credentials for it by using this quickstart instruction <a href="https://boto3.readthedocs.io/en/latest/guide/quickstart.html" target="_blank">https://boto3.readthedocs.io/en/latest/guide/quickstart.html</a> </li>
+				<li>Grant access to your S3 bucket using this instruction <a href="http://mikeferrier.com/2011/10/27/granting-access-to-a-single-s3-bucket-using-amazon-iam" target="_blank">http://mikeferrier.com/2011/10/27/granting-access-to-a-single-s3-bucket-using-amazon-iam</a> and set bucket as public</li>
+				<li>
+				  Enable technical features <a href="https://odoo-development.readthedocs.io/en/latest/odoo/usage/technical-features.html" target="_blank">https://odoo-development.readthedocs.io/en/latest/odoo/usage/technical-features.html</a>
+				</li>
+				<li>
+				  Open menu <em>Settings &rarr; Technical &rarr; Database Structure &rarr; S3 Settings</em> and specify the following parameters: <br/>
+				  - <code>s3.bucket</code>: the name of your bucket (e.g. mybucket) <br/>
+				  - <code>s3.condition</code>: only the attachments that meet the condition will be sent to S3 (e.g. <code>[('res_model', 'in', ['product.image'])]</code>) - it is actually the way of specifying the models with <code>fields.Binary</code> fields that should be stored on S3 instead of local file storage or db. Don't specify anything if you want to store all your attachment data from <code>fields.Binary</code> and also ordinary attachments on S3. <br/>
+				  - <code>s3.access_key_id</code>: S3 access key ID <br/>
+				  - <code>s3.secret_key</code>: S3 secret access key
+				</li>
+				<li>Click on <code>Upload existing attachments</code> if you want to upload attachments you had before installation the module</li>
+			  </ul>
+			</p>
+		<div class="oe_demo oe_picture oe_screenshot">
+		  <img src="s3_config.png?2"/>
+		</div>
+	  </div>
+    </div>
+</section>

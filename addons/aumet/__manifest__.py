@@ -20,7 +20,7 @@
     'data': [
         'data/aumet.scientific_name.csv',
         'views/assets.xml',
-        'views/views.xml',
+        'views/views.xml'
 
     ],
 
@@ -34,4 +34,5 @@
 
     'installable': True,
     'application': True,
+    # 'post_init_hook': 'listener'
 }

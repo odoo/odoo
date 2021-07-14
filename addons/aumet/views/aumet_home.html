@@ -1,42 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-
-
-    <template id="aumet_assets" name="Aumet Assets" inherit_id="web.assets_backend">
-        <xpath expr="." position="inside">
-            <link rel="stylesheet" href="/aumet/static/src/css/aumet.css"/>
-        </xpath>
-    </template>
-
-    <template id="aumet_assets_front" name="Aumet Assets" inherit_id="point_of_sale.assets">
-        <xpath expr="." position="inside">
-            <link rel="stylesheet" href="/aumet/static/src/css/aumet.css"/>
-        </xpath>
-    </template>
-
-    <template id="assets_backend" name="helpdesk assets" inherit_id="web.assets_backend">
-        <xpath expr="//script[last()]" position="after">
-            <link rel="stylesheet" href="/aumet/static/src/css/aumet.css"/>
-        </xpath>
-    </template>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
     <template id="aumet.homepage_block" name="homepage">
-        <xpath expr="//head" position="inside">
-            <link rel="stylesheet" href="/aumet/static/src/css/aumet.css"/>
-        </xpath>
-        <t t-call-assets="web.assets_common" t-js="false"/>
+
         <t name="Home" priority="29" t-name="aumet.home">
-            <p><t t-esc="data"/></p>
-            <link rel="stylesheet" href="/aumet/static/src/css/aumet.css"/>
             <t t-call="website.layout">
                 <t t-set="pageName" t-value="'homepage'"/>
                 <div id="wrap" class="oe_structure oe_empty">
-
                     <div class="website-container">
                         <div class="heading">
 
                         </div>
                         <div class="container">
+                            <p> ${data.results} </p>
                             <div class="row">
                                 <div class="col"></div>
                                 <div class="col-10">
@@ -44,10 +24,10 @@
 
                                         <div class="cell col-3">
                                             <div class="wrapper">
-                                                <a t-att-href='Inventory'>
+                                                <a>
                                                     <img class="cell-image" src="/aumet/static/img/inventory.svg"></img>
                                                     <div class="row">
-                                                        <h6 class="cell-text">Inventory</h6>
+                                                        <h6 class="cell-text">inventory</h6>
                                                     </div>
                                                 </a>
                                             </div>
@@ -56,7 +36,7 @@
 
                                         <div class="cell col-3">
                                             <div class="wrapper">
-                                                <a t-att-href='Purchases'>
+                                                <a>
                                                     <img class="cell-image" src="/aumet/static/img/purchases.svg"></img>
                                                     <div class="row">
                                                         <h6 class="cell-text">Purchases</h6>
@@ -68,7 +48,7 @@
 
                                         <div class="cell col-3">
                                             <div class="wrapper">
-                                                <a t-att-href='Sales'>
+                                                <a>
                                                     <img class="cell-image" src="/aumet/static/img/sales.svg"></img>
                                                     <div class="row">
                                                         <h6 class="cell-text">Sales</h6>
@@ -78,16 +58,16 @@
                                         </div>
 
 
-<!--                                        <div class="cell col-3">-->
-<!--                                            <div class="wrapper">-->
-<!--                                                <a t-att-href='pos'>-->
-<!--                                                    <img class="cell-image" src="/aumet/static/img/pos.svg"></img>-->
-<!--                                                    <div class="row">-->
-<!--                                                        <h6 class="cell-text">POS</h6>-->
-<!--                                                    </div>-->
-<!--                                                </a>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
+                                        <div class="cell col-3">
+                                            <div class="wrapper">
+                                                <a>
+                                                    <img class="cell-image" src="/aumet/static/img/pos.svg"></img>
+                                                    <div class="row">
+                                                        <h6 class="cell-text">POS</h6>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
 
 
                                     </div>
@@ -108,7 +88,7 @@
 
                                         <div class="cell col-3">
                                             <div class="wrapper">
-                                                <a t-att-href='Users'>
+                                                <a>
                                                     <img class="cell-image" src="/aumet/static/img/users.svg"></img>
                                                     <div class="row">
                                                         <h6 class="cell-text">Users</h6>
@@ -132,7 +112,7 @@
 
                                         <div class="cell col-3">
                                             <div class="wrapper">
-                                                <a t-att-href='Settings'>
+                                                <a>
                                                     <img class="cell-image" src="/aumet/static/img/settings.svg"></img>
                                                     <div class="row">
                                                         <h6 class="cell-text">settings</h6>
@@ -160,4 +140,5 @@
     </template>
 
 
-</odoo>
+</body>
+</html>

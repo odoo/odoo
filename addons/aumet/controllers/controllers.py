@@ -1,21 +1,30 @@
-# -*- coding: utf-8 -*-
-# from odoo import http
+import logging
+from odoo import http
+
+import jinja2
+
+#
+_logger = logging.getLogger(__name__)
 
 
-# class Aumet(http.Controller):
-#     @http.route('/aumet/aumet/', auth='public')
-#     def index(self, **kw):
-#         return "Hello, world"
+class Website1(http.Controller):
+    @http.route('/', type='http', auth="public", website=True)
+    def index(self, **kw):
+        data = {
+            "Invoicing": "",
+            "pos": "",
+            "Inventory": "",
+            "Settings": "",
+            "Sales": "",
+            "Users": ""
 
-#     @http.route('/aumet/aumet/objects/', auth='public')
-#     def list(self, **kw):
-#         return http.request.render('aumet.listing', {
-#             'root': '/aumet/aumet',
-#             'objects': http.request.env['aumet.aumet'].search([]),
-#         })
+        }
+        results = http.request.env['ir.ui.menu'].search([('name', "in", ["Invoicing", "Point of Sale", "Inventory",
+                                                                         "Settings", "Sales", "Users"])])
+        for i in results:
+            data.update(
+                {i.name: f"/web#action={i.id}" if i.action is not None else f"/web#menu_id={i.id}"} if "Point of Sale" not in i.name else {"pos": f"/web#action={i.id}" if i.action is not None else f"/web#menu_id={i.id}"})
 
-#     @http.route('/aumet/aumet/objects/<model("aumet.aumet"):obj>/', auth='public')
-#     def object(self, obj, **kw):
-#         return http.request.render('aumet.object', {
-#             'object': obj
-#         })
+        html_file = http.request.render('aumet.homepage_block', data)
+
+        return html_file
