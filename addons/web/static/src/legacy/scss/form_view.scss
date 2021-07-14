@@ -330,11 +330,13 @@ $o-form-label-margin-right: 0px;
         // that cases.
         box-shadow: inset 0 -1px 0 $border-color;
 
-        &.o_full .oe_stat_button:not(.o_invisible_modifier) ~ .oe_stat_button {
-            border-left: 1px solid $border-color;
+        .oe_stat_button, .o_dropdown_more {
+            border: 0 solid $border-color;
         }
+
+        &.o_full .oe_stat_button:not(.o_invisible_modifier) ~ .oe_stat_button,
         &.o_not_full .oe_stat_button {
-            border-left: 1px solid $border-color;
+            border-left-width: $border-width;
         }
 
         > .btn.oe_stat_button, > .o_dropdown_more {
@@ -445,8 +447,8 @@ $o-form-label-margin-right: 0px;
         > .o_dropdown_more {
             @include o-position-absolute(100%, 0);
             min-width: 0;
-            border: none;
-            border: 1px solid gray('300');
+            border-width: 0 $border-width;
+            box-sizing: content-box;
             margin: 0;
             padding: 0;
             @include media-breakpoint-down(sm) {
@@ -460,8 +462,8 @@ $o-form-label-margin-right: 0px;
             }
             > .btn.oe_stat_button {
                 width: 100%;
-                border: none;
-                border-bottom: 1px solid gray('300');
+                // Override stronger ':not(.o_invisible_modifier) ~' rule
+                border-width: 0 0 $border-width!important;
 
                 @include media-breakpoint-down(sm) {
                     display: inline-block;
