@@ -10,7 +10,6 @@
                 <field name="supplier_id"/>
                 <field name="description"/>
                 <separator/>
-                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
                 <filter name="available_today" string="Available Today" domain="[('supplier_id.available_today', '=', True)]"/>
                 <separator/>
                 <filter name="available_on_mon" string="Monday" domain="[('supplier_id.mon', '=', True)]"/>
@@ -20,6 +19,8 @@
                 <filter name="available_on_fri" string="Friday" domain="[('supplier_id.fri', '=', True)]"/>
                 <filter name="available_on_sat" string="Saturday" domain="[('supplier_id.sat', '=', True)]"/>
                 <filter name="available_on_sun" string="Sunday" domain="[('supplier_id.sun', '=', True)]"/>
+                <separator/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_supplier" string="Vendor" context="{'group_by': 'supplier_id'}"/>
                     <filter name="group_by_category" string="Category" context="{'group_by': 'category_id'}"/>

@@ -40,6 +40,7 @@
                 <field name="display_toppings" class="o_text_overflow"/>
                 <field name='note' class="o_text_overflow"/>
                 <field name='user_id'/>
+                <field name="lunch_location_id"/>
                 <field name="currency_id" invisible="1"/>
                 <field name='price' sum="Total" string="Price" widget="monetary"/>
                 <field name='state'/>
@@ -193,6 +194,7 @@
                 <field name="available_toppings_1" invisible="1"/>
                 <field name="available_toppings_2" invisible="1"/>
                 <field name="available_toppings_3" invisible="1"/>
+                <field name="supplier_id" invisible="1"/>
                 <div class="d-flex">
                     <div class="flex-grow-0 pr-5">
                         <field name="image_1920" widget="image" class="o_lunch_image" options="{'image_preview': 'image_128'}"/>
@@ -208,7 +210,7 @@
                             <field name="topping_label_1" nolabel="1" attrs="{'invisible': [('available_toppings_1', '=', False)]}" class="font-weight-bold"/>
                         </div>
                         <div class="col-10">
-                            <field name="topping_ids_1" attrs="{'invisible': [('available_toppings_1', '=', False)]}" widget="many2many_checkboxes" nolabel="1"/>
+                            <field name="topping_ids_1" attrs="{'invisible': [('available_toppings_1', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 1), ('supplier_id', '=', supplier_id)]"/>
                         </div>
                     </div>
                     <div class="row">
@@ -216,7 +218,7 @@
                             <field name="topping_label_2" nolabel="1" attrs="{'invisible': [('available_toppings_2', '=', False)]}" class="font-weight-bold"/>
                         </div>
                         <div class="col-10">
-                            <field name="topping_ids_2" attrs="{'invisible': [('available_toppings_2', '=', False)]}" widget="many2many_checkboxes" nolabel="1"/>
+                            <field name="topping_ids_2" attrs="{'invisible': [('available_toppings_2', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 2), ('supplier_id', '=', supplier_id)]"/>
                         </div>
                     </div>
                     <div class="row">
@@ -224,7 +226,7 @@
                             <field name="topping_label_3" nolabel="1" attrs="{'invisible': [('available_toppings_3', '=', False)]}" class="font-weight-bold"/>
                         </div>
                         <div class="col-10">
-                            <field name="topping_ids_3" attrs="{'invisible': [('available_toppings_3', '=', False)]}" widget="many2many_checkboxes" nolabel="1"/>
+                            <field name="topping_ids_3" attrs="{'invisible': [('available_toppings_3', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 3), ('supplier_id', '=', supplier_id)]"/>
                         </div>
                     </div>
                     <div class="row">

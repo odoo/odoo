@@ -187,6 +187,8 @@ class LunchSupplier(models.Model):
             topping_values = topping[2]
             if topping_values:
                 topping_values.update({'topping_category': 3})
+        if values.get('company_id'):
+            self.env['lunch.order'].search([('supplier_id', 'in', self.ids)]).write({'company_id': values['company_id']})
         super().write(values)
         if not CRON_DEPENDS.isdisjoint(values):
             self._sync_cron()
