@@ -178,6 +178,11 @@ class FleetVehicleLogContract(models.Model):
         if self.vehicle_id:
             self.odometer_unit = self.vehicle_id.odometer_unit
 
+    def create(self, vals):
+        res = super(FleetVehicleLogContract, self).create(vals)
+        res.cost_id.write({'contract_id': res.id})
+        return res
+
     def write(self, vals):
         res = super(FleetVehicleLogContract, self).write(vals)
         if vals.get('expiration_date') or vals.get('user_id'):
