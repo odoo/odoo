@@ -57,8 +57,6 @@ class AccountCheckbook(models.Model):
         ('no_print', 'No Print'),
         ('print_with_number', 'Print with number'),
         ('print_without_number', 'Print without number'),
-        # (pre-printed cheks numbered)
-        # ('pre_printed_not_numbered', 'Print (pre-printed cheks not numbered)'),
         ],
         default='no_print',
         help="* No Print: number will be assigned while creating payment, no print button\n"
