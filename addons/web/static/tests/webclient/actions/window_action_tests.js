@@ -2198,6 +2198,49 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
+    QUnit.test("do not pushState when target=new and dialog is opened", async function (assert) {
+        assert.expect(2);
+        const TestCustoFormController = FormView.prototype.config.Controller.extend({
+            _onButtonClicked() {
+                assert.ok(true, "Button was clicked");
+                this.trigger_up("push_state", { state: { id: 42 } });
+            },
+        });
+        const TestCustoFormView = FormView.extend({
+            config: Object.assign({}, FormView.prototype.config, {
+                Controller: TestCustoFormController,
+            }),
+        });
+        legacyViewRegistry.add("test_view", TestCustoFormView);
+        serverData.views["partner,3,form"] = `
+        <form js_class="test_view">
+            <field name="foo" />
+            <footer>
+            <button id="o_push_state_btn" special="special" />
+            </footer>
+        </form>`;
+        const webClient = await createWebClient({ serverData });
+        // Open Partner form in create mode
+        await doAction(webClient, 3, { viewType: "form" });
+        const prevHash = Object.assign({}, webClient.env.services.router.current.hash);
+        // Edit another partner in a dialog
+        await doAction(webClient, {
+            name: "Edit a Partner",
+            res_model: "partner",
+            res_id: 3,
+            type: "ir.actions.act_window",
+            views: [[3, "form"]],
+            target: "new",
+            view_mode: "form",
+        });
+        await click(document.getElementById("o_push_state_btn"));
+        assert.deepEqual(
+            webClient.env.services.router.current.hash,
+            prevHash,
+            "push_state in dialog shouldn't change the hash"
+        );
+    });
+
     QUnit.test("do not restore after action button clicked", async function (assert) {
         assert.expect(5);
         const mockRPC = async (route, args) => {
