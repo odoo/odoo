@@ -465,10 +465,12 @@ export const editorCommands = {
             if (font && font.nodeName === 'FONT') {
                 // Partially selected <font>: split it.
                 const selectedChildren = children.filter(child => selectedNodes.includes(child));
-                const after = selectedChildren[selectedChildren.length - 1].nextSibling;
-                font = after ? splitElement(font, childNodeIndex(after))[0] : font;
-                const before = selectedChildren[0].previousSibling;
-                font = before ? splitElement(font, childNodeIndex(before) + 1)[1] : font;
+                if (selectedChildren.length) {
+                    const after = selectedChildren[selectedChildren.length - 1].nextSibling;
+                    font = after ? splitElement(font, childNodeIndex(after))[0] : font;
+                    const before = selectedChildren[0].previousSibling;
+                    font = before ? splitElement(font, childNodeIndex(before) + 1)[1] : font;
+                }
             } else if (node.nodeType === Node.TEXT_NODE && isVisibleStr(node)) {
                 // Node is a visible text node: wrap it in a <font>.
                 const previous = node.previousSibling;
