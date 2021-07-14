@@ -7,6 +7,8 @@
 This module extends 'Check Printing Base' module to:
 * allow using own checks that are not printed but filled manually by the user
 * allow to use checkbooks to track numbering
+* add an optional "payment date" for postdated checks
+* add a menu to track own checks
 """,
     'author': 'ADHOC SA',
     'license': 'AGPL-3',
