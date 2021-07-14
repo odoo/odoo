@@ -77,6 +77,9 @@ models.Order = models.Order.extend({
         json.customer_count = this.get_customer_count();
         return json;
     },
+    _should_be_reset: function() {
+        return _super_order._should_be_reset.apply(this, arguments) && !this.pos.config.module_pos_restaurant;
+    },
     get_customer_count: function(){
         return this.customer_count;
     },

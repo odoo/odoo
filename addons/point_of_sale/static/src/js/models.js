@@ -2977,8 +2977,12 @@ exports.Order = Backbone.Model.extend({
         line.set_unit_price(line.compute_fixed_price(line.price));
     },
 
+    _should_be_reset: function(){
+        return this._printed;
+    },
+
     add_product: function(product, options){
-        if(this._printed){
+        if(this._should_be_reset()){
             this.destroy();
             return this.pos.get_order().add_product(product, options);
         }
