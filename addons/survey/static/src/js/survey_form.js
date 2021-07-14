@@ -11,6 +11,7 @@ var dom = require('web.dom');
 var utils = require('web.utils');
 
 var SurveyPreloadImageMixin = require('survey.preload_image_mixin');
+const { SurveyImageZoomer } = require("@survey/js/survey_image_zoomer");
 
 var _t = core._t;
 var isMac = navigator.platform.toUpperCase().includes('MAC');
@@ -22,6 +23,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         'click .o_survey_matrix_btn': '_onMatrixBtnClick',
         'click input[type="radio"]': '_onRadioChoiceClick',
         'click button[type="submit"]': '_onSubmit',
+        'click .o_survey_choice_img img': '_onChoiceImgClick',
         'focusin .form-control': '_updateEnterButtonText',
         'focusout .form-control': '_updateEnterButtonText'
     },
@@ -43,6 +45,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             self.options = self.$target.find('form').data();
             self.readonly = self.options.readonly;
             self.selectedAnswers = self.options.selectedAnswers;
+            self.imgZoomer = false;
 
             // Add Survey cookie to retrieve the survey if you quit the page and restart the survey.
             if (!utils.get_cookie('survey_' + self.options.surveyToken)) {
@@ -106,6 +109,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         }
         // If in session mode and question already answered, do not handle keydown
         if (this.$('fieldset[disabled="disabled"]').length !== 0) {
+            return;
+        }
+        // Disable all navigation keys when zoom modal is open, except the ESC.
+        if ((this.imgZoomer && !this.imgZoomer.isDestroyed()) && keyCode !== 27) {
             return;
         }
 
@@ -253,6 +260,22 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 }
             }
         }
+    },
+
+    /**
+     * Called when an image on an answer in multi-answers question is clicked.
+     * Starts a widget opening a dialog to display the now zoomable image.
+     * this.imgZoomer is the zoomer widget linked to the survey form, if any.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onChoiceImgClick: function (ev) {
+        ev.preventDefault();
+        this.imgZoomer = new SurveyImageZoomer({
+            sourceImage: $(ev.currentTarget).attr('src')
+        });
+        this.imgZoomer.appendTo(document.body);
     },
 
     /**
