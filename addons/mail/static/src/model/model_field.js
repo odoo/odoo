@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { FieldCommand, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, FieldCommand, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 
 /**
  * Class whose instances represent field on a model.
@@ -322,18 +322,15 @@ class ModelField {
             const OtherModel = otherRecord.constructor;
             const otherField = OtherModel.__fieldMap[relatedFieldName];
             const newVal = otherField.get(otherRecord);
+            if (newVal === undefined) {
+                return clear();
+            }
             if (this.fieldType === 'relation') {
-                if (newVal) {
-                    return replace(newVal);
-                } else {
-                    return unlinkAll();
-                }
+                return replace(newVal);
             }
             return newVal;
         }
-        if (this.fieldType === 'relation') {
-            return;
-        }
+        return clear();
     }
 
     /**
