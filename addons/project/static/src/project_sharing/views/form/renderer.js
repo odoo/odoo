@@ -20,7 +20,7 @@ export default FormRenderer.extend({
             hash: '',
             res_id: this.state.res_id,
             pager_step: 10,
-            allow_composer: true,
+            allow_composer: !!this.state.res_id,
             two_columns: false,
             project_sharing_id: session.project_id,
         };
@@ -33,5 +33,4 @@ export default FormRenderer.extend({
     _mountChatterContainerComponent() {
         this._chatterContainerComponent.appendTo(this._chatterContainerTarget);
     },
-    _updateChatterContainerComponent() {},
 });
