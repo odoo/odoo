@@ -70,7 +70,6 @@ function factory(dependencies) {
          * @param {Object} param0.current_partner
          * @param {integer} param0.current_user_id
          * @param {Object} [param0.mail_failures={}]
-         * @param {Object[]} [param0.mention_partner_suggestions=[]]
          * @param {integer} [param0.needaction_inbox_counter=0]
          * @param {Object} param0.partner_root
          * @param {Object[]} param0.public_partners
@@ -83,7 +82,6 @@ function factory(dependencies) {
             current_partner,
             current_user_id,
             mail_failures = {},
-            mention_partner_suggestions = [],
             menu_id,
             needaction_inbox_counter = 0,
             partner_root,
@@ -108,7 +106,6 @@ function factory(dependencies) {
             // various suggestions in no particular order
             this._initCannedResponses(shortcodes);
             this._initCommands(commands);
-            this._initMentionPartnerSuggestions(mention_partner_suggestions);
             // channels when the rest of messaging is ready
             await this.async(() => this._initChannels(channel_slots));
             // failures after channels
@@ -201,16 +198,6 @@ function factory(dependencies) {
                 }
             }));
             this.messaging.notificationGroupManager.computeGroups();
-        }
-
-        /**
-         * @private
-         * @param {Object[]} mentionPartnerSuggestionsData
-         */
-        async _initMentionPartnerSuggestions(mentionPartnerSuggestionsData) {
-            return executeGracefully(mentionPartnerSuggestionsData.map(partnerData => () => {
-                this.env.models['mail.partner'].insert(this.env.models['mail.partner'].convertData(partnerData));
-            }));
         }
 
         /**
