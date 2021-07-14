@@ -1,4 +1,4 @@
-odoo.define('website.set_view_track', function (require) {
+odoo.define('website.trackPage', function (require) {
 "use strict";
 
 var Widget = require('web.Widget');

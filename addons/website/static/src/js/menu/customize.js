@@ -5,8 +5,10 @@ var core = require('web.core');
 var Widget = require('web.Widget');
 var websiteNavbarData = require('website.navbar');
 var WebsiteAceEditor = require('website.ace');
+var TrackPage = require('website.trackPage');
 
 var qweb = core.qweb;
+
 
 var CustomizeMenu = Widget.extend({
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
@@ -74,7 +76,9 @@ var CustomizeMenu = Widget.extend({
         }
         this.__customizeOptionsLoaded = true;
 
+        var self = this;
         var $menu = this.$el.children('.dropdown-menu');
+
         return this._rpc({
             route: '/website/get_switchable_related_views',
             params: {
@@ -98,7 +102,19 @@ var CustomizeMenu = Widget.extend({
                 $a.find('input').prop('checked', !!item.active);
                 $menu.append($a);
             });
+            self._attachTrackPage();
         });
+    },
+
+    /**
+     * @private
+     */
+    _attachTrackPage: function () {
+        if (!this.__trackpageLoaded) {
+            this.__trackpageLoaded = true;
+            this.trackPage = new TrackPage(this);
+            this.trackPage.appendTo(this.$el.children('.dropdown-menu'));
+        }
     },
 
     //--------------------------------------------------------------------------
