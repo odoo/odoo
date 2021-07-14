@@ -68,6 +68,9 @@ class ActionAdapter extends ComponentAdapter {
     }
 
     pushState(state) {
+        if (this.wowlEnv.inDialog) {
+            return;
+        }
         const query = objectToQuery(state);
         if (this.tempQuery) {
             Object.assign(this.tempQuery, query);
