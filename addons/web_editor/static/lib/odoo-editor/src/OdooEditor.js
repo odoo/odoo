@@ -739,7 +739,7 @@ export class OdooEditor extends EventTarget {
         );
     }
 
-    _displayCollaboratorSelection({ range, color, direction, userId }) {
+    _displayCollaboratorSelection({ range, color, direction, userId, name = 'Anonyme' }) {
         const className = `collaborator-selection-displayer collaborator-selection-user-${userId}`;
         let clientRects;
         try {
@@ -776,7 +776,16 @@ export class OdooEditor extends EventTarget {
         caret.className = className;
         // Unrelated to the comedian.
         const caretTop = this.document.createElement('div');
-        caretTop.style = `height: 5px; width: 5px; background-color: ${color}; position: absolute; top: -5px; left: -4px`;
+        const baseCaretTopStyle = `min-height: 5px; min-width: 5px; color: #fff; text-shadow: 0 0 5px #000; background-color: ${color}; position: absolute; bottom: 100%; left: -4px;`;
+        caretTop.style = baseCaretTopStyle;
+        caretTop.addEventListener('mouseenter', () => {
+            caretTop.innerText = name;
+            caretTop.style = baseCaretTopStyle + 'border-radius: 2px; padding: 0.3em 0.6em;';
+        });
+        caretTop.addEventListener('mouseleave', () => {
+            caretTop.innerText = '';
+            caretTop.style = baseCaretTopStyle;
+        });
         caret.append(caretTop);
         if (clientRects.length) {
             if (direction === DIRECTIONS.LEFT) {
