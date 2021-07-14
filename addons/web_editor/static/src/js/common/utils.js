@@ -31,6 +31,8 @@ const CSS_UNITS_CONVERSION = {
     'ms-s': () => 0.001,
     'rem-px': () => _computePxByRem(),
     'px-rem': () => _computePxByRem(true),
+    '%-px': () => -1, // Not implemented but should simply be ignored for now
+    'px-%': () => -1, // Not implemented but should simply be ignored for now
 };
 /**
  * Colors of the default palette, used for substitution in shapes/illustrations.
