@@ -181,15 +181,15 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button o_stat_button_info" attrs="{'invisible': [('is_connected', '=', False)]}">
+                        <button class="oe_stat_button o_stat_button_info" disabled="1" attrs="{'invisible': [('is_connected', '=', False)]}">
                             <i class="fa fa-fw o_button_icon fa-circle text-success"/>
                             <span>Connected</span>
                         </button>
-                        <button class="oe_stat_button o_stat_button_info" attrs="{'invisible': [('is_connected', '=', True)]}">
+                        <button class="oe_stat_button o_stat_button_info" disabled="1" attrs="{'invisible': [('is_connected', '=', True)]}">
                             <i class="fa fa-fw o_button_icon fa-circle text-danger"/>
                             <span>Offline</span>
                         </button>
-                        <button id="w_visitor_visit_counter" class="oe_stat_button o_stat_button_info" icon="fa-globe">
+                        <button id="w_visitor_visit_counter" class="oe_stat_button o_stat_button_info" disabled="1" icon="fa-globe">
                             <field name="visit_count" widget="statinfo" string="Visits"/>
                         </button>
                         <button name="%(website.website_visitor_page_action)d" type="action"
