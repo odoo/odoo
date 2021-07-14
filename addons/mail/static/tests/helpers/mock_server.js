@@ -398,7 +398,6 @@ MockServer.include({
             current_partner: currentPartnerFormat,
             current_user_id: this.currentUserId,
             mail_failures: mailFailures,
-            mention_partner_suggestions: [],
             menu_id: false,
             needaction_inbox_counter,
             partner_root: partnerRootFormat,
