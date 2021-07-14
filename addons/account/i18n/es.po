@@ -194,7 +194,7 @@ msgstr "30 días"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
 msgid "30% Advance End of Following Month"
-msgstr "30% de anticipo al final del siguiente mes"
+msgstr "30% Anticipo - Restante Al Fin del Mes Siguiente"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -301,7 +301,7 @@ msgstr ""
 "            ${object.partner_id.name},\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Aquí está tu\n"
+"        Aquí está su\n"
 "        % if object.name:\n"
 "            factura <strong>${object.name}</strong>\n"
 "        % else:\n"
@@ -311,18 +311,18 @@ msgstr ""
 "            (con referencia: ${object.invoice_origin})\n"
 "        % endif\n"
 "        por el monto de <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
-"        from ${object.company_id.name}.\n"
-"        % if object.payment_state in ('paid', 'in_payment'):\n"
-"            Esta factura ya se encuentra pagada.\n"
+"        de ${object.company_id.name}.\n"
+"        % if object.payment_state == 'paid':\n"
+"            Esta factura ya está pagada.\n"
 "        % else:\n"
-"            Por favor, realiza el pago lo más pronto posible.\n"
+"            Por favor remita el pago a su más pronta conveniencia.\n"
 "            % if object.payment_reference:\n"
 "                <br/><br/>\n"
-"                Utiliza la siguiente referencia para el pago: <strong>${object.payment_reference}</strong>.\n"
+"                Utilice la siguiente referencia para su pago: <strong>${object.payment_reference}</strong>.\n"
 "            % endif\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Si tienes alguna pregunta, no dudes en ponerte en contacto con nosotros.\n"
+"        No dude en contactarnos si tiene alguna pregunta.\n"
 "        % if object.invoice_user_id.signature:\n"
 "            <br/>\n"
 "            ${object.invoice_user_id.signature | safe}\n"
@@ -2531,7 +2531,7 @@ msgstr "Saldo"
 #: code:addons/account/static/src/js/account_selection.js:0
 #, python-format
 msgid "Balance Sheet"
-msgstr "Balance general"
+msgstr "Balance de Situación"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
