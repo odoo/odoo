@@ -402,11 +402,11 @@
         <t t-if="label.value_image">
             <!-- Directly use field or route if the user doesn't have access rights -->
             <div t-if="not env.user.has_group('survey.group_survey_user')"
-                class="d-flex my-3 justify-content-center">
+                class="o_survey_choice_img d-flex my-3 justify-content-center">
                 <img t-att-src="'/survey/get_question_image/%s/%s/%s/%s' % (survey.access_token, answer.access_token, question.id, label.id)"/>
             </div>
             <div t-else=""  t-field="label.value_image"
-                class="d-flex my-3 justify-content-center"
+                class="o_survey_choice_img d-flex my-3 justify-content-center"
                 t-options="{'widget': 'image', 'alt-field': 'name', 'itemprop': 'image'}"/>
         </t>
     </template>

@@ -600,7 +600,8 @@ class SurveyQuestionAnswer(models.Model):
     scoring_type = fields.Selection(related='question_id.scoring_type')
     # answer related fields
     value = fields.Char('Suggested value', translate=True, required=True)
-    value_image = fields.Image('Image', max_width=256, max_height=256)
+    value_image = fields.Image('Image', max_width=1024, max_height=1024)
+    value_image_filename = fields.Char('Image Filename')
     is_correct = fields.Boolean('Correct')
     answer_score = fields.Float('Score', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 

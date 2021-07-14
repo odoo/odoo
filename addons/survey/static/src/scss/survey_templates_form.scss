@@ -253,6 +253,16 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         }
     }
 
+    .o_survey_choice_img img {
+        max-width: 95%;
+        max-height: 60vh;
+        cursor: zoom-in;
+        &:hover {
+            box-sizing: border-box;
+            box-shadow: 0 0 5px 2px grey;
+        }
+    }
+
     .o_survey_choice_key {
         width: 25px;
         height: 25px;
@@ -473,4 +483,57 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
     .o_survey_choice_question_skipped {
         color: darken($warning, 10%);
     }
+
+    .o_survey_choice_img img {
+        cursor: default;
+        &:hover {
+            box-shadow: none;
+        }
+    }
 }
+
+/**********************************************************
+    Zoomer Specific Style (SurveyImageZoomer widget)
+    When the width is small (mobile), let space above and below
+    to indicate that the user can close it by clicking out.
+ **********************************************************/
+
+.o_survey_img_zoom_modal {
+    cursor: pointer;
+    .o_survey_img_zoom_dialog {
+        background-color: rgba(0,0,0,0.65);
+        @include media-breakpoint-down(sm) {
+            height: 80% !important;
+        }
+        .o_survey_img_zoom_body {
+            font-size: 1.5rem;
+            img {
+                max-width: 90%;
+                min-width: clamp(250px, 60%, 450px);
+                max-height: 90%;
+                object-fit: contain;
+            }
+            .o_survey_img_zoom_close_btn {
+                right: 12px;
+                top: 12px;
+                z-index: 1;
+            }
+            .o_survey_img_zoom_controls_wrapper {
+                bottom: 5%;
+                .o_survey_img_zoom_in_btn, .o_survey_img_zoom_out_btn {
+                    background-color: rgba(0,0,0,0.65);
+                    &:hover .fa {
+                        color: grey;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Avoid shifting (due to scroll bar) when opening the image zoom widget
+.modal-open {
+    .o_survey_background {
+        overflow: auto !important;
+    }
+ }
