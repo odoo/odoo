@@ -13,6 +13,9 @@ class AccountJournal(models.Model):
         """
         Check and ensure that the user do not remove a apml that is linked to an acquirer in the test or enabled state.
         """
+        if not self.company_id:
+            return
+
         self.env['account.payment.method'].flush(['code', 'payment_type'])
         self.env['account.payment.method.line'].flush(['payment_method_id'])
         self.env['payment.acquirer'].flush(['provider', 'state'])
@@ -24,7 +27,8 @@ class AccountJournal(models.Model):
             LEFT JOIN account_payment_method_line apml ON apm.id = apml.payment_method_id
             WHERE acquirer.state IN ('enabled', 'test') AND apm.payment_type = 'inbound'
             AND apml.id IS NULL
-        ''')
+            AND acquirer.company_id IN %(company_ids)s
+        ''', {'company_ids': tuple(self.company_id.ids)})
         ids = [r[0] for r in self._cr.fetchall()]
         acquirers = self.env['payment.acquirer'].browse(ids)
         if acquirers:
