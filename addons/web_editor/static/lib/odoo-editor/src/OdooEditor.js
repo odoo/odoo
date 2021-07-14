@@ -2149,7 +2149,6 @@ export class OdooEditor extends EventTarget {
         // To avoid this problem, we make all editable zone become uneditable
         // except the link. Then when cliking outside the link, reset the
         // editable zones.
-        this.automaticStepSkipStack();
         const link = closestElement(ev.target, 'a');
         this._resetContenteditableLinks();
         if (
@@ -2179,6 +2178,8 @@ export class OdooEditor extends EventTarget {
         } else {
             this._activateContenteditable();
         }
+        // Ignore any changes that might have happened before this point
+        this.observer.takeRecords();
 
         const node = ev.target;
         // handle checkbox lists
@@ -2186,6 +2187,7 @@ export class OdooEditor extends EventTarget {
             if (ev.offsetX < 0) {
                 toggleClass(node, 'o_checked');
                 ev.preventDefault();
+                this.historyStep();
             }
         }
     }
