@@ -43,24 +43,15 @@ class AccountPayment(models.Model):
         readonly=False,
     )
 
-    @api.depends('checkbook_id')
-    def _compute_check_number(self):
-        for pay in self:
-            if pay.journal_id.check_manual_sequencing and pay.payment_method_code == 'check_printing':
-                sequence = pay.journal_id.check_sequence_id
-                pay.check_number = sequence.get_next_char(sequence.number_next_actual)
-            elif pay.checkbook_id.check_printing_type == 'no_print':
-                pay.check_number = pay.checkbook_id.sequence_id.get_next_char(pay.checkbook_id.next_number)
-            else:
-                pay.check_number = False
-
     @api.depends('payment_method_id.code', 'journal_id.use_checkbooks')
     def _compute_checkbook(self):
         with_checkbooks = self.filtered(lambda x: x.payment_method_id.code == 'check_printing' and x.journal_id.use_checkbooks)
         (self - with_checkbooks).checkbook_id = False
         for rec in with_checkbooks:
-            checkbook = rec.journal_id.with_context(active_test=True).checkbook_ids
-            rec.checkbook_id = checkbook and checkbook[0] or False
+            checkbooks = rec.journal_id.with_context(active_test=True).checkbook_ids
+            if rec.checkbook_id and rec.checkbook_id in checkbooks:
+                continue
+            rec.checkbook_id = checkbooks and checkbooks[0] or False
 
     # @api.depends('journal_id', 'payment_method_code')
     @api.depends('checkbook_id')
@@ -127,7 +118,7 @@ class AccountPayment(models.Model):
 
     @api.constrains('journal_id', 'check_number', 'checkbook_id')
     def _check_unique(self):
-        for rec in self.filtered(lambda x: x.payment_method_id.code == 'check_printing'):
+        for rec in self.filtered(lambda x: x.payment_method_id.code == 'check_printing' and x.check_number):
             same_checks = self.search([
                 ('checkbook_id', '=', rec.checkbook_id.id),
                 ('journal_id', '=', rec.journal_id.id),
