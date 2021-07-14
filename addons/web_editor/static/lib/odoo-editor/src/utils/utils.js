@@ -25,9 +25,10 @@ export const CTGROUPS = {
     BR: CTYPES.BR,
 };
 
-export const URL_REGEX = /((?:https?:\/\/)?(?:[a-z0-9-]{1,63}\.){1,2}[a-z]{2,15}(?:\/[^\s]*)?)/gi;
+export const URL_REGEX =
+    /((?:(?:https?:\/\/)|(?:[-a-zA-Z0-9@:%._\+~#=]{1,64}\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,63}\b(?:[^\s]*))/gi;
 export const URL_REGEX_WITH_INFOS =
-    /((https?:\/\/)?([a-z0-9-]{1,63}\.){1,2}[a-z]{2,15}(\/[^\s]*)?(\s|$))/gi;
+    /((?:(https?:\/\/)|(?:[-a-zA-Z0-9@:%._\+~#=]{1,64}\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,63}\b(?:[^\s]*))/gi;
 export const YOUTUBE_URL_GET_VIDEO_ID =
     /^(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:youtube\.com|youtu\.be)(?:\/(?:[\w-]+\?v=|embed\/|v\/)?)([^\s?&#]+)(?:\S+)?$/i;
 
