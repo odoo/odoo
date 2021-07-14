@@ -827,6 +827,7 @@ var FieldMany2One = AbstractField.extend({
             new M2ODialog(this, this.string, this.$input.val()).open();
         } else {
             this.$input.val("");
+            this.reinitialize(false);
         }
     },
     /**
