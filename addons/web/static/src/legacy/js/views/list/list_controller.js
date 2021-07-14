@@ -423,6 +423,13 @@ var ListController = BasicController.extend({
      * @private
      */
     _getActionMenuItems: function (state) {
+        let isM2MGrouped = false;
+        if (state.groupedBy.length) {
+            isM2MGrouped = state.groupedBy.some((group) => {
+                const groupByFieldName = group.split(':')[0];
+                return state.fields[groupByFieldName].type === "many2many";
+            });
+        }
         if (!this.hasActionMenus || !this.selectedRecords.length) {
             return null;
         }
@@ -434,7 +441,7 @@ var ListController = BasicController.extend({
                 callback: () => this._onExportData()
             });
         }
-        if (this.archiveEnabled) {
+        if (this.archiveEnabled && !isM2MGrouped) {
             otherActionItems.push({
                 description: _t("Archive"),
                 callback: () => {
@@ -450,7 +457,7 @@ var ListController = BasicController.extend({
                 callback: () => this._toggleArchiveState(false)
             });
         }
-        if (this.activeActions.delete) {
+        if (this.activeActions.delete && !isM2MGrouped) {
             otherActionItems.push({
                 description: _t("Delete"),
                 callback: () => this._onDeleteSelectedRecords()
@@ -552,13 +559,22 @@ var ListController = BasicController.extend({
      * @override
      * @param {string} recordId
      */
-    _saveRecord: function (recordId) {
+    _saveRecord: function (recordId, options) {
+        options = options || {};
         var record = this.model.get(recordId, { raw: true });
         if (record.isDirty() && this.renderer.isInMultipleRecordEdition(recordId)) {
             // do not save the record (see _saveMultipleRecords)
             const prom = this.multipleRecordsSavingPromise || Promise.reject();
             this.multipleRecordsSavingPromise = null;
             return prom;
+        }
+        const state = this.model.get(this.handle, { raw: true });
+        if (state.groupedBy.length) {
+            const isM2MGrouped = state.groupedBy.some((group) => {
+                const groupByFieldName = group.split(':')[0];
+                return state.fields[groupByFieldName].type === "many2many";
+            });
+            options.isM2mGrouped = isM2MGrouped;
         }
         return this._super.apply(this, arguments);
     },
@@ -918,7 +934,27 @@ var ListController = BasicController.extend({
      */
     _onSaveLine: function (ev) {
         this.saveRecord(ev.data.recordID)
-            .then(ev.data.onSuccess)
+            .then((result) => {
+                const state = this.model.get(this.handle, { raw: true });
+                let isM2MGrouped = false;
+                if (state.groupedBy.length) {
+                    isM2MGrouped = state.groupedBy.some((group) => {
+                        const groupByFieldName = group.split(':')[0];
+                        return state.fields[groupByFieldName].type === "many2many";
+                    });
+                }
+                if (isM2MGrouped) {
+                    return this.update({}, { reload: false }).then(() => {
+                        if (ev.data.onSuccess) {
+                            ev.data.onSuccess();
+                        }
+                    });
+                } else {
+                    if (ev.data.onSuccess) {
+                        ev.data.onSuccess(result);
+                    }
+                }
+            })
             .guardedCatch(ev.data.onFailure);
     },
     /**

@@ -489,6 +489,10 @@ var MockServer = Class.extend({
                     }
                     criterion = [criterion[0], 'in', childIDs];
                 }
+                // In case of many2many field, if domain operator is '=' then change it to 'in' operator
+                if (criterion.length === 3 && criterion[1] === '=' && typeof criterion[2] === 'number' && self.data[model].fields[criterion[0]] && self.data[model].fields[criterion[0]].type === "many2many") {
+                    criterion = [criterion[0], 'in', [criterion[2]]];
+                }
                 return criterion;
             });
             records = _.filter(records, function (record) {
@@ -1504,18 +1508,75 @@ var MockServer = Class.extend({
                 return val instanceof Array ? val[0] : (val || false);
             }
         }
-        function groupByFunction(record) {
-            var value = '';
-            _.each(groupBy, function (groupByField) {
-                value = (value ? value + ',' : value) + groupByField + '#';
-                var fieldName = groupByField.split(':')[0];
-                if (['date', 'datetime'].includes(fields[fieldName].type)) {
-                    value += formatValue(groupByField, record[fieldName]);
-                } else {
-                    value += JSON.stringify(record[groupByField]);
+        // if many2many field type comes then add 1 group for each m2m record like if groupby is ["m2o", "m2m"]
+        // then it should generate like "m2o#1,m2m#1" "m2o#1,m2m#2", "m2o#2,m2m#1", "m2o#2,m2m#2" and so on...
+        function generateGroups(records) {
+            const groups = {};
+            const createGroup = function (record) {
+                // generate keys for groups
+                const groupByKeys = {};
+                groupBy.forEach((groupByField) => {
+                    const fieldName = groupByField.split(':')[0];
+                    if (['date', 'datetime'].includes(fields[fieldName].type)) {
+                        groupByKeys[groupByField] = formatValue(groupByField, record[fieldName]);
+                    } else if (fields[fieldName].type === 'many2many') {
+                        self.data[fields[fieldName].relation].records.forEach((rec) => {
+                            if (record[fieldName] && record[fieldName].includes(rec.id)) {
+                                if (groupByKeys[groupByField]) {
+                                    groupByKeys[groupByField].push(rec.id);
+                                } else {
+                                    groupByKeys[groupByField] = [rec.id];
+                                }
+                            }
+                        });
+                    } else {
+                        groupByKeys[groupByField] = JSON.stringify(record[groupByField]);
+                    }
+                });
+
+                // prepare keys from groupByKeys
+                const keys = [];
+                for (const [groupByField, val] of Object.entries(groupByKeys)) {
+                    if (Array.isArray(val)) {
+                        if (!keys.length) {
+                            val.forEach((v) => {
+                                keys.push(groupByField + "#" + v);
+                            });
+                        } else {
+                            keys.forEach((k, i) => {
+                                val.forEach((v) => {
+                                    keys.push(k + "," + groupByField + "#" + v);
+                                    const index = keys.indexOf(k);
+                                    if (index !== -1) {
+                                        keys.splice(index, 1);
+                                    }
+                                });
+                            });
+                        }
+                    } else {
+                        if (!keys.length) {
+                            keys.push(groupByField + "#" + val);
+                        } else {
+                            keys.forEach((k, i) => {
+                                keys.push(k + "," + groupByField + "#" + val);
+                                const index = keys.indexOf(k);
+                                if (index !== -1) {
+                                    keys.splice(index, 1);
+                                }
+                            });
+                        }
+                    }
                 }
-            });
-            return value;
+                keys.forEach((key) => {
+                    if (groups[key]) {
+                        groups[key].push(record);
+                    } else {
+                        groups[key] = [record];
+                    }
+                });
+            };
+            records.forEach((record) => createGroup(record));
+            return groups;
         }
 
         if (!groupBy.length) {
@@ -1524,16 +1585,25 @@ var MockServer = Class.extend({
             return [group];
         }
 
-        var groups = _.groupBy(records, groupByFunction);
-        var result = _.map(groups, function (group) {
+        const groups = generateGroups(records);
+        const isUsed = [];
+        var result = _.map(groups, (group) => {
             var res = {
                 __domain: kwargs.domain || [],
                 __range: {},
             };
-            _.each(groupBy, function (groupByField) {
+            _.each(groupBy, (groupByField) => {
                 var fieldName = groupByField.split(':')[0];
-                var val = formatValue(groupByField, group[0][fieldName]);
                 var field = self.data[model].fields[fieldName];
+                var val = formatValue(groupByField, group[0][fieldName]);
+                if (field.type === 'many2many') {
+                    const m2mIds = _.map(group, (record) => {
+                        return record[fieldName];
+                    });
+                    const intersected = _.intersection(...m2mIds);
+                    val = _.difference(intersected, isUsed)[0];
+                    isUsed.push(val);
+                }
                 if (field.type === 'many2one' && !_.isArray(val)) {
                     var related_record = _.findWhere(self.data[field.relation].records, {
                         id: val

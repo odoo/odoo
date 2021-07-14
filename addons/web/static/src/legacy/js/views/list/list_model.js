@@ -1,6 +1,7 @@
 /** @odoo-module alias=web.ListModel **/
 
     import BasicModel from 'web.BasicModel';
+    import utils from 'web.utils';
 
     var ListModel = BasicModel.extend({
 
@@ -46,6 +47,7 @@
             var self = this;
             var referenceRecord = this.localData[referenceRecordId];
             var list = this.localData[listDatapointId];
+            const listState = this.get(listDatapointId);
             // generate all record values to ensure that we'll write something
             // (e.g. 2 records selected, edit a many2one in the first one, but
             // reset same value, we still want to save this value on the other
@@ -73,12 +75,39 @@
                     context: context,
                 });
             }).then(function (results) {
-                results.forEach(function (data) {
-                    var record = _.findWhere(records, {res_id: data.id});
+                const updateLocalRecord = (record, data) => {
                     record.data = _.extend({}, record.data, data);
                     record._changes = {};
                     record._isDirty = false;
                     self._parseServerData(fieldNames, record, record.data);
+                };
+
+                let isM2MGrouped = false;
+                if (list.groupedBy.length) {
+                    isM2MGrouped = list.groupedBy.some((group) => {
+                        const groupByFieldName = group.split(':')[0];
+                        return list.fields[groupByFieldName].type === "many2many";
+                    });
+                }
+
+                results.forEach(function (data) {
+                    const record = _.findWhere(records, { res_id: data.id });
+                    updateLocalRecord(record, data);
+
+                    // Note: if list is grouped by m2m field and user chages record then if same
+                    // record is available in another group then update that record as well.
+                    if (isM2MGrouped) {
+                        const sameResIdrecords = [];
+                        utils.traverse_records(listState, function (r) {
+                            if (r.res_id === data.id && !recordIds.includes(r.id)) {
+                                sameResIdrecords.push(r);
+                            }
+                        });
+                        sameResIdrecords.forEach((rec) => {
+                            const record = self.localData[rec.id];
+                            updateLocalRecord(record, data);
+                        });
+                    }
                 });
             }).then(function () {
                 if (!list.groupedBy.length) {
@@ -93,6 +122,39 @@
                     ]);
                 }
             });
+        },
+        /**
+         * overridden to update records with same res_id in other groups
+         *
+         * @override
+         * @param {Object} datapoint
+         * @param {Object} changes
+         */
+        updateSameResIdRecords(datapoint, changes) {
+            const self = this;
+            const recordUpdated = datapoint;
+            while (datapoint.parentID) {
+                datapoint = this.localData[datapoint.parentID];
+            }
+            if (datapoint.groupedBy.length) {
+                const listState = this.get(datapoint.id);
+                const isM2MGrouped = datapoint.groupedBy.some((group) => {
+                    const groupByFieldName = group.split(':')[0];
+                    return datapoint.fields[groupByFieldName].type === "many2many";
+                });
+                if (isM2MGrouped) {
+                    const sameResIdrecords = [];
+                    utils.traverse_records(listState, function (r) {
+                        if (r.res_id === recordUpdated.res_id) {
+                            sameResIdrecords.push(r);
+                        }
+                    });
+                    sameResIdrecords.forEach((rec) => {
+                        const record = self.localData[rec.id];
+                        _.extend(record.data, changes);
+                    });
+                }
+            }
         },
 
         //--------------------------------------------------------------------------

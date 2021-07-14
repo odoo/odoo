@@ -770,33 +770,100 @@ export class MockServer {
                 return val instanceof Array ? val[0] : val || false;
             }
         }
-        function groupByFunction(record) {
-            let value = "";
-            groupBy.forEach((groupByField) => {
-                value = (value ? value + "," : value) + groupByField + "#";
-                const fieldName = groupByField.split(":")[0];
-                if (fields[fieldName].type === "date") {
-                    value += formatValue(groupByField, record[fieldName]);
-                } else {
-                    value += JSON.stringify(record[groupByField]);
+        // if many2many field type comes then add 1 group for each m2m record like if groupby is ["m2o", "m2m"]
+        // then it should generate like "m2o#1,m2m#1" "m2o#1,m2m#2", "m2o#2,m2m#1", "m2o#2,m2m#2" and so on...
+        const generateGroups = (records) => {
+            const groups = {};
+            const createGroup = (record) => {
+                // generate keys for groups
+                const groupByKeys = {};
+                groupBy.forEach((groupByField) => {
+                    const fieldName = groupByField.split(':')[0];
+                    if (['date', 'datetime'].includes(fields[fieldName].type)) {
+                        groupByKeys[groupByField] = formatValue(groupByField, record[fieldName]);
+                    } else if (fields[fieldName].type === 'many2many') {
+                        this.data[fields[fieldName].relation].records.forEach((rec) => {
+                            if (record[fieldName] && record[fieldName].includes(rec.id)) {
+                                if (groupByKeys[groupByField]) {
+                                    groupByKeys[groupByField].push(rec.id);
+                                } else {
+                                    groupByKeys[groupByField] = [rec.id];
+                                }
+                            }
+                        });
+                    } else {
+                        groupByKeys[groupByField] = JSON.stringify(record[groupByField]);
+                    }
+                });
+
+                // prepare keys from groupByKeys
+                const keys = [];
+                for (const [groupByField, val] of Object.entries(groupByKeys)) {
+                    if (Array.isArray(val)) {
+                        if (!keys.length) {
+                            val.forEach((v) => {
+                                keys.push(groupByField + "#" + v);
+                            });
+                        } else {
+                            keys.forEach((k, i) => {
+                                val.forEach((v) => {
+                                    keys.push(k + "," + groupByField + "#" + v);
+                                    const index = keys.indexOf(k);
+                                    if (index !== -1) {
+                                        keys.splice(index, 1);
+                                    }
+                                });
+                            });
+                        }
+                    } else {
+                        if (!keys.length) {
+                            keys.push(groupByField + "#" + val);
+                        } else {
+                            keys.forEach((k, i) => {
+                                keys.push(k + "," + groupByField + "#" + val);
+                                const index = keys.indexOf(k);
+                                if (index !== -1) {
+                                    keys.splice(index, 1);
+                                }
+                            });
+                        }
+                    }
                 }
-            });
-            return value;
-        }
+                keys.forEach((key) => {
+                    if (groups[key]) {
+                        groups[key].push(record);
+                    } else {
+                        groups[key] = [record];
+                    }
+                });
+            };
+            records.forEach((record) => createGroup(record));
+            return groups;
+        };
+
         if (!groupBy.length) {
             const group = { __count: records.length };
             aggregateFields(group, records);
             return [group];
         }
-        const groups = utils.groupBy(records, groupByFunction);
+        const groups = generateGroups(records);
+        const isUsed = [];
         let result = Object.values(groups).map((records) => {
             const res = {
                 __domain: kwargs.domain || [],
             };
             groupBy.forEach((groupByField) => {
                 const fieldName = groupByField.split(":")[0];
-                const val = formatValue(groupByField, records[0][fieldName]);
                 const field = fields[fieldName];
+                let val = formatValue(groupByField, records[0][fieldName]);
+                if (field.type === 'many2many') {
+                    const m2mIds = _.map(records, (record) => {
+                        return record[fieldName];
+                    });
+                    const intersected = _.intersection(...m2mIds);
+                    val = _.difference(intersected, isUsed)[0];
+                    isUsed.push(val);
+                }
                 if (field.type === "many2one" && !Array.isArray(val)) {
                     const relRecord = this.models[field.relation].records.find((r) => r.id === val);
                     if (relRecord) {
@@ -1504,6 +1571,10 @@ export class MockServer {
                         });
                     }
                     criterion = [criterion[0], "in", childIDs];
+                }
+                // In case of many2many field, if domain operator is '=' then change it to 'in' operator
+                if (criterion.length === 3 && criterion[1] === '=' && typeof criterion[2] === 'number' && model.fields[criterion[0]] && model.fields[criterion[0]].type === "many2many") {
+                    criterion = [criterion[0], 'in', [criterion[2]]];
                 }
                 return criterion;
             });

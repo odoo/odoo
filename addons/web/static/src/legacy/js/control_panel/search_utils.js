@@ -151,6 +151,7 @@ odoo.define('web.searchUtils', function (require) {
         'datetime',
         'integer',
         'many2one',
+        'many2many',
         'selection',
     ];
     const DEFAULT_INTERVAL = 'month';

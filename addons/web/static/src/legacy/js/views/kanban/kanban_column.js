@@ -54,6 +54,7 @@ var KanbanColumn = Widget.extend({
         this.quickCreateView = options.quickCreateView;
         this.groupedBy = options.groupedBy;
         this.grouped_by_m2o = options.grouped_by_m2o;
+        this.grouped_by_m2m = options.grouped_by_m2m;
         this.editable = options.editable;
         this.deletable = options.deletable;
         this.archivable = options.archivable;
@@ -77,7 +78,7 @@ var KanbanColumn = Widget.extend({
 
         this.record_options = _.clone(recordOptions);
 
-        if (options.grouped_by_m2o || options.grouped_by_date ) {
+        if (options.grouped_by_m2o || options.grouped_by_date || options.grouped_by_m2m) {
             // For many2one and datetime, a false value means that the field is not set.
             this.title = value ? value : _t('Undefined');
         } else {
@@ -250,6 +251,10 @@ var KanbanColumn = Widget.extend({
      * @return {Promise}
      */
     _addRecord: function (recordState, options) {
+        if (this.grouped_by_m2m) {
+            this.record_options.deletable = false;
+            this.record_options.archivable = false;
+        }
         var record = new this.KanbanRecord(this, recordState, this.record_options);
         this.records.push(record);
         if (options && options.position === 'before') {

@@ -509,6 +509,9 @@ var KanbanRenderer = BasicRenderer.extend({
             if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
                 draggable = false;
                 grouped_by_date = true;
+            } else if (groupByFieldAttrs.type === "many2many") {
+                // do not allow dragging of record if grouped by many2many
+                draggable = false;
             }
             if (groupByFieldAttrs.readonly !== undefined) {
                 readonly = groupByFieldAttrs.readonly;
@@ -524,6 +527,7 @@ var KanbanRenderer = BasicRenderer.extend({
         }
         draggable = !readonly && draggable;
         this.groupedByM2O = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2one');
+        this.groupedByM2M = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2many');
         var relation = this.groupedByM2O && groupByFieldAttrs.relation;
         var groupByTooltip = groupByFieldInfo && groupByFieldInfo.options.group_by_tooltip;
         this.columnOptions = _.extend(this.columnOptions, {
@@ -531,6 +535,7 @@ var KanbanRenderer = BasicRenderer.extend({
             group_by_tooltip: groupByTooltip,
             groupedBy: groupByField,
             grouped_by_m2o: this.groupedByM2O,
+            grouped_by_m2m: this.groupedByM2M,
             grouped_by_date: grouped_by_date,
             relation: relation,
             quick_create: this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(this.state),

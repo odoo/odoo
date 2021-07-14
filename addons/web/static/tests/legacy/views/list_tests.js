@@ -1296,6 +1296,136 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('basic grouped list rendering with groupby m2m field', async function (assert) {
+        assert.expect(7);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                `<tree>
+                    <field name="foo"/>
+                    <field name="m2o"/>
+                    <field name="m2m" widget="many2many_tags"/>
+                </tree>`,
+            groupBy: ['m2m'],
+        });
+
+        assert.strictEqual(list.$('th:contains(1 (3))').length, 1, "should contain 1 in group header");
+        assert.strictEqual(list.$('th:contains(2 (2))').length, 1, "should contain 2 in group header");
+        assert.strictEqual(list.$('th:contains(3 (1))').length, 1, "should contain 3 in group header");
+
+        await testUtils.dom.click(list.$('th.o_group_name').first());
+        assert.containsN(list, 'tbody:eq(1) tr', 3, "open group should contain 3 records");
+        assert.strictEqual(list.$('tbody:eq(1) tr:first .o_field_many2manytags[name="m2m"]').text().replace(/\s/g, ''),
+            "Value1Value2", "the record 1 should be in first group");
+
+        await testUtils.dom.click(list.$('th.o_group_name:eq(1)'));
+        assert.containsN(list, 'tbody:eq(3) tr', 2, "open group should contain 2 record");
+        assert.strictEqual(list.$('tbody:eq(3) tr:first .o_field_many2manytags[name="m2m"]').text().replace(/\s/g, ''),
+            "Value1Value2", "the record 1 should be in second group as well");
+
+        list.destroy();
+    });
+
+    QUnit.test('grouped list rendering with groupby m2o and m2m field', async function (assert) {
+        assert.expect(7);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                `<tree>
+                    <field name="foo"/>
+                    <field name="m2o"/>
+                    <field name="m2m" widget="many2many_tags"/>
+                </tree>`,
+            groupBy: ['m2o', 'm2m'],
+        });
+
+        assert.strictEqual(list.$('th:contains(Value 1 (3))').length, 1,
+            "should contain 3 records in first group");
+        assert.strictEqual(list.$('th:contains(Value 2 (1))').length, 1,
+            "should contain 1 record in second group");
+
+        await testUtils.dom.click(list.$('th.o_group_name').first());
+        assert.strictEqual(list.$('tbody:eq(1) th:contains(1 (2))').length, 1,
+            "should contain 2 records in inner group");
+        assert.strictEqual(list.$('tbody:eq(1) th:contains(2 (1))').length, 1,
+            "should contain 1 records in inner group");
+
+        await testUtils.dom.click(list.$('tbody:eq(2) th.o_group_name'));
+        assert.strictEqual(list.$('tbody:eq(3) th:contains(1 (1))').length, 1,
+            "should contain 1 record in inner group");
+        assert.strictEqual(list.$('tbody:eq(3) th:contains(2 (1))').length, 1,
+            "should contain 1 record in inner group");
+        assert.strictEqual(list.$('tbody:eq(3) th:contains(3 (1))').length, 1,
+            "should contain 1 record in inner group");
+
+        list.destroy();
+    });
+
+    QUnit.test('deletion of record is disabled when groupby m2m field', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                `<tree>
+                    <field name="foo"/>
+                    <field name="m2m" widget="many2many_tags"/>
+                </tree>`,
+            viewOptions: { hasActionMenus: true },
+            groupBy: ['m2m'],
+        });
+
+        await testUtils.dom.click(list.$('.o_group_header:first')); // open first group
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
+        assert.containsNone(list.el, 'div.o_control_panel .o_cp_action_menus .o_dropdown_menu',
+            "should not have dropdown as delete item is not there");
+
+        list.destroy();
+    });
+
+    QUnit.test('editing a record should change same record in other groups when grouped by m2m field', async function (assert) {
+        assert.expect(4);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                `<tree editable="bottom">
+                    <field name="foo"/>
+                    <field name="m2m" widget="many2many_tags"/>
+                </tree>`,
+            groupBy: ['m2m'],
+        });
+
+        await testUtils.dom.click(list.$('.o_group_header:first')); // open first group
+        await testUtils.dom.click(list.$('.o_group_header:eq(1)')); // open second group
+        assert.containsOnce(list, 'tbody:eq(1) .o_list_char:contains("yop")',
+            "should have yop record in first group");
+        assert.containsOnce(list, 'tbody:eq(3) .o_list_char:contains("yop")',
+            "should have yop record in second group");
+
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:first'));
+        await testUtils.fields.editAndTrigger(list.$('.o_data_row:eq(0) .o_data_cell:first .o_input'), 'xyz', ['input', 'change']);
+        await testUtils.dom.click(list.$el);
+        assert.containsOnce(list, 'tbody:eq(1) .o_list_char:contains("xyz")',
+            "should have yop record in first group");
+        assert.containsOnce(list, 'tbody:eq(3) .o_list_char:contains("xyz")',
+            "should have yop record in second group");
+
+        list.destroy();
+    });
+
     QUnit.test('ordered list, sort attribute in context', async function (assert) {
         assert.expect(1);
         // Equivalent to saving a custom filter
@@ -8168,6 +8298,37 @@ QUnit.module('Views', {
         assert.containsN(document.body, ".modal .o_field_many2manytags .badge", 3);
         assert.strictEqual($(".modal .o_field_many2manytags .badge:last").text().trim(), "Value 3",
             "should have display_name in badge");
+
+        list.destroy();
+    });
+
+    QUnit.test('multi edition: many2many field in grouped list', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                `<tree multi_edit="1">
+                    <field name="foo"/>
+                    <field name="m2m" widget="many2many_tags"/>
+                </tree>`,
+            groupBy: ['m2m'],
+        });
+
+        await testUtils.dom.click(list.$('.o_group_header:first')); // open first group
+        await testUtils.dom.click(list.$('.o_group_header:eq(1)')); // open second group
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
+        await testUtils.fields.many2one.clickOpenDropdown('m2m');
+        await testUtils.fields.many2one.clickItem('m2m', 'Value 3');
+        assert.strictEqual(list.$('tbody:eq(1) .o_data_row:first .o_data_cell:eq(1)').text().replace(/\s/g, ''),
+            'Value1Value2Value3',
+            "should have a right value in many2many field");
+        assert.strictEqual(list.$('tbody:eq(3) .o_data_row:first .o_data_cell:eq(1)').text().replace(/\s/g, ''),
+            'Value1Value2Value3',
+            "should have same value in many2many field on all other records with same res_id");
 
         list.destroy();
     });

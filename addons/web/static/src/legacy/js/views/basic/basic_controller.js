@@ -848,7 +848,17 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var data = ev && ev.data || {};
         var handle = data.db_id;
         var prom;
-        if (handle) {
+        // Note: In case of grouped view by many2many field then reload whole view as
+        // same record can be in other group
+        const state = this.model.get(this.handle);
+        let isM2MGrouped = false;
+        if (state.groupedBy && state.groupedBy.length) {
+            isM2MGrouped = state.groupedBy.some((group) => {
+                const groupByFieldName = group.split(':')[0];
+                return state.fields[groupByFieldName].type === "many2many";
+            });
+        }
+        if (handle && !isM2MGrouped) {
             // reload the relational field given its db_id
             prom = this.model.reload(handle).then(this._confirmSave.bind(this, handle));
         } else {
