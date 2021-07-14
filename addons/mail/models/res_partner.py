@@ -113,19 +113,6 @@ class Partner(models.Model):
         return 0
 
     @api.model
-    def get_static_mention_suggestions(self):
-        """ Returns static mention suggestions of partners, loaded once at webclient initialization
-            and stored client side. All the internal users are returned.
-            The return format is a list of partner data (as per returned by `mail_partner_format()`).
-        """
-        partners = self.env['res.partner']
-        try:
-            partners = self.env.ref('base.group_user').users.partner_id
-        except AccessError:
-            pass
-        return [partner.mail_partner_format() for partner in partners]
-
-    @api.model
     def get_mention_suggestions(self, search, limit=8, channel_id=None):
         """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
             Prioritize partners that are also users, and then extend the research to all partners.
