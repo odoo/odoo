@@ -2148,8 +2148,8 @@ export class OdooEditor extends EventTarget {
                         },
                     ];
 
-                    this.execCommand('insertText', splitAroundUrl[i]);
                     if (['jpg', 'jpeg', 'png', 'gif'].includes(urlFileExtention)) {
+                        this.execCommand('insertText', splitAroundUrl[i]);
                         this.commandBar.open({
                             commands: [
                                 {
@@ -2171,6 +2171,7 @@ export class OdooEditor extends EventTarget {
                             ].concat(baseEmbedCommand),
                         });
                     } else if (youtubeUrl) {
+                        this.execCommand('insertText', splitAroundUrl[i]);
                         this.commandBar.open({
                             commands: [
                                 {
