@@ -8,6 +8,7 @@
                 <field name="name" filter_domain="[('name', 'ilike', self)]"/>
                 <field name="driver_id" filter_domain="[('driver_id', 'ilike', self)]"/>
                 <field name="date_start"/>
+                <field name="fleet_id" filter_domain="[('fleet_id', 'ilike', self)]"/>
                 <filter string="Service" name="service" domain="[('cost_type', '=', 'service')]"/>
                 <filter string="Contract" name="contract" domain="[('cost_type', '=', 'contract')]"/>
                 <separator/>
