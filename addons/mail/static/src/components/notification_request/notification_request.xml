@@ -15,12 +15,12 @@
             </div>
             <div class="o_NotificationRequest_content">
                 <div class="o_NotificationRequest_header">
-                    <span class="o_NotificationRequest_name" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }">
+                    <span class="o_NotificationRequest_name text-truncate" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }">
                         <t t-esc="getHeaderText()"/>
                     </span>
                 </div>
                 <div class="o_NotificationRequest_core">
-                    <span class="o_NotificationRequest_coreItem o_NotificationRequest_inlineText">
+                    <span class="o_NotificationRequest_coreItem o_NotificationRequest_inlineText text-truncate">
                         Enable desktop notifications to chat.
                     </span>
                 </div>

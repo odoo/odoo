@@ -27,7 +27,7 @@
                         <div class="o_Attachment_imageOverlay">
                             <div class="o_Attachment_details o_Attachment_imageOverlayDetails">
                                 <t t-if="props.showFilename">
-                                    <div class="o_Attachment_filename">
+                                    <div class="o_Attachment_filename text-truncate">
                                         <t t-esc="attachment.displayName"/>
                                     </div>
                                 </t>
@@ -62,7 +62,7 @@
                 <t t-if="(props.showFilename or props.showExtension) and detailsMode === 'card'">
                     <div class="o_Attachment_details">
                         <t t-if="props.showFilename">
-                            <div class="o_Attachment_filename">
+                            <div class="o_Attachment_filename text-truncate">
                                 <t t-esc="attachment.displayName"/>
                             </div>
                         </t>

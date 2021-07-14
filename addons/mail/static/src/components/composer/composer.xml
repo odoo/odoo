@@ -26,7 +26,7 @@
                     t-ref="fileUploader"
                 />
                 <t t-if="hasHeader">
-                    <div class="o_Composer_coreHeader">
+                    <div class="o_Composer_coreHeader text-truncate">
                         <t t-if="props.hasThreadName and composer.thread">
                             <span class="o_Composer_threadName">
                                 on: <b><t t-esc="composer.thread.displayName"/></b>
