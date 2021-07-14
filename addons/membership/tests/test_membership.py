@@ -124,7 +124,8 @@ class TestMembership(TestMembershipCommon):
         payment = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
             .create({
-                'amount': 86.25
+                'amount': 86.25,
+                'payment_method_line_id': self.inbound_payment_method_line.id,
             })\
             ._create_payments()
 
