@@ -146,7 +146,7 @@ function factory(dependencies) {
          * @private
          */
         _onThreadIsLoadingAttachmentsChanged() {
-            if (!this.thread.isLoadingAttachments) {
+            if (!this.thread || !this.thread.isLoadingAttachments) {
                 this._stopAttachmentsLoading();
                 return;
             }
