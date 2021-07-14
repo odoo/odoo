@@ -398,18 +398,30 @@
                 data-color-prefix="bg-"/>
 
         <we-button-group string="Size">
-            <we-button data-set-size="fa-1x" title="Size 1x">1x</we-button>
-            <we-button data-set-size="fa-2x" title="Size 2x">2x</we-button>
-            <we-button data-set-size="fa-3x" title="Size 3x">3x</we-button>
-            <we-button data-set-size="fa-4x" title="Size 4x">4x</we-button>
-            <we-button data-set-size="fa-5x" title="Size 5x">5x</we-button>
+            <we-button data-select-class="" title="Size 1x">1x</we-button>
+            <we-button data-select-class="fa-2x" title="Size 2x">2x</we-button>
+            <we-button data-select-class="fa-3x" title="Size 3x">3x</we-button>
+            <we-button data-select-class="fa-4x" title="Size 4x">4x</we-button>
+            <we-button data-select-class="fa-5x" title="Size 5x">5x</we-button>
+
+            <!-- Hidden buttons which allows to automatically remove other fa
+                 sizing class we do not suggest.
+                 TODO: implement a param to add those extra classes to remove
+                 via selectClass (also fixes the fact that nothing is selected
+                 if fa-1x is actually used on the icon in this case) -->
+            <we-button data-select-class="fa-1x" data-dependencies="fake"/>
+            <we-button data-select-class="fa-lg" data-dependencies="fake"/>
         </we-button-group>
     </div>
 
     <div data-js="ImageTools" data-selector="img">
-        <we-input class="o_we_large_input" string="Description" data-set-alt="" placeholder="Alt tag"
+        <we-input string="Description" class="o_we_large_input"
+            data-select-attribute="" data-attribute-name="alt"
+            placeholder="Alt tag"
             title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...)."/>
-        <we-input class="o_we_large_input" string="Tooltip" data-set-title="" placeholder="Title tag"
+        <we-input string="Tooltip" class="o_we_large_input"
+            data-select-attribute="" data-attribute-name="title"
+            placeholder="Title tag"
             title="'Title tag' is shown as a tooltip when you hover the picture."/>
     </div>
 
@@ -509,30 +521,30 @@
             </we-button>
         </we-row>
 
-        <we-button-group string="Width">
-            <we-button data-set-width="" title="Resize Auto">Auto</we-button>
-            <we-button data-set-width="25%" title="Resize Quarter">25%</we-button>
-            <we-button data-set-width="50%" title="Resize Half">50%</we-button>
-            <we-button data-set-width="100%" title="Resize Full">100%</we-button>
+        <we-button-group string="Width" data-css-property="width">
+            <we-button data-select-style="" title="Resize Auto">Auto</we-button>
+            <we-button data-select-style="25%" title="Resize Quarter">25%</we-button>
+            <we-button data-select-style="50%" title="Resize Half">50%</we-button>
+            <we-button data-select-style="100%" title="Resize Full">100%</we-button>
         </we-button-group>
     </div>
 
-    <div data-js="StaticMediaTools" data-selector="span.fa, i.fa, img">
-        <we-select string="Alignment">
-            <we-button data-align="" title="Unalign">None</we-button>
-            <we-button data-align="left" title="Align Left">Left</we-button>
-            <we-button data-align="center" title="Align Center">Center</we-button>
-            <we-button data-align="right" title="Align Right">Right</we-button>
+    <div data-selector="span.fa, i.fa, img">
+        <we-select string="Alignment" data-state-to-first-class="true">
+            <we-button data-select-class="" title="Unalign">None</we-button>
+            <we-button data-select-class="float-left" title="Align Left">Left</we-button>
+            <we-button data-select-class="mx-auto d-block" title="Align Center">Center</we-button>
+            <we-button data-select-class="float-right" title="Align Right">Right</we-button>
         </we-select>
 
         <we-row string="Style">
-            <we-button data-toggle-shape-rounded="rounded" title="Shape: Rounded"><i class="fa fa-square fa-fw"></i></we-button>
-            <we-button data-toggle-shape-circle="rounded-circle" title="Shape: Circle"><i class="fa fa-circle-o fa-fw"></i></we-button>
-            <we-button data-toggle-shape-shadow="shadow" title="Shadow"><i class="fa fa-sun-o fa-fw"></i></we-button>
-            <we-button data-toggle-shape-thumbnail="img-thumbnail" title="Shape: Thumbnail"><i class="fa fa-picture-o fa-fw"></i></we-button>
+            <we-button data-select-class="rounded" title="Shape: Rounded"><i class="fa fa-square fa-fw"/></we-button>
+            <we-button data-select-class="rounded-circle" title="Shape: Circle"><i class="fa fa-circle-o fa-fw"/></we-button>
+            <we-button data-select-class="shadow" title="Shadow"><i class="fa fa-sun-o fa-fw"/></we-button>
+            <we-button data-select-class="img-thumbnail" title="Shape: Thumbnail"><i class="fa fa-picture-o fa-fw"/></we-button>
         </we-row>
 
-        <we-input string="Padding" data-set-padding="" data-unit="px"/>
+        <we-input string="Padding" data-select-style="" data-unit="px" data-css-property="padding"/>
     </div>
 
     <div data-js="DynamicSvg" data-selector="img">
