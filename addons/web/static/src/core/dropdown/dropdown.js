@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
 import { useBus, useEffect, useService } from "@web/core/utils/hooks";
-import { scrollTo } from "../utils/scrolling";
+import { usePosition } from "../position/position_hook";
+import { useDropdownNavigation } from "./dropdown_navigation_hook";
 import { ParentClosingMode } from "./dropdown_item";
 
 const { Component, core, hooks, useState, QWeb } = owl;
 const { EventBus } = core;
-const { useExternalListener, onWillStart } = hooks;
+const { onWillStart, useExternalListener, useRef, useSubEnv } = hooks;
 
 /**
  * @typedef DropdownState
@@ -30,12 +31,14 @@ export class Dropdown extends Component {
             groupIsOpen: this.props.startOpen,
         });
 
+        // Set up beforeOpen ---------------------------------------------------
         onWillStart(() => {
-            if ((this.state.open || this.state.groupIsOpen) && this.props.beforeOpen) {
+            if (this.state.open && this.props.beforeOpen) {
                 return this.props.beforeOpen();
             }
         });
 
+        // Set up dynamic open/close behaviours --------------------------------
         if (!this.props.manualOnly) {
             // Close on outside click listener
             useExternalListener(window, "click", this.onWindowClicked);
@@ -60,76 +63,19 @@ export class Dropdown extends Component {
             () => []
         );
 
+        // Set up nested dropdowns ---------------------------------------------
+        this.hasParentDropdown = this.env.inDropdown;
+        useSubEnv({ inDropdown: true });
+        this.rootTag = this.props.tag || (this.hasParentDropdown ? "li" : "div");
+        const position =
+            this.props.position || (this.hasParentDropdown ? "right-start" : "bottom-start");
+
         // Set up key navigation -----------------------------------------------
-        this.hotkeyService = useService("hotkey");
-        this.hotkeyRemoves = [];
+        useDropdownNavigation();
 
-        const nextActiveIndexFns = {
-            FIRST: () => 0,
-            LAST: (items) => items.length - 1,
-            NEXT: (items, prevActiveIndex) => Math.min(prevActiveIndex + 1, items.length - 1),
-            PREV: (_, prevActiveIndex) => Math.max(0, prevActiveIndex - 1),
-        };
-
-        /** @type {(direction: "FIRST"|"LAST"|"NEXT"|"PREV") => Function} */
-        function activeItemSetter(direction) {
-            return function () {
-                const items = [
-                    ...this.el.querySelectorAll(":scope > ul.o_dropdown_menu > .o_dropdown_item"),
-                ];
-                const prevActiveIndex = items.findIndex((item) =>
-                    [...item.classList].includes("o_dropdown_active")
-                );
-                const nextActiveIndex = nextActiveIndexFns[direction](items, prevActiveIndex);
-                items.forEach((item) => item.classList.remove("o_dropdown_active"));
-                items[nextActiveIndex].classList.add("o_dropdown_active");
-                scrollTo(items[nextActiveIndex], this.el.querySelector(".o_dropdown_menu"));
-            };
-        }
-
-        const hotkeyCallbacks = {
-            arrowdown: activeItemSetter("NEXT").bind(this),
-            arrowup: activeItemSetter("PREV").bind(this),
-            "shift+arrowdown": activeItemSetter("LAST").bind(this),
-            "shift+arrowup": activeItemSetter("FIRST").bind(this),
-            enter: () => {
-                const activeItem = this.el.querySelector(
-                    ":scope > ul.o_dropdown_menu > .o_dropdown_item.o_dropdown_active"
-                );
-                if (activeItem) {
-                    activeItem.click();
-                }
-            },
-            escape: this.close.bind(this),
-        };
-
-        /** @this {Dropdown} */
-        function autoSubscribeKeynav() {
-            if (this.state.open) {
-                // Subscribe keynav
-                if (this.hotkeyRemoves.length) {
-                    // Keynav already subscribed
-                    return;
-                }
-                for (const [hotkey, callback] of Object.entries(hotkeyCallbacks)) {
-                    this.hotkeyRemoves.push(
-                        this.hotkeyService.add(hotkey, callback, {
-                            allowRepeat: true,
-                        })
-                    );
-                }
-            } else {
-                // Unsubscribe keynav
-                for (const removeHotkey of this.hotkeyRemoves) {
-                    removeHotkey();
-                }
-                this.hotkeyRemoves = [];
-            }
-        }
-
-        useEffect(autoSubscribeKeynav.bind(this));
-
+        // Set up toggler and positioning --------------------------------------
         if (this.props.toggler === "parent") {
+            // Add parent click listener to handle toggling
             useEffect(
                 () => {
                     const onClick = (ev) => {
@@ -146,6 +92,13 @@ export class Dropdown extends Component {
                 },
                 () => []
             );
+
+            // Position menu relatively to parent element
+            usePosition(() => this.el.parentElement, { popper: "menuRef", position });
+        } else {
+            // Position menu relatively to inner toggler
+            const togglerRef = useRef("togglerRef");
+            usePosition(() => togglerRef.el, { popper: "menuRef", position });
         }
     }
 
@@ -164,7 +117,7 @@ export class Dropdown extends Component {
      * @param {Partial<DropdownState>} stateSlice
      */
     async changeStateAndNotify(stateSlice) {
-        if ((stateSlice.open || stateSlice.groupIsOpen) && this.props.beforeOpen) {
+        if (stateSlice.open && this.props.beforeOpen) {
             await this.props.beforeOpen();
         }
         // Update the state
@@ -270,10 +223,13 @@ export class Dropdown extends Component {
     }
 
     /**
-     * Opens the dropdown the mous enters its toggler.
-     * NB: only if its siblings dropdown group is opened.
+     * Opens the dropdown the mouse enters its toggler.
+     * NB: only if its siblings dropdown group is opened and if not a sub dropdown.
      */
     onTogglerMouseEnter() {
+        if (this.hasParentDropdown) {
+            return;
+        }
         if (this.state.groupIsOpen && !this.state.open) {
             this.open();
         }
@@ -338,6 +294,10 @@ Dropdown.props = {
         optional: true,
     },
     title: {
+        type: String,
+        optional: true,
+    },
+    position: {
         type: String,
         optional: true,
     },

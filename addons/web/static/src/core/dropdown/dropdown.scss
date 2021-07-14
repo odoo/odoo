@@ -69,7 +69,37 @@
     @extend .dropdown-menu;
 
     &.o_dropdown_menu_right {
-      @extend .dropdown-menu-right;
+      // FIXME: does commenting this break anything?
+      // @extend .dropdown-menu-right;
+    }
+
+    & > li.o_dropdown {
+      &.navigated > .o_dropdown_toggler {
+        // FIXME: without this there is no selection feedback
+        // @extend :hover;
+      }
+      & > .o_dropdown_toggler {
+        // FIXME: without this there is no selection feedback
+        // @extend .dropdown-item;
+        &:after {
+          @include o-position-absolute($right: 0);
+          transform: translate(-.6em, .3em);
+          font: .9em/1em FontAwesome;
+          content: "\f0da";
+        }
+      }
+
+      // Correctly align sub dropdowns items with its parent's
+      & > .o_dropdown_menu {
+        &.o-popper-position {
+          &--rs, &--ls {
+            margin-top: calc(-.5rem - 1px);
+          }
+          &--re, &--le {
+            margin-top: calc(.5rem - 2px);
+          }
+        }
+      }
     }
 
     // Since wrapping entry's content is the norm, @extend bootstrap
@@ -86,6 +116,12 @@
       &.disabled > :first-child {
         // FIXME: does commenting this break anything?
         //@extend .disabled;
+      }
+      &.active > :first-child {
+        // FIXME: without this there is no selection feedback
+        // @extend :hover;
+        background-color: rgba(0, 0, 0, 0.08);
+        color: #091124;
       }
     }
   }

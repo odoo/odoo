@@ -87,8 +87,10 @@
     &, &:focus {
       background: none;
     }
+  }
 
-    &.o_dropdown_active {
+  .o-dropdown{
+    &--open > .o_dropdown_toggler {
       @extend %-main-navbar-entry-active;
     }
   }

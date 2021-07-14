@@ -17,7 +17,7 @@ import {
 } from "../helpers/utils";
 import { registerCleanup } from "../helpers/cleanup";
 
-const { mount, hooks } = owl;
+const { mount } = owl;
 const serviceRegistry = registry.category("services");
 const mainComponentsRegistry = registry.category("main_components");
 
@@ -310,7 +310,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         await click(parent.el, "button.o_dropdown_toggler:last-child");
         await click(parent.el, "button.o_dropdown_toggler:last-child");
         assert.containsN(parent.el, "ul.o_dropdown_menu", 2);
-        await click(parent.el, "li");
+        await click(parent.el, ".o_dropdown_item:not(.o_dropdown)");
         assert.containsNone(parent.el, "ul.o_dropdown_menu");
     });
 
@@ -373,7 +373,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         await click(parent.el, "button.o_dropdown_toggler:last-child");
         // As two listeners are defined in the template,
         // clicking once the item would execute the handler twice.
-        await click(parent.el, "li");
+        await click(parent.el, ".o_dropdown_item:not(.o_dropdown)");
     });
 
     QUnit.test("multi-level dropdown: recursive template can be rendered", async (assert) => {
@@ -433,7 +433,9 @@ QUnit.module("Components", ({ beforeEach }) => {
         env.qweb.addTemplate("recursive.Template", recursiveTemplate);
         parent = await mount(Parent, { env, target });
         assert.deepEqual(
-            [...parent.el.querySelectorAll("button,li")].map((el) => el.textContent),
+            [...parent.el.querySelectorAll("button,.o_dropdown_item:not(.o_dropdown)")].map(
+                (el) => el.textContent
+            ),
             [
                 "foo",
                 "foo-0",
@@ -598,7 +600,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("dropdowns keynav", async (assert) => {
-        assert.expect(20);
+        assert.expect(26);
         class Parent extends owl.Component {
             onItemSelected(ev) {
                 const { payload } = ev.detail;
@@ -627,7 +629,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         // Navigate with arrows
         assert.containsNone(
             parent.el,
-            ".o_dropdown_menu > .o_dropdown_active",
+            ".o_dropdown_menu > .active",
             "menu should not have any active items"
         );
 
@@ -635,21 +637,24 @@ QUnit.module("Components", ({ beforeEach }) => {
             { hotkey: "arrowdown", expected: "item1" },
             { hotkey: "arrowdown", expected: "item2" },
             { hotkey: "arrowdown", expected: "item3" },
-            { hotkey: "arrowdown", expected: "item3" },
+            { hotkey: "arrowdown", expected: "item1" },
+            { hotkey: "tab", expected: "item2" },
+            { hotkey: "tab", expected: "item3" },
+            { hotkey: "tab", expected: "item1" },
+            { hotkey: "arrowup", expected: "item3" },
             { hotkey: "arrowup", expected: "item2" },
             { hotkey: "arrowup", expected: "item1" },
-            { hotkey: "arrowup", expected: "item1" },
-            { hotkey: "shift+arrowdown", expected: "item3" },
-            { hotkey: "shift+arrowup", expected: "item1" },
+            { hotkey: "shift+tab", expected: "item3" },
+            { hotkey: "shift+tab", expected: "item2" },
+            { hotkey: "shift+tab", expected: "item1" },
+            { hotkey: "end", expected: "item3" },
+            { hotkey: "home", expected: "item1" },
         ];
 
         for (const step of scenarioSteps) {
             triggerHotkey(step.hotkey);
             await nextTick();
-            assert.hasClass(
-                parent.el.querySelector(".o_dropdown_menu > .o_dropdown_active"),
-                step.expected
-            );
+            assert.hasClass(parent.el.querySelector(".o_dropdown_menu > .active"), step.expected);
         }
 
         // Select last one activated in previous scenario (item1)
@@ -708,44 +713,187 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.containsNone(parent, ".o_dropdown button.o_dropdown_toggler");
         await click(parent.el, ".my_custom_toggler");
         assert.containsOnce(parent, ".o_dropdown .o_dropdown_menu");
-        assert.containsN(parent, ".o_dropdown .o_dropdown_menu li", 2);
+        assert.containsN(parent, ".o_dropdown .o_dropdown_menu .o_dropdown_item", 2);
     });
 
-    QUnit.test("props toggler='parent' with nested dropdowns", async (assert) => {
-        class Parent extends owl.Component {}
+    QUnit.test("multi-level dropdown: keynav", async (assert) => {
+        assert.expect(119);
+        class Parent extends owl.Component {
+            onItemSelected(ev) {
+                const { payload } = ev.detail;
+                assert.step(payload.val);
+            }
+        }
         Parent.template = owl.tags.xml`
-            <div>
-                <Dropdown>
-                    <t t-set-slot="toggler">
-                        Outer dropdown toggler
-                    </t>
-                    <DropdownItem> Element A </DropdownItem>
-                    <DropdownItem> Element B </DropdownItem>
-                    <DropdownItem parentClosingMode="'none'">
-                        <div class="my_custom_toggler">
-                            Inner dropdown toggler
-                            <Dropdown toggler="'parent'">
-                                <DropdownItem>Element 1</DropdownItem>
-                                <DropdownItem>Element 2</DropdownItem>
-                            </Dropdown>
-                        </div>
-                    </DropdownItem>
+            <Dropdown class="first" hotkey="'1'" t-on-dropdown-item-selected="onItemSelected">
+                <DropdownItem class="first-first" payload="{val:'first-first'}" hotkey="'a'">O</DropdownItem>
+                <Dropdown tag="'li'" class="second" hotkey="'2'">
+                    <DropdownItem class="second-first" payload="{val:'second-first'}" hotkey="'b'">O</DropdownItem>
+                    <Dropdown tag="'li'" class="third" hotkey="'3'">
+                        <DropdownItem class="third-first" payload="{val:'third-first'}" hotkey="'c'">O</DropdownItem>
+                        <DropdownItem class="third-last" payload="{val:'third-last'}" hotkey="'d'">O</DropdownItem>
+                    </Dropdown>
+                    <DropdownItem class="second-last" payload="{val:'second-last'}" hotkey="'e'">O</DropdownItem>
                 </Dropdown>
-            </div>`;
-
+                <DropdownItem class="first-last" payload="{val:'first-last'}" hotkey="'f'">O</DropdownItem>
+            </Dropdown>
+        `;
         env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
-        assert.containsOnce(parent, ".o_dropdown");
-        assert.containsOnce(parent, ".o_dropdown button.o_dropdown_toggler");
-        assert.containsNone(parent, ".o_dropdown .o_dropdown_menu");
-        await click(parent.el, ".o_dropdown_toggler");
-        assert.containsOnce(parent, ".o_dropdown .o_dropdown_menu");
-        assert.containsN(parent, ".o_dropdown .o_dropdown_menu li", 3);
-        assert.containsOnce(parent, ".o_dropdown .o_dropdown");
-        assert.containsNone(parent, ".o_dropdown .o_dropdown .o_dropdown_menu");
-        assert.containsNone(parent, ".o_dropdown .o_dropdown button.o_dropdown_toggler");
-        await click(parent.el, ".o_dropdown .my_custom_toggler");
-        assert.containsOnce(parent, ".o_dropdown .o_dropdown .o_dropdown_menu");
-        assert.containsN(parent, ".o_dropdown .o_dropdown .o_dropdown_menu li", 2);
+        assert.containsNone(parent.el, ".o_dropdown_menu", "menus are closed at start");
+
+        // Open through hotkeys
+        triggerHotkey("alt+2");
+        await nextTick();
+        assert.containsNone(parent.el, ".o_dropdown_menu", "no menu is opened");
+
+        triggerHotkey("alt+1");
+        await nextTick();
+        assert.containsOnce(parent.el, ".o_dropdown_menu", "first menu is opened");
+
+        triggerHotkey("alt+2");
+        await nextTick();
+        assert.containsN(parent.el, ".o_dropdown_menu", 2, "second menu is opened");
+
+        triggerHotkey("alt+3");
+        await nextTick();
+        assert.containsN(parent.el, ".o_dropdown_menu", 3, "both menus are opened");
+
+        // Close through hotkeys
+        triggerHotkey("escape");
+        await nextTick();
+        assert.containsN(parent.el, ".o_dropdown_menu", 2, "third menu is closed");
+
+        triggerHotkey("escape");
+        await nextTick();
+        assert.containsOnce(parent.el, ".o_dropdown_menu", "second menu is closed");
+
+        triggerHotkey("escape");
+        await nextTick();
+        assert.containsNone(parent.el, ".o_dropdown_menu", "both menus are closed");
+
+        // Highlighting and selecting items
+        const scenarioSteps = [
+            { hotkey: "alt+1" },
+            { hotkey: "arrowup", highlighted: ["first-last"] },
+            { hotkey: "arrowup", highlighted: ["second"] },
+            { hotkey: "arrowdown", highlighted: ["first-last"] },
+            { hotkey: "arrowdown", highlighted: ["first-first"] },
+            { hotkey: "arrowdown", highlighted: ["second"] },
+            { hotkey: "tab", highlighted: ["first-last"] },
+            { hotkey: "tab", highlighted: ["first-first"] },
+            { hotkey: "tab", highlighted: ["second"] },
+            { hotkey: "shift+tab", highlighted: ["first-first"] },
+            { hotkey: "shift+tab", highlighted: ["first-last"] },
+            { hotkey: "shift+tab", highlighted: ["second"] },
+            { hotkey: "arrowright", highlighted: ["second", "second-first"] },
+            { hotkey: "arrowright", highlighted: ["second", "second-first"] },
+            { hotkey: "arrowleft", highlighted: ["second"] },
+            { hotkey: "arrowleft", highlighted: ["second"] },
+            { hotkey: "arrowright", highlighted: ["second", "second-first"] },
+            { hotkey: "arrowup", highlighted: ["second", "second-last"] },
+            { hotkey: "arrowup", highlighted: ["second", "third"] },
+            { hotkey: "arrowup", highlighted: ["second", "second-first"] },
+            { hotkey: "arrowdown", highlighted: ["second", "third"] },
+            { hotkey: "arrowright", highlighted: ["second", "third", "third-first"] },
+            { hotkey: "arrowright", highlighted: ["second", "third", "third-first"] },
+            { hotkey: "arrowleft", highlighted: ["second", "third"] },
+            { hotkey: "arrowleft", highlighted: ["second"] },
+            { hotkey: "arrowleft", highlighted: ["second"] },
+            { hotkey: "arrowright", highlighted: ["second", "second-first"] },
+            { hotkey: "arrowdown", highlighted: ["second", "third"] },
+            { hotkey: "arrowright", highlighted: ["second", "third", "third-first"] },
+            { hotkey: "arrowup", highlighted: ["second", "third", "third-last"] },
+            { hotkey: "home", highlighted: ["second", "third", "third-first"] },
+            { hotkey: "home", highlighted: ["second", "third", "third-first"] },
+            { hotkey: "end", highlighted: ["second", "third", "third-last"] },
+            { hotkey: "end", highlighted: ["second", "third", "third-last"] },
+            { hotkey: "enter", selected: "third-last" },
+            { hotkey: "alt+1" },
+            { hotkey: "alt+e", selected: false },
+            { hotkey: "alt+f", selected: "first-last" },
+            { hotkey: "alt+1" },
+            { hotkey: "alt+2", highlighted: ["second", "second-first"] },
+            { hotkey: "alt+3", highlighted: ["second", "third", "third-first"] },
+            { hotkey: "alt+d", selected: "third-last" },
+            { hotkey: "alt+1" },
+            { hotkey: "alt+2", highlighted: ["second", "second-first"] },
+            { hotkey: "alt+e", selected: "second-last" },
+        ];
+
+        for (const [stepIndex, step] of scenarioSteps.entries()) {
+            triggerHotkey(step.hotkey);
+            await nextTick();
+            if (step.highlighted !== undefined) {
+                let index = 0;
+                const activeElements = parent.el.querySelectorAll(".active");
+                assert.ok(
+                    activeElements.length === step.highlighted.length,
+                    `step ${stepIndex}: all active elements to check are found`
+                );
+                for (const element of activeElements) {
+                    assert.hasClass(element, step.highlighted[index++]);
+                }
+            }
+            if (step.selected !== undefined) {
+                const verify = step.selected === false ? [] : [step.selected];
+                assert.verifySteps(verify, `step ${stepIndex}: selected item is correct`);
+            }
+        }
+    });
+
+    QUnit.test("multi-level dropdown: unsubscribe all keynav when root close", async (assert) => {
+        assert.expect(14);
+        class Parent extends owl.Component {}
+        Parent.template = owl.tags.xml`
+            <Dropdown togglerClass="'first'">
+                <Dropdown togglerClass="'second'">
+                    <Dropdown togglerClass="'third'"/>
+                </Dropdown>
+            </Dropdown>
+        `;
+        env = await makeTestEnv();
+        let hotkeyRegistrationsCount = 0;
+        patchWithCleanup(env.services.hotkey, {
+            add() {
+                const remove = this._super(...arguments);
+                hotkeyRegistrationsCount += 1;
+                return () => {
+                    remove();
+                    hotkeyRegistrationsCount -= 1;
+                };
+            },
+        });
+        parent = await mount(Parent, { env, target });
+        assert.containsNone(parent.el, ".o_dropdown_menu", "menus are closed at start");
+        assert.strictEqual(hotkeyRegistrationsCount, 0, "no hotkey registered");
+
+        // Open dropdowns one by one
+        await click(parent.el, ".first");
+        assert.containsOnce(parent.el, ".o_dropdown_menu", "1st menu is opened");
+        assert.strictEqual(hotkeyRegistrationsCount, 10, "1st menu hotkeys registered");
+
+        await click(parent.el, ".second");
+        assert.containsN(parent.el, ".o_dropdown_menu", 2, "2nd menu is also opened");
+        assert.strictEqual(hotkeyRegistrationsCount, 20, "2nd menu hotkeys also registered");
+
+        await click(parent.el, ".third");
+        assert.containsN(parent.el, ".o_dropdown_menu", 3, "3rd menu is also opened");
+        assert.strictEqual(hotkeyRegistrationsCount, 30, "3rd menu hotkeys also registered");
+
+        // Close second
+        await click(parent.el, ".second");
+        assert.containsN(parent.el, ".o_dropdown_menu", 1, "only 1st menu stay opened");
+        assert.strictEqual(hotkeyRegistrationsCount, 10, "only 1st menu hotkeys registered");
+
+        // Reopen second
+        await click(parent.el, ".second");
+        assert.containsN(parent.el, ".o_dropdown_menu", 2, "2nd menu is also opened");
+        assert.strictEqual(hotkeyRegistrationsCount, 20, "2nd menu hotkeys also registered");
+
+        // Close first
+        await click(parent.el, ".first");
+        assert.containsNone(parent.el, ".o_dropdown_menu", "all menus are now closed");
+        assert.strictEqual(hotkeyRegistrationsCount, 0, "no hotkey registration left");
     });
 });
