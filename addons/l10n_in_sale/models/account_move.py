@@ -13,4 +13,4 @@ class AccountMove(models.Model):
 
     @api.model
     def _l10n_in_get_shipping_partner_gstin(self, shipping_partner):
-        return shipping_partner.l10n_in_shipping_gstin or shipping_partner.vat
+        return shipping_partner.l10n_in_shipping_gstin
