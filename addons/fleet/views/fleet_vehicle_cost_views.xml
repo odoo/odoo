@@ -1,5 +1,178 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+<<<<<<< HEAD
+=======
+
+        <record id='fleet_vehicle_cost_view_tree' model='ir.ui.view'>
+            <field name="name">fleet.vehicle.cost.tree</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <tree string="Vehicle Costs">
+                    <field name="currency_id" invisible="1"/>
+                    <field name="vehicle_id"/>
+                    <field name="description"/>
+                    <field name="cost_subtype_id"/>
+                    <field name="date"/>
+                    <field name="contract_id"/>
+                    <field name="amount" sum="Cost" widget="monetary"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id='fleet_vehicle_cost_view_kanban' model='ir.ui.view'>
+            <field name="name">fleet.vehicle.cost.kanban</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="currency_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div>
+                                    <strong>
+                                        <field name="vehicle_id"/>
+                                        <span class="float-right"><field name="date"/></span>
+                                    </strong>
+                                </div>
+                                <div>
+                                    <field name="cost_subtype_id"/>
+                                    <span class="float-right"><field name="amount" widget="monetary"/></span>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id='fleet_vehicle_cost_view_pivot' model='ir.ui.view'>
+            <field name="name">fleet.vehicle.cost.pivot</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <pivot string="Vehicles costs">
+                    <field name="vehicle_id" type="row"/>
+                    <field name="cost_type" type="row"/>
+                    <field name="date" interval="year" type="col"/>
+                    <field name="amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id='fleet_vehicle_cost_view_graph' model='ir.ui.view'>
+            <field name="name">fleet.vehicle.cost.graph</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <graph string="Vehicles costs">
+                    <field name="vehicle_id"/>
+                    <field name="date" interval="year"/>
+                    <field name="amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id='fleet_vehicle_cost_indicative_view_pivot' model='ir.ui.view'>
+            <field name="name">fleet.vehicle.cost.pivot</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <pivot string="Vehicles costs" >
+                    <field name="vehicle_id" type="row"/>
+                    <field name="cost_type" type="col"/>
+                    <field name="amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id='fleet_vehicle_cost_indicative_view_graph' model='ir.ui.view'>
+            <field name="name">fleet.vehicle.cost.graph</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <graph string="Vehicles costs">
+                    <field name="parent_id" type="row"/>
+                    <field name="cost_type" type="col"/>
+                    <field name="amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id='fleet_vehicle_costs_view_search' model='ir.ui.view'>
+            <field name="name">fleet.vehicle.cost.search</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <search string="Vehicles costs" >
+                    <field name="vehicle_id" />
+                    <field name="cost_subtype_id"/>
+                    <field name="date"/>
+                    <field name="parent_id"/>
+                    <filter name="parent_false" domain="[('parent_id','=',False)]" string="Effective Costs"/>
+                    <filter name="parent_true" domain="[('parent_id','!=',False)]" string="Indicative Costs"/>
+                    <group expand="1" string="Group By">
+                        <filter name="groupby_cost_type" context="{'group_by': 'cost_type'}" string="Cost Type"/>
+                        <filter name="groupby_cost_subtype_id" context="{'group_by': 'cost_subtype_id'}" string="Cost Subtype"/>
+                        <filter name="groupby_vehicle_id" context="{'group_by': 'vehicle_id'}" string="Vehicle"/>
+                        <filter name="groupby_parent_id" context="{'group_by': 'parent_id'}" string="Parent"/>
+                        <separator/>
+                        <filter name="groupby_date" context="{'group_by': 'date:month'}" string="Date" help="Vehicle Costs by Date"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id='fleet_vehicle_costs_view_form' model='ir.ui.view'>
+            <field name="name">fleet.vehicle.cost.form</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <form string="Vehicle costs">
+                    <sheet>
+                        <field name="currency_id" invisible="1"/>
+                        <group col="2" string="Cost Details">
+                            <group>
+                                <field name="vehicle_id" />
+                                <field name="cost_subtype_id"/>
+                                <field name="amount" widget="monetary"/>
+                                <field name="description"/>
+                            </group>
+                            <group>
+                                <field name="date"/>
+                                <field name="contract_id"/>
+                                <field name="parent_id" groups="base.group_no_one"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="fleet_vehicle_costs_view_graph" model="ir.ui.view">
+           <field name="name">fleet.vehicle.cost.graph</field>
+           <field name="model">fleet.vehicle.cost</field>
+           <field name="arch" type="xml">
+                <graph string="Costs Per Month" stacked="True">
+                    <field name="date" type="row"/>
+                    <field name="vehicle_id" type="col"/>
+                    <field name="amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id='fleet_vehicle_costs_action' model='ir.actions.act_window'>
+            <field name="name">Vehicles Costs</field>
+            <field name="res_model">fleet.vehicle.cost</field>
+            <field name="view_mode">tree,kanban,form,graph</field>
+            <field name="context">{"search_default_parent_false" : True, "search_default_groupby_vehicle_id" : True,}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new cost
+              </p><p>
+                Manage the costs for your different vehicles.
+                Costs are created automatically from services, contracts and fuel logs.
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="fleet_vehicle_costs_action" parent="fleet_vehicles" id="fleet_vehicle_costs_menu" groups="fleet_group_manager"/>
+
+
+>>>>>>> 8580b59ffec... temp
     <record id='fleet_vehicle_log_contract_view_form' model='ir.ui.view'>
         <field name="name">fleet.vehicle.log_contract.form</field>
         <field name="model">fleet.vehicle.log.contract</field>
