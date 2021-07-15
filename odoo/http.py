@@ -302,6 +302,9 @@ class WebRequest(object):
         raise exception.with_traceback(None) from new_cause
 
     def redirect(self, location, code=303, local=True):
+        # compatibility, Werkzeug support URL as location
+        if isinstance(location, urls.URL):
+            location = location.to_url()
         if local:
             location = urls.url_parse(location).replace(scheme='', netloc='').to_url()
         if request and request.db:
