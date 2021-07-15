@@ -1434,8 +1434,11 @@
         <t t-set="has_child" t-value="field.children &amp;&amp; (field.id).split('/').length != 3" />
         <div t-att-data-id="field.id" t-attf-class="o_export_tree_item #{has_child ? 'haschild o_expand' : ''}" tabindex="-1" role="treeitem"> <!-- tabindex make the div focusable -->
             <span t-if="has_child" class="o_expand_parent fa fa-chevron-right" role="img" aria-label="Show sub-fields" title="Show sub-fields"/>
-            <div t-attf-class="o_tree_column" t-att-title="debug and field.id or None">
+            <div t-attf-class="o_tree_column">
                 <t t-esc="field.string"/>
+                <t t-if="debug and field.id">
+                    (<t t-esc="field.id"/>)
+                </t>
                 <span title="Select field" class="fa fa-plus pull-right m-1 o_add_field"/>
             </div>
         </div>
