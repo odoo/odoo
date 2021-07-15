@@ -1940,22 +1940,6 @@ class IrModelData(models.Model):
         return self._xmlid_to_res_model_res_id(xmlid, raise_if_not_found)[1]
 
     @api.model
-    def _xmlid_to_object(self, xmlid, raise_if_not_found=False):
-        """ Return a Model object, or ``None`` if ``raise_if_not_found`` is 
-        set
-        """
-        t = self._xmlid_to_res_model_res_id(xmlid, raise_if_not_found)
-        res_model, res_id = t
-
-        if res_model and res_id:
-            record = self.env[res_model].browse(res_id)
-            if record.exists():
-                return record
-            if raise_if_not_found:
-                raise ValueError('No record found for unique ID %s. It may have been deleted.' % (xmlid))
-        return None
-
-    @api.model
     def check_object_reference(self, module, xml_id, raise_on_access_error=False):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached), if and only if the user has the necessary access rights
         to see that object, otherwise raise a ValueError if raise_on_access_error is True or returns a tuple (model found, False)"""
@@ -2049,7 +2033,7 @@ class IrModelData(models.Model):
         """ Simply mark the given XML id as being loaded, and return the
             corresponding record.
         """
-        record = self._xmlid_to_object(xml_id)
+        record = self.env.ref(xml_id, raise_if_not_found=False)
         if record:
             self.pool.loaded_xmlids.add(xml_id)
         return record

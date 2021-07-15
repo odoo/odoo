@@ -50,7 +50,7 @@ class Job(models.Model):
     _inherit = ['hr.job', 'website.seo.metadata', 'website.published.multi.mixin']
 
     def _get_default_website_description(self):
-        default_description = self.env["ir.model.data"]._xmlid_to_object("website_hr_recruitment.default_website_description")
+        default_description = self.env.ref("website_hr_recruitment.default_website_description", raise_if_not_found=False)
         return (default_description._render() if default_description else "")
 
     website_published = fields.Boolean(help='Set if the application is published on the website of the company.')

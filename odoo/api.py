@@ -573,7 +573,17 @@ class Environment(Mapping):
 
     def ref(self, xml_id, raise_if_not_found=True):
         """Return the record corresponding to the given ``xml_id``."""
-        return self['ir.model.data']._xmlid_to_object(xml_id, raise_if_not_found=raise_if_not_found)
+        res_model, res_id = self['ir.model.data']._xmlid_to_res_model_res_id(
+            xml_id, raise_if_not_found=raise_if_not_found
+        )
+
+        if res_model and res_id:
+            record = self[res_model].browse(res_id)
+            if record.exists():
+                return record
+            if raise_if_not_found:
+                raise ValueError('No record found for unique ID %s. It may have been deleted.' % (xml_id))
+        return None
 
     def is_superuser(self):
         """ Return whether the environment is in superuser mode. """
