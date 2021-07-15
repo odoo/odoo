@@ -202,33 +202,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 "Amount currency of %s is incorrect" % account.name,
             )
 
-    def assertTaxGridAmounts(self, amount_per_tag):
-        expected_values = {tag.id: (tag, balance) for tag, balance in amount_per_tag}
-
-        if not expected_values:
-            return
-
-        self.cr.execute('''
-            SELECT
-                rel.account_account_tag_id,
-                SUM(line.balance)
-            FROM account_account_tag_account_move_line_rel rel
-            JOIN account_move_line line ON line.id = rel.account_move_line_id
-            WHERE line.tax_exigible IS TRUE
-              AND line.company_id = ANY(%(company_ids)s)
-            GROUP BY rel.account_account_tag_id
-        ''', {
-            'company_ids': self.env.companies.ids,
-        })
-
-        for tag_id, total_balance in self.cr.fetchall():
-            tag, expected_balance = expected_values[tag_id]
-            self.assertEqual(
-                total_balance,
-                expected_balance,
-                "Balance of %s is incorrect" % tag.name,
-            )
-
     # -------------------------------------------------------------------------
     # Test creation of account.partial.reconcile/account.full.reconcile
     # during the reconciliation.
@@ -1216,7 +1189,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'credit': 100.0,
                     'account_id': self.company_data['default_account_revenue'].id,
                     'tax_ids': [(6, 0, (self.cash_basis_tax_a_third_amount + self.cash_basis_tax_tiny_amount).ids)],
-                    'tax_exigible': False,
                 }),
 
                 # Tax lines
@@ -1225,14 +1197,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'credit': 33.33,
                     'account_id': self.cash_basis_transfer_account.id,
                     'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
-                    'tax_exigible': False,
                 }),
                 (0, 0, {
                     'debit': 0.0,
                     'credit': 0.01,
                     'account_id': self.cash_basis_transfer_account.id,
                     'tax_repartition_line_id': self.cash_basis_tax_tiny_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
-                    'tax_exigible': False,
                 }),
 
                 # Receivable lines
@@ -1428,7 +1398,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'currency_id': currency_id,
                     'account_id': self.company_data['default_account_revenue'].id,
                     'tax_ids': [(6, 0, taxes.ids)],
-                    'tax_exigible': False,
                 }),
 
                 # Tax lines
@@ -1439,7 +1408,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'currency_id': currency_id,
                     'account_id': self.cash_basis_transfer_account.id,
                     'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
-                    'tax_exigible': False,
                 }),
                 (0, 0, {
                     'debit': 0.0,
@@ -1448,7 +1416,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'currency_id': currency_id,
                     'account_id': self.cash_basis_transfer_account.id,
                     'tax_repartition_line_id': self.cash_basis_tax_tiny_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
-                    'tax_exigible': False,
                 }),
 
                 # Receivable lines
@@ -1639,7 +1606,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
     def test_reconcile_cash_basis_exchange_difference_transfer_account_check_entries_1(self):
         ''' Test the generation of the exchange difference for a tax cash basis journal entry when the transfer
-        account is not a reconcile one.
+        account is not reconcilable.
         '''
         currency_id = self.currency_data['currency'].id
 
@@ -1656,7 +1623,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'currency_id': currency_id,
                     'account_id': self.company_data['default_account_revenue'].id,
                     'tax_ids': [(6, 0, self.cash_basis_tax_a_third_amount.ids)],
-                    'tax_exigible': False,
                 }),
 
                 # Tax line
@@ -1667,7 +1633,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'currency_id': currency_id,
                     'account_id': self.cash_basis_transfer_account.id,
                     'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
-                    'tax_exigible': False,
                 }),
 
                 # Receivable lines
@@ -1794,7 +1759,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'currency_id': currency_id,
                     'account_id': self.company_data['default_account_revenue'].id,
                     'tax_ids': [(6, 0, self.cash_basis_tax_a_third_amount.ids)],
-                    'tax_exigible': False,
                 }),
 
                 # Tax line
@@ -1805,7 +1769,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'currency_id': currency_id,
                     'account_id': self.cash_basis_transfer_account.id,
                     'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
-                    'tax_exigible': False,
                 }),
 
                 # Receivable lines
@@ -1882,7 +1845,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'currency_id': currency_id,
                     'account_id': self.company_data['default_account_revenue'].id,
                     'tax_ids': [(6, 0, self.cash_basis_tax_a_third_amount.ids)],
-                    'tax_exigible': False,
                 }),
 
                 # Tax line
@@ -1893,7 +1855,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'currency_id': currency_id,
                     'account_id': self.cash_basis_transfer_account.id,
                     'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
-                    'tax_exigible': False,
                 }),
 
                 # Receivable lines
@@ -1957,7 +1918,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'credit': 100.0,
                     'account_id': self.company_data['default_account_revenue'].id,
                     'tax_ids': [(6, 0, self.cash_basis_tax_a_third_amount.ids)],
-                    'tax_exigible': False,
                 }),
 
                 # Tax line
@@ -1966,7 +1926,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'credit': 33.33,
                     'account_id': self.cash_basis_transfer_account.id,
                     'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
-                    'tax_exigible': False,
                 }),
 
                 # Receivable line
@@ -2037,8 +1996,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'credit': 100.0,
                     'account_id': self.company_data['default_account_revenue'].id,
                     'tax_ids': [(6, 0, self.cash_basis_tax_a_third_amount.ids)],
-                    'tax_tag_ids': [(6, 0, self.tax_tags[0].ids)],
-                    'tax_exigible': False,
                 }),
 
                 # Tax line
@@ -2047,8 +2004,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'credit': 33.33,
                     'account_id': self.cash_basis_transfer_account.id,
                     'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
-                    'tax_tag_ids': [(6, 0, self.tax_tags[1].ids)],
-                    'tax_exigible': False,
                 }),
 
                 # Receivable line
@@ -2072,8 +2027,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'credit': 0.0,
                     'account_id': self.company_data['default_account_revenue'].id,
                     'tax_ids': [(6, 0, self.cash_basis_tax_a_third_amount.ids)],
-                    'tax_tag_ids': [(6, 0, self.tax_tags[2].ids)],
-                    'tax_exigible': False,
                 }),
 
                 # Tax line
@@ -2081,9 +2034,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'debit': 33.33,
                     'credit': 0.0,
                     'account_id': self.cash_basis_transfer_account.id,
-                    'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
-                    'tax_tag_ids': [(6, 0, self.tax_tags[3].ids)],
-                    'tax_exigible': False,
+                    'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.refund_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
                 }),
 
                 # Receivable line
@@ -2104,7 +2055,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertFullReconcile(res['full_reconcile'], receivable_lines)
         self.assertEqual(len(res.get('tax_cash_basis_moves', [])), 2)
 
-        tax_cash_basis_moves = res['tax_cash_basis_moves'].sorted(lambda move: move.tax_cash_basis_move_id.id)
+        tax_cash_basis_moves = res['tax_cash_basis_moves'].sorted(lambda move: move.tax_cash_basis_origin_move_id.id)
 
         # Invoice:
         cb_lines = tax_cash_basis_moves[0].line_ids.sorted(lambda line: (-abs(line.balance), -line.debit, line.account_id))
@@ -2128,14 +2079,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'debit': 0.0,      'credit': 33.33,    'tax_tag_ids': [],                      'account_id': self.cash_basis_transfer_account.id},
         ])
 
-        self.assertTaxGridAmounts([
-            # Tag               Balance
-            (self.tax_tags[0],  -100.0),
-            (self.tax_tags[1],  -33.33),
-            (self.tax_tags[2],  100.0),
-            (self.tax_tags[3],  33.33),
-        ])
-
     def test_reconcile_cash_basis_tax_grid_multi_taxes(self):
         ''' Test the tax grid when reconciling an invoice with multiple taxes/tax repartition. '''
         base_taxes = self.cash_basis_tax_a_third_amount + self.cash_basis_tax_tiny_amount
@@ -2152,8 +2095,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'credit': 100.0,
                     'account_id': self.company_data['default_account_revenue'].id,
                     'tax_ids': [(6, 0, base_taxes.ids)],
-                    'tax_tag_ids': [(6, 0, base_tags.ids)],
-                    'tax_exigible': False,
                 }),
 
                 # Tax lines
@@ -2162,16 +2103,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'credit': 33.33,
                     'account_id': self.cash_basis_transfer_account.id,
                     'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
-                    'tax_tag_ids': [(6, 0, self.tax_tags[1].ids)],
-                    'tax_exigible': False,
                 }),
                 (0, 0, {
                     'debit': 0.0,
                     'credit': 0.01,
                     'account_id': self.cash_basis_transfer_account.id,
                     'tax_repartition_line_id': self.cash_basis_tax_tiny_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
-                    'tax_tag_ids': [(6, 0, self.tax_tags[5].ids)],
-                    'tax_exigible': False,
                 }),
 
                 # Receivable lines
@@ -2212,14 +2149,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             # tax_2:
             {'debit': 0.01,     'credit': 0.0,      'tax_ids': [],              'tax_tag_ids': [],                      'account_id': self.cash_basis_transfer_account.id},
             {'debit': 0.0,      'credit': 0.01,     'tax_ids': [],              'tax_tag_ids': self.tax_tags[5].ids,    'account_id': self.tax_account_2.id},
-        ])
-
-        self.assertTaxGridAmounts([
-            # Tag               Balance
-            (self.tax_tags[0],  -100.0),
-            (self.tax_tags[1],  -33.33),
-            (self.tax_tags[4],  -100.0),
-            (self.tax_tags[5],  -0.01),
         ])
 
     def test_caba_mix_reconciliation(self):

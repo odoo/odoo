@@ -230,6 +230,9 @@ class AccountPartialReconcile(models.Model):
                                 account.move.line.
         '''
         account = base_line.company_id.account_cash_basis_base_account_id or base_line.account_id
+        tax_ids = base_line.tax_ids.filtered(lambda x: x.tax_exigibility == 'on_payment')
+        is_refund = base_line.belongs_to_refund()
+
         return {
             'name': base_line.move_id.name,
             'debit': balance if balance > 0.0 else 0.0,
@@ -238,9 +241,8 @@ class AccountPartialReconcile(models.Model):
             'currency_id': base_line.currency_id.id,
             'partner_id': base_line.partner_id.id,
             'account_id': account.id,
-            'tax_ids': [(6, 0, base_line.tax_ids.ids)],
-            'tax_tag_ids': [(6, 0, base_line.tax_tag_ids.ids)],
-            'tax_exigible': True,
+            'tax_ids': [Command.set(tax_ids.ids)],
+            'tax_tag_ids': [Command.set(tax_ids.get_tax_tags(is_refund, 'base').ids)],
             'tax_tag_invert': base_line.tax_tag_invert,
         }
 
@@ -261,7 +263,6 @@ class AccountPartialReconcile(models.Model):
             'amount_currency': -cb_base_line_vals['amount_currency'],
             'currency_id': cb_base_line_vals['currency_id'],
             'partner_id': cb_base_line_vals['partner_id'],
-            'tax_exigible': True,
         }
 
     @api.model
@@ -274,19 +275,22 @@ class AccountPartialReconcile(models.Model):
         :return:                A python dictionary that could be passed to the create method of
                                 account.move.line.
         '''
+        tax_ids = tax_line.tax_ids.filtered(lambda x: x.tax_exigibility == 'on_payment')
+        base_tags = tax_ids.get_tax_tags(tax_line.tax_repartition_line_id.refund_tax_id, 'base')
+        all_tags = base_tags + tax_line.tax_repartition_line_id.tag_ids
+
         return {
             'name': tax_line.name,
             'debit': balance if balance > 0.0 else 0.0,
             'credit': -balance if balance < 0.0 else 0.0,
             'tax_base_amount': tax_line.tax_base_amount,
             'tax_repartition_line_id': tax_line.tax_repartition_line_id.id,
-            'tax_ids': [(6, 0, tax_line.tax_ids.ids)],
-            'tax_tag_ids': [(6, 0, tax_line.tax_tag_ids.ids)],
+            'tax_ids': [Command.set(tax_ids.ids)],
+            'tax_tag_ids': [Command.set(all_tags.ids)],
             'account_id': tax_line.tax_repartition_line_id.account_id.id or tax_line.account_id.id,
             'amount_currency': amount_currency,
             'currency_id': tax_line.currency_id.id,
             'partner_id': tax_line.partner_id.id,
-            'tax_exigible': True,
             # No need to set tax_tag_invert as on the base line; it will be computed from the repartition line
         }
 
@@ -308,7 +312,6 @@ class AccountPartialReconcile(models.Model):
             'amount_currency': -cb_tax_line_vals['amount_currency'],
             'currency_id': cb_tax_line_vals['currency_id'],
             'partner_id': cb_tax_line_vals['partner_id'],
-            'tax_exigible': True,
         }
 
     @api.model
@@ -317,12 +320,13 @@ class AccountPartialReconcile(models.Model):
         :param base_line_vals:  The values to create a new account.move.line record.
         :return:                The grouping key as a tuple.
         '''
+        tax_ids = base_line_vals['tax_ids'][0][2] # Decode [(6, 0, [...])] command
+        base_taxes = self.env['account.tax'].browse(tax_ids)
         return (
             base_line_vals['currency_id'],
             base_line_vals['partner_id'],
             base_line_vals['account_id'],
-            tuple(base_line_vals['tax_ids'][0][2]),     # Decode [(6, 0, [...])] command
-            tuple(base_line_vals['tax_tag_ids'][0][2]), # Decode [(6, 0, [...])] command
+            tuple(base_taxes.filtered(lambda x: x.tax_exigibility == 'on_payment').ids),
         )
 
     @api.model
@@ -336,8 +340,7 @@ class AccountPartialReconcile(models.Model):
             base_line.currency_id.id,
             base_line.partner_id.id,
             (account or base_line.account_id).id,
-            tuple(base_line.tax_ids.ids),
-            tuple(base_line.tax_tag_ids.ids),
+            tuple(base_line.tax_ids.filtered(lambda x: x.tax_exigibility == 'on_payment').ids),
         )
 
     @api.model
@@ -346,12 +349,13 @@ class AccountPartialReconcile(models.Model):
         :param tax_line_vals:   The values to create a new account.move.line record.
         :return:                The grouping key as a tuple.
         '''
+        tax_ids = tax_line_vals['tax_ids'][0][2] # Decode [(6, 0, [...])] command
+        base_taxes = self.env['account.tax'].browse(tax_ids)
         return (
             tax_line_vals['currency_id'],
             tax_line_vals['partner_id'],
             tax_line_vals['account_id'],
-            tuple(tax_line_vals['tax_ids'][0][2]),      # Decode [(6, 0, [...])] command
-            tuple(tax_line_vals['tax_tag_ids'][0][2]),  # Decode [(6, 0, [...])] command
+            tuple(base_taxes.filtered(lambda x: x.tax_exigibility == 'on_payment').ids),
             tax_line_vals['tax_repartition_line_id'],
         )
 
@@ -366,8 +370,7 @@ class AccountPartialReconcile(models.Model):
             tax_line.currency_id.id,
             tax_line.partner_id.id,
             (account or tax_line.account_id).id,
-            tuple(tax_line.tax_ids.ids),
-            tuple(tax_line.tax_tag_ids.ids),
+            tuple(tax_line.tax_ids.filtered(lambda x: x.tax_exigibility == 'on_payment').ids),
             tax_line.tax_repartition_line_id.id,
         )
 
@@ -394,15 +397,15 @@ class AccountPartialReconcile(models.Model):
                     'journal_id': partial.company_id.tax_cash_basis_journal_id.id,
                     'line_ids': [],
                     'tax_cash_basis_rec_id': partial.id,
-                    'tax_cash_basis_move_id': move.id,
-                    'fiscal_position_id': move.fiscal_position_id,
+                    'tax_cash_basis_origin_move_id': move.id,
+                    'fiscal_position_id': move.fiscal_position_id.id,
                 }
 
                 # Tracking of lines grouped all together.
                 # Used to reduce the number of generated lines and to avoid rounding issues.
                 partial_lines_to_create = {}
 
-                for line in move_values['to_process_lines']:
+                for caba_treatment, line in move_values['to_process_lines']:
 
                     # ==========================================================================
                     # Compute the balance of the current line on the cash basis entry.
@@ -424,12 +427,12 @@ class AccountPartialReconcile(models.Model):
                     # and well reported in the Tax Report.
                     # ==========================================================================
 
-                    if line.tax_repartition_line_id:
+                    if caba_treatment == 'tax':
                         # Tax line.
 
                         cb_line_vals = self._prepare_cash_basis_tax_line_vals(line, balance, amount_currency)
                         grouping_key = self._get_cash_basis_tax_line_grouping_key_from_vals(cb_line_vals)
-                    elif line.tax_ids:
+                    elif caba_treatment == 'base':
                         # Base line.
 
                         cb_line_vals = self._prepare_cash_basis_base_line_vals(line, balance, amount_currency)
@@ -448,7 +451,7 @@ class AccountPartialReconcile(models.Model):
                             'amount_currency': aggregated_vals['amount_currency'] + cb_line_vals['amount_currency'],
                         })
 
-                        if line.tax_repartition_line_id:
+                        if caba_treatment == 'tax':
                             aggregated_vals.update({
                                 'tax_base_amount': aggregated_vals['tax_base_amount'] + cb_line_vals['tax_base_amount'],
                             })
@@ -457,7 +460,7 @@ class AccountPartialReconcile(models.Model):
                         partial_lines_to_create[grouping_key] = {
                             'vals': cb_line_vals,
                         }
-                        if line.tax_repartition_line_id:
+                        if caba_treatment == 'tax':
                             partial_lines_to_create[grouping_key].update({
                                 'tax_line': line,
                             })
