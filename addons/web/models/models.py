@@ -102,8 +102,15 @@ class Base(models.AbstractModel):
         if not groups:
             length = 0
         elif limit and len(groups) == limit:
-            all_groups = self.read_group(domain, ['display_name'], groupby, lazy=True)
-            length = len(all_groups)
+            # We need to fetch all groups to know the total number
+            # this cannot be done all at once to avoid MemoryError
+            length = limit
+            chunk_size = 100000
+            while True:
+                more = len(self.read_group(domain, ['display_name'], groupby, offset=length, limit=chunk_size, lazy=True))
+                length += more
+                if more < chunk_size:
+                    break
         else:
             length = len(groups) + offset
         return {
