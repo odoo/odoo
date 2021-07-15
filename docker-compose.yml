@@ -1,0 +1,16 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+
+  odoo-docker:
+    image: postgres
+    restart: always
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: aumet-password
+      POSTGRES_USER: aumet-user
+      POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
