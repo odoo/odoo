@@ -5,16 +5,16 @@
 # Translators:
 # Martin Trigaux, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
-# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,7 +67,7 @@ msgstr ""
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Attendances can't overlap."
-msgstr ""
+msgstr "Prezențele nu se pot suprapune."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
@@ -79,6 +79,7 @@ msgstr "Ora medie pe zi"
 msgid ""
 "Average hours per day a resource is supposed to work with this calendar."
 msgstr ""
+"Media de ore pe zi ar trebui să funcționeze o resursă cu acest calendar."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
@@ -217,12 +218,13 @@ msgstr "Vineri dimineată"
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
 msgstr ""
+"Oferă secvența acestei linii atunci când se afișează calendarul resurselor."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Global Time Off"
-msgstr ""
+msgstr "Timp liber global"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -258,6 +260,8 @@ msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
 msgstr ""
+"Dacă este gol, acesta este un timp liber generic pentru companie. Dacă este "
+"setată o resursă, timpul liber este doar pentru această resursă"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -274,6 +278,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Working "
 "Time without removing it."
 msgstr ""
+"Dacă câmpul activ este setat la fals, acesta vă va permite să ascundeți "
+"timpul de lucru fără a-l elimina."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -322,7 +328,7 @@ msgstr "Ultima actualizare pe"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Date"
-msgstr ""
+msgstr "Data părăsirii"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -410,7 +416,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Time Off"
-msgstr ""
+msgstr "Timp resursă oprit"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
@@ -445,7 +451,7 @@ msgstr "Resurse"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Time Off"
-msgstr ""
+msgstr "Resurse Timp liber"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -473,7 +479,7 @@ msgstr "Cauta resursa"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Time Off"
-msgstr ""
+msgstr "Căutare Perioadă de lucru Timp liber"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -516,7 +522,7 @@ msgstr "Dată început"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave"
-msgstr ""
+msgstr "Data de începere a concediului"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
@@ -552,8 +558,10 @@ msgstr "Factorul de eficiență nu poate fi egal cu 0."
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
-msgid "The start date of the time off must be earlier end date."
+msgid "The start date of the time off must be earlier than the end date."
 msgstr ""
+"Data de începere a perioadei libere trebuie să fie mai devreme decât data de"
+" încheiere."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -576,6 +584,11 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Acest câmp este utilizat pentru a calcula durata preconizată a unei comenzi "
+"de lucru la acest centru de lucru. De exemplu, dacă o comandă de lucru "
+"durează o oră și factorul de eficiență este de 100%, atunci durata așteptată"
+" va fi de o oră. Dacă factorul de eficiență este de 200%, totuși durata "
+"așteptată va fi de 30 de minute."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
@@ -680,6 +693,8 @@ msgid ""
 "Whether this should be computed as a time off or as work time (eg: "
 "formation)"
 msgstr ""
+"Dacă acest lucru ar trebui calculat ca timp liber sau ca timp de lucru (de "
+"exemplu: formare)"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance

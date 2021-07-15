@@ -8,6 +8,7 @@ var _t = core._t;
 
 tour.register('account_tour', {
     url: "/web",
+    sequence: 60,
 }, [
     ...tour.stepUtils.goToAppSteps('account.menu_finance', _t('Send invoices to your customers in no time with the <b>Invoicing app</b>.')),
     {
@@ -18,6 +19,7 @@ tour.register('account_tour', {
         trigger: "button[name=action_save_onboarding_company_step]",
         extra_trigger: "a.o_onboarding_step_action[data-method=action_open_base_onboarding_company]",
         content: _t("Looks good. Let's continue."),
+        position: "left",
     }, {
         trigger: "a.o_onboarding_step_action[data-method=action_open_base_document_layout]",
         content: _t("Customize your layout."),
@@ -26,15 +28,11 @@ tour.register('account_tour', {
         trigger: "button[name=document_layout_save]",
         extra_trigger: "a.o_onboarding_step_action[data-method=action_open_base_document_layout]",
         content: _t("Once everything is as you want it, validate."),
+        position: "left",
     }, {
         trigger: "a.o_onboarding_step_action[data-method=action_open_account_onboarding_create_invoice]",
-        content: _t("Now, we'll create a your first invoice."),
+        content: _t("Now, we'll create your first invoice."),
         position: "bottom",
-    }, {
-        trigger: "input[name=name]",
-        extra_trigger: "[name=move_type][raw-value=out_invoice]",
-        content: _t("Customize the prefix and number to fit your needs."),
-        run: 'text SALE/0000000001'
     }, {
         trigger: "div[name=partner_id] input",
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
@@ -49,6 +47,7 @@ tour.register('account_tour', {
         trigger: ".modal-content button.btn-primary",
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
         content: _t("Once everything is set, you are good to continue. You will be able to edit this later in the <b>Customers</b> menu."),
+        auto: true,
     }, {
         trigger: "div[name=invoice_line_ids] .o_field_x2many_list_row_add a:not([data-context])",
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
@@ -56,7 +55,7 @@ tour.register('account_tour', {
     }, {
         trigger: "div[name=invoice_line_ids] textarea[name=name]",
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
-        content: _t("Fill in the details of the line.<br><i>Tip: all the details can be set automatically if you configure your <b>products</b>.</i>"),
+        content: _t("Fill in the details of the line."),
         position: "bottom",
     }, {
         trigger: "div[name=invoice_line_ids] input[name=price_unit]",
@@ -77,14 +76,17 @@ tour.register('account_tour', {
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
         content: _t("Write here <b>your own email address</b> to test the flow."),
         run: 'text customer@example.com',
+        auto: true,
     }, {
         trigger: ".modal-content button.btn-primary",
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
         content: _t("Validate."),
+        auto: true,
     }, {
         trigger: "button[name=send_and_print_action]",
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
         content: _t("Let's send the invoice."),
+        position: "left"
     }
 ]);
 

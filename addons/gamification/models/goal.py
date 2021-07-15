@@ -153,7 +153,7 @@ class Goal(models.Model):
     user_id = fields.Many2one('res.users', string="User", required=True, auto_join=True, ondelete="cascade")
     line_id = fields.Many2one('gamification.challenge.line', string="Challenge Line", ondelete="cascade")
     challenge_id = fields.Many2one(
-        related='line_id.challenge_id', store=True, readonly=True,
+        related='line_id.challenge_id', store=True, readonly=True, index=True,
         help="Challenge that generated the goal, assign challenge to users "
              "to generate goals with a value in this field.")
     start_date = fields.Date("Start Date", default=fields.Date.today)
@@ -289,11 +289,11 @@ class Goal(models.Model):
                             "of code for definition %s, expected a number",
                             result, definition.name)
 
-            else:  # count or sum
+            elif definition.computation_mode in ('count', 'sum'):  # count or sum
                 Obj = self.env[definition.model_id.model]
 
                 field_date_name = definition.field_date_id.name
-                if definition.computation_mode == 'count' and definition.batch_mode:
+                if definition.batch_mode:
                     # batch mode, trying to do as much as possible in one request
                     general_domain = ast.literal_eval(definition.domain)
                     field_name = definition.batch_distinctive_field.name
@@ -312,12 +312,22 @@ class Goal(models.Model):
                         if end_date:
                             subquery_domain.append((field_date_name, '<=', end_date))
 
-                        if field_name == 'id':
-                            # grouping on id does not work and is similar to search anyway
-                            users = Obj.search(subquery_domain)
-                            user_values = [{'id': user.id, 'id_count': 1} for user in users]
-                        else:
-                            user_values = Obj.read_group(subquery_domain, fields=[field_name], groupby=[field_name])
+                        if definition.computation_mode == 'count':
+                            value_field_name = field_name + '_count'
+                            if field_name == 'id':
+                                # grouping on id does not work and is similar to search anyway
+                                users = Obj.search(subquery_domain)
+                                user_values = [{'id': user.id, value_field_name: 1} for user in users]
+                            else:
+                                user_values = Obj.read_group(subquery_domain, fields=[field_name], groupby=[field_name])
+
+                        else:  # sum
+                            value_field_name = definition.field_id.name
+                            if field_name == 'id':
+                                user_values = Obj.search_read(subquery_domain, fields=['id', value_field_name])
+                            else:
+                                user_values = Obj.read_group(subquery_domain, fields=[field_name, "%s:sum" % value_field_name], groupby=[field_name])
+
                         # user_values has format of read_group: [{'partner_id': 42, 'partner_id_count': 3},...]
                         for goal in [g for g in goals if g.id in query_goals]:
                             for user_value in user_values:
@@ -325,7 +335,7 @@ class Goal(models.Model):
                                 if isinstance(queried_value, tuple) and len(queried_value) == 2 and isinstance(queried_value[0], int):
                                     queried_value = queried_value[0]
                                 if queried_value == query_goals[goal.id]:
-                                    new_value = user_value.get(field_name+'_count', goal.current)
+                                    new_value = user_value.get(value_field_name, goal.current)
                                     goals_to_write.update(goal._get_write_values(new_value))
 
                 else:
@@ -341,7 +351,6 @@ class Goal(models.Model):
 
                         if definition.computation_mode == 'sum':
                             field_name = definition.field_id.name
-                            # TODO for master: group on user field in batch mode
                             res = Obj.read_group(domain, [field_name], [])
                             new_value = res and res[0][field_name] or 0.0
 
@@ -349,6 +358,11 @@ class Goal(models.Model):
                             new_value = Obj.search_count(domain)
 
                         goals_to_write.update(goal._get_write_values(new_value))
+
+            else:
+                _logger.error(
+                    "Invalid computation mode '%s' in definition %s",
+                    definition.computation_mode, definition.name)
 
             for goal, values in goals_to_write.items():
                 if not values:

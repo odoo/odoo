@@ -34,6 +34,16 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Група податків: Податок включає субподатки.\n"
+"    - Фіксований: Сума податку залишається такою ж, незалежно від ціни.\n"
+"    - Відсоток ціни: Сума податку є % ціни:\n"
+"        напр., 100 * (1 + 10%) = 110 (не включає ціну)\n"
+"        напр., 110 / (1 + 10%) = 100 (ціна включена)\n"
+"    - Відсоток ціни із включеним податком: Сума податку - це поділ ціни:\n"
+"        напр., 180 / (1 - 10%) = 200 (не включає ціну)\n"
+"        напр., 200 * (1 - 10%) = 180 (ціна включена)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
@@ -53,14 +63,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Обчислити суму податку, встановивши змінну \"результат\"\n"
+"Обчисліть суму податку, встановивши змінну 'result'.\n"
 "\n"
-":param base_amount: float, фактична сума, на яку застосовується податок\n"
+":param base_amount: float, actual amount on which the tax is applied\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
-":param company: res.company набір одиночних записів\n"
-":param product: product.product набір одиночних записів або Нічого\n"
-":param partner: res.partner набір одиночних записів або Нічого"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
@@ -73,13 +83,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Обчислити суму податку, встановивши змінну \"результат\".\n"
+"Обчисліть суму податку, встановивши змінну 'result'.\n"
 "\n"
-":param base_amount: float, фактична сума, на яку застосовується податок\n"
+":param base_amount: float, actual amount on which the tax is applied\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
-":param product: product.product набір одиночних записів або Нічого\n"
-":param partner: res.partner набір одиночних записів або Нічого"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -92,13 +102,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Визначте, чи буде застосовано податок, встановивши змінну \"результат\" на \"Правильна\" або \"Невірна\".\n"
+"Визначте, чи буде застосовано податок, встановивши змінну 'result' на True або False.\n"
 "\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
-":param company: res.company набір одиночних записів\n"
-":param product: product.product набір одиночних записів або Нічого\n"
-":param partner: res.partner набір одиночних записів або Нічого"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
@@ -110,12 +120,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Визначте, чи буде застосовано податок, встановивши змінну \"результат\" на \"Правильний\" або \"Невірний\".\n"
+"Визначте, чи буде застосовано податок, встановивши змінну 'result' на True або False.\n"
 "\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
-":param product: product.product набір одиночних записів або Нічого\n"
-":param partner: res.partner набір одиночних записів або Нічого"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
@@ -133,7 +143,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax____last_update
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute

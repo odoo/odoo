@@ -538,7 +538,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
     def test_zero_amount_journal_curr_1_statement_curr_2(self):
         self.bank_journal_2.currency_id = self.currency_1
 
-        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+        statement = self.env['account.bank.statement'].create({
             'name': 'test_statement',
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
@@ -562,7 +562,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
     def test_zero_amount_currency_journal_curr_1_statement_curr_2(self):
         self.bank_journal_2.currency_id = self.currency_1
 
-        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+        statement = self.env['account.bank.statement'].create({
             'name': 'test_statement',
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
@@ -586,7 +586,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
     def test_zero_amount_journal_curr_2_statement_curr_1(self):
         self.bank_journal_2.currency_id = self.currency_2
 
-        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+        statement = self.env['account.bank.statement'].create({
             'name': 'test_statement',
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
@@ -610,7 +610,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
     def test_zero_amount_currency_journal_curr_2_statement_curr_1(self):
         self.bank_journal_2.currency_id = self.currency_2
 
-        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+        statement = self.env['account.bank.statement'].create({
             'name': 'test_statement',
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
@@ -634,7 +634,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
     def test_zero_amount_journal_curr_2_statement_curr_3(self):
         self.bank_journal_2.currency_id = self.currency_2
 
-        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+        statement = self.env['account.bank.statement'].create({
             'name': 'test_statement',
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
@@ -658,7 +658,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
     def test_zero_amount_currency_journal_curr_2_statement_curr_3(self):
         self.bank_journal_2.currency_id = self.currency_2
 
-        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+        statement = self.env['account.bank.statement'].create({
             'name': 'test_statement',
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
@@ -703,23 +703,10 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
         # ==== Test constraints at creation ====
 
-        # Amount can't be 0.0 on a statement line.
-        assertStatementLineConstraint(statement_vals, {
-            **statement_line_vals,
-            'amount': 0.0,
-        })
-
         # Foreign currency must not be the same as the journal one.
         assertStatementLineConstraint(statement_vals, {
             **statement_line_vals,
             'foreign_currency_id': self.currency_1.id,
-        })
-
-        # Can't have amount_currency = 0.0 with a specified foreign currency.
-        assertStatementLineConstraint(statement_vals, {
-            **statement_line_vals,
-            'foreign_currency_id': self.currency_2.id,
-            'amount_currency': 0.0,
         })
 
         # Can't have a stand alone amount in foreign currency without foreign currency set.
@@ -1497,4 +1484,111 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
                 'amount_residual': 0.0,
                 'amount_residual_currency': 0.0,
             },
+        ])
+
+    def test_conversion_rate_rounding_issue(self):
+        ''' Ensure the reconciliation is well handling the rounding issue due to multiple currency conversion rates.
+
+        In this test, the resulting journal entry after reconciliation is:
+        {'amount_currency': 7541.66,    'debit': 6446.97,   'credit': 0.0}
+        {'amount_currency': 226.04,     'debit': 193.22,    'credit': 0.0}
+        {'amount_currency': -7767.70,   'debit': 0.0,       'credit': 6640.19}
+        ... but 226.04 / 1.1698 = 193.23. In this situation, 0.01 has been removed from this write-off line in order to
+        avoid an unecessary open-balance line being an exchange difference issue.
+        '''
+        self.bank_journal_2.currency_id = self.currency_2
+        self.currency_data['rates'][-1].rate = 1.1698
+
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2017-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'amount': 7541.66,
+                }),
+            ],
+        })
+        statement.button_post()
+        statement_line = statement.line_ids
+
+        payment = self.env['account.payment'].create({
+            'amount': 7767.70,
+            'date': '2019-01-01',
+            'currency_id': self.currency_2.id,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+        })
+        payment.action_post()
+        liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
+        self.assertRecordValues(liquidity_lines, [{'amount_currency': 7767.70}])
+
+        statement_line.reconcile([
+            {'id': liquidity_lines.id},
+            {'balance': 226.04, 'account_id': self.company_data['default_account_revenue'].id, 'name': "write-off"},
+        ])
+
+        self.assertRecordValues(statement_line.line_ids, [
+            {'amount_currency': 7541.66,    'debit': 6446.97,   'credit': 0.0},
+            {'amount_currency': 226.04,     'debit': 193.22,    'credit': 0.0},
+            {'amount_currency': -7767.70,   'debit': 0.0,       'credit': 6640.19},
+        ])
+
+    def test_zero_amount_statement_line(self):
+        ''' Ensure the statement line is directly marked as reconciled when having an amount of zero. '''
+        self.company_data['company'].account_journal_suspense_account_id.reconcile = False
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2017-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': "Happy new year",
+                    'amount': 0.0,
+                }),
+            ],
+        })
+        statement_line = statement.line_ids
+
+        self.assertRecordValues(statement_line, [{'is_reconciled': True, 'amount_residual': 0.0}])
+
+    def test_bank_statement_line_analytic(self):
+        ''' Ensure the analytic lines are generated during the reconciliation. '''
+        analytic_account = self.env['account.analytic.account'].create({'name': 'analytic_account'})
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2017-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': "line",
+                    'amount': 100.0,
+                }),
+            ],
+        })
+        statement_line = statement.line_ids
+
+        statement_line.reconcile([{
+            'balance': -100.0,
+            'account_id': self.company_data['default_account_revenue'].id,
+            'name': "write-off",
+            'analytic_account_id': analytic_account.id,
+        }])
+
+        # Check the analytic account is there.
+        self.assertRecordValues(statement_line.line_ids.sorted('balance'), [
+            {'balance': -100.0, 'analytic_account_id': analytic_account.id},
+            {'balance': 100.0,  'analytic_account_id': False},
+        ])
+
+        # Check the analytic lines.
+        self.assertRecordValues(statement_line.line_ids.analytic_line_ids, [
+            {'amount': 100.0, 'account_id': analytic_account.id},
         ])

@@ -3,25 +3,46 @@
 # 	* website_form
 # 
 # Translators:
-# Martin Trigaux, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# Jiří Podhorecký, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# Martin Trigaux, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# Damian Brencic <brencicdamian12313@gmail.com>, 2021
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2020-11-27 14:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "'%s' is not a correct date"
+msgstr "'%s' není platné datum"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "'%s' is not a correct datetime"
+msgstr "'%s' není platné datum/čas"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid ", .s_website_form"
+msgstr ", .s_website_form"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
@@ -40,7 +61,7 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Email To</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Email pro</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -48,11 +69,13 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Email</span>\n"
 "                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">E-mail</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Phone Number</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Telefon</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -60,11 +83,13 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Subject</span>\n"
 "                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Předmět</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Your Company</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Vaše firma</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -72,21 +97,23 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Your Name</span>\n"
 "                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Vaše jméno</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Your Question</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Tvá otázka</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Add a new field after this one"
-msgstr ""
+msgstr "Po tomto přidejte nové pole"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Add a new field at the end"
-msgstr ""
+msgstr "Přidat nové pole na konec"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
@@ -94,9 +121,16 @@ msgid "Allowed to use in forms"
 msgstr "Povoleno používat ve formulářích"
 
 #. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "An error has occured, the form has not been sent."
+msgstr "Došlo k chybě, formulář nebyl odeslán."
+
+#. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
-msgstr ""
+msgstr "Zakázat toto pole pro webové formuláře"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_fields__website_form_blacklisted
@@ -106,7 +140,7 @@ msgstr "Blokováni ve webových formulářích"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Button Position"
-msgstr ""
+msgstr "Pozice tlačítka"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -121,7 +155,7 @@ msgstr "Zaškrtávací pole"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Custom field"
-msgstr ""
+msgstr "Vlastní pole"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -153,7 +187,7 @@ msgstr "Zobrazované jméno"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Edit Message"
-msgstr ""
+msgstr "Upravit zprávu"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -210,7 +244,7 @@ msgstr "Skrytý"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Hide"
-msgstr ""
+msgstr "Skrýt"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -229,7 +263,7 @@ msgstr "ID"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "In the meantime we invite you to visit our"
-msgstr ""
+msgstr "Mezitím vás zveme k návštěvě našeho"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -264,7 +298,7 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Labels Width"
-msgstr ""
+msgstr "Šířka štítků"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model____last_update
@@ -276,7 +310,7 @@ msgstr "Naposled změněno"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Left"
-msgstr ""
+msgstr "Vlevo"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -325,7 +359,7 @@ msgstr "Nic"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Nothing"
-msgstr ""
+msgstr "Nic"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -335,6 +369,30 @@ msgstr "Číslo"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "On Success"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option 1"
+msgstr "Možnost 1"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option 2"
+msgstr "Možnost 2"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option 3"
 msgstr ""
 
 #. module: website_form
@@ -353,7 +411,14 @@ msgstr "Jiná informace:"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Our team will message you back as soon as possible."
-msgstr ""
+msgstr "Náš tým vám co nejdříve zašle zprávu."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#, python-format
+msgid "Please fill in the form correctly."
+msgstr "Vyplňte prosím správně formulář."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -392,17 +457,17 @@ msgstr "Výběr"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Separate email addresses with a comma."
-msgstr ""
+msgstr "E-mailové adresy oddělte čárkou."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Show Message"
-msgstr ""
+msgstr "Zobrazit zprávu"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Show reCaptcha Policy"
-msgstr ""
+msgstr "Zobrazit zásady reCaptcha"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
@@ -429,12 +494,12 @@ msgstr "Úspěch"
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Suspicious activity detected by Google reCaptcha."
-msgstr ""
+msgstr "Google reCaptcha zjistil podezřelou aktivitu."
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Telephone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -446,7 +511,7 @@ msgstr "Text"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Thank You For Your Feedback"
-msgstr ""
+msgstr "Děkujeme vám za vaši reakci"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
@@ -465,7 +530,7 @@ msgstr "Formulář byl úspěšně odeslán."
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "The form's specified model does not exist"
-msgstr ""
+msgstr "Specifikovaný model formuláře neexistuje"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
@@ -525,9 +590,37 @@ msgid "Website Forms"
 msgstr "Formuláře webových stránek"
 
 #. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't duplicate a model field."
+msgstr "Pole modelu nelze duplikovat."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't duplicate the submit button of the form."
+msgstr "Tlačítko odeslání formuláře nelze duplikovat."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't remove a field that is required by the model itself."
+msgstr "Nelze odebrat pole, které je vyžadováno samotným modelem."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't remove the submit button of the form"
+msgstr "Tlačítko pro odeslání formuláře nelze odstranit."
+
+#. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "rows"
-msgstr ""
+msgstr "řádky"
 
 #. module: website_form
 #. openerp-web

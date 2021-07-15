@@ -2,6 +2,7 @@ odoo.define('website.editor.menu', function (require) {
 'use strict';
 
 var Dialog = require('web.Dialog');
+var dom = require('web.dom');
 var Widget = require('web.Widget');
 var core = require('web.core');
 var Wysiwyg = require('web_editor.wysiwyg.root');
@@ -233,8 +234,9 @@ var EditorMenu = Widget.extend({
      *
      * @private
      */
-    _onSaveClick: function () {
-        this.save();
+    _onSaveClick: function (ev) {
+        const restore = dom.addButtonLoadingEffect(ev.currentTarget);
+        this.save().then(restore).guardedCatch(restore);
     },
     /**
      * @private

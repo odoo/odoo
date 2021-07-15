@@ -34,7 +34,7 @@ odoo.define('point_of_sale.OrderReceipt', function(require) {
                 line.quantity === 1 &&
                 !(
                     line.display_discount_policy == 'without_discount' &&
-                    line.price != line.price_lst
+                    line.price < line.price_lst
                 )
             );
         }

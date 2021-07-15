@@ -589,7 +589,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                     if (questionRequired && !data[questionId]) {
                         errors[questionId] = constrErrorMsg;
                     } else if (data[questionId]) {
-                        var momentDate = moment($input.val());
+                        var datetimepickerFormat = $input.data('questionType') === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat();
+                        var momentDate = moment($input.val(), datetimepickerFormat);
                         if (!momentDate.isValid()) {
                             errors[questionId] = validationDateMsg;
                         } else {
@@ -914,7 +915,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
         var minDate = minDateData
             ? this._formatDateTime(minDateData, datetimepickerFormat)
-            : moment({ y: 1 });
+            : moment({ y: 1000 });
 
         var maxDate = maxDateData
             ? this._formatDateTime(maxDateData, datetimepickerFormat)

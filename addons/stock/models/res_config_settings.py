@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class ResConfigSettings(models.TransientModel):
@@ -17,7 +18,7 @@ class ResConfigSettings(models.TransientModel):
     group_stock_production_lot = fields.Boolean("Lots & Serial Numbers",
         implied_group='stock.group_production_lot')
     group_lot_on_delivery_slip = fields.Boolean("Display Lots & Serial Numbers on Delivery Slips",
-        implied_group='stock.group_lot_on_delivery_slip')
+        implied_group='stock.group_lot_on_delivery_slip', group="base.group_user,base.group_portal")
     group_stock_tracking_lot = fields.Boolean("Packages",
         implied_group='stock.group_tracking_lot')
     group_stock_tracking_owner = fields.Boolean("Consignment",
@@ -58,6 +59,16 @@ class ResConfigSettings(models.TransientModel):
             self.group_stock_multi_locations = True
 
     def set_values(self):
+        if self.module_procurement_jit == '0':
+            self.env['ir.config_parameter'].sudo().set_param('stock.picking_no_auto_reserve', True)
+        else:
+            self.env['ir.config_parameter'].sudo().set_param('stock.picking_no_auto_reserve', False)
+        warehouse_grp = self.env.ref('stock.group_stock_multi_warehouses')
+        location_grp = self.env.ref('stock.group_stock_multi_locations')
+        base_user = self.env.ref('base.group_user')
+        if not self.group_stock_multi_locations and location_grp in base_user.implied_ids and warehouse_grp in base_user.implied_ids:
+            raise UserError(_("You can't desactivate the multi-location if you have more than once warehouse by company"))
+
         res = super(ResConfigSettings, self).set_values()
 
         if not self.user_has_groups('stock.group_stock_manager'):

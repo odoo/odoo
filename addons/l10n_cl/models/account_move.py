@@ -17,32 +17,32 @@ class AccountMove(models.Model):
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
-        domain = super()._get_l10n_latam_documents_domain()
-        if self.journal_id.l10n_latam_use_documents and self.journal_id.company_id.country_id.code == "CL":
-            if self.journal_id.type == 'sale':
-                domain = [('country_id.code', '=', "CL"), ('internal_type', '!=', 'invoice_in')]
-                if self.company_id.partner_id.l10n_cl_sii_taxpayer_type == '1':
-                    domain += [('code', '!=', '71')]   # Companies with VAT Affected doesn't have "Boleta de honorarios Electrónica"
-                document_type_ids = self.env['l10n_latam.document.type'].search(domain).ids
-            else:
-                partner_domain = [
-                    ('country_id.code', '=', 'CL'),
-                    ('internal_type', 'in', ['invoice', 'debit_note', 'credit_note', 'invoice_in'])]
-                if not self.partner_id:
-                    pass
-                elif self.partner_id.l10n_cl_sii_taxpayer_type == '1' and self.partner_id_vat != SII_VAT:
-                    partner_domain += [('code', 'not in', ['39', '70', '71', '914', '911'])]
-                elif self.partner_id.l10n_cl_sii_taxpayer_type == '1' and self.partner_id_vat == SII_VAT:
-                    partner_domain += [('code', 'not in', ['39', '70', '71'])]
-                elif self.partner_id.l10n_cl_sii_taxpayer_type == '2':
-                    partner_domain += [('code', 'in', ['70', '71', '56', '61'])]
-                elif self.partner_id.l10n_cl_sii_taxpayer_type == '3':
-                    partner_domain += [('code', 'in', ['35', '38', '39', '41', '56', '61'])]
-                elif not self.partner_id.l10n_cl_sii_taxpayer_type or self.partner_id.country_id.code != "CL" or self.partner_id.l10n_cl_sii_taxpayer_type == '4':
-                    partner_domain += [('code', 'in', [])]
-                document_type_ids = self.env['l10n_latam.document.type'].search(partner_domain).ids
-            domain = expression.AND([domain, [('id', 'in', document_type_ids)]])
+        if self.journal_id.company_id.country_id != self.env.ref('base.cl') or not \
+                self.journal_id.l10n_latam_use_documents:
+            return super()._get_l10n_latam_documents_domain()
+        if self.journal_id.type == 'sale':
+            domain = [('country_id.code', '=', "CL"), ('internal_type', '!=', 'invoice_in')]
+            if self.company_id.partner_id.l10n_cl_sii_taxpayer_type == '1':
+                domain += [('code', '!=', '71')]  # Companies with VAT Affected doesn't have "Boleta de honorarios Electrónica"
+            return domain
+        domain = [
+            ('country_id.code', '=', 'CL'),
+            ('internal_type', 'in', ['invoice', 'debit_note', 'credit_note', 'invoice_in'])]
+        if self.partner_id.l10n_cl_sii_taxpayer_type == '1' and self.partner_id_vat != '60805000-0':
+            domain += [('code', 'not in', ['39', '70', '71', '914', '911'])]
+        elif self.partner_id.l10n_cl_sii_taxpayer_type == '1' and self.partner_id_vat == '60805000-0':
+            domain += [('code', 'not in', ['39', '70', '71'])]
+            if self.move_type == 'in_invoice':
+                domain += [('internal_type', '!=', 'credit_note')]
+        elif self.partner_id.l10n_cl_sii_taxpayer_type == '2':
+            domain += [('code', 'in', ['70', '71', '56', '61'])]
+        elif self.partner_id.l10n_cl_sii_taxpayer_type == '3':
+            domain += [('code', 'in', ['35', '38', '39', '41', '56', '61'])]
+        elif not self.partner_id.l10n_cl_sii_taxpayer_type or self.partner_id.country_id != self.env.ref(
+                'base.cl') or self.partner_id.l10n_cl_sii_taxpayer_type == '4':
+            domain += [('code', 'in', [])]
         return domain
+
 
     def _check_document_types_post(self):
         for rec in self.filtered(
@@ -91,12 +91,12 @@ class AccountMove(models.Model):
                                             'the country should be different from Chile to register purchases.'))
 
     @api.onchange('journal_id')
-    def _onchange_journal(self):
+    def _l10n_cl_onchange_journal(self):
         self.l10n_latam_document_type_id = False
 
     def _post(self, soft=True):
         self._check_document_types_post()
-        super()._post(soft)
+        return super()._post(soft)
 
     def _l10n_cl_get_formatted_sequence(self, number=0):
         return '%s %06d' % (self.l10n_latam_document_type_id.doc_code_prefix, number)
@@ -114,7 +114,7 @@ class AccountMove(models.Model):
         if self.company_id.country_id.code == "CL" and self.l10n_latam_use_documents:
             where_string = where_string.replace('journal_id = %(journal_id)s AND', '')
             where_string += ' AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s AND ' \
-                            'company_id = %(company_id)s'
+                            'company_id = %(company_id)s AND move_type IN (\'out_invoice\', \'out_refund\')'
             param['company_id'] = self.company_id.id or False
             param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
         return where_string, param

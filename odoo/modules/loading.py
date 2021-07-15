@@ -227,7 +227,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
 
             # Update translations for all installed languages
             overwrite = odoo.tools.config["overwrite_existing_translations"]
-            module.with_context(overwrite=overwrite)._update_translations()
+            module._update_translations(overwrite=overwrite)
 
         if package.name is not None:
             registry._init_modules.add(package.name)
@@ -421,7 +421,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
             module_names = [k for k, v in tools.config['update'].items() if v]
             if module_names:
-                modules = Module.search([('state', '=', 'installed'), ('name', 'in', module_names)])
+                modules = Module.search([('state', 'in', ('installed', 'to upgrade')), ('name', 'in', module_names)])
                 if modules:
                     modules.button_upgrade()
 
@@ -454,12 +454,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     ['to install'], force, status, report,
                     loaded_modules, update_module, models_to_check)
 
-        # check that new module dependencies have been properly installed after a migration/upgrade
-        cr.execute("SELECT name from ir_module_module WHERE state IN ('to install', 'to upgrade')")
-        module_list = [name for (name,) in cr.fetchall()]
-        if module_list:
-            _logger.error("Some modules have inconsistent states, some dependencies may be missing: %s", sorted(module_list))
-
         # check that all installed modules have been loaded by the registry after a migration/upgrade
         cr.execute("SELECT name from ir_module_module WHERE state = 'installed' and name != 'studio_customization'")
         module_list = [name for (name,) in cr.fetchall() if name not in graph]
@@ -473,6 +467,12 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         migrations = odoo.modules.migration.MigrationManager(cr, graph)
         for package in graph:
             migrations.migrate_module(package, 'end')
+
+        # check that new module dependencies have been properly installed after a migration/upgrade
+        cr.execute("SELECT name from ir_module_module WHERE state IN ('to install', 'to upgrade')")
+        module_list = [name for (name,) in cr.fetchall()]
+        if module_list:
+            _logger.error("Some modules have inconsistent states, some dependencies may be missing: %s", sorted(module_list))
 
         # STEP 3.6: apply remaining constraints in case of an upgrade
         registry.finalize_constraints()

@@ -457,6 +457,8 @@ class MrpWorkorder(models.Model):
                     })
 
             for workorders in workorders_by_bom.values():
+                if not workorders:
+                    continue
                 if workorders[0].state == 'pending':
                     workorders[0].state = 'ready'
                 for workorder in workorders:
@@ -515,6 +517,8 @@ class MrpWorkorder(models.Model):
 
         if self.product_tracking == 'serial':
             self.qty_producing = 1.0
+        else:
+            self.qty_producing = self.qty_remaining
 
         self.env['mrp.workcenter.productivity'].create(
             self._prepare_timeline_vals(self.duration, datetime.now())
@@ -555,6 +559,7 @@ class MrpWorkorder(models.Model):
                 continue
             workorder.end_all()
             vals = {
+                'qty_produced': workorder.qty_produced or workorder.qty_producing or workorder.qty_production,
                 'state': 'done',
                 'date_finished': end_date,
                 'date_planned_finished': end_date

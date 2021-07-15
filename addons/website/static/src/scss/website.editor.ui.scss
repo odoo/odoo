@@ -60,3 +60,20 @@ $o-we-switch-inactive-color: #F7F7F7 !default;
         }
     }
 }
+
+.o_new_content_loader_container {
+    background-color: rgba($o-shadow-color, .9);
+    pointer-events: all;
+    font-size: 3.5rem;
+    justify-content: center;
+    z-index: $zindex-modal - 1;
+}
+.o_new_content_loader {
+    position: relative;
+    display: inline-block;
+    width: 400px;
+    height: 220px;
+    background-image: url('/website/static/src/img/theme_loader.gif');
+    background-size: cover;
+    border-radius: 6px;
+}

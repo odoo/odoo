@@ -9,6 +9,7 @@
 # Jesper Carstensen <jc@danodoo.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgstr ""
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 msgid "(Disable two-factor authentication)"
-msgstr ""
+msgstr "(Deaktiver to-faktor autentificering)"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -36,6 +37,9 @@ msgid ""
 "                        Open the two-factor authentication app on your\n"
 "                        device to obtain a code and verify your identity"
 msgstr ""
+"<i class=\"fa fa-2x fa-mobile pull-left\"/>\n"
+"                        Åben to-faktor autentificerings applikationen på din\n"
+"                        enhed for at indhente en kode til at bekræfte din identitet"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -43,6 +47,8 @@ msgid ""
 "<i class=\"fa fa-check-circle\"/>\n"
 "                                Two-factor authentication enabled"
 msgstr ""
+"<i class=\"fa fa-check-circle\"/>\n"
+"                                To-faktor autentificering aktiveret"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -50,6 +56,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/>\n"
 "                                Two-factor authentication not enabled"
 msgstr ""
+"<i class=\"fa fa-warning\"/>\n"
+"                                To-faktor autentificering ikke aktiveret"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -59,6 +67,10 @@ msgid ""
 "                            Two-factor authentication not enabled\n"
 "                        </span>"
 msgstr ""
+"<span class=\"alert alert-info\" role=\"status\">\n"
+"                            <i class=\"fa fa-warning\"/>\n"
+"                            To-faktor autentificering ikke aktiveret\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -68,6 +80,10 @@ msgid ""
 "                            Two-factor authentication enabled\n"
 "                        </span>"
 msgstr ""
+"<span class=\"text-success\">\n"
+"                            <i class=\"fa fa-check-circle\"/>\n"
+"                            To-faktor autentificering aktiveret\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -76,11 +92,14 @@ msgid ""
 "                                should enter below. Don't worry if the code changes in the app,\n"
 "                                it stays valid a bit longer."
 msgstr ""
+"Efter scanning af stregkoden, vil applikationen vise en 6-cifret kode som du\n"
+"                               skal angive nedenfor. Bliv ikke bekymret hvis koden ændres i applikationen,\n"
+"                               den forbliver gyldig lidt længere."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Authentication Code (6 digits)"
-msgstr ""
+msgstr "Autentificerings Kode (6 cifre)"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -101,7 +120,7 @@ msgstr "Oprettet den"
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable TOTP on users"
-msgstr ""
+msgstr "Deaktiver TOTP på brugere"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__display_name
@@ -114,18 +133,18 @@ msgstr "Vis navn"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Enable Two-Factor Authentication"
-msgstr ""
+msgstr "Aktiver To-Faktor Autentificering"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enable two-factor authentication"
-msgstr ""
+msgstr "Aktiver to-faktor autentificering"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enter the 6-digit code from your app"
-msgstr ""
+msgstr "Angiv den 6-cifrede kode fra din applikation"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_ir_http
@@ -143,7 +162,7 @@ msgstr "ID"
 #: code:addons/auth_totp/controllers/home.py:0
 #, python-format
 msgid "Invalid authentication code format."
-msgstr ""
+msgstr "Ugyldig autentificering kode format."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard____last_update
@@ -165,12 +184,12 @@ msgstr "Sidst opdateret den"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Or enter the secret code manually:"
-msgstr ""
+msgstr "Eller angiv den hemmelige kode manuelt:"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__qrcode
 msgid "Qrcode"
-msgstr ""
+msgstr "Qrkode"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -178,11 +197,13 @@ msgid ""
 "Scan the image below with the authenticator app on your phone.<br/>\n"
 "                                If you cannot scan the barcode, here are some alternative options:"
 msgstr ""
+"Scan billedet nedenfor med autentificerings applikationen på din telefon.<br/>\n"
+"                                Hvis du ikke kan scanne stregkoden, er her nogle alternative muligheder:"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Scan this barcode with your app"
-msgstr ""
+msgstr "Scan denne stregkode med din applikation"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__secret
@@ -193,51 +214,51 @@ msgstr "Hemmelighed"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "The verification code should only contain numbers"
-msgstr ""
+msgstr "Bekræftelses koden bør kun indeholde tal"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
 msgid "Totp Secret"
-msgstr ""
+msgstr "Totp Hemmelig"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard
 msgid "Two-Factor Setup Wizard"
-msgstr ""
+msgstr "To-Faktor Opsætning Guide"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Two-factor Authentication"
-msgstr ""
+msgstr "To-faktor Autentificering"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
 msgid "Two-factor authentication"
-msgstr ""
+msgstr "To-faktor autentificering"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication already enabled"
-msgstr ""
+msgstr "To-faktor autentificering allerede aktiveret"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication can only be enabled for yourself"
-msgstr ""
+msgstr "To-faktor autentificering kan kun aktiveres for dig selv"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication disabled for user(s) %s"
-msgstr ""
+msgstr "To-faktor autentificering deaktiveret for bruger(e) %s"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication is now enabled."
-msgstr ""
+msgstr "To-faktor autentificering er nu aktiveret."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url
@@ -265,7 +286,7 @@ msgstr "Bekræftelses kode"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr ""
+msgstr "Bekræftelse slog fejl, vær venlig at tjekke den 6-cifrede kode"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -275,14 +296,14 @@ msgstr "Verificer"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 msgid "What is this?"
-msgstr ""
+msgstr "Hvad er dette?"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Your two-factor secret:"
-msgstr ""
+msgstr "Din to-faktor hemmelighed:"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "show the code"
-msgstr ""
+msgstr "vis koden"

@@ -380,6 +380,14 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             this.$target.removeClass('d-none');
             this.$message.addClass("d-none");
         }
+
+        // Clear default values coming from data-for/data-values attributes
+        this.$target.find('input[name],textarea[name]').each(function () {
+            var original = $(this).data('website_form_original_default_value');
+            if (original !== undefined && $(this).val() === original) {
+                $(this).val('').removeAttr('value');
+            }
+        });
     },
     /**
      * @override
@@ -714,6 +722,8 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
     },
 });
 
+const authorizedFieldsCache = {};
+
 options.registry.WebsiteFieldEditor = FieldEditor.extend({
     events: _.extend({}, FieldEditor.prototype.events, {
         'click we-button.o_we_select_remove_option': '_onRemoveItemClick',
@@ -736,11 +746,20 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     willStart: async function () {
         const _super = this._super.bind(this);
         // Get the authorized existing fields for the form model
-        this.existingFields = await this._rpc({
-            model: "ir.model",
-            method: "get_authorized_fields",
-            args: [this.formEl.dataset.model_name],
-        }).then(fields => {
+        const model = this.formEl.dataset.model_name;
+        let getFields;
+        if (model in authorizedFieldsCache) {
+            getFields = authorizedFieldsCache[model];
+        } else {
+            getFields = this._rpc({
+                model: "ir.model",
+                method: "get_authorized_fields",
+                args: [model],
+            });
+            authorizedFieldsCache[model] = getFields;
+        }
+
+        this.existingFields = await getFields.then(fields => {
             this.fields = _.each(fields, function (field, fieldName) {
                 field.name = fieldName;
                 field.domain = field.domain || [];

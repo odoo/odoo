@@ -225,7 +225,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                         toolbar.splice(-1, 0, ['view', ['codeview']]);
                     }
                 }
-                if (self.field.sanitize && self.field.sanitize_tags) {
+                if (self.model === "mail.compose.message" || self.model === "mailing.mailing") {
                     options.noVideos = true;
                 }
                 options.prettifyHtml = false;
@@ -458,7 +458,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @param {OdooEvent} ev
      */
     _onKeydown: function (ev) {
-        if (ev.which === $.ui.keyCode.ENTER && $(ev.target).is('textarea')) {
+        if (ev.which === $.ui.keyCode.ENTER) {
             ev.stopPropagation();
             return;
         }

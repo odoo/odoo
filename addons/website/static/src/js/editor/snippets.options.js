@@ -39,7 +39,15 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
         this.containerEl.appendChild(linkButton);
         this.el.classList.add('o_we_large_input');
         this.inputEl.classList.add('text-left');
-        wUtils.autocompleteWithPages(this, $(this.inputEl));
+        const options = {
+            position: {
+                collision: 'flip fit',
+            },
+            classes: {
+                "ui-autocomplete": 'o_website_ui_autocomplete'
+            },
+        }
+        wUtils.autocompleteWithPages(this, $(this.inputEl), options);
     },
 
     //--------------------------------------------------------------------------
@@ -151,7 +159,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                 {
                     text: _t("Save & Reload"),
                     classes: 'btn-primary',
-                    click: () => {
+                    click: async () => {
                         const inputEl = dialog.el.querySelector('.o_input_google_font');
                         // if font page link (what is expected)
                         let m = inputEl.value.match(/\bspecimen\/([\w+]+)/);
@@ -163,6 +171,24 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                                 return;
                             }
                         }
+
+                        let isValidFamily = false;
+
+                        try {
+                            const result = await fetch("https://fonts.googleapis.com/css?family=" + m[1], {method: 'HEAD'});
+                            // Google fonts server returns a 400 status code if family is not valid.
+                            if (result.ok) {
+                                isValidFamily = true;
+                            }
+                        } catch (error) {
+                            console.error(error);
+                        }
+
+                        if (!isValidFamily) {
+                            inputEl.classList.add('is-invalid');
+                            return;
+                        }
+
                         const font = m[1].replace(/\+/g, ' ');
                         this.googleFonts.push(font);
                         this.trigger_up('google_fonts_custo_request', {
@@ -795,7 +821,7 @@ options.registry.OptionsTab = options.Class.extend({
         // TODO improve: hack to click on external image picker
         this.bodyImageType = widgetValue;
         const widget = this._requestUserValueWidgets(params.imagepicker)[0];
-        widget.$el.click();
+        widget.enable();
     },
     /**
      * @override
@@ -971,6 +997,14 @@ options.registry.OptionsTab = options.Class.extend({
         });
         return aceEditor;
     },
+    /**
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        uiFragment.querySelectorAll('we-colorpicker').forEach(el => {
+            el.dataset.lazyPalette = 'true';
+        });
+    },
 });
 
 options.registry.ThemeColors = options.registry.OptionsTab.extend({
@@ -1036,6 +1070,8 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             }
             uiFragment.appendChild(collapseEl);
         }
+
+        await this._super(...arguments);
     },
 });
 
@@ -1631,7 +1667,7 @@ options.registry.Parallax = options.Class.extend({
             // The parallax option was enabled but the background image was
             // removed: disable the parallax option.
             const widget = this._requestUserValueWidgets('parallax_none_opt')[0];
-            widget.$el.click();
+            widget.enable();
             widget.getParent().close(); // FIXME remove this ugly hack asap
         }
     },
@@ -1645,6 +1681,7 @@ options.registry.collapse = options.Class.extend({
         var self = this;
         this.$target.on('shown.bs.collapse hidden.bs.collapse', '[role="tabpanel"]', function () {
             self.trigger_up('cover_update');
+            self.$target.trigger('content_changed');
         });
         return this._super.apply(this, arguments);
     },
@@ -1658,8 +1695,6 @@ options.registry.collapse = options.Class.extend({
      * @override
      */
     onClone: function () {
-        this.$target.find('[data-toggle="collapse"]').removeAttr('data-target').removeData('target');
-        this.$target.find('.collapse').removeAttr('id');
         this._createIDs();
     },
     /**
@@ -1688,30 +1723,30 @@ options.registry.collapse = options.Class.extend({
      * @private
      */
     _createIDs: function () {
-        var time = new Date().getTime();
-        var $tab = this.$target.find('[data-toggle="collapse"]');
+        let time = new Date().getTime();
+        const $tablist = this.$target.closest('[role="tablist"]');
+        const $tab = this.$target.find('[role="tab"]');
+        const $panel = this.$target.find('[role="tabpanel"]');
 
-        // link to the parent group
-        var $tablist = this.$target.closest('.accordion');
-        var tablist_id = $tablist.attr('id');
-        if (!tablist_id) {
-            tablist_id = 'myCollapse' + time;
-            $tablist.attr('id', tablist_id);
-        }
-        $tab.attr('data-parent', '#' + tablist_id);
-        $tab.data('parent', '#' + tablist_id);
-
-        // link to the collapse
-        var $panel = this.$target.find('.collapse');
-        var panel_id = $panel.attr('id');
-        if (!panel_id) {
-            while ($('#' + (panel_id = 'myCollapseTab' + time)).length) {
-                time++;
+        const setUniqueId = ($elem, label) => {
+            let elemId = $elem.attr('id');
+            if (!elemId || $('[id="' + elemId + '"]').length > 1) {
+                do {
+                    time++;
+                    elemId = label + time;
+                } while ($('#' + elemId).length);
+                $elem.attr('id', elemId);
             }
-            $panel.attr('id', panel_id);
-        }
-        $tab.attr('data-target', '#' + panel_id);
-        $tab.data('target', '#' + panel_id);
+            return elemId;
+        };
+
+        const tablistId = setUniqueId($tablist, 'myCollapse');
+        $panel.attr('data-parent', '#' + tablistId);
+        $panel.data('parent', '#' + tablistId);
+
+        const panelId = setUniqueId($panel, 'myCollapseTab');
+        $tab.attr('data-target', '#' + panelId);
+        $tab.data('target', '#' + panelId);
     },
 });
 
@@ -1766,12 +1801,19 @@ const VisibilityPageOptionUpdate = options.Class.extend({
      * @override
      */
     async onTargetShow() {
+        if (await this._isShown()) {
+            // onTargetShow may be called even if the element is already shown.
+            // In most cases, this is not a problem but here it is as the code
+            // that follows clicks on the visibility checkbox regardless of its
+            // status. This avoids searching for that checkbox entirely.
+            return;
+        }
         // TODO improve: here we make a hack so that if we make the invisible
         // header appear for edition, its actual visibility for the page is
         // toggled (otherwise it would be about editing an element which
         // is actually never displayed on the page).
         const widget = this._requestUserValueWidgets(this.showOptionWidgetName)[0];
-        widget.$el.click();
+        widget.enable();
     },
 
     //--------------------------------------------------------------------------
@@ -1930,6 +1972,42 @@ options.registry.topMenuColor = options.Class.extend({
                 onSuccess: value => resolve(!!value),
             });
         });
+    },
+});
+
+/**
+ * Manage the visibility of snippets on mobile.
+ */
+options.registry.MobileVisibility = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Allows to show or hide the associated snippet in mobile display mode.
+     *
+     * @see this.selectClass for parameters
+     */
+    showOnMobile(previewMode, widgetValue, params) {
+        const classes = `d-none d-md-${this.$target.css('display')}`;
+        this.$target.toggleClass(classes, !widgetValue);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        if (methodName === 'showOnMobile') {
+            const classList = [...this.$target[0].classList];
+            return classList.includes('d-none') &&
+                classList.some(className => className.startsWith('d-md-')) ? '' : 'true';
+        }
+        return await this._super(...arguments);
     },
 });
 
@@ -2306,8 +2384,15 @@ options.registry.CoverProperties = options.Class.extend({
     updateUI: async function () {
         await this._super(...arguments);
 
+        // TODO: `o_record_has_cover` should be handled using model field, not
+        // resize_class to avoid all of this.
+        let coverClass = this.$el.find('[data-cover-opt-name="size"] we-button.active').data('selectClass') || '';
+        const bg = this.$image.css('background-image');
+        if (bg && bg !== 'none') {
+            coverClass += " o_record_has_cover";
+        }
         // Update saving dataset
-        this.$target[0].dataset.coverClass = this.$el.find('[data-cover-opt-name="size"] we-button.active').data('selectClass') || '';
+        this.$target[0].dataset.coverClass = coverClass;
         this.$target[0].dataset.textAlignClass = this.$el.find('[data-cover-opt-name="text_align"] we-button.active').data('selectClass') || '';
         this.$target[0].dataset.filterValue = this.$filterValueOpts.filter('.active').data('filterValue') || 0.0;
         let colorPickerWidget = null;
@@ -2436,6 +2521,7 @@ options.registry.SnippetMove = options.Class.extend({
             dom.scrollTo(this.$target[0], {
                 extraOffset: 50,
                 easing: 'linear',
+                duration: 550,
             });
         }
     },

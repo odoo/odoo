@@ -160,6 +160,14 @@ var DebouncedField = AbstractField.extend({
      * @returns {*}
      */
     _getValue: function () {},
+    /**
+     * Should make an action on lost focus.
+     *
+     * @abstract
+     * @private
+     * @returns {*}
+     */
+    _onBlur: function () {},
 });
 
 var InputField = DebouncedField.extend({
@@ -169,6 +177,7 @@ var InputField = DebouncedField.extend({
     events: _.extend({}, DebouncedField.prototype.events, {
         'input': '_onInput',
         'change': '_onChange',
+        'blur' : '_onBlur',
     }),
 
     /**
@@ -265,7 +274,7 @@ var InputField = DebouncedField.extend({
             inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: this.attrs.autocomplete || 'new-password' });
             inputVal = this.value || '';
         } else {
-            inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete || 'none'});
+            inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete || 'off'});
             inputVal = this._formatValue(this.value);
         }
 
@@ -638,6 +647,31 @@ var FieldDateRange = InputField.extend({
         }
         this._super.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Field widget is valid if value entered can convered to date/dateime value
+     * while parsing input value to date/datetime throws error then widget considered
+     * invalid
+     *
+     * @override
+     */
+    isValid: function () {
+        const value = this.mode === "readonly" ? this.value : this.$input.val();
+        try {
+            return field_utils.parse[this.formatType](value, this.field, { timezone: true }) || true;
+        } catch (error) {
+            return false;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * Return the date written in the input, in UTC.
      *
@@ -645,7 +679,14 @@ var FieldDateRange = InputField.extend({
      * @returns {Moment|false}
      */
     _getValue: function () {
-        return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
+        try {
+            // user may enter manual value in input and it may not be parsed as date/datetime value
+            this.removeInvalidClass();
+            return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
+        } catch (error) {
+            this.setInvalidClass();
+            return false;
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -747,7 +788,7 @@ var FieldDateRange = InputField.extend({
      */
     _onDateRangePickerShow() {
         this._onScroll = ev => {
-            if (!this.$pickerContainer.get(0).contains(ev.target)) {
+            if (!config.device.isMobile && !this.$pickerContainer.get(0).contains(ev.target)) {
                 this.$el.data('daterangepicker').hide();
             }
         };
@@ -985,9 +1026,9 @@ const RemainingDays = AbstractField.extend({
         } else if (diffDays === 0) {
             text = _t("Today");
         } else if (diffDays < 0) {
-            text = diffDays === -1 ? _t("Yesterday") : _t(`${-diffDays} days ago`);
+            text = diffDays === -1 ? _t("Yesterday") : _.str.sprintf(_t('%s days ago'), -diffDays);
         } else {
-            text = diffDays === 1 ? _t("Tomorrow") : _t(`In ${diffDays} days`);
+            text = diffDays === 1 ? _t("Tomorrow") : _.str.sprintf(_t('In %s days'), diffDays);
         }
         this.$el.text(text).attr('title', this._formatValue(this.value, 'date'));
         this.$el.toggleClass('text-bf', diffDays <= 0);
@@ -1500,7 +1541,9 @@ var FieldEmail = InputField.extend({
      */
     _renderReadonly: function () {
         if (this.value) {
-            this.$el.text(this.value)
+            // Odoo legacy widgets can have multiple nodes inside their $el JQuery object
+            // so, select the proper one (other nodes are assumed not to contain proper data)
+            this.$el.closest("." + this.className).text(this.value)
                 .addClass('o_form_uri o_text_overflow')
                 .attr('href', this.prefix + ':' + this.value);
         } else {
@@ -1707,7 +1750,7 @@ var AbstractFieldBinary = AbstractField.extend({
         this._super.apply(this, arguments);
         this.fields = record.fields;
         this.useFileAPI = !!window.FileReader;
-        this.max_upload_size = 64 * 1024 * 1024; // 64Mo
+        this.max_upload_size = session.max_file_upload_size || 128 * 1024 * 1024;
         this.accepted_file_extensions = (this.nodeOptions && this.nodeOptions.accepted_file_extensions) || this.accepted_file_extensions || '*';
         if (!this.useFileAPI) {
             var self = this;
@@ -3655,6 +3698,9 @@ var FieldColorPicker = FieldInteger.extend({
 
         }
     },
+    _onNavigationMove() {
+        // disable navigation from FieldInput, to prevent a crash
+    }
 });
 
 return {

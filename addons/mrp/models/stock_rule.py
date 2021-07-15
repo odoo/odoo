@@ -41,7 +41,7 @@ class StockRule(models.Model):
         productions_values_by_company = defaultdict(list)
         errors = []
         for procurement, rule in procurements:
-            bom = self._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
+            bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
             if not bom:
                 msg = _('There is no Bill of Material of type manufacture or kit found for the product %s. Please define a Bill of Material for this product.') % (procurement.product_id.display_name,)
                 errors.append((procurement, msg))
@@ -119,16 +119,19 @@ class StockRule(models.Model):
         and cumulative description.
         """
         delay, delay_description = super()._get_lead_days(product)
+        bypass_delay_description = self.env.context.get('bypass_delay_description')
         manufacture_rule = self.filtered(lambda r: r.action == 'manufacture')
         if not manufacture_rule:
             return delay, delay_description
         manufacture_rule.ensure_one()
         manufacture_delay = product.produce_delay
         delay += manufacture_delay
-        delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacturing Lead Time'), manufacture_delay, _('day(s)'))
+        if not bypass_delay_description:
+            delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacturing Lead Time'), manufacture_delay, _('day(s)'))
         security_delay = manufacture_rule.picking_type_id.company_id.manufacturing_lead
         delay += security_delay
-        delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacture Security Lead Time'), security_delay, _('day(s)'))
+        if not bypass_delay_description:
+            delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacture Security Lead Time'), security_delay, _('day(s)'))
         return delay, delay_description
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
@@ -172,7 +175,7 @@ class ProcurementGroup(models.Model):
                 procurements_without_kit.append(procurement)
         return super(ProcurementGroup, self).run(procurements_without_kit, raise_user_error=raise_user_error)
 
-    def _get_moves_to_assign_domain(self):
-        domain = super(ProcurementGroup, self)._get_moves_to_assign_domain()
+    def _get_moves_to_assign_domain(self, company_id):
+        domain = super(ProcurementGroup, self)._get_moves_to_assign_domain(company_id)
         domain = expression.AND([domain, [('production_id', '=', False)]])
         return domain

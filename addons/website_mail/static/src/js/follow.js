@@ -85,8 +85,6 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
      * @param {jQuery} $jsFollowEls
      */
     _updateSubscriptionDOM: function (follow, email, $jsFollowEls) {
-        $jsFollowEls.find(".js_follow_btn").toggleClass('d-none', follow);
-        $jsFollowEls.find(".js_unfollow_btn").toggleClass('d-none', !follow);
         $jsFollowEls.find('input.js_follow_email')
             .val(email || "")
             .attr("disabled", email && (follow || this.isUser) ? "disabled" : false);

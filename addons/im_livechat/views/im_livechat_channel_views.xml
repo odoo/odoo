@@ -170,7 +170,7 @@
                                             or copy this url and send it by email to your customers or suppliers:
                                         </p>
                                         <field name="web_page" readonly="1" widget="CopyClipboardChar"/>
-                                        <p>For websites built with the Odoo CMS, go to Website > Configuration > Settings and select the Website Live Chat Channel you want to add on your website.</p>
+                                        <p>For websites built with the Odoo CMS, go to Website > Configuration > Settings and select the Website Live Chat Channel you want to add to your website.</p>
                                     </div>
                                 </group>
                             </page>
@@ -234,7 +234,7 @@
                     <sheet>
                         <group>
                             <field name="action" widget="radio"/>
-                            <field name="regex_url" placeholder="e.g. /page/contactus"/>
+                            <field name="regex_url" placeholder="e.g. /contactus"/>
                             <label for="auto_popup_timer" class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}"/>
                             <div class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}">
                                 <field name="auto_popup_timer" class="oe_inline"/> seconds

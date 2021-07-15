@@ -143,7 +143,7 @@ class Product(models.Model):
             domain_move_in_done = list(domain_move_in)
             domain_move_out_done = list(domain_move_out)
         if from_date:
-            date_date_expected_domain_from = [('date', '<=', from_date)]
+            date_date_expected_domain_from = [('date', '>=', from_date)]
             domain_move_in += date_date_expected_domain_from
             domain_move_out += date_date_expected_domain_from
         if to_date:
@@ -287,7 +287,7 @@ class Product(models.Model):
         # to use the quants, not the stock moves. Therefore, we bypass the usual
         # '_search_product_quantity' method and call '_search_qty_available_new' instead. This
         # allows better performances.
-        if value == 0.0 and operator == '>' and not ({'from_date', 'to_date'} & set(self.env.context.keys())):
+        if not ({'from_date', 'to_date'} & set(self.env.context.keys())):
             product_ids = self._search_qty_available_new(
                 operator, value, self.env.context.get('lot_id'), self.env.context.get('owner_id'),
                 self.env.context.get('package_id')
@@ -340,9 +340,28 @@ class Product(models.Model):
         if package_id:
             domain_quant.append(('package_id', '=', package_id))
         quants_groupby = self.env['stock.quant'].read_group(domain_quant, ['product_id', 'quantity'], ['product_id'], orderby='id')
+
+        # check if we need include zero values in result
+        include_zero = (
+            value < 0.0 and operator in ('>', '>=') or
+            value > 0.0 and operator in ('<', '<=') or
+            value == 0.0 and operator in ('>=', '<=', '=')
+        )
+
+        processed_product_ids = set()
         for quant in quants_groupby:
+            product_id = quant['product_id'][0]
+            if include_zero:
+                processed_product_ids.add(product_id)
             if OPERATORS[operator](quant['quantity'], value):
-                product_ids.add(quant['product_id'][0])
+                product_ids.add(product_id)
+
+        if include_zero:
+            products_without_quants_in_domain = self.env['product.product'].search([
+                ('type', '=', 'product'),
+                ('id', 'not in', list(processed_product_ids))]
+            )
+            product_ids |= set(products_without_quants_in_domain.ids)
         return list(product_ids)
 
     def _compute_nbr_reordering_rules(self):
@@ -487,13 +506,13 @@ class Product(models.Model):
                 single_product=True
             )
         else:
-            self = self.with_context(product_tmpl_id=self.product_tmpl_id.id)
+            self = self.with_context(product_tmpl_ids=self.product_tmpl_id.ids)
         action = self.env['stock.quant']._get_quants_action(domain)
         action["name"] = _('Update Quantity')
         return action
 
     def action_update_quantity_on_hand(self):
-        return self.product_tmpl_id.with_context(default_product_id=self.id).action_update_quantity_on_hand()
+        return self.product_tmpl_id.with_context(default_product_id=self.id, create=True).action_update_quantity_on_hand()
 
     def action_product_forecast_report(self):
         self.ensure_one()
@@ -512,6 +531,8 @@ class Product(models.Model):
         owner_id = self.env['res.partner'].browse(owner_id)
         to_uom = self.env['uom.uom'].browse(to_uom)
         quants = self.env['stock.quant']._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+        if lot_id:
+            quants = quants.filtered(lambda q: q.lot_id == lot_id)
         theoretical_quantity = sum([quant.quantity for quant in quants])
         if to_uom and product_id.uom_id != to_uom:
             theoretical_quantity = product_id.uom_id._compute_quantity(theoretical_quantity, to_uom)
@@ -540,6 +561,13 @@ class Product(models.Model):
             return seen_rules | rule
         else:
             return self._get_rules_from_location(rule.location_src_id, seen_rules=seen_rules | rule)
+
+
+    def _filter_to_unlink(self):
+        domain = [('product_id', 'in', self.ids)]
+        lines = self.env['stock.production.lot'].read_group(domain, ['product_id'], ['product_id'])
+        linked_product_ids = [group['product_id'][0] for group in lines]
+        return super(Product, self - self.browse(linked_product_ids))._filter_to_unlink()
 
 
 class ProductTemplate(models.Model):
@@ -602,7 +630,7 @@ class ProductTemplate(models.Model):
     # TDE FIXME: seems only visible in a view - remove me ?
     route_from_categ_ids = fields.Many2many(
         relation="stock.location.route", string="Category Routes",
-        related='categ_id.total_route_ids', readonly=False)
+        related='categ_id.total_route_ids', readonly=False, related_sudo=False)
 
     @api.depends('type')
     def _compute_has_available_route_ids(self):
@@ -613,7 +641,7 @@ class ProductTemplate(models.Model):
         'product_variant_ids.stock_move_ids.product_qty',
         'product_variant_ids.stock_move_ids.state',
     )
-    @api.depends_context('company')
+    @api.depends_context('company', 'location', 'warehouse')
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
         for template in self:
@@ -702,9 +730,22 @@ class ProductTemplate(models.Model):
 
     @api.onchange('type')
     def _onchange_type(self):
-        res = super(ProductTemplate, self)._onchange_type()
+        res = super(ProductTemplate, self)._onchange_type() or {}
         if self.type == 'consu' and self.tracking != 'none':
             self.tracking = 'none'
+
+        # Return a warning when trying to change the product type
+        if self.ids and self.product_variant_ids.ids and self.env['stock.move.line'].sudo().search_count([
+            ('product_id', 'in', self.product_variant_ids.ids), ('state', '!=', 'cancel')
+        ]):
+            res['warning'] = {
+                'title': _('Warning!'),
+                'message': _(
+                    'This product has been used in at least one inventory movement. '
+                    'It is not advised to change the Product Type since it can lead to inconsistencies. '
+                    'A better solution could be to archive the product and create a new one instead.'
+                )
+            }
         return res
 
     def write(self, vals):
@@ -741,7 +782,7 @@ class ProductTemplate(models.Model):
         if (self.env.user.user_has_groups(','.join(advanced_option_groups))):
             return self.action_open_quants()
         else:
-            default_product_id = len(self.product_variant_ids) == 1 and self.product_variant_id.id
+            default_product_id = self.env.context.get('default_product_id', len(self.product_variant_ids) == 1 and self.product_variant_id.id)
             action = self.env["ir.actions.actions"]._for_xml_id("stock.action_change_product_quantity")
             action['context'] = dict(
                 self.env.context,
@@ -840,17 +881,26 @@ class UoM(models.Model):
                 lambda u: any(u[f].id != int(values[f]) if f in values else False
                               for f in {'category_id'}))
             if changed:
-                stock_move_lines = self.env['stock.move.line'].search_count([
-                    ('product_uom_id.category_id', 'in', changed.mapped('category_id.id')),
-                    ('state', '!=', 'cancel'),
-                ])
-
-                if stock_move_lines:
-                    raise UserError(_(
-                        "You cannot change the ratio of this unit of measure as some"
-                        " products with this UoM have already been moved or are "
-                        "currently reserved."
-                    ))
+                error_msg = _(
+                    "You cannot change the ratio of this unit of measure"
+                    " as some products with this UoM have already been moved"
+                    " or are currently reserved."
+                )
+                if self.env['stock.move'].sudo().search_count([
+                    ('product_uom', 'in', changed.ids),
+                    ('state', 'not in', ('cancel', 'done'))
+                ]):
+                    raise UserError(error_msg)
+                if self.env['stock.move.line'].sudo().search_count([
+                    ('product_uom_id', 'in', changed.ids),
+                    ('state', 'not in', ('cancel', 'done')),
+                ]):
+                    raise UserError(error_msg)
+                if self.env['stock.quant'].sudo().search_count([
+                    ('product_id.product_tmpl_id.uom_id', 'in', changed.ids),
+                    ('quantity', '!=', 0),
+                ]):
+                    raise UserError(error_msg)
         return super(UoM, self).write(values)
 
     def _adjust_uom_quantities(self, qty, quant_uom):

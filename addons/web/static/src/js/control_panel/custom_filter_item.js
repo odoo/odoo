@@ -105,6 +105,7 @@ odoo.define('web.CustomFilterItem', function (require) {
             const fieldType = this.fields[condition.field].type;
             const genericType = FIELD_TYPES[fieldType];
             const operator = FIELD_OPERATORS[genericType][condition.operator];
+            // Logical value
             switch (genericType) {
                 case 'id':
                 case 'number':
@@ -128,6 +129,12 @@ odoo.define('web.CustomFilterItem', function (require) {
                     break;
                 default:
                     condition.value = "";
+            }
+            // Displayed value
+            if (["float", "monetary"].includes(fieldType)) {
+                condition.displayedValue = `0${this.DECIMAL_POINT}0`;
+            } else {
+                condition.displayedValue = String(condition.value);
             }
         }
 
@@ -235,20 +242,25 @@ odoo.define('web.CustomFilterItem', function (require) {
          * @param {Event} ev
          */
         _onValueInput(condition, ev) {
-            const type = this.fields[condition.field].type;
-            if (['float', 'integer', 'id'].includes(type)) {
-                const previousValue = condition.value;
-                const parser = field_utils.parse[type === 'float' ? 'float' : 'integer'];
+            if (!ev.target.value) {
+                return this._setDefaultValue(condition);
+            }
+            let { type } = this.fields[condition.field];
+            if (type === "id") {
+                type = "integer";
+            }
+            if (FIELD_TYPES[type] === "number") {
                 try {
-                    const parsed = parser(ev.target.value || 0);
-                    // Force parsed value in the input.
-                    ev.target.value = condition.value = (parsed || 0);
+                    // Write logical value into the 'value' property
+                    condition.value = field_utils.parse[type](ev.target.value);
+                    // Write displayed value in the input and 'displayedValue' property
+                    condition.displayedValue = ev.target.value;
                 } catch (err) {
-                    // Force previous value if non-parseable.
-                    ev.target.value = previousValue || 0;
+                    // Parsing error: reverts to previous value
+                    ev.target.value = condition.displayedValue;
                 }
             } else {
-                condition.value = ev.target.value || "";
+                condition.value = condition.displayedValue = ev.target.value;
             }
         }
     }

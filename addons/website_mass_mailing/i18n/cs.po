@@ -5,16 +5,17 @@
 # Translators:
 # Martin Trigaux, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
-# Jiří Podhorecký, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2021-02-25 10:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,16 +24,15 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
-#, python-format
-msgid "${result.toast_type === 'success' ? 'Success' : 'Error'}"
-msgstr ""
-
-#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid ", .o_newsletter_popup"
-msgstr ""
+msgstr ", .o_newsletter_popup"
+
+#. module: website_mass_mailing
+#: code:addons/website_mass_mailing/models/mailing_list.py:0
+#, python-format
+msgid "<p>Thanks for subscribing!</p>"
+msgstr "<p>Děkujeme za přihlášení!</p>"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -51,7 +51,7 @@ msgstr "Přidat vyskakovací okno odebírání zpravodaje"
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup_content
 msgid "Always <b>First</b>."
-msgstr ""
+msgstr "Vždy <b>První</b>."
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
@@ -61,13 +61,14 @@ msgstr "Vždy první."
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
 msgid "Be the first to find out all the latest news, products, and trends."
-msgstr ""
+msgstr "Buďte první, kdo zjistí všechny nejnovější zprávy, produkty a trendy."
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup_content
 msgid ""
 "Be the first to find out all the latest news,<br/> products, and trends."
 msgstr ""
+"Buďte první, kdo se dozví všechny nejnovější zprávy,<br/> produkty a trendy."
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
@@ -120,8 +121,30 @@ msgstr "Zobrazované jméno"
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
 #, python-format
+msgid ""
+"Do you want to install Google reCAPTCHA to secure your newsletter "
+"subscriptions?"
+msgstr ""
+"Chcete si nainstalovat Google reCAPTCHA k zajištění odebírání zpravodaje?"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
 msgid "Error"
 msgstr "Chyba"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid ""
+"Google reCAPTCHA is now installed! You can configure it from your website "
+"settings."
+msgstr ""
+"Google reCAPTCHA je nyní nainstalován! Můžete jej nakonfigurovat z nastavení"
+" svého webu."
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__id
@@ -129,6 +152,13 @@ msgstr "Chyba"
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__id
 msgid "ID"
 msgstr "ID"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "Install now"
+msgstr "Nainstalovat nyní"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list____last_update
@@ -168,7 +198,7 @@ msgstr "Newsletter"
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Show reCaptcha Policy"
-msgstr ""
+msgstr "Zobrazit zásady reCaptcha"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
@@ -176,10 +206,17 @@ msgid "Subscribe"
 msgstr "Odebírat"
 
 #. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "Success"
+msgstr "Úspěch"
+
+#. module: website_mass_mailing
 #: code:addons/website_mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Suspicious activity detected by Google reCaptcha."
-msgstr ""
+msgstr "Google reCaptcha zjistil podezřelou aktivitu."
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
@@ -189,7 +226,7 @@ msgstr "Díky"
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__toast_content
 msgid "Toast Content"
-msgstr ""
+msgstr "Toastový obsah"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__website_id
@@ -219,6 +256,15 @@ msgid ""
 "Website popups can only be translated through mailing list configuration in "
 "the Email Marketing app."
 msgstr ""
+"Vyskakovací okna webových stránek lze překládat pouze prostřednictvím "
+"konfigurace seznamu adresátů v aplikaci E-mailový marketing."
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "Website settings"
+msgstr "Nastavení webových stránek"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form

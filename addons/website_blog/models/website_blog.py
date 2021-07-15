@@ -185,7 +185,7 @@ class BlogPost(models.Model):
 
     def _check_for_publication(self, vals):
         if vals.get('is_published'):
-            for post in self:
+            for post in self.filtered(lambda p: p.active):
                 post.blog_id.message_post_with_view(
                     'website_blog.blog_post_template_new_post',
                     subject=post.name,
@@ -202,6 +202,9 @@ class BlogPost(models.Model):
 
     def write(self, vals):
         result = True
+        # archiving a blog post, unpublished the blog post
+        if 'active' in vals and not vals['active']:
+            vals['is_published'] = False
         for post in self:
             copy_vals = dict(vals)
             published_in_vals = set(vals.keys()) & {'is_published', 'website_published'}
@@ -234,9 +237,9 @@ class BlogPost(models.Model):
             'res_id': self.id,
         }
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Add access button to everyone if the document is published. """
-        groups = super(BlogPost, self)._notify_get_groups()
+        groups = super(BlogPost, self)._notify_get_groups(msg_vals=msg_vals)
 
         if self.website_published:
             for group_name, group_method, group_data in groups:

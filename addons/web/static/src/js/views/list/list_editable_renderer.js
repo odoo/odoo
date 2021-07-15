@@ -263,7 +263,7 @@ ListRenderer.include({
                     currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
                     if (currentWidget) {
                         focusedElement = currentWidget.getFocusableElement().get(0);
-                        if (currentWidget.formatType !== 'boolean') {
+                        if (currentWidget.formatType !== 'boolean' && focusedElement) {
                             selectionRange = dom.getSelectionRange(focusedElement);
                         }
                     }
@@ -1811,16 +1811,16 @@ ListRenderer.include({
         }
 
         // ignore clicks in autocomplete dropdowns
-        if ($(event.target).parents('.ui-autocomplete').length) {
+        if ($(event.target).closest('.ui-autocomplete').length) {
             return;
         }
 
-        // ignore clicks in modals, except if the list is in a modal, and the
-        // click is performed in that modal
-        var $clickModal = $(event.target).closest('.modal');
-        if ($clickModal.length) {
+        // ignore clicks if there is a modal, except if the list is in the last
+        // (active) modal
+        var $modal = $('body > .modal:last');
+        if ($modal.length) {
             var $listModal = this.$el.closest('.modal');
-            if ($clickModal.prop('id') !== $listModal.prop('id')) {
+            if ($modal.prop('id') !== $listModal.prop('id')) {
                 return;
             }
         }
@@ -1834,6 +1834,12 @@ ListRenderer.include({
         // ignore clicks if target is inside the list. In that case, they are
         // handled directly by the renderer.
         if (this.el.contains(event.target) && this.el !== event.target) {
+            return;
+        }
+
+        // ignore click if search facet is removed as it will re-render whole
+        // listview again
+        if ($(event.target).hasClass('o_facet_remove')) {
             return;
         }
 

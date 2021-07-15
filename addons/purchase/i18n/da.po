@@ -18,15 +18,15 @@
 # lhmflexerp <lhm@flexerp.dk>, 2020
 # walther_b <wba@miracle.dk>, 2020
 # Mads Søndergaard, 2020
-# Mads Søndergaard <mads@vkdata.dk>, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,6 +62,12 @@ msgstr "# af linjer"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 msgstr "${object.company_id.name} Ordre (Ref ${object.name or 'n/a' })"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "%(name)s confirmed the receipt will take place on %(date)s."
+msgstr "%(name)s bekræftede at modtagelse vil finde sted den %(date)s."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -319,8 +325,8 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
-msgid "<span> days before</span>"
-msgstr "<span> dage før</span>"
+msgid "<span> day(s) before</span>"
+msgstr "<span> dag(e) før</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -485,13 +491,13 @@ msgstr "Adgangsadvarsel"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the recieved quantity can be automatically computed by mechanism :\n"
+"According to product configuration, the received quantity can be automatically computed by mechanism :\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Ifølge produkt konfigurationen, kan den modtaget kvantitet udregnes per mekanismen :\n"
-"  - Manuel: Kvantiteten angives manuelt på linjen\n"
-"  - Lager bevægelser: Kvantiteten kommer fra bekræftede pluk\n"
+"Ifølge produkt konfigurationen, kan modtaget mængder automatisk udregnes per mekanisme :\n"
+"  - Manuel: Mængden angivet manuelt på linjen\n"
+"  - Lager Bevægelser: Mængden kommer fra bekræftede pluk\n"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
@@ -586,11 +592,10 @@ msgstr "Alle Afventende RFQ'er"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
-msgid ""
-"Allow automatically send email to reminder your vendor the receipt date"
+msgid "Allow automatically send email to remind your vendor the receipt date"
 msgstr ""
-"Tillad automatisk afsending af email til at påminde din leverandør om "
-"kvitteringsdatoen"
+"Tillad automatisk afsendelse af email til at påminde din leverandør om "
+"modtagelsesdatoen"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
@@ -1072,9 +1077,11 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__date_order
 msgid ""
-"Depicts the date where the Quotation should be validated and converted into "
-"a purchase order."
-msgstr "Datoen hvor tilbuddet skal være konverteret til en indkøbsordre."
+"Depicts the date within which the Quotation should be confirmed and "
+"converted into a purchase order."
+msgstr ""
+"Viser datoen indenfor hvilket Tilbuddet bør bekræftes og omdannes til en "
+"købsordre."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
@@ -2614,6 +2621,12 @@ msgid "Terms and Conditions"
 msgstr "Salgs- og leveringsbetingelser"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "The order receipt has been acknowledged by %(name)s."
+msgstr "Modtagelse af ordren er blevet bekræftet af %(name)s."
+
+#. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
@@ -3081,5 +3094,5 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "days before"
-msgstr "dage før"
+msgid "day(s) before"
+msgstr "dag(e) før"

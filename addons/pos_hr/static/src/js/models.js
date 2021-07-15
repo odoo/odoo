@@ -6,17 +6,23 @@ var models = require('point_of_sale.models');
 models.load_models([{
     model:  'hr.employee',
     fields: ['name', 'id', 'user_id'],
-    domain: function(self){ return [['company_id', '=', self.config.company_id[0]]]; },
+    domain: function(self){
+        return self.config.employee_ids.length > 0
+            ? [
+                  '&',
+                  ['company_id', '=', self.config.company_id[0]],
+                  '|',
+                  ['user_id', '=', self.user.id],
+                  ['id', 'in', self.config.employee_ids],
+              ]
+            : [['company_id', '=', self.config.company_id[0]]];
+    },
     loaded: function(self, employees) {
         if (self.config.module_pos_hr) {
-            if (self.config.employee_ids.length > 0) {
-                self.employees = employees.filter(function(employee) {
-                    return self.config.employee_ids.includes(employee.id) || employee.user_id[0] === self.user.id;
-                });
-            } else {
-                self.employees = employees;
-            }
+            self.employees = employees;
+            self.employee_by_id = {};
             self.employees.forEach(function(employee) {
+                self.employee_by_id[employee.id] = employee;
                 var hasUser = self.users.some(function(user) {
                     if (user.id === employee.user_id[0]) {
                         employee.role = user.role;
@@ -53,6 +59,38 @@ models.PosModel = models.PosModel.extend({
                 });
             });
         });
+    },
+    set_cashier: function(employee) {
+        posmodel_super.set_cashier.apply(this, arguments);
+        const selectedOrder = this.get_order();
+        if (selectedOrder && !selectedOrder.get_orderlines().length) {
+            // Order without lines can be considered to be un-owned by any employee.
+            // We set the employee on that order to the currently set employee.
+            selectedOrder.employee = employee;
+        }
+    }
+});
+
+var super_order_model = models.Order.prototype;
+models.Order = models.Order.extend({
+    initialize: function (attributes, options) {
+        super_order_model.initialize.apply(this, arguments);
+        if (!options.json) {
+            this.employee = this.pos.get_cashier();
+        }
+    },
+    init_from_JSON: function (json) {
+        super_order_model.init_from_JSON.apply(this, arguments);
+        if (this.pos.config.module_pos_hr) {
+            this.employee = this.pos.employee_by_id[json.employee_id];
+        }
+    },
+    export_as_JSON: function () {
+        const json = super_order_model.export_as_JSON.apply(this, arguments);
+        if (this.pos.config.module_pos_hr) {
+            json.employee_id = this.employee ? this.employee.id : false;
+        }
+        return json;
     },
 });
 

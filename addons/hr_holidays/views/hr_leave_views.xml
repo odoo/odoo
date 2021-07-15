@@ -70,12 +70,12 @@
                 <filter name="year" string="Active Time Off"
                     domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
@@ -245,7 +245,9 @@
                                     From
                                 </span>
                                 <field name="request_date_from" class="oe_inline" nolabel="1"
-                                    attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}"/>
+                                    attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))],
+                                            'required': ['|', ('date_from', '=', False), ('date_to', '=', False)]
+                                            }"/>
                                 <span class="oe_inline"
                                     attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}">
                                     To
@@ -253,7 +255,8 @@
                                 <field name="request_date_to" class="oe_inline"
                                     attrs="{
                                         'readonly': [('state', 'not in', ('draft', 'confirm'))],
-                                        'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]
+                                        'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)],
+                                        'required': ['|', ('date_from', '=', False), ('date_to', '=', False)]
                                     }"/>
                                 <field name="request_date_from_period" class="oe_inline"
                                     string="In"
@@ -307,8 +310,7 @@
 
                         <!-- When the user is leave manager, he should always see `number_of_days` to allow
                         him to edit the value. `number_of_hours_display` is only an informative field -->
-                        <label for="number_of_days" string="Duration"/>
-                        <!-- <div attrs="{'invisible': [('request_unit_half', '=', False), ('request_unit_hours', '=', False)]}"> -->
+                        <label for="number_of_days" string="Duration" attrs="{'invisible': [('request_unit_half', '=', True), ('leave_type_request_unit', '!=', 'hour')]}"/>
                         <div>
                             <div class="o_row">
                                 <div groups="!hr_holidays.group_hr_holidays_manager" attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}" class="o_row">

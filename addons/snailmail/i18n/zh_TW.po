@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2020-11-17 10:35+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -39,10 +39,24 @@ msgid "An error occured when sending the document by post.<br>Error: %s"
 msgstr "通過發送文件時發生一個錯誤.<br>錯誤：%s"
 
 #. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/notification_group/notification_group.xml:0
+#, python-format
+msgid "An error occurred when sending a letter with Snailmail."
+msgstr ""
+
+#. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "An unknown error happened. Please contact the support."
 msgstr "發生未知錯誤，請聯繫支援。"
+
+#. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#, python-format
+msgid "An unknown error occurred. Please contact our"
+msgstr ""
 
 #. module: snailmail
 #: code:addons/snailmail/wizard/snailmail_letter_cancel.py:0
@@ -63,6 +77,13 @@ msgid "Attachment Filename"
 msgstr ""
 
 #. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.js:0
+#, python-format
+msgid "Awaiting Dispatch"
+msgstr "等待發貨"
+
+#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
 msgid "Both side"
 msgstr "雙面"
@@ -71,6 +92,14 @@ msgstr "雙面"
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_duplex
 msgid "Both sides"
 msgstr "雙面"
+
+#. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#, python-format
+msgid "Buy credits"
+msgstr "購買信用"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
@@ -90,7 +119,10 @@ msgid "Cancel Letter"
 msgstr ""
 
 #. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+#, python-format
 msgid "Cancel letter"
 msgstr ""
 
@@ -101,7 +133,10 @@ msgid "Cancel notification in failure"
 msgstr "取消失敗通知"
 
 #. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__canceled
+#, python-format
 msgid "Canceled"
 msgstr "已取消"
 
@@ -113,8 +148,11 @@ msgid "City"
 msgstr "城市"
 
 #. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+#, python-format
 msgid "Close"
 msgstr "關閉"
 
@@ -220,8 +258,11 @@ msgid "Document ID"
 msgstr "文件ID"
 
 #. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.js:0
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__error_code
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__error
+#, python-format
 msgid "Error"
 msgstr "錯誤"
 
@@ -231,7 +272,10 @@ msgid "FORMAT_ERROR"
 msgstr ""
 
 #. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.js:0
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
+#, python-format
 msgid "Failed letter"
 msgstr ""
 
@@ -367,7 +411,7 @@ msgstr "消息類型：電子信件用於 信件消息， 通知使用者系統�
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_cancel__model
 msgid "Model"
-msgstr "型號"
+msgstr "模型"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_confirm__model_name
@@ -429,6 +473,13 @@ msgid "Qweb Field Contact"
 msgstr "Qweb 聯絡人欄位"
 
 #. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#, python-format
+msgid "Re-send letter"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
 msgid "Recipient"
 msgstr "收件人"
@@ -449,7 +500,10 @@ msgid "Send Now"
 msgstr "立即發送"
 
 #. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__sent
+#, python-format
 msgid "Sent"
 msgstr "已發送"
 
@@ -479,6 +533,13 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
 msgid "Snailmail Credit Error"
+msgstr ""
+
+#. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/models/notification_group/notification_group.js:0
+#, python-format
+msgid "Snailmail Failures"
 msgstr ""
 
 #. module: snailmail
@@ -596,6 +657,15 @@ msgid "The country of the partner is not covered by Snailmail."
 msgstr "Snailmail不包含合作夥伴所在的國家或地區。"
 
 #. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#, python-format
+msgid ""
+"The country to which you want to send the letter is not supported by our "
+"service."
+msgstr ""
+
+#. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid ""
 "The customer address is not complete. Update the address here and re-send "
@@ -606,6 +676,15 @@ msgstr ""
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The document was correctly sent by post.<br>The tracking id is %s"
+msgstr ""
+
+#. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#, python-format
+msgid ""
+"The letter could not be sent due to insufficient credits on your IAP "
+"account."
 msgstr ""
 
 #. module: snailmail
@@ -664,6 +743,13 @@ msgid ""
 msgstr "您沒有足夠的積分來執行此操作.<br>請轉到您的<a href=%s target=\"new\">iap帳戶</a>。"
 
 #. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#, python-format
+msgid "You need credits on your IAP account to send a letter."
+msgstr ""
+
+#. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "ZIP"
 msgstr "郵編"
@@ -677,4 +763,18 @@ msgstr "郵政編碼"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
 msgid "by post. Are you sure you want to continue?"
+msgstr ""
+
+#. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#, python-format
+msgid "for further assistance."
+msgstr ""
+
+#. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#, python-format
+msgid "support"
 msgstr ""

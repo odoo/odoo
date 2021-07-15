@@ -6,17 +6,18 @@
 # Martin Trigaux, 2020
 # ExcaliberX <excaliberx@gmail.com>, 2020
 # Yihya Hugirat <hugirat@gmail.com>, 2020
-# דודי מלכה <Dudimalka6@gmail.com>, 2020
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # Ofir Blum <ofir.blum@gmail.com>, 2020
+# דודי מלכה <Dudimalka6@gmail.com>, 2020
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Ofir Blum <ofir.blum@gmail.com>, 2020\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2021\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,11 +71,6 @@ msgid ""
 msgstr "מנהל מערכת צריך להגדיר את תצורת הסנכרון של גוגל לפני שתוכל להשתמש בו!"
 
 #. module: google_calendar
-#: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
-msgid "Calendar"
-msgstr "לוח שנה"
-
-#. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
 msgid "Calendar Event"
 msgstr "אירוע לוח שנה"
@@ -97,7 +93,7 @@ msgstr "מזהה לקוח"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client Secret"
-msgstr "סיסמת לקוח"
+msgstr "סוד לקוח"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_client_id
@@ -140,17 +136,17 @@ msgstr "נוצר ב-"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_odoo
 msgid "Delete from Odoo"
-msgstr ""
+msgstr "מחק מהמערכת"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_both
 msgid "Delete from both"
-msgstr ""
+msgstr "מחק משניהם"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
 msgid "Delete from the current Google Calendar account"
-msgstr ""
+msgstr "מחק מהיומן של גוגל"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__display_name
@@ -171,13 +167,18 @@ msgstr "דוא\"ל"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
-msgstr ""
+msgstr "כלל ארוע חוזר"
+
+#. module: google_calendar
+#: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
+msgid "Google Calendar"
+msgstr "לוח שנה של גוגל"
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
 #: model:ir.model,name:google_calendar.model_google_calendar_account_reset
 msgid "Google Calendar Account Reset"
-msgstr ""
+msgstr "אפס את היומן של גוגל"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__google_id
@@ -188,7 +189,7 @@ msgstr "מזהה אירוע לוח השנה של גוגל"
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__google_id
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__google_id
 msgid "Google Calendar Id"
-msgstr ""
+msgstr "מזהה היומן של גוגל"
 
 #. module: google_calendar
 #: model:ir.actions.server,name:google_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -248,19 +249,19 @@ msgstr "עדכון אחרון ב"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__dont_delete
 msgid "Leave them untouched"
-msgstr ""
+msgstr "עזוב אותם ללא שינוי"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__need_sync
 msgid "Need Sync"
-msgstr ""
+msgstr "יש צורך בסינכרון"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_sync_token
 msgid "Next Sync Token"
-msgstr ""
+msgstr "האסימון לסנכרון הבא:"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__sync_policy
@@ -288,12 +289,12 @@ msgstr "רענן אסימון"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
 msgid "Reset Account"
-msgstr ""
+msgstr "אפס חשבון"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
 msgid "Reset Google Calendar Account"
-msgstr ""
+msgstr "אפס את היומן של גוגל"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/res_users.py:0
@@ -317,22 +318,22 @@ msgstr "סנכרן עם <b>גוגל</b>"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "Synched with Google"
-msgstr ""
+msgstr "סנכרן עם <b>גוגל</b>"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_sync
 msgid "Synchronize a record with Google Calendar"
-msgstr ""
+msgstr "סנכרן את היומן שלך עם לוח השנה של גוגל"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__all
 msgid "Synchronize all existing events"
-msgstr ""
+msgstr "סנכרן את כל הארועים הקיימים"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__new
 msgid "Synchronize only new events"
-msgstr ""
+msgstr "סנכרן את כל הארועים החדשים"
 
 #. module: google_calendar
 #. openerp-web
@@ -349,12 +350,12 @@ msgstr ""
 #: code:addons/google_calendar/models/res_users.py:0
 #, python-format
 msgid "The account for the Google Calendar service is not configured."
-msgstr ""
+msgstr "חשבון ה- Google  אינו מוגדר"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
-msgstr ""
+msgstr "ישפיע על ארועים של המשתמש"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
@@ -374,20 +375,12 @@ msgstr "אסימון משתמש"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "User's Existing Events"
-msgstr ""
+msgstr "ארועים של המשתמש"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users
 msgid "Users"
 msgstr "משתמשים"
-
-#. module: google_calendar
-#: code:addons/google_calendar/models/google_sync.py:0
-#, python-format
-msgid ""
-"You cannot delete a record synchronized with Google Calendar, archive it "
-"instead."
-msgstr ""
 
 #. module: google_calendar
 #. openerp-web

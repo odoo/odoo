@@ -10,18 +10,18 @@
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2020
 # Morten Schou <ms@msteknik.dk>, 2020
 # Jesper Carstensen <info@danodoo.dk>, 2020
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
-# Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
 # Mads Søndergaard, 2020
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
+# Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:12+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
 "Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
@@ -34,17 +34,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr ""
+msgstr "Data Hentet"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids_nbr
 msgid "# of Invoices"
 msgstr "# fakturaer"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
-msgid "&amp;times;"
-msgstr "&amp;times;"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__html_3ds
@@ -121,13 +116,6 @@ msgid "<i class=\"fa fa-trash\"/> Delete"
 msgstr "<i class=\"fa fa-trash\"/> Slet"
 
 #. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:0
-#, python-format
-msgid "<p>This card is currently linked to the following records:<p/>"
-msgstr "<p>Dette kort er i øjebliket forbundet med følgende datasæt:<p/>"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<small class=\"text-muted\">(Some fees may apply)</small>"
 msgstr "<small class=\"text-muted\">(Visse gebyrer kan forekommer)</small>"
@@ -172,8 +160,8 @@ msgstr ""
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
-msgid "A journal must be specified of the acquirer %s."
-msgstr "En journal skal være specificeret af modtager %s."
+msgid "A journal must be specified for the acquirer %s."
+msgstr "En journal skal være specificeret for modtageren %s."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
@@ -645,7 +633,7 @@ msgstr "Kreditkort (i kraft af Ingenico)"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_odoo_by_adyen
 msgid "Credit Card (powered by Odoo Payments)"
-msgstr ""
+msgstr "Kreditkort (I kræft af Odoo Payments)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_payulatam
@@ -772,12 +760,12 @@ msgstr "E-mail"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Enable QR Codes"
-msgstr ""
+msgstr "Aktiver QR Koder"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__qr_code
 msgid "Enable the use of QR-codes for payments made on this provider."
-msgstr ""
+msgstr "Aktiver brugen af QR-koder til betalinger foretaget af denne udbyder."
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
@@ -1273,7 +1261,7 @@ msgstr "Kun administratorer kan tilgå dette data."
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Only transactions having the authorized status can be captured."
-msgstr ""
+msgstr "Kun transaktioner som har autoriseret statussen kan hæves."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1838,6 +1826,13 @@ msgstr ""
 "nyt kreditkort."
 
 #. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:0
+#, python-format
+msgid "This card is currently linked to the following records:"
+msgstr "Dette kort er i øjeblikket forbundet til følgende datasæt:"
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
 msgid ""
 "This field holds the image used for this payment icon, limited to "
@@ -2006,17 +2001,10 @@ msgstr "Advarsel!"
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:0
+#: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to add your payment method at the moment."
 msgstr "Vi er i øjeblikket ikke i stand til at tilføje din betalingsmetode."
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:0
-#, python-format
-msgid "We are not able to add your payment method at the moment.</p>"
-msgstr ""
-"Vi er i øjeblikket ikke i stand til at tilføje din betalingsmetode.</p>"
 
 #. module: payment
 #. openerp-web

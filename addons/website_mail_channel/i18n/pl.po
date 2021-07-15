@@ -12,14 +12,16 @@
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2020
 # Karol Rybak <karolrybak85@gmail.com>, 2020
 # Paweł Wodyński <pw@myodoo.pl>, 2020
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2020
+# Piotr Strębski <strebski@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2020-11-17 06:09+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2020\n"
+"Last-Translator: Piotr Strębski <strebski@gmail.com>, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +33,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "- <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr ""
+msgstr "- <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Data\" title=\"Data\"/>"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.messages_short
@@ -39,6 +41,8 @@ msgid ""
 "- <i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Attachments\" "
 "title=\"Attachments\"/>"
 msgstr ""
+"- <i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Załączniki\" "
+"title=\"Załączniki\"/>"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -46,6 +50,8 @@ msgid ""
 "<i class=\"fa fa-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
 "title=\"Previous message\"/>"
 msgstr ""
+"<i class=\"fa fa-arrow-left\" role=\"img\" aria-label=\"Poprzednia "
+"wiadomość\" title=\"Poprzednia wiadomość\"/>"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -384,11 +390,25 @@ msgid "Mailing-List"
 msgstr "Lista mailingowa"
 
 #. module: website_mail_channel
+#. openerp-web
+#: code:addons/website_mail_channel/static/src/snippets/s_channel/options.js:0
+#, python-format
+msgid "Name"
+msgstr "Nazwa"
+
+#. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid ""
 "Need to unsubscribe? It's right here! <span class=\"fa fa-2x fa-arrow-down "
 "float-right\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
 msgstr ""
+
+#. module: website_mail_channel
+#. openerp-web
+#: code:addons/website_mail_channel/static/src/snippets/s_channel/options.js:0
+#, python-format
+msgid "New Mail Channel"
+msgstr "Nowy kanał mailowy"
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_mail
@@ -490,6 +510,8 @@ msgid ""
 "members<br/>\n"
 "                    <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
 msgstr ""
+"członków<br/>\n"
+"                    <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Ruch\" title=\"Ruch\"/>"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels

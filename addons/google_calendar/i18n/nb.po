@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
 "Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
@@ -65,11 +65,6 @@ msgid ""
 "use it!"
 msgstr ""
 "En administrator må sette opp Google-synkronisering før du kan bruke den!"
-
-#. module: google_calendar
-#: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
-msgid "Calendar"
-msgstr "Kalender"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
@@ -169,6 +164,11 @@ msgstr "E-post"
 #: model:ir.model,name:google_calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
 msgstr ""
+
+#. module: google_calendar
+#: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
+msgid "Google Calendar"
+msgstr "Google Calendar"
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
@@ -375,14 +375,6 @@ msgstr ""
 #: model:ir.model,name:google_calendar.model_res_users
 msgid "Users"
 msgstr "Brukere"
-
-#. module: google_calendar
-#: code:addons/google_calendar/models/google_sync.py:0
-#, python-format
-msgid ""
-"You cannot delete a record synchronized with Google Calendar, archive it "
-"instead."
-msgstr ""
 
 #. module: google_calendar
 #. openerp-web

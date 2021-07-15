@@ -110,8 +110,8 @@
                 <div class="o_panel_body">
                     <t id="form_form_hook"/>
                     <t t-snippet="website.s_google_map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_google_map.svg"/>
-                    <t t-snippet="website.s_dynamic_snippet" t-thumbnail="/website/static/src/img/snippets_thumbs/s_dynamic_snippet.svg"/>
-                    <t t-snippet="website.s_dynamic_snippet_carousel" t-thumbnail="/website/static/src/img/snippets_thumbs/s_dynamic_carousel.svg"/>
+                    <t t-if="debug" t-snippet="website.s_dynamic_snippet" t-thumbnail="/website/static/src/img/snippets_thumbs/s_dynamic_snippet.svg"/>
+                    <t t-if="debug" t-snippet="website.s_dynamic_snippet_carousel" t-thumbnail="/website/static/src/img/snippets_thumbs/s_dynamic_carousel.svg"/>
                     <t id="sale_products_hook"/>
                     <t id="sale_recently_viewed_product_hook"/>
                     <t id="sale_product_search_section_hook"/>
@@ -482,9 +482,9 @@
     </div>
 
     <!-- Mobile display options -->
-    <div data-option-name="showMobile" data-selector="section .row > div"
+    <div data-js="MobileVisibility" data-option-name="showMobile" data-selector="section .row > div"
          data-exclude=".s_col_no_resize.row > div">
-        <we-checkbox string="Shown On Mobile" data-select-class="d-none d-md-block|" data-no-preview="true"/>
+        <we-checkbox string="Shown On Mobile" data-show-on-mobile="true" data-no-preview="true"/>
     </div>
 
     <div data-js="sizing_y"
@@ -508,7 +508,8 @@
         data-drop-in=".content, nav"/>
 
     <div data-js="SnippetSave"
-        t-attf-data-selector="#{so_snippet_addition_selector}, #{so_content_addition_selector}">
+        t-attf-data-selector="#{so_snippet_addition_selector}, #{so_content_addition_selector}"
+        data-exclude=".o_no_save">
         <we-button class="fa fa-fw fa-save o_we_link o_we_hover_warning"
                    title="Save the block to use it elsewhere"
                    data-save-snippet=""
@@ -935,7 +936,7 @@
     <!-- Anchor Name -->
     <div data-js="anchor"
         data-selector=":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *"
-        data-exclude=".modal *, .oe_structure .oe_structure *, [data-oe-type=html] .oe_structure *">
+        data-exclude=".modal *, .oe_structure .oe_structure *, [data-oe-type=html] .oe_structure *, .s_popup">
         <we-button class="fa fa-fw fa-link o_we_link"
                    title="Create a link to target this section"
                    data-no-preview="true"/>

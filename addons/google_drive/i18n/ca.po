@@ -8,6 +8,7 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2020
 # Quim - eccit <quim@eccit.com>, 2020
 # M Palau <mpalau@tda.ad>, 2020
+# Josep Anton Belchi, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: M Palau <mpalau@tda.ad>, 2020\n"
+"Last-Translator: Josep Anton Belchi, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -141,6 +142,14 @@ msgid "Creating google drive may only be done by one at a time."
 msgstr ""
 
 #. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:161
+#, python-format
+msgid ""
+"The document filter must not include any 'dynamic' part, so it should not be"
+" based on the current time or current user, for example."
+msgstr ""
+
+#. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
 msgid "Customer"
 msgstr "Client"
@@ -149,7 +158,7 @@ msgstr "Client"
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__display_name
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr "Mostrar Nom"
+msgstr "Nom mostrat"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__filter_id

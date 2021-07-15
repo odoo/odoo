@@ -40,7 +40,8 @@ QUnit.module('form_renderer_tests.js', {
                     },
                     viewParams,
                 );
-                const { env, widget } = await start(viewArgs, ...args);
+                const { afterEvent, env, widget } = await start(viewArgs, ...args);
+                this.afterEvent = afterEvent;
                 this.env = env;
                 this.widget = widget;
             });
@@ -461,24 +462,16 @@ QUnit.test('basic chatter rendering without messages', async function (assert) {
 });
 
 QUnit.test('chatter updating', async function (assert) {
-    assert.expect(3);
+    assert.expect(1);
 
     this.data['mail.message'].records.push({ body: "not empty", model: 'res.partner', res_id: 12 });
     this.data['res.partner'].records.push(
         { display_name: "first partner", id: 11 },
         { display_name: "second partner", id: 12 }
     );
-    const messageFetchChannelDef = makeDeferred();
     await this.createView({
         data: this.data,
         hasView: true,
-        async mockRPC(route, args) {
-            const res = await this._super(...arguments);
-            if (route.includes('message_fetch')) {
-                messageFetchChannelDef.resolve();
-            }
-            return res;
-        },
         // View params
         View: FormView,
         model: 'res.partner',
@@ -497,27 +490,35 @@ QUnit.test('chatter updating', async function (assert) {
                 </div>
             </form>
         `,
+        waitUntilEvent: {
+            eventName: 'o-thread-view-hint-processed',
+            message: "should wait until partner 11 thread loaded messages initially",
+            predicate: ({ hint, threadViewer }) => {
+                return (
+                    hint.type === 'messages-loaded' &&
+                    threadViewer.thread.model === 'res.partner' &&
+                    threadViewer.thread.id === 11
+                );
+            },
+        }
     });
-    assert.containsOnce(
-        document.body,
-        '.o_Chatter',
-        "there should be a chatter"
-    );
-    assert.containsNone(
-        document.body,
-        '.o_Message',
-        "there should be no message"
-    );
 
-    await afterNextRender(async () => {
-        document.querySelector('.o_pager_next').click();
-        // wait until messages are fetched, ignore other renders that are too early
-        await messageFetchChannelDef;
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => document.querySelector('.o_pager_next').click(),
+        message: "should wait until partner 12 thread loaded messages after clicking on next",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'res.partner' &&
+                threadViewer.thread.id === 12
+            );
+        },
     });
     assert.containsOnce(
         document.body,
         '.o_Message',
-        "there should be a message"
+        "there should be a message in partner 12 thread"
     );
 });
 
@@ -639,6 +640,11 @@ QUnit.test('read more/less links are not duplicated when switching from read to 
                 </div>
             </form>
         `,
+        waitUntilEvent: {
+            eventName: 'o-component-message-read-more-less-inserted',
+            message: "should wait until read more/less is inserted initially",
+            predicate: ({ message }) => message.id === 1000,
+        },
     });
     assert.containsOnce(
         document.body,
@@ -655,19 +661,24 @@ QUnit.test('read more/less links are not duplicated when switching from read to 
         '.o_Message_readMoreLess',
         "there should be only one read more"
     );
-
-    await afterNextRender(() => {
-        document.querySelector('.o_form_button_edit').click();
-    });
+    await afterNextRender(() => this.afterEvent({
+        eventName: 'o-component-message-read-more-less-inserted',
+        func: () => document.querySelector('.o_form_button_edit').click(),
+        message: "should wait until read more/less is inserted after clicking on edit",
+        predicate: ({ message }) => message.id === 1000,
+    }));
     assert.containsOnce(
         document.body,
         '.o_Message_readMoreLess',
         "there should still be only one read more after switching to edit mode"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_form_button_cancel').click();
-    });
+    await afterNextRender(() => this.afterEvent({
+        eventName: 'o-component-message-read-more-less-inserted',
+        func: () => document.querySelector('.o_form_button_cancel').click(),
+        message: "should wait until read more/less is inserted after canceling edit",
+        predicate: ({ message }) => message.id === 1000,
+    }));
     assert.containsOnce(
         document.body,
         '.o_Message_readMoreLess',
@@ -718,6 +729,11 @@ QUnit.test('read more links becomes read less after being clicked', async functi
                 </div>
             </form>
         `,
+        waitUntilEvent: {
+            eventName: 'o-component-message-read-more-less-inserted',
+            message: "should wait until read more/less is inserted initially",
+            predicate: ({ message }) => message.id === 1000,
+        },
     });
     assert.containsOnce(
         document.body,
@@ -740,9 +756,12 @@ QUnit.test('read more links becomes read less after being clicked', async functi
         "read more/less link should contain 'read more' as text"
     );
 
-    await afterNextRender(() => {
-        document.querySelector('.o_form_button_edit').click();
-    });
+    await afterNextRender(() => this.afterEvent({
+        eventName: 'o-component-message-read-more-less-inserted',
+        func: () => document.querySelector('.o_form_button_edit').click(),
+        message: "should wait until read more/less is inserted after clicking on edit",
+        predicate: ({ message }) => message.id === 1000,
+    }));
     assert.strictEqual(
         document.querySelector('.o_Message_readMoreLess').textContent,
         'read more',

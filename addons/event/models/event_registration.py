@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.tools import format_datetime
 from odoo.exceptions import AccessError, ValidationError
-
-from dateutil.relativedelta import relativedelta
 
 
 class EventRegistration(models.Model):
@@ -32,10 +31,10 @@ class EventRegistration(models.Model):
         states={'done': [('readonly', True)]})
     name = fields.Char(
         string='Attendee Name', index=True,
-        compute='_compute_contact_info', readonly=False, store=True, tracking=10)
-    email = fields.Char(string='Email', compute='_compute_contact_info', readonly=False, store=True, tracking=11)
-    phone = fields.Char(string='Phone', compute='_compute_contact_info', readonly=False, store=True, tracking=12)
-    mobile = fields.Char(string='Mobile', compute='_compute_contact_info', readonly=False, store=True, tracking=13)
+        compute='_compute_name', readonly=False, store=True, tracking=10)
+    email = fields.Char(string='Email', compute='_compute_email', readonly=False, store=True, tracking=11)
+    phone = fields.Char(string='Phone', compute='_compute_phone', readonly=False, store=True, tracking=12)
+    mobile = fields.Char(string='Mobile', compute='_compute_mobile', readonly=False, store=True, tracking=13)
     # organization
     date_open = fields.Datetime(string='Registration Date', readonly=True, default=lambda self: fields.Datetime.now())  # weird crash is directly now
     date_closed = fields.Datetime(
@@ -72,16 +71,40 @@ class EventRegistration(models.Model):
                 registration.update(registration._synchronize_partner_values(registration.partner_id))
 
     @api.depends('partner_id')
-    def _compute_contact_info(self):
+    def _compute_name(self):
         for registration in self:
-            if registration.partner_id:
-                partner_vals = self._synchronize_partner_values(registration.partner_id)
-                registration.update(
-                    dict((fname, fvalue)
-                         for fname, fvalue in partner_vals.items()
-                         if fvalue and not (registration[fname] or registration._origin[fname])
-                         )
-                    )
+            if not registration.name and registration.partner_id:
+                registration.name = registration._synchronize_partner_values(
+                    registration.partner_id,
+                    fnames=['name']
+                ).get('name') or False
+
+    @api.depends('partner_id')
+    def _compute_email(self):
+        for registration in self:
+            if not registration.email and registration.partner_id:
+                registration.email = registration._synchronize_partner_values(
+                    registration.partner_id,
+                    fnames=['email']
+                ).get('email') or False
+
+    @api.depends('partner_id')
+    def _compute_phone(self):
+        for registration in self:
+            if not registration.phone and registration.partner_id:
+                registration.phone = registration._synchronize_partner_values(
+                    registration.partner_id,
+                    fnames=['phone']
+                ).get('phone') or False
+
+    @api.depends('partner_id')
+    def _compute_mobile(self):
+        for registration in self:
+            if not registration.mobile and registration.partner_id:
+                registration.mobile = registration._synchronize_partner_values(
+                    registration.partner_id,
+                    fnames=['mobile']
+                ).get('mobile') or False
 
     @api.depends('state')
     def _compute_date_closed(self):
@@ -109,6 +132,16 @@ class EventRegistration(models.Model):
         if any(registration.event_id != registration.event_ticket_id.event_id for registration in self if registration.event_ticket_id):
             raise ValidationError(_('Invalid event / ticket choice'))
 
+    def _synchronize_partner_values(self, partner, fnames=None):
+        if fnames is None:
+            fnames = ['name', 'email', 'phone', 'mobile']
+        if partner:
+            contact_id = partner.address_get().get('contact', False)
+            if contact_id:
+                contact = self.env['res.partner'].browse(contact_id)
+                return dict((fname, contact[fname]) for fname in fnames if contact[fname])
+        return {}
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
@@ -127,7 +160,7 @@ class EventRegistration(models.Model):
         if vals.get('state') == 'open':
             # auto-trigger after_sub (on subscribe) mail schedulers, if needed
             onsubscribe_schedulers = self.mapped('event_id.event_mail_ids').filtered(lambda s: s.interval_type == 'after_sub')
-            onsubscribe_schedulers.execute()
+            onsubscribe_schedulers.sudo().execute()
 
         return ret
 
@@ -157,14 +190,6 @@ class EventRegistration(models.Model):
                (not registration.event_id.seats_available and registration.event_id.seats_limited) for registration in self):
             return False
         return True
-
-    def _synchronize_partner_values(self, partner):
-        if partner:
-            contact_id = partner.address_get().get('contact', False)
-            if contact_id:
-                contact = self.env['res.partner'].browse(contact_id)
-                return dict((fname, contact[fname]) for fname in ['name', 'email', 'phone', 'mobile'] if contact[fname])
-        return {}
 
     # ------------------------------------------------------------
     # ACTIONS / BUSINESS

@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+import random
+import threading
+
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -8,8 +12,6 @@ from odoo import api, fields, models, tools
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
 
-import random
-import logging
 _logger = logging.getLogger(__name__)
 
 _INTERVALS = {
@@ -117,10 +119,11 @@ class EventMailScheduler(models.Model):
                 if lines:
                     mail.write({'mail_registration_ids': lines})
                 # execute scheduler on registrations
-                mail.mail_registration_ids.filtered(lambda reg: reg.scheduled_date and reg.scheduled_date <= now).execute()
+                mail.mail_registration_ids.execute()
             else:
                 # Do not send emails if the mailing was scheduled before the event but the event is over
-                if not mail.mail_sent and (mail.interval_type != 'before_event' or mail.event_id.date_end > now) and mail.notification_type == 'mail':
+                if not mail.mail_sent and mail.scheduled_date <= now and mail.notification_type == 'mail' and \
+                        (mail.interval_type != 'before_event' or mail.event_id.date_end > now):
                     mail.event_id.mail_attendees(mail.template_id.id)
                     mail.write({'mail_sent': True})
         return True
@@ -169,13 +172,14 @@ You receive this email because you are:
         for scheduler in schedulers:
             try:
                 with self.env.cr.savepoint():
-                    scheduler.execute()
+                    # Prevent a mega prefetch of the registration ids of all the events of all the schedulers
+                    self.browse(scheduler.id).execute()
             except Exception as e:
                 _logger.exception(e)
                 self.invalidate_cache()
                 self._warn_template_error(scheduler, e)
             else:
-                if autocommit:
+                if autocommit and not getattr(threading.currentThread(), 'testing', False):
                     self.env.cr.commit()
         return True
 
@@ -192,10 +196,16 @@ class EventMailRegistration(models.Model):
     mail_sent = fields.Boolean('Mail Sent')
 
     def execute(self):
-        for mail in self:
-            if mail.registration_id.state in ['open', 'done'] and not mail.mail_sent and mail.scheduler_id.notification_type == 'mail':
-                mail.scheduler_id.template_id.send_mail(mail.registration_id.id)
-                mail.write({'mail_sent': True})
+        now = fields.Datetime.now()
+        todo = self.filtered(lambda reg_mail:
+            not reg_mail.mail_sent and \
+            reg_mail.registration_id.state in ['open', 'done'] and \
+            (reg_mail.scheduled_date and reg_mail.scheduled_date <= now) and \
+            reg_mail.scheduler_id.notification_type == 'mail'
+        )
+        for reg_mail in todo:
+            reg_mail.scheduler_id.template_id.send_mail(reg_mail.registration_id.id)
+        todo.write({'mail_sent': True})
 
     @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
     def _compute_scheduled_date(self):

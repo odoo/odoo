@@ -21,21 +21,24 @@
 # Fabien Bourgeois <fabien@yaltik.com>, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Fred Gilson <fgi@odoo.com>, 2020
-# Eloïse Stilmant <est@odoo.com>, 2020
 # Martin Trigaux, 2020
 # Frédéric LIETART <stuff@tifred.fr>, 2020
 # Hamid Darabi, 2020
-# Cécile Collart <cco@odoo.com>, 2020
 # Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
+# Eloïse Stilmant <est@odoo.com>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
+# Sébastien BÜHL <buhlsebastien@gmail.com>, 2021
+# Alexandra Jubert <aju@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-27 15:41+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Vallen Delobel <edv@odoo.com>, 2020\n"
+"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -405,6 +408,25 @@ msgstr ""
 "Dans cette optique, quelle est la difficulté de mise en place et de panne?"
 
 #. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website_blog.js:0
+#, python-format
+msgid "Amazing blog article: %s! Check it live: %s"
+msgstr "Un article de blog étonnant : %s! Vérifiez en direct : %s"
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/snippets/s_latest_posts/000.js:0
+#, python-format
+msgid ""
+"An error occured with this latest posts block. If the problem persists, "
+"please consider deleting it and adding a new one"
+msgstr ""
+"Une erreur est survenue avec ce bloc de dernières publications. Si le "
+"problème persiste, merci de considérer la suppression de ce bloc et l'ajout "
+"d'un nouveau."
+
+#. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_1
 msgid "An exciting mix of relaxation, culture, history, wildlife and hiking."
 msgstr ""
@@ -580,7 +602,7 @@ msgstr "Au-delà de l'œil"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Big Pictures"
-msgstr ""
+msgstr "Grandes images"
 
 #. module: website_blog
 #: code:addons/website_blog/models/website.py:0
@@ -729,7 +751,7 @@ msgstr "Peut publier"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Cards"
-msgstr ""
+msgstr "Cartes"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__category_id
@@ -752,6 +774,13 @@ msgstr ""
 #, python-format
 msgid "Choose an image from the library."
 msgstr "Choisir une image depuis la librairie."
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#, python-format
+msgid "Click here to add new content to your website."
+msgstr "Cliquez ici pour ajouter du nouveau contenu à votre site Web."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -907,7 +936,7 @@ msgstr "Modifiez l'en-tête de page \"Filtrer les résultats\"."
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Existing"
-msgstr ""
+msgstr "Éxistant"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
@@ -1458,7 +1487,16 @@ msgstr "Nouvel article de blog"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "New tag"
+msgstr "Nouvelle étiquette"
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/snippets/s_latest_posts/000.js:0
+#, python-format
+msgid "No blog post was found. Make sure your posts are published."
 msgstr ""
+"Pas de publication trouvée. Assurez-vous que vos publications soient "
+"publiées."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -1746,7 +1784,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__seo_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "Seo name"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
@@ -2202,7 +2240,7 @@ msgstr "Cette boîte ne sera pas visible pour vos visiteurs"
 #: code:addons/website_blog/static/src/js/website_blog.editor.js:0
 #, python-format
 msgid "This tag already exists"
-msgstr ""
+msgstr "Cette étiquette existe déjà."
 
 #. module: website_blog
 #. openerp-web

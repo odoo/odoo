@@ -25,8 +25,17 @@ class TestSlidesManagement(slides_common.SlidesCase):
 
     @users('user_manager')
     def test_archive(self):
+        self.env['slide.slide.partner'].create({
+            'slide_id': self.slide.id,
+            'channel_id': self.channel.id,
+            'partner_id': self.user_manager.partner_id.id,
+            'completed': True
+        })
+        channel_partner = self.channel._action_add_members(self.user_manager.partner_id)
+
         self.assertTrue(self.channel.active)
         self.assertTrue(self.channel.is_published)
+        self.assertFalse(channel_partner.completed)
         for slide in self.channel.slide_ids:
             self.assertTrue(slide.active, "All slide should be archived when a channel is archived")
             self.assertTrue(slide.is_published, "All slide should be unpublished when a channel is archived")
@@ -34,6 +43,8 @@ class TestSlidesManagement(slides_common.SlidesCase):
         self.channel.toggle_active()
         self.assertFalse(self.channel.active)
         self.assertFalse(self.channel.is_published)
+        # channel_partner should still NOT be marked as completed
+        self.assertFalse(channel_partner.completed)
 
         for slide in self.channel.slide_ids:
             self.assertFalse(slide.active, "All slides should be archived when a channel is archived")
@@ -136,7 +147,8 @@ class TestFromURL(slides_common.SlidesCase):
             'hlhLv0GN1hA': [
                 'https://www.youtube.com/v/hlhLv0GN1hA',
                 'https://www.youtube.com/embed/hlhLv0GN1hA',
-                'https://m.youtube.com/watch?v=hlhLv0GN1hA'
+                'https://www.youtube-nocookie.com/embed/hlhLv0GN1hA',
+                'https://m.youtube.com/watch?v=hlhLv0GN1hA',
             ],
         }
 

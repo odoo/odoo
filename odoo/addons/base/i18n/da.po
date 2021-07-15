@@ -8,28 +8,28 @@
 # Jesper Carstensen <jc@danodoo.dk>, 2020
 # peso <peer.sommerlund@gmail.com>, 2020
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2020
-# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2020
 # jonas jensen <j.jensen@tcomp.dk>, 2020
 # Morten Schou <ms@msteknik.dk>, 2020
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # Joe Hansen <joedalton2@yahoo.dk>, 2020
 # Preben Lisby <preben.lisby@gmail.com>, 2020
 # JonathanStein <jstein@image.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
-# lhmflexerp <lhm@flexerp.dk>, 2020
-# Martin Trigaux, 2020
 # Jesper Carstensen <info@danodoo.dk>, 2020
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2020
+# lhmflexerp <lhm@flexerp.dk>, 2020
 # Mads Søndergaard, 2020
-# Mads Søndergaard <mads@vkdata.dk>, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:25+0000\n"
+"POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1085,7 +1085,7 @@ msgid ""
 "        Generate payment orders as recommended by the SEPA norm, thanks to pain.001 messages. Supported pain version (countries) are pain.001.001.03 (generic), pain.001.001.03.ch.02 (Switzerland) and pain.001.003.03 (Germany). The generated XML file can then be uploaded to your bank.\n"
 "\n"
 "        This module follow the implementation guidelines issued by the European Payment Council.\n"
-"        For more informations about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
+"        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
 "\n"
@@ -1552,17 +1552,17 @@ msgid ""
 "\n"
 "    Make the lock date irreversible:\n"
 "\n"
-"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
-"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
-"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.\n"
+"    * You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.\n"
+"    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
 "\n"
-"    Gør afslutningsdato irreversibel:\n"
+"    Gør låsedatoen irreversibel:\n"
 "\n"
-"    * Du kan ikke definere mere strikse betingelser for rådgivere, end for brugere. I så fald, skal afslutningsdatoen for en rådgiver blive sat til før brugerens afslutningsdato.\n"
-"    * Du kan ikke afslutte en periode, der endnu ikke er overstået. I så fald skal afslutningsdatoen for rådgivere, være sat til før sidste dag af den forrige måned.\n"
-"    * Den nye afslutningsdato for rådgivere, skal være sat efter den tidligere afslutningsdato.\n"
+"    * Du kan ikke angive strengere restriktioner for rådgivere end for brugere. Derfor skal Alle Brugere Låsedatoen være forud (eller lig med) Fakturerings Låsedatoen.\n"
+"    * Du kan ikke låse en periode der ikke er afsluttet endnu. Derfor skal Alle Brugere Låsedato være forud (eller lig med) den sidste dag i den forrige måned.\n"
+"    * Enhver ny Alle Brugere Låsedato skal være efter (eller lig med) den tidligere.\n"
 "    "
 
 #. module: base
@@ -3284,7 +3284,7 @@ msgid ""
 "This module has been tested as base for more of 1000 companies, because\n"
 "it is based in a mixtures of most common software in the Venezuelan\n"
 "market what will allow for sure to accountants feel them first steps with\n"
-"Odoo more confortable.\n"
+"Odoo more comfortable.\n"
 "\n"
 "This module doesn't pretend be the total localization for Venezuela,\n"
 "but it will help you to start really quickly with Odoo in this country.\n"
@@ -3917,12 +3917,6 @@ msgid ""
 "automatically applicable for EU sales with a customer\n"
 "in the selected countries.\n"
 "The wizard can be run again for adding more countries.\n"
-"\n"
-"The wizard creates a separate Chart of Taxes for collecting the\n"
-"VAT amounts of the MOSS declaration, so extracting the MOSS\n"
-"data should be easy.\n"
-"Look for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\n"
-"Taxes Report menu (Generic Accounting Report).\n"
 "\n"
 "References\n"
 "++++++++++\n"
@@ -4622,6 +4616,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
+#: model:ir.module.module,description:base.module_l10n_nl_report_intrastat
 msgid ""
 "\n"
 "Generates Netherlands Intrastat report for declaration based on invoices.\n"
@@ -6759,18 +6754,17 @@ msgid ""
 "Swiss localization\n"
 "==================\n"
 "Added a QR-IBAN field on bank account.\n"
-"If this field is empty, but the bank account number itself is a valid QR-IBAN number, it will still be used as QR-IBAN as before.  \n"
-"But if you fill in the new QR-IBAN field, that one will be used as the QR-IBAN.  This should help for reconciliation as \n"
-"on the bank statements, the old IBAN code is still used.  \n"
+"If this field is empty but the bank account number itself is a valid QR-IBAN number, it will continue using it as QR-IBAN.\n"
+"However, if the new QR-IBAN field is filled, the value will be used as the QR-IBAN.\n"
+"This should help for reconciliation on the bank statements where the old IBAN code is still used.\n"
 "    "
 msgstr ""
 "\n"
 "Schweizisk lokalisering\n"
 "=====================\n"
 "Tilføjet et QR-IBAN felt på bank konto.\n"
-"Hvis dette felt er tomt, men bank konto nummeret selv er et gyldigt QR-IBAN nummer, vil det i stedet blive brugt som et QR-IBAN som før.\n"
-"Men hvis du udfylder det nye QR-IBAN felt, vil det blive brugt som QR-IBAN. Dette bør hjælpe afstemninger eftersom\n"
-"på bankudtog, anvendes det gamle IBAN stadigt."
+"Hvis dette felt er tomt, men bank konto nummeret selv er et gyldigt QR-IBAN nummer, vil det stadig bruge det som et QR-IBAN.\n"
+"Men det nye QR-IBAN felt er udfyldt, vil værdien blive brugt som QR-IBAN. Dette bør hjælpe afstemninger på kontoudtog, hvor der stadig anvendes det gamle IBAN."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -7416,9 +7410,10 @@ msgid ""
 "This is the latest basic Israelian localisation necessary to run Odoo in Israel:\n"
 "================================================================================\n"
 "\n"
-"This module consists:\n"
-" - Generic Israelian chart of accounts\n"
-" - Israelian taxes\n"
+"This module consists of:\n"
+" - Generic Israel Chart of Accounts\n"
+" - Taxes and tax report\n"
+" - Fiscal position for Palestina\n"
 " "
 msgstr ""
 "\n"
@@ -7426,9 +7421,9 @@ msgstr ""
 "================================================================================\n"
 "\n"
 "Dette modul indeholder:\n"
-" - Generisk Isrealisk kontodiagrammer\n"
-" - Isrealiske moms\n"
-" "
+" - Generisk Isrealsk kontodiagrammer\n"
+" - Isrealske moms\n"
+" - Skattepositioner for Pælestina"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za
@@ -7951,7 +7946,7 @@ msgstr ""
 msgid ""
 "\n"
 "This module allows to print your payments on pre-printed check paper.\n"
-"You can configure the output (layout, stubs informations, etc.) in company settings, and manage the\n"
+"You can configure the output (layout, stubs information, etc.) in company settings, and manage the\n"
 "checks numbering (if you use pre-printed checks without numbers) in journal settings.\n"
 "\n"
 "Supported formats\n"
@@ -8343,6 +8338,15 @@ msgstr ""
 "\n"
 "Den installerer  profilen for at foreninger kan administrere begivenheder, registreringer, medlemskaber, og medlemskabsprodukter (skemaer).\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,summary:base.module_account_online_synchronization
+msgid ""
+"\n"
+"This module is used for Online bank synchronization."
+msgstr ""
+"\n"
+"Dette modul bruges til Online banksynkronisering."
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals
@@ -8971,6 +8975,26 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_online_synchronization
+msgid ""
+"\n"
+"With this module, users will be able to link bank journals to their\n"
+"online bank accounts (for supported banking institutions), and configure\n"
+"a periodic and automatic synchronization of their bank statements.\n"
+"This module has been added end of 2020 and is purpose is to work with\n"
+"the latest providers. It should be used over the previous account_online_sync\n"
+"module.\n"
+"    "
+msgstr ""
+"\n"
+"Med dette modul vil brugere være i stand til at forbinde bankjournaler til deres\n"
+"online bankkonti (for understøttede bankinstitutioner), og konfigurere\n"
+"en periodisk og automatisk synkronisering af deres kontoudtog.\n"
+"Dette modul er blevet tilføjet slut 2020, og dets formål er at fungere med\n"
+"de seneste udbydere. Det bør bruges i stedet for det forrige account_online_sync\n"
+"modul."
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_sips
 msgid ""
 "\n"
@@ -9402,8 +9426,10 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
-msgid "<code>Warning</code>: Warning Exception to use with <code>raise</code>"
-msgstr "<code>Advarsel</code>: Advarselsflag til brug med <code>flag</code>"
+msgid ""
+"<code>UserError</code>: Warning Exception to use with <code>raise</code>"
+msgstr ""
+"<code>BrugerFejl</code>: Advarsel Undtagelse at bruge med <code>raise</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -9525,8 +9551,8 @@ msgstr "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
-msgid "<span aria-label=\"Close\">&amp;times;</span>"
-msgstr "<span aria-label=\"Close\">&amp;times;</span>"
+msgid "<span aria-label=\"Close\">×</span>"
+msgstr "<span aria-label=\"Luk\">x</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -9543,21 +9569,21 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Virksomheds Adresse</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Faktura Adresse</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Leverings Adresse</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Anden Adresse</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Privat Adresse</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Adresse</b>\n"
+"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Virksomhedsadresse</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Faktureringsadresse</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Leveringsadresse</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Anden adresse</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Privat Adresse</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Adresse</b>\n"
 "                            </span>"
 
 #. module: base
@@ -10259,11 +10285,6 @@ msgstr "Adgang til eksport funktion"
 #, python-format
 msgid "Access to unauthorized or invalid companies."
 msgstr "Adgang til uautoriserede og ugyldige virksomheder."
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_account
-msgid "Account"
-msgstr "Konto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
@@ -11012,6 +11033,11 @@ msgid "Advanced features for stock_account"
 msgstr "Avancerede funktioner for stock_account"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_proration
+msgid "Advantage Proration"
+msgstr "Fordels Forholdsregler"
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_adyen
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Adyen Payment Acquirer"
@@ -11118,6 +11144,11 @@ msgstr "Afsæt fri tid og følg fri tids anmodninger"
 #: model:ir.module.module,summary:base.module_helpdesk_fsm
 msgid "Allow generating fsm tasks from ticket"
 msgstr "Tillad oprettelsen af fsm opgaver fra sag"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_hr_payroll_edit_lines
+msgid "Allow payslip edition"
+msgstr "Tillad lønningsredigering"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_crm
@@ -12148,6 +12179,21 @@ msgid "Belgian Intrastat Declaration"
 msgstr "Belgisk Intrastat erklæring"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_proration
+msgid "Belgian Payroll - Advantage Proration"
+msgstr "Belgisk Lønning - Fordels Forholdsregler"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_posted_employee
+msgid "Belgian Payroll - Posted Employee"
+msgstr "Belgisk Lønningsliste - Posteret Medarbejder"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_variable_revenue
+msgid "Belgian Payroll - Variable Revenue"
+msgstr "Belgisk Lønningsliste - Variable Omsætning"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
 msgid "Belgian Registered Cash Register"
 msgstr "Belgisk registreret kasseapparat"
@@ -12478,8 +12524,8 @@ msgstr "Af"
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
-msgid "By default the widget uses the field informations"
-msgstr "Widget'et bruger per standard felt informationerne"
+msgid "By default the widget uses the field information"
+msgstr "Per standard anvender widget'en felt informationen"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
@@ -12658,6 +12704,14 @@ msgid ""
 msgstr ""
 "Kan ikke oprette ny '%s' posteringer udelukkende fra deres navn. Opret "
 "venligst disse posteringer manuelt, og prøv at importere dem igen."
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid "Cannot deactivate a language that is currently used by contacts."
+msgstr ""
+"Kan ikke deaktivere et sprog som på nuværende tidspunkt anvendes af "
+"kontakter."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -16642,6 +16696,11 @@ msgstr ""
 "3. Prøve balancens 13. Måneds rapport skal oprettes med datoer for hele året, for at oprette rapporten for det finansielle år.\n"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_fix_register_token
+msgid "Fix register payment wizard with 'payment' module"
+msgstr "Fiks kasseapparat betalings guide med 'betaling' modul"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__image_url
 msgid "Flag"
 msgstr "Anmeld"
@@ -19887,11 +19946,6 @@ msgid "Localization"
 msgstr "Lokalisering"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account_localizations
-msgid "Localizations"
-msgstr "Lokaliseringer"
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Log"
 msgstr "Log"
@@ -21353,6 +21407,11 @@ msgid "Netherlands Intrastat Declaration"
 msgstr "Hollands Intrastat deklaration"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nl_report_intrastat
+msgid "Netherlands Intrastat Declaration Reports"
+msgstr "Hollandsk Intrastat Deklaration Rapporter"
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "New API Key"
 msgstr "Ny API Nøgle"
@@ -21709,6 +21768,11 @@ msgstr "Antallet af opdaterede moduler"
 #: model:ir.model.fields,help:base.field_res_users__rules_count
 msgid "Number of record rules that apply to the current user"
 msgstr "antal af datasæt regler der gælder for nuværende bruger"
+
+#. module: base
+#: model:res.country,vat_label:base.pf
+msgid "N° Tahiti"
+msgstr "N° Tahiti"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
@@ -22874,7 +22938,7 @@ msgid ""
 "### Blazing fast search\n"
 "\n"
 "Scan products, browse through hierarchical categories, or get quick information\n"
-"about products with the blasting fast filter accross all your products.\n"
+"about products with the blasting fast filter across all your products.\n"
 "\n"
 "Integrated Inventory Management\n"
 "-------------------------------\n"
@@ -23679,6 +23743,20 @@ msgstr ""
 "Modul operationer er ikke mulige lige nu, prøv venligst igen senere, eller kontakt din system administrator."
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+"Odoo er ude af stand til at forene PDF filerne forbundet til følgende datasæt:\n"
+"%s\n"
+"\n"
+"Vær venlig at udeluk dem fra valget for at fortsætte. Det er muligt stadig at indhente de pågældende PDF filer, ved at vælge hver af de pågældende datasæt individuelt, hvilket undgår foreningen."
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr "Odoo henvisningsprogram"
@@ -23753,6 +23831,12 @@ msgstr ""
 "prøve igen efter forfriskende."
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid "One of the documents, you try to merge is encrypted"
+msgstr "En af de dokumenter du forsøger at forene er krypteret"
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -23786,6 +23870,11 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_marketing_online_appointment
 msgid "Online Appointment"
 msgstr "Online aftale"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_online_synchronization
+msgid "Online Bank Statement Synchronization"
+msgstr "Online Kontoudtog Synkronisering"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
@@ -24832,6 +24921,11 @@ msgid "Payroll Localization"
 msgstr "Lønninger lokalisering"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_payroll_edit_lines
+msgid "Payroll: Edit lines - Recompute work entries"
+msgstr "Lønninger: Rediger linjer - Genudregn arbejdsposteringer"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payulatam
 msgid "PayuLatam Payment Acquirer"
 msgstr "PayuLatam betalingsmodtager"
@@ -25029,6 +25123,11 @@ msgstr "Portugal"
 #: model:ir.module.module,shortdesc:base.module_l10n_pt
 msgid "Portugal - Accounting"
 msgstr "Portugal - Regnskab"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_posted_employee
+msgid "Posted Employee"
+msgstr "Posteret Medarbejder"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
@@ -26062,8 +26161,8 @@ msgstr "Fjern fra 'Print' menuen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
-msgid "Remove the contextual action related this report"
-msgstr "Fjern den kontekstrelaterede handling ved denne rapport"
+msgid "Remove the contextual action related to this report"
+msgstr "Fjern den kontekstuelle handling relateret til denne rapport"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
@@ -27759,8 +27858,8 @@ msgstr "Butiksansatte lønningssedler i Dokument applikationen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_holidays
-msgid "Store employee's time off documents  in the Document app"
-msgstr "Butiksansattes fritid dokumenter i Dokument applikationen."
+msgid "Store employee's time off documents in the Document app"
+msgstr "Gem medarbejders orlogs dokumenter i Dokument applikationen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__store
@@ -28579,6 +28678,12 @@ msgid "The internal user in charge of this contact."
 msgstr "Den interne bruger ansvarlig for denne kontakt."
 
 #. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr "Layoutet indeholder en ugyldig format nøgle"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "Listen over modeller der udvider den nuværende model."
@@ -29248,16 +29353,6 @@ msgid ""
 msgstr ""
 "Denne restriktion er på grund af følgende regler:\n"
 "  %s"
-
-#. module: base
-#: code:addons/base/models/ir_sequence.py:0
-#, python-format
-msgid ""
-"This transaction wasn't executed because another transaction is already "
-"using the same no-gap sequence. Please try again later."
-msgstr ""
-"Denne transaktion blev ikke gennemført, eftersom en anden transaktion "
-"allerede anvender den samme no-gap sekvens. Prøv venligst igen senere."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -30542,6 +30637,11 @@ msgid "Vanuatu"
 msgstr "Vanuatu"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_variable_revenue
+msgid "Variable Revenue"
+msgstr "Variable Omsætning"
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "Various fields may use Python code or Python expressions. The following "
@@ -30850,11 +30950,6 @@ msgid "Web-only translations"
 msgstr "Web-kun oversættelser"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
-msgid "Webiste Event CRM Questions"
-msgstr "Hjemmeside Begivenhed CRM Spørgsmål"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__website
 #: model:ir.module.category,name:base.module_category_website
 #: model:ir.module.category,name:base.module_category_website_website
@@ -30874,6 +30969,11 @@ msgstr "Hjemmeside - Salgsadministration"
 #: model:ir.module.module,shortdesc:base.module_website_enterprise
 msgid "Website Enterprise"
 msgstr "Hjemmeside virksomhed"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
+msgid "Website Event CRM Questions"
+msgstr "Hjemmeside Begivenhed CRM Spørgsmål"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm
@@ -31340,8 +31440,10 @@ msgstr "Du kan ikke aktiverer superbrugeren."
 #. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
-msgstr "Du kan ikke arkiverer en kontakt forbundet til en intern bruger."
+msgid "You cannot archive a contact linked to a portal or internal user."
+msgstr ""
+"Du kan ikke arkivere en kontakt der er forbundet til en portal- eller intern"
+" bruger."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -31458,6 +31560,15 @@ msgstr ""
 "Administrer brugeres rettigheder."
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_currency_form
+msgid ""
+"You won't be able to reduce the number of decimal places of a currency which"
+" has already been used to make accounting entries."
+msgstr ""
+"Du vil ikke være i stand til at reducere antallet af decimaler på en valuta "
+"som er blevet brugt til at foretage regnskabs posteringer."
+
+#. module: base
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -31535,16 +31646,6 @@ msgstr "account_ponto"
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_sepa
 msgid "account_qr_code_sepa"
 msgstr "account_qr_code_sepa"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_lt
-msgid "accounting, Lithuanian"
-msgstr "regnskab, Litauen"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_lt_reports
-msgid "accounting, report, Lithuanian"
-msgstr "regnskab, rapport, Litauen"
 
 #. module: base
 #: code:addons/models.py:0

@@ -22,6 +22,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"Any new All Users Lock Date must be posterior (or equal) to the previous "
+"one."
+msgstr ""
+
+#. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
 msgid "Companies"
 msgstr "Empresas"
@@ -51,15 +59,6 @@ msgstr ""
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
-msgid ""
-"The new lock date for advisors must be set after the previous lock date."
-msgstr ""
-"A nova data de fecho para consultores deve ser estabecida posteriormente à "
-"data de fecho anterior."
-
-#. module: account_lock
-#: code:addons/account_lock/models/res_company.py:0
-#, python-format
 msgid "The new tax lock date must be set after the previous lock date."
 msgstr ""
 "A nova data de fecho fiscal de ser estabelecida após a anterior data de "
@@ -75,31 +74,23 @@ msgstr "A data de fecho fiscal é irreversível e não pode ser apagada."
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot define stricter conditions on advisors than on users. Please make"
-" sure that the lock date on advisor is set before the lock date for users."
+"You cannot lock a period that has not yet ended. Therefore, the All Users "
+"Lock Date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
-"Não pode definir condições mais estritas para consultores do que para "
-"utilizadores. Assegure-se de que a data de fecho de consultores fica "
-"estabelecida antes da data de fecho para utilizadores."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" lock date for advisors is not set after the last day of the previous month."
+"You cannot lock a period that has not yet ended. Therefore, the tax lock "
+"date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
-"Não pode fechar um período que ainda não tenha terminado. Assegure-se de que"
-" a data de fecho para consultores seja definida não ultrapassando o último "
-"dia do mês anterior."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" tax lock date is not set after the last day of the previous month."
+"You cannot set stricter restrictions on advisors than on users. Therefore, "
+"the All Users Lock Date must be anterior (or equal) to the Invoice/Bills "
+"Lock Date."
 msgstr ""
-"Não pode fechar um período que ainda não tenha terminado. Assegure-se de que"
-" a data de fecho fiscal seja definida não ultrapassando o último dia do mês "
-"anterior."

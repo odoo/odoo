@@ -18,8 +18,12 @@ var QuickCreate = require('web.CalendarQuickCreate');
 var _t = core._t;
 var QWeb = core.qweb;
 
-function dateToServer (date) {
-    return date.clone().utc().locale('en').format('YYYY-MM-DD HH:mm:ss');
+function dateToServer (date, fieldType) {
+    date = date.clone().locale('en');
+    if (fieldType === "date") {
+        return date.local().format('YYYY-MM-DD');
+    }
+    return date.utc().format('YYYY-MM-DD HH:mm:ss');
 }
 
 var CalendarController = AbstractController.extend({
@@ -151,7 +155,7 @@ var CalendarController = AbstractController.extend({
             self._rpc({
                 model: self.modelName,
                 method: 'get_unusual_days',
-                args: [self.model.data.start_date.format('YYYY-MM-DD'), self.model.data.end_date.format('YYYY-MM-DD')],
+                args: [dateToServer(self.model.data.start_date, 'date'), dateToServer(self.model.data.end_date, 'date')],
                 context: self.context,
             }).then(function (data) {
                 _.each(self.$el.find('td.fc-day'), function (td) {
@@ -391,7 +395,7 @@ var CalendarController = AbstractController.extend({
             res_model: self.modelName,
             res_id: id || null,
             context: event.context || self.context,
-            title: _t("Open: ") + event.data.title,
+            title: _t("Open: ") + _.escape(event.data.title),
             on_saved: function () {
                 if (event.data.on_save) {
                     event.data.on_save();

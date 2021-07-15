@@ -99,10 +99,6 @@ var stock_report_generic = AbstractAction.extend({
         });
         return this.$buttons;
     },
-    do_show: function() {
-        this._super();
-        this.update_cp();
-    },
 });
 
 core.action_registry.add("stock_report_generic", stock_report_generic);

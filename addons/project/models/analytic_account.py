@@ -22,7 +22,7 @@ class AccountAnalyticAccount(models.Model):
     @api.constrains('company_id')
     def _check_company_id(self):
         for record in self:
-            if record.project_ids:
+            if record.company_id and not all(record.company_id == c for c in record.project_ids.mapped('company_id')):
                 raise UserError(_('You cannot change the company of an analytical account if it is related to a project.'))
 
     def unlink(self):

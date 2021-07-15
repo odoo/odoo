@@ -119,6 +119,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     on_attach_callback: function () {
         ActionMixin.on_attach_callback.call(this);
         this.searchModel.on('search', this, this._onSearch);
+        this.searchModel.trigger('focus-control-panel');
         if (this.withControlPanel) {
             this.searchModel.on('get-controller-query-params', this, this._onGetOwnedQueryParams);
         }
@@ -338,7 +339,10 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      */
     _renderBanner: async function () {
         if (this.bannerRoute !== undefined) {
-            const response = await this._rpc({route: this.bannerRoute});
+            const response = await this._rpc({
+                route: this.bannerRoute,
+                params: {context: session.user_context},
+            });
             if (!response.html) {
                 this.$el.removeClass('o_has_banner');
                 return Promise.resolve();

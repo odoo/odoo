@@ -311,9 +311,12 @@ class MailMail(models.Model):
                 headers = {}
                 ICP = self.env['ir.config_parameter'].sudo()
                 bounce_alias = ICP.get_param("mail.bounce.alias")
+                bounce_alias_static = tools.str2bool(ICP.get_param("mail.bounce.alias.static", "False"))
                 catchall_domain = ICP.get_param("mail.catchall.domain")
                 if bounce_alias and catchall_domain:
-                    if mail.mail_message_id.is_thread_message():
+                    if bounce_alias_static:
+                        headers['Return-Path'] = '%s@%s' % (bounce_alias, catchall_domain)
+                    elif mail.mail_message_id.is_thread_message():
                         headers['Return-Path'] = '%s+%d-%s-%d@%s' % (bounce_alias, mail.id, mail.model, mail.res_id, catchall_domain)
                     else:
                         headers['Return-Path'] = '%s+%d@%s' % (bounce_alias, mail.id, catchall_domain)

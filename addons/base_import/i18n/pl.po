@@ -15,6 +15,7 @@
 # Andrzej Donczew <a.donczew@hadron.eu.com>, 2020
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2020
 # Paweł Wodyński <pw@myodoo.pl>, 2020
+# Piotr Strębski <strebski@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2020\n"
+"Last-Translator: Piotr Strębski <strebski@gmail.com>, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,14 +36,14 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records successfully imported"
-msgstr ""
+msgstr "Pomyślnie zaimportowanych rekordów: %d"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records successfully imported..."
-msgstr ""
+msgstr "%d rekordów zostało pomyślnie zaimportowane..."
 
 #. module: base_import
 #. openerp-web
@@ -214,6 +215,9 @@ msgid ""
 "Note that the value in the column will be used as the new record's 'name', "
 "and assumes this is sufficient to create the record."
 msgstr ""
+"Tworzy nowe rekordy, jeśli nie można ich znaleźć (zamiast niepowodzenia "
+"importu). Zwróć uwagę, że wartość w kolumnie zostanie użyta jako „nazwa” "
+"nowego rekordu i założymy, że jest to wystarczające do utworzenia rekordu."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -479,7 +483,7 @@ msgstr "Podgląd niemożliwy ponieważ:"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import records"
-msgstr ""
+msgstr "Zaimportuj rekordy"
 
 #. module: base_import
 #. openerp-web
@@ -490,6 +494,9 @@ msgid ""
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
 msgstr ""
+"Upłynął limit czasu dla importu. Spróbuj ponownie. Jeśli nadal napotykasz "
+"ten problem, plik może być zbyt duży dla konfiguracji systemu, spróbuj go "
+"podzielić (importuj mniej rekordów na plik)."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0

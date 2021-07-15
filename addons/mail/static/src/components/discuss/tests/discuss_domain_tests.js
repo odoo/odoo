@@ -63,6 +63,7 @@ QUnit.test('discuss should filter messages based on given domain', async functio
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
+                hint.data.fetchedMessages.length === 1 &&
                 threadViewer.thread.model === 'mail.box' &&
                 threadViewer.thread.id === 'inbox'
             );
@@ -197,8 +198,8 @@ QUnit.test('discuss should refresh filtered thread on receiving new message', as
         func: () => this.env.services.rpc({
             route: '/mail/chat_post',
             params: {
-                uuid: channel.uuid,
                 message_content: "test",
+                uuid: channel.uuid,
             },
         }),
         message: "should wait until channel 20 refreshed its filtered message list",
@@ -294,8 +295,8 @@ QUnit.test('discuss should refresh filtered thread on changing thread', async fu
     await this.env.services.rpc({
         route: '/mail/chat_post',
         params: {
-            uuid: channel20.uuid,
             message_content: "test",
+            uuid: channel20.uuid,
         },
     });
     assert.containsNone(

@@ -274,7 +274,7 @@
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                         <header class="modal-header">
                             <h4 class="modal-title">New Opportunity</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                         </header>
                         <main class="modal-body" id="new-opp-dialog">
                             <div class="form-group">
@@ -320,7 +320,10 @@
                         </td>
                         <td><span t-field="opp.contact_name" /></td>
                         <td>
-                            <span class="text-nowrap" t-esc="opp.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/> at <span t-field="opp.probability" />%
+                            <span t-if="opp.company_currency" class="text-nowrap" t-esc="opp.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/>
+                            <span t-else="" class="text-nowrap" t-esc="opp.expected_revenue"/>
+                            <span> at </span>
+                            <span t-field="opp.probability" />%
                         </td>
                         <td>
                             <span class="badge badge-info badge-pill" title="Current stage of the opportunity" t-esc="opp.stage_id.name" />
@@ -430,7 +433,7 @@
                             <input type="hidden" name="lead_id" class="assign_lead_id" t-att-value="lead.id"/>
                             <header class="modal-header">
                                 <h4 class="modal-title">Lead Feedback</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                             </header>
                             <main class="modal-body" id="sign-dialog">
                                 <div class="form-group">
@@ -459,7 +462,7 @@
                             <input type="hidden" name="lead_id" class="assign_lead_id" t-att-value="lead.id"/>
                             <header class="modal-header">
                                 <h4 class="modal-title">Lead Feedback</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                             </header>
                             <main class="modal-body" id="sign-dialog">
                                 <div class="form-group">
@@ -529,7 +532,9 @@
                         <div class="col-lg-5 mb-4 mb-lg-0">
                             <div class="border-bottom d-flex justify-content-between py-2 mb-3 align-items-center">
                                 <h5 class="mb-0">
-                                    <span class="text-nowrap" t-esc="opportunity.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/> at
+                                    <span t-if="opportunity.company_currency" class="text-nowrap" t-esc="opportunity.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/>
+                                    <span t-else="" class="text-nowrap" t-esc="opportunity.expected_revenue"/>
+                                    <span> at </span>
                                     <span class="badge badge-info badge-pill"><span t-field="opportunity.probability"/>%</span>
                                 </h5>
                                 <button type="button" data-toggle="modal" data-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="fa fa-pencil mr-1"/>Edit</button>
@@ -623,7 +628,7 @@
                                         <input type="hidden" name="opportunity_id" class="opportunity_id" t-att-value="opportunity.id"/>
                                         <header class="modal-header">
                                             <h4 class="modal-title">Edit Opportunity</h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                                         </header>
                                         <main class="modal-body" id="sign-dialog">
                                             <div class="form-group">
@@ -727,7 +732,7 @@
                                         <input type="hidden" name="opportunity_id" class="opportunity_id" t-att-value="opportunity.id"/>
                                         <header class="modal-header">
                                             <h4 class="modal-title">Edit Contact</h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                                         </header>
                                         <main class="modal-body" id="sign-dialog">
                                             <t t-if="opportunity.partner_name">

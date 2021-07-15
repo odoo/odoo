@@ -20,6 +20,8 @@ class GroupOperator(models.Model):
     int_max = fields.Integer(group_operator='max')
     float_min = fields.Float(group_operator='min')
     float_avg = fields.Float(group_operator='avg')
+    float_monetary = fields.Monetary(currency_field='currency_id',group_operator='sum')
+    currency_id = fields.Many2one('res.currency')
     date_max = fields.Date(group_operator='max')
     bool_and = fields.Boolean(group_operator='bool_and')
     bool_or = fields.Boolean(group_operator='bool_or')

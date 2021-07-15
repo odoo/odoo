@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2020
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
+# Andreas Schmidt <schmigo@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020\n"
+"Last-Translator: Andreas Schmidt <schmigo@gmail.com>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +35,15 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- Gruppe von Steuern: Die Steuer ist eine Gruppe von Untersteuern.\n"
+"- Fest: Der Steuerbetrag bleibt unabhängig vom Preis gleich.\n"
+"- Prozentsatz des Preises: Der Steuerbetrag ist ein Prozentsatz des Preises:\n"
+"   z.B. 100 * (1 + 10%) = 110 (ohne Preis)\n"
+"   z. B. 110 / (1 + 10%) = 100 (im Preis enthalten)\n"
+"- Prozentsatz des Preises mit eingeschlossener Steuer: Der Steuerbetrag ist eine Division des Preises:\n"
+"   z. B. 180 / (1 - 10%) = 200 (nicht im Preis enthalten)\n"
+"   z. B. 200 * (1 - 10%) = 180 (im Preis enthalten)"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable

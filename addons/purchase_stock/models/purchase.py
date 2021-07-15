@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_round
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
@@ -29,19 +29,12 @@ class PurchaseOrder(models.Model):
     is_shipped = fields.Boolean(compute="_compute_is_shipped")
     effective_date = fields.Datetime("Effective Date", compute='_compute_effective_date', store=True, copy=False,
         help="Completion date of the first receipt order.")
-    on_time_rate = fields.Float(related='partner_id.on_time_rate')
+    on_time_rate = fields.Float(related='partner_id.on_time_rate', compute_sudo=False)
 
-    @api.depends('order_line.move_ids.returned_move_ids',
-                 'order_line.move_ids.state',
-                 'order_line.move_ids.picking_id')
+    @api.depends('order_line.move_ids.picking_id')
     def _compute_picking(self):
         for order in self:
-            pickings = self.env['stock.picking']
-            for line in order.order_line:
-                # We keep a limited scope on purpose. Ideally, we should also use move_orig_ids and
-                # do some recursive search, but that could be prohibitive if not done correctly.
-                moves = line.move_ids | line.move_ids.mapped('returned_move_ids')
-                pickings |= moves.mapped('picking_id')
+            pickings = order.order_line.mapped('move_ids.picking_id')
             order.picking_ids = pickings
             order.picking_count = len(pickings)
 
@@ -221,7 +214,7 @@ class PurchaseOrder(models.Model):
 
     def _create_picking(self):
         StockPicking = self.env['stock.picking']
-        for order in self:
+        for order in self.filtered(lambda po: po.state in ('purchase', 'done')):
             if any(product.type in ['product', 'consu'] for product in order.order_line.product_id):
                 order = order.with_company(order.company_id)
                 pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
@@ -340,6 +333,18 @@ class PurchaseOrderLine(models.Model):
             self.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
         return result
 
+    def unlink(self):
+        self.move_ids._action_cancel()
+
+        ppg_cancel_lines = self.filtered(lambda line: line.propagate_cancel)
+        ppg_cancel_lines.move_dest_ids._action_cancel()
+
+        not_ppg_cancel_lines = self.filtered(lambda line: not line.propagate_cancel)
+        not_ppg_cancel_lines.move_dest_ids.write({'procure_method': 'make_to_stock'})
+        not_ppg_cancel_lines.move_dest_ids._recompute_state()
+
+        return super().unlink()
+
     # --------------------------------------------------
     # Business methods
     # --------------------------------------------------
@@ -382,10 +387,13 @@ class PurchaseOrderLine(models.Model):
         line = self[0]
         order = line.order_id
         price_unit = line.price_unit
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         if line.taxes_id:
+            qty = line.product_qty or 1
             price_unit = line.taxes_id.with_context(round=False).compute_all(
-                price_unit, currency=line.order_id.currency_id, quantity=1.0, product=line.product_id, partner=line.order_id.partner_id
+                price_unit, currency=line.order_id.currency_id, quantity=qty, product=line.product_id, partner=line.order_id.partner_id
             )['total_void']
+            price_unit = float_round(price_unit / qty, precision_digits=price_unit_prec)
         if line.product_uom.id != line.product_id.uom_id.id:
             price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
         if order.currency_id != order.company_id.currency_id:
@@ -439,7 +447,7 @@ class PurchaseOrderLine(models.Model):
         product = self.product_id.with_context(lang=self.order_id.dest_address_id.lang or self.env.user.lang)
         description_picking = product._get_description(self.order_id.picking_type_id)
         if self.product_description_variants:
-            description_picking += self.product_description_variants
+            description_picking += "\n" + self.product_description_variants
         date_planned = self.date_planned or self.order_id.date_planned
         return {
             # truncate to 2000 to avoid triggering index limit error
@@ -462,7 +470,6 @@ class PurchaseOrderLine(models.Model):
             'origin': self.order_id.name,
             'description_picking': description_picking,
             'propagate_cancel': self.propagate_cancel,
-            'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,
@@ -470,12 +477,16 @@ class PurchaseOrderLine(models.Model):
 
     @api.model
     def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, company_id, values, po):
-        line_description = product_id._get_description(po.picking_type_id)
+        line_description = ''
         if values.get('product_description_variants'):
-            line_description += values['product_description_variants']
+            line_description = values['product_description_variants']
         supplier = values.get('supplier')
         res = self._prepare_purchase_order_line(product_id, product_qty, product_uom, company_id, supplier, po)
-        res['name'] = line_description
+        # We need to keep the vendor name set in _prepare_purchase_order_line. To avoid redundancy
+        # in the line name, we add the line_description only if different from the product name.
+        # This way, we shoud not lose any valuable information.
+        if line_description and product_id.name != line_description:
+            res['name'] += '\n' + line_description
         res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
         res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id
         res['propagate_cancel'] = values.get('propagate_cancel')
@@ -496,13 +507,30 @@ class PurchaseOrderLine(models.Model):
         args can be merged. If it returns an empty record then a new line will
         be created.
         """
-        description_picking = product_id._get_description(self.order_id.picking_type_id) or ''
+        description_picking = ''
         if values.get('product_description_variants'):
-            description_picking += values['product_description_variants']
+            description_picking = values['product_description_variants']
         lines = self.filtered(
-            lambda l: l.propagate_cancel == values['propagate_cancel'] and
-            ((values['orderpoint_id'] and not values['move_dest_ids']) and l.orderpoint_id == values['orderpoint_id'] or True) and
-            (not values.get('product_description_variants') or l.name == description_picking))
+            lambda l: l.propagate_cancel == values['propagate_cancel']
+            and ((values['orderpoint_id'] and not values['move_dest_ids']) and l.orderpoint_id == values['orderpoint_id'] or True)
+        )
+
+        # In case 'product_description_variants' is in the values, we also filter on the PO line
+        # name. This way, we can merge lines with the same description. To do so, we need the
+        # product name in the context of the PO partner.
+        if lines and values.get('product_description_variants'):
+            partner = self.mapped('order_id.partner_id')[:1]
+            product_lang = product_id.with_context(
+                lang=partner.lang,
+                partner_id=partner.id,
+            )
+            name = product_lang.display_name
+            if product_lang.description_purchase:
+                name += '\n' + product_lang.description_purchase
+            lines = lines.filtered(lambda l: l.name == name + '\n' + description_picking)
+            if lines:
+                return lines[0]
+
         return lines and lines[0] or self.env['purchase.order.line']
 
     def _get_outgoing_incoming_moves(self):
@@ -520,8 +548,9 @@ class PurchaseOrderLine(models.Model):
 
     def _update_date_planned(self, updated_date):
         move_to_update = self.move_ids.filtered(lambda m: m.state not in ['done', 'cancel'])
-        if move_to_update:
+        if not self.move_ids or move_to_update:  # Only change the date if there is no move done or none
             super()._update_date_planned(updated_date)
+        if move_to_update:
             self._update_move_date_deadline(updated_date)
 
     @api.model

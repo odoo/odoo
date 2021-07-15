@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2020
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2020
+# Josep Anton Belchi, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,13 +13,21 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2020\n"
+"Last-Translator: Josep Anton Belchi, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"Any new All Users Lock Date must be posterior (or equal) to the previous "
+"one."
+msgstr ""
 
 #. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
@@ -28,7 +37,7 @@ msgstr "Empreses"
 #. module: account_lock
 #: model:ir.model.fields,field_description:account_lock.field_res_company__display_name
 msgid "Display Name"
-msgstr "Mostrar Nom"
+msgstr "Nom mostrat"
 
 #. module: account_lock
 #: model:ir.model.fields,field_description:account_lock.field_res_company__id
@@ -50,15 +59,6 @@ msgstr ""
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
-msgid ""
-"The new lock date for advisors must be set after the previous lock date."
-msgstr ""
-"La nova data de bloqueig per als assessors s'ha de configurar després de la "
-"data de bloqueig anterior."
-
-#. module: account_lock
-#: code:addons/account_lock/models/res_company.py:0
-#, python-format
 msgid "The new tax lock date must be set after the previous lock date."
 msgstr ""
 
@@ -72,28 +72,23 @@ msgstr ""
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot define stricter conditions on advisors than on users. Please make"
-" sure that the lock date on advisor is set before the lock date for users."
+"You cannot lock a period that has not yet ended. Therefore, the All Users "
+"Lock Date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
-"No podeu definir condicions més estrictes als assessors que als usuaris. Si "
-"us plau assegureu-vos que la data de blocatge dels assessors estigui "
-"establerta abans que la dels usuaris. "
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" lock date for advisors is not set after the last day of the previous month."
+"You cannot lock a period that has not yet ended. Therefore, the tax lock "
+"date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
-"No podeu blocar un període que encara no s'hagi acabat. Si us plau "
-"assegureu-vos que la data de blocatge per als assessors no està establerta "
-"després de l'últim dia del mes anterior. "
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" tax lock date is not set after the last day of the previous month."
+"You cannot set stricter restrictions on advisors than on users. Therefore, "
+"the All Users Lock Date must be anterior (or equal) to the Invoice/Bills "
+"Lock Date."
 msgstr ""

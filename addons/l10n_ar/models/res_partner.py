@@ -2,6 +2,7 @@
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
 import stdnum.ar
+import re
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -110,3 +111,14 @@ class ResPartner(models.Model):
                 raise ValidationError(_('Only numbers allowed for "%s"', rec.l10n_latam_identification_type_id.name))
             except Exception as error:
                 raise ValidationError(repr(error))
+
+    @api.model
+    def _get_id_number_sanitize(self):
+        """ Sanitize the identification number. Return the digits/integer value of the identification number """
+        if self.l10n_latam_identification_type_id.l10n_ar_afip_code in ['80', '86']:
+            # Compact is the number clean up, remove all separators leave only digits
+            res = int(stdnum.ar.cuit.compact(self.vat))
+        else:
+            id_number = re.sub('[^0-9]', '', self.vat)
+            res = int(id_number)
+        return res

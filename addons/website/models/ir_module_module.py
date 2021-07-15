@@ -360,7 +360,11 @@ class IrModuleModule(models.Model):
         # this will install 'self' if it is not installed yet
         self._theme_upgrade_upstream()
 
-        return website.button_go_website(mode_edit=True)
+        active_todo = self.env['ir.actions.todo'].search([('state', '=', 'open')], limit=1)
+        if active_todo:
+            return active_todo.action_launch()
+        else:
+            return website.button_go_website(mode_edit=True)
 
     def button_remove_theme(self):
         """Remove the current theme of the current website."""
@@ -407,3 +411,13 @@ class IrModuleModule(models.Model):
                         'res_model': self._name,
                         'res_id': theme.id,
                     })
+
+    def _check(self):
+        super()._check()
+        View = self.env['ir.ui.view']
+        website_views_to_adapt = getattr(self.pool, 'website_views_to_adapt', [])
+        if website_views_to_adapt:
+            for view_replay in website_views_to_adapt:
+                cow_view = View.browse(view_replay[0])
+                View._load_records_write_on_cow(cow_view, view_replay[1], view_replay[2])
+            self.pool.website_views_to_adapt.clear()

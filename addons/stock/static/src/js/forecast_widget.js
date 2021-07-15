@@ -31,10 +31,10 @@ const ForecastWidgetField = AbstractField.extend({
         if (data.forecast_expected_date && data.date_deadline) {
             data.forecast_is_late = data.forecast_expected_date > data.date_deadline;
         }
-        data.will_be_fulfilled = utils.round_decimals(data.forecast_availability, this.record.fields.forecast_availability.digits[1]) >= utils.round_decimals(data.product_qty, this.record.fields.product_qty.digits[1]);
+        data.will_be_fulfilled = utils.round_decimals(data.forecast_availability, this.record.fields.forecast_availability.digits[1]) >= utils.round_decimals(data.product_qty, this.record.fields.forecast_availability.digits[1]);
 
         this.$el.html(QWeb.render('stock.forecastWidget', data));
-        this.$el.on('click', this._onOpenReport.bind(this));
+        this.$('.o_forecast_report_button').on('click', this._onOpenReport.bind(this));
     },
 
     isSet: function () {

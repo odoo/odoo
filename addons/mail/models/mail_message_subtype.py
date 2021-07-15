@@ -57,6 +57,9 @@ class MailMessageSubtype(models.Model):
     @tools.ormcache('model_name')
     def _get_auto_subscription_subtypes(self, model_name):
         """ Return data related to auto subscription based on subtype matching.
+        Here model_name indicates child model (like a task) on which we want to
+        make subtype matching based on its parents (like a project).
+
         Example with tasks and project :
 
          * generic: discussion, res_model = False
@@ -65,13 +68,15 @@ class MailMessageSubtype(models.Model):
 
         Returned data
 
-          * all_ids: all subtypes that are generic or related to task and project
-          * def_ids: for task, default subtypes ids
-          * int_ids: for task, internal-only default subtypes ids
+          * child_ids: all subtypes that are generic or related to task (res_model = False or model_name)
+          * def_ids: default subtypes ids (either generic or task specific)
+          * all_int_ids: all internal-only subtypes ids (generic or task or project)
           * parent: dict(parent subtype id, child subtype id), i.e. {task_new.id: new.id}
           * relation: dict(parent_model, relation_fields), i.e. {'project.project': ['project_id']}
         """
-        all_ids, def_ids, int_ids, parent, relation = list(), list(), list(), dict(), dict()
+        child_ids, def_ids = list(), list()
+        all_int_ids = list()
+        parent, relation = dict(), dict()
         subtypes = self.sudo().search([
             '|', '|', ('res_model', '=', False),
             ('res_model', '=', model_name),
@@ -79,15 +84,16 @@ class MailMessageSubtype(models.Model):
         ])
         for subtype in subtypes:
             if not subtype.res_model or subtype.res_model == model_name:
-                all_ids += subtype.ids
+                child_ids += subtype.ids
                 if subtype.default:
                     def_ids += subtype.ids
             elif subtype.relation_field:
                 parent[subtype.id] = subtype.parent_id.id
                 relation.setdefault(subtype.res_model, set()).add(subtype.relation_field)
+            # required for backward compatibility
             if subtype.internal:
-                int_ids += subtype.ids
-        return all_ids, def_ids, int_ids, parent, relation
+                all_int_ids += subtype.ids
+        return child_ids, def_ids, all_int_ids, parent, relation
 
     @api.model
     def default_subtypes(self, model_name):

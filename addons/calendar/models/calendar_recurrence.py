@@ -118,7 +118,13 @@ class RecurrenceRule(models.Model):
     until = fields.Date('Repeat Until')
 
     _sql_constraints = [
-        ('month_day', "CHECK (rrule_type != 'monthly' OR month_by != 'day' OR day >= 1 AND day <= 31)", "The day must be between 1 and 31"),
+        ('month_day',
+         "CHECK (rrule_type != 'monthly' "
+                "OR month_by != 'day' "
+                "OR day >= 1 AND day <= 31 "
+                "OR weekday in %s AND byday in %s)"
+                % (tuple(wd[0] for wd in WEEKDAY_SELECTION), tuple(bd[0] for bd in BYDAY_SELECTION)),
+         "The day must be between 1 and 31"),
     ]
 
     @api.depends('rrule')
@@ -345,11 +351,14 @@ class RecurrenceRule(models.Model):
             data['end_type'] = 'forever'
         return data
 
+    def _get_lang_week_start(self):
+        lang = self.env['res.lang']._lang_get(self.env.user.lang)
+        week_start = int(lang.week_start)  # lang.week_start ranges from '1' to '7'
+        return rrule.weekday(week_start - 1) # rrule expects an int from 0 to 6
+
     def _get_start_of_period(self, dt):
         if self.rrule_type == 'weekly':
-            lang = self.env['res.lang']._lang_get(self.env.user.lang)
-            week_start = int(lang.week_start)  # lang.week_start ranges from '1' to '7'
-            week_start = rrule.weekday(week_start - 1)  # expects an int from 0 to 6
+            week_start = self._get_lang_week_start()
             start = dt + relativedelta(weekday=week_start(-1))
         elif self.rrule_type == 'monthly':
             start = dt + relativedelta(day=1)
@@ -461,6 +470,7 @@ class RecurrenceRule(models.Model):
             if not weekdays:
                 raise UserError(_("You have to choose at least one day in the week"))
             rrule_params['byweekday'] = weekdays
+            rrule_params['wkst'] = self._get_lang_week_start()
 
         if self.end_type == 'count':  # e.g. stop after X occurence
             rrule_params['count'] = min(self.count, MAX_RECURRENT_EVENT)

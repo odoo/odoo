@@ -164,7 +164,7 @@ class User(models.Model):
         can_edit_self = self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit') or self.env.user.has_group('hr.group_hr_user')
         if hr_fields and not can_edit_self:
             # Raise meaningful error message
-            raise AccessError(_("You are only allowed to update your preferences. Please contact a HR officer to update other informations."))
+            raise AccessError(_("You are only allowed to update your preferences. Please contact a HR officer to update other information."))
 
         result = super(User, self).write(vals)
 
@@ -188,7 +188,7 @@ class User(models.Model):
     @api.model
     def action_get(self):
         if self.env.user.employee_id:
-            return self.sudo().env.ref('hr.res_users_action_my').sudo().read()[0]
+            return self.env['ir.actions.act_window']._for_xml_id('hr.res_users_action_my')
         return super(User, self).action_get()
 
     @api.depends('employee_ids')

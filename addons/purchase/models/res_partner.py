@@ -11,7 +11,7 @@ class res_partner(models.Model):
 
     def _compute_purchase_order_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
-        all_partners = self.search([('id', 'child_of', self.ids)])
+        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         all_partners.read(['parent_id'])
 
         purchase_order_groups = self.env['purchase.order'].read_group(
@@ -30,7 +30,7 @@ class res_partner(models.Model):
 
     def _compute_supplier_invoice_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
-        all_partners = self.search([('id', 'child_of', self.ids)])
+        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         all_partners.read(['parent_id'])
 
         supplier_invoice_groups = self.env['account.move'].read_group(

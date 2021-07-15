@@ -32,8 +32,9 @@ function loadAnchors(url) {
  * @param {ServicesMixin|Widget} self - an element capable to trigger an RPC
  * @param {jQuery} $input
  */
-function autocompleteWithPages(self, $input) {
+function autocompleteWithPages(self, $input, options) {
     $.widget("website.urlcomplete", $.ui.autocomplete, {
+        options: options || {},
         _create: function () {
             this._super();
             this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
@@ -50,7 +51,7 @@ function autocompleteWithPages(self, $input) {
             });
         },
         _renderSeparator: function (ul, item) {
-            return $("<li class='ui-autocomplete-category font-weight-bold text-capitalize m-2'>")
+            return $("<li class='ui-autocomplete-category font-weight-bold text-capitalize p-2'>")
                    .append(`<div>${item.separator}</div>`)
                    .appendTo(ul);
         },
@@ -88,8 +89,10 @@ function autocompleteWithPages(self, $input) {
                 });
             }
         },
-        close: function () {
+        select: function (ev, ui) {
+            ev.target.value = ui.item.value;
             self.trigger_up('website_url_chosen');
+            ev.preventDefault();
         },
     });
 }
@@ -260,6 +263,16 @@ function sendRequest(route, params) {
     form.submit();
 }
 
+/**
+ * Removes the navigation-blocking fullscreen loader from the DOM
+ */
+function removeLoader() {
+    const $loader = $('#o_website_page_loader');
+    if ($loader) {
+        $loader.remove();
+    }
+}
+
 return {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
@@ -267,5 +280,6 @@ return {
     prompt: prompt,
     sendRequest: sendRequest,
     websiteDomain: websiteDomain,
+    removeLoader: removeLoader,
 };
 });

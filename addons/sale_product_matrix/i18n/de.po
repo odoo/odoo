@@ -6,6 +6,7 @@
 # Martin Trigaux, 2020
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2020
 # philku79 <philip.kuss@gmx.de>, 2020
+# Andreas Schmidt <schmigo@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: philku79 <philip.kuss@gmx.de>, 2020\n"
+"Last-Translator: Andreas Schmidt <schmigo@gmail.com>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
 #: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
 msgid "Add product mode"
-msgstr ""
+msgstr "Produktmodus hinzufügen"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
@@ -34,6 +35,8 @@ msgid ""
 "Configurator: choose attribute values to add the matching         product variant to the order.\n"
 "Grid: add several variants at once from the grid of attribute values"
 msgstr ""
+"Konfigurator: Auswahl von Attributwerten zum Hinzufügen der passenden Produktvariante zum Auftrag.\n"
+"Raster: mehrere Varianten auf einmal aus dem Raster der Attributwerte hinzufügen"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__display_name
@@ -44,7 +47,7 @@ msgstr "Anzeigename"
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
 msgid "Grid Product Tmpl"
-msgstr ""
+msgstr "Raster Prod-Vlge"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_update
@@ -63,6 +66,8 @@ msgid ""
 "If set, the matrix of the products configurable by matrix will be shown on "
 "the report of the order."
 msgstr ""
+"Wenn gesetzt, wird die Matrix der per Matrix konfigurierbaren Produkte auf "
+"dem Bericht der Bestellung angezeigt."
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_product_template____last_update
@@ -73,7 +78,7 @@ msgstr "Zuletzt geändert am"
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
 msgid "Matrix local storage"
-msgstr ""
+msgstr "Matrix lokaler Speicher"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
@@ -103,12 +108,12 @@ msgstr "Verkaufsauftrag"
 #. module: sale_product_matrix
 #: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
 msgid "Sales Variant Selection"
-msgstr ""
+msgstr "Auswahl der Verkaufsvariante"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_product_tmpl_id
 msgid "Technical field for product_matrix functionalities."
-msgstr ""
+msgstr "Technisches Feld für product_matrix Funktionalitäten."
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
@@ -117,11 +122,16 @@ msgid ""
 "If grid_update, will be loaded on the SO. \n"
 "If not, represents the matrix to open."
 msgstr ""
+"Technische lokale Speicherung des Rasters. \n"
+"Wenn grid_update, wird auf die SO geladen. \n"
+"Wenn nicht, stellt die zu öffnende Matrix dar."
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_update
 msgid "Whether the grid field contains a new matrix to apply or not."
 msgstr ""
+"Ob das Rasterfeld eine neue Matrix enthält, die angewendet werden soll oder "
+"nicht."
 
 #. module: sale_product_matrix
 #: code:addons/sale_product_matrix/models/sale_order.py:0
@@ -129,3 +139,5 @@ msgstr ""
 msgid ""
 "You cannot change the quantity of a product present in multiple sale lines."
 msgstr ""
+"Sie können die Menge eines Produkts, das in mehreren Verkaufslinien "
+"vorhanden ist, nicht ändern."

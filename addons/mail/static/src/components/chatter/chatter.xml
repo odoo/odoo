@@ -24,7 +24,7 @@
                         />
                     </t>
                 </div>
-                <div class="o_Chatter_scrollPanel" t-on-scroll="_onScrollPanelScroll">
+                <div class="o_Chatter_scrollPanel" t-on-scroll="_onScrollPanelScroll" t-ref="scrollPanel">
                     <t t-if="chatter.isAttachmentBoxVisible">
                         <AttachmentBox
                             class="o_Chatter_attachmentBox"
@@ -40,6 +40,7 @@
                     <t t-if="chatter.threadView">
                         <ThreadView
                             class="o_Chatter_thread"
+                            getScrollableElement="getScrollableElement"
                             hasComposer="false"
                             hasScrollAdjust="chatter.hasMessageListScrollAdjust"
                             order="'desc'"

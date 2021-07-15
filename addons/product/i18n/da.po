@@ -11,7 +11,7 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
-# Walther Barnett <wba@miracle.dk>, 2020
+# walther_b <wba@miracle.dk>, 2020
 # Joe Hansen <joedalton2@yahoo.dk>, 2020
 # Martin Trigaux, 2020
 # jonas jensen <j.jensen@tcomp.dk>, 2020
@@ -48,7 +48,7 @@ msgstr "# Produkter"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
-msgstr ""
+msgstr "%(percentage)s %% rabat og %(price)s ekstragebyr"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -273,7 +273,7 @@ msgstr "Aktivitets Type Ikon"
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Add a quantity"
-msgstr ""
+msgstr "Tilføj en mængde"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -356,6 +356,8 @@ msgid ""
 "At most %d quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"Højest %d kvantiteter kan vises på samme tid. Fjerne en valgt kvantitet for "
+"at tilføje andre."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
@@ -771,12 +773,12 @@ msgstr "Definer leverandørprislister."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your volume unit of measure"
-msgstr ""
+msgstr "Definer din volumen måleenhed"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your weight unit of measure"
-msgstr ""
+msgstr "Definer din vægt måleenhed"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
@@ -914,6 +916,8 @@ msgid ""
 "Ending datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"Afsluttende datetime for prisliste vare validering\n"
+"Den viste værdi afhænger tidszonen angivet i dine præferencer."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -1011,7 +1015,7 @@ msgstr "Generelle oplysninger"
 #: model:ir.actions.server,name:product.action_product_price_list_report
 #: model:ir.actions.server,name:product.action_product_template_price_list_report
 msgid "Generate Pricelist"
-msgstr ""
+msgstr "Generer Prisliste"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
@@ -1490,7 +1494,7 @@ msgstr "Næste aktivitetstype"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
-msgstr ""
+msgstr "Ingen leverandør prisliste fundet"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
@@ -1620,7 +1624,7 @@ msgstr "Pris i procent"
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Please enter a positive whole number"
-msgstr ""
+msgstr "Vær venlig at angive et positivt hel-tal"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -1741,7 +1745,7 @@ msgstr "Prisliste navn"
 #: model:ir.model,name:product.model_report_product_report_pricelist
 #, python-format
 msgid "Pricelist Report"
-msgstr ""
+msgstr "Prisliste Rapport"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -1998,7 +2002,7 @@ msgstr "Prissøgning på varer"
 #: code:addons/product/models/product.py:0
 #, python-format
 msgid "Products: %(category)s"
-msgstr ""
+msgstr "Produkter: %(category)s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__lst_price
@@ -2033,7 +2037,7 @@ msgstr "Indkøbsenhed"
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Quantities:"
-msgstr ""
+msgstr "Kvantiteter:"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__min_qty
@@ -2045,7 +2049,7 @@ msgstr "Antal"
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%d)."
-msgstr ""
+msgstr "Kvantitet allerede tilstede (%d)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -2068,6 +2072,8 @@ msgid ""
 "Register the prices requested by your vendors for each product, based on the"
 " quantity and the period."
 msgstr ""
+"Registrer priserne anmodet af dine leverandører for hvert produkt, baseret "
+"på kvantiteten og perioden."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
@@ -2085,7 +2091,7 @@ msgstr "Relateret varianter"
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Remove quantity"
-msgstr ""
+msgstr "Fjerne kvantitet"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_user_id
@@ -2245,6 +2251,8 @@ msgid ""
 "Starting datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"Start datetime for prisliste vare validering\n"
+"Den viste værdi afhænger af tidszonen angivet i dine præferencer."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__activity_state
@@ -2759,7 +2767,7 @@ msgstr "Volumen"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Volume UoM"
-msgstr ""
+msgstr "Volumen Måleenhed"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_volume_volume_in_cubic_feet
@@ -2786,7 +2794,7 @@ msgstr "Vægt"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Weight UoM"
-msgstr ""
+msgstr "Vægt Måleenhed"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
@@ -2903,6 +2911,8 @@ msgstr ""
 msgid ""
 "You cannot delete this product category, it is the default generic category."
 msgstr ""
+"Du kan ikke slette denne produkt kategori, da det er standard generisk "
+"kategorien."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

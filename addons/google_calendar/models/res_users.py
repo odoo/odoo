@@ -89,6 +89,7 @@ class User(models.Model):
         self.google_calendar_sync_token = next_sync_token
 
         # Google -> Odoo
+        events.clear_type_ambiguity(self.env)
         recurrences = events.filter(lambda e: e.is_recurrence())
         synced_recurrences = self.env['calendar.recurrence']._sync_google2odoo(recurrences)
         synced_events = self.env['calendar.event']._sync_google2odoo(events - recurrences, default_reminders=default_reminders)

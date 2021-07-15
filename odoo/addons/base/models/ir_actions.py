@@ -6,6 +6,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import MissingError, UserError, ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval, test_python_expr
+from odoo.tools.float_utils import float_compare
 
 import base64
 from collections import defaultdict
@@ -74,6 +75,7 @@ class IrActions(models.Model):
             'datetime': tools.safe_eval.datetime,
             'dateutil': tools.safe_eval.dateutil,
             'timezone': timezone,
+            'float_compare': float_compare,
             'b64encode': base64.b64encode,
             'b64decode': base64.b64decode,
         }
@@ -321,6 +323,13 @@ class IrActionsActWindowclose(models.Model):
 
     type = fields.Char(default='ir.actions.act_window_close')
 
+    def _get_readable_fields(self):
+        return super()._get_readable_fields() | {
+            # 'effect' is not a real field of ir.actions.act_window_close but is
+            # used to display the rainbowman
+            "effect"
+        }
+
 
 class IrActionsActUrl(models.Model):
     _name = 'ir.actions.act_url'
@@ -374,6 +383,7 @@ class IrActionsServer(models.Model):
 #  - record: record on which the action is triggered; may be void
 #  - records: recordset of all records on which the action is triggered in multi-mode; may be void
 #  - time, datetime, dateutil, timezone: useful Python libraries
+#  - float_compare: Odoo function to compare floats based on specific precisions
 #  - log: log(message, level='info'): logging function to record debug information in ir.logging table
 #  - UserError: Warning Exception to use with raise
 # To return an action, assign: action = {...}\n\n\n\n"""
@@ -604,6 +614,16 @@ class IrActionsServer(models.Model):
                     raise
 
             eval_context = self._get_eval_context(action)
+            records = eval_context.get('record') or eval_context['model']
+            records |= eval_context.get('records') or eval_context['model']
+            if records:
+                try:
+                    records.check_access_rule('write')
+                except AccessError:
+                    _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
+                        action.name, self.env.user.login, records,
+                    )
+                    raise
 
             runner, multi = action._get_runner()
             if runner and multi:

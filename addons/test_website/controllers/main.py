@@ -44,6 +44,10 @@ class WebsiteTest(Home):
     def test_company_context(self):
         return request.make_response(json.dumps(request.context.get('allowed_company_ids')))
 
+    @http.route('/test_lang_url/<model("res.country"):country>', type='http', auth='public', website=True, sitemap=False)
+    def test_lang_url(self, **kwargs):
+        return request.render('test_website.test_view')
+
     # Test Session
 
     @http.route('/test_get_dbname', type='json', auth='public', website=True, sitemap=False)
@@ -125,3 +129,12 @@ class WebsiteTest(Home):
     @http.route(['/empty_controller_test'], type='http', auth='public', website=True, multilang=False, sitemap=False)
     def empty_controller_test(self, **kw):
         return 'Basic Controller Content'
+
+    # Test Redirects
+    @http.route(['/test_website/country/<model("res.country"):country>'], type='http', auth="public", website=True, sitemap=False)
+    def test_model_converter_country(self, country, **kw):
+        return request.render('test_website.test_redirect_view', {'country': country})
+
+    @http.route(['/test_website/200/<model("test.model"):rec>'], type='http', auth="public", website=True, sitemap=False)
+    def test_model_converter_seoname(self, rec, **kw):
+        return request.make_response('ok')

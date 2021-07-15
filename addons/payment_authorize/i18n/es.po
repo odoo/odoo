@@ -3,9 +3,8 @@
 # 	* payment_authorize
 # 
 # Translators:
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
 # Martin Trigaux, 2020
-# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# Daniela Cervantes <dace@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
+"Last-Translator: Daniela Cervantes <dace@odoo.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,28 +27,27 @@ msgid ""
 " If you don't have any account, ask your salesperson to grant you a portal "
 "access. "
 msgstr ""
-" Si no tiene ninguna cuenta, pídale a su vendedor que le otorgue acceso al "
-"portal."
+" Si no tienes cuenta, pídele a su comercial que te de acceso al portal."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_client_key
 msgid "API Client Key"
-msgstr "Clave de Cliente API"
+msgstr "Clave de cliente API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
 msgid "API Login Id"
-msgstr "API Login Id "
+msgstr "Id de inicio de sesión API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
 msgid "API Signature Key"
-msgstr "Clave de Firma API"
+msgstr "Clave de firma API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
 msgid "API Transaction Key"
-msgstr "API Clave de la transacción"
+msgstr "Clave de la transacción API "
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__provider__authorize
@@ -93,7 +91,7 @@ msgstr "Nombre mostrado"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "Generate Client Key"
-msgstr "Generar Clave de Cliente"
+msgstr "Generar clave de cliente"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
@@ -115,7 +113,7 @@ msgid ""
 "token has a valid acquirer reference."
 msgstr ""
 "Se encontró un token no válido: falta el perfil de autorización. Por favor, "
-"asegúrese de que el token tenga una referencia de adquirente válida."
+"asegúrate de que el token tenga una referencia de comprador válida."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer____last_update
@@ -127,7 +125,7 @@ msgstr "Última modificación el"
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Método de Pago"
+msgstr "Método de pago"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
@@ -143,7 +141,7 @@ msgstr "Transacción de pago"
 #: code:addons/payment_authorize/controllers/main.py:0
 #, python-format
 msgid "Please complete your profile. "
-msgstr "Por favor complete su perfil."
+msgstr "Por favor completa tu perfil."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:0
@@ -168,13 +166,13 @@ msgstr "Guardar las tarjetas"
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
 msgid "Server Error"
-msgstr "Error de Servidor"
+msgstr "Error en el servidor"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr "Fallo en la creación del perfil de cliente en Authorize.NET."
+msgstr "Error en la creación del perfil de cliente en Authorize.NET."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:0
@@ -204,9 +202,9 @@ msgid ""
 " an invoice."
 msgstr ""
 "Esta opción permite a los clientes guardar su tarjeta de crédito como un "
-"token de pago y reutilizarla para una compra posterior. Si administra las "
-"suscripciones (facturación recurrente), necesita que se le cobre "
-"automáticamente al cliente cuando emite una factura."
+"token de pago y reutilizarla para una compra posterior. Si administras las "
+"suscripciones (facturación recurrente), necesitas que se le cobre "
+"automáticamente al cliente cuando emita una factura."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
@@ -215,18 +213,18 @@ msgid ""
 "Unable to fetch Client Key, make sure the API Login and Transaction Key are "
 "correct."
 msgstr ""
-"No se puede obtener la clave de cliente, asegúrese de que el inicio de "
+"No se puede obtener la clave de cliente, asegúrate de que el inicio de "
 "sesión de API y la clave de transacción sean correctos."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
 #, python-format
 msgid "Warning"
-msgstr "Alerta"
+msgstr "Advertencia"
 
 #. module: payment_authorize
 #. openerp-web
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to add your payment method at the moment."
-msgstr "No podemos agregar su método de pago en este momento."
+msgstr "No podemos agregar tu método de pago en este momento."

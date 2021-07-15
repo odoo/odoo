@@ -4,7 +4,9 @@ odoo.define('mail/static/src/components/chatter_container/chatter_container.js',
 const components = {
     Chatter: require('mail/static/src/components/chatter/chatter.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 const { clear } = require('mail/static/src/model/model_field_command.js');
 
 const { Component } = owl;
@@ -26,6 +28,7 @@ class ChatterContainer extends Component {
         super(...args);
         this.chatter = undefined;
         this._wasMessagingInitialized = false;
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const isMessagingInitialized = this.env.isMessagingInitialized();
             // Delay creation of chatter record until messaging is initialized.
@@ -37,10 +40,7 @@ class ChatterContainer extends Component {
             }
             return { chatter: this.chatter };
         });
-    }
-
-    mounted() {
-        this._update();
+        useUpdate({ func: () => this._update() });
     }
 
     /**
@@ -51,10 +51,6 @@ class ChatterContainer extends Component {
             this._insertFromProps(nextProps);
         }
         return super.willUpdateProps(...arguments);
-    }
-
-    patched() {
-        this._update();
     }
 
     /**

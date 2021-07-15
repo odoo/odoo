@@ -228,9 +228,7 @@ QUnit.test('view attachments', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    const firstAttachment = this.env.models['mail.attachment'].find(
-        attachment => attachment.id === 143
-    );
+    const firstAttachment = this.env.models['mail.attachment'].findFromIdentifyingData({ id: 143 });
     await this.createAttachmentBoxComponent(thread);
 
     await afterNextRender(() =>
@@ -307,11 +305,11 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
     );
     assert.containsOnce(
         document.body,
-        '.o_Attachment_actionUnlink',
+        '.o_Attachment_asideItemUnlink',
         "attachment should have a delete button"
     );
 
-    await afterNextRender(() => document.querySelector('.o_Attachment_actionUnlink').click());
+    await afterNextRender(() => document.querySelector('.o_Attachment_asideItemUnlink').click());
     assert.containsOnce(
         document.body,
         '.o_AttachmentDeleteConfirmDialog',

@@ -1,0 +1,1318 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* adyen_platforms
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Bohdan Lisnenko, 2020
+# ТАрас <tratatuta@i.ua>, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-27 15:42+0000\n"
+"PO-Revision-Date: 2020-11-16 13:49+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid ""
+". If we or our\n"
+"            Processor at any time discover that the information you provided about your\n"
+"            business is incorrect or has changed without informing us or if you violate any of\n"
+"            these conditions, the services may be suspended and/or terminated with\n"
+"            immediate effect and fines may be applied by the Credit Card Schemes and/or the\n"
+"            authorities for unregistered or inappropriate use of payment services which will in\n"
+"            such case be payable by you."
+msgstr ""
+". Якщо ми або наш\n"
+" процесор у будь-який час виявимо, що інформація, яку ви надали про вашу\n"
+" компанію, є неправильною або змінилася, не повідомивши нас, або якщо ви порушили будь-яку з\n"
+" цих умов, послуги можуть бути призупинені та/або припинені з\n"
+" негайним впливом, а штрафи можуть застосовуватися Схемами кредитних карток та/або\n"
+" органами влади за незареєстроване або неналежне використання платіжних послуг, які\n"
+" в такому випадку будуть сплачуватися вами."
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+msgid "<span class=\"o_stat_text\"> Transactions</span>"
+msgstr "<span class=\"o_stat_text\"> Транзакції</span>"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "A timeout occured while trying to reach the Adyen proxy."
+msgstr "Стався тайм-аут під час спроби зв’язатися з проксі Adyen."
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__code
+msgid "Account Code"
+msgstr "Код рахунку"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__account_holder_code
+msgid "Account Holder Code"
+msgstr "Код власника рахунку"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__account_number
+msgid "Account Number"
+msgstr "Номер рахунку"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__account_type
+msgid "Account Type"
+msgstr "Тип рахунку"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_needaction
+msgid "Action Needed"
+msgstr "Необхідна дія"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+#, python-format
+msgid "Address"
+msgstr "Адреса"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__adyen_account_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__adyen_account_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__adyen_account_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__adyen_account_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_res_company__adyen_account_id
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#, python-format
+msgid "Adyen Account"
+msgstr "Рахунок Adyen"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+msgid "Adyen Bank Account"
+msgstr "Банківський рахунок Adyen"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Adyen MarketPay Terms and Conditions (click"
+msgstr "Терміни та умови Adyen MarketPay (натисніть"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__adyen_payout_id
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_payout_view_form
+msgid "Adyen Payout"
+msgstr "Виплата Adyen"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Adyen Restricted and Prohibited Products and Services list (click"
+msgstr "Список обмежених та заборонених товарів і послуг Adyen (натисніть"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+msgid "Adyen Shareholder"
+msgstr "Акціонер Adyen"
+
+#. module: adyen_platforms
+#: model:ir.actions.server,name:adyen_platforms.adyen_sync_cron_ir_actions_server
+#: model:ir.cron,cron_name:adyen_platforms.adyen_sync_cron
+#: model:ir.cron,name:adyen_platforms.adyen_sync_cron
+msgid "Adyen Sync"
+msgstr "Синх. Adyen"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__adyen_uuid
+msgid "Adyen UUID"
+msgstr "Adyen UUID"
+
+#. module: adyen_platforms
+#: model:ir.model.constraint,message:adyen_platforms.constraint_adyen_account_adyen_uuid_uniq
+msgid "Adyen UUID should be unique"
+msgstr "Adyen UUID має бути унікальним"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_adyen_account
+msgid "Adyen for Platforms Account"
+msgstr "Adyen для рахунку Plaforms"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_adyen_address_mixin
+msgid "Adyen for Platforms Address Mixin"
+msgstr "Adyen для адреси Plaforms"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_adyen_bank_account
+msgid "Adyen for Platforms Bank Account"
+msgstr "Adyen для банківського рахунку Plaforms"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_adyen_id_mixin
+msgid "Adyen for Platforms ID Mixin"
+msgstr "Adyen ID Plaforms"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_adyen_payout
+msgid "Adyen for Platforms Payout"
+msgstr "Adyen для виплат Plaforms"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_adyen_shareholder
+msgid "Adyen for Platforms Shareholder"
+msgstr "Adyen для акціонера Platforms"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_adyen_transaction
+msgid "Adyen for Platforms Transaction"
+msgstr "Adyen для тразакцій Platforms"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "Allowed file formats for bank statements are jpeg, jpg, pdf or png"
+msgstr ""
+"Дозволені формати файйлу для банківських виписок - це jpeg, jpg, pdf або png"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "Allowed file formats for photo IDs are jpeg, jpg, pdf or png"
+msgstr "Дозволені формати файлу для ID фото - це jpeg, jpg, pdf або png"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__id_back
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__id_front
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_id_mixin__id_back
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_id_mixin__id_front
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_shareholder__id_back
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_shareholder__id_front
+msgid "Allowed formats: jpg, pdf, png. Maximum allowed size: 4MB."
+msgstr "Дозволені формати: jpg, pdf, png. Максимально дозволений розмір: 4MB."
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__amount
+msgid "Amount"
+msgstr "Сума"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_attachment_count
+msgid "Attachment Count"
+msgstr "Кількість прикріплень"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__adyen_bank_account_id
+msgid "Bank Account"
+msgstr "Банківський рахунок"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__bank_account_ids
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+msgid "Bank Accounts"
+msgstr "Банківські рахунки"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.kyc_status_message
+msgid "Bank Accounts:"
+msgstr "Банківські рахунки:"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__bank_code
+msgid "Bank Code"
+msgstr "Банківський код"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__bank_statement
+msgid "Bank Statement"
+msgstr "Банківська виписка"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__bank_statement_filename
+msgid "Bank Statement Filename"
+msgstr "Назва файлу банківської виписки"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid ""
+"Bank statements must be greater than 10kB (except for PDFs) and smaller than"
+" 10MB"
+msgstr ""
+"Банківська виписка має бути більшою, ніж 10kB (окрім PDF) та меншою, ніж "
+"10MB"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__branch_code
+msgid "Branch Code"
+msgstr "Код гілки"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#, python-format
+msgid "Business"
+msgstr "Бізнес"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/js/adyen_account_views.js:0
+#, python-format
+msgid "Cancel"
+msgstr "Скасувати"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__chargeback
+msgid "Chargeback"
+msgstr "Повернення платежу"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__chargebackreceived
+msgid "Chargeback Received"
+msgstr "Пеовернення платежу отримано"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__chargebackreversed
+msgid "Chargeback Reversed"
+msgstr "Повернення платежу змінено"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__chargebackreversedreceived
+msgid "Chargeback Reversed Received"
+msgstr "Отримано зміну повернення платежу"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Chargebacks cost 7.5€ each."
+msgstr "Вартість кожного повернення платежу 7.5€."
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_bank_account__account_type__checking
+msgid "Checking"
+msgstr "Чеки"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__city
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__city
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__city
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+msgid "City"
+msgstr "Місто"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_res_company
+msgid "Companies"
+msgstr "Компанії"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__company_id
+msgid "Company"
+msgstr "Компанія"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/js/adyen_account_views.js:0
+#, python-format
+msgid "Confirm your Adyen Account Creation"
+msgstr "Підтвердіть створення вашого рахунку Adyen"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__kyc_status__passed
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_bank_account__kyc_status__passed
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__kyc_status__passed
+#, python-format
+msgid "Confirmed"
+msgstr "Підтверджено"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Contractual Relationship"
+msgstr "Договірні відносини"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__converted
+msgid "Converted"
+msgstr "Конвертовано"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__country_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__country_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__country_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__country_id
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+msgid "Country"
+msgstr "Країна"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__country_code
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__country_code
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__country_code
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__country_code
+msgid "Country Code"
+msgstr "Код країни"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/js/adyen_account_views.js:0
+#, python-format
+msgid "Create"
+msgstr "Створити"
+
+#. module: adyen_platforms
+#: model:ir.actions.act_window,name:adyen_platforms.adyen_account_action_create
+msgid "Create an Adyen Account"
+msgstr "Створіть рахунок Adyen"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__create_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__create_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__create_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__create_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__create_uid
+msgid "Created by"
+msgstr "Створено"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__create_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__create_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__create_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__create_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__create_date
+msgid "Created on"
+msgstr "Створено"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__creditfailed
+msgid "Credit Failed"
+msgstr "Кредит не вдався"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__credited
+msgid "Credited"
+msgstr "Кредитовано"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__currency_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__currency_id
+msgid "Currency"
+msgstr "Валюта"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_payout__payout_schedule__day
+msgid "Daily"
+msgstr "Щодня"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__kyc_status__awaiting_data
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_bank_account__kyc_status__awaiting_data
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__kyc_status__awaiting_data
+#, python-format
+msgid "Data to provide"
+msgstr "Дані для надання"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__date
+msgid "Date"
+msgstr "Дата"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Date of Birth"
+msgstr "Дата народження"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__date_of_birth
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__date_of_birth
+msgid "Date of birth"
+msgstr "Дата народження"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__debitfailed
+msgid "Debit Failed"
+msgstr "Дебет не вдався"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__debitedreversed
+msgid "Debit Reversed"
+msgstr "Дебет повернуто"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__debitreversedreceived
+msgid "Debit Reversed Received"
+msgstr "Отримано повернення дебету"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__debited
+msgid "Debited"
+msgstr "Дебетовано"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__description
+msgid "Description"
+msgstr "Опис"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Disclaimers"
+msgstr "Застереження"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__display_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__display_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__display_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__display_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__display_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__display_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__display_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_res_company__display_name
+msgid "Display Name"
+msgstr "Відобразити назву"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__document_type
+msgid "Document Type"
+msgstr "Тип документу"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__doing_business_as
+#, python-format
+msgid "Doing Business As"
+msgstr "Робіть бізнес як"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__id_type__driving_license
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_id_mixin__id_type__driving_license
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__id_type__driving_license
+msgid "Driving License"
+msgstr "Водійське посвідчення"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__document_type__drivinglicense
+msgid "Driving license"
+msgstr "Водійські права"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__email
+#, python-format
+msgid "Email"
+msgstr "Ел. пошта"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__kyc_status__failed
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_bank_account__kyc_status__failed
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__kyc_status__failed
+#, python-format
+msgid "Failed"
+msgstr "Не пройшов"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__first_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__first_name
+#, python-format
+msgid "First Name"
+msgstr "Ім'я"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_follower_ids
+msgid "Followers"
+msgstr "Підписники"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Підписники (Канали)"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Підписники (Партнери)"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__full_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__full_name
+msgid "Full Name"
+msgstr "Повна назва"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__fundtransfer
+msgid "Fund Transfer"
+msgstr "Переказ коштів"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__house_number_or_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__house_number_or_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__house_number_or_name
+msgid "House Number Or Name"
+msgstr "Номер будинку або назва"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+msgid "House number or name"
+msgstr "Номер рахунку або назва"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid ""
+"I confirm I have taken notice of and accept the following terms and "
+"restrictions:"
+msgstr "Я підтвердив, що я помітив та приймаю такі умови та обмеження:"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__iban
+msgid "IBAN"
+msgstr "IBAN"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__id
+#: model:ir.model.fields,field_description:adyen_platforms.field_res_company__id
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__document_type__id
+msgid "ID"
+msgstr "ID"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__id_type__id_card
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_id_mixin__id_type__id_card
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__id_type__id_card
+msgid "ID Card"
+msgstr "ID картка"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__document_number
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__document_number
+msgid "ID Number"
+msgstr "Номер ID"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_back_filename
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_back_filename
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_back_filename
+msgid "Id Back Filename"
+msgstr "Зворотня назва файлу Id "
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_front_filename
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_front_filename
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_front_filename
+msgid "Id Front Filename"
+msgstr "Передня назва файлу Id"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__message_needaction
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "Якщо позначено, то нові повідомлення будуть потребувати вашої уваги."
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Якщо позначено, деякі повідомлення мають помилку доставки."
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#, python-format
+msgid "Individual"
+msgstr "Індивідуальний"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_is_follower
+msgid "Is Follower"
+msgstr "Стежить"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__is_business
+msgid "Is a business"
+msgstr "Бізнес"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__kyc_status
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__kyc_status
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__kyc_status
+msgid "KYC Status"
+msgstr "Статус KYC"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__kyc_status_message
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__kyc_status_message
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__kyc_status_message
+msgid "KYC Status Message"
+msgstr "Повідомлення статусу KYC"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account____last_update
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin____last_update
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account____last_update
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin____last_update
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout____last_update
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder____last_update
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction____last_update
+#: model:ir.model.fields,field_description:adyen_platforms.field_res_company____last_update
+msgid "Last Modified on"
+msgstr "Останні зміни"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__last_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__last_name
+#, python-format
+msgid "Last Name"
+msgstr "Прізвище"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__write_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__write_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__write_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__write_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновив"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__write_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__write_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__write_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__write_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__legal_business_name
+#, python-format
+msgid "Legal Business Name"
+msgstr "Юридична назва бізнесу"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Legal Entity"
+msgstr "Юридична особа"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Основне прикріплення"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__manualcorrected
+msgid "Manual Corrected"
+msgstr "Виправлено вручну"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_has_error
+msgid "Message Delivery error"
+msgstr "Помилка доставлення повідомлення"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_ids
+msgid "Messages"
+msgstr "Повідомлення"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "Missing required fields: "
+msgstr "Відсутні необхідні поля: "
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_payout__payout_schedule__month
+msgid "Monthly"
+msgstr "Щомісяця"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__name
+msgid "Name"
+msgstr "Назва"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.kyc_status_message
+msgid "New KYC Status:"
+msgstr "Новий статус KYC:"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__next_scheduled_payout
+msgid "Next scheduled payout"
+msgstr "Наступна запланована виплата"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "No balance is currently awaitng payout."
+msgstr "Наразі баланс не очікує виплат."
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "No pending balance"
+msgstr "Немає очікувань балансу"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Кількість дій"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_has_error_counter
+msgid "Number of errors"
+msgstr "Кількість помилок"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Кількість повідомлень, які потебують дії"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Кількість повідомлень з помилковою доставкою"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Кількість непрочитаних повідомлень"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Onboarding and KYC cost 5€."
+msgstr "Залучення та KYC вартує 5€."
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+msgid "Owner Address"
+msgstr "Адреса власника"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_city
+msgid "Owner City"
+msgstr "Місто власника"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_country_id
+msgid "Owner Country"
+msgstr "Країна власника"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_house_number_or_name
+msgid "Owner House Number or Name"
+msgstr "Номер будинку власника и назва"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_name
+msgid "Owner Name"
+msgstr "Ім'я власника"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_state_id
+msgid "Owner State"
+msgstr "Область власника"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_street
+msgid "Owner Street"
+msgstr "Вулиця власника"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_zip
+msgid "Owner ZIP"
+msgstr "Індекс власника"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__document_type__passport
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__id_type__passport
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_id_mixin__id_type__passport
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__id_type__passport
+msgid "Passport"
+msgstr "Паспорт"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Payment and processing fees are listed on"
+msgstr "Оплата та стягнення за обробку вказані на"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__payout
+msgid "Payout"
+msgstr "Виплата"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "Payout Request sent"
+msgstr "Запит на виплату надіслано"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__payoutreversed
+msgid "Payout Reversed"
+msgstr "Виплату повернено"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__payout_ids
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+msgid "Payouts"
+msgstr "Виплати"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Payouts cost 0.20€ (EU) or 0.22$ (US) each."
+msgstr "Кожна виплата вартує 0.20€ (EU) або 0.22$ (US)."
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Payouts will be blocked until your application has been accepted."
+msgstr "Виплати буде заблоковано поки вашу заявку не буде підтверджено."
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__pendingcredit
+msgid "Pending Credit"
+msgstr "Кредит очікування"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__pendingdebit
+msgid "Pending Debit"
+msgstr "Дебет очікування"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__pendingfundtransfer
+msgid "Pending Fund Transfer"
+msgstr "Переказ коштів очікування"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__phone_number
+#, python-format
+msgid "Phone Number"
+msgstr "Номер телефону"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_back
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_back
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_back
+msgid "Photo ID Back"
+msgstr "Фото зворотнього ID"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_front
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_front
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_front
+msgid "Photo ID Front"
+msgstr "Фото переднього ID"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "Photo ID file size must be between 100kB (1kB for PDFs) and 4MB"
+msgstr "Розмір файлу фото ID поивнен бути між 100kB (1kB для PDF) та 4MB"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_type
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_type
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_type
+msgid "Photo ID type"
+msgstr "Тип ID фото"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Pricing"
+msgstr "Ціноутворення"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Prohibited Products and Services List of our Processor"
+msgstr "Список заборонених товарів та послуг нашого процесору"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__proxy_token
+msgid "Proxy Token"
+msgstr "Токен Proxy"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.kyc_status_message
+msgid "Reason(s):"
+msgstr "Причина(и):"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__bank_account_reference
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__shareholder_reference
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__reference
+msgid "Reference"
+msgstr "Референс"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__registration_number
+#, python-format
+msgid "Registration Number"
+msgstr "Номер реєстрації"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_payout_view_form
+msgid "Request a payout now"
+msgstr "Надішліть запит на виплату зараз"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_bank_account__account_type__savings
+msgid "Savings"
+msgstr "Збереження"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__payout_schedule
+msgid "Schedule"
+msgstr "Запланувати"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__shareholder_ids
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+msgid "Shareholders"
+msgstr "Акціонери"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.kyc_status_message
+msgid "Shareholders:"
+msgstr "Акціонери:"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__state_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__state_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__state_id
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+msgid "State"
+msgstr "Статус"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__state_code
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__state_code
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__state_code
+msgid "State Code"
+msgstr "Код області"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__street
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__street
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__street
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+msgid "Street"
+msgstr "Вулиця"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Submitted data"
+msgstr "Відправлені дані"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "Successfully sent payout request for %s"
+msgstr "Запит на виплату успішно надіслано для %s"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_transactions_templates.xml:0
+#, python-format
+msgid "Sync Transactions"
+msgstr "Синх. транзакції"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "The Adyen proxy is not reachable, please try again later."
+msgstr "Проксі Adyen не обробляється, спробуйте пізніше."
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__country_code
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_address_mixin__country_code
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_bank_account__country_code
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_shareholder__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Код країни ISO у двох символах.\n"
+"Ви можете використовувати це поле для швидкого пошуку."
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_payout__adyen_bank_account_id
+msgid ""
+"The bank account to which the payout is to be made. If left blank, a bank "
+"account is automatically selected"
+msgstr ""
+"Банкіський рахунок, на який має прийти повернення. Якщо банк відстуній, "
+"банківський рахунок буде обрано автоматично"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid ""
+"The payment processing services ordered by you by placing this order will be\n"
+"            provided to you by Adyen N.V. (hereafter “Processor”), with which you are\n"
+"            entering into a direct agreement by confirming this order. Odoo S.A.\n"
+"            (hereafter “We /Us”) will assist and support you in your use of the services to be\n"
+"            provided by the Processor and we will provide you first line assistance with and\n"
+"            enable you to connect to the systems of Processor to be able to use its services.\n"
+"            For this purpose, you hereby instruct Processor to provide us access to your data\n"
+"            and setting in Processor’s systems which are used by Processor to provide the\n"
+"            services and authorise us to manage these on your behalf."
+msgstr ""
+"Послуги обробки платежу, які ви замовили при розміщенні цього замовлення, будуть\n"
+"            надані вам Adyen N.V. (надалі “процесор”), з яким ви\n"
+"            вступили у прямі зобов'язання, підтвердивши це замовлення. Odoo S.A.\n"
+"            (надалі “ми/нас”) буде консультувати та підтримувати вас у використанні послуг,\n"
+"            наданих процесор, а ми будемо надавати вам першу консультацію з ним\n"
+"            та дозволимо вам підключитися до системи процесору, щоби мати змогу використовувати його послуги.\n"
+"            Для цього, ви доручаєте процесору надати нам доступ до ваших даних\n"
+"            та налаштувань у системі процесора, яка використовується процесором, для надання\n"
+"            послуг та нашої авторизації для їх налаштувань від вашого імені."
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__state_code
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_address_mixin__state_code
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_shareholder__state_code
+msgid "The state code."
+msgstr "Код області."
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__document_number
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_shareholder__document_number
+msgid ""
+"The type of ID Number required depends on the country:\n"
+"US: Social Security Number (9 digits or last 4 digits)\n"
+"Canada: Social Insurance Number\n"
+"Italy: Codice fiscale\n"
+"Australia: Document Number"
+msgstr ""
+"Тип ID-номеру обов'язковий в залежності від країни:\n"
+"США: Номер соціального страхування (9 цифр або останні 4 цифри)\n"
+"Канада: Номер соціального страхування\n"
+"Італія: Codice fiscale\n"
+"Автсралія: Номер документу"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__transaction_ids
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__transaction_ids
+#, python-format
+msgid "Transactions"
+msgstr "Операції"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__transactions_count
+msgid "Transactions Count"
+msgstr "Підрахунок транзакцій"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__status
+msgid "Type"
+msgstr "Тип"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__bank_account_uuid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__shareholder_uuid
+msgid "UUID"
+msgstr "UUID"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_unread
+msgid "Unread Messages"
+msgstr "Непрочитані повідомлення"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Кількість непрочитаних повідомлень"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__document_type__visa
+msgid "Visa"
+msgstr "Visa"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid ""
+"WARNING: Please note that the right to use the payment services is only for\n"
+"            sales in your own name. You may not resell, hire or on any other basis allow third\n"
+"            parties to use the payment services to enable such third parties to be paid for their\n"
+"            services. You may not use the payment services for different types of product and\n"
+"            services than as registered with your application. In particular you confirm that you\n"
+"            will not use the payment services for any type of product or service appearing in the"
+msgstr ""
+"УВАГА: Зверніть увагу, що право користуватися платіжними послугами є лише для\n"
+"            продажів від вашого умені. Ви не можете перепродавати, наймати або на будь-якій іншій основі дозволяти третім\n"
+"            особам використовувати платіжні послуги, щоб дозволити таким третім особам оплачувати свої\n"
+"            послуги. Ви не можете використовувати платіжні послуги для різних типів товарів та\n"
+"            послуг, які не зареєстровані у вашому додатку. Зокрема ви підтверджуєте, що ви\n"
+"            не будете використовувати платіжні послуги для будь-якого виду товару або послуги, що з'являються в"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__kyc_status__pending
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_bank_account__kyc_status__pending
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__kyc_status__pending
+#, python-format
+msgid "Waiting for validation"
+msgstr "Очікує на підтвердження"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid ""
+"We had troubles reaching Adyen, please retry later or contact the support if"
+" the problem persists"
+msgstr ""
+"У нас виникли проблеми в роботі з Adyen, спробуйте пізніше або зв'яжіться зі"
+" службою підтримки, якщо проблема не зникне"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid ""
+"We will notify you when the status of the review changes, or if additional "
+"data is required."
+msgstr ""
+"Ми повідомимо вас, коли статус огляду зміниться або якщо будуть потрібні "
+"додаткові дані."
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_payout__payout_schedule__week
+msgid "Weekly"
+msgstr "Щотижня"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "You can start processing payments as soon as your application is sent."
+msgstr ""
+"Ви можете почати обробку платежів, як тільки вашу заявку буде надіслано."
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_bank_account__bank_statement
+msgid ""
+"You need to provide a bank statement to allow payouts.         The file must"
+" be a bank statement, a screenshot of your online banking environment, a "
+"letter from the bank or a cheque and must contain         the logo of the "
+"bank or it's name in a unique font, the bank account details, the name of "
+"the account holder.        Allowed formats: jpg, pdf, png. Maximum allowed "
+"size: 10MB."
+msgstr ""
+"Вам необхідно надати банківську виписку, щоб дозволити виплати. Файл повинен"
+" бути банківською випискою, скріншотом вашого банківського середовища, "
+"листом з банку або чеком та має містити логотип банку або його назву з "
+"унікальним шрифтом, деталі банківського рахунку, ім'я власника рахунку. "
+"Дозволені формати: jpg, pdf, png. Максимально дозволений розмір: 10MB."
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__zip
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__zip
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__zip
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+msgid "ZIP"
+msgstr "Індекс"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "adyen.com/pricing"
+msgstr "adyen.com/pricing"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "here"
+msgstr "тут"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "to download and review)"
+msgstr "завантажити та переглянути)"

@@ -2,6 +2,7 @@
 
 from odoo import models
 
+import re
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -14,3 +15,8 @@ class AccountMove(models.Model):
         values['ubl_version'] = 2.0
 
         return values
+
+    def _get_efff_name(self):
+        self.ensure_one()
+        vat = self.company_id.partner_id.commercial_partner_id.vat
+        return 'efff_%s%s%s' % (vat or '', '_' if vat else '', re.sub('[\W_]', '', self.name))  # official naming convention

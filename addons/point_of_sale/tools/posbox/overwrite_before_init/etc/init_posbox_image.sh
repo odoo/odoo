@@ -66,7 +66,6 @@ PKGS_TO_INSTALL="
     python3-psutil \
     python3-psycopg2 \
     python3-pydot \
-    python3-pyparsing \
     python3-pypdf2 \
     python3-qrcode \
     python3-reportlab \

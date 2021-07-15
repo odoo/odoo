@@ -45,7 +45,7 @@
                             attrs="{'invisible': [('comment_single_recipient', '=', False)]}"/>
                         <div attrs="{'invisible': [('comment_single_recipient', '=', False)]}">
                             <field name="recipient_single_description" class="oe_inline"/>
-                            <field name="recipient_single_number_itf" class="oe_inline" nolabel="1" options="{'onchange_on_keydown': True}"/>
+                            <field name="recipient_single_number_itf" class="oe_inline" nolabel="1" options="{'onchange_on_keydown': True}" placeholder="e.g. +1 415 555 0100"/>
                         </div>
                                                 
                         <field name="body" widget="sms_widget"/>

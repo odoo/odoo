@@ -94,6 +94,7 @@ class ProductionLot(models.Model):
                 ))
         return super(ProductionLot, self).write(vals)
 
+    @api.depends('quant_ids', 'quant_ids.quantity')
     def _product_qty(self):
         for lot in self:
             # We only care for the quants in internal or transit locations.

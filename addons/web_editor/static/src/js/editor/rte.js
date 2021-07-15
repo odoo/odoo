@@ -565,6 +565,10 @@ var RTEWidget = Widget.extend({
         if ($editable.is('[data-oe-model]') && !$editable.is('[data-oe-model="ir.ui.view"]') && !$editable.is('[data-oe-type="html"]')) {
             $editable.data('layoutInfo').popover().find('.btn-group:not(.note-history)').remove();
         }
+        if ($editable.data('oe-type') === "image") {
+            $editable.attr('contenteditable', false);
+            $editable.find('img').attr('contenteditable', true);
+        }
     },
     /**
      * When an element enters edition, summernote is initialized on it. This
@@ -688,7 +692,7 @@ var RTEWidget = Widget.extend({
             $editable.find('[_moz_abspos]').removeAttr('_moz_abspos');
         });
 
-        if (isLink) {
+        if (isLink && !$target.closest('.o_not_editable').length) {
             /**
              * Remove content editable everywhere and add it on the link only so that characters can be added
              * and removed at the start and at the end of it.

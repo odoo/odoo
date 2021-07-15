@@ -13,5 +13,5 @@
         'views/assets.xml',
         'views/res_config_settings_view.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
 }

@@ -358,8 +358,12 @@ class Survey(http.Controller):
         if access_data['validity_code'] is not True:
             return self._redirect_with_error(access_data, access_data['validity_code'])
 
+        answer_sudo = access_data['answer_sudo']
+        if answer_sudo.state != 'done' and answer_sudo.survey_time_limit_reached:
+            answer_sudo._mark_done()
+
         return request.render('survey.survey_page_fill',
-            self._prepare_survey_data(access_data['survey_sudo'], access_data['answer_sudo'], **post))
+            self._prepare_survey_data(access_data['survey_sudo'], answer_sudo, **post))
 
     @http.route('/survey/get_background_image/<string:survey_token>/<string:answer_token>', type='http', auth="public", website=True, sitemap=False)
     def survey_get_background(self, survey_token, answer_token):
@@ -463,8 +467,8 @@ class Survey(http.Controller):
 
         errors = {}
         # Prepare answers / comment by question, validate and save answers
-        inactive_questions = request.env['survey.question'] if answer_sudo.is_session_answer else answer_sudo._get_inactive_conditional_questions()
         for question in questions:
+            inactive_questions = request.env['survey.question'] if answer_sudo.is_session_answer else answer_sudo._get_inactive_conditional_questions()
             if question in inactive_questions:  # if question is inactive, skip validation and save
                 continue
             answer, comment = self._extract_comment_from_answers(question, post.get(str(question.id)))
@@ -531,7 +535,7 @@ class Survey(http.Controller):
                 if not isinstance(answers, list):
                     answers = [answers]
                 for answer in answers:
-                    if 'comment' in answer:
+                    if isinstance(answer, dict) and 'comment' in answer:
                         comment = answer['comment'].strip()
                     else:
                         answers_no_comment.append(answer)

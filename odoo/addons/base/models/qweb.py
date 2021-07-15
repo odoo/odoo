@@ -359,7 +359,7 @@ class QWeb(object):
                 raise e
             except Exception as e:
                 template = options.get('caller_template', template)
-                path = options['last_path_node']
+                path = options.get('last_path_node')
                 raise QWebException("load could not load template", e, path, name=template)
 
         if document is None:
@@ -367,7 +367,7 @@ class QWeb(object):
 
         if isinstance(document, etree._Element):
             element = document
-            document = etree.tostring(document)
+            document = etree.tostring(document, encoding='utf-8')
         elif not document.strip().startswith('<') and os.path.exists(document):
             element = etree.parse(document).getroot()
         else:

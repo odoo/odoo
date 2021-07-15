@@ -24,5 +24,8 @@ class ResPartner(models.Model):
     @api.onchange('country_id')
     def _onchange_country(self):
         country = self.country_id or self.company_id.country_id or self.env.company.country_id
-        self.l10n_latam_identification_type_id = self.env['l10n_latam.identification.type'].search(
-            [('country_id', '=', country.id), ('is_vat', '=', True)], limit=1) or self.env.ref('l10n_latam_base.it_vat', raise_if_not_found=False)
+        identification_type = self.l10n_latam_identification_type_id
+        if not identification_type or (identification_type.country_id != country):
+            self.l10n_latam_identification_type_id = self.env['l10n_latam.identification.type'].search(
+                [('country_id', '=', country.id), ('is_vat', '=', True)], limit=1) or self.env.ref(
+                    'l10n_latam_base.it_vat', raise_if_not_found=False)

@@ -97,6 +97,20 @@ odoo.define('web.test_utils', async function (require) {
         return testUtilsDom.returnAfterNextAnimationFrame();
     }
 
+    /**
+     * Calls nextTick. While we have a hybrid implemetation (Owl + legacy), we may
+     * have situations where waiting for a single nextTick isn't enough. For instance,
+     * having a layer of Owl components, above a layer of legacy widgets, above a
+     * layer of Owl components requires two nextTick for the whole hierarchy to be
+     * rendered into the DOM. In those situation, one should use this helper, which
+     * will be removed (alongside all its calls) in the future.
+     *
+     * @returns {Promise}
+     */
+    async function owlCompatibilityNextTick() {
+        return nextTick();
+    }
+
     // Loading static files cannot be properly simulated when their real content is
     // really needed. This is the case for static XML files so we load them here,
     // before starting the qunit test suite.
@@ -104,6 +118,7 @@ odoo.define('web.test_utils', async function (require) {
     // to load xml files that are normally lazy loaded by specific widgets).
     await Promise.all([
         session.is_bound,
+        ajax.loadXML('/web/static/src/xml/crash_manager.xml', core.qweb),
         ajax.loadXML('/web/static/src/xml/debug.xml', core.qweb),
         ajax.loadXML('/web/static/src/xml/dialog.xml', core.qweb),
         ajax.loadXML('/web/static/src/xml/translation_dialog.xml', core.qweb),
@@ -247,6 +262,7 @@ odoo.define('web.test_utils', async function (require) {
         makeTestPromiseWithAssert: makeTestPromiseWithAssert,
         nextMicrotaskTick: nextMicrotaskTick,
         nextTick: nextTick,
+        owlCompatibilityNextTick: owlCompatibilityNextTick,
         prepareTarget: testUtilsCreate.prepareTarget,
         returnAfterNextAnimationFrame: testUtilsDom.returnAfterNextAnimationFrame,
 

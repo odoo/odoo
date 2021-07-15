@@ -23,7 +23,7 @@ class AccountInvoiceLine(models.Model):
 
         # Get free products
         purchases += self.env['sale.order.line'].sudo().search_read(
-            domain=[('order_id.partner_id', '=', partner.id), '|', ('price_subtotal', '=', 0.0), ('order_id.amount_total', '=', 0.0)],
+            domain=[('display_type', '=', False), ('order_id.partner_id', '=', partner.id), '|', ('price_subtotal', '=', 0.0), ('order_id.amount_total', '=', 0.0)],
             fields=['product_id'],
         )
 

@@ -9,6 +9,7 @@ var _t = core._t;
 tour.register("sale_tour", {
     url: "/web",
     rainbowMan: false,
+    sequence: 20,
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
     content: _t("Open Sales app to send your first quotation in a few clicks."),
@@ -27,7 +28,7 @@ tour.register("sale_tour", {
 }, {
     trigger: ".modal-content button[name='action_save_onboarding_company_step']",
     content: _t("Looks good. Let's continue."),
-    position: "bottom",
+    position: "left",
 }, {
     trigger: 'a.o_onboarding_step_action.btn[data-method=action_open_base_document_layout]',
     extra_trigger: ".o_sale_order",
@@ -37,7 +38,7 @@ tour.register("sale_tour", {
     trigger: "button[name='document_layout_save']",
     extra_trigger: ".o_sale_order",
     content: _t("Good job, let's continue."),
-    position: "bottom",
+    position: "top", // dot NOT move to bottom, it would cause a resize flicker
 }, {
     trigger: 'a.o_onboarding_step_action.btn[data-method=action_open_sale_onboarding_payment_acquirer]',
     extra_trigger: ".o_sale_order",
@@ -58,7 +59,8 @@ tour.register("sale_tour", {
 tour.register("sale_quote_tour", {
         url: "/web#action=sale.action_quotations_with_onboarding&view_type=form",
         rainbowMan: true,
-        rainbowManMessage: "<b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote."
+        rainbowManMessage: "<b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.",
+        sequence: 30,
     }, [{
         trigger: ".o_form_editable .o_field_many2one[name='partner_id']",
         extra_trigger: ".o_sale_order",
@@ -111,11 +113,6 @@ tour.register("sale_quote_tour", {
         run: "text 10.0"
     },
     ...tour.stepUtils.statusbarButtonsSteps("Send by Email", _t("<b>Send the quote</b> to yourself and check what the customer will receive."), ".o_statusbar_buttons button[name='action_quotation_send']"),
-    {
-        trigger: ".modal-content div[name='partner_ids']",
-        content: _t("Write <b>your own email address</b> here in order to test the flow."),
-        run: "text agrolait@example.com"
-    },
     {
         trigger: ".modal-footer button.btn-primary",
         auto: true,

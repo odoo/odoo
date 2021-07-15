@@ -270,7 +270,7 @@ class Post(models.Model):
     plain_content = fields.Text('Plain Content', compute='_get_plain_content', store=True)
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
     state = fields.Selection([('active', 'Active'), ('pending', 'Waiting Validation'), ('close', 'Closed'), ('offensive', 'Offensive'), ('flagged', 'Flagged')], string='Status', default='active')
-    views = fields.Integer('Views', default=0, readonly=True)
+    views = fields.Integer('Views', default=0, readonly=True, copy=False)
     active = fields.Boolean('Active', default=True)
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
     website_id = fields.Many2one(related='forum_id.website_id', readonly=True)
@@ -310,9 +310,9 @@ class Post(models.Model):
     moderator_id = fields.Many2one('res.users', string='Reviewed by', readonly=True)
 
     # closing
-    closed_reason_id = fields.Many2one('forum.post.reason', string='Reason')
-    closed_uid = fields.Many2one('res.users', string='Closed by', index=True, readonly=True)
-    closed_date = fields.Datetime('Closed on', readonly=True)
+    closed_reason_id = fields.Many2one('forum.post.reason', string='Reason', copy=False)
+    closed_uid = fields.Many2one('res.users', string='Closed by', index=True, readonly=True, copy=False)
+    closed_date = fields.Datetime('Closed on', readonly=True, copy=False)
 
     # karma calculation and access
     karma_accept = fields.Integer('Convert comment to answer', compute='_get_post_karma_rights', compute_sudo=False)
@@ -871,9 +871,9 @@ class Post(models.Model):
             'res_id': self.id,
         }
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Add access button to everyone if the document is active. """
-        groups = super(Post, self)._notify_get_groups()
+        groups = super(Post, self)._notify_get_groups(msg_vals=msg_vals)
 
         if self.state == 'active':
             for group_name, group_method, group_data in groups:

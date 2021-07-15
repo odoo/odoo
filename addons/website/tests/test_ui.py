@@ -110,7 +110,10 @@ class TestUiTranslate(odoo.tests.HttpCase):
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
-    def test_01_restricted_editor(self):
+    def test_01_admin_tour_homepage(self):
+        self.start_tour("/?enable_editor=1", 'homepage', login='admin')
+
+    def test_02_restricted_editor(self):
         self.restricted_editor = self.env['res.users'].create({
             'name': 'Restricted Editor',
             'login': 'restricted',
@@ -122,10 +125,10 @@ class TestUi(odoo.tests.HttpCase):
         })
         self.start_tour("/", 'restricted_editor', login='restricted')
 
-    def test_02_backend_dashboard(self):
+    def test_03_backend_dashboard(self):
         self.start_tour("/", 'backend_dashboard', login='admin')
 
-    def test_03_website_navbar_menu(self):
+    def test_04_website_navbar_menu(self):
         website = self.env['website'].search([], limit=1)
         self.env['website.menu'].create({
             'name': 'Test Tour Menu',
@@ -136,7 +139,7 @@ class TestUi(odoo.tests.HttpCase):
         })
         self.start_tour("/", 'website_navbar_menu')
 
-    def test_04_specific_website_editor(self):
+    def test_05_specific_website_editor(self):
         website_default = self.env['website'].search([], limit=1)
         new_website = self.env['website'].create({'name': 'New Website'})
         website_editor_assets_view = self.env.ref('website.assets_wysiwyg')
@@ -151,8 +154,8 @@ class TestUi(odoo.tests.HttpCase):
                 </xpath>
             """,
         })
-        self.start_tour("/?fw=%s" % website_default.id, "generic_website_editor", login='admin')
-        self.start_tour("/?fw=%s" % new_website.id, "specific_website_editor", login='admin')
+        self.start_tour("/website/force/%s" % website_default.id, "generic_website_editor", login='admin')
+        self.start_tour("/website/force/%s" % new_website.id, "specific_website_editor", login='admin')
 
     def test_06_public_user_editor(self):
         website_default = self.env['website'].search([], limit=1)
@@ -186,3 +189,6 @@ class TestUi(odoo.tests.HttpCase):
             """,
         }])
         self.start_tour("/", 'snippet_version', login='admin')
+
+    def test_08_website_style_custo(self):
+        self.start_tour("/", "website_style_edition", login="admin")

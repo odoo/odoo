@@ -24,7 +24,7 @@ class ResCurrency(models.Model):
             rounding_val = vals['rounding']
             for record in self:
                 if (rounding_val > record.rounding or rounding_val == 0) and record._has_accounting_entries():
-                    raise UserError(_("You cannot reduce the number of decimal places of a currency which has already been used to make accounting entries. If you really need to do that, please contact tech support."))
+                    raise UserError(_("You cannot reduce the number of decimal places of a currency which has already been used to make accounting entries."))
 
         return super(ResCurrency, self).write(vals)
 

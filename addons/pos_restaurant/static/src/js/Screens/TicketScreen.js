@@ -20,17 +20,19 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                 }
             }
             get filterOptions() {
+                const { Payment, Open, Tipping } = this.getOrderStates();
                 var filterOptions = super.filterOptions;
                 if (this.env.pos.config.set_tip_after_payment) {
-                    var idx = filterOptions.indexOf('Payment');
-                    filterOptions[idx] = 'Open';
+                    var idx = filterOptions.indexOf(Payment);
+                    filterOptions[idx] = Open;
                 }
-                return [...filterOptions, 'Tipping'];
+                return [...filterOptions, Tipping];
             }
             get _screenToStatusMap() {
+                const { Open, Tipping } = this.getOrderStates();
                 return Object.assign(super._screenToStatusMap, {
-                    PaymentScreen: this.env.pos.config.set_tip_after_payment ? 'Open' : super._screenToStatusMap.PaymentScreen,
-                    TipScreen: 'Tipping',
+                    PaymentScreen: this.env.pos.config.set_tip_after_payment ? Open : super._screenToStatusMap.PaymentScreen,
+                    TipScreen: Tipping,
                 });
             }
             getTable(order) {
@@ -114,6 +116,12 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                     method: 'set_no_tip',
                     model: 'pos.order',
                     args: [serverId],
+                });
+            }
+            getOrderStates() {
+                return Object.assign(super.getOrderStates(), {
+                    Tipping: this.env._t('Tipping'),
+                    Open: this.env._t('Open'),
                 });
             }
         };

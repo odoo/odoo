@@ -12,6 +12,7 @@ import werkzeug.utils
 import werkzeug.wrappers
 
 from itertools import islice
+from werkzeug import urls
 from xml.etree import ElementTree as ET
 
 import odoo
@@ -85,10 +86,37 @@ class Website(Home):
 
         raise request.not_found()
 
-    @http.route('/website/force_website', type='json', auth="user")
-    def force_website(self, website_id):
-        request.env['website']._force_website(website_id)
-        return True
+    @http.route('/website/force/<int:website_id>', type='http', auth="user", website=True, sitemap=False, multilang=False)
+    def website_force(self, website_id, path='/', isredir=False, **kw):
+        """ To switch from a website to another, we need to force the website in
+        session, AFTER landing on that website domain (if set) as this will be a
+        different session.
+        """
+        parse = werkzeug.urls.url_parse
+        safe_path = parse(path).path
+
+        if not (request.env.user.has_group('website.group_multi_website')
+           and request.env.user.has_group('website.group_website_publisher')):
+            # The user might not be logged in on the forced website, so he won't
+            # have rights. We just redirect to the path as the user is already
+            # on the domain (basically a no-op as it won't change domain or
+            # force website).
+            # Website 1 : 127.0.0.1 (admin)
+            # Website 2 : 127.0.0.2 (not logged in)
+            # Click on "Website 2" from Website 1
+            return request.redirect(safe_path)
+
+        website = request.env['website'].browse(website_id)
+
+        if not isredir and website.domain:
+            domain_from = request.httprequest.environ.get('HTTP_HOST', '')
+            domain_to = parse(website._get_http_domain()).netloc
+            if domain_from != domain_to:
+                # redirect to correct domain for a correct routing map
+                url_to = urls.url_join(website._get_http_domain(), '/website/force/%s?isredir=1&path=%s' % (website.id, safe_path))
+                return request.redirect(url_to)
+        website._force()
+        return request.redirect(safe_path)
 
     # ------------------------------------------------------
     # Login - overwrite of the web login so that regular users are redirected to the backend
@@ -122,6 +150,7 @@ class Website(Home):
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):
         """ :param lang: supposed to be value of `url_code` field """
+        r = request.website._get_relative_url(r)
         if lang == 'default':
             lang = request.website.default_lang_id.url_code
             r = '/%s%s' % (lang, r or '/')
@@ -212,7 +241,7 @@ class Website(Home):
         try:
             request.website.get_template('website.website_info').name
         except Exception as e:
-            return request.env['ir.http']._handle_exception(e, 404)
+            return request.env['ir.http']._handle_exception(e)
         Module = request.env['ir.module.module'].sudo()
         apps = Module.search([('state', '=', 'installed'), ('application', '=', True)])
         l10n = Module.search([('state', '=', 'installed'), ('name', '=like', 'l10n_%')])
@@ -254,8 +283,8 @@ class Website(Home):
         suggested_controllers = []
         for name, url, mod in current_website.get_suggested_controllers():
             if needle.lower() in name.lower() or needle.lower() in url.lower():
-                module = mod and request.env.ref('base.module_%s' % mod, False)
-                icon = mod and "<img src='%s' width='24px' class='mr-2 rounded' /> " % (module and module.icon or mod) or ''
+                module_sudo = mod and request.env.ref('base.module_%s' % mod, False).sudo()
+                icon = mod and "<img src='%s' width='24px' class='mr-2 rounded' /> " % (module_sudo and module_sudo.icon or mod) or ''
                 suggested_controllers.append({
                     'value': url,
                     'label': '%s%s (%s)' % (icon, url, name),
@@ -475,8 +504,8 @@ class Website(Home):
         :param enable: list of views' keys to enable
         :param disable: list of views' keys to disable
         """
-        self._get_customize_views(disable).write({'active': False})
-        self._get_customize_views(enable).write({'active': True})
+        self._get_customize_views(disable).filtered('active').write({'active': False})
+        self._get_customize_views(enable).filtered(lambda x: not x.active).write({'active': True})
 
     @http.route(['/website/theme_customize_bundle_reload'], type='json', auth='user', website=True)
     def theme_customize_bundle_reload(self):
@@ -523,22 +552,22 @@ class Website(Home):
 
         # find the action_id: either an xml_id, the path, or an ID
         if isinstance(path_or_xml_id_or_id, str) and '.' in path_or_xml_id_or_id:
-            action = request.env.ref(path_or_xml_id_or_id, raise_if_not_found=False)
+            action = request.env.ref(path_or_xml_id_or_id, raise_if_not_found=False).sudo()
         if not action:
-            action = ServerActions.search([('website_path', '=', path_or_xml_id_or_id), ('website_published', '=', True)], limit=1)
+            action = ServerActions.sudo().search(
+                [('website_path', '=', path_or_xml_id_or_id), ('website_published', '=', True)], limit=1)
         if not action:
             try:
                 action_id = int(path_or_xml_id_or_id)
+                action = ServerActions.sudo().browse(action_id).exists()
             except ValueError:
                 pass
 
-        # check it effectively exists
-        if action_id:
-            action = ServerActions.browse(action_id).exists()
         # run it, return only if we got a Response object
         if action:
             if action.state == 'code' and action.website_published:
-                action_res = action.run()
+                # use main session env for execution
+                action_res = ServerActions.browse(action.id).run()
                 if isinstance(action_res, werkzeug.wrappers.Response):
                     return action_res
 

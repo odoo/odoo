@@ -5,6 +5,7 @@
 # Translators:
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # Duy BQ <duybq86@gmail.com>, 2020
+# Trần Hà <tranthuha13590@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,13 +13,21 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2020\n"
+"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"Any new All Users Lock Date must be posterior (or equal) to the previous "
+"one."
+msgstr ""
 
 #. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
@@ -49,47 +58,36 @@ msgstr "Ngày khóa cho cố vấn là không thể đảo ngược và không t
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
-msgid ""
-"The new lock date for advisors must be set after the previous lock date."
-msgstr "Ngày khóa mới dành cho cố vấn phải được đặt sau ngày khóa trước đó."
-
-#. module: account_lock
-#: code:addons/account_lock/models/res_company.py:0
-#, python-format
 msgid "The new tax lock date must be set after the previous lock date."
-msgstr ""
+msgstr "The new tax lock date must be set after the previous lock date."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The tax lock date is irreversible and can't be removed."
+msgstr "The tax lock date is irreversible and can't be removed."
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that has not yet ended. Therefore, the All Users "
+"Lock Date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot define stricter conditions on advisors than on users. Please make"
-" sure that the lock date on advisor is set before the lock date for users."
+"You cannot lock a period that has not yet ended. Therefore, the tax lock "
+"date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
-"Bạn không thể xác định điều kiện chặt chẽ trên cố vấn hơn là người dùng. Vui"
-" lòng đảm bảo rằng ngày khóa trên cố vấn được đặt trước ngày khóa cho người "
-"dùng."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" lock date for advisors is not set after the last day of the previous month."
-msgstr ""
-"Bạn không thể khóa một khoảng thời gian chưa hoàn thành. Vui lòng đảm bảo "
-"rằng ngày khóa cố vấn không được đặt sau ngày cuối cùng của tháng trước đó."
-
-#. module: account_lock
-#: code:addons/account_lock/models/res_company.py:0
-#, python-format
-msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" tax lock date is not set after the last day of the previous month."
+"You cannot set stricter restrictions on advisors than on users. Therefore, "
+"the All Users Lock Date must be anterior (or equal) to the Invoice/Bills "
+"Lock Date."
 msgstr ""

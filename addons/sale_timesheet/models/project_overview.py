@@ -10,6 +10,7 @@ from odoo.tools import float_round
 from odoo.tools.misc import get_lang
 
 from odoo.addons.web.controllers.main import clean_action
+from datetime import date
 
 DEFAULT_MONTH_RANGE = 3
 
@@ -26,6 +27,11 @@ class Project(models.Model):
         values['actions'] = projects._plan_prepare_actions(values)
 
         return values
+
+    def _plan_get_employee_ids(self):
+        aal_employee_ids = self.env['account.analytic.line'].read_group([('project_id', 'in', self.ids), ('employee_id', '!=', False)], ['employee_id'], ['employee_id'])
+        employee_ids = list(map(lambda x: x['employee_id'][0], aal_employee_ids))
+        return employee_ids
 
     def _plan_prepare_values(self):
         currency = self.env.company.currency_id
@@ -88,22 +94,26 @@ class Project(models.Model):
 
         # rates from non-invoiced timesheets that are linked to canceled so
         dashboard_values['rates']['canceled'] = float_round(100 * total_canceled_hours / (dashboard_total_hours or 1), precision_rounding=hour_rounding)
-
-        other_revenues = self.env['account.analytic.line'].read_group([
-            ('account_id', 'in', self.analytic_account_id.ids),
-            ('amount', '>=', 0),
-            ('project_id', '=', False)], ['amount'], [])[0].get('amount', 0)
-
+        
         # profitability, using profitability SQL report
-        profit = dict.fromkeys(['invoiced', 'to_invoice', 'cost', 'expense_cost', 'expense_amount_untaxed_invoiced', 'total'], 0.0)
-        profitability_raw_data = self.env['project.profitability.report'].read_group([('project_id', 'in', self.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_invoiced'], ['project_id'])
+        field_map = {
+            'amount_untaxed_invoiced': 'invoiced',
+            'amount_untaxed_to_invoice': 'to_invoice',
+            'timesheet_cost': 'cost',
+            'expense_cost': 'expense_cost',
+            'expense_amount_untaxed_invoiced':  'expense_amount_untaxed_invoiced',
+            'other_revenues': 'other_revenues'
+            }
+        profit = dict.fromkeys(list(field_map.values()) + ['other_revenues', 'total'], 0.0)
+        profitability_raw_data = self.env['project.profitability.report'].read_group([('project_id', 'in', self.ids)], ['project_id'] + list(field_map), ['project_id'])   
         for data in profitability_raw_data:
-            profit['invoiced'] += data.get('amount_untaxed_invoiced', 0.0)
-            profit['to_invoice'] += data.get('amount_untaxed_to_invoice', 0.0)
-            profit['cost'] += data.get('timesheet_cost', 0.0)
-            profit['expense_cost'] += data.get('expense_cost', 0.0)
-            profit['expense_amount_untaxed_invoiced'] += data.get('expense_amount_untaxed_invoiced', 0.0)
-        profit['other_revenues'] = other_revenues or 0
+            company_id = self.env['project.project'].browse(data.get('project_id')[0]).company_id
+            from_currency = company_id.currency_id
+            for field in field_map:
+                value = data.get(field, 0.0)
+                if from_currency != currency:
+                    value = from_currency._convert(value, currency, company_id, date.today())
+                profit[field_map[field]] += value               
         profit['total'] = sum([profit[item] for item in profit.keys()])
         dashboard_values['profit'] = profit
 
@@ -112,15 +122,8 @@ class Project(models.Model):
         #
         # Time Repartition (per employee per billable types)
         #
-        user_ids = self.env['project.task'].sudo().read_group([('project_id', 'in', self.ids), ('user_id', '!=', False)], ['user_id'], ['user_id'])
-        user_ids = [user_id['user_id'][0] for user_id in user_ids]
-        employee_ids = self.env['res.users'].sudo().search_read([('id', 'in', user_ids)], ['employee_ids'])
-        # flatten the list of list
-        employee_ids = list(itertools.chain.from_iterable([employee_id['employee_ids'] for employee_id in employee_ids]))
-
-        aal_employee_ids = self.env['account.analytic.line'].read_group([('project_id', 'in', self.ids), ('employee_id', '!=', False)], ['employee_id'], ['employee_id'])
-        employee_ids.extend(list(map(lambda x: x['employee_id'][0], aal_employee_ids)))
-
+        employee_ids = self._plan_get_employee_ids()
+        employee_ids = list(set(employee_ids))
         # Retrieve the employees for which the current user can see theirs timesheets
         employee_domain = expression.AND([[('company_id', 'in', self.env.companies.ids)], self.env['account.analytic.line']._domain_employee_id()])
         employees = self.env['hr.employee'].sudo().browse(employee_ids).filtered_domain(employee_domain)

@@ -16,16 +16,14 @@ class MrpRoutingWorkcenter(models.Model):
         'Sequence', default=100,
         help="Gives the sequence order when displaying a list of routing Work Centers.")
     bom_id = fields.Many2one(
-        'mrp.bom', 'Bill of Material',
+        'mrp.bom', 'Bill of Material', check_company=True,
         index=True, ondelete='cascade',
         help="The Bill of Material this operation is linked to")
     company_id = fields.Many2one(
-        'res.company', 'Company',
-        readonly=True, store=True,
-        default=lambda self: self.env.company)
+        'res.company', 'Company', default=lambda self: self.env.company)
     worksheet_type = fields.Selection([
         ('pdf', 'PDF'), ('google_slide', 'Google Slide'), ('text', 'Text')],
-        string="Work Sheet", default="pdf",
+        string="Work Sheet", default="text",
         help="Defines if you want to use a PDF or a Google Slide as work sheet."
     )
     note = fields.Text('Description', help="Text worksheet description")
@@ -53,6 +51,7 @@ class MrpRoutingWorkcenter(models.Model):
         for operation in self - manual_ops:
             data = self.env['mrp.workorder'].read_group([
                 ('operation_id', '=', operation.id),
+                ('qty_produced', '>', 0),
                 ('state', '=', 'done')], ['operation_id', 'duration', 'qty_produced'], ['operation_id'],
                 limit=operation.time_mode_batch)
             count_data = dict((item['operation_id'][0], (item['duration'], item['qty_produced'])) for item in data)

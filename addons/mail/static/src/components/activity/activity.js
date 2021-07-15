@@ -6,6 +6,7 @@ const components = {
     FileUploader: require('mail/static/src/components/file_uploader/file_uploader.js'),
     MailTemplate: require('mail/static/src/components/mail_template/mail_template.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const {
@@ -24,6 +25,7 @@ class Activity extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         this.state = useState({
             areDetailsVisible: false,
         });
@@ -153,9 +155,10 @@ class Activity extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickCancel(ev) {
+    async _onClickCancel(ev) {
         ev.preventDefault();
-        this.activity.deleteServerRecord();
+        await this.activity.deleteServerRecord();
+        this.trigger('reload', { keepChanges: true });
     }
 
     /**

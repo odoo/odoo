@@ -16,11 +16,7 @@ function factory(dependencies) {
          * Close the messaging menu. Should reset its internal state.
          */
         close() {
-            this.update({
-                activeTabId: 'all',
-                isMobileNewMessageToggled: false,
-                isOpen: false,
-            });
+            this.update({ isOpen: false });
         }
 
         /**
@@ -68,7 +64,8 @@ function factory(dependencies) {
             const inboxMailbox = this.env.messaging.inbox;
             const unreadChannels = this.env.models['mail.thread'].all(thread =>
                 thread.localMessageUnreadCounter > 0 &&
-                thread.model === 'mail.channel'
+                thread.model === 'mail.channel' &&
+                thread.isPinned
             );
             let counter = unreadChannels.length;
             if (inboxMailbox) {

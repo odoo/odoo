@@ -7,8 +7,6 @@
 # Felix Yuen <fyu@odoo.com>, 2020
 # 开源智造OSCG-老杨 <yangxunbo@163.com>, 2020
 # Martin Trigaux, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
 # r <263737@qq.com>, 2020
 # Gary Wei <Gary.wei@elico-corp.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
@@ -16,17 +14,20 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # ChinaMaker <liuct@chinamaker.net>, 2020
 # snow wang <147156565@qq.com>, 2020
+# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# 稀饭~~ <wangwhai@qq.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # Mandy Choy <mnc@odoo.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# liAnGjiA <liangjia@qq.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:12+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,12 +43,7 @@ msgstr "数据已获取"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids_nbr
 msgid "# of Invoices"
-msgstr "# 发票"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
-msgid "&amp;times;"
-msgstr "&amp;times;"
+msgstr "# 结算单"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__html_3ds
@@ -122,13 +118,6 @@ msgid "<i class=\"fa fa-trash\"/> Delete"
 msgstr "<i class=\"fa fa-trash\"/>删除"
 
 #. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:0
-#, python-format
-msgid "<p>This card is currently linked to the following records:<p/>"
-msgstr "<p>此卡目前连接以下记录:<p/>"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<small class=\"text-muted\">(Some fees may apply)</small>"
 msgstr "<small class=\"text-muted\">(可能会收取一些费用)</small>"
@@ -168,8 +157,8 @@ msgstr "<span>无需账户即可直接开始销售; Paypal将发送一封电子�
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
-msgid "A journal must be specified of the acquirer %s."
-msgstr "日记账必须指定一个收单明细 %s."
+msgid "A journal must be specified for the acquirer %s."
+msgstr "必须为收单机构指定日记账 %s。"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
@@ -205,13 +194,13 @@ msgstr "已启动%s的事务%s。"
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A transaction can't be linked to invoices having different currencies."
-msgstr "一条事务不能链接到具有不同货币的发票。"
+msgstr "一条事务不能链接到具有不同货币的结算单。"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A transaction can't be linked to invoices having different partners."
-msgstr "一条事务不能链接到具有不同合作伙伴的发票。"
+msgstr "一条事务不能链接到具有不同合作伙伴的结算单。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__access_token
@@ -322,7 +311,7 @@ msgstr "金额最大值"
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "An error occured during the processing of this payment"
-msgstr ""
+msgstr "处理此付款时出错"
 
 #. module: payment
 #. openerp-web
@@ -362,7 +351,7 @@ msgstr "授权信息"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
 msgid "Authorize.Net"
-msgstr "授权.Net"
+msgstr "Authorize.Net"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__authorized
@@ -446,7 +435,7 @@ msgstr "取消付款"
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Cannot setup the payment"
-msgstr ""
+msgstr "无法设置付款"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -639,7 +628,7 @@ msgstr "信用卡（由Ingenico提供）"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_odoo_by_adyen
 msgid "Credit Card (powered by Odoo Payments)"
-msgstr ""
+msgstr "信用卡（由Odoo支付提供支持）"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_payulatam
@@ -766,12 +755,12 @@ msgstr "Email"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Enable QR Codes"
-msgstr ""
+msgstr "启用二维码"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__qr_code
 msgid "Enable the use of QR-codes for payments made on this provider."
-msgstr ""
+msgstr "允许在此提供商上使用二维码进行支付。"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
@@ -922,7 +911,7 @@ msgstr "如果没有定义，将使用收购者的名称。"
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "If the payment hasn't been confirmed you can contact us."
-msgstr ""
+msgstr "如果付款尚未确认，您可以与我们联系。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_128
@@ -950,7 +939,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inbound_payment_method_ids
 msgid "Inbound Payment Methods"
-msgstr ""
+msgstr "境内支付方式"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ingenico
@@ -1000,19 +989,19 @@ msgstr "找不到该伙伴的对应路由 %s != %s"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
-msgstr "发票"
+msgstr "结算单"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids
 #, python-format
 msgid "Invoices"
-msgstr "发票"
+msgstr "结算单"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_move
 msgid "Journal Entry"
-msgstr "会计凭证"
+msgstr "日记账分录"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
@@ -1237,7 +1226,7 @@ msgstr "Odoo 企业版专属模块"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_odoo_by_adyen
 msgid "Odoo Payments by Adyen"
-msgstr ""
+msgstr "Odoo 的 Adyen支付模块"
 
 #. module: payment
 #. openerp-web
@@ -1256,7 +1245,7 @@ msgstr "只有系统管理员可以访问此数据。"
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Only transactions having the authorized status can be captured."
-msgstr ""
+msgstr "只能捕获具有授权状态的事务。"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1693,7 +1682,7 @@ msgstr "少量"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__state
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_search
 msgid "State"
-msgstr "省/ 州"
+msgstr "状态"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
@@ -1778,7 +1767,7 @@ msgstr "%s的%s交易%s已取消."
 msgid ""
 "The transaction %s with %s for %s has been confirmed. The related payment is"
 " posted: %s"
-msgstr "%s的%s交易%s已确认。相关付款已过账：%s"
+msgstr "交易%s，%s关于%s已确认。相关付款已过账：%s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1809,6 +1798,13 @@ msgid ""
 msgstr "此交易已自动处理和退款，以验证新的信用卡。"
 
 #. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:0
+#, python-format
+msgid "This card is currently linked to the following records:"
+msgstr "此标签当前链接到以下记录："
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
 msgid ""
 "This field holds the image used for this payment icon, limited to "
@@ -1822,14 +1818,14 @@ msgid ""
 "and to reuse it for a later purchase. If you manage subscriptions (recurring"
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
-msgstr "此选项允许客户保存信用卡作为支付令牌，并将其用于以后的购买。如果您管理订阅（循环发票），则需要在发出发票时自动向客户收取费用。"
+msgstr "此选项允许客户保存信用卡作为支付令牌，并将其用于以后的购买。如果您管理订阅（循环结算单），则需要在发出结算单时自动向客户收取费用。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid ""
 "This partner has no email, which may cause issues with some payment "
 "acquirers. Setting an email for this partner is advised."
-msgstr ""
+msgstr "此合作伙伴没有电子邮件，这可能会导致某些支付收单机构出现问题。建议为此合作伙伴设置电子邮件。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
@@ -1967,16 +1963,10 @@ msgstr "警告!"
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:0
+#: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to add your payment method at the moment."
 msgstr "目前我们无法添加您的付款方式。"
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:0
-#, python-format
-msgid "We are not able to add your payment method at the moment.</p>"
-msgstr "目前我们无法添加您的付款方式。</p>"
 
 #. module: payment
 #. openerp-web

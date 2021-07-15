@@ -355,6 +355,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
 
         # Create an invoice with the same price
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.invoice_date = move_form.date
         move_form.partner_id = order.partner_id
         move_form.purchase_id = order
         move = move_form.save()

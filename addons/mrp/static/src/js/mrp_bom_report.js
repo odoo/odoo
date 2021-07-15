@@ -19,7 +19,7 @@ var MrpBomReport = stock_report_generic.extend({
         var self = this;
         var args = [
             this.given_context.active_id,
-            this.given_context.searchQty || 1,
+            this.given_context.searchQty || false,
             this.given_context.searchVariant,
         ];
         return this._rpc({
@@ -30,6 +30,9 @@ var MrpBomReport = stock_report_generic.extend({
             })
             .then(function (result) {
                 self.data = result;
+                if (! self.given_context.searchVariant) {
+                    self.given_context.searchVariant = result.is_variant_applied && Object.keys(result.variants)[0];
+                }
             });
     },
     set_html: function() {
@@ -107,8 +110,9 @@ var MrpBomReport = stock_report_generic.extend({
         return this.updateControlPanel(status);
     },
     renderSearch: function () {
-        this.$buttonPrint = $(QWeb.render('mrp.button'));
+        this.$buttonPrint = $(QWeb.render('mrp.button', {'is_variant_applied': this.data.is_variant_applied}));
         this.$buttonPrint.find('.o_mrp_bom_print').on('click', this._onClickPrint.bind(this));
+        this.$buttonPrint.find('.o_mrp_bom_print_all_variants').on('click', this._onClickPrint.bind(this));
         this.$buttonPrint.find('.o_mrp_bom_print_unfolded').on('click', this._onClickPrint.bind(this));
         this.$searchView = $(QWeb.render('mrp.report_bom_search', _.omit(this.data, 'lines')));
         this.$searchView.find('.o_mrp_bom_report_qty').on('change', this._onChangeQty.bind(this));
@@ -126,7 +130,9 @@ var MrpBomReport = stock_report_generic.extend({
         if (! $(ev.currentTarget).hasClass('o_mrp_bom_print_unfolded')) {
             reportname += '&childs=' + JSON.stringify(childBomIDs);
         }
-        if (this.given_context.searchVariant) {
+        if ($(ev.currentTarget).hasClass('o_mrp_bom_print_all_variants')) {
+            reportname += '&all_variants=' + 1;
+        } else if (this.given_context.searchVariant) {
             reportname += '&variant=' + this.given_context.searchVariant;
         }
         var action = {

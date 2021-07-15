@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2020
 # Adam Levrinc <adam.levrinc@26house.com>, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,13 +13,21 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"Any new All Users Lock Date must be posterior (or equal) to the previous "
+"one."
+msgstr ""
 
 #. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
@@ -50,14 +58,6 @@ msgstr "Uzávierka termínu pre poradcov je nenávratná a nemôže byť odstrá
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
-msgid ""
-"The new lock date for advisors must be set after the previous lock date."
-msgstr ""
-"Nová uzávierka termínov pre poradcov musí byť vytvorená po predchádzajúcej"
-
-#. module: account_lock
-#: code:addons/account_lock/models/res_company.py:0
-#, python-format
 msgid "The new tax lock date must be set after the previous lock date."
 msgstr "Nová daňová uzávierka musí byť vytvorená po predchádzajúcej."
 
@@ -71,30 +71,26 @@ msgstr "Nová daňová uzávierka musí byť vytvorená po predchádzajúcej."
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot define stricter conditions on advisors than on users. Please make"
-" sure that the lock date on advisor is set before the lock date for users."
+"You cannot lock a period that has not yet ended. Therefore, the All Users "
+"Lock Date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
-"Nemôžte definovať prísnejšie podmienky na poradcov ako na užívateľov. Prosím"
-" uistite sa že uzávierka pre poradcov je nastavená pred uzávierkami pre "
-"užívateľov."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" lock date for advisors is not set after the last day of the previous month."
+"You cannot lock a period that has not yet ended. Therefore, the tax lock "
+"date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
-"Nemôžte uzavrieť obdobie, ktoré ešte neskončilo. Prosím uistite sa, že "
-"uzávierka pre poradcov nie je nastavená po poslednom dni predchádzajúceho "
-"mesiaca."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" tax lock date is not set after the last day of the previous month."
+"You cannot set stricter restrictions on advisors than on users. Therefore, "
+"the All Users Lock Date must be anterior (or equal) to the Invoice/Bills "
+"Lock Date."
 msgstr ""
-"Nemôžte uzavrieť obdobie, ktoré ešte neskončilo. Prosím uistite sa, že "
-"daňová uzávierka nie je nastavená po poslednom dni predchádzajúceho mesiaca."
+"Nemôžete stanoviť prísnejšie obmedzenia pre poradcov ako pre užívateľov. "
+"Dátum uzamknutia všetkých užívateľov preto musí byť pred (alebo rovný) "
+"dátumu uzamknutia faktúry / prijatých faktúr."

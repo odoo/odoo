@@ -1,17 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * auth_password_policy
+# 	* auth_password_policy
 # 
 # Translators:
-# Somchart Jabsung <jabsung.s@gmail.com>, 2018
+# Martin Trigaux, 2020
+# Somchart Jabsung <jabsung.s@gmail.com>, 2020
+# Odoo Thaidev <odoothaidev@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 07:10+0000\n"
-"Last-Translator: Somchart Jabsung <jabsung.s@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Odoo Thaidev <odoothaidev@gmail.com>, 2020\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +24,25 @@ msgstr ""
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "การตั้งค่า"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__display_name
+msgid "Display Name"
+msgstr "ชื่อที่ใช้แสดง"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__id
+msgid "ID"
+msgstr "รหัส"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
@@ -36,14 +56,14 @@ msgid ""
 msgstr ""
 
 #. module: auth_password_policy
-#: code:addons/auth_password_policy/models/res_users.py:30
+#: code:addons/auth_password_policy/models/res_users.py:0
 #, python-format
 msgid "Passwords must have at least %d characters, got %d."
 msgstr ""
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:123
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid ""
 "Required: %s.\n"
@@ -58,28 +78,28 @@ msgstr "ผู้ใช้งาน"
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:28
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "at least %d character classes"
 msgstr ""
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:22
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "at least %d characters"
 msgstr ""
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:25
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "at least %d words"
 msgstr ""
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:125
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
 #, python-format
 msgid "no requirements"
 msgstr ""

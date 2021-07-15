@@ -110,7 +110,7 @@ class Company(models.Model):
         when module stock is installed.
         """
         company_ids  = self.env['res.company'].search([])
-        company_with_warehouse = self.env['stock.warehouse'].search([]).mapped('company_id')
+        company_with_warehouse = self.env['stock.warehouse'].with_context(active_test=False).search([]).mapped('company_id')
         company_without_warehouse = company_ids - company_with_warehouse
         for company in company_without_warehouse:
             self.env['stock.warehouse'].create({

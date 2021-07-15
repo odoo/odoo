@@ -5,6 +5,7 @@ const components = {
     MessageAuthorPrefix: require('mail/static/src/components/message_author_prefix/message_author_prefix.js'),
     PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const mailUtils = require('mail.utils');
 
@@ -18,24 +19,25 @@ class ThreadNeedactionPreview extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const thread = this.env.models['mail.thread'].get(props.threadLocalId);
             const mainThreadCache = thread ? thread.mainCache : undefined;
-            let lastNeedactionMessageAuthor;
-            let lastNeedactionMessage;
+            let lastNeedactionMessageAsOriginThreadAuthor;
+            let lastNeedactionMessageAsOriginThread;
             let threadCorrespondent;
             if (thread) {
-                lastNeedactionMessage = mainThreadCache.lastNeedactionMessage;
+                lastNeedactionMessageAsOriginThread = mainThreadCache.lastNeedactionMessageAsOriginThread;
                 threadCorrespondent = thread.correspondent;
             }
-            if (lastNeedactionMessage) {
-                lastNeedactionMessageAuthor = lastNeedactionMessage.author;
+            if (lastNeedactionMessageAsOriginThread) {
+                lastNeedactionMessageAsOriginThreadAuthor = lastNeedactionMessageAsOriginThread.author;
             }
             return {
                 isDeviceMobile: this.env.messaging.device.isMobile,
-                lastNeedactionMessage: lastNeedactionMessage ? lastNeedactionMessage.__state : undefined,
-                lastNeedactionMessageAuthor: lastNeedactionMessageAuthor
-                    ? lastNeedactionMessageAuthor.__state
+                lastNeedactionMessageAsOriginThread: lastNeedactionMessageAsOriginThread ? lastNeedactionMessageAsOriginThread.__state : undefined,
+                lastNeedactionMessageAsOriginThreadAuthor: lastNeedactionMessageAsOriginThreadAuthor
+                    ? lastNeedactionMessageAsOriginThreadAuthor.__state
                     : undefined,
                 thread: thread ? thread.__state : undefined,
                 threadCorrespondent: threadCorrespondent
@@ -85,6 +87,18 @@ class ThreadNeedactionPreview extends Component {
     }
 
     /**
+     * Get inline content of the last message of this conversation.
+     *
+     * @returns {string}
+     */
+    get inlineLastNeedactionMessageAsOriginThreadBody() {
+        if (!this.thread.lastNeedactionMessageAsOriginThread) {
+            return '';
+        }
+        return mailUtils.htmlToTextContentInline(this.thread.lastNeedactionMessageAsOriginThread.prettyBody);
+    }
+
+    /**
      * @returns {mail.thread}
      */
     get thread() {
@@ -105,7 +119,6 @@ class ThreadNeedactionPreview extends Component {
             // handled in `_onClickMarkAsRead`
             return;
         }
-        this.thread.markNeedactionMessagesAsRead();
         this.thread.open();
         if (!this.env.messaging.device.isMobile) {
             this.env.messaging.messagingMenu.close();
@@ -117,7 +130,10 @@ class ThreadNeedactionPreview extends Component {
      * @param {MouseEvent} ev
      */
     _onClickMarkAsRead(ev) {
-        this.thread.markNeedactionMessagesAsRead();
+        this.env.models['mail.message'].markAllAsRead([
+            ['model', '=', this.thread.model],
+            ['res_id', '=', this.thread.id],
+        ]);
     }
 
 }

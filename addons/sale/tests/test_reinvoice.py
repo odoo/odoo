@@ -26,7 +26,12 @@ class TestReInvoice(TestSaleCommon):
             'pricelist_id': cls.company_data['default_pricelist'].id,
         })
 
-        cls.AccountMove = cls.env['account.move'].with_context(default_move_type='in_invoice', mail_notrack=True, mail_create_nolog=True)
+        cls.AccountMove = cls.env['account.move'].with_context(
+            default_move_type='in_invoice',
+            default_invoice_date=cls.sale_order.date_order,
+            mail_notrack=True,
+            mail_create_nolog=True,
+        )
 
     def test_at_cost(self):
         """ Test vendor bill at cost for product based on ordered and delivered quantities. """
@@ -218,3 +223,44 @@ class TestReInvoice(TestSaleCommon):
 
         self.assertEqual(len(self.sale_order.order_line), 1, "No SO line should have been created (or removed) when validating vendor bill")
         self.assertTrue(invoice_a.mapped('line_ids.analytic_line_ids'), "Analytic lines should be generated")
+
+    def test_not_reinvoicing_invoiced_so_lines(self):
+        """ Test that invoiced SO lines are not re-invoiced. """
+        so_line1 = self.env['sale.order.line'].create({
+            'name': self.company_data['product_delivery_cost'].name,
+            'product_id': self.company_data['product_delivery_cost'].id,
+            'product_uom_qty': 1,
+            'product_uom': self.company_data['product_delivery_cost'].uom_id.id,
+            'price_unit': self.company_data['product_delivery_cost'].list_price,
+            'discount': 100.00,
+            'order_id': self.sale_order.id,
+        })
+        so_line1.product_id_change()
+        so_line2 = self.env['sale.order.line'].create({
+            'name': self.company_data['product_delivery_sales_price'].name,
+            'product_id': self.company_data['product_delivery_sales_price'].id,
+            'product_uom_qty': 1,
+            'product_uom': self.company_data['product_delivery_sales_price'].uom_id.id,
+            'price_unit': self.company_data['product_delivery_sales_price'].list_price,
+            'discount': 100.00,
+            'order_id': self.sale_order.id,
+        })
+        so_line2.product_id_change()
+
+        self.sale_order.onchange_partner_id()
+        self.sale_order._compute_tax_id()
+        self.sale_order.action_confirm()
+
+        for line in self.sale_order.order_line:
+            line.qty_delivered = 1
+        # create invoice and validate it
+        invoice = self.sale_order._create_invoices()
+        invoice.action_post()
+
+        so_line3 = self.sale_order.order_line.filtered(lambda sol: sol != so_line1 and sol.product_id == self.company_data['product_delivery_cost'])
+        so_line4 = self.sale_order.order_line.filtered(lambda sol: sol != so_line2 and sol.product_id == self.company_data['product_delivery_sales_price'])
+
+        self.assertFalse(so_line3, "No re-invoicing should have created a new sale line with product #1")
+        self.assertFalse(so_line4, "No re-invoicing should have created a new sale line with product #2")
+        self.assertEqual(so_line1.qty_delivered, 1, "No re-invoicing should have impacted exising SO line 1")
+        self.assertEqual(so_line2.qty_delivered, 1, "No re-invoicing should have impacted exising SO line 2")

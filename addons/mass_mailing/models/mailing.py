@@ -171,11 +171,13 @@ class MassMailing(models.Model):
         for key in (
             'scheduled', 'expected', 'ignored', 'sent', 'delivered', 'opened',
             'clicked', 'replied', 'bounced', 'failed', 'received_ratio',
-            'opened_ratio', 'replied_ratio', 'bounced_ratio', 'clicks_ratio',
+            'opened_ratio', 'replied_ratio', 'bounced_ratio',
         ):
             self[key] = False
         if not self.ids:
             return
+        # ensure traces are sent to db
+        self.flush()
         self.env.cr.execute("""
             SELECT
                 m.id as mailing_id,
@@ -200,10 +202,9 @@ class MassMailing(models.Model):
                 m.id
         """, (tuple(self.ids), ))
         for row in self.env.cr.dictfetchall():
-            total = row['expected'] = (row['expected'] - row['ignored']) or 1
+            total = (row['expected'] - row['ignored']) or 1
             row['received_ratio'] = 100.0 * row['delivered'] / total
             row['opened_ratio'] = 100.0 * row['opened'] / total
-            row['clicks_ratio'] = 100.0 * row['clicked'] / total
             row['replied_ratio'] = 100.0 * row['replied'] / total
             row['bounced_ratio'] = 100.0 * row['bounced'] / total
             self.browse(row.pop('mailing_id')).update(row)
@@ -579,7 +580,7 @@ class MassMailing(models.Model):
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': self._prepend_preview(self.body_html, self.preview),
+                'body': mailing._prepend_preview(mailing.body_html, mailing.preview),
                 'subject': mailing.subject,
                 'model': mailing.mailing_model_real,
                 'email_from': mailing.email_from,
@@ -595,7 +596,7 @@ class MassMailing(models.Model):
                 composer_values['reply_to'] = mailing.reply_to
 
             composer = self.env['mail.compose.message'].with_context(active_ids=res_ids).create(composer_values)
-            extra_context = self._get_mass_mailing_context()
+            extra_context = mailing._get_mass_mailing_context()
             composer = composer.with_context(active_ids=res_ids, **extra_context)
             # auto-commit except in testing mode
             auto_commit = not getattr(threading.currentThread(), 'testing', False)
@@ -755,19 +756,9 @@ class MassMailing(models.Model):
     # ------------------------------------------------------
 
     def _get_default_mailing_domain(self):
-        default_mailing_domain = self.default_get(['mailing_domain']).get('mailing_domain')
+        mailing_domain = []
         if self.mailing_model_name == 'mailing.list' and self.contact_list_ids:
             mailing_domain = [('list_ids', 'in', self.contact_list_ids.ids)]
-        elif default_mailing_domain:
-            default_mailing_domain = literal_eval(default_mailing_domain) if isinstance(default_mailing_domain, str) else default_mailing_domain
-            try:
-                self.env[self.mailing_model_real].search(default_mailing_domain, limit=1)
-            except:
-                mailing_domain = []
-            else:
-                mailing_domain = default_mailing_domain
-        else:
-            mailing_domain = []
 
         if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
             mailing_domain = expression.AND([[('is_blacklisted', '=', False)], mailing_domain])

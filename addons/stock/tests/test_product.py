@@ -104,3 +104,14 @@ class TestVirtualAvailable(TestStockCommon):
         self.assertTrue(orderpoint.active)
         self.product_3.active = False
         self.assertFalse(orderpoint.active)
+
+    def test_search_qty_available(self):
+        product = self.env['product.product'].create({
+            'name': 'Brand new product',
+            'type': 'product',
+        })
+        result = self.env['product.product'].search([
+            ('qty_available', '=', 0),
+            ('id', 'in', product.ids),
+        ])
+        self.assertEqual(product, result)

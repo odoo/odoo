@@ -231,7 +231,7 @@ var BasicModel = AbstractModel.extend({
      * @returns {Promise} resolved when the fieldInfo have been set on the given
      *   datapoint and all its children, and all rawChanges have been applied
      */
-    addFieldsInfo: function (dataPointID, viewInfo) {
+    addFieldsInfo: async function (dataPointID, viewInfo) {
         var dataPoint = this.localData[dataPointID];
         dataPoint.fields = _.extend({}, dataPoint.fields, viewInfo.fields);
         // complete the given fieldInfo with the fields of the main view, so
@@ -245,7 +245,9 @@ var BasicModel = AbstractModel.extend({
         // so we might have stored changes for them (e.g. coming from onchange
         // RPCs), that we haven't been able to process earlier (because those
         // fields were unknown at that time). So we now try to process them.
-        return this.applyRawChanges(dataPointID, viewInfo.viewType).then(() => {
+        if (dataPoint.type === 'record') {
+            await this.applyRawChanges(dataPointID, viewInfo.viewType);
+        }
             const proms = [];
             const fieldInfo = dataPoint.fieldsInfo[viewInfo.viewType];
             // recursively apply the new field info on sub datapoints
@@ -278,8 +280,6 @@ var BasicModel = AbstractModel.extend({
                 });
             }
             return Promise.all(proms);
-        });
-
     },
     /**
      * Onchange RPCs may return values for fields that are not in the current
@@ -381,6 +381,11 @@ var BasicModel = AbstractModel.extend({
                     if (parent && parent.type === 'list') {
                         parent.data = _.without(parent.data, record.id);
                         delete self.localData[record.id];
+                        // Check if we are on last page and all records are deleted from current
+                        // page i.e. if there is no state.data.length then go to previous page
+                        if (!parent.data.length && parent.offset > 0) {
+                            parent.offset = Math.max(parent.offset - parent.limit, 0);
+                        }
                     } else {
                         record.res_ids.splice(record.offset, 1);
                         record.offset = Math.min(record.offset, record.res_ids.length - 1);
@@ -1102,9 +1107,9 @@ var BasicModel = AbstractModel.extend({
 
                 // save the viewType of edition, so that the correct readonly modifiers
                 // can be evaluated when the record will be saved
-                _.each((record._changes || {}), function (value, fieldName) {
+                for (let fieldName in (record._changes || {})) {
                     record._editionViewType[fieldName] = options.viewType;
-                });
+                }
             }
             var shouldReload = 'reload' in options ? options.reload : true;
             var method = self.isNew(recordID) ? 'create' : 'write';
@@ -1302,14 +1307,27 @@ var BasicModel = AbstractModel.extend({
                 // optionally clear the DataManager's cache
                 self._invalidateCache(parent);
                 if (!_.isEmpty(action)) {
-                    return self.do_action(action, {
-                        on_close: function () {
-                            return self.trigger_up('reload');
-                        }
+                    return new Promise(function (resolve, reject) {
+                        self.do_action(action, {
+                            on_close: function (result) {
+                                return self.trigger_up('reload', {
+                                    onSuccess: resolve,
+                                });
+                            }
+                        });
                     });
                 } else {
                     return self.reload(parentID);
                 }
+            }).then(function (datapoint) {
+                // if there are no records to display and we are not on first page(we check it
+                // by checking offset is greater than limit i.e. we are not on first page)
+                // reason for adding logic after reload to make sure there is no records after operation
+                if (parent && parent.type === 'list' && !parent.data.length && parent.offset > 0) {
+                    parent.offset = Math.max(parent.offset - parent.limit, 0);
+                    return self.reload(parentID);
+                }
+                return datapoint;
             });
     },
     /**
@@ -1331,14 +1349,27 @@ var BasicModel = AbstractModel.extend({
                 // optionally clear the DataManager's cache
                 self._invalidateCache(parent);
                 if (!_.isEmpty(action)) {
-                    return self.do_action(action, {
-                        on_close: function () {
-                            return self.trigger_up('reload');
-                        }
+                    return new Promise(function (resolve, reject) {
+                        self.do_action(action, {
+                            on_close: function () {
+                                return self.trigger_up('reload', {
+                                    onSuccess: resolve,
+                                });
+                            }
+                        });
                     });
                 } else {
                     return self.reload(parentID);
                 }
+            }).then(function (datapoint) {
+                // if there are no records to display and we are not on first page(we check it
+                // by checking offset is greater than limit i.e. we are not on first page)
+                // reason for adding logic after reload to make sure there is no records after operation
+                if (parent && parent.type === 'list' && !parent.data.length && parent.offset > 0) {
+                    parent.offset = Math.max(parent.offset - parent.limit, 0);
+                    return self.reload(parentID);
+                }
+                return datapoint;
             });
     },
     /**
@@ -1431,7 +1462,7 @@ var BasicModel = AbstractModel.extend({
             fieldsInfo: list.fieldsInfo,
             parentID: list.id,
             position: position,
-            viewType: list.viewType,
+            viewType: options.viewType || list.viewType,
             allowWarning: options && options.allowWarning
         };
 
@@ -1666,7 +1697,8 @@ var BasicModel = AbstractModel.extend({
         const viewType = options.viewType || record.viewType;
         record._changes = record._changes || {};
 
-        _.each(values, function (val, name) {
+        for (let name in (values || {})) {
+            const val = values[name];
             var field = record.fields[name];
             if (!field) {
                 // this field is unknown so we can't process it for now (it is not
@@ -1685,7 +1717,7 @@ var BasicModel = AbstractModel.extend({
                 // if (options.firstOnChange) {
                 //     record._changes[name] = val;
                 // }
-                return;
+                continue;
             }
             if (record._rawChanges[name]) {
                 // if previous _rawChanges exists, clear them since the field is now knwon
@@ -1749,7 +1781,8 @@ var BasicModel = AbstractModel.extend({
                 } else {
                     var fieldInfo = record.fieldsInfo[viewType][name];
                     if (!fieldInfo) {
-                        return; // ignore changes of x2many not in view
+                        // ignore changes of x2many not in view
+                        continue;
                     }
                     var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
                     list = self._makeDataPoint({
@@ -1847,7 +1880,7 @@ var BasicModel = AbstractModel.extend({
                     record._changes[name] = newValue;
                 }
             }
-        });
+        }
         return Promise.all(defs);
 
         // inner function that adds a record (based on its res_id) to a list
@@ -2003,6 +2036,7 @@ var BasicModel = AbstractModel.extend({
                     context: command.context,
                     position: command.position
                 }, options || {});
+                createOptions.viewType = fieldInfo.mode;
 
                 def = this._addX2ManyDefaultRecord(list, createOptions).then(function (ids) {
                     _.each(ids, function(id){
@@ -2021,7 +2055,9 @@ var BasicModel = AbstractModel.extend({
             case 'UPDATE':
                 list._changes.push({operation: 'UPDATE', id: command.id});
                 if (command.data) {
-                    defs.push(this._applyChange(command.id, command.data, { viewType: view.type }));
+                    defs.push(this._applyChange(command.id, command.data, {
+                        viewType: view && view.type,
+                    }));
                 }
                 break;
             case 'FORGET':
@@ -3143,14 +3179,15 @@ var BasicModel = AbstractModel.extend({
         options = options || {};
         var viewType = options.viewType || record.viewType;
         var changes;
-        if ('changesOnly' in options && !options.changesOnly) {
+        const changesOnly = 'changesOnly' in options ? !!options.changesOnly : true;
+        if (!changesOnly) {
             changes = _.extend({}, record.data, record._changes);
         } else {
             changes = _.extend({}, record._changes);
         }
         var withReadonly = options.withReadonly || false;
         var commands = this._generateX2ManyCommands(record, {
-            changesOnly: 'changesOnly' in options ? options.changesOnly : true,
+            changesOnly: changesOnly,
             withReadonly: withReadonly,
         });
         for (var fieldName in record.fields) {
@@ -3167,7 +3204,7 @@ var BasicModel = AbstractModel.extend({
             var type = record.fields[fieldName].type;
             var value;
             if (type === 'one2many' || type === 'many2many') {
-                if (commands[fieldName] && commands[fieldName].length) { // replace localId by commands
+                if (!changesOnly || (commands[fieldName] && commands[fieldName].length)) { // replace localId by commands
                     changes[fieldName] = commands[fieldName];
                 } else { // no command -> no change for that field
                     delete changes[fieldName];
@@ -3338,12 +3375,12 @@ var BasicModel = AbstractModel.extend({
                                 commands[fieldName].push(x2ManyCommands.link_to(list.res_ids[i]));
                                 continue;
                             }
-                            changes = this._generateChanges(relRecord, _.extend({}, options, {changesOnly: true}));
+                            changes = this._generateChanges(relRecord, options);
                             if (!this.isNew(relRecord.id)) {
                                 // the subrecord already exists in db
                                 commands[fieldName].push(x2ManyCommands.link_to(relRecord.res_id));
-                                delete changes.id;
-                                if (!_.isEmpty(changes)) {
+                                if (this.isDirty(relRecord.id)) {
+                                    delete changes.id;
                                     commands[fieldName].push(x2ManyCommands.update(relRecord.res_id, changes));
                                 }
                             } else {
@@ -4029,7 +4066,7 @@ var BasicModel = AbstractModel.extend({
         // Hence preventing their value to crash when getting back to the originating view
         var parentRecord = params.parentID && this.localData[params.parentID].type === 'list' ? this.localData[params.parentID] : null;
 
-        if (parentRecord) {
+        if (parentRecord && parentRecord.viewType in parentRecord.fieldsInfo) {
             var originView = parentRecord.viewType;
             fieldNames = _.union(fieldNames, Object.keys(parentRecord.fieldsInfo[originView]));
             fieldsInfo[targetView] = _.defaults({}, fieldsInfo[targetView], parentRecord.fieldsInfo[originView]);
@@ -4764,6 +4801,7 @@ var BasicModel = AbstractModel.extend({
                     fieldsInfo: element.fieldsInfo,
                     fields: element.fields,
                     viewType: element.viewType,
+                    allowWarning: true,
                 };
                 return this._makeDefaultRecord(element.model, params);
             }

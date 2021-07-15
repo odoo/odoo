@@ -150,7 +150,7 @@ class PosConfig(models.Model):
     proxy_ip = fields.Char(string='IP Address', size=45,
         help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty.')
     active = fields.Boolean(default=True)
-    uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()),
+    uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()), copy=False,
         help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.')
     sequence_id = fields.Many2one('ir.sequence', string='Order IDs Sequence', readonly=True,
         help="This sequence is automatically created by Odoo but you can change it "
@@ -383,6 +383,13 @@ class PosConfig(models.Model):
                 _("You must configure an intermediary account for the payment methods: %s.") % method_names
             )
 
+    def _check_payment_method_ids(self):
+        self.ensure_one()
+        if not self.payment_method_ids:
+            raise ValidationError(
+                _("You must have at least one payment method configured to launch a session.")
+            )
+
     @api.constrains('company_id', 'available_pricelist_ids')
     def _check_companies(self):
         if any(self.available_pricelist_ids.mapped(lambda pl: pl.company_id.id not in (False, self.company_id.id))):
@@ -603,6 +610,7 @@ class PosConfig(models.Model):
             self._check_company_payment()
             self._check_currencies()
             self._check_profit_loss_cash_journal()
+            self._check_payment_method_ids()
             self._check_payment_method_receivable_accounts()
             self.env['pos.session'].create({
                 'user_id': self.env.uid,
@@ -653,7 +661,7 @@ class PosConfig(models.Model):
 
     def assign_payment_journals(self, company):
         for pos_config in self:
-            if pos_config.payment_method_ids:
+            if pos_config.payment_method_ids or pos_config.has_active_session:
                 continue
             cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash')], limit=1)
             pos_receivable_account = company.account_default_pos_receivable_account_id

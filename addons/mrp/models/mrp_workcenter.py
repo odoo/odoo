@@ -5,6 +5,7 @@ from dateutil import relativedelta
 from datetime import timedelta
 from functools import partial
 import datetime
+from pytz import timezone
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import ValidationError
@@ -223,8 +224,8 @@ class MrpWorkcenter(models.Model):
         self.ensure_one()
         start_datetime, revert = make_aware(start_datetime)
 
-        get_available_intervals = partial(self.resource_calendar_id._work_intervals, domain=[('time_type', 'in', ['other', 'leave'])], resource=self.resource_id)
-        get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals, domain=[('time_type', '=', 'other')], resource=self.resource_id)
+        get_available_intervals = partial(self.resource_calendar_id._work_intervals, domain=[('time_type', 'in', ['other', 'leave'])], resource=self.resource_id, tz=timezone(self.resource_calendar_id.tz))
+        get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals, domain=[('time_type', '=', 'other')], resource=self.resource_id, tz=timezone(self.resource_calendar_id.tz))
 
         remaining = duration
         start_interval = start_datetime
@@ -328,7 +329,7 @@ class MrpWorkcenterProductivity(models.Model):
     @api.depends('date_end', 'date_start')
     def _compute_duration(self):
         for blocktime in self:
-            if blocktime.date_end:
+            if blocktime.date_start and blocktime.date_end:
                 d1 = fields.Datetime.from_string(blocktime.date_start)
                 d2 = fields.Datetime.from_string(blocktime.date_end)
                 diff = d2 - d1

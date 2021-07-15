@@ -260,6 +260,13 @@
         <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
     </record>
 
+    <record id="account_invoice_send_rule_group_invoice" model="ir.rule">
+        <field name="name">Readonly Invoice Send and Print</field>
+        <field name="model_id" ref="model_account_invoice_send"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
+    </record>
+
     <!-- account analytic default-->
     <record id="analytic_default_comp_rule" model="ir.rule">
         <field name="name">Analytic Default multi company rule</field>

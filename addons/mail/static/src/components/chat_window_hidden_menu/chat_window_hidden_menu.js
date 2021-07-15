@@ -4,6 +4,7 @@ odoo.define('mail/static/src/components/chat_window_hidden_menu/chat_window_hidd
 const components = {
     ChatWindowHeader: require('mail/static/src/components/chat_window_header/chat_window_header.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;

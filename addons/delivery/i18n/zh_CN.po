@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # liAnGjiA <liangjia@qq.com>, 2020
 # 苏州远鼎 <tiexinliu@126.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
@@ -13,6 +12,9 @@
 # Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
 # Gary Wei <Gary.wei@elico-corp.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
+# 稀饭~~ <wangwhai@qq.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# Mandy Choy <mnc@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2020\n"
+"Last-Translator: Mandy Choy <mnc@odoo.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,18 +89,18 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight (estimated): </span>"
-msgstr ""
+msgstr "<span>‎- 重量（估计）：‎</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_stock_report_delivery_no_package_section_line
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight: </span>"
-msgstr ""
+msgstr "<span> - ‎重量‎: </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "<span>Shipping Weight: </span>"
-msgstr ""
+msgstr "<span>‎运输重量：‎</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -126,6 +128,8 @@ msgid ""
 "<strong>Total Weight:</strong>\n"
 "                <br/>"
 msgstr ""
+"<strong>‎总重量：‎</strong>\n"
+"                       <br/>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -161,7 +165,7 @@ msgstr "添加"
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
 msgid "Add a shipping method"
-msgstr "添加运费模板"
+msgstr "添加送货方式"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -181,6 +185,7 @@ msgid ""
 msgstr "免费发货的订单金额，按公司本位币计算"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
 msgstr "已归档"
@@ -198,7 +203,7 @@ msgstr "按设置的规则"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_bulk
 msgid "Bulk Weight"
-msgstr "打包总重量"
+msgstr "散货重量"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__can_generate_return
@@ -223,7 +228,7 @@ msgstr "物流商"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_choose_delivery_carrier__carrier_id
 msgid "Choose the method to deliver your goods"
-msgstr "选择运费模板"
+msgstr "选择交付货物的方法"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -287,17 +292,17 @@ msgstr "调试日志"
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "Default delivery method used in sales orders."
-msgstr "销售订单中使用的默认运费模板。"
+msgstr "销售订单中使用的默认交货方式。"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
-msgstr "定义新运费模板"
+msgstr "定义新交货方式"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr "运费模板"
+msgstr "发货"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -326,7 +331,7 @@ msgstr "发货消息"
 #: model:ir.model.fields,field_description:delivery.field_res_users__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 msgid "Delivery Method"
-msgstr "运费模板"
+msgstr "交货方式"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
@@ -338,13 +343,13 @@ msgstr "邮包选择向导"
 #: model:ir.ui.menu,name:delivery.menu_delivery_packagings
 #: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
 msgid "Delivery Packages"
-msgstr "发货邮包"
+msgstr "发货包裹"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
 #: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
 msgid "Delivery Packaging"
-msgstr "发货邮包"
+msgstr "交货包装"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -436,7 +441,7 @@ msgstr "Environment"
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr "错误:此运费模板不适用于这个地址。"
+msgstr "错误:此交货方式不适用于这个地址。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -445,7 +450,7 @@ msgid ""
 "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of the shipping will be updated on the SO after the delivery."
 msgstr ""
 "预估客户运费:将向客户开具估计的运费。\n"
-"实际客户运费:客户将开具发票的实际开具发票，实际客户运费将在交付后的SO上更新。"
+"实际客户运费:客户将开具结算单的实际开具结算单，实际客户运费将在交付后的SO上更新。"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -566,7 +571,7 @@ msgstr "开票策略"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__is_return_picking
 msgid "Is Return Picking"
-msgstr "是退货"
+msgstr "是退回拣货"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
@@ -620,7 +625,7 @@ msgstr "长度必须为正"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__length_uom_name
 msgid "Length unit of measure label"
-msgstr ""
+msgstr "‎度量标签的长度单位‎"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
@@ -704,30 +709,30 @@ msgstr "订单"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Package"
-msgstr "邮包"
+msgstr "包裹"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__shipper_package_code
 msgid "Package Code"
-msgstr "邮包编号"
+msgstr "包裹编号"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
 msgid "Package Details"
-msgstr "邮包明细"
+msgstr "包裹明细"
 
 #. module: delivery
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
 #, python-format
 msgid "Package too heavy!"
-msgstr "邮包太重！"
+msgstr "包裹太重！"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__package_ids
 msgid "Packages"
-msgstr "邮包"
+msgstr "包裹"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__picking_id
@@ -744,7 +749,7 @@ msgstr "价格"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
-msgstr "客户运费计算规则"
+msgstr "价格规则"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -754,7 +759,7 @@ msgstr "价格"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
 msgid "Pricing Rules"
-msgstr "客户运费计算规则"
+msgstr "价格规则"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
@@ -765,7 +770,7 @@ msgstr "打印退货标签"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "产品凭证(移库明细)"
+msgstr "产品移动(移库明细)"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
@@ -794,7 +799,7 @@ msgstr "物流商"
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__quantity
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__quantity
 msgid "Quantity"
-msgstr "最少购买量"
+msgstr "数量"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__real
@@ -814,7 +819,7 @@ msgstr "退货标签可从客户门户访问"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr "退货"
+msgstr "退回拣货"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
@@ -870,6 +875,7 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s<br/>Cost: %(price).2f %(currency)s"
 msgstr ""
+"‎寄送承运人的货件‎%(carrier_name)s‎用于带跟踪号码的运输‎%(ref)s<br/>‎成本：‎%(price).2f%(currency)s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -884,7 +890,7 @@ msgstr "发货信息"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
 msgid "Shipping Method"
-msgstr "运费模板"
+msgstr "送货方式"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -893,7 +899,7 @@ msgstr "运费模板"
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Shipping Methods"
-msgstr "运费模板"
+msgstr "送货方式"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__shipping_weight
@@ -912,12 +918,12 @@ msgstr "国际物流和货物申报的标准化代码 。目前，仅用于FedEx
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
 msgid "States"
-msgstr "省/ 州"
+msgstr "状态"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr "库存凭证"
+msgstr "库存移动"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
@@ -955,7 +961,7 @@ msgstr "发货完成后将设置客户运费。"
 msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
-msgstr "您的邮包的重量大于这个包装类型所授权的最大重量。请选择另一个邮包类型。"
+msgstr "您的包裹的重量大于这个包装类型所授权的最大重量。请选择另一个包裹类型。"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:0
@@ -971,7 +977,7 @@ msgid ""
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "这些运费模板能根据你的设定，自动的计算显示给用户的运输价格；\n"
-"显示在销售订单中（基于报价单）或者发票中（基于发货单）"
+"显示在销售订单中（基于报价单）或者结算单中（基于发货单）"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -981,7 +987,7 @@ msgstr "这个百分比将被添加到物流价格。"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__weight
 msgid "Total weight of all the products contained in the package."
-msgstr "邮包中包含的所有产品的总重量。"
+msgstr "包裹中包含的所有产品的总重量。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__shipping_weight
@@ -989,17 +995,17 @@ msgid ""
 "Total weight of packages and products not in a package. Packages with no "
 "shipping weight specified will default to their products' total weight. This"
 " is the weight used to compute the cost of the shipping."
-msgstr ""
+msgstr "‎包装和产品的总重量不在包装中。未指定运输重量的包裹将默认为其产品的总重量。这是用于计算运费的权重。‎"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_bulk
 msgid "Total weight of products which are not in a package."
-msgstr ""
+msgstr "‎不包括包装中的产品的总重量。‎"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
 msgid "Total weight of the package."
-msgstr "邮包的总重量。"
+msgstr "包裹的总重量。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight
@@ -1034,7 +1040,7 @@ msgstr "追踪:"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Transfer"
-msgstr "转账"
+msgstr "调拨"
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
@@ -1129,7 +1135,7 @@ msgstr "你有多个运单/面单追踪链接，它们在聊天中可用。"
 msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
-msgstr "物流商网站没有找到此订单的链接。请检查您设置的运费模板。"
+msgstr "物流商网站没有找到此订单的链接。请检查您设置的交货方式。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_from

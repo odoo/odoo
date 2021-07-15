@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import decimal
 import logging
 import uuid
 
@@ -39,8 +40,9 @@ class PaymentAcquirerPayulatam(models.Model):
             data_string = ('~').join((self.payulatam_api_key, self.payulatam_merchant_id, values['referenceCode'],
                                       str(values['amount']), values['currency']))
         else:
+            rounded_amount = decimal.Decimal(values.get('TX_VALUE')).quantize(decimal.Decimal('0.1'), decimal.ROUND_HALF_EVEN)
             data_string = ('~').join((self.payulatam_api_key, self.payulatam_merchant_id, values['referenceCode'],
-                                      str(float(values.get('TX_VALUE'))), values['currency'], values.get('transactionState')))
+                                      str(rounded_amount), values['currency'], values.get('transactionState')))
         return md5(data_string.encode('utf-8')).hexdigest()
 
     def payulatam_form_generate_values(self, values):

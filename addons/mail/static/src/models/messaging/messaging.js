@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/messaging/messaging.js', function (require) 
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
+const { attr, many2many, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
 
 function factory(dependencies) {
 
@@ -12,7 +12,9 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
-            this.env.services['bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
+            if (this.env.services['bus_service']) {
+                this.env.services['bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
+            }
             return super._willDelete(...arguments);
         }
 
@@ -222,7 +224,19 @@ function factory(dependencies) {
             default: 0,
         }),
         partnerRoot: many2one('mail.partner'),
+        /**
+         * Determines which partner should be considered the public partner,
+         * which is a special partner notably used in livechat.
+         *
+         * @deprecated in favor of `publicPartners` because in multi-website
+         * setup there might be a different public partner per website.
+         */
         publicPartner: many2one('mail.partner'),
+        /**
+         * Determines which partners should be considered the public partners,
+         * which are special partners notably used in livechat.
+         */
+        publicPartners: many2many('mail.partner'),
         /**
          * Mailbox Starred.
          */

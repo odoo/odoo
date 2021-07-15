@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.mass_mailing_sms.tests.common import MassSMSCommon
@@ -9,23 +10,39 @@ from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
 class TestMailFullCommon(TestMassMailCommon, MassSMSCommon):
 
     @classmethod
-    def _create_records_for_batch(cls, model, count):
-        records = cls.env[model]
-        partners = cls.env['res.partner']
-        country_id = cls.env.ref('base.be').id,
-        for x in range(count):
-            partners += cls.env['res.partner'].with_context(**cls._test_context).create({
-                'name': 'Partner_%s' % (x),
-                'email': '_test_partner_%s@example.com' % (x),
-                'country_id': country_id,
-                'mobile': '047500%02d%02d' % (x, x)
-            })
-            records += cls.env[model].with_context(**cls._test_context).create({
-                'name': 'Test_%s' % (x),
-                'customer_id': partners[x].id,
-            })
-        cls.records = cls._reset_mail_context(records)
-        cls.partners = partners
+    def setUpClass(cls):
+        super(TestMailFullCommon, cls).setUpClass()
+
+        cls.mailing_sms = cls.env['mailing.mailing'].with_user(cls.user_marketing).create({
+            'name': 'XMas SMS',
+            'subject': 'Xmas SMS for {object.name}',
+            'mailing_model_id': cls.env['ir.model']._get('mail.test.sms').id,
+            'mailing_type': 'sms',
+            'mailing_domain': '%s' % repr([('name', 'ilike', 'SMSTest')]),
+            'body_plaintext': 'Dear ${object.display_name} this is a mass SMS with two links http://www.odoo.com/smstest and http://www.odoo.com/smstest/${object.id}',
+            'sms_force_send': True,
+            'sms_allow_unsubscribe': True,
+        })
+
+    @classmethod
+    def _create_mailing_sms_test_records(cls, model='mail.test.sms', partners=None, count=1):
+        """ Helper to create data. Currently simple, to be improved. """
+        Model = cls.env[model]
+        phone_field = 'phone_nbr' if 'phone_nbr' in Model else 'phone'
+        partner_field = 'customer_id' if 'customer_id' in Model else 'partner_id'
+
+        vals_list = []
+        for idx in range(count):
+            vals = {
+                'name': 'SMSTestRecord_%02d' % idx,
+                phone_field: '045600%02d%02d' % (idx, idx)
+            }
+            if partners:
+                vals[partner_field] = partners[idx % len(partners)]
+
+            vals_list.append(vals)
+
+        return cls.env[model].create(vals_list)
 
 
 class TestRecipients(TestRecipients):

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_ddt_view">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <div class="col-6">
+                               <span><strong>Warehouse Address:</strong></span>
+                                <t t-set="delivery_from" t-value="o.picking_type_id.warehouse_id.partner_id or o.company_id.partner_id"/>
+                                <t t-if="o.picking_type_id.warehouse_id.partner_id">
+                                    <div t-field="o.picking_type_id.warehouse_id.partner_id"
+                                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                                </t>
+                                <t t-else="">
+                                    <div t-field="o.company_id.partner_id"
+                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                                </t>
+                                <p t-if="delivery_from.vat">Pta IVA: <span t-field="delivery_from.vat"/></p>
+                            </div>
+                            <div class="col-5 offset-1">
+                                <div>
+                                    <span><strong>Customer Address:</strong></span>
+                                    <div t-field="o.partner_id"
+                                           t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                                    <p t-if="o.partner_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'Pta IVA'"/>: <span t-field="o.partner_id.vat"/></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt16"/>
+                        <div class="mt64"/>
+                        <div>
+                            <h1>Documento di Trasporto <span t-esc="o.l10n_it_ddt_number"/></h1>
+                        </div>
+                        <div class="clearfix"/>
+                        <div class="mb32"/>
+                        <div class="row">
+                            <div class="col-6">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>Transportation Reason</td>
+                                            <td><span t-field="o.l10n_it_transport_reason"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Transportation Method</td>
+                                            <td><span t-field="o.l10n_it_transport_method"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Carrier Condition</td>
+                                            <td><span t-field="o.sale_id.incoterm.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Carrier</td>
+                                            <td><span t-field="o.carrier_id"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div t-if="o.l10n_it_transport_method_details">
+                                    <b>Transportation Method Details: </b>
+                                    <span t-field="o.l10n_it_transport_method_details"/>
+                                </div>
+                            </div>
+                            <div class="col-5 offset-1">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>Order</td>
+                                            <td><span t-field="o.origin"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Picking Number</td>
+                                            <td><span t-field="o.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Shipping Date</td>
+                                            <td><span t-field="o.date_done"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Gross Weight (kg)</td>
+                                            <td><span t-field="o.shipping_weight"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Parcels</td>
+                                            <td><span t-field="o.l10n_it_parcels"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="mt64"/>
+                        <div t-if="o.note"><b>Note:</b> <span t-field="o.note"/></div>
+
+                        <div class="mt64"/>
+                        <div class="mt64"/>
+
+                        <table class="table table-sm" name="document_details">
+                            <thead>
+                                <tr>
+                                    <th><strong>Product</strong></th>
+                                    <th><strong>Quantity</strong></th>
+                                    <th><strong>Total Value</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="total_value" t-value="0"/>
+                                <t t-foreach="o.move_lines" t-as="move">
+                                    <tr>
+                                        <td>
+                                            <span t-field="move.product_id"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="move.product_uom_qty"/>
+                                            <span t-field="move.product_uom" groups="uom.group_uom"/>
+                                        </td>
+                                        <td>
+                                            <t t-set="lst_price" t-value="move.product_id.lst_price * move.product_qty"/>
+                                            <span t-esc="lst_price"  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            <t t-set="total_value" t-value="total_value + lst_price"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td>
+                                    </td>
+                                    <td style="text-align:right">
+                                        <b>Total:</b>
+                                    </td>
+                                    <td>
+                                        <span t-esc="total_value"  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="mt64"/>
+                        <div class="mt64"/>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th><div class="row"><span class="fa fa-pencil mt4"></span><div class="ml4"/><strong>Company Signature</strong></div></th>
+                                    <th><div class="row"><span class="fa fa-pencil mt4"></span><div class="ml4"/><strong>Carrier Signature</strong></div></th>
+                                    <th><div class="row"><span class="fa fa-pencil mt4"></span><div class="ml4"/><strong>Customer Signature</strong></div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="col">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+    <record id="action_report_ddt" model="ir.actions.report">
+        <field name="name">DDT report</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_it_stock_ddt.report_ddt_view</field>
+        <field name="report_file">report_ddt</field>
+        <field name="print_report_name">'DDT - %s - %s' % (object.partner_id.name or '', object.l10n_it_ddt_number)</field>
+    </record>
+</odoo>

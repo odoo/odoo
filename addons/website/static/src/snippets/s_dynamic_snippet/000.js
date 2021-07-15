@@ -129,10 +129,17 @@ const DynamicSnippet = publicWidget.Widget.extend({
      *
      * @private
      */
+    _mustMessageWarningBeHidden: function() {
+        return this._isConfigComplete() || !this.editableMode;
+    },
+    /**
+     *
+     * @private
+     */
     _manageWarningMessageVisibility: async function () {
         this.$el.find('.missing_option_warning').toggleClass(
             'd-none',
-            this._isConfigComplete()
+            this._mustMessageWarningBeHidden()
         );
     },
     /**

@@ -343,17 +343,35 @@ var dom = {
             // part, the button is disabled without any visual effect.
             $button.addClass('o_debounce_disabled');
             Promise.resolve(dom.DEBOUNCE && concurrency.delay(dom.DEBOUNCE)).then(function () {
-                $button.addClass('disabled').prop('disabled', true);
                 $button.removeClass('o_debounce_disabled');
-
-                return Promise.resolve(result).then(function () {
-                    $button.removeClass('disabled').prop('disabled', false);
-                }).guardedCatch(function () {
-                    $button.removeClass('disabled').prop('disabled', false);
-                });
+                const restore = dom.addButtonLoadingEffect($button[0]);
+                return Promise.resolve(result).then(restore).guardedCatch(restore);
             });
 
             return result;
+        };
+    },
+    /**
+     * Gives the button a loading effect by disabling it and adding a `fa`
+     * spinner icon.
+     * The existing button `fa` icons will be hidden through css.
+     *
+     * @param {HTMLElement} btn - the button to disable/load
+     * @return {function} a callback function that will restore the button
+     *         initial state
+     */
+    addButtonLoadingEffect: function (btn) {
+        const $btn = $(btn);
+        $btn.addClass('o_website_btn_loading disabled');
+        $btn.prop('disabled', true);
+        const $loader = $('<span/>', {
+            class: 'fa fa-refresh fa-spin mr-2',
+        });
+        $btn.prepend($loader);
+        return () => {
+             $btn.removeClass('o_website_btn_loading disabled');
+             $btn.prop('disabled', false);
+             $loader.remove();
         };
     },
     /**
@@ -466,6 +484,9 @@ var dom = {
         }
         if (options && options.prop) {
             $input.prop(options.prop);
+        }
+        if (options && options.role) {
+            $input.attr('role', options.role);
         }
         return $container.append($input, $label);
     },

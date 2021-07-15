@@ -112,7 +112,8 @@ class AccountJournal(models.Model):
         domain_checks_to_print = [
             ('journal_id', '=', self.id),
             ('payment_method_id.code', '=', 'check_printing'),
-            ('state', '=', 'posted')
+            ('state', '=', 'posted'),
+            ('is_move_sent','=', False),
         ]
         return dict(
             super(AccountJournal, self).get_journal_dashboard_datas(),

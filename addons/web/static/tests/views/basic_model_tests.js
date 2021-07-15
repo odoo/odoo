@@ -127,6 +127,42 @@ odoo.define('web.basic_model_tests', function (require) {
             form.destroy();
         });
 
+        QUnit.test('can process x2many commands (with multiple fields)', async function (assert) {
+            assert.expect(1);
+
+            this.data.partner.fields.product_ids.default = [[0, 0, { category: [] }]];
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="product_ids"/>
+                    </form>
+                `,
+                archs: {
+                    'product,false,list': `
+                        <tree>
+                            <field name="display_name"/>
+                            <field name="active"/>
+                        </tree>
+                    `,
+                },
+                mockRPC(route, args) {
+                    if (args.method === "create") {
+                        const product_ids = args.args[0].product_ids;
+                        const values = product_ids[0][2];
+                        assert.strictEqual(values.active, true, "active field should be set");
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            await testUtils.form.clickSave(form);
+            form.destroy();
+        });
+
         QUnit.test('can load a record', async function (assert) {
             assert.expect(7);
 
@@ -1109,7 +1145,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 mockRPC: function (route, args) {
                     if (args.method === 'create') {
                         // has to be done before the call to _super
-                        assert.notOk('product_ids' in args.args[0], "should not have any value");
+                        assert.deepEqual(args.args[0].product_ids, [], "should not have any command");
                         assert.notOk('category' in args.args[0], "should not have other fields");
 
                         assert.strictEqual(args.kwargs.context.active_field, 2,

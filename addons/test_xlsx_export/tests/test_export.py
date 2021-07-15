@@ -50,6 +50,7 @@ class XlsxCreatorCase(common.HttpCase):
             params['fields'] = [{
                 'name': self.model._fields[f].name,
                 'label': self.model._fields[f].string,
+                'type': self.model._fields[f].type,
             } for f in fields]
 
         with patch.object(ExportXlsxWriter, 'write', self._mock_write):
@@ -116,13 +117,13 @@ class TestGroupedExport(XlsxCreatorCase):
 
         self.assertExportEqual(export, [
             ['Int Sum'      ,'Float Min'],
-            ['10 (2)'       ,'111.0'],
-            ['    111.0 (1)','111.0'],
+            ['10 (2)'       ,'111.00'],
+            ['    111.0 (1)','111.00'],
             ['10'           ,'111.0'],
-            ['    222.0 (1)','222.0'],
+            ['    222.0 (1)','222.00'],
             ['10'           ,'222.0'],
-            ['20 (1)'       ,'333.0'],
-            ['    333.0 (1)','333.0'],
+            ['20 (1)'       ,'333.00'],
+            ['    333.0 (1)','333.00'],
             ['20'           ,'333.0'],
         ])
 
@@ -136,13 +137,13 @@ class TestGroupedExport(XlsxCreatorCase):
 
         self.assertExportEqual(export, [
             ['Int Sum'      ,'Float Avg'],
-            ['10 (2)'       ,'150.0'],
-            ['    100.0 (1)','100.0'],
+            ['10 (2)'       ,'150.00'],
+            ['    100.0 (1)','100.00'],
             ['10'           ,'100.0'],
-            ['    200.0 (1)','200.0'],
+            ['    200.0 (1)','200.00'],
             ['10'           ,'200.0'],
-            ['20 (1)'       ,'300.0'],
-            ['    300.0 (1)','300.0'],
+            ['20 (1)'       ,'300.00'],
+            ['    300.0 (1)','300.00'],
             ['20'           ,'300.0'],
         ])
 
@@ -157,14 +158,14 @@ class TestGroupedExport(XlsxCreatorCase):
 
         self.assertExportEqual(export, [
             ['Int Sum'          ,'Float Avg'],
-            ['10 (3)'           ,'300.0'],
-            ['    20 (1)'       ,'600.0'],
-            ['        600.0 (1)','600.0'],
+            ['10 (3)'           ,'300.00'],
+            ['    20 (1)'       ,'600.00'],
+            ['        600.0 (1)','600.00'],
             ['10'               ,'600.0'],
-            ['    30 (2)'       ,'150.0'],
-            ['        100.0 (1)','100.0'],
+            ['    30 (2)'       ,'150.00'],
+            ['        100.0 (1)','100.00'],
             ['10'               ,'100.0'],
-            ['        200.0 (1)','200.0'],
+            ['        200.0 (1)','200.00'],
             ['10'               ,'200.0'],
         ])
 
@@ -179,12 +180,12 @@ class TestGroupedExport(XlsxCreatorCase):
 
         self.assertExportEqual(export, [
             ['Int Sum'              ,'Float Avg'],
-            ['10 (3)'               ,'0.0'],
-            ['    20 (1)'           ,'0.0'],
-            ['        Undefined (1)','0.0'],
+            ['10 (3)'               ,'0.00'],
+            ['    20 (1)'           ,'0.00'],
+            ['        Undefined (1)','0.00'],
             ['10'                   ,'0.0'],
-            ['    30 (2)'           ,'0.0'],
-            ['        Undefined (2)','0.0'],
+            ['    30 (2)'           ,'0.00'],
+            ['        Undefined (2)','0.00'],
             ['10'                   ,'0.0'],
             ['10'                   ,'0.0'],
         ])
@@ -339,4 +340,32 @@ class TestGroupedExport(XlsxCreatorCase):
             ['10'                   ,'2019-01-01'],
             ['    Undefined (1)'    ,''],
             ['10'                   ,''],
+        ])
+
+    def test_float_representation(self):
+        currency = self.env['res.currency'].create({
+            'name': "bottlecap",
+            'symbol': "b",
+            'rounding': 0.001,
+            'decimal_places': 3,
+        })
+
+        values = [
+                {'int_sum': 1, 'currency_id': currency.id, 'float_monetary': 60739.2000000004},
+                {'int_sum': 2, 'currency_id': currency.id, 'float_monetary': 2.0},
+                {'int_sum': 3, 'currency_id': currency.id, 'float_monetary': 999.9995999},
+        ]
+        export = self.export(values, fields=['int_sum', 'float_monetary'], params={'groupby': ['int_sum', 'float_monetary']})
+
+        self.assertExportEqual(export, [
+            ['Int Sum', 'Float Monetary'],
+            ['1 (1)','60739.200'],
+            ['    60739.2 (1)','60739.200'],
+            ['1','60739.2'],
+            ['2 (1)','2.000'],
+            ['    2.0 (1)','2.000'],
+            ['2','2.0'],
+            ['3 (1)','1000.000'],
+            ['    1000.0 (1)','1000.000'],
+            ['3','1000.0'],
         ])

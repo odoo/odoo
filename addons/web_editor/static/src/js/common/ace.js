@@ -5,6 +5,7 @@ var ajax = require('web.ajax');
 var config = require('web.config');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
+var dom = require('web.dom');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var localStorage = require('web.local_storage');
@@ -628,6 +629,10 @@ var ViewEditor = Widget.extend({
 
         var self = this;
         return Promise.all(defs).guardedCatch(function (results) {
+            // some overrides handle errors themselves
+            if (results === undefined) {
+                return;
+            }
             var error = results[1];
             Dialog.alert(self, '', {
                 title: _t("Server error"),
@@ -911,8 +916,9 @@ var ViewEditor = Widget.extend({
      *
      * @private
      */
-    _onSaveClick: function () {
-        this._saveResources();
+    _onSaveClick: function (ev) {
+        const restore = dom.addButtonLoadingEffect(ev.currentTarget);
+        this._saveResources().then(restore).guardedCatch(restore);
     },
     /**
      * Called when the user wants to switch from xml to scss or vice-versa ->

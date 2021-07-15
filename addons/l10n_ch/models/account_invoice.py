@@ -150,7 +150,7 @@ class AccountMove(models.Model):
             return res
 
         for record in self:
-            if record.name and record.partner_bank_id and record.partner_bank_id.l10n_ch_postal:
+            if record.l10n_ch_isr_number:
                 record.l10n_ch_isr_number_spaced = _space_isr_number(record.l10n_ch_isr_number)
             else:
                 record.l10n_ch_isr_number_spaced = False
@@ -246,7 +246,11 @@ class AccountMove(models.Model):
         for inv in self:
             if inv.move_type == 'in_invoice' and inv.company_id.country_id.code == "CH":
                 partner_bank = inv.partner_bank_id
-                if partner_bank._is_isr_issuer() and not inv._has_isr_ref():
+                if partner_bank:
+                    needs_isr_ref = partner_bank._is_qr_iban() or partner_bank._is_isr_issuer()
+                else:
+                    needs_isr_ref = False
+                if needs_isr_ref and not inv._has_isr_ref():
                     inv.l10n_ch_isr_needs_fixing = True
                     continue
             inv.l10n_ch_isr_needs_fixing = False

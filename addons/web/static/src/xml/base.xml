@@ -390,20 +390,20 @@
                         t-att-type="DECIMAL_POINT === '.' ? 'number' : 'text'"
                         t-attf-title="Number using {{ DECIMAL_POINT }} as decimal separator."
                         t-attf-pattern="[0-9]+([\\{{ DECIMAL_POINT }}][0-9]+)?"
-                        t-att-value="condition.value or (0 + DECIMAL_POINT + 0)"
+                        t-att-value="condition.displayedValue"
                         t-on-input="_onValueInput(condition)"
                     />
                     <input t-elif="['integer', 'id'].includes(fieldType)"
                         class="o_input"
                         step="1"
                         type="number"
-                        t-att-value="condition.value or 0"
+                        t-att-value="condition.displayedValue"
                         t-on-input="_onValueInput(condition)"
                     />
                     <input t-else=""
                         type="text"
                         class="o_input"
-                        t-att-value="condition.value or ''"
+                        t-att-value="condition.displayedValue"
                         t-on-input="_onValueInput(condition)"
                     />
                 </span>
@@ -631,12 +631,13 @@
 </t>
 
 <t t-name="web.ViewSwitcherButton" owl="1">
+    <t t-set="buttonLabel">View %s</t>
     <button type="button"
         t-att-accesskey="view.accessKey"
         t-attf-class="btn btn-secondary fa fa-lg o_switch_view o_{{ view.type }} {{ view.icon }}"
         t-att-class="{ active: env.view.type === view.type }"
-        t-attf-aria-label="View {{ view.type }}"
-        t-attf-title="View {{ view.type }}"
+        t-att-aria-label="sprintf(buttonLabel.toString(), view.type)"
+        t-att-title="sprintf(buttonLabel.toString(), view.type)"
         data-toggle="tooltip"
         tabindex="-1"
         t-on-click="trigger('switch-view', { view_type: view.type })"
@@ -823,7 +824,7 @@
             </button>
         </t>
         <t t-if="widget.is_action_enabled('export_xlsx') and widget.isExportEnable">
-            <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" title="Export All"/>
+            <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" title="Export All" aria-label="Export All"/>
         </t>
     </div>
 </t>

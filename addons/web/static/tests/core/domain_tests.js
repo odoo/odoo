@@ -142,5 +142,45 @@ QUnit.module('core', {}, function () {
         assert.expect(1);
         assert.notOk(new Domain(Domain.FALSE_DOMAIN).compute({}));
     });
+
+    QUnit.test("arrayToString", function (assert) {
+        assert.expect(7);
+
+        const arrayToString = Domain.prototype.arrayToString;
+
+        // domains containing null, false or true
+        assert.strictEqual(arrayToString([['name', '=', null]]), '[["name","=",None]]');
+        assert.strictEqual(arrayToString([['name', '=', false]]), '[["name","=",False]]');
+        assert.strictEqual(arrayToString([['name', '=', true]]), '[["name","=",True]]');
+        assert.strictEqual(arrayToString([['name', '=', 'null']]), '[["name","=","null"]]');
+        assert.strictEqual(arrayToString([['name', '=', 'false']]), '[["name","=","false"]]');
+        assert.strictEqual(arrayToString([['name', '=', 'true']]), '[["name","=","true"]]');
+
+        assert.strictEqual(arrayToString(), '[]');
+    });
+
+    QUnit.test("like, =like, ilike and =ilike", function (assert) {
+        assert.expect(16);
+
+        assert.ok(new Domain([['a', 'like', 'value']]).compute({ a: 'value' }));
+        assert.ok(new Domain([['a', 'like', 'value']]).compute({ a: 'some value' }));
+        assert.notOk(new Domain([['a', 'like', 'value']]).compute({ a: 'Some Value' }));
+        assert.notOk(new Domain([['a', 'like', 'value']]).compute({ a: false }));
+
+        assert.ok(new Domain([['a', '=like', '%value']]).compute({ a: 'value' }));
+        assert.ok(new Domain([['a', '=like', '%value']]).compute({ a: 'some value' }));
+        assert.notOk(new Domain([['a', '=like', '%value']]).compute({ a: 'Some Value' }));
+        assert.notOk(new Domain([['a', '=like', '%value']]).compute({ a: false }));
+
+        assert.ok(new Domain([['a', 'ilike', 'value']]).compute({ a: 'value' }));
+        assert.ok(new Domain([['a', 'ilike', 'value']]).compute({ a: 'some value' }));
+        assert.ok(new Domain([['a', 'ilike', 'value']]).compute({ a: 'Some Value' }));
+        assert.notOk(new Domain([['a', 'ilike', 'value']]).compute({ a: false }));
+
+        assert.ok(new Domain([['a', '=ilike', '%value']]).compute({ a: 'value' }));
+        assert.ok(new Domain([['a', '=ilike', '%value']]).compute({ a: 'some value' }));
+        assert.ok(new Domain([['a', '=ilike', '%value']]).compute({ a: 'Some Value' }));
+        assert.notOk(new Domain([['a', '=ilike', '%value']]).compute({ a: false }));
+    });
 });
 });

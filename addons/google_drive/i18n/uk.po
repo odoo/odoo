@@ -3,8 +3,8 @@
 # 	* google_drive
 # 
 # Translators:
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # Martin Trigaux, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +54,7 @@ msgid ""
 " token set"
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; Не "
-"встановлено оновленого токена"
+"встановлено оновленого токену"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
@@ -104,7 +104,7 @@ msgstr "Заархівовано"
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern."
 msgstr ""
-"Принаймні один ключ не може бути знайдено у шаблоні під назвою Google Диска."
+"Принаймні один ключ не може бути знайдено у шаблоні назви Google Диска."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
@@ -143,13 +143,23 @@ msgstr "Створив"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr "Кожен може створити Google Диск тільки раз."
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:161
+#, python-format
+msgid ""
+"The document filter must not include any 'dynamic' part, so it should not be"
+" based on the current time or current user, for example."
+msgstr ""
+"Фільтр документу не повинен містити жодних 'динамічних' частин, тому він не "
+"повинен базуватися на поточному часі чи користувачі, наприклад."
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
@@ -219,7 +229,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config____last_update
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__write_uid
@@ -240,7 +250,7 @@ msgid ""
 "checklist for each order in a foreign country, ... Its very easy to manage "
 "them, link them to Odoo and use them to collaborate with your employees."
 msgstr ""
-"Прив'яжіть свої шаблони Google Диска до будь-якого запису в Odoo. Якщо ви "
+"Прив'яжіть свої шаблони Google Диску до будь-якого запису в Odoo. Якщо ви "
 "хочете, щоб ваш співробітник заповнив якісь дуже особливі документи, напр., "
 "використав таблицю для контролю якості товарів, чи переглянув контрольний "
 "перелік доставок з кожного замовлення в інші країни, ... Ними дуже легко "

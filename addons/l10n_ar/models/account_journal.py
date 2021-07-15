@@ -48,16 +48,18 @@ class AccountJournal(models.Model):
                 '9': ['I'],
                 '10': [],
                 '13': ['C', 'E'],
+                '99': []
             },
             'received': {
                 '1': ['A', 'B', 'C', 'M', 'I'],
                 '3': ['B', 'C', 'I'],
                 '4': ['B', 'C', 'I'],
                 '5': ['B', 'C', 'I'],
-                '6': ['B', 'C', 'I'],
+                '6': ['A', 'B', 'C', 'I'],
                 '9': ['E'],
                 '10': ['E'],
-                '13': ['B', 'C', 'I'],
+                '13': ['A', 'B', 'C', 'I'],
+                '99': ['B', 'C', 'I']
             },
         }
         if not self.company_id.l10n_ar_afip_responsibility_type_id:
@@ -67,14 +69,9 @@ class AccountJournal(models.Model):
 
         letters = letters_data['issued' if self.type == 'sale' else 'received'][
             self.company_id.l10n_ar_afip_responsibility_type_id.code]
-        if not counterpart_partner:
-            return letters
-
-        if not counterpart_partner.l10n_ar_afip_responsibility_type_id:
-            letters = []
-        else:
-            counterpart_letters = letters_data['issued' if self.type == 'purchase' else 'received'][
-                counterpart_partner.l10n_ar_afip_responsibility_type_id.code]
+        if counterpart_partner:
+            counterpart_letters = letters_data['issued' if self.type == 'purchase' else 'received'].get(
+                counterpart_partner.l10n_ar_afip_responsibility_type_id.code, [])
             letters = list(set(letters) & set(counterpart_letters))
         return letters
 
@@ -86,6 +83,7 @@ class AccountJournal(models.Model):
         receipt_m_code = ['54']
         receipt_codes = ['4', '9', '15']
         expo_codes = ['19', '20', '21']
+        liq_product_codes = ['60', '61']
         if self.type != 'sale':
             return []
         elif self.l10n_ar_afip_pos_system == 'II_IM':
@@ -93,7 +91,7 @@ class AccountJournal(models.Model):
             return usual_codes + receipt_codes + expo_codes + invoice_m_code + receipt_m_code
         elif self.l10n_ar_afip_pos_system in ['RAW_MAW', 'RLI_RLM']:
             # electronic/online invoice
-            return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes
+            return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes + liq_product_codes
         elif self.l10n_ar_afip_pos_system in ['CPERCEL', 'CPEWS']:
             # invoice with detail
             return usual_codes + invoice_m_code

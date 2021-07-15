@@ -49,7 +49,7 @@ class WebsiteVisitor(models.Model):
     visit_count = fields.Integer('Number of visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 8 hours ago.")
     website_track_ids = fields.One2many('website.track', 'visitor_id', string='Visited Pages History', readonly=True)
     visitor_page_count = fields.Integer('Page Views', compute="_compute_page_statistics", help="Total number of visits on tracked pages")
-    page_ids = fields.Many2many('website.page', string="Visited Pages", compute="_compute_page_statistics")
+    page_ids = fields.Many2many('website.page', string="Visited Pages", compute="_compute_page_statistics", groups="website.group_website_designer")
     page_count = fields.Integer('# Visited Pages', compute="_compute_page_statistics", help="Total number of tracked page visited")
     last_visited_page_id = fields.Many2one('website.page', string="Last Visited Page", compute="_compute_last_visited_page_id")
 
@@ -66,10 +66,13 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('name')
     def name_get(self):
-        return [(
-            record.id,
-            (record.name or _('Website Visitor #%s', record.id))
-        ) for record in self]
+        res = []
+        for record in self:
+            res.append((
+                record.id,
+                record.name or _('Website Visitor #%s', record.id)
+            ))
+        return res
 
     @api.depends('partner_id.email_normalized', 'partner_id.mobile', 'partner_id.phone')
     def _compute_email_phone(self):
@@ -189,7 +192,7 @@ class WebsiteVisitor(models.Model):
         if visitor and not visitor.timezone:
             tz = self._get_visitor_timezone()
             if tz:
-                visitor.timezone = tz
+                visitor._update_visitor_timezone(tz)
         if not visitor and force_create:
             visitor = self._create_visitor()
 
@@ -288,6 +291,17 @@ class WebsiteVisitor(models.Model):
         deadline = datetime.now() - timedelta(days=delay_days)
         visitors_to_archive = self.env['website.visitor'].sudo().search([('last_connection_datetime', '<', deadline)])
         visitors_to_archive.write({'active': False})
+        
+    def _update_visitor_timezone(self, timezone):
+        """ We need to do this part here to avoid concurrent updates error. """
+        try:
+            with self.env.cr.savepoint():
+                query_lock = "SELECT * FROM website_visitor where id = %s FOR NO KEY UPDATE NOWAIT"
+                self.env.cr.execute(query_lock, (self.id,), log_exceptions=False)
+                query = "UPDATE website_visitor SET timezone = %s WHERE id = %s"
+                self.env.cr.execute(query, (timezone, self.id), log_exceptions=False)
+        except Exception:
+            pass
 
     def _update_visitor_last_visit(self):
         """ We need to do this part here to avoid concurrent updates error. """

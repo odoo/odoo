@@ -4,20 +4,20 @@
 # 
 # Translators:
 # Mark Lee <odoos@soti.33mail.com>, 2020
-# Martin Trigaux, 2020
-# JH CHOI <hwangtog@gmail.com>, 2020
 # heejun lee <tkm01b@gmail.com>, 2020
 # Link Up링크업 <linkup.way@gmail.com>, 2020
-# Linkup <link-up@naver.com>, 2020
 # Seongseok Shin <shinss61@hotmail.com>, 2020
+# Martin Trigaux, 2020
+# Linkup <link-up@naver.com>, 2021
+# JH CHOI <hwangtog@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2020\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -185,7 +185,7 @@ msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
-msgstr "고객에게 전달하고자 하는 품목 설명. 이 설명은 모든 판매 주문, 배송 주문 및 고객 송장/대변 전표에 복사됩니다"
+msgstr "고객에게 전달하고자 하는 품목 설명. 이 설명은 모든 판매 주문, 배송 주문 및 고객 송장/대변전표에 복사됩니다"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -254,7 +254,7 @@ msgstr "활동 상태"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "활동 유형 아이콘"
 
 #. module: product
 #. openerp-web
@@ -590,8 +590,8 @@ msgstr "포함된 수량"
 #. module: product
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
-msgid "Corner Desk Black"
-msgstr "코너 데스크 블랙"
+msgid "Corner Desk Left Sit"
+msgstr ""
 
 #. module: product
 #: model:product.product,name:product.product_product_5
@@ -838,6 +838,7 @@ msgstr "할인"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:product.field_res_country_group__display_name
 #: model:ir.model.fields,field_description:product.field_res_partner__display_name
+#: model:ir.model.fields,field_description:product.field_uom_uom__display_name
 msgid "Display Name"
 msgstr "이름 표시"
 
@@ -1061,6 +1062,7 @@ msgstr "시간"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__id
 #: model:ir.model.fields,field_description:product.field_res_country_group__id
 #: model:ir.model.fields,field_description:product.field_res_partner__id
+#: model:ir.model.fields,field_description:product.field_uom_uom__id
 msgid "ID"
 msgstr "ID"
 
@@ -1280,6 +1282,7 @@ msgstr "큰 회의용 테이블"
 #: model:ir.model.fields,field_description:product.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:product.field_res_country_group____last_update
 #: model:ir.model.fields,field_description:product.field_res_partner____last_update
+#: model:ir.model.fields,field_description:product.field_uom_uom____last_update
 msgid "Last Modified on"
 msgstr "최근 수정"
 
@@ -1902,6 +1905,11 @@ msgid "Product Type"
 msgstr "상품 유형"
 
 #. module: product
+#: model:ir.model,name:product.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "상품 단위"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
@@ -2398,6 +2406,18 @@ msgid ""
 msgstr "이 가격표는 기본 협력사 대신 현재 협력사에게 판매하는 데 사용됩니다"
 
 #. module: product
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid ""
+"This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
+"This may cause inconsistencies in computations.\n"
+"Please set a precision between %s and 1."
+msgstr ""
+"이 반올림 정밀도는 소수점 정확도 (%s 자리)보다 높습니다.\n"
+"이로 인해 계산 불일치가 발생할 수 있습니다.\n"
+"%s와 1 사이의 정밀도로 설정하십시오."
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
@@ -2719,6 +2739,13 @@ msgid "Volume unit of measure label"
 msgstr "부피 단위 꼬리표"
 
 #. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid "Warning!"
+msgstr "경고!"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Warnings"
 msgstr "경고"
@@ -2750,6 +2777,20 @@ msgstr "무게 단위 꼬리표"
 #: model:product.template.attribute.value,name:product.product_4_attribute_2_value_1
 msgid "White"
 msgstr "흰색"
+
+#. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOMs:\n"
+"%s\n"
+"This may cause inconsistencies in computations.\n"
+"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+msgstr ""
+"소수점 정확도를 UOM보다 덜 정확하게 설정하고 있습니다  :\n"
+"%s\n"
+"이로 인해 계산 불일치가 발생할 수 있습니다. \n"
+"측정 단위의 반올림 또는 소수점 정확도의 자릿수를 늘리십시오."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -2906,7 +2947,7 @@ msgstr "예 : 등"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "e.g. Odoo Enterprise Subscription"
-msgstr "예 : Odoo 엔터프라이즈 구독"
+msgstr "예 : Odoo 유료버전 구독"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view

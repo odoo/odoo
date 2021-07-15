@@ -106,20 +106,31 @@ var Domain = collections.Tree.extend({
                     return _.intersection(
                         _.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
                         _.isArray(fieldValue) ? fieldValue : [fieldValue],
-                    ).length !== 0;;
+                    ).length !== 0;
                 case "not in":
                     return _.intersection(
                         _.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
                         _.isArray(fieldValue) ? fieldValue : [fieldValue],
                     ).length === 0;
                 case "like":
-                    return (fieldValue.toLowerCase().indexOf(this._data[2].toLowerCase()) >= 0);
-                case "=like":
-                    var regExp = new RegExp(this._data[2].toLowerCase().replace(/([.\[\]\{\}\+\*])/g, '\\\$1').replace(/%/g, '.*'));
-                    return regExp.test(fieldValue.toLowerCase());
-                case "ilike":
+                    if (fieldValue === false) {
+                        return false;
+                    }
                     return (fieldValue.indexOf(this._data[2]) >= 0);
+                case "=like":
+                    if (fieldValue === false) {
+                        return false;
+                    }
+                    return new RegExp(this._data[2].replace(/%/g, '.*')).test(fieldValue);
+                case "ilike":
+                    if (fieldValue === false) {
+                        return false;
+                    }
+                    return (fieldValue.toLowerCase().indexOf(this._data[2].toLowerCase()) >= 0);
                 case "=ilike":
+                    if (fieldValue === false) {
+                        return false;
+                    }
                     return new RegExp(this._data[2].replace(/%/g, '.*'), 'i').test(fieldValue);
                 default:
                     throw new Error(_.str.sprintf(
@@ -234,15 +245,26 @@ var Domain = collections.Tree.extend({
      * representation of the Python prefix-array representation of this domain.
      *
      * @static
-     * @param {Array|string} domain
+     * @param {Array|string|undefined} domain
      * @returns {string}
      */
     arrayToString: function (domain) {
         if (_.isString(domain)) return domain;
-        return JSON.stringify(domain || [])
-            .replace(/null/g, "None")
-            .replace(/false/g, "False")
-            .replace(/true/g, "True");
+        const parts = (domain || []).map(part => {
+            if (_.isArray(part)) { // e.g. ['name', 'ilike', 'foo'] or ['is_active', '=', true]
+                return "[" + part.map(c => {
+                    switch (c) {
+                        case null: return "None";
+                        case true: return "True";
+                        case false: return "False";
+                        default: return JSON.stringify(c);
+                    }
+                }).join(',') + "]";
+            } else { // e.g. '|' or '&'
+                return JSON.stringify(part);
+            }
+        });
+        return "[" + parts.join(',') + "]";
     },
     /**
      * Converts a string representation of the Python prefix-array

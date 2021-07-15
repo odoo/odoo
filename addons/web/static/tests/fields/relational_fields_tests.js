@@ -474,9 +474,11 @@ QUnit.module('relational_fields', {
         await testUtils.form.clickEdit(form);
         // add a line (virtual record)
         await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        await testUtils.owlCompatibilityNextTick();
         await testUtils.fields.editInput(form.$('.o_input'), 'pi');
         // delete the line above it
         await testUtils.dom.click(form.$('.o_list_record_remove').first());
+        await testUtils.owlCompatibilityNextTick();
         // the next line should be displayed below the newly added one
         assert.strictEqual(form.$('.o_data_row').length, 2, "should have 2 records");
         assert.strictEqual(form.$('.o_data_row .o_data_cell:first-child').text(), 'pikawa',
@@ -2420,6 +2422,112 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('widget many2many_checkboxes with 40+ values', async function (assert) {
+        // 40 is the default limit for x2many fields. However, the many2many_checkboxes is a
+        // special field that fetches its data through the fetchSpecialData mechanism, and it
+        // uses the name_search server-side limit of 100. This test comes with a fix for a bug
+        // that occurred when the user (un)selected a checkbox that wasn't in the 40 first checkboxes,
+        // because the piece of data corresponding to that checkbox hadn't been processed by the
+        // BasicModel, whereas the code handling the change assumed it had.
+        assert.expect(3);
+
+        const records = [];
+        for (let id = 1; id <= 90; id++) {
+            records.push({
+                id,
+                display_name: `type ${id}`,
+                color: id % 7,
+            });
+        }
+        this.data.partner_type.records = records;
+        this.data.partner.records[0].timmy = records.map((r) => r.id);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="timmy" widget="many2many_checkboxes"/></form>',
+            res_id: 1,
+            async mockRPC(route, args) {
+                if (args.method === 'write') {
+                    const expectedIds = records.map((r) => r.id);
+                    expectedIds.pop();
+                    assert.deepEqual(args.args[1].timmy, [[6, false, expectedIds]]);
+                }
+                return this._super(...arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.containsN(form, '.o_field_widget[name=timmy] input[type=checkbox]:checked', 90);
+
+        // toggle the last value
+        await testUtils.dom.click(form.$('.o_field_widget[name=timmy] input[type=checkbox]:last'));
+        assert.notOk(form.$('.o_field_widget[name=timmy] input[type=checkbox]:last').is(':checked'));
+
+        await testUtils.form.clickSave(form);
+
+        form.destroy();
+    });
+
+    QUnit.test('widget many2many_checkboxes with 100+ values', async function (assert) {
+        // The many2many_checkboxes widget limits the displayed values to 100 (this is the
+        // server-side name_search limit). This test encodes a scenario where there are more than
+        // 100 records in the co-model, and all values in the many2many relationship aren't
+        // displayed in the widget (due to the limit). If the user (un)selects a checkbox, we don't
+        // want to remove all values that aren't displayed from the relation.
+        assert.expect(5);
+
+        const records = [];
+        for (let id = 1; id < 150; id++) {
+            records.push({
+                id,
+                display_name: `type ${id}`,
+                color: id % 7,
+            });
+        }
+        this.data.partner_type.records = records;
+        this.data.partner.records[0].timmy = records.map((r) => r.id);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="timmy" widget="many2many_checkboxes"/></form>',
+            res_id: 1,
+            async mockRPC(route, args) {
+                if (args.method === 'write') {
+                    const expectedIds = records.map((r) => r.id);
+                    expectedIds.shift();
+                    assert.deepEqual(args.args[1].timmy, [[6, false, expectedIds]]);
+                }
+                const result = await this._super(...arguments);
+                if (args.method === 'name_search') {
+                    assert.strictEqual(result.length, 100,
+                        "sanity check: name_search automatically sets the limit to 100");
+                }
+                return result;
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.containsN(form, '.o_field_widget[name=timmy] input[type=checkbox]', 100,
+            "should only display 100 checkboxes");
+        assert.ok(form.$('.o_field_widget[name=timmy] input[type=checkbox]:first').is(':checked'));
+
+        // toggle the first value
+        await testUtils.dom.click(form.$('.o_field_widget[name=timmy] input[type=checkbox]:first'));
+        assert.notOk(form.$('.o_field_widget[name=timmy] input[type=checkbox]:first').is(':checked'));
+
+        await testUtils.form.clickSave(form);
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2ManyBinaryMultiFiles');
 
     QUnit.test('widget many2many_binary', async function (assert) {
@@ -2535,6 +2643,7 @@ QUnit.module('relational_fields', {
         });
 
         await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        await testUtils.owlCompatibilityNextTick();
         await testUtils.fields.many2one.searchAndClickItem('product_id',
             {selector: '.modal', search: 'new record'});
 
@@ -3070,13 +3179,16 @@ QUnit.module('relational_fields', {
         await testUtils.form.clickEdit(form);
         await testUtils.fields.many2one.clickOpenDropdown("product_id");
         await testUtils.fields.many2one.clickHighlightedItem("product_id");
+        await testUtils.owlCompatibilityNextTick();
         assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column when the product_id is set");
         await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
             '', 'keyup');
+        await testUtils.owlCompatibilityNextTick();
         assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
             "should be 2 columns in the one2many when product_id is not set");
         await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+        await testUtils.owlCompatibilityNextTick();
         assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column after the value change");
         form.destroy();
@@ -3164,13 +3276,16 @@ QUnit.module('relational_fields', {
         await testUtils.form.clickEdit(form);
         await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
         await testUtils.fields.many2one.clickHighlightedItem("product_id");
+        await testUtils.owlCompatibilityNextTick();
         assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column when the product_id is set");
         await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
             '', 'keyup');
+        await testUtils.owlCompatibilityNextTick();
         assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
             "should be 2 columns in the one2many when product_id is not set");
         await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+        await testUtils.owlCompatibilityNextTick();
         assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column after the value change");
         form.destroy();
@@ -3230,6 +3345,13 @@ QUnit.module('relational_fields', {
         assert.containsN(form.$('.o_field_one2many'), 'div.o_optional_columns div.dropdown-item:visible', 2,
             "dropdown is still open");
         await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        // use of owlCompatibilityNextTick because the x2many field is reset, meaning that
+        // 1) its list renderer is updated (updateState is called): this is async and as it
+        // contains a FieldBoolean, which is written in Owl, it completes in the nextAnimationFrame
+        // 2) when this is done, the control panel is updated: as it is written in owl, this is
+        // done in the nextAnimationFrame
+        // -> we need to wait for 2 nextAnimationFrame to ensure that everything is fine
+        await testUtils.owlCompatibilityNextTick();
         assert.containsN(form.$('.o_field_one2many'), 'div.o_optional_columns div.dropdown-item:visible', 0,
             "dropdown is closed");
         var $selectedRow = form.$('.o_field_one2many tr.o_selected_row');
@@ -3329,6 +3451,7 @@ QUnit.module('relational_fields', {
            which: $.ui.keyCode.TAB,
            keyCode: $.ui.keyCode.TAB,
        }));
+       await testUtils.owlCompatibilityNextTick();
        await testUtils.dom.click(document.activeElement);
        assert.strictEqual(assert.strictEqual(form.$el.find('input[name="turtle_foo"]')[0],
                            document.activeElement,

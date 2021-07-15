@@ -62,7 +62,7 @@
             <field name="arch" type="xml">
                 <form string="Blog Post">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
+                        <div class="oe_button_box" name="button_box" attrs="{'invisible': [('active', '=', False)]}">
                             <field name="is_published" widget="website_redirect_button"/>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>

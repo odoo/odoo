@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError, UserError
 
 
 class StockWarehouse(models.Model):
@@ -259,15 +259,15 @@ class StockWarehouse(models.Model):
         data = super(StockWarehouse, self)._get_picking_type_update_values()
         data.update({
             'pbm_type_id': {
-                'active': self.manufacture_to_resupply and self.manufacture_steps in ('pbm', 'pbm_sam'),
+                'active': self.manufacture_to_resupply and self.manufacture_steps in ('pbm', 'pbm_sam') and self.active,
                 'barcode': self.code.replace(" ", "").upper() + "-PC",
             },
             'sam_type_id': {
-                'active': self.manufacture_to_resupply and self.manufacture_steps == 'pbm_sam',
+                'active': self.manufacture_to_resupply and self.manufacture_steps == 'pbm_sam' and self.active,
                 'barcode': self.code.replace(" ", "").upper() + "-SFP",
             },
             'manu_type_id': {
-                'active': self.manufacture_to_resupply,
+                'active': self.manufacture_to_resupply and self.active,
                 'default_location_src_id': self.manufacture_steps in ('pbm', 'pbm_sam') and self.pbm_loc_id.id or self.lot_stock_id.id,
                 'default_location_dest_id': self.manufacture_steps == 'pbm_sam' and self.sam_loc_id.id or self.lot_stock_id.id,
             },
@@ -296,3 +296,13 @@ class StockWarehouse(models.Model):
             if warehouse.manufacture_pull_id and name:
                 warehouse.manufacture_pull_id.write({'name': warehouse.manufacture_pull_id.name.replace(warehouse.name, name, 1)})
         return res
+
+class Orderpoint(models.Model):
+    _inherit = "stock.warehouse.orderpoint"
+
+    @api.constrains('product_id')
+    def check_product_is_not_kit(self):
+        if self.env['mrp.bom'].search(['|', ('product_id', 'in', self.product_id.ids),
+                                            '&', ('product_id', '=', False), ('product_tmpl_id', 'in', self.product_id.product_tmpl_id.ids),
+                                       ('type', '=', 'phantom')], count=True):
+            raise ValidationError(_("A product with a kit-type bill of materials can not have a reordering rule."))

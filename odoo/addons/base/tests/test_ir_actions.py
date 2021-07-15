@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
 from psycopg2 import IntegrityError, ProgrammingError
 
 import odoo
@@ -50,6 +51,7 @@ class TestServerActionsBase(common.TransactionCase):
         self.action = self.env['ir.actions.server'].create({
             'name': 'TestAction',
             'model_id': self.res_partner_model.id,
+            'model_name': 'res.partner',
             'state': 'code',
             'code': 'record.write({"comment": "MyComment"})',
         })
@@ -268,7 +270,7 @@ class TestServerActions(TestServerActionsBase):
         self.assertEqual([vals.get('name') for vals in bindings['action']], ['TestAction2', 'TestAction'])
         self.assertEqual([vals.get('sequence') for vals in bindings['action']], [1, 5])
 
-    def test_copy_action(self):
+    def test_70_copy_action(self):
         # first check that the base case (reset state) works normally
         r = self.env['ir.actions.todo'].create({
             'action_id': self.action.id,
@@ -285,6 +287,30 @@ class TestServerActions(TestServerActionsBase):
             self.action.copy().state, 'code',
             "copying a server action should not reset the state"
         )
+
+    def test_80_permission(self):
+        self.action.write({
+            'state': 'code',
+            'code': """record.write({'date': datetime.date.today()})""",
+        })
+
+        user_demo = self.env.ref("base.user_demo")
+        self_demo = self.action.with_user(user_demo.id)
+
+        # can write on contact partner
+        self.test_partner.type = "contact"
+        self.test_partner.with_user(user_demo.id).check_access_rule("write")
+
+        self_demo.with_context(self.context).run()
+        self.assertEqual(self.test_partner.date, date.today())
+
+        # but can not write on private address
+        self.test_partner.type = "private"
+        with self.assertRaises(AccessError):
+            self.test_partner.with_user(user_demo.id).check_access_rule("write")
+        # nor execute a server action on it
+        with self.assertRaises(AccessError), mute_logger('odoo.addons.base.models.ir_actions'):
+            self_demo.with_context(self.context).run()
 
 
 class TestCustomFields(common.TransactionCase):
@@ -453,6 +479,51 @@ class TestCustomFields(common.TransactionCase):
         custom_binary = self.env[self.MODEL]._fields['x_image']
 
         self.assertTrue(custom_binary.attachment)
+
+    def test_related_field(self):
+        """ create a custom related field, and check filled values """
+        #
+        # Add a custom field equivalent to the following definition:
+        #
+        # class Partner(models.Model)
+        #     _inherit = 'res.partner'
+        #     x_oh_boy = fields.Char(related="country_id.code", store=True)
+        #
+
+        # pick N=100 records in comodel
+        countries = self.env['res.country'].search([('code', '!=', False)], limit=100)
+        self.assertEqual(len(countries), 100, "Not enough records in comodel 'res.country'")
+
+        # create records in model, with N distinct values for the related field
+        partners = self.env['res.partner'].create([
+            {'name': country.code, 'country_id': country.id} for country in countries
+        ])
+        partners.flush()
+
+        # determine how many queries it takes to create a non-computed field
+        query_count = self.cr.sql_log_count
+        self.env['ir.model.fields'].create({
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'name': 'x_oh_box',
+            'field_description': 'x_oh_box',
+            'ttype': 'char',
+        })
+        query_count = self.cr.sql_log_count - query_count
+
+        # create the related field, and assert it only takes 1 extra queries
+        with self.assertQueryCount(query_count + 1):
+            self.env['ir.model.fields'].create({
+                'model_id': self.env['ir.model']._get_id('res.partner'),
+                'name': 'x_oh_boy',
+                'field_description': 'x_oh_boy',
+                'ttype': 'char',
+                'related': 'country_id.code',
+                'store': True,
+            })
+
+        # check the computed values
+        for partner in partners:
+            self.assertEqual(partner.x_oh_boy, partner.country_id.code)
 
     def test_selection(self):
         """ custom selection field """

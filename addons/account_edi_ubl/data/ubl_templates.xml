@@ -123,6 +123,7 @@
                 </cac:AccountingCustomerParty>
                 <cac:PaymentMeans>
                     <cbc:PaymentMeansCode listID="UN/ECE 4461" t-esc="payment_means_code"/>
+                    <cbc:InstructionID t-esc="invoice.payment_reference"/>
                     <cbc:PaymentDueDate t-esc="invoice.invoice_date_due"/>
                     <cac:PayeeFinancialAccount t-if="invoice.journal_id.bank_account_id">
                         <cbc:ID schemeName="IBAN" t-esc="invoice.journal_id.bank_account_id.acc_number"/>

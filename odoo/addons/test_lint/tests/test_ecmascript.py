@@ -11,7 +11,7 @@ from odoo.modules import get_modules, get_module_path
 
 from . import lint_case
 
-MAX_ES_VERSION = 'es8'
+MAX_ES_VERSION = 'es10'
 
 _logger = logging.getLogger(__name__)
 

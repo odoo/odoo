@@ -29,7 +29,8 @@ class SaleOrderLine(models.Model):
                 # If the standard_price is 0
                 # Avoid unnecessary computations
                 # and currency conversions
-                line.purchase_price = 0.0
+                if not line.purchase_price:
+                    line.purchase_price = 0.0
                 continue
             fro_cur = product.cost_currency_id
             to_cur = line.currency_id or line.order_id.currency_id

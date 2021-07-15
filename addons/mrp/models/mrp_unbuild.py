@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import float_compare
+from odoo.osv import expression
 
 
 class MrpUnbuild(models.Model):
@@ -15,7 +16,7 @@ class MrpUnbuild(models.Model):
     name = fields.Char('Reference', copy=False, readonly=True, default=lambda x: _('New'))
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
-        domain="[('bom_ids', '!=', False), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         required=True, states={'done': [('readonly', True)]})
     company_id = fields.Many2one(
         'res.company', 'Company',
@@ -76,17 +77,12 @@ class MrpUnbuild(models.Model):
     @api.depends('company_id', 'product_id')
     def _compute_allowed_mo_ids(self):
         for unbuild in self:
-            if unbuild.product_id:
-                domain = [
+            domain = [
                     ('state', '=', 'done'),
-                    ('product_id', '=', unbuild.product_id.id),
                     ('company_id', '=', unbuild.company_id.id)
                 ]
-            else:
-                domain = [
-                    ('state', 'in', ['done', 'cancel']),
-                    ('company_id', '=', unbuild.company_id.id)
-                ]
+            if unbuild.product_id:
+                domain = expression.AND([domain, [('product_id', '=', unbuild.product_id.id)]])
             allowed_mos = self.env['mrp.production'].search_read(domain, ['id'])
             if allowed_mos:
                 unbuild.allowed_mo_ids = [mo['id'] for mo in allowed_mos]
@@ -120,7 +116,7 @@ class MrpUnbuild(models.Model):
     def _onchange_product_id(self):
         if self.product_id:
             self.bom_id = self.env['mrp.bom']._bom_find(product=self.product_id, company_id=self.company_id.id)
-            self.product_uom_id = self.product_id.uom_id.id
+            self.product_uom_id = self.mo_id.product_id == self.product_id and self.mo_id.product_uom_id.id or self.product_id.uom_id.id
 
     @api.constrains('product_qty')
     def _check_qty(self):

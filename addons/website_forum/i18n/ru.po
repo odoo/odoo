@@ -12,18 +12,18 @@
 # Gennady Marchenko <gennadym@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Collex100, 2020
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # Oleg Kuryan <oleg@ventor.tech>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
 # Сергей Шебанин <sergey@shebanin.ru>, 2020
+# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2020\n"
+"Last-Translator: Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -565,6 +565,11 @@ msgstr ""
 "                </small>"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<span aria-label=\"Close\">×</span>"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span class=\"badge badge-info\">Closed</span>"
 msgstr ""
@@ -636,11 +641,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "<span class=\"text-muted mx-3\">or</span>"
 msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<span>&amp;times;</span>"
-msgstr "<span>&amp;times;</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -1121,11 +1121,9 @@ msgstr "Кликните тут, чтобы принять этот ответ."
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid ""
-"Click here to send a verification email allowing you to participate to the "
+"Click here to send a verification email allowing you to participate in the "
 "forum."
 msgstr ""
-"Кликните тут, чтобы отправить письмо с подтверждением, позволяющее "
-"участвовать в форуме."
 
 #. module: website_forum
 #. openerp-web
@@ -1813,7 +1811,7 @@ msgstr "Прекрасный вопрос"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Group By"
-msgstr "Группировать по"
+msgstr "Группировка"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__faq
@@ -2279,7 +2277,7 @@ msgstr "Новый форум"
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "New Post"
-msgstr ""
+msgstr "Новый пост"
 
 #. module: website_forum
 #: model:mail.message.subtype,description:website_forum.mt_question_new
@@ -2628,7 +2626,7 @@ msgstr "Публичный"
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__privacy
 msgid ""
-"Public: Forum is pubic\n"
+"Public: Forum is public\n"
 "Signed In: Forum is visible for signed in users\n"
 "Some users: Forum and their content are hidden for non members of selected group"
 msgstr ""
@@ -2638,7 +2636,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
 #, python-format
 msgid ""
-"Public: Forum is pubic\\nSigned In: Forum is visible for signed in "
+"Public: Forum is public\\nSigned In: Forum is visible for signed in "
 "users\\nSome users: Forum and their content are hidden for non members of "
 "selected group"
 msgstr ""
@@ -3644,7 +3642,7 @@ msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "You may now participate to our forums."
+msgid "You may now participate in our forums."
 msgstr ""
 
 #. module: website_forum

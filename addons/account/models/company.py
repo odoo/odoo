@@ -223,6 +223,7 @@ class ResCompany(models.Model):
                 ('company_id', 'in', self.ids),
                 ('is_reconciled', '=', False),
                 ('date', '<=', values['fiscalyear_lock_date']),
+                ('move_id.state', 'in', ('draft', 'posted')),
             ])
             if unreconciled_statement_lines:
                 error_msg = _("There are still unreconciled bank statement lines in the period you want to lock."

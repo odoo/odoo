@@ -3,16 +3,17 @@
 # 	* website_mail
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
+# Martin Trigaux, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: krnkris, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:22+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,40 +22,33 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_mail
-#: model:ir.model.fields,field_description:website_mail.field_mail_mail__description
-#: model:ir.model.fields,field_description:website_mail.field_mail_message__description
-msgid "Description"
-msgstr "Leírás"
+#: model_terms:ir.ui.view,arch_db:website_mail.follow
+msgid "<small>Follow</small><i class=\"fa fa-fw ml-1\"/>"
+msgstr ""
 
 #. module: website_mail
-#: model:ir.model,name:website_mail.model_mail_message
-msgid "Message"
-msgstr "Üzenet"
+#: model_terms:ir.ui.view,arch_db:website_mail.follow
+msgid "<small>Unfollow</small><i class=\"fa fa-fw ml-1\"/>"
+msgstr ""
 
 #. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_mail_mail__description
-#: model:ir.model.fields,help:website_mail.field_mail_message__description
-msgid "Message description: either the subject, or the beginning of the body"
-msgstr "Üzenet leírása: vagy a tárgy, vagy a törzsrész eleje"
+#: model:ir.model.fields,field_description:website_mail.field_publisher_warranty_contract__display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
 
 #. module: website_mail
-#. openerp-web
-#: code:addons/website_mail/static/src/xml/portal_chatter.xml:0
-#: model:ir.model.fields,field_description:website_mail.field_mail_mail__website_published
-#: model:ir.model.fields,field_description:website_mail.field_mail_message__website_published
-#, python-format
-msgid "Published"
-msgstr "Közzétett"
+#: model:ir.model.fields,field_description:website_mail.field_publisher_warranty_contract__id
+msgid "ID"
+msgstr "Azonosító"
+
+#. module: website_mail
+#: model:ir.model.fields,field_description:website_mail.field_publisher_warranty_contract____last_update
+msgid "Last Modified on"
+msgstr "Legutóbb módosítva"
 
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_publisher_warranty_contract
 msgid "Publisher Warranty Contract"
-msgstr ""
-
-#. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:0
-#, python-format
-msgid "Records:"
 msgstr ""
 
 #. module: website_mail
@@ -63,40 +57,9 @@ msgid "Subscribe"
 msgstr "Feliratkozás"
 
 #. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:0
-#, python-format
-msgid ""
-"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
-"\n"
-"(Document type: %s, Operation: %s)"
-msgstr ""
-"Az igényelt műveletet nem lehetett végrehajtani biztonsági korlátok miatt. Kérem vegye fel a kapcsolatot a rendszer adminisztrátorral.\n"
-"\n"
-"(Dokumentum típus: %s, Művelet: %s)"
-
-#. module: website_mail
-#. openerp-web
-#: code:addons/website_mail/static/src/xml/portal_chatter.xml:0
-#, python-format
-msgid "Unpublished"
-msgstr ""
-
-#. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "Unsubscribe"
 msgstr "Leiratkozás"
-
-#. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:0
-#, python-format
-msgid "User:"
-msgstr "Felhasználó"
-
-#. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_mail_mail__website_published
-#: model:ir.model.fields,help:website_mail.field_mail_message__website_published
-msgid "Visible on the website as a comment"
-msgstr "Hozzászólásként látható a weboldalon"
 
 #. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow

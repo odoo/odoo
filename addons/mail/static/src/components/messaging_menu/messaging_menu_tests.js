@@ -289,6 +289,10 @@ QUnit.test('basic rendering', async function (assert) {
 QUnit.test('counter is taking into account failure notification', async function (assert) {
     assert.expect(2);
 
+    this.data['mail.channel'].records.push({
+        id: 31,
+        seen_message_id: 11,
+    });
     // message that is expected to have a failure
     this.data['mail.message'].records.push({
         id: 11, // random unique id, will be used to link failure to message
@@ -617,10 +621,10 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 10 &&
-                    thread.model === 'mail.channel'
-                ).localId
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 10,
+                    model: 'mail.channel',
+                }).localId
             }"]
         `).length,
         1,
@@ -630,10 +634,10 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 20 &&
-                    thread.model === 'mail.channel'
-                ).localId
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 20,
+                    model: 'mail.channel',
+                }).localId
             }"]
         `).length,
         1,
@@ -652,10 +656,10 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 10 &&
-                    thread.model === 'mail.channel'
-                ).localId
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 10,
+                    model: 'mail.channel',
+                }).localId
             }"]
         `).length,
         1,
@@ -665,10 +669,10 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 20 &&
-                    thread.model === 'mail.channel'
-                ).localId
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 20,
+                    model: 'mail.channel',
+                }).localId
             }"]
         `).length,
         0,
@@ -690,10 +694,10 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 10 &&
-                    thread.model === 'mail.channel'
-                ).localId
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 10,
+                    model: 'mail.channel',
+                }).localId
             }"]
         `).length,
         0,
@@ -703,10 +707,10 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 20 &&
-                    thread.model === 'mail.channel'
-                ).localId
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 20,
+                    model: 'mail.channel',
+                }).localId
             }"]
         `).length,
         1,
@@ -725,10 +729,10 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 10 &&
-                    thread.model === 'mail.channel'
-                ).localId
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 10,
+                    model: 'mail.channel',
+                }).localId
             }"]
         `).length,
         1,
@@ -738,10 +742,10 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 20 &&
-                    thread.model === 'mail.channel'
-                ).localId
+                this.env.models['mail.thread'].findFromIdentifyingData({
+                    id: 20,
+                    model: 'mail.channel',
+                }).localId
             }"]
         `).length,
         1,

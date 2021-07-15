@@ -3,10 +3,13 @@
 from ast import literal_eval
 from collections import OrderedDict
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, MissingError
 from odoo.osv import expression
 from odoo.tools import html_escape as escape
 from lxml import etree as ET
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class WebsiteSnippetFilter(models.Model):
@@ -57,9 +60,9 @@ class WebsiteSnippetFilter(models.Model):
         records = self._prepare_values(limit, search_domain)
         View = self.env['ir.ui.view'].sudo().with_context(inherit_branding=False)
         content = View._render_template(template_key, dict(records=records)).decode('utf-8')
-        return [ET.tostring(el) for el in ET.fromstring('<root>%s</root>' % content).getchildren()]
+        return [ET.tostring(el, encoding='utf-8') for el in ET.fromstring('<root>%s</root>' % content).getchildren()]
 
-    def _prepare_values(self, limit=None, search_domain=[]):
+    def _prepare_values(self, limit=None, search_domain=None):
         """Gets the data and returns it the right format for render."""
         self.ensure_one()
         limit = limit and min(limit, self.limit) or self.limit
@@ -69,21 +72,28 @@ class WebsiteSnippetFilter(models.Model):
             if 'is_published' in self.env[filter_sudo.model_id]:
                 domain = expression.AND([domain, [('is_published', '=', True)]])
             if search_domain:
-                domain = expression.AND([domain, search_domain]),
-
-            records = self.env[filter_sudo.model_id].search(
-                domain,
-                order=','.join(literal_eval(filter_sudo.sort)) or None,
-                limit=limit
-            )
-            return self._filter_records_to_dict_values(records)
+                domain = expression.AND([domain, search_domain])
+            try:
+                records = self.env[filter_sudo.model_id].search(
+                    domain,
+                    order=','.join(literal_eval(filter_sudo.sort)) or None,
+                    limit=limit
+                )
+                return self._filter_records_to_dict_values(records)
+            except MissingError:
+                _logger.warning("The provided domain %s in 'ir.filters' generated a MissingError in '%s'", domain, self._name)
+                return []
         elif self.action_server_id:
-            return self.action_server_id.with_context(
-                dynamic_filter=self,
-                limit=limit,
-                search_domain=search_domain,
-                get_rendering_data_structure=self._get_rendering_data_structure,
-            ).sudo().run()
+            try:
+                return self.action_server_id.with_context(
+                    dynamic_filter=self,
+                    limit=limit,
+                    search_domain=search_domain,
+                    get_rendering_data_structure=self._get_rendering_data_structure,
+                ).sudo().run()
+            except MissingError:
+                _logger.warning("The provided domain %s in 'ir.actions.server' generated a MissingError in '%s'", search_domain, self._name)
+                return []
 
     @api.model
     def _get_rendering_data_structure(self):

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- This view can be removed to change only if it is needed in the inherit view in sale_timesheet -->
+    <record id="project_task_view_form_inherit_sale_timesheet_edit" model="ir.ui.view">
+        <field name="name">project.task.form.view.form.inherit.sale.timesheet.edit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="sale_timesheet.project_task_view_form_inherit_sale_timesheet"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='timesheet_ids']" position="attributes">
+                <attribute name="widget">so_line_one2many</attribute>
+            </xpath>
+            <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='so_line']" position="attributes">
+                <attribute name="readonly">0</attribute>
+                <attribute name="domain">[('is_service', '=', True), ('order_partner_id', 'child_of', parent.commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_id', '=?', parent.project_sale_order_id)]</attribute>
+                <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!--
+        TODO: [XBO] In master, add this view in the sale_timesheet when we will merge of the both modules
+        Don't forget to change the inherit_id to have the correct view in sale_timesheet,
+        since the view above can be merged with project_task_view_form_inherit_sale_timesheet view.
+    -->
+    <record id="project_task_view_form_inherit_sale_timesheet_editable" model="ir.ui.view">
+        <field name="name">project.task.form.view.form.inherit.sale.timesheet.editable</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_task_view_form_inherit_sale_timesheet_edit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='so_line']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='timesheet_ids']/tree" position="inside">
+                <field name="is_so_line_edited" invisible="1" />
+            </xpath>
+        </field>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+</odoo>

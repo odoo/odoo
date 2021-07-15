@@ -20,7 +20,6 @@
 # fausthuang, 2020
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2020
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2020
-# diaojiaolou <124412206@qq.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # ChinaMaker <liuct@chinamaker.net>, 2020
 # 李赋 <fu792659@163.com>, 2020
@@ -29,30 +28,31 @@
 # Lisa Zhang <lzh@odoo.com>, 2020
 # Youfu Sheng <wdmsyf@sina.com>, 2020
 # Jeanphy <hzh0292@qq.com>, 2020
-# Mandy Choy <mnc@odoo.com>, 2020
 # Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
 # 226408 台北 <226408@so8d.com>, 2020
 # Datasource International <Hennessy@datasourcegroup.com>, 2020
 # e2f <projects@e2f.com>, 2020
 # Martin Trigaux, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # niulin lnc. <admin@niulin.net>, 2020
 # liAnGjiA <liangjia@qq.com>, 2020
 # v2exerer <9010446@qq.com>, 2020
 # bf2549c5415a9287249cba2b8a5823c7, 2020
-# guohuadeng <guohuadeng@hotmail.com>, 2020
 # keecome <7017511@qq.com>, 2020
 # Shane Tsoi <sso@odoo.com>, 2020
 # snow wang <147156565@qq.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
+# diaojiaolou <124412206@qq.com>, 2020
+# guohuadeng <guohuadeng@hotmail.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# Mandy Choy <mnc@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2020\n"
+"Last-Translator: Mandy Choy <mnc@odoo.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -697,11 +697,6 @@ msgid "Average Order"
 msgstr "平均订单"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Background Color"
-msgstr "背景颜色"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "银行名称"
@@ -1343,13 +1338,13 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Generate an invoice from orders ready for invoicing."
-msgstr "从准备好开发票的订单中生成发票。"
+msgstr "从准备好开结算单的订单中生成结算单。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
-msgstr "当在线支付确认时，自动生成发票"
+msgstr "当在线支付确认时，自动生成结算单"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
@@ -1495,7 +1490,7 @@ msgstr "库存"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_invoices_ecommerce
 msgid "Invoices"
-msgstr "发票"
+msgstr "结算单"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_account
@@ -1513,7 +1508,7 @@ msgstr "已发布"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Issue invoices to customers"
-msgstr "向客户开发票"
+msgstr "向客户开结算单"
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
@@ -1524,7 +1519,7 @@ msgstr "禁止修改未处于草稿状态的销售订单。"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
 msgid "Journal Entry"
-msgstr "会计凭证"
+msgstr "日记账分录"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_acquirer_state__just_done
@@ -1682,11 +1677,6 @@ msgstr "商家账户ID"
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__manual_name
 msgid "Method"
 msgstr "付款方式"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Mode"
-msgstr "模式"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_multimedia
@@ -1953,14 +1943,14 @@ msgstr "订单关注"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
 msgid "Orders To Invoice"
-msgstr "订单发票"
+msgstr "订单结算单"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Orders to Invoice"
-msgstr "订单发票"
+msgstr "订单结算单"
 
 #. module: website_sale
 #. openerp-web
@@ -2061,11 +2051,6 @@ msgstr "请输入有效的视频链接。"
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Please proceed your current cart."
 msgstr "请继续使用当前购物车。"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Position"
-msgstr "位置"
 
 #. module: website_sale
 #. openerp-web
@@ -2313,7 +2298,7 @@ msgstr "数量："
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #, python-format
 msgid "Quantity"
-msgstr "最少购买量"
+msgstr "数量"
 
 #. module: website_sale
 #. openerp-web
@@ -2434,8 +2419,8 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Right"
-msgstr "右"
+msgid "Right (only on grid view)"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__is_seo_optimized
@@ -2592,7 +2577,7 @@ msgstr "在购物车被遗弃时发送一个恢复邮件"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__seo_name
 #: model:ir.model.fields,field_description:website_sale.field_product_template__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "Seo 名称"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__sequence
@@ -2829,11 +2814,6 @@ msgstr "服务条款"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "Terms and Conditions"
 msgstr "条款和条件"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Text Color"
-msgstr "文本颜色"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -3200,7 +3180,7 @@ msgstr "网站opengraph图像"
 #: model:ir.model.fields,help:website_sale.field_account_move__website_id
 #: model:ir.model.fields,help:website_sale.field_account_payment__website_id
 msgid "Website through which this invoice was created."
-msgstr "创建此发票的网站。"
+msgstr "创建此结算单的网站。"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__website_id
@@ -3254,7 +3234,7 @@ msgstr "你没有从网站上拿到任何订单"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_order_action_to_invoice
 msgid "You don't have any order to invoice from the website"
-msgstr "你没有任何从网站开具发票的订单"
+msgstr "你没有任何从网站开具结算单的订单"
 
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
@@ -3369,8 +3349,8 @@ msgstr "在品类中 \\"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
-msgid "items)"
-msgstr "项目)"
+msgid "item(s))"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
@@ -3411,3 +3391,37 @@ msgstr "条款和条件"
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "to follow your order."
 msgstr "关注您的订单。"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "⌙ Background"
+msgstr "⌙ 背景"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "⌙ Mode"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "⌙ Position"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "⌙ Text"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+msgid ""
+"Changing company name is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+msgid ""
+"Changing VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr "一旦您的账户开具发票，不可更改增值税号码。如需要此操作，请直接与我们联系。"

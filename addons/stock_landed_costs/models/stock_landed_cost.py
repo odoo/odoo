@@ -81,13 +81,15 @@ class StockLandedCost(models.Model):
 
     @api.depends('company_id')
     def _compute_allowed_picking_ids(self):
-        self.env.cr.execute("""SELECT sm.picking_id, sm.company_id
-                                 FROM stock_move AS sm
-                           INNER JOIN stock_valuation_layer AS svl ON svl.stock_move_id = sm.id
-                                WHERE sm.picking_id IS NOT NULL""")
         valued_picking_ids_per_company = defaultdict(list)
-        for res in self.env.cr.fetchall():
-            valued_picking_ids_per_company[res[1]].append(res[0])
+        if self.company_id:
+            self.env.cr.execute("""SELECT sm.picking_id, sm.company_id
+                                     FROM stock_move AS sm
+                               INNER JOIN stock_valuation_layer AS svl ON svl.stock_move_id = sm.id
+                                    WHERE sm.picking_id IS NOT NULL AND sm.company_id IN %s
+                                 GROUP BY sm.picking_id, sm.company_id""", [tuple(self.company_id.ids)])
+            for res in self.env.cr.fetchall():
+                valued_picking_ids_per_company[res[1]].append(res[0])
         for cost in self:
             cost.allowed_picking_ids = valued_picking_ids_per_company[cost.company_id.id]
 
@@ -136,6 +138,7 @@ class StockLandedCost(models.Model):
                 'move_type': 'entry',
             }
             valuation_layer_ids = []
+            cost_to_add_byproduct = defaultdict(lambda: 0.0)
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 remaining_qty = sum(line.move_id.stock_valuation_layer_ids.mapped('remaining_qty'))
                 linked_layer = line.move_id.stock_valuation_layer_ids[:1]
@@ -159,8 +162,8 @@ class StockLandedCost(models.Model):
                     valuation_layer_ids.append(valuation_layer.id)
                 # Update the AVCO
                 product = line.move_id.product_id
-                if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
-                    product.with_company(self.company_id).sudo().with_context(disable_auto_svl=True).standard_price += cost_to_add / product.quantity_svl
+                if product.cost_method == 'average':
+                    cost_to_add_byproduct[product] += cost_to_add
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.
                 qty_out = 0
@@ -169,6 +172,12 @@ class StockLandedCost(models.Model):
                 elif line.move_id._is_out():
                     qty_out = line.move_id.product_qty
                 move_vals['line_ids'] += line._create_accounting_entries(move, qty_out)
+
+            # batch standard price computation avoid recompute quantity_svl at each iteration
+            products = self.env['product.product'].browse(p.id for p in cost_to_add_byproduct.keys())
+            for product in products:  # iterate on recordset to prefetch efficiently quantity_svl
+                if not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
+                    product.with_company(cost.company_id).sudo().with_context(disable_auto_svl=True).standard_price += cost_to_add_byproduct[product] / product.quantity_svl
 
             move_vals['stock_valuation_layer_ids'] = [(6, None, valuation_layer_ids)]
             move = move.create(move_vals)

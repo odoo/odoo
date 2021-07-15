@@ -3,19 +3,21 @@
 # 	* payment_stripe
 # 
 # Translators:
-# Arminas Grigonis <arminas@versada.lt>, 2019
-# Anatolij, 2019
-# Silvija Butko <silvija.butko@gmail.com>, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Martin Trigaux, 2021
+# Arminas Grigonis <arminas@versada.lt>, 2021
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2021
+# Anatolij, 2021
+# Silvija Butko <silvija.butko@gmail.com>, 2021
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2021
+# Linas Versada <linaskrisiukenas@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2021\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,9 +51,17 @@ msgstr "Apmokėjimo paveikslėlio URL"
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "Close"
 msgstr "Uždaryti"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Rodomas pavadinimas"
 
 #. module: payment_stripe
 #. openerp-web
@@ -61,11 +71,33 @@ msgid "Error"
 msgstr "Klaida"
 
 #. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
+msgid ""
+"If you enable webhooks, this secret is used to verify the electronic "
+"signature of events sent by Stripe to Odoo. Failing to set this field in "
+"Odoo will disable the webhook system for this acquirer entirely."
+msgstr ""
+
+#. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/stripe.js:0
 #, python-format
 msgid "Just one more second, We are redirecting you to Stripe..."
 msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token____last_update
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Paskutinį kartą keista"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
@@ -120,6 +152,11 @@ msgid "Stripe Payment Intent ID"
 msgstr ""
 
 #. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent_secret
+msgid "Stripe Payment Intent Secret"
+msgstr ""
+
+#. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Stripe Publishable Key"
 msgstr "Stripe skelbiamas raktas"
@@ -130,6 +167,12 @@ msgid "Stripe Secret Key"
 msgstr "Stripe slaptas raktas"
 
 #. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
+msgid "Stripe Webhook Secret"
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
@@ -138,8 +181,8 @@ msgstr "\"Stripe\" suteikė mums šią informaciją apie problemą: \"%s\""
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
-msgid "Stripe: %s orders found for reference %s"
-msgstr "Stripe: %s užsakymai rasti numeriui %s"
+msgid "Stripe: %(count)s orders found for reference %(reference)s"
+msgstr ""
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0

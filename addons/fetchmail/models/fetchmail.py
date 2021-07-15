@@ -64,8 +64,6 @@ class FetchmailServer(models.Model):
             self.port = self.is_ssl and 995 or 110
         elif self.server_type == 'imap':
             self.port = self.is_ssl and 993 or 143
-        else:
-            self.server = ''
 
         conf = {
             'dbname': self.env.cr.dbname,

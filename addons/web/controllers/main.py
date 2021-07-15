@@ -34,7 +34,7 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_module_path, get_resource_path
-from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property
+from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlsxwriter, file_open
@@ -102,6 +102,7 @@ db_list = http.db_list
 
 db_monodb = http.db_monodb
 
+def clean(name): return name.replace('\x3c', '')
 def serialize_exception(f):
     @functools.wraps(f)
     def wrap(*args, **kwargs):
@@ -324,17 +325,30 @@ def set_cookie_and_redirect(redirect_url):
     return redirect
 
 def clean_action(action, env):
-    action.setdefault('flags', {})
     action_type = action.setdefault('type', 'ir.actions.act_window_close')
     if action_type == 'ir.actions.act_window':
         action = fix_view_modes(action)
 
-    # When returning an action, only few information are really usefull
-    return {
+    # When returning an action, keep only relevant fields/properties
+    readable_fields = env[action['type']]._get_readable_fields()
+    action_type_fields = env[action['type']]._fields.keys()
+
+    cleaned_action = {
         field: value
         for field, value in action.items()
-        if field in env[action['type']]._get_readable_fields()
+        # keep allowed fields and custom properties fields
+        if field in readable_fields or field not in action_type_fields
     }
+
+    # Warn about custom properties fields, because use is discouraged
+    action_name = action.get('name') or action
+    custom_properties = action.keys() - readable_fields - action_type_fields
+    if custom_properties:
+        _logger.warning("Action %r contains custom properties %s. Passing them "
+            "via the `params` or `context` properties is recommended instead",
+            action_name, ', '.join(map(repr, custom_properties)))
+
+    return cleaned_action
 
 # I think generate_views,fix_view_modes should go into js ActionManager
 def generate_views(action):
@@ -840,9 +854,25 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
 
         label = '%s%s (%s)' % ('    ' * group_depth, label, group.count)
         self.write(row, column, label, self.header_bold_style)
+        if any(f.get('type') == 'monetary' for f in self.fields[1:]):
+
+            decimal_places = [res['decimal_places'] for res in group._model.env['res.currency'].search_read([], ['decimal_places'])]
+            decimal_places = max(decimal_places) if decimal_places else 2
         for field in self.fields[1:]: # No aggregates allowed in the first column because of the group title
             column += 1
             aggregated_value = aggregates.get(field['name'])
+            # Float fields may not be displayed properly because of float
+            # representation issue with non stored fields or with values
+            # that, even stored, cannot be rounded properly and it is not
+            # acceptable to display useless digits (i.e. monetary)
+            #
+            # non stored field ->  we force 2 digits
+            # stored monetary -> we force max digits of installed currencies
+            if isinstance(aggregated_value, float):
+                if field.get('type') == 'monetary':
+                    aggregated_value = float_repr(aggregated_value, decimal_places)
+                elif not field.get('store'):
+                    aggregated_value = float_repr(aggregated_value, 2)
             self.write(row, column, str(aggregated_value if aggregated_value is not None else ''), self.header_bold_style)
         return row + 1, 0
 
@@ -1514,7 +1544,10 @@ class Binary(http.Controller):
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
 
-        image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop, quality=int(quality))
+        try:
+            image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop, quality=int(quality))
+        except Exception:
+            return request.not_found()
 
         content = base64.b64decode(image_base64)
         headers = http.set_safe_image_headers(headers, content)
@@ -1546,7 +1579,7 @@ class Binary(http.Controller):
                     ufile.content_type, pycompat.to_text(base64.b64encode(data))]
         except Exception as e:
             args = [False, str(e)]
-        return out % (json.dumps(callback), json.dumps(args)) if callback else json.dumps(args)
+        return out % (json.dumps(clean(callback)), json.dumps(args)) if callback else json.dumps(args)
 
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
     @serialize_exception
@@ -1579,12 +1612,12 @@ class Binary(http.Controller):
                 _logger.exception("Fail to upload attachment %s" % ufile.filename)
             else:
                 args.append({
-                    'filename': filename,
+                    'filename': clean(filename),
                     'mimetype': ufile.content_type,
                     'id': attachment.id,
                     'size': attachment.file_size
                 })
-        return out % (json.dumps(callback), json.dumps(args)) if callback else json.dumps(args)
+        return out % (json.dumps(clean(callback)), json.dumps(args)) if callback else json.dumps(args)
 
     @http.route([
         '/web/binary/company_logo',
@@ -1668,7 +1701,7 @@ class Binary(http.Controller):
         else:
             current_dir = os.path.dirname(os.path.abspath(__file__))
             fonts_directory = os.path.join(current_dir, '..', 'static', 'src', 'fonts', 'sign')
-            font_filenames = sorted(os.listdir(fonts_directory))
+            font_filenames = sorted([fn for fn in os.listdir(fonts_directory) if fn.endswith(('.ttf', '.otf', '.woff', '.woff2'))])
 
             for filename in font_filenames:
                 font_file = open(os.path.join(fonts_directory, filename), 'rb')
@@ -1739,7 +1772,7 @@ class Export(http.Controller):
         fields = self.fields_get(model)
         if import_compat:
             if parent_field_type in ['many2one', 'many2many']:
-                rec_name = request.env[model]._rec_name
+                rec_name = request.env[model]._rec_name_fallback()
                 fields = {'id': fields['id'], rec_name: fields[rec_name]}
         else:
             fields['.id'] = {**fields['id']}
@@ -1888,13 +1921,16 @@ class ExportFormat(object):
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat')(params)
 
+        Model = request.env[model].with_context(**params.get('context', {}))
+        if not Model._is_an_ordinary_table():
+            fields = [field for field in fields if field['name'] != 'id']
+
         field_names = [f['name'] for f in fields]
         if import_compat:
             columns_headers = field_names
         else:
             columns_headers = [val['label'].strip() for val in fields]
 
-        Model = request.env[model].with_context(**params.get('context', {}))
         groupby = params.get('groupby')
         if not import_compat and groupby:
             groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
@@ -1912,11 +1948,9 @@ class ExportFormat(object):
             Model = Model.with_context(import_compat=import_compat)
             records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
 
-            if not Model._is_an_ordinary_table():
-                fields = [field for field in fields if field['name'] != 'id']
-
             export_data = records.export_data(field_names).get('datas',[])
             response_data = self.from_data(columns_headers, export_data)
+
         return request.make_response(response_data,
             headers=[('Content-Disposition',
                             content_disposition(self.filename(model))),
@@ -2012,7 +2046,7 @@ class ReportController(http.Controller):
             # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
             # the user explicitely wants to change the lang, this mechanism overwrites it.
             data['context'] = json.loads(data['context'])
-            if data['context'].get('lang'):
+            if data['context'].get('lang') and not data.get('force_context_lang'):
                 del data['context']['lang']
             context.update(data['context'])
         if converter == 'html':

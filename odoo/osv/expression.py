@@ -117,6 +117,7 @@ import collections.abc
 import warnings
 
 import logging
+import reprlib
 import traceback
 from functools import partial
 
@@ -310,7 +311,10 @@ def distribute_not(domain):
             if negate:
                 left, operator, right = token
                 if operator in TERM_OPERATORS_NEGATION:
-                    result.append((left, TERM_OPERATORS_NEGATION[operator], right))
+                    if token in (TRUE_LEAF, FALSE_LEAF):
+                        result.append(FALSE_LEAF if token == TRUE_LEAF else TRUE_LEAF)
+                    else:
+                        result.append((left, TERM_OPERATORS_NEGATION[operator], right))
                 else:
                     result.append(NOT_OPERATOR)
                     result.append(token)
@@ -872,7 +876,7 @@ class expression(object):
                     push(('id', inselect_operator, (subselect, params)), model, alias, internal=True)
                 else:
                     _logger.error("Binary field '%s' stored in attachment: ignore %s %s %s",
-                                  field.string, left, operator, right)
+                                  field.string, left, operator, reprlib.repr(right))
                     push(TRUE_LEAF, model, alias)
 
             # -------------------------------------------------
@@ -905,7 +909,7 @@ class expression(object):
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     if need_wildcard:
                         right = '%%%s%%' % right
-                    if sql_operator == 'in':
+                    if sql_operator in ('in', 'not in'):
                         right = tuple(right)
 
                     unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x

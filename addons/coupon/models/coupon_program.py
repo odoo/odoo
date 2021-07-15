@@ -86,15 +86,8 @@ class CouponProgram(models.Model):
     def create(self, vals):
         program = super(CouponProgram, self).create(vals)
         if not vals.get('discount_line_product_id', False):
-            discount_line_product_id = self.env['product.product'].create({
-                'name': program.reward_id.display_name,
-                'type': 'service',
-                'taxes_id': False,
-                'supplier_taxes_id': False,
-                'sale_ok': False,
-                'purchase_ok': False,
-                'lst_price': 0, #Do not set a high value to avoid issue with coupon code
-            })
+            values = program._get_discount_product_values()
+            discount_line_product_id = self.env['product.product'].create(values)
             program.write({'discount_line_product_id': discount_line_product_id.id})
         return program
 
@@ -133,7 +126,7 @@ class CouponProgram(models.Model):
         return self.currency_id._convert(self[field], currency_to, self.company_id, fields.Date.today())
 
     def _is_valid_partner(self, partner):
-        if self.rule_partners_domain:
+        if self.rule_partners_domain and self.rule_partners_domain != '[]':
             domain = ast.literal_eval(self.rule_partners_domain) + [('id', '=', partner.id)]
             return bool(self.env['res.partner'].search_count(domain))
         else:
@@ -153,3 +146,14 @@ class CouponProgram(models.Model):
             domain = ast.literal_eval(self.rule_products_domain)
             return products.filtered_domain(domain)
         return products
+
+    def _get_discount_product_values(self):
+        return {
+            'name': self.reward_id.display_name,
+            'type': 'service',
+            'taxes_id': False,
+            'supplier_taxes_id': False,
+            'sale_ok': False,
+            'purchase_ok': False,
+            'lst_price': 0, #Do not set a high value to avoid issue with coupon code
+        }

@@ -100,8 +100,7 @@ class AccountPayment(models.Model):
         store=True, readonly=False,
         compute='_compute_destination_account_id',
         domain="[('user_type_id.type', 'in', ('receivable', 'payable')), ('company_id', '=', company_id)]",
-        check_company=True,
-        help="The payment's currency.")
+        check_company=True)
 
     # == Stat buttons ==
     reconciled_invoice_ids = fields.Many2many('account.move', string="Reconciled Invoices",
@@ -158,7 +157,11 @@ class AccountPayment(models.Model):
         writeoff_lines = self.env['account.move.line']
 
         for line in self.move_id.line_ids:
-            if line.account_id in (self.journal_id.payment_debit_account_id, self.journal_id.payment_credit_account_id):
+            if line.account_id in (
+                    self.journal_id.default_account_id,
+                    self.journal_id.payment_debit_account_id,
+                    self.journal_id.payment_credit_account_id,
+            ):
                 liquidity_lines += line
             elif line.account_id.internal_type in ('receivable', 'payable') or line.partner_id == line.company_id.partner_id:
                 counterpart_lines += line
@@ -184,23 +187,32 @@ class AccountPayment(models.Model):
                 self.journal_id.display_name))
 
         # Compute amounts.
-        write_off_amount = write_off_line_vals.get('amount', 0.0)
+        write_off_amount_currency = write_off_line_vals.get('amount', 0.0)
 
         if self.payment_type == 'inbound':
             # Receive money.
-            counterpart_amount = -self.amount
-            write_off_amount *= -1
+            liquidity_amount_currency = self.amount
         elif self.payment_type == 'outbound':
             # Send money.
-            counterpart_amount = self.amount
+            liquidity_amount_currency = -self.amount
+            write_off_amount_currency *= -1
         else:
-            counterpart_amount = 0.0
-            write_off_amount = 0.0
+            liquidity_amount_currency = write_off_amount_currency = 0.0
 
-        balance = self.currency_id._convert(counterpart_amount, self.company_id.currency_id, self.company_id, self.date)
-        counterpart_amount_currency = counterpart_amount
-        write_off_balance = self.currency_id._convert(write_off_amount, self.company_id.currency_id, self.company_id, self.date)
-        write_off_amount_currency = write_off_amount
+        write_off_balance = self.currency_id._convert(
+            write_off_amount_currency,
+            self.company_id.currency_id,
+            self.company_id,
+            self.date,
+        )
+        liquidity_balance = self.currency_id._convert(
+            liquidity_amount_currency,
+            self.company_id.currency_id,
+            self.company_id,
+            self.date,
+        )
+        counterpart_amount_currency = -liquidity_amount_currency - write_off_amount_currency
+        counterpart_balance = -liquidity_balance - write_off_balance
         currency_id = self.currency_id.id
 
         if self.is_internal_transfer:
@@ -221,7 +233,7 @@ class AccountPayment(models.Model):
         }
 
         default_line_name = self.env['account.move.line']._get_default_line_name(
-            payment_display_name['%s-%s' % (self.payment_type, self.partner_type)],
+            _("Internal Transfer") if self.is_internal_transfer else payment_display_name['%s-%s' % (self.payment_type, self.partner_type)],
             self.amount,
             self.currency_id,
             self.date,
@@ -233,33 +245,33 @@ class AccountPayment(models.Model):
             {
                 'name': liquidity_line_name or default_line_name,
                 'date_maturity': self.date,
-                'amount_currency': -counterpart_amount_currency,
+                'amount_currency': liquidity_amount_currency,
                 'currency_id': currency_id,
-                'debit': balance < 0.0 and -balance or 0.0,
-                'credit': balance > 0.0 and balance or 0.0,
+                'debit': liquidity_balance if liquidity_balance > 0.0 else 0.0,
+                'credit': -liquidity_balance if liquidity_balance < 0.0 else 0.0,
                 'partner_id': self.partner_id.id,
-                'account_id': self.journal_id.payment_debit_account_id.id if balance < 0.0 else self.journal_id.payment_credit_account_id.id,
+                'account_id': self.journal_id.payment_credit_account_id.id if liquidity_balance < 0.0 else self.journal_id.payment_debit_account_id.id,
             },
             # Receivable / Payable.
             {
                 'name': self.payment_reference or default_line_name,
                 'date_maturity': self.date,
-                'amount_currency': counterpart_amount_currency + write_off_amount_currency if currency_id else 0.0,
+                'amount_currency': counterpart_amount_currency,
                 'currency_id': currency_id,
-                'debit': balance + write_off_balance > 0.0 and balance + write_off_balance or 0.0,
-                'credit': balance + write_off_balance < 0.0 and -balance - write_off_balance or 0.0,
+                'debit': counterpart_balance if counterpart_balance > 0.0 else 0.0,
+                'credit': -counterpart_balance if counterpart_balance < 0.0 else 0.0,
                 'partner_id': self.partner_id.id,
                 'account_id': self.destination_account_id.id,
             },
         ]
-        if write_off_balance:
+        if not self.currency_id.is_zero(write_off_amount_currency):
             # Write-off line.
             line_vals_list.append({
                 'name': write_off_line_vals.get('name') or default_line_name,
-                'amount_currency': -write_off_amount_currency,
+                'amount_currency': write_off_amount_currency,
                 'currency_id': currency_id,
-                'debit': write_off_balance < 0.0 and -write_off_balance or 0.0,
-                'credit': write_off_balance > 0.0 and write_off_balance or 0.0,
+                'debit': write_off_balance if write_off_balance > 0.0 else 0.0,
+                'credit': -write_off_balance if write_off_balance < 0.0 else 0.0,
                 'partner_id': self.partner_id.id,
                 'account_id': write_off_line_vals.get('account_id'),
             })
@@ -269,7 +281,7 @@ class AccountPayment(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('move_id.line_ids.amount_residual', 'move_id.line_ids.amount_residual_currency')
+    @api.depends('move_id.line_ids.amount_residual', 'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.account_id')
     def _compute_reconciliation_status(self):
         ''' Compute the field indicating if the payments are already reconciled with something.
         This field is used for display purpose (e.g. display the 'reconcile' button redirecting to the reconciliation
@@ -285,11 +297,16 @@ class AccountPayment(models.Model):
                 pay.is_reconciled = True
                 pay.is_matched = True
             else:
-                # The journal entry seems reconciled.
                 residual_field = 'amount_residual' if pay.currency_id == pay.company_id.currency_id else 'amount_residual_currency'
+                if pay.journal_id.default_account_id and pay.journal_id.default_account_id in liquidity_lines.account_id:
+                    # Allow user managing payments without any statement lines by using the bank account directly.
+                    # In that case, the user manages transactions only using the register payment wizard.
+                    pay.is_matched = True
+                else:
+                    pay.is_matched = pay.currency_id.is_zero(sum(liquidity_lines.mapped(residual_field)))
+
                 reconcile_lines = (counterpart_lines + writeoff_lines).filtered(lambda line: line.account_id.reconcile)
                 pay.is_reconciled = pay.currency_id.is_zero(sum(reconcile_lines.mapped(residual_field)))
-                pay.is_matched = pay.currency_id.is_zero(sum(liquidity_lines.mapped(residual_field)))
 
     @api.model
     def _get_method_codes_using_bank_account(self):
@@ -311,7 +328,7 @@ class AccountPayment(models.Model):
     def _compute_partner_bank_id(self):
         ''' The default partner_bank_id will be the first available on the partner. '''
         for pay in self:
-            available_partner_bank_accounts = pay.partner_id.bank_ids
+            available_partner_bank_accounts = pay.partner_id.bank_ids.filtered(lambda x: x.company_id in (False, pay.company_id))
             if available_partner_bank_accounts:
                 pay.partner_bank_id = available_partner_bank_accounts[0]._origin
             else:
@@ -336,7 +353,9 @@ class AccountPayment(models.Model):
                 available_payment_methods = pay.journal_id.outbound_payment_method_ids
 
             # Select the first available one by default.
-            if available_payment_methods:
+            if pay.payment_method_id in available_payment_methods:
+                pay.payment_method_id = pay.payment_method_id
+            elif available_payment_methods:
                 pay.payment_method_id = available_payment_methods[0]._origin
             else:
                 pay.payment_method_id = False
@@ -404,7 +423,7 @@ class AccountPayment(models.Model):
                 and pay.currency_id:
 
                 if pay.partner_bank_id:
-                    qr_code = pay.partner_bank_id.build_qr_code_url(pay.amount, pay.ref, None, pay.currency_id, pay.partner_id)
+                    qr_code = pay.partner_bank_id.build_qr_code_url(pay.amount, pay.ref, pay.ref, pay.currency_id, pay.partner_id)
                 else:
                     qr_code = None
 
@@ -508,6 +527,17 @@ class AccountPayment(models.Model):
             pay.reconciled_statements_count = len(statement_ids)
 
     # -------------------------------------------------------------------------
+    # ONCHANGE METHODS
+    # -------------------------------------------------------------------------
+
+    @api.onchange('posted_before', 'state', 'journal_id', 'date')
+    def _onchange_journal_date(self):
+        # Before the record is created, the move_id doesn't exist yet, and the name will not be
+        # recomputed correctly if we change the journal or the date, leading to inconsitencies
+        if not self.move_id:
+            self.name = False
+
+    # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
 
@@ -601,6 +631,12 @@ class AccountPayment(models.Model):
             return
 
         for pay in self.with_context(skip_account_move_synchronization=True):
+
+            # After the migration to 14.0, the journal entry could be shared between the account.payment and the
+            # account.bank.statement.line. In that case, the synchronization will only be made with the statement line.
+            if pay.move_id.statement_line_id:
+                continue
+
             move = pay.move_id
             move_vals_to_write = {}
             payment_vals_to_write = {}
@@ -653,12 +689,15 @@ class AccountPayment(models.Model):
                 })
                 payment_vals_to_write.update({
                     'amount': abs(liquidity_amount),
-                    'payment_type': 'inbound' if liquidity_amount > 0.0 else 'outbound',
                     'partner_type': partner_type,
                     'currency_id': liquidity_lines.currency_id.id,
                     'destination_account_id': counterpart_lines.account_id.id,
                     'partner_id': liquidity_lines.partner_id.id,
                 })
+                if liquidity_amount > 0.0:
+                    payment_vals_to_write.update({'payment_type': 'inbound'})
+                elif liquidity_amount < 0.0:
+                    payment_vals_to_write.update({'payment_type': 'outbound'})
 
             move.write(move._cleanup_write_orm_values(move, move_vals_to_write))
             pay.write(move._cleanup_write_orm_values(pay, payment_vals_to_write))
@@ -683,16 +722,21 @@ class AccountPayment(models.Model):
             # This allows to create a new payment with custom 'line_ids'.
 
             if writeoff_lines:
+                counterpart_amount = sum(counterpart_lines.mapped('amount_currency'))
                 writeoff_amount = sum(writeoff_lines.mapped('amount_currency'))
-                counterpart_amount = counterpart_lines['amount_currency']
-                if writeoff_amount > 0.0 and counterpart_amount > 0.0:
-                    sign = 1
-                else:
+
+                # To be consistent with the payment_difference made in account.payment.register,
+                # 'writeoff_amount' needs to be signed regarding the 'amount' field before the write.
+                # Since the write is already done at this point, we need to base the computation on accounting values.
+                if (counterpart_amount > 0.0) == (writeoff_amount > 0.0):
                     sign = -1
+                else:
+                    sign = 1
+                writeoff_amount = abs(writeoff_amount) * sign
 
                 write_off_line_vals = {
                     'name': writeoff_lines[0].name,
-                    'amount': writeoff_amount * sign,
+                    'amount': writeoff_amount,
                     'account_id': writeoff_lines[0].account_id.id,
                 }
             else:
@@ -708,8 +752,8 @@ class AccountPayment(models.Model):
             for line in writeoff_lines:
                 line_ids_commands.append((2, line.id))
 
-            if writeoff_lines:
-                line_ids_commands.append((0, 0, line_vals_list[2]))
+            for extra_line_vals in line_vals_list[2:]:
+                line_ids_commands.append((0, 0, extra_line_vals))
 
             # Update the existing journal items.
             # If dealing with multiple write-off lines, they are dropped and a new one is generated.

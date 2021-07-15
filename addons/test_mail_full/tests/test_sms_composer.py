@@ -45,7 +45,9 @@ class TestSMSComposerComment(TestMailFullCommon, TestRecipients):
             with self.mockSMSGateway():
                 composer._action_send_sms()
 
-        self.assertSMSSent(self.random_numbers_san, self._test_body)
+        # use sms.api directly, does not create sms.sms
+        self.assertNoSMS()
+        self.assertSMSIapSent(self.random_numbers_san, self._test_body)
 
     def test_composer_comment_default(self):
         with self.with_user('employee'):
@@ -198,7 +200,10 @@ class TestSMSComposerComment(TestMailFullCommon, TestRecipients):
 
             with self.mockSMSGateway():
                 composer._action_send_sms()
-        self.assertSMSSent(self.random_numbers_san, self._test_body)
+
+        # use sms.api directly, does not create sms.sms
+        self.assertNoSMS()
+        self.assertSMSIapSent(self.random_numbers_san, self._test_body)
 
 
 class TestSMSComposerBatch(TestMailFullCommon):
@@ -303,7 +308,7 @@ class TestSMSComposerMass(TestMailFullCommon):
                 composer.action_send_sms()
 
         for record in self.records:
-            self.assertSMSOutgoing(record.customer_id, None, self._test_body)
+            self.assertSMSOutgoing(record.customer_id, None, content=self._test_body)
 
     def test_composer_mass_active_domain_w_template(self):
         with self.with_user('employee'):
@@ -321,7 +326,7 @@ class TestSMSComposerMass(TestMailFullCommon):
                 composer.action_send_sms()
 
         for record in self.records:
-            self.assertSMSOutgoing(record.customer_id, None, 'Dear %s this is an SMS.' % record.display_name)
+            self.assertSMSOutgoing(record.customer_id, None, content='Dear %s this is an SMS.' % record.display_name)
 
     def test_composer_mass_active_ids(self):
         with self.with_user('employee'):
@@ -338,7 +343,7 @@ class TestSMSComposerMass(TestMailFullCommon):
                 composer.action_send_sms()
 
         for partner in self.partners:
-            self.assertSMSOutgoing(partner, None, self._test_body)
+            self.assertSMSOutgoing(partner, None, content=self._test_body)
 
     def test_composer_mass_active_ids_w_blacklist(self):
         self.env['phone.blacklist'].create([{
@@ -363,7 +368,7 @@ class TestSMSComposerMass(TestMailFullCommon):
         for partner in self.partners[5:]:
             self.assertSMSOutgoing(partner, partner.phone_sanitized, content=self._test_body)
         for partner in self.partners[:5]:
-            self.assertSMSCanceled(partner, partner.phone_sanitized, 'sms_blacklist', content=self._test_body)
+            self.assertSMSCanceled(partner, partner.phone_sanitized, error_code='sms_blacklist', content=self._test_body)
 
     def test_composer_mass_active_ids_wo_blacklist(self):
         self.env['phone.blacklist'].create([{
@@ -414,9 +419,9 @@ class TestSMSComposerMass(TestMailFullCommon):
         for partner in self.partners[8:]:
             self.assertSMSOutgoing(partner, partner.phone_sanitized, content=self._test_body)
         for partner in self.partners[5:8]:
-            self.assertSMSCanceled(partner, partner.phone_sanitized, 'sms_duplicate', content=self._test_body)
+            self.assertSMSCanceled(partner, partner.phone_sanitized, error_code='sms_duplicate', content=self._test_body)
         for partner in self.partners[:5]:
-            self.assertSMSCanceled(partner, partner.phone_sanitized, 'sms_blacklist', content=self._test_body)
+            self.assertSMSCanceled(partner, partner.phone_sanitized, error_code='sms_blacklist', content=self._test_body)
 
     def test_composer_mass_active_ids_w_template(self):
         with self.with_user('employee'):
@@ -433,7 +438,7 @@ class TestSMSComposerMass(TestMailFullCommon):
                 composer.action_send_sms()
 
         for record in self.records:
-            self.assertSMSOutgoing(record.customer_id, None, 'Dear %s this is an SMS.' % record.display_name)
+            self.assertSMSOutgoing(record.customer_id, None, content='Dear %s this is an SMS.' % record.display_name)
 
     def test_composer_mass_active_ids_w_template_and_lang(self):
         self.env['res.lang']._activate_lang('fr_FR')
@@ -467,9 +472,9 @@ class TestSMSComposerMass(TestMailFullCommon):
 
         for record in self.records:
             if record.customer_id == self.partners[2]:
-                self.assertSMSOutgoing(record.customer_id, None, 'Cher·e· %s ceci est un SMS.' % record.display_name)
+                self.assertSMSOutgoing(record.customer_id, None, content='Cher·e· %s ceci est un SMS.' % record.display_name)
             else:
-                self.assertSMSOutgoing(record.customer_id, None, 'Dear %s this is an SMS.' % record.display_name)
+                self.assertSMSOutgoing(record.customer_id, None, content='Dear %s this is an SMS.' % record.display_name)
 
     def test_composer_mass_active_ids_w_template_and_log(self):
         with self.with_user('employee'):
@@ -486,7 +491,7 @@ class TestSMSComposerMass(TestMailFullCommon):
                 composer.action_send_sms()
 
         for record in self.records:
-            self.assertSMSOutgoing(record.customer_id, None, 'Dear %s this is an SMS.' % record.display_name)
+            self.assertSMSOutgoing(record.customer_id, None, content='Dear %s this is an SMS.' % record.display_name)
             self.assertSMSLogged(record, 'Dear %s this is an SMS.' % record.display_name)
 
     def test_composer_template_context_action(self):
@@ -558,5 +563,5 @@ class TestSMSComposerMass(TestMailFullCommon):
             with self.mockSMSGateway():
                 composer.action_send_sms()
 
-        self.assertSMSOutgoing(test_record_1.customer_id, None, 'Dear %s this is an SMS.' % test_record_1.display_name)
-        self.assertSMSOutgoing(test_record_2.customer_id, None, "Hello %s ceci est en français." % test_record_2.display_name)
+        self.assertSMSOutgoing(test_record_1.customer_id, None, content='Dear %s this is an SMS.' % test_record_1.display_name)
+        self.assertSMSOutgoing(test_record_2.customer_id, None, content="Hello %s ceci est en français." % test_record_2.display_name)

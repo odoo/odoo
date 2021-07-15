@@ -66,6 +66,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                     </GuidelineSpecifiedDocumentContextParameter>
                 </ExchangedDocumentContext>
                 <ExchangedDocument>
+                    <ID>INV/2017/01/0001</ID>
                     <TypeCode>380</TypeCode>
                     <IssueDateTime>
                         <DateTimeString format="102">20170101</DateTimeString>
@@ -209,12 +210,17 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
 
         self.assert_generated_file_equal(self.invoice, self.expected_invoice_facturx_values, applied_xpath)
 
+    def test_export_pdf(self):
+        self.invoice.action_post()
+        pdf_values = self.edi_format._get_embedding_to_invoice_pdf_values(self.invoice)
+        self.assertEqual(pdf_values['name'], 'factur-x.xml')
+
     ####################################################
     # Test import
     ####################################################
 
     def test_invoice_edi_pdf(self):
-        invoice = self.env['account.move'].with_context(default_move_type='in_invoice').create({})
+        invoice = self._create_empty_vendor_bill()
         invoice_count = len(self.env['account.move'].search([]))
         self.update_invoice_from_file('account_edi_facturx', 'test_file', 'test_facturx.pdf', invoice)
 
@@ -227,7 +233,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
         self.assertEqual(len(self.env['account.move'].search([])), invoice_count + 1)
 
     def test_invoice_edi_xml(self):
-        invoice = self.env['account.move'].with_context(default_move_type='in_invoice').create({})
+        invoice = self._create_empty_vendor_bill()
         invoice_count = len(self.env['account.move'].search([]))
         self.update_invoice_from_file('account_edi_facturx', 'test_file', 'test_facturx.xml', invoice)
 

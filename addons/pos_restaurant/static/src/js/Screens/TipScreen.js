@@ -136,8 +136,7 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
         async _printWeb(receipt) {
             try {
                 $(this.el).find('.pos-receipt-container').html(receipt);
-                const isPrinted = document.execCommand('print', false, null);
-                if (!isPrinted) window.print();
+                window.print();
             } catch (err) {
                 await this.showPopup('ErrorPopup', {
                     title: this.env._t('Printing is not supported on some browsers'),

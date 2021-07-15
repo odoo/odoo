@@ -4,6 +4,7 @@ odoo.define('mail/static/src/components/dialog_manager/dialog_manager.js', funct
 const components = {
     Dialog: require('mail/static/src/components/dialog/dialog.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
@@ -15,6 +16,7 @@ class DialogManager extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const dialogManager = this.env.messaging && this.env.messaging.dialogManager;
             return {

@@ -13,6 +13,7 @@ const CountdownWidget = publicWidget.Widget.extend({
     selector: '.s_countdown',
     xmlDependencies: ['/website/static/src/snippets/s_countdown/000.xml'],
     disabledInEditableMode: false,
+    defaultColor: 'rgba(0, 0, 0, 255)',
 
     /**
      * @override
@@ -76,7 +77,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         if (ColorpickerWidget.isCSSColor(color)) {
             return color;
         }
-        return weUtils.getCSSVariableValue(color);
+        return weUtils.getCSSVariableValue(color) || this.defaultColor;
     },
     /**
      * Gets the time difference in seconds between now and countdown due date.
@@ -124,7 +125,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         this.diff = [];
         if (this._isUnitVisible('d') && !(this.onlyOneUnit && delta < 86400)) {
             this.diff.push({
-                canvas: $('<canvas/>').appendTo(this.$wrapper)[0],
+                canvas: $('<canvas/>', {class: 'o_temp_auto_element'}).appendTo(this.$wrapper)[0],
                 // There is no logical number of unit (total) on which day units
                 //  can be compared against, so we use an arbitrary number.
                 total: 15,
@@ -134,7 +135,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         }
         if (this._isUnitVisible('h') || (this.onlyOneUnit && delta < 86400 && delta > 3600)) {
             this.diff.push({
-                canvas: $('<canvas/>').appendTo(this.$wrapper)[0],
+                canvas: $('<canvas/>', {class: 'o_temp_auto_element'}).appendTo(this.$wrapper)[0],
                 total: 24,
                 label: _t("Hours"),
                 nbSeconds: 3600,
@@ -142,7 +143,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         }
         if (this._isUnitVisible('m') || (this.onlyOneUnit && delta < 3600 && delta > 60)) {
             this.diff.push({
-                canvas: $('<canvas/>').appendTo(this.$wrapper)[0],
+                canvas: $('<canvas/>', {class: 'o_temp_auto_element'}).appendTo(this.$wrapper)[0],
                 total: 60,
                 label: _t("Minutes"),
                 nbSeconds: 60,
@@ -150,7 +151,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         }
         if (this._isUnitVisible('s') || (this.onlyOneUnit && delta < 60)) {
             this.diff.push({
-                canvas: $('<canvas/>').appendTo(this.$wrapper)[0],
+                canvas: $('<canvas/>', {class: 'o_temp_auto_element'}).appendTo(this.$wrapper)[0],
                 total: 60,
                 label: _t("Seconds"),
                 nbSeconds: 1,

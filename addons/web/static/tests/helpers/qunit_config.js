@@ -183,9 +183,10 @@ QUnit.on('OdooAfterTestHook', function (info) {
     // check for leftovers in #qunit-fixture
     const qunitFixture = document.getElementById('qunit-fixture');
     if (qunitFixture.children.length) {
-        // console.error('#qunit-fixture still contains elements:' +
-        //     '\n#qunit-fixture HTML:\n' + qunitFixture.outerHTML);
-        // QUnit.pushFailure(`#qunit-fixture still contains elements`);
+        console.error(`Test ${info.moduleName} > ${info.testName}`);
+        console.error('#qunit-fixture still contains elements:' +
+            '\n#qunit-fixture HTML:\n' + qunitFixture.outerHTML);
+        QUnit.pushFailure(`#qunit-fixture still contains elements`);
         toRemove.push(...qunitFixture.children);
     }
 

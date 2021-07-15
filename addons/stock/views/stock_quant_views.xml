@@ -207,6 +207,11 @@
         </field>
     </record>
 
+    <record model="ir.actions.act_window" id="dashboard_open_quants"> <!-- Used in dashboard -->
+        <field name="name">Stock On Hand</field>
+        <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1}</field>
+        <field name="res_model">stock.quant</field>
+    </record>
     <record model="ir.actions.act_window" id="location_open_quants"> <!-- Used in location -->
         <field name="context">{'search_default_productgroup': 1}</field>
         <field name="domain">[('location_id', 'child_of', active_ids)]</field>
@@ -251,7 +256,7 @@
                         <h1><field name="name" class="oe_inline"/></h1>
                     </div>
                     <group>
-                        <group>
+                        <group id='stock.package_location_group'>
                             <field name='company_id' groups="base.group_multi_company"/>
                             <field name='owner_id' groups="stock.group_tracking_owner"/>
                             <field name="location_id" options="{'no_create': True}"/>

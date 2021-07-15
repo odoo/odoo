@@ -44,17 +44,21 @@
 .o_Message_content {
     word-wrap: break-word;
     word-break: break-word;
-    // Message content can contain arbitrary HTML that might overflow and break
-    // the style without this rule.
-    overflow: auto;
 
-    > pre {
-        white-space: pre-wrap;
-        word-break: break-word;
+    *:not(li):not(li div) {
+        // Message content can contain arbitrary HTML that might overflow and break
+        // the style without this rule.
+        // Lists are ignored because otherwise bullet style become hidden from overflow.
+        // It's acceptable not to manage overflow of these tags for the moment.
+        // It also excludes all div in li because 1st leaf and div child of list overflow
+        // may impact the bullet point (at least it does on Safari).
+        max-width: 100%;
+        overflow-x: auto;
     }
 
-    > p:last-of-type {
-        margin-bottom: 0;
+    img {
+        max-width: 100%;
+        height: auto;
     }
 }
 
@@ -125,6 +129,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.o_Message_prettyBody {
+
+    > p:last-of-type {
+        margin-bottom: 0;
+    }
+
 }
 
 .o_Message_readMoreLess {

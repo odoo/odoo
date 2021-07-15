@@ -69,7 +69,7 @@ var PrinterMixin = {
             }
             // rpc call is okay but printing failed because
             // IoT box can't find a printer.
-            if (!sendPrintResult || (sendPrintResult && !sendPrintResult.result)) {
+            if (!sendPrintResult || sendPrintResult.result === false) {
                 this.receipt_queue.length = 0;
                 return this.printResultGenerator.IoTResultError();
             }
@@ -101,7 +101,8 @@ var PrinterMixin = {
                 onrendered: function (canvas) {
                     $('.pos-receipt-print').empty();
                     resolve(self.process_canvas(canvas));
-                }
+                },
+                letterRendering: true,
             })
         });
         return promise;

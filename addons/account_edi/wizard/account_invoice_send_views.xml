@@ -2,12 +2,13 @@
 <odoo>
     <data>
         <record model="ir.ui.view" id="account_invoice_send_inherit_account_wizard_form">
+            <!-- Deprecated, the field is now invisible. This view will be removed in future versions. -->
             <field name="name">account.invoice.send.form.inherited.edi</field>
             <field name="model">account.invoice.send</field>
             <field name="inherit_id" ref="account.account_invoice_send_wizard_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='mail_form']" position='before'>
-                    <div name="edi_format_option" attrs="{'invisible':[('edi_format_ids', '=', [])]}">
+                    <div name="edi_format_option" invisible='1'>
                         <group>
                             <label for="edi_format_ids"/>
                             <div class="oe_inline">

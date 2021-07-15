@@ -106,6 +106,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         #After Receiving all products create vendor bill.
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.invoice_date = move_form.date
         move_form.partner_id = self.partner_a
         move_form.purchase_id = self.po
         self.invoice = move_form.save()
@@ -136,6 +137,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(self.po.order_line[0].qty_received, 3.0, 'Purchase: delivered quantity should be 3.0 instead of "%s" after picking return' % self.po.order_line[0].qty_received)
         #Create vendor bill for refund qty
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_refund'))
+        move_form.invoice_date = move_form.date
         move_form.partner_id = self.partner_a
         move_form.purchase_id = self.po
         self.invoice = move_form.save()
@@ -212,7 +214,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(po1.order_line.qty_received, 5)
         self.assertEqual(po1.picking_ids[-1].move_lines.product_qty, 10)
 
-    def test_update_date_planned(self):
+    def test_04_update_date_planned(self):
         today = datetime.today().replace(hour=9, microsecond=0)
         tomorrow = datetime.today().replace(hour=9, microsecond=0) + timedelta(days=1)
         po = self.env['purchase.order'].create(self.po_vals)
@@ -245,3 +247,86 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             '<p> partner_a modified receipt dates for the following products:</p><p> \xa0 - Large Desk from %s to %s </p><p> \xa0 - Conference Chair from %s to %s </p><p>Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.</p>' % (today.date(), tomorrow.date(), today.date(), tomorrow.date(), po.picking_ids.name),
             activity.note,
         )
+
+    def test_05_multi_company(self):
+        company_a = self.env.user.company_id
+        company_b = self.env['res.company'].create({
+            "name": "Test Company",
+            "currency_id": self.env['res.currency'].with_context(active_test=False).search([
+                ('id', '!=', company_a.currency_id.id),
+            ], limit=1).id
+        })
+        self.env.user.write({
+            'company_id': company_b.id,
+            'company_ids': [(4, company_b.id), (4, company_a.id)],
+        })
+        po = self.env['purchase.order'].create(dict(company_id=company_a.id, partner_id=self.partner_a.id))
+
+        self.assertEqual(po.company_id, company_a)
+        self.assertEqual(po.picking_type_id.warehouse_id.company_id, company_a)
+        self.assertEqual(po.currency_id, po.company_id.currency_id)
+
+    def test_06_on_time_rate(self):
+        company_a = self.env.user.company_id
+        company_b = self.env['res.company'].create({
+            "name": "Test Company",
+            "currency_id": self.env['res.currency'].with_context(active_test=False).search([
+                ('id', '!=', company_a.currency_id.id),
+            ], limit=1).id
+        })
+
+        # Create a purchase order with 90% qty received for company A
+        self.env.user.write({
+            'company_id': company_a.id,
+            'company_ids': [(6, 0, [company_a.id])],
+        })
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.order_line.write({'product_qty': 10})
+        po.button_confirm()
+        picking = po.picking_ids[0]
+        # Process 9.0 out of the 10.0 ordered qty
+        picking.move_line_ids.write({'qty_done': 9.0})
+        res_dict = picking.button_validate()
+        # No backorder
+        self.env['stock.backorder.confirmation'].with_context(res_dict['context']).process_cancel_backorder()
+        # `on_time_rate` should be equals to the ratio of quantity received against quantity ordered
+        expected_rate = sum(picking.move_line_ids.mapped("qty_done")) / sum(po.order_line.mapped("product_qty")) * 100
+        self.assertEqual(expected_rate, po.on_time_rate)
+
+        # Create a purchase order with 80% qty received for company B
+        # The On-Time Delivery Rate shouldn't be shared accross multiple companies
+        self.env.user.write({
+            'company_id': company_b.id,
+            'company_ids': [(6, 0, [company_b.id])],
+        })
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.order_line.write({'product_qty': 10})
+        po.button_confirm()
+        picking = po.picking_ids[0]
+        # Process 8.0 out of the 10.0 ordered qty
+        picking.move_line_ids.write({'qty_done': 8.0})
+        res_dict = picking.button_validate()
+        # No backorder
+        self.env['stock.backorder.confirmation'].with_context(res_dict['context']).process_cancel_backorder()
+        # `on_time_rate` should be equal to the ratio of quantity received against quantity ordered
+        expected_rate = sum(picking.move_line_ids.mapped("qty_done")) / sum(po.order_line.mapped("product_qty")) * 100
+        self.assertEqual(expected_rate, po.on_time_rate)
+
+        # Tricky corner case
+        # As `purchase.order.on_time_rate` is a related to `partner_id.on_time_rate`
+        # `on_time_rate` on the PO should equals `on_time_rate` on the partner.
+        # Related fields are by default computed as sudo
+        # while non-stored computed fields are not computed as sudo by default
+        # If the computation of the related field (`purchase.order.on_time_rate`) was asked
+        # and `res.partner.on_time_rate` was not yet in the cache
+        # the `sudo` requested for the computation of the related `purchase.order.on_time_rate`
+        # was propagated to the computation of `res.partner.on_time_rate`
+        # and therefore the multi-company record rules were ignored.
+        # 1. Compute `res.partner.on_time_rate` regular non-stored comptued field
+        partner_on_time_rate = po.partner_id.on_time_rate
+        # 2. Invalidate the cache for that record and field, so it's not reused in the next step.
+        po.partner_id.invalidate_cache(fnames=["on_time_rate"], ids=po.partner_id.ids)
+        # 3. Compute the related field `purchase.order.on_time_rate`
+        po_on_time_rate = po.on_time_rate
+        # 4. Check both are equals.
+        self.assertEqual(partner_on_time_rate, po_on_time_rate)

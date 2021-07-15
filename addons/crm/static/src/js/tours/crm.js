@@ -9,7 +9,7 @@ var _t = core._t;
 tour.register('crm_tour', {
     url: "/web",
     rainbowManMessage: _t("Congrats, best of luck catching such big fish! :)"),
-    sequence: 5,
+    sequence: 10,
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
     content: _t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.'),
@@ -28,7 +28,7 @@ tour.register('crm_tour', {
 }, {
     trigger: ".o_kanban_quick_create .o_field_widget[name='partner_id']",
     content: _t('<b>Write a few letters</b> to look for a company, or create a new one.'),
-    position: "bottom",
+    position: "top",
     run: function (actions) {
         actions.text("Brandon Freeman", this.$anchor.find("input"));
     },
@@ -37,11 +37,6 @@ tour.register('crm_tour', {
     auto: true,
     in_modal: false,
 }, {
-    trigger: '.o_kanban_quick_create .o_field_monetary[name="expected_revenue"] input',
-    content: _t("Define here the Expected Revenue of this Opportunity."),
-    position: 'right',
-    run: "text 12.3",
-}, {
     trigger: ".o_kanban_quick_create .o_kanban_add",
     content: _t("Now, <b>add your Opportunity</b> to your Pipeline."),
     position: "bottom",
@@ -49,7 +44,7 @@ tour.register('crm_tour', {
     trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-child .oe_kanban_content",
     extra_trigger: ".o_opportunity_kanban",
     content: _t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle."),
-    position: "bottom",
+    position: "right",
     run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
     trigger: ".o_kanban_record:not(.o_updating) .o_activity_color_default",
@@ -65,7 +60,7 @@ tour.register('crm_tour', {
 }, {
     trigger: '.modal-footer button[name="action_close_dialog"]',
     content: _t("All set. Let’s <b>Schedule</b> it."),
-    position: "bottom",
+    position: "top",  // dot NOT move to bottom, it would cause a resize flicker, see task-2476595
     run: function (actions) {
         actions.auto('.modal-footer button[special=cancel]');
     },

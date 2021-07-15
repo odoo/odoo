@@ -25,7 +25,7 @@ class AccountMove(models.Model):
         ' identify the type of responsibilities that a person or a legal entity could have and that impacts in the'
         ' type of operations and requirements they need.')
 
-    l10n_ar_currency_rate = fields.Float(copy=False, digits=(16, 4), readonly=True, string="Currency Rate")
+    l10n_ar_currency_rate = fields.Float(copy=False, digits=(16, 6), readonly=True, string="Currency Rate")
 
     # Mostly used on reports
     l10n_ar_afip_concept = fields.Selection(
@@ -41,6 +41,19 @@ class AccountMove(models.Model):
         not_invoices = self.filtered(lambda x: x.company_id.country_id.code == "AR" and x.journal_id.type in ['sale', 'purchase'] and x.l10n_latam_use_documents and not x.is_invoice())
         if not_invoices:
             raise ValidationError(_("The selected Journal can't be used in this transaction, please select one that doesn't use documents as these are just for Invoices."))
+
+    @api.constrains('move_type', 'l10n_latam_document_type_id')
+    def _check_invoice_type_document_type(self):
+        """ LATAM module define that we are not able to use debit_note or invoice document types in an invoice refunds,
+        However for Argentinian Document Type's 99 (internal type = invoice) we are able to used in a refund invoices.
+
+        In this method we exclude the argentinian document type 99 from the generic constraint """
+        ar_doctype_99 = self.filtered(
+            lambda x: x.country_code == 'AR' and
+            x.l10n_latam_document_type_id.code == '99' and
+            x.move_type in ['out_refund', 'in_refund'])
+
+        super(AccountMove, self - ar_doctype_99)._check_invoice_type_document_type()
 
     def _get_afip_invoice_concepts(self):
         """ Return the list of values of the selection field. """

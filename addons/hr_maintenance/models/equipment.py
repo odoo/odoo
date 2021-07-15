@@ -16,7 +16,7 @@ class MaintenanceEquipment(models.Model):
         required=True,
         default='employee')
     owner_user_id = fields.Many2one(compute='_compute_owner', store=True)
-    assign_date = fields.Date(compute='_compute_equipement_assign', store=True, readonly=False, copy=True)
+    assign_date = fields.Date(compute='_compute_equipment_assign', store=True, readonly=False, copy=True)
 
     @api.depends('employee_id', 'department_id', 'equipment_assign_to')
     def _compute_owner(self):

@@ -37,7 +37,7 @@ class ResPartnerBank(models.Model):
         return super().write(vals)
 
     def _is_qr_iban(self):
-        return super()._is_qr_iban() or self.l10n_ch_qr_iban
+        return super(ResPartnerBank, self)._is_qr_iban() or self.l10n_ch_qr_iban
 
     def _l10n_ch_get_qr_vals(self, amount, currency, debtor_partner, free_communication, structured_communication):
         qr_vals = super()._l10n_ch_get_qr_vals(amount, currency, debtor_partner, free_communication, structured_communication)

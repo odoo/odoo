@@ -151,7 +151,7 @@ odoo.define('web.SampleServer', function (require) {
                         for (const record of records) {
                             value += record[fieldName];
                         }
-                        values[fieldName] = value;
+                        values[fieldName] = this._sanitizeNumber(value);
                     } else {
                         values[fieldName] = null;
                     }
@@ -251,6 +251,9 @@ odoo.define('web.SampleServer', function (require) {
                     if (field.relation === 'res.currency') {
                         return session.company_currency_id;
                     }
+                    if (field.relation === 'ir.attachment') {
+                        return false;
+                    }
                     return this._getRandomSubRecordId();
                 case "one2many":
                 case "many2many": {
@@ -314,7 +317,7 @@ odoo.define('web.SampleServer', function (require) {
          * @returns {number} float in [O, max[
          */
         _getRandomFloat(max) {
-            return Math.random() * max;
+            return this._sanitizeNumber(Math.random() * max);
         }
 
         /**
@@ -592,6 +595,16 @@ odoo.define('web.SampleServer', function (require) {
         }
 
         /**
+         * Rounds the given number value according to the configured precision.
+         * @private
+         * @param {number} value
+         * @returns {number}
+         */
+        _sanitizeNumber(value) {
+            return parseFloat(value.toFixed(SampleServer.FLOAT_PRECISION));
+        }
+
+        /**
          * A real (web_)read_group call has been done, and it has returned groups,
          * but they are all empty. This function updates the sample data such
          * that those group values exist and those groups contain sample records.
@@ -653,6 +666,7 @@ odoo.define('web.SampleServer', function (require) {
     SampleServer.MAX_COLOR_INT = 7;
     SampleServer.MAX_MONETARY = 100000;
     SampleServer.DATE_DELTA = 24 * 60; // in hours -> 60 days
+    SampleServer.FLOAT_PRECISION = 2;
 
     SampleServer.SAMPLE_COUNTRIES = ["Belgium", "France", "Portugal", "Singapore", "Australia"];
     SampleServer.SAMPLE_PEOPLE = [

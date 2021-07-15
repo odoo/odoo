@@ -24,7 +24,7 @@ class MassMailingContactListRel(models.Model):
 
     _sql_constraints = [
         ('unique_contact_list', 'unique (contact_id, list_id)',
-         'A contact cannot be subscribed multiple times to the same list!')
+         'A mailing contact cannot subscribe to the same mailing list multiple times.')
     ]
 
     @api.model
@@ -48,6 +48,18 @@ class MassMailingContact(models.Model):
     _inherit = ['mail.thread.blacklist']
     _description = 'Mailing Contact'
     _order = 'email'
+
+    def default_get(self, fields):
+        """ When coming from a mailing list we may have a default_list_ids context
+        key. We should use it to create subscription_list_ids default value that
+        are displayed to the user as list_ids is not displayed on form view. """
+        res = super(MassMailingContact, self).default_get(fields)
+        if 'subscription_list_ids' in fields and not res.get('subscription_list_ids'):
+            list_ids = self.env.context.get('default_list_ids')
+            if 'default_list_ids' not in res and list_ids and isinstance(list_ids, (list, tuple)):
+                res['subscription_list_ids'] = [
+                    (0, 0, {'list_id': list_id}) for list_id in list_ids]
+        return res
 
     name = fields.Char()
     company_name = fields.Char(string='Company Name')
@@ -80,6 +92,7 @@ class MassMailingContact(models.Model):
             return expression.FALSE_DOMAIN if value else expression.TRUE_DOMAIN
 
     @api.depends('subscription_list_ids')
+    @api.depends_context('default_list_ids')
     def _compute_opt_out(self):
         if 'default_list_ids' in self._context and isinstance(self._context['default_list_ids'], (list, tuple)) and len(self._context['default_list_ids']) == 1:
             [active_list_id] = self._context['default_list_ids']
@@ -97,6 +110,44 @@ class MassMailingContact(models.Model):
         if email and not name:
             name = email
         return name, email
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """ Synchronize default_list_ids (currently used notably for computed
+        fields) default key with subscription_list_ids given by user when creating
+        contacts.
+
+        Those two values have the same purpose, adding a list to to the contact
+        either through a direct write on m2m, either through a write on middle
+        model subscription.
+
+        This is a bit hackish but is due to default_list_ids key being
+        used to compute oupt_out field. This should be cleaned in master but here
+        we simply try to limit issues while keeping current behavior. """
+        default_list_ids = self._context.get('default_list_ids')
+        default_list_ids = default_list_ids if isinstance(default_list_ids, (list, tuple)) else []
+
+        if default_list_ids:
+            for vals in vals_list:
+                current_list_ids = []
+                subscription_ids = vals.get('subscription_list_ids') or []
+                for subscription in subscription_ids:
+                    if len(subscription) == 3:
+                        current_list_ids.append(subscription[2]['list_id'])
+                for list_id in set(default_list_ids) - set(current_list_ids):
+                    subscription_ids.append((0, 0, {'list_id': list_id}))
+                vals['subscription_list_ids'] = subscription_ids
+
+        return super(MassMailingContact, self.with_context(default_list_ids=False)).create(vals_list)
+
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        """ Cleans the default_list_ids while duplicating mailing contact in context of
+        a mailing list because we already have subscription lists copied over for newly
+        created contact, no need to add the ones from default_list_ids again """
+        if self.env.context.get('default_list_ids'):
+            self = self.with_context(default_list_ids=False)
+        return super().copy(default)
 
     @api.model
     def name_create(self, name):

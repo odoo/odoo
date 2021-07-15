@@ -16,12 +16,12 @@ class StockValuationLayerRevaluation(models.TransientModel):
         res = super().default_get(default_fields)
         if res.get('product_id'):
             product = self.env['product.product'].browse(res['product_id'])
-            accounts = product.product_tmpl_id.get_product_accounts()
             if product.categ_id.property_cost_method == 'standard':
                 raise UserError(_("You cannot revalue a product with a standard cost method."))
             if product.quantity_svl <= 0:
                 raise UserError(_("You cannot revalue a product with an empty or negative stock."))
-            if 'account_journal_id' not in res and 'account_journal_id' in default_fields:
+            if 'account_journal_id' not in res and 'account_journal_id' in default_fields and product.categ_id.property_valuation == 'real_time':               
+                accounts = product.product_tmpl_id.get_product_accounts()
                 res['account_journal_id'] = accounts['stock_journal'].id
         return res
 
@@ -39,7 +39,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
     new_value_by_qty = fields.Monetary("New value by quantity", compute='_compute_new_value')
     reason = fields.Char("Reason", help="Reason of the revaluation")
 
-    account_journal_id = fields.Many2one('account.journal', "Journal", required=True, check_company=True)
+    account_journal_id = fields.Many2one('account.journal', "Journal", check_company=True)
     account_id = fields.Many2one('account.account', "Counterpart Account", domain=[('deprecated', '=', False)], check_company=True)
     date = fields.Date("Accounting Date")
 

@@ -22,6 +22,14 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"Any new All Users Lock Date must be posterior (or equal) to the previous "
+"one."
+msgstr ""
+
+#. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
 msgid "Companies"
 msgstr "شركات"
@@ -50,13 +58,6 @@ msgstr "لا رجعة في تاريخ القفل للاستشاريين ولا �
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
-msgid ""
-"The new lock date for advisors must be set after the previous lock date."
-msgstr "يجب أن يكون تاريخ القفل الجديد للاستشاريين بعد تاريخ القفل السابق."
-
-#. module: account_lock
-#: code:addons/account_lock/models/res_company.py:0
-#, python-format
 msgid "The new tax lock date must be set after the previous lock date."
 msgstr ""
 
@@ -70,26 +71,23 @@ msgstr ""
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot define stricter conditions on advisors than on users. Please make"
-" sure that the lock date on advisor is set before the lock date for users."
+"You cannot lock a period that has not yet ended. Therefore, the All Users "
+"Lock Date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
-"لا يمكنك وضع شروط أكثر صرامة علي الاستشاريين من المستخدمين. برجاء التأكد من "
-"تعيين تاريخ قفل علي الاستشاري قبل تاريخ القفل المعين للمستخدمين."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" lock date for advisors is not set after the last day of the previous month."
+"You cannot lock a period that has not yet ended. Therefore, the tax lock "
+"date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
-"لا يمكنك قفل مدة لم تنتهِ بعد. برجاء مراجعة تاريخ القفل للاستشاريين والتأكد "
-"من أنه لا يجاوز تاريخ آخر أيام الشهر الماضي."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" tax lock date is not set after the last day of the previous month."
+"You cannot set stricter restrictions on advisors than on users. Therefore, "
+"the All Users Lock Date must be anterior (or equal) to the Invoice/Bills "
+"Lock Date."
 msgstr ""

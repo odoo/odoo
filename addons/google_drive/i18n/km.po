@@ -1,17 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * google_drive
+# 	* google_drive
 # 
 # Translators:
-# Sengtha Chay <sengtha@gmail.com>, 2018
-# Samkhann Seang <seangsamkhann@gmail.com>, 2018
+# Sengtha Chay <sengtha@gmail.com>, 2020
+# Samkhann Seang <seangsamkhann@gmail.com>, 2020
+# Lux Sok <sok.lux@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Samkhann Seang <seangsamkhann@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"PO-Revision-Date: 2020-09-07 08:12+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2020\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,21 +31,54 @@ msgid ""
 "                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
+"ដើម្បីបង្កើតឯកសារថ្មី:</b><br/>\n"
+"                                - អ្នកចង់យកឯកសារពីOdoo។ តួយ៉ាង, ទៅលើការផ្តល់ឪកាស និងការស្រាវជ្រាវលើក្រុមផ្នែកលក់។<br/>\n"
+"                                - ក្នុងនេះដែរ \"ការស្រាវជ្រាវ\" មតិ, ធ្វើការជ្រើសរើសជំរើស \"រក្សាទុកឯកសារបច្ចុប្បន្ន\", បញ្ចូលឈ្មោះ (ឧទារណ៍ៈក្រុមផ្នែកលក់)<br/>\n"
+"                                - ប្រើសិនអ្នកជ្រើសរើស \"ការចែករំលែកជាមួយនឹងអ្នកប្រើប្រាស់ទាំងអស់\", តំណររបស់ឯកសារGoogle \"បន្ថែម\" ជម្រើសនឹងបង្ហាញសម្រាប់អ្នកប្រើទាំងអស់នៅក្នុងឱកាសនៃផ្នែកលក់។<br/>\n"
+"                                - ប្រសិនបើអ្នកមិនជ្រើសរើស“ ចែករំលែកជាមួយអ្នកប្រើប្រាស់ទាំងអស់” តំណភ្ជាប់ឯកសារហ្គូហ្គលក្នុងជម្រើស“ ច្រើនទៀត” នឹងមិនបង្ហាញខ្លួនសម្រាប់អ្នកប្រើប្រាស់ដទៃទៀតក្នុងឱកាសការិយាល័យលក់ឡើយ។<br/>\n"
+"                                - ប្រសិនបើតម្រងមិនត្រូវបានបញ្ជាក់តំណរបស់ឯកសារហ្គូហ្គលនឹងបង្ហាញនៅក្នុងជម្រើស \"ច្រើនទៀត\" សម្រាប់អ្នកប្រើប្រាស់ទាំងអស់សម្រាប់គ្រប់ឱកាសទាំងអស់។"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Reset token"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Set up token"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; No refresh"
+" token set"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"text-success fa fa-check\"/> &amp;nbsp; Refresh token set"
+msgstr ""
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "<span>Get an authorization code and set it in the field below.</span>"
+msgstr ""
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
 msgid "<strong>Active</strong>"
-msgstr ""
+msgstr "<strong>សកម្មភាព</strong>"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
 msgid "<strong>Model</strong>"
-msgstr ""
+msgstr "<strong>គំរូ</strong>"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
 msgid "<strong>Template</strong>"
-msgstr ""
+msgstr "<strong>ឯកសារ</strong>"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__active
@@ -53,18 +88,28 @@ msgstr "សកម្ម"
 #. module: google_drive
 #: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid "Add a new template"
-msgstr ""
+msgstr "ការបន្ថែមឯកសារថ្មី"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:42
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_config_view_search
+msgid "Archived"
+msgstr "ទុកជាឯកសារ"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern."
-msgstr ""
+msgstr "យ៉ាងហោចណាស់រកឃើញកូនសោមួយនៅក្នុងលំនាំឈ្មោះថាស Google របស់អ្នក។"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
 msgid "Authorization Code"
-msgstr ""
+msgstr "កូដដោយស្វ័យប្រវត្តិ"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Cancel"
+msgstr "លុបចោល"
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config__name_template
@@ -72,11 +117,18 @@ msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
 msgstr ""
+"ជ្រើសរើសវិធីដែលហ្គូហ្គោលថ្មីនឹងត្រូវដាក់ឈ្មោះ, on google side. Eg. "
+"gdoc_%(field_name)s"
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "កំណត់រចនាសម្ព័ន្ធ"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Confirm"
+msgstr "បញ្ជាក់"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_uid
@@ -89,9 +141,17 @@ msgid "Created on"
 msgstr "បង្កើតនៅ"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:161
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
+msgstr "ការបង្កើតដ្រាយហ្គូហ្គោលអាចត្រូវបានធ្វើឡើងដោយមួយដងប៉ុណ្ណោះ"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:161
+#, python-format
+msgid ""
+"The document filter must not include any 'dynamic' part, so it should not be"
+" based on the current time or current user, for example."
 msgstr ""
 
 #. module: google_drive
@@ -101,17 +161,18 @@ msgstr "អតិថិជន"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__display_name
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "ឈ្មោះសំរាប់បង្ហាញ"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__filter_id
 msgid "Filter"
-msgstr ""
+msgstr "ឯកសារ"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:61
-#: code:addons/google_drive/models/google_drive.py:82
+#: code:addons/google_drive/models/google_drive.py:0
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "ចូលទៅផ្ទាំងការតំឡើង"
@@ -119,43 +180,47 @@ msgstr "ចូលទៅផ្ទាំងការតំឡើង"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_client_id
 msgid "Google Client"
-msgstr ""
+msgstr "Google Client"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
 msgid "Google Drive Configuration"
-msgstr ""
+msgstr "ការកំណត់​រចនាសម្ព័ន្ធGoogle Drive "
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name_template
 msgid "Google Drive Name Pattern"
-msgstr ""
+msgstr "ឈ្មោះលំនាំGoogle Drive"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
 msgid "Google Drive Templates"
-msgstr ""
+msgstr "តារាងនៃGoogle Drive"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:63
-#: code:addons/google_drive/models/google_drive.py:84
+#: code:addons/google_drive/models/google_drive.py:0
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
 msgstr ""
+"Google Drive មិនត្រូវបានកំណត់រចនាសម្ព័ន្ធនៅឡើយទេ។ "
+"សូមទាក់ទងអ្នកគ្រប់គ្រងរបស់អ្នក។"
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
 msgid "Google Drive templates config"
-msgstr ""
+msgstr "កំណត់រចនាសម្ព័ន្ធគំរូGoogle Drive "
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__id
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__id
 msgid "ID"
-msgstr "ID"
+msgstr "អត្តសញ្ញាណ"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config____last_update
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings____last_update
 msgid "Last Modified on"
 msgstr "កាលបរិច្ឆេតកែប្រែចុងក្រោយ"
 
@@ -178,61 +243,84 @@ msgid ""
 "checklist for each order in a foreign country, ... Its very easy to manage "
 "them, link them to Odoo and use them to collaborate with your employees."
 msgstr ""
+"ភ្ជាប់គំរូដ្រាយហ្គូហ្គលផ្ទាល់ខ្លួនរបស់អ្នកទៅនឹងកំណត់ត្រារបស់អូដូ។ "
+"ប្រសិនបើអ្នកមានឯកសារជាក់លាក់ពិតប្រាកដអ្នកចង់អោយអ្នកសហការរបស់អ្នកបំពេញឧទាហរណ៍។"
+" "
+"ប្រើសៀវភៅបញ្ជីដើម្បីត្រួតពិនិត្យគុណភាពផលិតផលរបស់អ្នកឬពិនិត្យមើលបញ្ជីត្រួតពិនិត្យការចែកចាយសម្រាប់ការបញ្ជាទិញនីមួយៗនៅបរទេស"
+" ... "
+"វាងាយស្រួលក្នុងការគ្រប់គ្រងពួកវាភ្ជាប់ពួកវាទៅអូដូហើយប្រើវាដើម្បីសហការជាមួយនិយោជិករបស់អ្នក។"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model_id
 msgid "Model"
-msgstr ""
+msgstr "ម៉ូដែល"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:203
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Please enter a valid Google Document URL."
+msgstr "សូមបញ្ចូល URL ឯកសារ Google ត្រឹមត្រូវ។"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__is_google_drive_token_generated
+msgid "Refresh Token Generated"
 msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model
 msgid "Related Model"
-msgstr ""
+msgstr "ម៉ូដែលពាក់ព័ន្ធ"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_resource_id
 msgid "Resource Id"
+msgstr "លេខសម្គាល់ធនធាន"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_config_view_search
+msgid "Search Google Drive Config"
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:81
+#: code:addons/google_drive/models/res_config_settings.py:0
+#, python-format
+msgid "Set up refresh token"
+msgstr ""
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
 msgstr ""
+"មានអ្វីមួយមិនប្រក្រតីកំឡុងជំនាន់ថូខឹន។ សូមស្នើសុំលេខកូដអនុញ្ញាតម្តងទៀត។"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name
 msgid "Template Name"
-msgstr ""
+msgstr "ឈ្មោះគំរូ"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_template_url
 msgid "Template URL"
-msgstr ""
+msgstr "គម្រូURL"
 
 #. module: google_drive
 #: model:ir.actions.act_window,name:google_drive.action_google_drive_users_config
 msgid "Templates"
-msgstr ""
+msgstr "គម្រូ"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:99
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
-msgstr ""
+msgstr "គម្រូGoogle មិនអាចរកឃើញបានទេ។ ប្រហែលជាវាបានលុបចោលបាត់ហើយ។"
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_res_config_settings__google_drive_uri
 msgid "The URL to generate the authorization code from Google"
-msgstr ""
+msgstr "ជាទូទៅURLទៅលើកូដដោយស្វ័យប្រវត្តិពីGoogle"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -242,30 +330,37 @@ msgid ""
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Deco_Addict_SO0001_Sales'."
 msgstr ""
+"ឈ្មោះនៃឯកសារភ្ជាប់អាចប្រើទិន្នន័យថេរឬអថេរ។ ដើម្បីបែងចែករវាងឯកសារនៅក្នុង។\n"
+"                                ថាសហ្គូហ្គលប្រើពាក្យនិងវាលថេរ។ ឧទាហរណ៍ក្នុងឧទាហរណ៍ខាងលើប្រសិនបើអ្នកសរសេរ Deco_Addict_%(name)s_លក់\n"
+"                                នៅក្នុងឈ្មោះឈ្មោះថាសហ្គូហ្គលឯកសារនៅក្នុងថាសហ្គូហ្គលរបស់អ្នកនិងនៅក្នុងឯកសារភ្ជាប់ Odoo នឹងត្រូវបានដាក់ឈ្មោះ។\n"
+"                                'Deco_Addict_SO0001_Sales'."
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:135
+#: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
 msgstr ""
+"ការអនុញ្ញាត 'អ្នកអាន' សម្រាប់ 'អ្នកណាម្នាក់ដែលមានតំណភ្ជាប់' "
+"មិនត្រូវបានសរសេរនៅលើឯកសារទេ។"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"There is no refresh code set for Google Drive. You can set it up from the "
+"configuration panel."
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_uri
 msgid "URI"
-msgstr ""
-
-#. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:60
-#, python-format
-msgid ""
-"You haven't configured 'Authorization Code' generated from google, Please "
-"generate and configure it ."
-msgstr ""
+msgstr "URI"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
 msgstr ""
+"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"

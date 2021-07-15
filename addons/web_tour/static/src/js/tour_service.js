@@ -133,7 +133,7 @@ return session.is_bound.then(function () {
         let mutationTimer;
         const observer = new MutationObserver(mutations => {
             clearTimeout(mutationTimer);
-            currentMutations.push(...mutations);
+            currentMutations = currentMutations.concat(mutations);
             mutationTimer = setTimeout(() => _processMutations(), 750);
         });
 

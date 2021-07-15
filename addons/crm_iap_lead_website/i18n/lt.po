@@ -3,20 +3,21 @@
 # 	* crm_iap_lead_website
 # 
 # Translators:
-# Martin Trigaux, 2019
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
-# Andrius Laukavičius <andrius@focusate.eu>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Martin Trigaux, 2021
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2021
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2021
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2021
+# Andrius Laukavičius <andrius@focusate.eu>, 2021
+# Linas Versada <linaskrisiukenas@gmail.com>, 2021
+# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: grupoda2 <dmitrijus.ivanovas@gmail.com>, 2021\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -129,8 +130,10 @@ msgid "Data Tracking"
 msgstr ""
 
 #. module: crm_iap_lead_website
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__display_name
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_ir_http__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
@@ -181,8 +184,10 @@ msgid "IAP Credits"
 msgstr ""
 
 #. module: crm_iap_lead_website
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__id
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__id
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__id
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_ir_http__id
 msgid "ID"
 msgstr "ID"
 
@@ -198,8 +203,10 @@ msgid "Industries"
 msgstr ""
 
 #. module: crm_iap_lead_website
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view____last_update
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_ir_http____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
@@ -306,7 +313,7 @@ msgid "Number of Contacts"
 msgstr "Kontaktų skaičius"
 
 #. module: crm_iap_lead_website
-#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__leads_count
+#: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_count
 msgid "Number of Generated Leads"
 msgstr ""
 
@@ -342,6 +349,12 @@ msgstr ""
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Opportunity Generation Conditions"
+msgstr ""
+
+#. module: crm_iap_lead_website
+#: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
+#, python-format
+msgid "Opportunity created by Odoo Lead Generation"
 msgstr ""
 
 #. module: crm_iap_lead_website
@@ -416,7 +429,7 @@ msgstr "Seka"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_view__reveal_state
 msgid "State"
-msgstr "Būsena"
+msgstr "Regionas"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__state_ids

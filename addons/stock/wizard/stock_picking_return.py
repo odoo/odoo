@@ -79,6 +79,8 @@ class ReturnPicking(models.TransientModel):
     def _prepare_stock_return_picking_line_vals_from_move(self, stock_move):
         quantity = stock_move.product_qty
         for move in stock_move.move_dest_ids:
+            if move.origin_returned_move_id and move.origin_returned_move_id != stock_move:
+                continue
             if move.state in ('partially_available', 'assigned'):
                 quantity -= sum(move.move_line_ids.mapped('product_qty'))
             elif move.state in ('done'):
@@ -174,6 +176,7 @@ class ReturnPicking(models.TransientModel):
         # Override the context to disable all the potential filters that could have been set previously
         ctx = dict(self.env.context)
         ctx.update({
+            'default_partner_id': self.picking_id.partner_id.id,
             'search_default_picking_type_id': pick_type_id,
             'search_default_draft': False,
             'search_default_assigned': False,

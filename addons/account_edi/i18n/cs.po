@@ -6,15 +6,17 @@
 # Martin Trigaux, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# Jiří Podhorecký, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-07 07:33+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Jiří Podhorecký, 2020\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,12 +28,12 @@ msgstr ""
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A cancellation of the EDI has been requested."
-msgstr ""
+msgstr "Bylo požádáno o zrušení EDI."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_invoice_send
 msgid "Account Invoice Send"
-msgstr ""
+msgstr "Odeslání faktury k účtu"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -52,6 +54,8 @@ msgid ""
 "Cannot deactivate (%s) on this journal because not all documents are "
 "synchronized"
 msgstr ""
+"Nelze deaktivovat (%s) v tomto deníku, protože ne všechny dokumenty jsou "
+"synchronizovány"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__code
@@ -61,7 +65,7 @@ msgstr "Kód"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_journal__compatible_edi_ids
 msgid "Compatible Edi"
-msgstr ""
+msgstr "Kompatibilní EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_uid
@@ -94,60 +98,66 @@ msgstr "Zobrazované jméno"
 #: model:ir.cron,cron_name:account_edi.ir_cron_edi_network
 #: model:ir.cron,name:account_edi.ir_cron_edi_network
 msgid "EDI : Perform web services operations"
-msgstr ""
+msgstr "EDI: provádět operace webových služeb"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
+msgid "EDI Documents"
+msgstr "EDI dokumenty"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_format
 msgid "EDI format"
-msgstr ""
+msgstr "EDI format"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
 msgid "EDI format that support moves in this journal"
-msgstr ""
+msgstr "Formát EDI, který podporuje pohyby v tomto deníku"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_document_ids
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_document_ids
 msgid "Edi Document"
-msgstr ""
+msgstr "EDI document"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_count
 msgid "Edi Error Count"
-msgstr ""
+msgstr "Počet chyb EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
 msgid "Edi Format"
-msgstr ""
+msgstr "Počet chyb EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_cancel_button
 msgid "Edi Show Cancel Button"
-msgstr ""
+msgstr "Tlačítko zrušení EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_web_services_to_process
 msgid "Edi Web Services To Process"
-msgstr ""
+msgstr "Zpracování webových služeb EDI"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_journal_form_inherited
 msgid "Electronic Data Interchange"
-msgstr ""
+msgstr "Elektronická výměna dat"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_document
 msgid "Electronic Document for an account.move"
-msgstr ""
+msgstr "Elektronický dokument pro účet. Přesunout"
 
 #. module: account_edi
 #: model:ir.actions.act_window,name:account_edi.action_open_edi_documents
@@ -158,13 +168,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_state
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_state
 msgid "Electronic invoicing"
-msgstr ""
+msgstr "Elektronická fakturace"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Electronic invoicing error(s)"
-msgstr ""
+msgstr "Chyby elektronické fakturace"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_mail_template
@@ -180,25 +190,25 @@ msgstr "Chyba"
 #: code:addons/account_edi/models/account_edi_document.py:0
 #, python-format
 msgid "Error when cancelling the journal entry."
-msgstr ""
+msgstr "Chyba při rušení zápisu do deníku."
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_edi_document.py:0
 #, python-format
 msgid "Error when processing the journal entry."
-msgstr ""
+msgstr "Chyba při zpracování zápisu do deníku."
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
 msgid "Format Name"
-msgstr ""
+msgstr "Název formátu"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_error_count
 msgid "How many EDIs are in error for this move ?"
-msgstr ""
+msgstr "Kolik EDI je v tomto tahu omylem?"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
@@ -269,7 +279,7 @@ msgstr "Název"
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_document_unique_edi_document_by_move_by_format
 msgid "Only one edi document by move by format"
-msgstr ""
+msgstr "Pouze jeden EDI dokument přesunutím podle formátu"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_payment
@@ -284,19 +294,19 @@ msgstr "Nahlásit akci"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Request EDI Cancellation"
-msgstr ""
+msgstr "Požádejte o zrušení EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_invoice_send__edi_format_ids
 #: model:ir.model.fields,help:account_edi.field_account_journal__edi_format_ids
 msgid "Send XML/EDI invoices"
-msgstr ""
+msgstr "Odesílejte XML / EDI faktury"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Send now"
-msgstr ""
+msgstr "Odeslat nyní"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__sent
@@ -310,19 +320,27 @@ msgid "State"
 msgstr "Stav"
 
 #. module: account_edi
+#: model:ir.model.fields,help:account_edi_extended.field_account_edi_document__error
+msgid ""
+"The text of the last error that happened during Electronic Invoice "
+"operation."
+msgstr ""
+"Text poslední chyby, ke které došlo během operace Elektronické fakturace."
+
+#. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_web_services_to_process
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_web_services_to_process
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_web_services_to_process
 msgid ""
 "Technical field to display the documents that will be processed by the CRON"
-msgstr ""
+msgstr "Technické pole pro zobrazení dokumentů, které budou zpracovány CRON"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_state
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_state
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_state
 msgid "The aggregated state of all the EDIs of this move"
-msgstr ""
+msgstr "Agregovaný stav všech EDI tohoto tahu"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
@@ -330,38 +348,40 @@ msgid ""
 "The file generated by edi_format_id when the invoice is posted (and this "
 "document is processed)."
 msgstr ""
+"Soubor vygenerovaný edi_format_id při zaúčtování faktury (a zpracování "
+"tohoto dokumentu)."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "The invoice will be sent asynchronously to :"
-msgstr ""
+msgstr "Faktura bude odeslána asynchronně na adresu:"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "The payment will be sent asynchronously to :"
-msgstr ""
+msgstr "Platba bude odeslána asynchronně na:"
 
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
 msgid "This code already exists"
-msgstr ""
+msgstr "Tento kód již existuje"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_cancel
 msgid "To Cancel"
-msgstr ""
+msgstr "Zrušit"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_send
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_send
 msgid "To Send"
-msgstr ""
+msgstr "Poslat"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.account_invoice_send_inherit_account_wizard_form
 msgid "You can set default electronic invoicing formats on the journal"
-msgstr ""
+msgstr "V deníku můžete nastavit výchozí formáty elektronické fakturace"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
@@ -371,6 +391,8 @@ msgid ""
 " has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
+"Následující položku deníku nemůžete upravit%s protože elektronický dokument "
+"již byl odeslán. Místo toho použijte tlačítko „Požádat o zrušení EDI“."
 
 #. module: account_edi
 #: code:addons/account_edi/models/ir_attachment.py:0
@@ -378,9 +400,10 @@ msgstr ""
 msgid ""
 "You can't unlink an attachment being an EDI document sent to the government."
 msgstr ""
+"Nelze zrušit propojení přílohy, která je dokumentem EDI zaslaným vládě."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "⇒ See errors"
-msgstr ""
+msgstr "⇒ Zobrazit chyby"

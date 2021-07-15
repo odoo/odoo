@@ -28,6 +28,8 @@
         <script type="text/javascript" src="/website/static/tests/tours/public_user_editor.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/website_navbar_menu.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/snippet_version.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/website_style_edition.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/snippet_empty_parent_autoremove.js"/>
     </xpath>
 </template>
 
@@ -48,6 +50,7 @@
 
 <template id="qunit_suite" inherit_id="web.qunit_suite_tests">
     <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/tests/dashboard_tests.js"/>
         <script type="text/javascript" src="/website/static/tests/website_tests.js"/>
     </xpath>
 </template>

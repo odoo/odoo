@@ -4,18 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Simone Bernini <simone@aperturelabs.it>, 2020
-# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2020
 # Paolo Valier, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2021-02-25 10:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,30 +23,29 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
-#, python-format
-msgid "${result.toast_type === 'success' ? 'Success' : 'Error'}"
-msgstr ""
-
-#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid ", .o_newsletter_popup"
-msgstr ""
+msgstr ", .o_newsletter_popup"
+
+#. module: website_mass_mailing
+#: code:addons/website_mass_mailing/models/mailing_list.py:0
+#, python-format
+msgid "<p>Thanks for subscribing!</p>"
+msgstr "<p>Grazie per l'iscrizione!</p>"
 
 #. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
 #, python-format
 msgid "Add a Newsletter Subscribe Button"
-msgstr "Aggiungi un pulsante di iscrizione alla Newsletter"
+msgstr "Aggiunta pulsante di iscrizione alla newsletter"
 
 #. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
 #, python-format
 msgid "Add a Newsletter Subscribe Popup"
-msgstr "Aggiungi un popup di iscrizione alla Newsletter"
+msgstr "Aggiunta finestra a comparsa per iscrizione newsletter"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup_content
@@ -101,7 +99,7 @@ msgstr "Creato da"
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -121,8 +119,31 @@ msgstr "Nome visualizzato"
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
 #, python-format
+msgid ""
+"Do you want to install Google reCAPTCHA to secure your newsletter "
+"subscriptions?"
+msgstr ""
+"Installare il reCAPTCHA di Google per proteggere le iscrizioni alla "
+"newsletter?"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
 msgid "Error"
 msgstr "Errore"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid ""
+"Google reCAPTCHA is now installed! You can configure it from your website "
+"settings."
+msgstr ""
+"Il reCAPTCHA di Google è stato installato, è possibile configurarlo dalle "
+"impostazioni del sito web."
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__id
@@ -130,6 +151,13 @@ msgstr "Errore"
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__id
 msgid "ID"
 msgstr "ID"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "Install now"
+msgstr "Installa ora"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list____last_update
@@ -157,7 +185,7 @@ msgstr "Mailing list"
 #. module: website_mass_mailing
 #: model:ir.model,name:website_mass_mailing.model_website_mass_mailing_popup
 msgid "Mailing list popup"
-msgstr ""
+msgstr "Finestra a comparsa mailing list"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -175,6 +203,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Subscribe"
 msgstr "Iscriviti"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "Success"
+msgstr "Successo"
 
 #. module: website_mass_mailing
 #: code:addons/website_mass_mailing/controllers/main.py:0
@@ -200,17 +235,17 @@ msgstr "Sito web"
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__popup_content
 msgid "Website Popup Content"
-msgstr "Contenuto Popup del Sito"
+msgstr "Contenuto finestra a comparsa sito web"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__website_popup_ids
 msgid "Website Popups"
-msgstr ""
+msgstr "Finestre a comparsa sito web"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.mailing_list_view_form
 msgid "Website popups"
-msgstr ""
+msgstr "Finestre a comparsa sito web"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -220,6 +255,15 @@ msgid ""
 "Website popups can only be translated through mailing list configuration in "
 "the Email Marketing app."
 msgstr ""
+"Le finestre a comparsa possono essere tradotte solo tramite la "
+"configurazione mailing list nell'applicazione di marketing via e-mail."
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "Website settings"
+msgstr "Impostazioni sito web"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form

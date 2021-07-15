@@ -74,9 +74,11 @@ class HrExpense(models.Model):
         domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]", string='Taxes')
     untaxed_amount = fields.Float("Subtotal", store=True, compute='_compute_amount', digits='Account')
     total_amount = fields.Monetary("Total", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True)
+    amount_residual = fields.Monetary(string='Amount Due', compute='_compute_amount_residual')
     company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True, readonly=False)
     total_amount_company = fields.Monetary("Total (Company Currency)", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company)
+    # TODO make required in master (sgv)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', check_company=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
@@ -94,7 +96,7 @@ class HrExpense(models.Model):
         ('approved', 'Approved'),
         ('done', 'Paid'),
         ('refused', 'Refused')
-    ], compute='_compute_state', string='Status', copy=False, index=True, readonly=True, store=True, help="Status of the expense.")
+    ], compute='_compute_state', string='Status', copy=False, index=True, readonly=True, store=True, default='draft', help="Status of the expense.")
     sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", domain="[('employee_id', '=', employee_id), ('company_id', '=', company_id)]", readonly=True, copy=False)
     reference = fields.Char("Bill Reference")
     is_refused = fields.Boolean("Explicitly Refused by manager or accountant", readonly=True, copy=False)
@@ -124,6 +126,20 @@ class HrExpense(models.Model):
             expense.untaxed_amount = expense.unit_amount * expense.quantity
             taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id, expense.employee_id.user_id.partner_id)
             expense.total_amount = taxes.get('total_included')
+
+    @api.depends("sheet_id.account_move_id.line_ids")
+    def _compute_amount_residual(self):
+        for expense in self:
+            if not expense.sheet_id:
+                expense.amount_residual = expense.total_amount
+                continue
+            if not expense.currency_id or expense.currency_id == expense.company_id.currency_id:
+                residual_field = 'amount_residual'
+            else:
+                residual_field = 'amount_residual_currency'
+            payment_term_lines = expense.sheet_id.account_move_id.line_ids \
+                .filtered(lambda line: line.expense_id == self and line.account_internal_type in ('receivable', 'payable'))
+            expense.amount_residual = -sum(payment_term_lines.mapped(residual_field))
 
     @api.depends('date', 'total_amount', 'company_currency_id')
     def _compute_total_amount_company(self):
@@ -494,38 +510,11 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         move_line_values_by_expense = self._get_account_move_line_values()
 
         for expense in self:
-            company_currency = expense.company_id.currency_id
-            different_currency = expense.currency_id != company_currency
-
             # get the account move of the related sheet
             move = move_group_by_sheet[expense.sheet_id.id]
 
             # get move line values
             move_line_values = move_line_values_by_expense.get(expense.id)
-            move_line_dst = move_line_values[-1]
-            total_amount = move_line_dst['debit'] or -move_line_dst['credit']
-            total_amount_currency = move_line_dst['amount_currency']
-
-            # create one more move line, a counterline for the total on payable account
-            if expense.payment_mode == 'company_account':
-                if not expense.sheet_id.bank_journal_id.default_account_id:
-                    raise UserError(_("No account found for the %s journal, please configure one.") % (expense.sheet_id.bank_journal_id.name))
-                journal = expense.sheet_id.bank_journal_id
-                # create payment
-                payment_methods = journal.outbound_payment_method_ids if total_amount < 0 else journal.inbound_payment_method_ids
-                journal_currency = journal.currency_id or journal.company_id.currency_id
-                payment = self.env['account.payment'].create({
-                    'payment_method_id': payment_methods and payment_methods[0].id or False,
-                    'payment_type': 'outbound' if total_amount < 0 else 'inbound',
-                    'partner_id': expense.employee_id.sudo().address_home_id.commercial_partner_id.id,
-                    'partner_type': 'supplier',
-                    'journal_id': journal.id,
-                    'date': expense.date,
-                    'currency_id': expense.currency_id.id if different_currency else journal_currency.id,
-                    'amount': abs(total_amount_currency) if different_currency else abs(total_amount),
-                    'ref': expense.name,
-                })
-                move_line_dst['payment_id'] = payment.id
 
             # link move lines to move, and move to expense sheet
             move.write({'line_ids': [(0, 0, line) for line in move_line_values]})
@@ -576,7 +565,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             ], ['total_amount', 'currency_id', 'state'], ['state', 'currency_id'], lazy=False)
         for expense in expenses:
             state = expense['state']
-            currency = self.env['res.currency'].browse(expense['currency_id'][0])
+            currency = self.env['res.currency'].browse(expense['currency_id'][0]) if expense['currency_id'] else target_currency
             amount = currency._convert(
                     expense['total_amount'], target_currency, self.env.company, fields.Date.today())
             expense_state[state]['amount'] += amount
@@ -607,6 +596,10 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
 
         if not company:  # ultimate fallback, since company_id is required on expense
             company = self.env.company
+
+        # The expenses alias is the same for all companies, we need to set the proper context
+        # To select the product account
+        self = self.with_company(company)
 
         product, price, currency_id, expense_description = self._parse_expense_subject(expense_description, currencies)
         vals = {
@@ -953,9 +946,26 @@ class HrExpenseSheet(models.Model):
             if not self.env.user in current_managers and not self.user_has_groups('hr_expense.group_hr_expense_user') and self.employee_id.expense_manager_id != self.env.user:
                 raise UserError(_("You can only approve your department expenses"))
 
-        responsible_id = self.user_id.id or self.env.user.id
-        self.write({'state': 'approve', 'user_id': responsible_id})
+        responsible_id = self.user_id.id or self.env.user.id    
+        notification = {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('There are no expense reports to approve.'),
+                'type': 'warning',
+                'sticky': False,  #True/False will display for few seconds if false
+            },
+        }
+        sheet_to_approve = self.filtered(lambda s: s.state in ['submit', 'draft'])
+        if sheet_to_approve:
+            notification['params'].update({
+                'title': _('The expense reports were successfully approved.'),
+                'type': 'success',
+                'next': {'type': 'ir.actions.act_window_close'},
+            })
+            sheet_to_approve.write({'state': 'approve', 'user_id': responsible_id})
         self.activity_update()
+        return notification
 
     def paid_expense_sheets(self):
         self.write({'state': 'done'})

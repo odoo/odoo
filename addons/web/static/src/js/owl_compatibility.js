@@ -375,6 +375,17 @@ odoo.define('web.OwlCompatibility', function () {
          */
         on_attach_callback() {
             function recursiveCallMounted(component) {
+                if (
+                    component.__owl__.status !== 2 /* RENDERED */ &&
+                    component.__owl__.status !== 3 /* MOUNTED */ &&
+                    component.__owl__.status !== 4 /* UNMOUNTED */
+                ) {
+                    // Avoid calling mounted on a component that is not even
+                    // rendered. Doing otherwise will lead to a crash if a
+                    // specific mounted callback is legitimately relying on the
+                    // component being mounted.
+                    return;
+                }
                 for (const key in component.__owl__.children) {
                     recursiveCallMounted(component.__owl__.children[key]);
                 }
@@ -439,14 +450,14 @@ odoo.define('web.OwlCompatibility', function () {
          * @return {Promise}
          */
         async update(props = {}) {
-            if (this.__owl__.isDestroyed) {
+            if (this.__owl__.status === 5 /* destroyed */) {
                 return new Promise(() => {});
             }
 
             Object.assign(this.props, props);
 
             let prom;
-            if (this.__owl__.isMounted) {
+            if (this.__owl__.status === 3 /* mounted */) {
                 prom = this.render();
             } else {
                 // we may not be in the DOM, but actually want to be redrawn

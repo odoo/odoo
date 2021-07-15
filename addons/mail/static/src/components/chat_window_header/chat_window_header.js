@@ -4,6 +4,7 @@ odoo.define('mail/static/src/components/chat_window_header/chat_window_header.js
 const components = {
     ThreadIcon: require('mail/static/src/components/thread_icon/thread_icon.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
@@ -15,13 +16,20 @@ class ChatWindowHeader extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const chatWindow = this.env.models['mail.chat_window'].get(props.chatWindowLocalId);
             const thread = chatWindow && chatWindow.thread;
             return {
-                chatWindow: chatWindow ? chatWindow.__state : undefined,
+                chatWindow,
+                chatWindowHasShiftLeft: chatWindow && chatWindow.hasShiftLeft,
+                chatWindowHasShiftRight: chatWindow && chatWindow.hasShiftRight,
+                chatWindowName: chatWindow && chatWindow.name,
                 isDeviceMobile: this.env.messaging.device.isMobile,
-                thread: thread ? thread.__state : undefined,
+                thread,
+                threadLocalMessageUnreadCounter: thread && thread.localMessageUnreadCounter,
+                threadMassMailing: thread && thread.mass_mailing,
+                threadModel: thread && thread.model,
             };
         });
     }
@@ -56,6 +64,9 @@ class ChatWindowHeader extends Component {
      */
     _onClickClose(ev) {
         ev.stopPropagation();
+        if (!this.chatWindow) {
+            return;
+        }
         this.chatWindow.close();
     }
 

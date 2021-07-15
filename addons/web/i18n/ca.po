@@ -11,18 +11,18 @@
 # Lluís Dalmau <lluis.dalmau@guifi.net>, 2020
 # RGB Consulting <odoo@rgbconsulting.com>, 2020
 # Quim - eccit <quim@eccit.com>, 2020
-# Manel Fernandez Ramirez <manelfera@outlook.com>, 2020
 # Arnau Ros, 2020
-# jabelchi <jabelchi@gmail.com>, 2020
 # Martin Trigaux, 2020
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2021
+# jabelchi, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"POT-Creation-Date: 2021-02-25 10:30+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: jabelchi, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,13 +50,6 @@ msgstr "registres"
 #, python-format
 msgid "# Code editor"
 msgstr "# Editor de codi"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
-#, python-format
-msgid "${-diffDays} days ago"
-msgstr ""
 
 #. module: web
 #. openerp-web
@@ -102,10 +95,10 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/notification.xml:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "&times;"
-msgstr "&times;"
+msgid "%s days ago"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1140,7 +1133,7 @@ msgstr "Companyia"
 #. module: web
 #: model:ir.model,name:web.model_base_document_layout
 msgid "Company Document Layout"
-msgstr ""
+msgstr "Disposició del document de l'empresa"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo
@@ -1552,7 +1545,7 @@ msgstr "Descripció"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Discard"
-msgstr "Rebutgi"
+msgstr "Descartar"
 
 #. module: web
 #. openerp-web
@@ -1569,7 +1562,7 @@ msgstr "Descartar la modificació d'un registre"
 #: model:ir.model.fields,field_description:web.field_ir_qweb_field_image_url__display_name
 #: model:ir.model.fields,field_description:web.field_res_company__display_name
 msgid "Display Name"
-msgstr "Mostrar Nom"
+msgstr "Nom mostrat"
 
 #. module: web
 #. openerp-web
@@ -2032,6 +2025,7 @@ msgstr "Verd"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/groupby_menu.js:0
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #, python-format
 msgid "Group By"
 msgstr "Agrupar per"
@@ -2082,7 +2076,7 @@ msgstr "Prem ENTER per CREAR"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to SAVE"
-msgstr "Prem ENTER per DESAR"
+msgstr "Premeu ENTER per DESAR"
 
 #. module: web
 #. openerp-web
@@ -2135,7 +2129,7 @@ msgstr "Imatge"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "In ${diffDays} days"
+msgid "In %s days"
 msgstr ""
 
 #. module: web
@@ -2396,12 +2390,12 @@ msgstr "Logo"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo_primary_color
 msgid "Logo Primary Color"
-msgstr ""
+msgstr "Color primari del logo"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo_secondary_color
 msgid "Logo Secondary Color"
-msgstr ""
+msgstr "Color secundari del logo"
 
 #. module: web
 #. openerp-web
@@ -2409,6 +2403,13 @@ msgstr ""
 #, python-format
 msgid "Mac"
 msgstr "Mac"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/services/crash_manager.js:0
+#, python-format
+msgid "MailDeliveryException"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -2486,6 +2487,7 @@ msgstr "Potser podries considerar tornar a carregar l'aplicació prement F5..."
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Measures"
@@ -2614,7 +2616,7 @@ msgstr "Nou"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
-msgid "New ${this.name}"
+msgid "New %s"
 msgstr ""
 
 #. module: web
@@ -2921,6 +2923,13 @@ msgstr "Només tu"
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
+msgid "Open Developer Tools"
+msgstr "Obrir eines del desenvolupador"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
 msgid "Open Developer Tools#{widget.debug_mode_help}"
 msgstr ""
 
@@ -2969,6 +2978,13 @@ msgstr "Obrir a la vista de llista"
 #, python-format
 msgid "Open: "
 msgstr "Obre:"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list/list_renderer.js:0
+#, python-format
+msgid "Optional columns"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -3140,8 +3156,7 @@ msgstr "Si us plau, selecciona els camps a exportar..."
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Please select fields to save export list..."
-msgstr ""
-"Si us plau, selecciona els camps per guardar la llista d'exportació..."
+msgstr "Si us plau, seleccioneu els camps per desar la llista d'exportació..."
 
 #. module: web
 #. openerp-web
@@ -4436,6 +4451,13 @@ msgstr "Variació"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View %s"
+msgstr "Vista %s"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "View Access Rights"
@@ -4478,6 +4500,7 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/chrome/action_manager_report.js:0
+#: code:addons/web/static/src/js/services/crash_manager.js:0
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
@@ -4505,7 +4528,7 @@ msgstr "Testos web"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__website
 msgid "Website Link"
-msgstr ""
+msgstr "Enllaç a Lloc Web"
 
 #. module: web
 #. openerp-web
@@ -5025,13 +5048,6 @@ msgstr "de:"
 #, python-format
 msgid "or"
 msgstr "o"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/colorpicker.xml:0
-#, python-format
-msgid "p-0 border-0 text-center text-monospace bg-transparent text-white"
-msgstr ""
 
 #. module: web
 #. openerp-web

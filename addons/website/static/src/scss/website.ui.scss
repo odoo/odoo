@@ -126,6 +126,13 @@ body.o_connected_user {
     }
 }
 
+// BLOCKING LOADER
+#o_website_page_loader {
+    @include o-position-absolute(0, 0, 0, 0);
+    z-index: $zindex-modal - 1;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
 // MODALS
 body .modal {
     &.o_technical_modal {
@@ -473,5 +480,34 @@ body .modal {
     }
     .fa-check, .fa-eye-slash {
         color: $info;
+    }
+}
+
+.ui-autocomplete.o_website_ui_autocomplete {
+    max-width: 400px;
+    font-size: $o-we-sidebar-font-size;
+    border: none;
+    background-color: $o-we-sidebar-content-field-dropdown-bg;
+    box-shadow: $o-we-sidebar-content-field-dropdown-shadow;
+    > li {
+        border-bottom: $o-we-sidebar-content-field-border-width solid lighten($o-we-sidebar-content-field-dropdown-border-color, 15%);
+        border-radius: $o-we-sidebar-content-field-border-radius;
+        background-color: $o-we-sidebar-content-field-clickable-bg;
+        color: $o-we-sidebar-content-field-clickable-color;
+        &.ui-menu-item {
+            > div {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-height: 20px;
+                &.ui-state-active {
+                    border: $o-we-sidebar-content-field-dropdown-border-width solid transparent;
+                    background-color: $o-we-sidebar-content-field-dropdown-item-bg-hover;
+                }
+            }
+        }
+        &.ui-autocomplete-category {
+            background-color: $o-we-bg-lighter;
+        }
     }
 }

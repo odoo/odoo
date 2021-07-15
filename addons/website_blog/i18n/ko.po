@@ -7,15 +7,15 @@
 # Jongkwan, Yeom <jongkwanyeom@gmail.com>, 2020
 # Link Up링크업 <linkup.way@gmail.com>, 2020
 # Linkup <link-up@naver.com>, 2020
-# JH CHOI <hwangtog@gmail.com>, 2020
+# JH CHOI <hwangtog@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-27 15:41+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -359,6 +359,22 @@ msgid "Along those lines, how difficult is the set up and break down?"
 msgstr "그 선들을 따라 설치와 고장이 얼마나 어렵습니까?"
 
 #. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website_blog.js:0
+#, python-format
+msgid "Amazing blog article: %s! Check it live: %s"
+msgstr "놀라운 블로그 기사: %s! 실시간 확인 : %s"
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/snippets/s_latest_posts/000.js:0
+#, python-format
+msgid ""
+"An error occured with this latest posts block. If the problem persists, "
+"please consider deleting it and adding a new one"
+msgstr "이 최신 게시물 블록에서 오류가 발생했습니다. 문제가 지속되면 삭제하고 새 문제를 추가하는 것을 고려하시기 바랍니다."
+
+#. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_1
 msgid "An exciting mix of relaxation, culture, history, wildlife and hiking."
 msgstr "휴식, 문화, 역사, 야생동물 그리고 하이킹이 흥미진진하게 혼합되어 있습니다."
@@ -686,6 +702,13 @@ msgstr ""
 #, python-format
 msgid "Choose an image from the library."
 msgstr "라이브러리에서 이미지를 선택하십시오."
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#, python-format
+msgid "Click here to add new content to your website."
+msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -1343,6 +1366,13 @@ msgid "New tag"
 msgstr ""
 
 #. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/snippets/s_latest_posts/000.js:0
+#, python-format
+msgid "No blog post was found. Make sure your posts are published."
+msgstr "블로그 게시물을 찾을 수 없습니다. 게시물이 게시되었는지 확인하십시오."
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "No blog post yet."
 msgstr "아직 블로그 게시물이 없습니다."
@@ -1617,7 +1647,7 @@ msgstr "새 블로그 게시물을 작성하려면 이 메뉴 항목을 선택�
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__seo_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "Seo 이름"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form

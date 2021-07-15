@@ -3,18 +3,19 @@
 # 	* sale_product_configurator
 # 
 # Translators:
-# Martin Trigaux, 2019
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
-# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Martin Trigaux, 2021
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2021
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2021
+# Linas Versada <linaskrisiukenas@gmail.com>, 2021
+# Denis Knotko <denis_knotko@yahoo.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Denis Knotko <denis_knotko@yahoo.com>, 2021\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,6 +69,11 @@ msgid "Cancel"
 msgstr "Atšaukti"
 
 #. module: sale_product_configurator
+#: model:product.template,name:sale_product_configurator.product_product_1_product_template
+msgid "Chair floor protection"
+msgstr "Kėdės grindų apsauga"
+
+#. module: sale_product_configurator
 #. openerp-web
 #: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
@@ -102,6 +108,8 @@ msgid "Custom Values"
 msgstr ""
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
@@ -112,6 +120,8 @@ msgid "Extra Values"
 msgstr ""
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__id
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__id
 msgid "ID"
 msgstr "ID"
@@ -122,6 +132,8 @@ msgid "Is the product configurable?"
 msgstr ""
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template____last_update
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line____last_update
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
@@ -135,6 +147,11 @@ msgstr "Paskutinį kartą atnaujino"
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
+
+#. module: sale_product_configurator
+#: model:product.template,description_sale:sale_product_configurator.product_product_1_product_template
+msgid "Office chairs can harm your floor: protect it."
+msgstr "Biuro kėdės gali pažeisti jūsų grindis, apsaugokite jas."
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
@@ -192,6 +209,11 @@ msgid "Product Template"
 msgstr "Produkto šablonas"
 
 #. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_order_view_form
+msgid "Product Variant"
+msgstr "Produkto variantas"
+
+#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__quantity
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "Quantity"
@@ -228,3 +250,8 @@ msgstr "Ši kombinacija neegzistuoja."
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
 msgstr "Šis produktas neturi galimų kombinacijų."
+
+#. module: sale_product_configurator
+#: model:product.template,uom_name:sale_product_configurator.product_product_1_product_template
+msgid "Units"
+msgstr "Vienetai"

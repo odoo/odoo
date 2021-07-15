@@ -168,14 +168,7 @@ models.PosModel = models.PosModel.extend({
         if (orders_to_sync.length) {
             this.set_synch('connecting', orders_to_sync.length);
             this._save_to_server(orders_to_sync, {'draft': true}).then(function (server_ids) {
-                server_ids.forEach(function(server_id){
-                    table_orders.some(function(o){
-                        if (o.name === server_id.pos_reference) {
-                            o.server_id = server_id.id;
-                            o.save_to_db();
-                        }
-                    });
-                });
+                server_ids.forEach(server_id => self.update_table_order(server_id, table_orders));
                 if (!ids_to_remove.length) {
                     self.set_synch('connected');
                 } else {
@@ -192,6 +185,15 @@ models.PosModel = models.PosModel.extend({
             }
             self.clean_table_transfer(table);
         }
+    },
+
+    update_table_order: function(server_id, table_orders) {
+        const order = table_orders.find(o => o.name === server_id.pos_reference);
+        if (order) {
+            order.server_id = server_id.id;
+            order.save_to_db();
+        }
+        return order;
     },
 
     /**
@@ -367,7 +369,7 @@ models.PosModel = models.PosModel.extend({
             if( (reason === 'abandon' || removed_order.temporary) && order_list.length > 0){
                 this.set_order(order_list[index] || order_list[order_list.length - 1], { silent: true });
             } else if (order_list.length === 0) {
-                this.set_order(null);
+                this.table ? this.set_order(null) : this.set_table(null);
             }
         } else {
             _super_posmodel.on_removed_order.apply(this,arguments);

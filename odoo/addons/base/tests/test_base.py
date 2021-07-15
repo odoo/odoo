@@ -196,7 +196,7 @@ class TestBase(TransactionCase):
         self.assertEqual(p1.street, p1street, 'Address fields must not be synced after turning sync off')
         self.assertNotEqual(ghoststep.street, p1street, 'Parent address must never be touched')
 
-        # turn on sync again       
+        # turn on sync again
         p1.write({'type': 'contact'})
         self.assertEqual(p1.street, ghoststep.street, 'Address fields must be synced again')
         self.assertEqual(p1.phone, p1phone, 'Phone should be preserved after address sync')
@@ -383,12 +383,12 @@ class TestBase(TransactionCase):
         for p in (p0, p1, p11, p2, p3):
             self.assertEqual(p.commercial_partner_id, sunhelm, 'Incorrect commercial entity resolution')
             self.assertEqual(p.vat, sunhelm.vat, 'Commercial fields must be automatically synced')
-        sunhelmvat = 'BE0123456789'
+        sunhelmvat = 'BE0123456749'
         sunhelm.write({'vat': sunhelmvat})
         for p in (p0, p1, p11, p2, p3):
             self.assertEqual(p.vat, sunhelmvat, 'Commercial fields must be automatically and recursively synced')
 
-        p1vat = 'BE0987654321'
+        p1vat = 'BE0987654394'
         p1.write({'vat': p1vat})
         for p in (sunhelm, p0, p11, p2, p3):
             self.assertEqual(p.vat, sunhelmvat, 'Sync to children should only work downstream and on commercial entities')
@@ -401,7 +401,7 @@ class TestBase(TransactionCase):
         self.assertEqual(p1.commercial_partner_id, p1, 'Incorrect commercial entity resolution after setting is_company')
 
         # writing on parent should not touch child commercial entities
-        sunhelmvat2 = 'BE0112233445'
+        sunhelmvat2 = 'BE0112233453'
         sunhelm.write({'vat': sunhelmvat2})
         self.assertEqual(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
         self.assertEqual(p0.vat, sunhelmvat2, 'Commercial fields must be automatically synced')

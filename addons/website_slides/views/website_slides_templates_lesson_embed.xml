@@ -77,8 +77,8 @@
                                 </div>
                             </div>
                             <t t-if="slide.slide_type in ('presentation', 'document')">
-                                <div id="PDFViewerLoader" class="oe_slides_loader position-absolute mt-3 mr-3" style="right:0">
-                                    <div class="toast show">
+                                <div id="PDFViewerLoader" class="oe_slides_loader mt-3 mx-2 w-100">
+                                    <div class="toast show mx-auto">
                                         <div class="toast-header">
                                             <i class="fa fa-circle-o-notch fa-spin mr-2"/><b>Loading...</b>
                                         </div>
@@ -87,7 +87,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <canvas id="PDFViewerCanvas" class="img-fluid w-100" style="display: none;"></canvas>
+                                <canvas id="PDFViewerCanvas" class="mx-auto" style="display: none;"></canvas>
                             </t>
                             <t t-if="slide.slide_type == 'infographic'">
                                 <img t-att-src="website.image_url(slide, 'image_1024')" class="img-fluid" style="width: 100%" alt="Slide image"/>
@@ -97,28 +97,34 @@
                         <div id="PDFViewerNav" class="pt-2 pb-2 bg-light text-white" role="navigation" t-if="slide.slide_type in ('presentation', 'document')">
                             <div class="container-fluid oe_slides_panel_footer">
                                 <div class="row align-items-center">
-                                    <div class="col-2 flex-grow-0">
+                                    <div class="col-3 d-flex align-items-center">
                                         <div class="input-group input-group-sm flex-nowrap" style="max-width: 100px">
                                             <input type="number" class="form-control text-center" id="page_number" style="min-width: 60px"/>
                                             <div class="input-group-append">
                                                 <span class="input-group-text" id="page_count"/>
                                             </div>
                                         </div>
+                                        <a id="zoomout" href="#" class="text-decoration-none d-none d-sm-inline ml-2 mr-2" title="Zoom out" aria-label="Zoom out" role="button">
+                                            <i class="fa fa-search-minus" />
+                                        </a>
+                                        <a id="zoomin" href="#" class="text-decoration-none d-none d-sm-inline" title="Zoom in" aria-label="Zoom in" role="button">
+                                            <i class="fa fa-search-plus" />
+                                        </a>
                                     </div>
                                     <div class="col text-center">
                                         <a id="first" href="#" class="text-decoration-none mr-1 mr-sm-2" title="First slide" role="button" aria-label="First slide"> <i class="fa fa-step-backward"/> </a>
                                         <a id="previous" href="#" class="text-decoration-none mx-1 mx-sm-2" title="Previous slide" aria-label="Previous slide" role="button"> <i class="fa fa-arrow-circle-left"/> </a>
                                         <a id="next" href="#" class="text-decoration-none mx-1 mx-sm-2" title="Next slide" aria-label="Next slide" role="button"> <i class="fa fa-arrow-circle-right"/> </a>
-                                        <a id="last" href="#" class="text-decoration-none ml-1 ml-sm-2" title="Last slide" aria-label="Last slide" role="button"> <i class="fa fa-step-forward"/> </a>
-                                    </div>
-                                    <div class="col-2 flex-grow-0 text-right">
+                                        <a id="last" href="#" class="text-decoration-none mx-1 mx-sm-2" title="Last slide" aria-label="Last slide" role="button"> <i class="fa fa-step-forward"/> </a>
                                         <a t-if="slide.slide_resource_downloadable" id="download" t-attf-href="/web/content/slide.slide/#{slide.id}/datas?download=true"
-                                           class="text-decoration-none mr-1 mr-sm-2" title="Download Content" role="img" aria-label="Download">
+                                           class="text-decoration-none ml-1 ml-sm-2" title="Download Content" role="img" aria-label="Download">
                                             <i class="fa fa-download" />
                                         </a>
+                                    </div>                                    
+                                    <div class="col-3 text-right flex-grow-0">
                                         <a id="fullscreen" href="#" class="text-decoration-none ml-1 ml-sm-2"
                                            title="View fullscreen" role="img" aria-label="Fullscreen">
-                                            <i class="fas fa-expand-arrows-alt"/>
+                                            <i class="fa fa-arrows-alt"/>
                                         </a>
                                     </div>
                                 </div>

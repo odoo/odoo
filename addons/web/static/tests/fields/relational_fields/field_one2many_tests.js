@@ -3,6 +3,8 @@ odoo.define('web.field_one_to_many_tests', function (require) {
 
 var AbstractField = require('web.AbstractField');
 var AbstractStorageService = require('web.AbstractStorageService');
+const ControlPanel = require('web.ControlPanel');
+const fieldRegistry = require('web.field_registry');
 var FormView = require('web.FormView');
 var KanbanRecord = require('web.KanbanRecord');
 var ListRenderer = require('web.ListRenderer');
@@ -14,6 +16,7 @@ var fieldUtils = require('web.field_utils');
 
 const cpHelpers = testUtils.controlPanel;
 var createView = testUtils.createView;
+const { FieldOne2Many } = relationalFields;
 
 QUnit.module('fields', {}, function () {
 
@@ -1545,6 +1548,110 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('onchange on one2many with x2many in list (no widget) and form view (list)', async function (assert) {
+            assert.expect(6);
+
+            this.data.turtle.fields.turtle_foo.default = "a default value";
+            this.data.partner.onchanges = {
+                foo: function (obj) {
+                  obj.p = [[0, false, { turtles: [[0, false, { turtle_foo: 'hello'}]] }]];
+                },
+            };
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="foo"/>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="turtles"/>' +
+                            '</tree>' +
+                            '<form>' +
+                                '<field name="turtles">' +
+                                    '<tree editable="top">' +
+                                        '<field name="turtle_foo"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</form>' +
+                        '</field>' +
+                    '</form>',
+            });
+
+
+            assert.containsOnce(form, '.o_data_row',
+                "the onchange should have created one record in the relation");
+
+            // open the created o2m record in a form view
+            await testUtils.dom.click(form.$('.o_data_row'));
+
+            assert.containsOnce(document.body, '.modal', "should have opened a dialog");
+            assert.containsOnce(document.body, '.modal .o_data_row');
+            assert.strictEqual($('.modal .o_data_row').text(), 'hello');
+
+            // add a one2many subrecord and check if the default value is correctly applied
+            await testUtils.dom.click($('.modal .o_field_x2many_list_row_add a'));
+
+            assert.containsN(document.body, '.modal .o_data_row', 2);
+            assert.strictEqual($('.modal .o_data_row:first .o_field_widget[name=turtle_foo]').val(),
+                'a default value');
+
+            form.destroy();
+        });
+
+        QUnit.test('onchange on one2many with x2many in list (many2many_tags) and form view (list)', async function (assert) {
+            assert.expect(6);
+
+            this.data.turtle.fields.turtle_foo.default = "a default value";
+            this.data.partner.onchanges = {
+                foo: function (obj) {
+                  obj.p = [[0, false, { turtles: [[0, false, { turtle_foo: 'hello'}]] }]];
+                },
+            };
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="foo"/>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="turtles" widget="many2many_tags"/>' +
+                            '</tree>' +
+                            '<form>' +
+                                '<field name="turtles">' +
+                                    '<tree editable="top">' +
+                                        '<field name="turtle_foo"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</form>' +
+                        '</field>' +
+                    '</form>',
+            });
+
+
+            assert.containsOnce(form, '.o_data_row',
+                "the onchange should have created one record in the relation");
+
+            // open the created o2m record in a form view
+            await testUtils.dom.click(form.$('.o_data_row'));
+
+            assert.containsOnce(document.body, '.modal', "should have opened a dialog");
+            assert.containsOnce(document.body, '.modal .o_data_row');
+            assert.strictEqual($('.modal .o_data_row').text(), 'hello');
+
+            // add a one2many subrecord and check if the default value is correctly applied
+            await testUtils.dom.click($('.modal .o_field_x2many_list_row_add a'));
+
+            assert.containsN(document.body, '.modal .o_data_row', 2);
+            assert.strictEqual($('.modal .o_data_row:first .o_field_widget[name=turtle_foo]').val(),
+                'a default value');
+
+            form.destroy();
+        });
+
         QUnit.test('embedded one2many with handle widget with minimum setValue calls', async function (assert) {
             var done = assert.async();
             assert.expect(20);
@@ -1600,7 +1707,7 @@ QUnit.module('fields', {}, function () {
             var positions = [
                 [6, 0, 'top', ['3', '6', '1', '2', '5', '7', '4']], // move the last to the first line
                 [5, 1, 'top', ['7', '6', '1', '2', '5']], // move the penultimate to the second line
-                [2, 5, 'center', ['1', '2', '5', '6']], // move the third to the penultimate line
+                [2, 5, 'bottom', ['1', '2', '5', '6']], // move the third to the penultimate line
             ];
             async function dragAndDrop() {
                 var pos = positions.shift();
@@ -2557,7 +2664,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             await testUtils.dom.click(form.$el);
 
-            assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_pager').text().trim(), '1-3 / 5',
+            assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_pager').text().trim(), '1-4 / 5',
                 "pager should display the correct total");
             form.destroy();
         });
@@ -2869,7 +2976,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('editable one2many list, adding line when only one page', async function (assert) {
-            assert.expect(1);
+            assert.expect(5);
 
             this.data.partner.records[0].turtles = [1, 2, 3];
             var form = await createView({
@@ -2891,6 +2998,15 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             // the record currently being added should not count in the pager
             assert.containsNone(form, '.o_field_widget[name=turtles] .o_pager');
+
+            // unselect the row
+            await testUtils.dom.click(form.$el);
+            assert.containsNone(form, '.o_selected_row');
+            assert.containsNone(form, '.o_field_widget[name=turtles] .o_pager');
+
+            await testUtils.form.clickSave(form);
+            assert.containsOnce(form, '.o_field_widget[name=turtles] .o_pager');
+            assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_pager').text(), "1-3 / 4");
 
             form.destroy();
         });
@@ -2993,13 +3109,13 @@ QUnit.module('fields', {}, function () {
             // see a confirm dialog
             await testUtils.dom.click(form.$('.o_field_widget[name=turtles] .o_pager_next'));
 
-            assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_pager').text().trim(), '1-3 / 4',
+            assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_pager').text().trim(), '1-4 / 5',
                 "pager should still display the correct total");
 
             // click on cancel
             await testUtils.dom.click($('.modal .modal-footer .btn-secondary'));
 
-            assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_pager').text().trim(), '1-3 / 4',
+            assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_pager').text().trim(), '1-4 / 5',
                 "pager should again display the correct total");
             assert.containsOnce(form, '.o_field_one2many input.o_field_invalid',
                 "there should be an invalid input in the one2many");
@@ -3007,7 +3123,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('editable one2many list, adding, discarding, and pager', async function (assert) {
-            assert.expect(2);
+            assert.expect(4);
 
             this.data.partner.records[0].turtles = [1];
 
@@ -3025,15 +3141,15 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            // add a 4 records record (to make the pager appear)
+            // add 4 records (to have more records than the limit)
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
-            // go on next page
-            await testUtils.dom.click(form.$('.o_field_widget[name=turtles] .o_pager_next'));
+            assert.containsN(form, 'tr.o_data_row', 5);
+            assert.containsNone(form, '.o_field_widget[name=turtles] .o_pager');
 
             // discard
             await testUtils.form.clickDiscard(form);
@@ -4541,6 +4657,61 @@ QUnit.module('fields', {}, function () {
 
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
+            // use of owlCompatibilityNextTick because we have an x2many field with a boolean field
+            // (written in owl), so when we add a line, we sequentially render the list itself
+            // (including the boolean field), so we have to wait for the next animation frame, and
+            // then we render the control panel (also in owl), so we have to wait again for the
+            // next animation frame
+            await testUtils.owlCompatibilityNextTick();
+            form.destroy();
+        });
+
+        QUnit.test('parent data is properly sent on an onchange rpc (existing x2many record)', async function (assert) {
+            assert.expect(4);
+
+            this.data.partner.onchanges = {
+                display_name: function () {},
+            };
+            this.data.partner.records[0].p = [1];
+            this.data.partner.records[0].turtles = [2];
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="foo"/>
+                        <field name="p">
+                            <tree editable="top">
+                                <field name="display_name"/>
+                                <field name="turtles" widget="many2many_tags"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                res_id: 1,
+                mockRPC(route, args) {
+                    if (args.method === 'onchange') {
+                        const fieldValues = args.args[1];
+                        assert.strictEqual(fieldValues.trululu.foo, "yop");
+                        // we only send fields that changed inside the reverse many2one
+                        assert.deepEqual(fieldValues.trululu.p, [
+                            [1, 1, { display_name: 'new val' }],
+                        ]);
+                    }
+                    return this._super(...arguments);
+                },
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            assert.containsOnce(form, '.o_data_row');
+
+            await testUtils.dom.click(form.$('.o_data_row .o_data_cell:first'));
+
+            assert.containsOnce(form, '.o_data_row.o_selected_row');
+            await testUtils.fields.editInput(form.$('.o_selected_row .o_field_widget[name=display_name]'), "new val");
+
             form.destroy();
         });
 
@@ -4571,6 +4742,12 @@ QUnit.module('fields', {}, function () {
                 },
             });
             await testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
+            // use of owlCompatibilityNextTick because we have an x2many field with a boolean field
+            // (written in owl), so when we add a line, we sequentially render the list itself
+            // (including the boolean field), so we have to wait for the next animation frame, and
+            // then we render the control panel (also in owl), so we have to wait again for the
+            // next animation frame
+            await testUtils.owlCompatibilityNextTick();
             assert.verifySteps(['onchange', 'onchange']);
             form.destroy();
         });
@@ -6071,6 +6248,7 @@ QUnit.module('fields', {}, function () {
 
             // add a new row (which is invalid at first)
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            await testUtils.owlCompatibilityNextTick();
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "0",
                 "int_field should still be 0 (no onchange should have been done yet)");
             assert.verifySteps(['load_views', 'read', 'onchange']);
@@ -6487,7 +6665,7 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.test('one2many: onchange that returns unknow field in list, but not in form', async function (assert) {
+        QUnit.test('one2many: onchange that returns unknown field in list, but not in form', async function (assert) {
             assert.expect(5);
 
             this.data.partner.onchanges = {
@@ -6535,6 +6713,79 @@ QUnit.module('fields', {}, function () {
                 "m2mtags should contain one tag");
             assert.strictEqual($('.modal .o_field_many2manytags[name="timmy"] .o_badge_text').text(),
                 'gold', "tag name should have been correctly loaded");
+
+            form.destroy();
+        });
+
+        QUnit.test('multi level of nested x2manys, onchange and rawChanges', async function (assert) {
+            assert.expect(8);
+
+            this.data.partner.records[0].p = [1];
+            this.data.partner.onchanges = {
+                name: function () { },
+            };
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="name"/>
+                        <field name="p">
+                            <tree><field name="display_name"/></tree>
+                            <form>
+                                <field name="display_name"/>
+                                <field name="p">
+                                    <tree><field name="display_name"/></tree>
+                                    <form><field name="display_name"/></form>
+                                </field>
+                            </form>
+                        </field>
+                    </form>`,
+                mockRPC(route, args) {
+                    if (args.method === 'write') {
+                        assert.deepEqual(args.args[1].p[0][2], {
+                            p: [[1, 1, { display_name: 'new name' }]],
+                        });
+                    }
+                    return this._super(...arguments);
+                },
+                res_id: 1,
+            });
+
+            assert.containsOnce(form, '.o_data_row', "the one2many should contain one row");
+
+            // open the o2m record in readonly first
+            await testUtils.dom.click(form.$('.o_data_row td:first'));
+            assert.containsOnce(document.body, ".modal .o_form_readonly");
+            await testUtils.dom.click($('.modal .modal-footer .o_form_button_cancel'));
+
+            // switch to edit mode and open it again
+            await testUtils.form.clickEdit(form);
+            await testUtils.dom.click(form.$('.o_data_row td:first'));
+
+            assert.containsOnce(document.body, ".modal .o_form_editable");
+            assert.containsOnce(document.body, '.modal .o_data_row', "the one2many should contain one row");
+
+            // open the o2m again, in the dialog
+            await testUtils.dom.click($('.modal .o_data_row td:first'));
+
+            assert.containsN(document.body, ".modal .o_form_editable", 2);
+
+            // edit the name and click save modal that is on top
+            await testUtils.fields.editInput($('.modal:nth(1) .o_field_widget[name=display_name]'), 'new name');
+            await testUtils.dom.click($('.modal:nth(1) .modal-footer .btn-primary'));
+
+            assert.containsOnce(document.body, ".modal .o_form_editable");
+
+            // click save on the other modal
+            await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+
+            assert.containsNone(document.body, ".modal");
+
+            // save the main record
+            await testUtils.form.clickSave(form);
 
             form.destroy();
         });
@@ -6693,13 +6944,14 @@ QUnit.module('fields', {}, function () {
 
 
             await testUtils.form.clickEdit(form);
+            // add a new record page 1 (this increases the limit to 4)
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             await testUtils.fields.editInput(form.$('.o_data_row input[name="turtle_foo"]'), 'rainbow dash');
-            await testUtils.dom.click(form.$('.o_x2m_control_panel .o_pager_next'));
-            await testUtils.dom.click(form.$('.o_x2m_control_panel .o_pager_next'));
+            await testUtils.dom.click(form.$('.o_x2m_control_panel .o_pager_next')); // page 2: 4 records
+            await testUtils.dom.click(form.$('.o_x2m_control_panel .o_pager_next')); // page 3: 2 records
 
-            assert.containsN(form, 'tr.o_data_row', 3,
-                "should have 3 data rows on the current page");
+            assert.containsN(form, 'tr.o_data_row', 2,
+                "should have 2 data rows on the current page");
             form.destroy();
         });
 
@@ -6885,7 +7137,11 @@ QUnit.module('fields', {}, function () {
             });
 
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
-
+            // use of owlCompatibilityNextTick because we have a boolean field (owl) inside the
+            // x2many, so an update of the x2many requires to wait for 2 animation frames: one
+            // for the list to be re-rendered (with the boolean field) and one for the control
+            // panel.
+            await testUtils.owlCompatibilityNextTick();
             await testUtils.dom.click(form.$('.o_field_widget[name=bar] input'));
             assert.notOk(form.$('.o_field_widget[name=bar] input').prop('checked'),
                 "the checkbox should be unticked");
@@ -7072,6 +7328,43 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), 'pinky pie');
             await testUtils.form.clickSave(form);
+
+            form.destroy();
+        });
+
+        QUnit.test('nested one2manys with no widget in list and as invisible list in form', async function (assert) {
+            assert.expect(6);
+
+            this.data.partner.records[0].p = [1];
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree><field name="turtles"/></tree>
+                            <form><field name="turtles" invisible="1"/></form>
+                        </field>
+                    </form>`,
+                res_id: 1,
+            });
+
+            assert.containsOnce(form, '.o_data_row');
+            assert.strictEqual(form.$('.o_data_row .o_data_cell').text(), '1 record');
+
+            await testUtils.dom.click(form.$('.o_data_row'));
+
+            assert.containsOnce(document.body, '.modal .o_form_view');
+            assert.containsNone(document.body, '.modal .o_form_view .o_field_one2many');
+
+            // Test possible caching issues
+            await testUtils.dom.click($('.modal .o_form_button_cancel'));
+            await testUtils.dom.click(form.$('.o_data_row'));
+
+            assert.containsOnce(document.body, '.modal .o_form_view');
+            assert.containsNone(document.body, '.modal .o_form_view .o_field_one2many');
 
             form.destroy();
         });
@@ -8430,13 +8723,16 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
+            await testUtils.owlCompatibilityNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
                 '', 'keyup');
+            await testUtils.owlCompatibilityNextTick();
             assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+            await testUtils.owlCompatibilityNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
@@ -8611,13 +8907,16 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
+            await testUtils.owlCompatibilityNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
                 '', 'keyup');
+            await testUtils.owlCompatibilityNextTick();
             assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+            await testUtils.owlCompatibilityNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
@@ -9110,6 +9409,12 @@ QUnit.module('fields', {}, function () {
             // resolve the name_create to trigger the onchange, and the reset of p
             prom.resolve();
             await testUtils.nextTick();
+            // use of owlCompatibilityNextTick because we have two sequential updates of the
+            // fieldX2Many: one because of the onchange, and one because of the click on add a line.
+            // As an update requires an update of the ControlPanel, which is an Owl Component, and
+            // waits for it, we need to wait for two animation frames before seeing the new line in
+            // the DOM
+            await testUtils.owlCompatibilityNextTick();
             assert.containsOnce(form, '.o_data_row');
             assert.hasClass(form.$('.o_data_row'), 'o_selected_row');
 
@@ -9328,6 +9633,324 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_field_many2manytags .o_badge_text').text(), 'coucou');
 
             await testUtils.form.clickSave(form);
+
+            form.destroy();
+        });
+
+        QUnit.test('mounted is called only once for x2many control panel', async function (assert) {
+            // This test could be removed as soon as the field widgets will be converted in owl.
+            // It comes with a fix for a bug that occurred because in some circonstances, 'mounted'
+            // is called twice for the x2many control panel.
+            // Specifically, this occurs when there is 'pad' widget in the form view, because this
+            // widget does a 'setValue' in its 'start', which thus resets the field x2many.
+            assert.expect(5);
+
+            const PadLikeWidget = fieldRegistry.get('char').extend({
+                start() {
+                    this._setValue("some value");
+                }
+            });
+            fieldRegistry.add('pad_like', PadLikeWidget);
+
+            let resolveCP;
+            const prom = new Promise(r => {
+                resolveCP = r;
+            });
+            ControlPanel.patch('cp_patch_mock', T =>
+                class extends T {
+                    constructor() {
+                        super(...arguments);
+                        owl.hooks.onMounted(() => {
+                            assert.step('mounted');
+                        });
+                        owl.hooks.onWillUnmount(() => {
+                            assert.step('willUnmount');
+                        });
+                    }
+                    async update() {
+                        // the issue is a race condition, so we manually delay the update to turn it deterministic
+                        await prom;
+                        super.update(...arguments);
+                    }
+                }
+            );
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="foo" widget="pad_like"/>
+                        <field name="p">
+                            <tree><field name="display_name"/></tree>
+                        </field>
+                    </form>`,
+                viewOptions: {
+                    withControlPanel: false, // s.t. there is only one CP: the one of the x2many
+                },
+            });
+
+            assert.verifySteps(['mounted']);
+
+            resolveCP();
+            await testUtils.nextTick();
+
+            assert.verifySteps([]);
+
+            ControlPanel.unpatch('cp_patch_mock');
+            delete fieldRegistry.map.pad_like;
+            form.destroy();
+
+            assert.verifySteps(["willUnmount"]);
+        });
+
+        QUnit.test('one2many: internal state is updated after another field changes', async function (assert) {
+            // The FieldOne2Many is configured such that it is reset at any field change.
+            // The MatrixProductConfigurator feature relies on that, and requires that its
+            // internal state is correctly updated. This white-box test artificially checks that.
+            assert.expect(2);
+
+            let o2m;
+            testUtils.patch(FieldOne2Many, {
+                init() {
+                    this._super(...arguments);
+                    o2m = this;
+                },
+            });
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="display_name"/>
+                        <field name="p">
+                            <tree><field name="display_name"/></tree>
+                        </field>
+                    </form>`,
+            });
+
+            assert.strictEqual(o2m.recordData.display_name, false);
+
+            await testUtils.fields.editInput(form.$('.o_field_widget[name=display_name]'), 'val');
+
+            assert.strictEqual(o2m.recordData.display_name, "val");
+
+            form.destroy();
+            testUtils.unpatch(FieldOne2Many);
+        });
+
+        QUnit.test('nested one2many, onchange, no command value', async function (assert) {
+            // This test ensures that we always send all values to onchange rpcs for nested
+            // one2manys, even if some field hasn't changed. In this particular test case,
+            // a first onchange returns a value for the inner one2many, and a second onchange
+            // removes it, thus restoring the field to its initial empty value. From this point,
+            // the nested one2many value must still be sent to onchange rpcs (on the main record),
+            // as it might be used to compute other fields (so the fact that the nested o2m is empty
+            // must be explicit).
+            assert.expect(3);
+
+            this.data.turtle.fields.o2m = {
+                string: "o2m", type: "one2many", relation: 'partner', relation_field: 'trululu',
+            };
+            this.data.turtle.fields.turtle_bar.default = true;
+            this.data.partner.onchanges.turtles = function (obj) {};
+            this.data.turtle.onchanges.turtle_bar = function (obj) {
+                if (obj.turtle_bar) {
+                    obj.o2m = [[5], [0, false, { display_name: "default" }]];
+                } else {
+                    obj.o2m = [[5]];
+                }
+            };
+
+            let step = 1;
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form>
+                        <field name="turtles">
+                            <tree editable="bottom">
+                                <field name="o2m"/>
+                                <field name="turtle_bar"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                async mockRPC(route, args) {
+                    if (step === 3 && args.method === 'onchange' && args.model === 'partner') {
+                        assert.deepEqual(args.args[1].turtles[0][2], {
+                            turtle_bar: false,
+                            o2m: [], // we must send a value for this field
+                        });
+                    }
+                    const result = await this._super(...arguments);
+                    if (args.model === 'turtle') {
+                        // sanity checks; this is what the onchanges on turtle must return
+                        if (step === 2) {
+                            assert.deepEqual(result.value, {
+                                o2m: [[5], [0, false, { display_name: "default" }]],
+                                turtle_bar: true,
+                            });
+                        }
+                        if (step === 3) {
+                            assert.deepEqual(result.value, {
+                                o2m: [[5]],
+                            });
+                        }
+                    }
+                    return result;
+                },
+            });
+
+            step = 2;
+            await testUtils.dom.click(form.$('.o_field_x2many_list .o_field_x2many_list_row_add a'));
+            // use of owlCompatibilityNextTick because we have an x2many field with a boolean field
+            // (written in owl), so when we add a line, we sequentially render the list itself
+            // (including the boolean field), so we have to wait for the next animation frame, and
+            // then we render the control panel (also in owl), so we have to wait again for the
+            // next animation frame
+            await testUtils.owlCompatibilityNextTick();
+            step = 3;
+            await testUtils.dom.click(form.$('.o_data_row .o_field_boolean input'));
+
+            form.destroy();
+        });
+
+        QUnit.test('update a one2many from a custom field widget', async function (assert) {
+            // In this test, we define a custom field widget to render/update a one2many
+            // field. For the update part, we ensure that updating primitive fields of a sub
+            // record works. There is no guarantee that updating a relational field on the sub
+            // record would work. Deleting a sub record works as well. However, creating sub
+            // records isn't supported. There are obviously a lot of limitations, but the code
+            // hasn't been designed to support all this. This test simply encodes what can be
+            // done, and this comment explains what can't (and won't be implemented in stable
+            // versions).
+            assert.expect(3);
+
+            this.data.partner.records[0].p = [1, 2];
+            const MyRelationalField = AbstractField.extend({
+                events: {
+                    'click .update': '_onUpdate',
+                    'click .delete': '_onDelete',
+                },
+                async _render() {
+                    const records = await this._rpc({
+                        method: 'read',
+                        model: 'partner',
+                        args: [this.value.res_ids],
+                    });
+                    this.$el.text(records.map(r => `${r.display_name}/${r.int_field}`).join(', '));
+                    this.$el.append($('<button class="update fa fa-edit">'));
+                    this.$el.append($('<button class="delete fa fa-trash">'));
+                },
+                _onUpdate() {
+                    this._setValue({
+                        operation: 'UPDATE',
+                        id: this.value.data[0].id,
+                        data: {
+                            display_name: 'new name',
+                            int_field: 44,
+                        },
+                    });
+                },
+                _onDelete() {
+                    this._setValue({
+                        operation: 'DELETE',
+                        ids: [this.value.data[0].id],
+                    });
+                },
+            });
+            fieldRegistry.add('my_relational_field', MyRelationalField);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="p" widget="my_relational_field"/>
+                    </form>`,
+                res_id: 1,
+            });
+
+            assert.strictEqual(form.$('.o_field_widget[name=p]').text(), 'first record/10, second record/9');
+
+            await testUtils.dom.click(form.$('button.update'));
+
+            assert.strictEqual(form.$('.o_field_widget[name=p]').text(), 'new name/44, second record/9');
+
+            await testUtils.dom.click(form.$('button.delete'));
+
+            assert.strictEqual(form.$('.o_field_widget[name=p]').text(), 'second record/9');
+
+            form.destroy();
+            delete fieldRegistry.map.my_relational_field;
+        });
+
+        QUnit.test('reordering embedded one2many with handle widget starting with same sequence', async function (assert) {
+            assert.expect(3);
+
+            this.data.turtle = {
+                fields: {turtle_int: {string: "int", type: "integer", sortable: true}},
+                records: [
+                    {id: 1, turtle_int: 1},
+                    {id: 2, turtle_int: 1},
+                    {id: 3, turtle_int: 1},
+                    {id: 4, turtle_int: 2},
+                    {id: 5, turtle_int: 3},
+                    {id: 6, turtle_int: 4},
+                ],
+            };
+            this.data.partner.records[0].turtles = [1, 2, 3, 4, 5, 6];
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form string="Partners">
+                        <sheet>
+                            <notebook>
+                                <page string="P page">
+                                    <field name="turtles">
+                                        <tree default_order="turtle_int">
+                                            <field name="turtle_int" widget="handle"/>
+                                            <field name="id"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </sheet>
+                    </form>`,
+                res_id: 1,
+            });
+
+            await testUtils.form.clickEdit(form);
+
+            assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "123456", "default should be sorted by id");
+
+            // Drag and drop the fourth line in first position
+            await testUtils.dom.dragAndDrop(
+                form.$('.ui-sortable-handle').eq(3),
+                form.$('tbody tr').first(),
+                {position: 'top'}
+            );
+            assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "412356", "should still have the 6 rows in the correct order");
+
+            await testUtils.form.clickSave(form);
+
+            assert.deepEqual(_.map(this.data.turtle.records, function (turtle) {
+                return _.pick(turtle, 'id', 'turtle_int');
+            }), [
+                {id: 1, turtle_int: 2},
+                {id: 2, turtle_int: 3},
+                {id: 3, turtle_int: 4},
+                {id: 4, turtle_int: 1},
+                {id: 5, turtle_int: 5},
+                {id: 6, turtle_int: 6},
+            ], "should have saved the updated turtle_int sequence");
 
             form.destroy();
         });

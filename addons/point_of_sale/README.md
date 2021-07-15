@@ -58,7 +58,7 @@ in parallel to not make your customers wait.
 ### Blazing fast search
 
 Scan products, browse through hierarchical categories, or get quick information
-about products with the blasting fast filter accross all your products.
+about products with the blasting fast filter across all your products.
 
 Integrated Inventory Management
 -------------------------------

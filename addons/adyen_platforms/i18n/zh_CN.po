@@ -1,0 +1,1309 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* adyen_platforms
+# 
+# Translators:
+# Martin Trigaux, 2020
+# liAnGjiA <liangjia@qq.com>, 2020
+# Wei "oldrev" Li <liwei@sandwych.com>, 2020
+# guohuadeng <guohuadeng@hotmail.com>, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# 稀饭~~ <wangwhai@qq.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-27 15:42+0000\n"
+"PO-Revision-Date: 2020-11-16 13:49+0000\n"
+"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2021\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid ""
+". If we or our\n"
+"            Processor at any time discover that the information you provided about your\n"
+"            business is incorrect or has changed without informing us or if you violate any of\n"
+"            these conditions, the services may be suspended and/or terminated with\n"
+"            immediate effect and fines may be applied by the Credit Card Schemes and/or the\n"
+"            authorities for unregistered or inappropriate use of payment services which will in\n"
+"            such case be payable by you."
+msgstr ""
+".如果我们或我们的\n"
+"            处理器随时发现您提供的信息\n"
+"            业务是不正确的或已更改，而不通知我们，或者如果你违反任何\n"
+"            这些条件，服务可能会暂停和/或终止与\n"
+"            信用卡计划和/或\n"
+"            当局未注册或不当使用支付服务，这将在\n"
+"            这种情况下，由您支付。"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+msgid "<span class=\"o_stat_text\"> Transactions</span>"
+msgstr "<span class=\"o_stat_text\">交易</span>"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "A timeout occured while trying to reach the Adyen proxy."
+msgstr "在尝试联系阿迪恩代理时发生了超时。"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__code
+msgid "Account Code"
+msgstr "帐户代码"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__account_holder_code
+msgid "Account Holder Code"
+msgstr "账户持有人代码"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__account_number
+msgid "Account Number"
+msgstr "账户号码"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__account_type
+msgid "Account Type"
+msgstr "科目类型"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_needaction
+msgid "Action Needed"
+msgstr "需要采取行动"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+#, python-format
+msgid "Address"
+msgstr "地址"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__adyen_account_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__adyen_account_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__adyen_account_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__adyen_account_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_res_company__adyen_account_id
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#, python-format
+msgid "Adyen Account"
+msgstr "Adyen帐户"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+msgid "Adyen Bank Account"
+msgstr "Adyen 银行账户"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Adyen MarketPay Terms and Conditions (click"
+msgstr "Adyen 市场支付条款和条件（点击"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__adyen_payout_id
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_payout_view_form
+msgid "Adyen Payout"
+msgstr "Adyen 支付"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Adyen Restricted and Prohibited Products and Services list (click"
+msgstr "Adyen 受限制和禁止的产品和服务列表（单击"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+msgid "Adyen Shareholder"
+msgstr "Adyen 股东"
+
+#. module: adyen_platforms
+#: model:ir.actions.server,name:adyen_platforms.adyen_sync_cron_ir_actions_server
+#: model:ir.cron,cron_name:adyen_platforms.adyen_sync_cron
+#: model:ir.cron,name:adyen_platforms.adyen_sync_cron
+msgid "Adyen Sync"
+msgstr "Adyen 同步"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__adyen_uuid
+msgid "Adyen UUID"
+msgstr "Adyen UUID"
+
+#. module: adyen_platforms
+#: model:ir.model.constraint,message:adyen_platforms.constraint_adyen_account_adyen_uuid_uniq
+msgid "Adyen UUID should be unique"
+msgstr "Adyen UUID 应该是独一无二的"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_adyen_account
+msgid "Adyen for Platforms Account"
+msgstr "Adyen 平台帐户"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_adyen_address_mixin
+msgid "Adyen for Platforms Address Mixin"
+msgstr "Adyen 用于平台地址混合"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_adyen_bank_account
+msgid "Adyen for Platforms Bank Account"
+msgstr "Adyen 用于平台银行账户"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_adyen_id_mixin
+msgid "Adyen for Platforms ID Mixin"
+msgstr "Adyen 平台 ID 混合"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_adyen_payout
+msgid "Adyen for Platforms Payout"
+msgstr "Adyen 平台支付"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_adyen_shareholder
+msgid "Adyen for Platforms Shareholder"
+msgstr "Adyen 平台股东"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_adyen_transaction
+msgid "Adyen for Platforms Transaction"
+msgstr "Adyen 平台交易"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "Allowed file formats for bank statements are jpeg, jpg, pdf or png"
+msgstr "银行对账单允许的文件格式为jpeg、jpg、pdf或png"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "Allowed file formats for photo IDs are jpeg, jpg, pdf or png"
+msgstr "照片ID的允许文件格式为jpeg、jpg、pdf或png"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__id_back
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__id_front
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_id_mixin__id_back
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_id_mixin__id_front
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_shareholder__id_back
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_shareholder__id_front
+msgid "Allowed formats: jpg, pdf, png. Maximum allowed size: 4MB."
+msgstr "允许的格式：jpg、pdf、png。最大允许尺寸：4MB。"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__amount
+msgid "Amount"
+msgstr "金额"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_attachment_count
+msgid "Attachment Count"
+msgstr "附件数量"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__adyen_bank_account_id
+msgid "Bank Account"
+msgstr "银行账户"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__bank_account_ids
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+msgid "Bank Accounts"
+msgstr "银行帐户"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.kyc_status_message
+msgid "Bank Accounts:"
+msgstr "银行账户："
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__bank_code
+msgid "Bank Code"
+msgstr "银行代码"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__bank_statement
+msgid "Bank Statement"
+msgstr "银行对账单"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__bank_statement_filename
+msgid "Bank Statement Filename"
+msgstr "银行对账单文件名"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid ""
+"Bank statements must be greater than 10kB (except for PDFs) and smaller than"
+" 10MB"
+msgstr "银行对账单必须大于 10kB（PDF 除外），小于 10MB"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__branch_code
+msgid "Branch Code"
+msgstr "分支代码"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#, python-format
+msgid "Business"
+msgstr "业务"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/js/adyen_account_views.js:0
+#, python-format
+msgid "Cancel"
+msgstr "取消"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__chargeback
+msgid "Chargeback"
+msgstr "充值"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__chargebackreceived
+msgid "Chargeback Received"
+msgstr "收到回费"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__chargebackreversed
+msgid "Chargeback Reversed"
+msgstr "反向回转"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__chargebackreversedreceived
+msgid "Chargeback Reversed Received"
+msgstr "反向接收"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Chargebacks cost 7.5€ each."
+msgstr "每次收费7.5欧元。"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_bank_account__account_type__checking
+msgid "Checking"
+msgstr "检查"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__city
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__city
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__city
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+msgid "City"
+msgstr "城市"
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/js/adyen_account_views.js:0
+#, python-format
+msgid "Confirm your Adyen Account Creation"
+msgstr "确认您的Adyen帐户创建"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__kyc_status__passed
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_bank_account__kyc_status__passed
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__kyc_status__passed
+#, python-format
+msgid "Confirmed"
+msgstr "已确认"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+msgid "Contact"
+msgstr "联系人"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Contractual Relationship"
+msgstr "合同关系"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__converted
+msgid "Converted"
+msgstr "转换"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__country_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__country_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__country_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__country_id
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+msgid "Country"
+msgstr "国家/地区"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__country_code
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__country_code
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__country_code
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__country_code
+msgid "Country Code"
+msgstr "国家/地区代码"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/js/adyen_account_views.js:0
+#, python-format
+msgid "Create"
+msgstr "创建"
+
+#. module: adyen_platforms
+#: model:ir.actions.act_window,name:adyen_platforms.adyen_account_action_create
+msgid "Create an Adyen Account"
+msgstr "创建Adyen 帐户"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__create_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__create_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__create_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__create_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__create_uid
+msgid "Created by"
+msgstr "创建者"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__create_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__create_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__create_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__create_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__creditfailed
+msgid "Credit Failed"
+msgstr "信用失败"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__credited
+msgid "Credited"
+msgstr "记入"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__currency_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__currency_id
+msgid "Currency"
+msgstr "币种"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_payout__payout_schedule__day
+msgid "Daily"
+msgstr "每天"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__kyc_status__awaiting_data
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_bank_account__kyc_status__awaiting_data
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__kyc_status__awaiting_data
+#, python-format
+msgid "Data to provide"
+msgstr "要提供的数据"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__date
+msgid "Date"
+msgstr "日期"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Date of Birth"
+msgstr "出生日期"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__date_of_birth
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__date_of_birth
+msgid "Date of birth"
+msgstr "出生日期"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__debitfailed
+msgid "Debit Failed"
+msgstr "借记失败"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__debitedreversed
+msgid "Debit Reversed"
+msgstr "借记已撤销"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__debitreversedreceived
+msgid "Debit Reversed Received"
+msgstr "借记已撤销接收"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__debited
+msgid "Debited"
+msgstr "扣除"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__description
+msgid "Description"
+msgstr "说明"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Disclaimers"
+msgstr "免责 声明"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__display_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__display_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__display_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__display_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__display_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__display_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__display_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_res_company__display_name
+msgid "Display Name"
+msgstr "显示名称显示名称"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__document_type
+msgid "Document Type"
+msgstr "文档类型"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__doing_business_as
+#, python-format
+msgid "Doing Business As"
+msgstr "作为"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__id_type__driving_license
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_id_mixin__id_type__driving_license
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__id_type__driving_license
+msgid "Driving License"
+msgstr "驾照"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__document_type__drivinglicense
+msgid "Driving license"
+msgstr "驾照"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__email
+#, python-format
+msgid "Email"
+msgstr "电子邮件"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__kyc_status__failed
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_bank_account__kyc_status__failed
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__kyc_status__failed
+#, python-format
+msgid "Failed"
+msgstr "失败的"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__first_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__first_name
+#, python-format
+msgid "First Name"
+msgstr "名字"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_follower_ids
+msgid "Followers"
+msgstr "关注者"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "关注者(渠道)"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "关注者(业务伙伴)"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__full_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__full_name
+msgid "Full Name"
+msgstr "完整名称"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__fundtransfer
+msgid "Fund Transfer"
+msgstr "资金转移"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__house_number_or_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__house_number_or_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__house_number_or_name
+msgid "House Number Or Name"
+msgstr "房号或名称"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+msgid "House number or name"
+msgstr "房号或姓名"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid ""
+"I confirm I have taken notice of and accept the following terms and "
+"restrictions:"
+msgstr "我确认我已注意到并接受以下条款和限制："
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__iban
+msgid "IBAN"
+msgstr "IBAN"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__id
+#: model:ir.model.fields,field_description:adyen_platforms.field_res_company__id
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__document_type__id
+msgid "ID"
+msgstr "ID"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__id_type__id_card
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_id_mixin__id_type__id_card
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__id_type__id_card
+msgid "ID Card"
+msgstr "身份证"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__document_number
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__document_number
+msgid "ID Number"
+msgstr "身份证号码"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_back_filename
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_back_filename
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_back_filename
+msgid "Id Back Filename"
+msgstr "ID背面文件名"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_front_filename
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_front_filename
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_front_filename
+msgid "Id Front Filename"
+msgstr "ID 前文件名"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__message_needaction
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "确认后, 出现提示消息."
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "如果勾选此项， 某些消息将会产生传递错误。"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#, python-format
+msgid "Individual"
+msgstr "个人"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_is_follower
+msgid "Is Follower"
+msgstr "关注者"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__is_business
+msgid "Is a business"
+msgstr "是企业"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__kyc_status
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__kyc_status
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__kyc_status
+msgid "KYC Status"
+msgstr "KYC 状态"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__kyc_status_message
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__kyc_status_message
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__kyc_status_message
+msgid "KYC Status Message"
+msgstr "KYC 状态消息"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account____last_update
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin____last_update
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account____last_update
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin____last_update
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout____last_update
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder____last_update
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction____last_update
+#: model:ir.model.fields,field_description:adyen_platforms.field_res_company____last_update
+msgid "Last Modified on"
+msgstr "上次修改时间"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__last_name
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__last_name
+#, python-format
+msgid "Last Name"
+msgstr "姓氏"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__write_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__write_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__write_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__write_uid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__write_uid
+msgid "Last Updated by"
+msgstr "上次更新者"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__write_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__write_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__write_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__write_date
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__write_date
+msgid "Last Updated on"
+msgstr "上次更新时间"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__legal_business_name
+#, python-format
+msgid "Legal Business Name"
+msgstr "合法企业名称"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Legal Entity"
+msgstr "法人实体"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "附件"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__manualcorrected
+msgid "Manual Corrected"
+msgstr "手动更正"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_has_error
+msgid "Message Delivery error"
+msgstr "消息传递错误"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_ids
+msgid "Messages"
+msgstr "消息"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "Missing required fields: "
+msgstr "缺少所需的字段："
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_payout__payout_schedule__month
+msgid "Monthly"
+msgstr "每月"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__name
+msgid "Name"
+msgstr "名称"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.kyc_status_message
+msgid "New KYC Status:"
+msgstr "新的 KYC 状态："
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__next_scheduled_payout
+msgid "Next scheduled payout"
+msgstr "下一次计划付款"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "No balance is currently awaitng payout."
+msgstr "目前没有余额等待付款。"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "No pending balance"
+msgstr "无待定余额"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_needaction_counter
+msgid "Number of Actions"
+msgstr "操作次数"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_has_error_counter
+msgid "Number of errors"
+msgstr "错误数"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "需要操作消息数量"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "递送错误消息数量"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__message_unread_counter
+msgid "Number of unread messages"
+msgstr "未读消息数量"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Onboarding and KYC cost 5€."
+msgstr "入职和 KYC 费用为 5€。"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+msgid "Owner Address"
+msgstr "所有者地址"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_city
+msgid "Owner City"
+msgstr "业主城市"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_country_id
+msgid "Owner Country"
+msgstr "所有者国家/地区"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_house_number_or_name
+msgid "Owner House Number or Name"
+msgstr "业主房屋编号或名称"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_name
+msgid "Owner Name"
+msgstr "所有者姓名"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_state_id
+msgid "Owner State"
+msgstr "所有者状态"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_street
+msgid "Owner Street"
+msgstr "业主街"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__owner_zip
+msgid "Owner ZIP"
+msgstr "所有者邮编"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__document_type__passport
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__id_type__passport
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_id_mixin__id_type__passport
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__id_type__passport
+msgid "Passport"
+msgstr "护照"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Payment and processing fees are listed on"
+msgstr "付款和处理费用列在"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__payout
+msgid "Payout"
+msgstr "支出"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "Payout Request sent"
+msgstr "已发送付款请求"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__payoutreversed
+msgid "Payout Reversed"
+msgstr "付款反转"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__payout_ids
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+msgid "Payouts"
+msgstr "支出"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Payouts cost 0.20€ (EU) or 0.22$ (US) each."
+msgstr "支付费用为 0.20 欧元（欧盟）或 0.22 美元（美国）。"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Payouts will be blocked until your application has been accepted."
+msgstr "付款将被阻止，直到您的申请已被接受。"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__pendingcredit
+msgid "Pending Credit"
+msgstr "待决信贷"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__pendingdebit
+msgid "Pending Debit"
+msgstr "待决借记"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__pendingfundtransfer
+msgid "Pending Fund Transfer"
+msgstr "待定资金转移"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__phone_number
+#, python-format
+msgid "Phone Number"
+msgstr "电话号码"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_back
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_back
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_back
+msgid "Photo ID Back"
+msgstr "照片ID背面"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_front
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_front
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_front
+msgid "Photo ID Front"
+msgstr "照片 ID 正面"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "Photo ID file size must be between 100kB (1kB for PDFs) and 4MB"
+msgstr "照片 ID 文件大小必须在 100kB（PDF 为 1kB）和 4MB 之间"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_type
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_type
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_type
+msgid "Photo ID type"
+msgstr "照片 ID 类型"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Pricing"
+msgstr "价格"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Prohibited Products and Services List of our Processor"
+msgstr "我们处理器的违禁产品和服务列表"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__proxy_token
+msgid "Proxy Token"
+msgstr "代理令牌"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.kyc_status_message
+msgid "Reason(s):"
+msgstr "原因："
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__bank_account_reference
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__shareholder_reference
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__reference
+msgid "Reference"
+msgstr "编码"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__registration_number
+#, python-format
+msgid "Registration Number"
+msgstr "注册号"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_payout_view_form
+msgid "Request a payout now"
+msgstr "立即申请付款"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_bank_account__account_type__savings
+msgid "Savings"
+msgstr "储蓄"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__payout_schedule
+msgid "Schedule"
+msgstr "安排"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__shareholder_ids
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+msgid "Shareholders"
+msgstr "股东"
+
+#. module: adyen_platforms
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.kyc_status_message
+msgid "Shareholders:"
+msgstr "股东："
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__state_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__state_id
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__state_id
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+msgid "State"
+msgstr "状态"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__state_code
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__state_code
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__state_code
+msgid "State Code"
+msgstr "州/省代码"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__street
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__street
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__street
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+msgid "Street"
+msgstr "街道"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "Submitted data"
+msgstr "已提交的数据"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "Successfully sent payout request for %s"
+msgstr "成功发送%s的付款请求"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_transactions_templates.xml:0
+#, python-format
+msgid "Sync Transactions"
+msgstr "同步交易"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid "The Adyen proxy is not reachable, please try again later."
+msgstr "无法联系到 Adyen 代理，请稍后重试。"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__country_code
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_address_mixin__country_code
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_bank_account__country_code
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_shareholder__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO 国家代码使用两个字符。\n"
+" 您可以使用此字段进行快速搜索。"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_payout__adyen_bank_account_id
+msgid ""
+"The bank account to which the payout is to be made. If left blank, a bank "
+"account is automatically selected"
+msgstr "付款的银行账户。如果留空，则自动选择银行账户"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid ""
+"The payment processing services ordered by you by placing this order will be\n"
+"            provided to you by Adyen N.V. (hereafter “Processor”), with which you are\n"
+"            entering into a direct agreement by confirming this order. Odoo S.A.\n"
+"            (hereafter “We /Us”) will assist and support you in your use of the services to be\n"
+"            provided by the Processor and we will provide you first line assistance with and\n"
+"            enable you to connect to the systems of Processor to be able to use its services.\n"
+"            For this purpose, you hereby instruct Processor to provide us access to your data\n"
+"            and setting in Processor’s systems which are used by Processor to provide the\n"
+"            services and authorise us to manage these on your behalf."
+msgstr ""
+"您通过下订单订购的付款处理服务将是\n"
+"            由阿迪恩N.V.（以下简称\"处理器\"）提供给你，你与\n"
+"            通过确认此订单达成直接协议。奥多·萨\n"
+"            （以下简称\"我们/我们\"）将协助和支持您使用的服务\n"
+"            由处理器提供，我们将为您提供第一线的帮助，并\n"
+"            使您能够连接到处理器系统，以便能够使用其服务。\n"
+"            为此，您特此指示处理器向我们提供对您的数据的访问权限\n"
+"            和设置在处理器的系统中，由处理器提供\n"
+"            服务并授权我们代表您管理这些服务。"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__state_code
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_address_mixin__state_code
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_shareholder__state_code
+msgid "The state code."
+msgstr "州省代码。"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_account__document_number
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_shareholder__document_number
+msgid ""
+"The type of ID Number required depends on the country:\n"
+"US: Social Security Number (9 digits or last 4 digits)\n"
+"Canada: Social Insurance Number\n"
+"Italy: Codice fiscale\n"
+"Australia: Document Number"
+msgstr ""
+"所需身份证号码的类型取决于国家：\n"
+"美国：社会保障号码（9位数或最后4位数字）\n"
+"加拿大：社会保险号码\n"
+"意大利：科迪斯财政\n"
+"澳大利亚：文档编号"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__transaction_ids
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__transaction_ids
+#, python-format
+msgid "Transactions"
+msgstr "交易"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__transactions_count
+msgid "Transactions Count"
+msgstr "交易计数"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__status
+msgid "Type"
+msgstr "类型"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__bank_account_uuid
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__shareholder_uuid
+msgid "UUID"
+msgstr "UUID"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_unread
+msgid "Unread Messages"
+msgstr "未读消息"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "未读消息计数器"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__document_type__visa
+msgid "Visa"
+msgstr "签证"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid ""
+"WARNING: Please note that the right to use the payment services is only for\n"
+"            sales in your own name. You may not resell, hire or on any other basis allow third\n"
+"            parties to use the payment services to enable such third parties to be paid for their\n"
+"            services. You may not use the payment services for different types of product and\n"
+"            services than as registered with your application. In particular you confirm that you\n"
+"            will not use the payment services for any type of product or service appearing in the"
+msgstr ""
+"警告：请注意，使用支付服务的权利仅用于\n"
+"            以您自己的名义销售。您不得转售、租用或在任何其他基础上允许第三\n"
+"            当事人使用支付服务，使这种第三方支付其\n"
+"            服务。您不得为不同类型的产品和\n"
+"            服务比注册您的应用程序。特别是你确认你\n"
+"            不会使用支付服务的任何类型的产品或服务出现在"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__kyc_status__pending
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_bank_account__kyc_status__pending
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__kyc_status__pending
+#, python-format
+msgid "Waiting for validation"
+msgstr "等待验证"
+
+#. module: adyen_platforms
+#: code:addons/adyen_platforms/models/adyen_account.py:0
+#, python-format
+msgid ""
+"We had troubles reaching Adyen, please retry later or contact the support if"
+" the problem persists"
+msgstr "我们很难到达阿迪恩，请稍后重试或联系支持，如果问题仍然存在"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid ""
+"We will notify you when the status of the review changes, or if additional "
+"data is required."
+msgstr "当审查状态发生变化或需要其他数据时，我们将通知您。"
+
+#. module: adyen_platforms
+#: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_payout__payout_schedule__week
+msgid "Weekly"
+msgstr "每周"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "You can start processing payments as soon as your application is sent."
+msgstr "您可以在收到申请后立即开始处理付款。"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,help:adyen_platforms.field_adyen_bank_account__bank_statement
+msgid ""
+"You need to provide a bank statement to allow payouts.         The file must"
+" be a bank statement, a screenshot of your online banking environment, a "
+"letter from the bank or a cheque and must contain         the logo of the "
+"bank or it's name in a unique font, the bank account details, the name of "
+"the account holder.        Allowed formats: jpg, pdf, png. Maximum allowed "
+"size: 10MB."
+msgstr ""
+"您需要提供银行对账单才能付款。        "
+"该文件必须是银行对账单、网上银行环境的屏幕截图、银行来信或支票，并且必须包含银行徽标或其名称的独特字体、银行账户详细信息、账户持有人的姓名。"
+"       允许的格式：jpg、pdf、png。最大允许尺寸：10MB。"
+
+#. module: adyen_platforms
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__zip
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_address_mixin__zip
+#: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__zip
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_bank_account_view_form
+#: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_shareholder_view_form
+msgid "ZIP"
+msgstr "邮编"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "adyen.com/pricing"
+msgstr "adyen.com/pricing"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "here"
+msgstr "这里"
+
+#. module: adyen_platforms
+#. openerp-web
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
+#, python-format
+msgid "to download and review)"
+msgstr "下载和审查）"

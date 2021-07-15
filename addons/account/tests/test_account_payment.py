@@ -324,6 +324,206 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             },
         ])
 
+    def test_inbound_payment_sync_writeoff_debit_sign(self):
+        payment = self.env['account.payment'].create({
+            'amount': 100.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+        })
+
+        # ==== Edit the account.move.line ====
+
+        liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
+        payment.move_id.write({
+            'line_ids': [
+                (1, liquidity_lines.id, {'debit': 100.0}),
+                (1, counterpart_lines.id, {'credit': 125.0}),
+                (0, 0, {'debit': 25.0, 'account_id': self.company_data['default_account_revenue'].id}),
+            ],
+        })
+
+        self.assertRecordValues(payment, [{
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'amount': 100.0,
+        }])
+
+        # ==== Edit the account.payment amount ====
+
+        payment.write({
+            'partner_type': 'supplier',
+            'amount': 100.1,
+            'destination_account_id': self.company_data['default_account_payable'].id,
+        })
+
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            {
+                'debit': 0.0,
+                'credit': 125.1,
+                'account_id': self.company_data['default_account_payable'].id,
+            },
+            {
+                'debit': 25.0,
+                'credit': 0.0,
+                'account_id': self.company_data['default_account_revenue'].id,
+            },
+            {
+                'debit': 100.1,
+                'credit': 0.0,
+                'account_id': self.payment_debit_account_id.id,
+            },
+        ])
+
+    def test_inbound_payment_sync_writeoff_credit_sign(self):
+        payment = self.env['account.payment'].create({
+            'amount': 100.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+        })
+
+        # ==== Edit the account.move.line ====
+
+        liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
+        payment.move_id.write({
+            'line_ids': [
+                (1, liquidity_lines.id, {'debit': 100.0}),
+                (1, counterpart_lines.id, {'credit': 75.0}),
+                (0, 0, {'credit': 25.0, 'account_id': self.company_data['default_account_revenue'].id}),
+            ],
+        })
+
+        self.assertRecordValues(payment, [{
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'amount': 100.0,
+        }])
+
+        # ==== Edit the account.payment amount ====
+
+        payment.write({
+            'partner_type': 'supplier',
+            'amount': 100.1,
+            'destination_account_id': self.company_data['default_account_payable'].id,
+        })
+
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            {
+                'debit': 0.0,
+                'credit': 75.1,
+                'account_id': self.company_data['default_account_payable'].id,
+            },
+            {
+                'debit': 0.0,
+                'credit': 25.0,
+                'account_id': self.company_data['default_account_revenue'].id,
+            },
+            {
+                'debit': 100.1,
+                'credit': 0.0,
+                'account_id': self.payment_debit_account_id.id,
+            },
+        ])
+
+    def test_outbound_payment_sync_writeoff_debit_sign(self):
+        payment = self.env['account.payment'].create({
+            'amount': 100.0,
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+        })
+
+        # ==== Edit the account.move.line ====
+
+        liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
+        payment.move_id.write({
+            'line_ids': [
+                (1, liquidity_lines.id, {'credit': 100.0}),
+                (1, counterpart_lines.id, {'debit': 75.0}),
+                (0, 0, {'debit': 25.0, 'account_id': self.company_data['default_account_revenue'].id}),
+            ],
+        })
+
+        self.assertRecordValues(payment, [{
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'amount': 100.0,
+        }])
+
+        # ==== Edit the account.payment amount ====
+
+        payment.write({
+            'partner_type': 'customer',
+            'amount': 100.1,
+            'destination_account_id': self.company_data['default_account_receivable'].id,
+        })
+
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            {
+                'debit': 0.0,
+                'credit': 100.1,
+                'account_id': self.payment_credit_account_id.id,
+            },
+            {
+                'debit': 25.0,
+                'credit': 0.0,
+                'account_id': self.company_data['default_account_revenue'].id,
+            },
+            {
+                'debit': 75.1,
+                'credit': 0.0,
+                'account_id': self.company_data['default_account_receivable'].id,
+            },
+        ])
+
+    def test_outbound_payment_sync_writeoff_credit_sign(self):
+        payment = self.env['account.payment'].create({
+            'amount': 100.0,
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+        })
+
+        # ==== Edit the account.move.line ====
+
+        liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
+        payment.move_id.write({
+            'line_ids': [
+                (1, liquidity_lines.id, {'credit': 100.0}),
+                (1, counterpart_lines.id, {'debit': 125.0}),
+                (0, 0, {'credit': 25.0, 'account_id': self.company_data['default_account_revenue'].id}),
+            ],
+        })
+
+        self.assertRecordValues(payment, [{
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'amount': 100.0,
+        }])
+
+        # ==== Edit the account.payment amount ====
+
+        payment.write({
+            'partner_type': 'customer',
+            'amount': 100.1,
+            'destination_account_id': self.company_data['default_account_receivable'].id,
+        })
+
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            {
+                'debit': 0.0,
+                'credit': 100.1,
+                'account_id': self.payment_credit_account_id.id,
+            },
+            {
+                'debit': 0.0,
+                'credit': 25.0,
+                'account_id': self.company_data['default_account_revenue'].id,
+            },
+            {
+                'debit': 125.1,
+                'credit': 0.0,
+                'account_id': self.company_data['default_account_receivable'].id,
+            },
+        ])
+
     def test_internal_transfer(self):
         copy_receivable = self.copy_account(self.company_data['default_account_receivable'])
 

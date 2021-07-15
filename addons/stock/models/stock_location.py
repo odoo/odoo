@@ -112,7 +112,7 @@ class Location(models.Model):
                 children_quants = self.env['stock.quant'].search(['&', '|', ('quantity', '!=', 0), ('reserved_quantity', '!=', 0), ('location_id', 'in', internal_children_locations.ids)])
                 if children_quants and values['active'] == False:
                     raise UserError(_('You still have some product in locations %s') %
-                        (', '.join(children_quants.mapped('location_id.name'))))
+                        (', '.join(children_quants.mapped('location_id.display_name'))))
                 else:
                     super(Location, children_location - self).with_context(do_not_check_quant=True).write({
                         'active': values['active'],

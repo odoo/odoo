@@ -1,18 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_sips
+# 	* payment_sips
 # 
 # Translators:
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
-# Daniel Forslund <daniel.forslund@gmail.com>, 2018
+# Martin Trigaux, 2021
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
+# Daniel Forslund <daniel.forslund@gmail.com>, 2021
+# Kim Asplund <kim.asplund@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Daniel Forslund <daniel.forslund@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,40 +23,25 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:164
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
-msgid "; multiple order found"
-msgstr "; flerfaldig beställning funnen"
-
-#. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:162
-#, python-format
-msgid "; no order found"
-msgstr "; ingen beställning funnen"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
+msgid "Currency not supported by Wordline: %s"
 msgstr ""
 
 #. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
 
 #. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:75
-#, python-format
-msgid "Currency not supported by Wordline"
-msgstr ""
-
-#. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:56
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
 msgid "Incorrect payment acquirer provider"
 msgstr ""
@@ -65,9 +52,10 @@ msgid "Interface Version"
 msgstr ""
 
 #. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Senast redigerad"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
@@ -75,29 +63,14 @@ msgid "Merchant ID"
 msgstr ""
 
 #. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr ""
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
-msgstr ""
-
-#. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Betalväxel"
+msgstr "Betalnings Inlösare"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Betalningstransaktion"
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
-msgstr ""
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
@@ -115,32 +88,22 @@ msgid "Secret Key"
 msgstr ""
 
 #. module: payment_sips
-#: selection:payment.acquirer,provider:0
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_key_version
+msgid "Secret Key Version"
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields.selection,name:payment_sips.selection__payment_acquirer__provider__sips
 msgid "Sips"
 msgstr ""
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:160
+#: code:addons/payment_sips/models/payment.py:0
 #, python-format
-msgid "Sips: received data for reference %s"
-msgstr ""
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
+msgid "Sips: received data for reference %s; no order found"
 msgstr ""
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
 msgid "Test url"
-msgstr ""
-
-#. module: payment_sips
-#: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
-msgid "Used for production only"
-msgstr ""
-
-#. module: payment_sips
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
 msgstr ""

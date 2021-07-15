@@ -12,7 +12,10 @@ const components = {
     NotificationList: require('mail/static/src/components/notification_list/notification_list.js'),
     ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+
+const patchMixin = require('web.patchMixin');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -24,21 +27,8 @@ class Discuss extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const discuss = this.env.messaging && this.env.messaging.discuss;
-            const threadView = discuss && discuss.threadView;
-            return {
-                checkedMessages: threadView ? threadView.checkedMessages.map(message => message.__state) : [],
-                discuss: discuss ? discuss.__state : undefined,
-                isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
-                isMessagingInitialized: this.env.isMessagingInitialized(),
-                thread: discuss && discuss.thread ? discuss.thread.__state : undefined,
-                threadCache: (threadView && threadView.threadCache)
-                    ? threadView.threadCache.__state
-                    : undefined,
-                uncheckedMessages: threadView ? threadView.uncheckedMessages.map(message => message.__state) : [],
-            };
-        }, {
+        useShouldUpdateBasedOnProps();
+        useStore((...args) => this._useStoreSelector(...args), {
             compareDepth: {
                 checkedMessages: 1,
                 uncheckedMessages: 1,
@@ -62,11 +52,10 @@ class Discuss extends Component {
         this.discuss.update({ isOpen: true });
         if (this.discuss.thread) {
             this.trigger('o-push-state-action-manager');
-        } else if (this.env.messaging.isInitialized) {
+        } else if (this.env.isMessagingInitialized()) {
             this.discuss.openInitThread();
         }
         this._updateLocalStoreProps();
-        this._update();
     }
 
     patched() {
@@ -85,7 +74,6 @@ class Discuss extends Component {
         }
         this._activeThreadCache = this.discuss.threadView && this.discuss.threadView.threadCache;
         this._updateLocalStoreProps();
-        this._update();
     }
 
     willUnmount() {
@@ -145,24 +133,6 @@ class Discuss extends Component {
     /**
      * @private
      */
-    _update() {
-        if (this.discuss.isDoFocus) {
-            this.discuss.update({ isDoFocus: false });
-            const composer = this._composerRef.comp;
-            if (composer) {
-                composer.focus();
-            } else {
-                const threadView = this._threadViewRef.comp;
-                if (threadView) {
-                    threadView.focus();
-                }
-            }
-        }
-    }
-
-    /**
-     * @private
-     */
     _updateLocalStoreProps() {
         /**
          * Locally tracked store props `activeThreadCache`.
@@ -184,6 +154,50 @@ class Discuss extends Component {
         );
     }
 
+    /**
+     * Returns data selected from the store.
+     *
+     * @private
+     * @param {Object} props
+     * @returns {Object}
+     */
+    _useStoreSelector(props) {
+        const discuss = this.env.messaging && this.env.messaging.discuss;
+        const thread = discuss && discuss.thread;
+        const threadView = discuss && discuss.threadView;
+        const replyingToMessage = discuss && discuss.replyingToMessage;
+        const replyingToMessageOriginThread = replyingToMessage && replyingToMessage.originThread;
+        const checkedMessages = threadView ? threadView.checkedMessages : [];
+        return {
+            checkedMessages,
+            checkedMessagesIsModeratedByCurrentPartner: checkedMessages && checkedMessages.some(message => message.isModeratedByCurrentPartner), // for widget
+            discuss,
+            discussActiveId: discuss && discuss.activeId, // for widget
+            discussActiveMobileNavbarTabId: discuss && discuss.activeMobileNavbarTabId,
+            discussHasModerationDiscardDialog: discuss && discuss.hasModerationDiscardDialog,
+            discussHasModerationRejectDialog: discuss && discuss.hasModerationRejectDialog,
+            discussIsAddingChannel: discuss && discuss.isAddingChannel,
+            discussIsAddingChat: discuss && discuss.isAddingChat,
+            discussIsDoFocus: discuss && discuss.isDoFocus,
+            discussReplyingToMessageOriginThreadComposer: replyingToMessageOriginThread && replyingToMessageOriginThread.composer,
+            inbox: this.env.messaging.inbox,
+            isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
+            isMessagingInitialized: this.env.isMessagingInitialized(),
+            replyingToMessage,
+            starred: this.env.messaging.starred, // for widget
+            thread,
+            threadCache: threadView && threadView.threadCache,
+            threadChannelType: thread && thread.channel_type, // for widget
+            threadDisplayName: thread && thread.displayName, // for widget
+            threadCounter: thread && thread.counter,
+            threadModel: thread && thread.model,
+            threadPublic: thread && thread.public, // for widget
+            threadView,
+            threadViewMessagesLength: threadView && threadView.messages.length, // for widget
+            uncheckedMessages: threadView ? threadView.uncheckedMessages : [], // for widget
+        };
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -200,6 +214,14 @@ class Discuss extends Component {
      */
     _onDialogClosedModerationReject() {
         this.discuss.update({ hasModerationRejectDialog: false });
+    }
+
+    /**
+     * @private
+     * @param {CustomEvent} ev
+     */
+    _onFocusinComposer(ev) {
+        this.discuss.update({ isDoFocus: false });
     }
 
     /**
@@ -286,6 +308,6 @@ Object.assign(Discuss, {
     template: 'mail.Discuss',
 });
 
-return Discuss;
+return patchMixin(Discuss);
 
 });

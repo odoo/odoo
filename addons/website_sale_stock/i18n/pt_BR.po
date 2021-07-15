@@ -10,6 +10,7 @@
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2020
 # JEK Odoo <jek@odoo.com>, 2020
 # Keli Brugalli <kbr@odoo.com>, 2020
+# Éder Brito <britoederr@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Keli Brugalli <kbr@odoo.com>, 2020\n"
+"Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,13 +30,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
 msgid "<strong>Warning!</strong>"
-msgstr ""
+msgstr "<strong>Aviso!</strong>"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_product_product__inventory_availability
 #: model:ir.model.fields,help:website_sale_stock.field_product_template__inventory_availability
 msgid "Adds an inventory availability status on the web product page."
 msgstr ""
+"Adiciona um status de disponibilidade de inventário na página do produto da "
+"web."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -47,23 +50,23 @@ msgstr "Disponibilidade"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
 msgid "Availability Threshold"
-msgstr ""
+msgstr "Limite de Disponibilidade"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__cart_qty
 msgid "Cart Qty"
-msgstr ""
+msgstr "Qtd no Carrinho"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configurações"
+msgstr "Definições de Configuração"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__custom_message
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__custom_message
 msgid "Custom Message"
-msgstr ""
+msgstr "Mensagem Personalizada"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -71,6 +74,8 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
+"Modo de disponibilidade padrão definido em produtos armazenáveis ​​recém-"
+"criados. Isso pode ser alterado no nível do produto."
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__display_name
@@ -99,7 +104,7 @@ msgstr "ID"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "In stock"
-msgstr ""
+msgstr "Em estoque"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -111,7 +116,7 @@ msgstr "Inventário"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__inventory_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__inventory_availability
 msgid "Inventory Availability"
-msgstr ""
+msgstr "Disponibilidade de Inventário"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product____last_update
@@ -130,6 +135,8 @@ msgid ""
 "Manage the inventory of your products and display their availability status "
 "on the website."
 msgstr ""
+"Gerencie o inventário de seus produtos e exiba seus status de "
+"disponibilidade em seu site."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -160,18 +167,21 @@ msgstr "Linha do pedido de vendas"
 #: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__never
 #: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__never
 msgid "Sell regardless of inventory"
-msgstr ""
+msgstr "Venda independentemente do estoque"
 
 #. module: website_sale_stock
 #: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__threshold
 msgid "Show inventory below a threshold and prevent sales if not enough stock"
 msgstr ""
+"Mostre o estoque abaixo de um limite e evite vendas se não houver estoque "
+"suficiente"
 
 #. module: website_sale_stock
 #: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__always
 #: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__always
 msgid "Show inventory on website and prevent sales if not enough stock"
 msgstr ""
+"Mostre o estoque no site e evite vendas se não houver estoque suficiente"
 
 #. module: website_sale_stock
 #: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__threshold
@@ -179,12 +189,14 @@ msgid ""
 "Show inventory when below the threshold and prevent sales if not enough "
 "stock"
 msgstr ""
+"Mostre o estoque quando estiver abaixo do limite e evite vendas se não "
+"houver estoque suficiente"
 
 #. module: website_sale_stock
 #: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__custom
 #: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__custom
 msgid "Show product-specific notifications"
-msgstr ""
+msgstr "Mostrar notificações específicas do produto"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:0
@@ -193,18 +205,20 @@ msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
 " for the inconvenience."
 msgstr ""
+"Alguns produtos ficaram indisponíveis e seu carrinho foi atualizado. Pedimos"
+" desculpas pelo transtorno."
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Temporarily out of stock"
-msgstr ""
+msgstr "Temporariamente fora de estoque"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Threshold"
-msgstr ""
+msgstr "Limite"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -241,14 +255,14 @@ msgstr "Website"
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website this picking belongs to."
-msgstr ""
+msgstr "Site ao qual esta separação pertence."
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added"
-msgstr ""
+msgstr "Você já foi adicionado"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/controllers/main.py:0
@@ -256,12 +270,14 @@ msgstr ""
 msgid ""
 "You ask for %(quantity)s products but only %(available_qty)s is available"
 msgstr ""
+"Você gostaria de %(quantity)s de produtos, mas temos somente "
+"%(available_qty)s disponível"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %s products but only %s is available"
-msgstr ""
+msgstr "Você gostaria de %s produtos, mas temos apenas %s disponível"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -283,4 +299,4 @@ msgstr "disponível"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "in your cart."
-msgstr ""
+msgstr "em seu carrinho"

@@ -164,6 +164,8 @@ var loadCSS = (function () {
             urlDefs[url] = new Promise(function (resolve, reject) {
                 $link.on('load', function () {
                     resolve();
+                }).on('error', function () {
+                    reject(new Error("Couldn't load css dependency: " + $link[0].href));
                 });
             });
             $('head').append($link);
@@ -309,7 +311,7 @@ function get_file(options) {
     xhr.onerror = function () {
         if (options.error) {
             options.error({
-                message: _("Something happened while trying to contact the server, check that the server is online and that you still have a working network connection."),
+                message: _t("Something happened while trying to contact the server, check that the server is online and that you still have a working network connection."),
                 data: { title: _t("Could not connect to the server") }
             });
         }

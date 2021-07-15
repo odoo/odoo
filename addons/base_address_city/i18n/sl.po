@@ -1,13 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_address_city
+# 	* base_address_city
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2021
+# laznikd <laznik@mentis.si>, 2021
+# matjaz k <matjaz@mentis.si>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: matjaz k <matjaz@mentis.si>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,9 +23,9 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: base_address_city
-#: model:ir.model.fields,help:base_address_city.field_res_country_enforce_cities
-#: model:ir.model.fields,help:base_address_city.field_res_partner_country_enforce_cities
-#: model:ir.model.fields,help:base_address_city.field_res_users_country_enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_country__enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_users__country_enforce_cities
 msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
@@ -31,43 +38,45 @@ msgid "Cities"
 msgstr ""
 
 #. module: base_address_city
+#: code:addons/base_address_city/models/res_partner.py:55
 #: model:ir.model,name:base_address_city.model_res_city
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_city_tree
+#, python-format
 msgid "City"
-msgstr ""
+msgstr "Kraj"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_partner_city_id
-#: model:ir.model.fields,field_description:base_address_city.field_res_users_city_id
-msgid "Company"
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__city_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_users__city_id
+msgid "City of Address"
 msgstr ""
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Stik"
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_country
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_country_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__country_id
 msgid "Country"
-msgstr ""
+msgstr "Država"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_create_uid
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Ustvaril"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_create_date
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Ustvarjeno"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_display_name
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazani naziv"
 
 #. module: base_address_city
 #: model_terms:ir.actions.act_window,help:base_address_city.action_res_city_tree
@@ -78,36 +87,36 @@ msgid ""
 msgstr ""
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_country_enforce_cities
-#: model:ir.model.fields,field_description:base_address_city.field_res_partner_country_enforce_cities
-#: model:ir.model.fields,field_description:base_address_city.field_res_users_country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_country__enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
 msgstr ""
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city___last_update
+#: model:ir.model.fields,field_description:base_address_city.field_res_city____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Zadnjič spremenjeno"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_write_uid
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zadnji posodobil"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_write_date
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zadnjič posodobljeno"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_name
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__name
 msgid "Name"
-msgstr ""
+msgstr "Naziv"
 
 #. module: base_address_city
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
@@ -115,11 +124,11 @@ msgid "Search City"
 msgstr ""
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_state_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__state_id
 msgid "State"
-msgstr ""
+msgstr "Stanje"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_zipcode
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__zipcode
 msgid "Zip"
-msgstr ""
+msgstr "Poštna št."

@@ -45,6 +45,12 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return True if self.code == 'facturx_1_0_05' else super()._is_embedding_to_invoice_pdf_needed()
 
+    def _get_embedding_to_invoice_pdf_values(self, invoice):
+        values = super()._get_embedding_to_invoice_pdf_values(invoice)
+        if values and self.code == 'facturx_1_0_05':
+            values['name'] = 'factur-x.xml'
+        return values
+
     def _export_facturx(self, invoice):
 
         def format_date(dt):
@@ -75,7 +81,7 @@ class AccountEdiFormat(models.Model):
         # Invoice lines.
         for i, line in enumerate(invoice.invoice_line_ids.filtered(lambda l: not l.display_type)):
             price_unit_with_discount = line.price_unit * (1 - (line.discount / 100.0))
-            taxes_res = line.tax_ids.compute_all(
+            taxes_res = line.tax_ids.with_context(force_sign=line.move_id._get_tax_force_sign()).compute_all(
                 price_unit_with_discount,
                 currency=line.currency_id,
                 quantity=line.quantity,
@@ -182,20 +188,23 @@ class AccountEdiFormat(models.Model):
         invoice.move_type = default_move_type
 
         # self could be a single record (editing) or be empty (new).
-        with Form(invoice.with_context(default_move_type=default_move_type)) as invoice_form:
+        with Form(invoice.with_context(default_move_type=default_move_type,
+                                       account_predictive_bills_disable_prediction=True)) as invoice_form:
             # Partner (first step to avoid warning 'Warning! You must first select a partner.').
             partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
-            elements = tree.xpath('//ram:' + partner_type + '/ram:SpecifiedTaxRegistration/ram:ID', namespaces=tree.nsmap)
-            partner = elements and self.env['res.partner'].search([('vat', '=', elements[0].text)], limit=1)
-            if not partner:
-                elements = tree.xpath('//ram:' + partner_type + '/ram:Name', namespaces=tree.nsmap)
-                partner_name = elements and elements[0].text
-                partner = elements and self.env['res.partner'].search([('name', 'ilike', partner_name)], limit=1)
-            if not partner:
-                elements = tree.xpath('//ram:' + partner_type + '//ram:URIID[@schemeID=\'SMTP\']', namespaces=tree.nsmap)
-                partner = elements and self.env['res.partner'].search([('email', '=', elements[0].text)], limit=1)
-            if partner:
-                invoice_form.partner_id = partner
+            invoice_form.partner_id = self._retrieve_partner(
+                name=self._find_value('//ram:' + partner_type + '/ram:Name', tree, namespaces=tree.nsmap),
+                mail=self._find_value('//ram:' + partner_type + '//ram:URIID[@schemeID=\'SMTP\']', tree, namespaces=tree.nsmap),
+                vat=self._find_value('//ram:' + partner_type + '/ram:SpecifiedTaxRegistration/ram:ID', tree, namespaces=tree.nsmap),
+            )
+
+            # Delivery partner
+            if 'partner_shipping_id' in invoice._fields:
+                invoice_form.partner_shipping_id = self._retrieve_partner(
+                    name=self._find_value('//ram:ShipToTradeParty/ram:Name', tree, namespaces=tree.nsmap),
+                    mail=self._find_value('//ram:ShipToTradeParty//ram:URIID[@schemeID=\'SMTP\']', tree, namespaces=tree.nsmap),
+                    vat=self._find_value('//ram:ShipToTradeParty/ram:SpecifiedTaxRegistration/ram:ID', tree, namespaces=tree.nsmap),
+                )
 
             # Reference.
             elements = tree.xpath('//rsm:ExchangedDocument/ram:ID', namespaces=tree.nsmap)

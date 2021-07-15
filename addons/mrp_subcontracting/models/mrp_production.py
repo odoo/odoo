@@ -125,3 +125,16 @@ class MrpProduction(models.Model):
                 for ml in subcontract_move_id.move_line_ids:
                     ml.product_uom_qty = ml.qty_done
                 subcontract_move_id._recompute_state()
+
+    def _subcontracting_filter_to_done(self):
+        """ Filter subcontracting production where composant is already recorded and should be consider to be validate """
+        def filter_in(mo):
+            if mo.state in ('done', 'cancel'):
+                return False
+            if float_is_zero(mo.qty_producing, precision_rounding=mo.product_uom_id.rounding):
+                return False
+            if not all(line.lot_id for line in mo.move_raw_ids.filtered(lambda sm: sm.has_tracking != 'none').move_line_ids):
+                return False
+            return True
+
+        return self.filtered(filter_in)

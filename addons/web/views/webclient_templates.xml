@@ -129,6 +129,7 @@
         <script type="text/javascript" src="/web/static/src/js/libs/download.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/content-disposition.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/underscore.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/popper.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/fullcalendar.js"></script>
 
         <script type="text/javascript" src="/web/static/src/js/chrome/keyboard_navigation_mixin.js"></script>
@@ -447,7 +448,7 @@
                 <title t-esc="title or 'Odoo'"/>
                 <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/src/img/favicon.ico'"/>
 
-                <script type="text/javascript">
+                <script id="web.layout.odooscript" type="text/javascript">
                     var odoo = {
                         csrf_token: "<t t-esc="request.csrf_token(None)"/>",
                         debug: "<t t-esc="debug"/>",
@@ -471,7 +472,7 @@
             <t t-call-assets="web.assets_common" t-js="false"/>
             <t t-call-assets="web.assets_frontend" t-js="false"/>
         </xpath>
-        <xpath expr="//head/script" position="after">
+        <xpath expr="//head/script[@id='web.layout.odooscript'] | //head/script[last()]" position="after">
             <script type="text/javascript">
                 odoo.session_info = <t t-raw="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
                 if (!/(^|;\s)tz=/.test(document.cookie)) {
@@ -502,7 +503,7 @@
                             <div class="row">
                                 <div class="col-sm text-center text-sm-left text-muted">
                                     <t t-call="web.debug_icon"/>
-                                    <span class="o_footer_copyright_name mr-2">Copyright &amp;copy; Company name</span>
+                                    <span class="o_footer_copyright_name mr-2">Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span></span>
                                 </div>
                                 <div class="col-sm text-center text-sm-right">
                                     <t t-call="web.brand_promotion"/>
@@ -698,6 +699,7 @@
         <script type="text/javascript" src="/web/static/tests/qweb_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/mockserver_tests.js"></script>
 
+        <script type="text/javascript" src="/web/static/tests/services/crash_manager_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/services/data_manager_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/services/notification_service_tests.js"></script>
 
@@ -775,6 +777,8 @@
         <script type="text/javascript" src="/web/static/tests/widgets/domain_selector_tests.js"/>
         <script type="text/javascript" src="/web/static/tests/widgets/model_field_selector_tests.js"/>
         <script type="text/javascript" src="/web/static/tests/widgets/rainbow_man_tests.js"/>
+
+        <script type="text/javascript" src="/web/static/tests/report/client_action_tests.js"/>
 
         <script type="text/javascript" src="/web/static/tests/tools/debug_manager_tests.js"/>
 

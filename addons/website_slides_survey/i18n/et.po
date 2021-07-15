@@ -3,18 +3,20 @@
 # 	* website_slides_survey
 # 
 # Translators:
-# Triine Aavik <triine@avalah.ee>, 2020
+# atriine <triine@avalah.ee>, 2020
 # Rivo Zängov <eraser@eraser.ee>, 2020
 # Arma Gedonsky <armagedonsky@hot.ee>, 2020
 # Eneli Õigus <enelioigus@gmail.com>, 2020
+# Piia Paurson <piia@avalah.ee>, 2020
+# Andre Roomet <andreroomet@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"POT-Creation-Date: 2020-11-27 15:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2020\n"
+"Last-Translator: Andre Roomet <andreroomet@gmail.com>, 2020\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,11 +42,25 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Armas ${object.partner_id.name or 'participant'}<br/><br/>\n"
+"        Õnnetuseks kukkusid sa sertifitseerimisel läbi ja ei ole enam selle kursuse liige: ${object.slide_partner_id.channel_id.name}.<br/><br/>\n"
+"        Ära kõhkle uuesti registreerumast!\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${(object.slide_partner_id.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Registreeru nüüd\n"
+"            </a>\n"
+"        </div>\n"
+"        Tänud osalemast.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "<i class=\"fa fa-arrow-right mr-1\"/>All Certifications"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Kõik sertifikaadid"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
@@ -52,6 +68,8 @@ msgid ""
 "<i class=\"fa fa-download\" aria-label=\"Download certification\" "
 "title=\"Download Certification\"/>"
 msgstr ""
+"<i class=\"fa fa-download\" aria-label=\"Download certification\" "
+"title=\"Download Certification\"/>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
@@ -59,31 +77,29 @@ msgid ""
 "<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
 "certification\" title=\"Download certification\"/> Download certification"
 msgstr ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
+"certification\" title=\"Download certification\"/> Lae alla sertifikaat"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
 msgid "<i class=\"text-muted\"> awarded users</i>"
-msgstr ""
-
-#. module: website_slides_survey
-#: model:survey.survey,description:website_slides_survey.furniture_certification
-msgid "<p>Test your furniture knowledge!.</p>"
-msgstr ""
+msgstr "<i class=\"text-muted\"> tunnustatud kasutajad</i>"
 
 #. module: website_slides_survey
 #: model:survey.question,description:website_slides_survey.furniture_certification_page_1
+#: model:survey.survey,description:website_slides_survey.furniture_certification
 msgid "<p>Test your furniture knowledge!</p>"
-msgstr ""
+msgstr "<p>Testi oma mööblialaseid teadmisi!</p>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.courses_home_inherit_survey
 msgid "<span class=\"ml-1\">Certifications</span>"
-msgstr ""
+msgstr "<span class=\"ml-1\">Sertifikaadid</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
@@ -91,78 +107,81 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '&gt;', 0)]}\">Finished</span>\n"
 "                <span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '=', 0)]}\">Certified</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '&gt;', 0)]}\">Valmis</span>\n"
+"                <span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '=', 0)]}\">Sertifitseeritud</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.all_user_card
 msgid "<span class=\"text-muted small font-weight-bold\">Certifications</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small font-weight-bold\">Sertifikaadid</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.top3_user_card
 msgid "<span class=\"text-muted\">Certifications</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Sertifikaadid</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_kanban
 msgid "<span class=\"text-muted\">Certified</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Sertifitseeritud</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_kanban
 msgid "<span class=\"text-muted\">Finished</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Valmis</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
 msgid "<span>Start Now</span><i class=\"fa fa-chevron-right ml-2 align-middle\"/>"
 msgstr ""
+"<span>Alusta nüüd</span><i class=\"fa fa-chevron-right ml-2 align-middle\"/>"
 
 #. module: website_slides_survey
 #: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_survey_id
 msgid "A slide of type 'certification' requires a certification."
-msgstr ""
+msgstr "'certification' tüüpi slaid nõuab sertifikaati."
 
 #. module: website_slides_survey
 #: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_certification_preview
 msgid "A slide of type certification cannot be previewed."
-msgstr ""
+msgstr "Sertifikaadi tüüpi slaidi ei saa eelvaadata"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
 msgid "Add Certification"
-msgstr ""
+msgstr "Lisa sertifikaat"
 
 #. module: website_slides_survey
 #: model_terms:ir.actions.act_window,help:website_slides_survey.slide_slide_action_certification
 #: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
 #: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides_report
 msgid "Add a new certification"
-msgstr ""
+msgstr "Lisa uus atesteering"
 
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_3
 msgid "Ash"
-msgstr ""
+msgstr "Saar"
 
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_5
 msgid "Bed"
-msgstr ""
+msgstr "Kiht"
 
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_4
 msgid "Beech"
-msgstr ""
+msgstr "Pöök"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
 msgid "Begin Certification"
-msgstr ""
+msgstr "Alusta atestatsiooniga"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
 msgid "Begin your <b>certification</b> today!"
-msgstr ""
+msgstr "Alusta oma <b>sertifikaat</b> kohe!"
 
 #. module: website_slides_survey
 #. openerp-web
@@ -173,50 +192,51 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_type__certification
 #, python-format
 msgid "Certification"
-msgstr ""
+msgstr "Sertifitseerimine"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
 msgid "Certification Badges"
-msgstr ""
+msgstr "Sertifikaadi märgised"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_channel_ids
 msgid "Certification Courses"
-msgstr ""
+msgstr "Sertifikaadi kursused"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_ids
 msgid "Certification Slides"
-msgstr ""
+msgstr "Sertifikaadi slaidid"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__survey_scoring_success
 msgid "Certification Succeeded"
-msgstr ""
+msgstr "Sertifitseerimine läbitud!"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__user_input_ids
 msgid "Certification attempts"
-msgstr ""
+msgstr "Sertifitseeringute katsed"
 
 #. module: website_slides_survey
 #. openerp-web
 #: code:addons/website_slides_survey/static/src/js/slides_certification_upload_toast.js:0
 #, python-format
 msgid "Certification created"
-msgstr ""
+msgstr "Sertifikaat loodud"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.o_wss_certification_icon
 msgid "Certification icon"
-msgstr ""
+msgstr "Sertifitseeringu pisipilt"
 
 #. module: website_slides_survey
 #: code:addons/website_slides_survey/controllers/slides.py:0
 #, python-format
 msgid "Certification slides are completed when the survey is succeeded."
 msgstr ""
+"Sertifitseerimise slaidid on läbi kui tagasiside andmine on õnnestunud."
 
 #. module: website_slides_survey
 #: model:ir.actions.act_window,name:website_slides_survey.slide_slide_action_certification
@@ -226,39 +246,39 @@ msgstr ""
 #: model:ir.ui.menu,name:website_slides_survey.website_slides_menu_report_certification
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
 msgid "Certifications"
-msgstr ""
+msgstr "Sertifikaadid"
 
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_1
 msgid "Chair"
-msgstr ""
+msgstr "Koosoleku juhataja"
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_channel
 msgid "Course"
-msgstr ""
+msgstr "Kursus"
 
 #. module: website_slides_survey
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_form
 #, python-format
 msgid "Courses"
-msgstr ""
+msgstr "Kursused"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_channel_count
 msgid "Courses Count"
-msgstr ""
+msgstr "Kursuste loendus"
 
 #. module: website_slides_survey
 #: model:slide.slide,name:website_slides_survey.slide_slide_demo_6_0
 msgid "DIY Furniture Certification"
-msgstr ""
+msgstr "DIY Mööbli Sertifikaat"
 
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_3
 msgid "Desk"
-msgstr ""
+msgstr "Laud"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__display_name
@@ -276,12 +296,12 @@ msgstr "Kuva nimi"
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #, python-format
 msgid "Download certification"
-msgstr ""
+msgstr "Laadi alla sertifikaat"
 
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_1
 msgid "Fir"
-msgstr ""
+msgstr "Nulg"
 
 #. module: website_slides_survey
 #. openerp-web
@@ -291,29 +311,31 @@ msgid ""
 "Follow this link to add questions to your certification. <a href=\"%s\">Edit"
 " certification</a>"
 msgstr ""
+"Sellel lingil saad lisada küsimusi oma sertifikaadile. <a href=\"%s\">Muuda "
+"sertifikaati</a>"
 
 #. module: website_slides_survey
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1
 msgid "Furniture"
-msgstr ""
+msgstr "Mööbel"
 
 #. module: website_slides_survey
 #: model:slide.slide,name:website_slides_survey.slide_slide_demo_5_4
 #: model:survey.survey,title:website_slides_survey.furniture_certification
 msgid "Furniture Creation Certification"
-msgstr ""
+msgstr "Mööbli Loomise Sertifikaat"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
 msgid "Go back to course"
-msgstr ""
+msgstr "Tagasi kursuse juurde"
 
 #. module: website_slides_survey
 #. openerp-web
 #: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
 #, python-format
 msgid "How to upload a certification on your course?"
-msgstr ""
+msgstr "Kuidas oma kursuse juurde sertifikaati üles laadida ?"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__id
@@ -330,12 +352,12 @@ msgstr "ID"
 #: model:survey.question,comments_message:website_slides_survey.furniture_certification_page_1_question_2
 #: model:survey.question,comments_message:website_slides_survey.furniture_certification_page_1_question_3
 msgid "If other, please specify:"
-msgstr "Kui muu, siis palun täpsustage:"
+msgstr "Muul juhul palun täpsusta:"
 
 #. module: website_slides_survey
 #: model:slide.slide,description:website_slides_survey.slide_slide_demo_6_0
 msgid "It's time to test your knowledge!"
-msgstr ""
+msgstr "On aeg panna oma teadmised proovile!"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel____last_update
@@ -344,66 +366,66 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey____last_update
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input____last_update
 msgid "Last Modified on"
-msgstr "Viimati muudetud (millal)"
+msgstr "Viimati muudetud"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "No certifications yet!"
-msgstr ""
+msgstr "Pole veel ühtegi sertifikaati!"
 
 #. module: website_slides_survey
 #: model:slide.slide,description:website_slides_survey.slide_slide_demo_5_4
 msgid ""
 "Now that you have completed the course, it's time to test your knowledge!"
-msgstr ""
+msgstr "Nüüd kui oled läbinud kursuse, on aeg panna oma teadmised proovile!"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__nbr_certification
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__nbr_certification
 msgid "Number of Certifications"
-msgstr ""
+msgstr "Sertifikaatide number"
 
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_2
 msgid "Oak"
-msgstr ""
+msgstr "Tamm"
 
 #. module: website_slides_survey
 #. openerp-web
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #, python-format
 msgid "Pass Certification"
-msgstr ""
+msgstr "Sertifitseeritud"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_id
 msgid "Related course slide"
-msgstr ""
+msgstr "Seonduva kursuse slaid"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "Score :"
-msgstr ""
+msgstr "Tulemus:"
 
 #. module: website_slides_survey
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_2
 msgid "Select all the furniture shown in the video"
-msgstr ""
+msgstr "Vali kõik mööbliesemed mida videos näidati"
 
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_4
 msgid "Shelf"
-msgstr ""
+msgstr "Riiul"
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_slide_partner
 msgid "Slide / Partner decorated m2m"
-msgstr ""
+msgstr "Külg / osapool kaetud m2m"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_partner_id
 msgid "Slide membership information for the logged in user"
-msgstr ""
+msgstr "Nihuta ette liikme info sisse logitud kasutaja kohta"
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_slide
@@ -413,17 +435,17 @@ msgstr "Presentatsioon"
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_partner_id
 msgid "Subscriber information"
-msgstr ""
+msgstr "Registreeruja info"
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_survey_survey
 msgid "Survey"
-msgstr "Küsitlus"
+msgstr "Tagasiside"
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_survey_user_input
 msgid "Survey User Input"
-msgstr "Küsitluses osalenud kasutaja sisend"
+msgstr "Tagasiside Kasutajapoolne Sisend"
 
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_2
@@ -436,7 +458,7 @@ msgstr "Laud"
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
 #, python-format
 msgid "Test Certification"
-msgstr ""
+msgstr "Kontrollsertifikaat"
 
 #. module: website_slides_survey
 #: model:survey.question,validation_error_msg:website_slides_survey.furniture_certification_page_1
@@ -444,13 +466,13 @@ msgstr ""
 #: model:survey.question,validation_error_msg:website_slides_survey.furniture_certification_page_1_question_2
 #: model:survey.question,validation_error_msg:website_slides_survey.furniture_certification_page_1_question_3
 msgid "The answer you entered is not valid."
-msgstr ""
+msgstr "Sinu vastus ei ole õige."
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_channel_ids
 msgid ""
 "The courses this survey is linked to through the e-learning application"
-msgstr ""
+msgstr "Küsitlusega seonduvad kursused e-õppe rakenduses"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
@@ -458,16 +480,18 @@ msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
 msgstr ""
+"Dokumendi laad pannakse paika automaatselt vastavuses dokumendi URL ja "
+"omadustega (nt. kõrgus ja laius esitluse ja dokumendi tarvis)."
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_id
 msgid "The related course slide when there is no membership information"
-msgstr ""
+msgstr "Küsitlusega seonduvad slaidid e-õppe rakenduses"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_ids
 msgid "The slides this survey is linked to through the e-learning application"
-msgstr ""
+msgstr "Küsitlusega seonduvad slaidid e-õppe rakenduses"
 
 #. module: website_slides_survey
 #: model:survey.question,constr_error_msg:website_slides_survey.furniture_certification_page_1
@@ -485,24 +509,24 @@ msgstr "Tüüp"
 #. module: website_slides_survey
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_3
 msgid "What do you think about the content of the course? (not rated)"
-msgstr ""
+msgstr "Mida arvad kursuse sisust? (pole hinnatud)"
 
 #. module: website_slides_survey
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_1
 msgid "What type of wood is the best for furniture?"
-msgstr ""
+msgstr "Milline puuliik on mööbli jaoks parim?"
 
 #. module: website_slides_survey
 #: code:addons/website_slides_survey/controllers/slides.py:0
 #, python-format
 msgid "You are not allowed to create a survey."
-msgstr ""
+msgstr "Sul pole lubatud küsitlust koostada."
 
 #. module: website_slides_survey
 #: code:addons/website_slides_survey/controllers/slides.py:0
 #, python-format
 msgid "You are not allowed to link a certification."
-msgstr ""
+msgstr "Sul pole lubatud linkida sertifikaati."
 
 #. module: website_slides_survey
 #. openerp-web
@@ -512,6 +536,8 @@ msgid ""
 "You can create your certification from here or use an existing one. Once "
 "your certification is created, you can still edit it in backend."
 msgstr ""
+"Võid luua oma sertifikaadi siin või kasutada olemasolevat. Kui sertifikaat "
+"on loodud, võid hiljem taustaprogrammis seda muuta."
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
@@ -519,8 +545,10 @@ msgid ""
 "You can gain badges by passing certifications. Here is a list of all available certification badges.\n"
 "                            <br/>Follow the links to reach new heights and skill up!"
 msgstr ""
+"Võid koguda tunnistusi, läbides sertifitseerimisi. Siin on nimekiri kõigist saadaval sertifikaatide tunnistustest.\n"
+"                            <br/>Vajuta siia et jõuda uutele tasemetele ja omandada lisaoskusi!"
 
 #. module: website_slides_survey
 #: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
 msgid "You have failed the course: ${object.slide_partner_id.channel_id.name}"
-msgstr ""
+msgstr "Sa ei sooritanud kursust: ${object.slide_partner_id.channel_id.name}"

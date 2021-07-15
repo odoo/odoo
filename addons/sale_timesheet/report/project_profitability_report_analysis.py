@@ -36,6 +36,37 @@ class ProfitabilityAnalysis(models.Model):
                                   help="All revenues that are not from timesheets and that are linked to the analytic account of the project.")
     margin = fields.Float("Margin", digits=(16, 2), readonly=True, group_operator="sum")
 
+    _depends = {
+        'sale.order.line': [
+            'order_id',
+            'invoice_status',
+            'price_reduce',
+            'product_id',
+            'qty_invoiced',
+            'untaxed_amount_invoiced',
+            'untaxed_amount_to_invoice',
+            'currency_id',
+            'company_id',
+            'is_downpayment',
+            'project_id',
+            'task_id',
+            'qty_delivered_method',
+        ],
+        'sale.order': [
+            'date_order',
+            'user_id',
+            'partner_id',
+            'currency_id',
+            'analytic_account_id',
+            'order_line',
+            'invoice_status',
+            'amount_untaxed',
+            'currency_rate',
+            'company_id',
+            'project_id',
+        ],
+    }
+
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
         query = """
@@ -147,6 +178,13 @@ class ProfitabilityAnalysis(models.Model):
                                     LEFT JOIN account_analytic_account AA ON P.analytic_account_id = AA.id
                                     LEFT JOIN account_analytic_line AAL ON AAL.account_id = AA.id
                                 WHERE AAL.amount > 0.0 AND AAL.project_id IS NULL AND P.active = 't' AND P.allow_timesheets = 't'
+                                    AND NOT EXISTS (
+                                        SELECT SOL.id
+                                        FROM sale_order_line SOL
+                                        JOIN sale_order_line_invoice_rel SOINV ON SOINV.order_line_id = SOL.id AND SOINV.invoice_line_id = AAL.move_id -- AAL.move_id is an account.move.line id
+                                        WHERE SOL.qty_delivered_method IN ('timesheet', 'manual')
+                                            OR (SOL.qty_delivered_method = 'analytic' AND SOL.invoice_status != 'no')
+                                    )
 
                                 UNION ALL
 

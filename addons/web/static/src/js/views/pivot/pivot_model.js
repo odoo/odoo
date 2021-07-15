@@ -975,15 +975,14 @@ var PivotModel = AbstractModel.extend({
                     acc.push(measure);
                     return acc;
                 }
-                var type = self.fields[measure].type;
-                var groupOperator = self.fields[measure].group_operator;
-                if (type === 'many2one') {
-                    groupOperator = 'count_distinct';
+                var field = self.fields[measure];
+                if (field.type === 'many2one') {
+                    field.group_operator = 'count_distinct';
                 }
-                if (groupOperator === undefined) {
+                if (field.group_operator === undefined) {
                     throw new Error("No aggregate function has been provided for the measure '" + measure + "'");
                 }
-                acc.push(measure + ':' + groupOperator);
+                acc.push(measure + ':' + field.group_operator);
                 return acc;
             },
             []

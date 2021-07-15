@@ -948,7 +948,7 @@ class Users(models.Model):
                     "and *might* be a proxy. If your Odoo is behind a proxy, "
                     "it may be mis-configured. Check that you are running "
                     "Odoo in Proxy Mode and that the proxy is properly configured, see "
-                    "https://www.odoo.com/documentation/14.0/setup/deploy.html#https for details.",
+                    "https://www.odoo.com/documentation/14.0/administration/deployment/deploy.html#https for details.",
                     source
                 )
             raise AccessDenied(_("Too many login failures, please wait a bit before trying again."))
@@ -1440,13 +1440,26 @@ class UsersView(models.Model):
     def fields_get(self, allfields=None, attributes=None):
         res = super(UsersView, self).fields_get(allfields, attributes=attributes)
         # add reified groups fields
-        for app, kind, gs, category_name in self.env['res.groups'].sudo().get_groups_by_application():
+        Group = self.env['res.groups'].sudo()
+        for app, kind, gs, category_name in Group.get_groups_by_application():
             if kind == 'selection':
                 # 'User Type' should not be 'False'. A user is either 'employee', 'portal' or 'public' (required).
                 selection_vals = [(False, '')]
                 if app.xml_id == 'base.module_category_user_type':
                     selection_vals = []
-                field_name = name_selection_groups(gs.ids)
+
+                # FIXME: in Accounting, the groups in the selection are not
+                # totally ordered, and their order therefore partially depends
+                # on their name, which is translated!  However, the group name
+                # used in the "user groups view" corresponds to the group order
+                # without translations.
+                field_name_gs = gs
+                if app.xml_id == 'base.module_category_accounting_accounting':
+                    # put field_name_gs in the same order as in the user form view
+                    order = {g: len(g.trans_implied_ids & gs) for g in gs}
+                    field_name_gs = gs.with_context(lang=None).sorted('name').sorted(order.get)
+
+                field_name = name_selection_groups(field_name_gs.ids)
                 if allfields and field_name not in allfields:
                     continue
                 # selection group field
@@ -1568,7 +1581,14 @@ class APIKeysUser(models.Model):
         return False
 
     def _check_credentials(self, password, user_agent_env):
-        if user_agent_env['interactive']:
+        user_agent_env = user_agent_env or {}
+        if user_agent_env.get('interactive', True):
+            if 'interactive' not in user_agent_env:
+                _logger.warning(
+                    "_check_credentials without 'interactive' env key, assuming interactive login. \
+                    Check calls and overrides to ensure the 'interactive' key is properly set in \
+                    all _check_credentials environments"
+                )
             return super()._check_credentials(password, user_agent_env)
 
         if not self.env.user._rpc_api_keys_only():
@@ -1630,7 +1650,11 @@ class APIKeys(models.Model):
     def _check_credentials(self, *, scope, key):
         assert scope, "scope is required"
         index = key[:INDEX_SIZE]
-        self.env.cr.execute('SELECT user_id, key FROM res_users_apikeys WHERE index = %s AND (scope IS NULL OR scope = %s)', [index, scope])
+        self.env.cr.execute('''
+            SELECT user_id, key
+            FROM res_users_apikeys INNER JOIN res_users u ON (u.id = user_id)
+            WHERE u.active and index = %s AND (scope IS NULL OR scope = %s)
+        ''', [index, scope])
         for user_id, current_key in self.env.cr.fetchall():
             if KEY_CRYPT_CONTEXT.verify(key, current_key):
                 return user_id

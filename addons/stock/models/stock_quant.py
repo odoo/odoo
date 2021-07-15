@@ -33,18 +33,21 @@ class StockQuant(models.Model):
         ]
         if self.env.context.get('active_model') == 'product.product':
             domain.insert(0, "('product_id', '=', %s)" % self.env.context.get('active_id'))
-        if self.env.context.get('active_model') == 'product.template':
+        elif self.env.context.get('active_model') == 'product.template':
             product_template = self.env['product.template'].browse(self.env.context.get('active_id'))
             if product_template.exists():
                 domain.insert(0, "('product_id', 'in', %s)" % product_template.product_variant_ids.ids)
+        else:
+            domain.insert(0, "('product_id', '=', product_id)")
         return '[' + ', '.join(domain) + ']'
 
     def _domain_product_id(self):
         if not self._is_inventory_mode():
             return
         domain = [('type', '=', 'product')]
-        if self.env.context.get('product_tmpl_id'):
-            domain = expression.AND([domain, [('product_tmpl_id', '=', self.env.context['product_tmpl_id'])]])
+        if self.env.context.get('product_tmpl_ids') or self.env.context.get('product_tmpl_id'):
+            products = self.env.context.get('product_tmpl_ids', []) + [self.env.context.get('product_tmpl_id', 0)]
+            domain = expression.AND([domain, [('product_tmpl_id', 'in', products)]])
         return domain
 
     product_id = fields.Many2one(
@@ -63,7 +66,7 @@ class StockQuant(models.Model):
         domain=lambda self: self._domain_location_id(),
         auto_join=True, ondelete='restrict', readonly=True, required=True, index=True, check_company=True)
     lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot/Serial Number',
+        'stock.production.lot', 'Lot/Serial Number', index=True,
         ondelete='restrict', readonly=True, check_company=True,
         domain=lambda self: self._domain_lot_id())
     package_id = fields.Many2one(
@@ -275,14 +278,14 @@ class StockQuant(models.Model):
         ]
         if not strict:
             if lot_id:
-                domain = expression.AND([[('lot_id', '=', lot_id.id)], domain])
+                domain = expression.AND([['|', ('lot_id', '=', lot_id.id), ('lot_id', '=', False)], domain])
             if package_id:
                 domain = expression.AND([[('package_id', '=', package_id.id)], domain])
             if owner_id:
                 domain = expression.AND([[('owner_id', '=', owner_id.id)], domain])
             domain = expression.AND([[('location_id', 'child_of', location_id.id)], domain])
         else:
-            domain = expression.AND([[('lot_id', '=', lot_id and lot_id.id or False)], domain])
+            domain = expression.AND([['|', ('lot_id', '=', lot_id.id), ('lot_id', '=', False)] if lot_id else [('lot_id', '=', False)], domain])
             domain = expression.AND([[('package_id', '=', package_id and package_id.id or False)], domain])
             domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
@@ -297,7 +300,9 @@ class StockQuant(models.Model):
         self._cr.execute(query_str, where_clause_params)
         res = self._cr.fetchall()
         # No uniquify list necessary as auto_join is not applied anyways...
-        return self.browse([x[0] for x in res])
+        quants = self.browse([x[0] for x in res])
+        quants = quants.sorted(lambda q: not q.lot_id)
+        return quants
 
     @api.model
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
@@ -396,6 +401,8 @@ class StockQuant(models.Model):
         """
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+        if lot_id and quantity > 0:
+            quants = quants.filtered(lambda q: q.lot_id)
 
         incoming_dates = [d for d in quants.mapped('in_date') if d]
         incoming_dates = [fields.Datetime.from_string(incoming_date) for incoming_date in incoming_dates]
@@ -410,7 +417,7 @@ class StockQuant(models.Model):
 
         for quant in quants:
             try:
-                with self._cr.savepoint():
+                with self._cr.savepoint(flush=False):  # Avoid flush compute store of package
                     self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE NOWAIT", [quant.id], log_exceptions=False)
                     quant.write({
                         'quantity': quant.quantity + quantity,
@@ -421,6 +428,9 @@ class StockQuant(models.Model):
                 if e.pgcode == '55P03':  # could not obtain the lock
                     continue
                 else:
+                    # Because savepoint doesn't flush, we need to invalidate the cache
+                    # when there is a error raise from the write (other than lock-error)
+                    self.clear_caches()
                     raise
         else:
             self.create({
@@ -454,7 +464,7 @@ class StockQuant(models.Model):
 
         if float_compare(quantity, 0, precision_rounding=rounding) > 0:
             # if we want to reserve
-            available_quantity = self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+            available_quantity = sum(quants.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=rounding) > 0).mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
             if float_compare(quantity, available_quantity, precision_rounding=rounding) > 0:
                 raise UserError(_('It is not possible to reserve more products of %s than you have in stock.', product_id.display_name))
         elif float_compare(quantity, 0, precision_rounding=rounding) < 0:
@@ -618,6 +628,10 @@ class StockQuant(models.Model):
                 level of your products.</p>
                 """
         }
+
+        target_action = self.env.ref('stock.dashboard_open_quants', False)
+        if target_action:
+            action['id'] = target_action.id
 
         if self._is_inventory_mode():
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree_editable').id

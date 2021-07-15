@@ -6,7 +6,7 @@
     'name': 'Ukraine - Accounting',
     'author': 'ERP Ukraine',
     'website': 'https://erp.co.ua',
-    'version': '1.3',
+    'version': '1.4',
     'description': """
 Ukraine - Chart of accounts.
 ============================

@@ -1,6 +1,7 @@
 odoo.define('mail/static/src/components/mail_template/mail_template.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
@@ -12,6 +13,7 @@ class MailTemplate extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const activity = this.env.models['mail.activity'].get(props.activityLocalId);
             const mailTemplate = this.env.models['mail.mail_template'].get(props.mailTemplateLocalId);

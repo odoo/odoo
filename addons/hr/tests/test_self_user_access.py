@@ -185,3 +185,7 @@ class TestSelfAccessRights(TestHrCommon):
         for f in self.self_protected_fields_user:
             with self.assertRaises(AccessError):
                 self.hubert.with_user(self.richard).write({f: 'dummy'})
+
+    def testSearchUserEMployee(self):
+        # Searching user based on employee_id field should not raise bad query error
+        self.env['res.users'].with_user(self.richard).search([('employee_id', 'ilike', 'Hubert')])

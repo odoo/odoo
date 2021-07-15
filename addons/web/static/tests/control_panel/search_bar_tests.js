@@ -18,13 +18,14 @@ odoo.define('web.search_bar_tests', function (require) {
                         birthday: { string: "Birthday", type: 'date' },
                         birth_datetime: { string: "Birth DateTime", type: 'datetime' },
                         foo: { string: "Foo", type: 'char' },
+                        bool: { string: "Bool", type: 'boolean' },
                     },
                     records: [
-                        { id: 1, display_name: "First record", foo: "yop", bar: 2, birthday: '1983-07-15', birth_datetime: '1983-07-15 01:00:00' },
-                        { id: 2, display_name: "Second record", foo: "blip", bar: 1, birthday: '1982-06-04', birth_datetime: '1982-06-04 02:00:00' },
-                        { id: 3, display_name: "Third record", foo: "gnap", bar: 1, birthday: '1985-09-13', birth_datetime: '1985-09-13 03:00:00' },
-                        { id: 4, display_name: "Fourth record", foo: "plop", bar: 2, birthday: '1983-05-05', birth_datetime: '1983-05-05 04:00:00' },
-                        { id: 5, display_name: "Fifth record", foo: "zoup", bar: 2, birthday: '1800-01-01', birth_datetime: '1800-01-01 05:00:00' },
+                        { id: 1, display_name: "First record", foo: "yop", bar: 2, bool: true, birthday: '1983-07-15', birth_datetime: '1983-07-15 01:00:00' },
+                        { id: 2, display_name: "Second record", foo: "blip", bar: 1, bool: false, birthday: '1982-06-04', birth_datetime: '1982-06-04 02:00:00' },
+                        { id: 3, display_name: "Third record", foo: "gnap", bar: 1, bool: false, birthday: '1985-09-13', birth_datetime: '1985-09-13 03:00:00' },
+                        { id: 4, display_name: "Fourth record", foo: "plop", bar: 2, bool: true, birthday: '1983-05-05', birth_datetime: '1983-05-05 04:00:00' },
+                        { id: 5, display_name: "Fifth record", foo: "zoup", bar: 2, bool: true, birthday: '1800-01-01', birth_datetime: '1800-01-01 05:00:00' },
                     ],
                 },
             };
@@ -538,6 +539,86 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
+        QUnit.test('"null" as autocomplete value', async function (assert) {
+            assert.expect(4);
+
+            const actionManager = await createActionManager({
+                actions: this.actions,
+                archs: this.archs,
+                data: this.data,
+                mockRPC(route, args) {
+                    if (route === '/web/dataset/search_read') {
+                        assert.step(JSON.stringify(args.domain));
+                    }
+                    return this._super(...arguments);
+                },
+            });
+
+            await actionManager.doAction(1);
+
+            await cpHelpers.editSearch(actionManager, "null");
+
+            assert.strictEqual(actionManager.$('.o_searchview_autocomplete .o_selection_focus').text(),
+                "Search Foo for: null");
+
+            await testUtils.dom.click(actionManager.el.querySelector('.o_searchview_autocomplete li.o_selection_focus a'));
+
+            assert.verifySteps([
+                JSON.stringify([]), // initial search
+                JSON.stringify([["foo", "ilike", "null"]]),
+            ]);
+
+            actionManager.destroy();
+        });
+
+        QUnit.test('autocompletion with a boolean field', async function (assert) {
+            assert.expect(9);
+
+            this.archs['partner,false,search'] = '<search><field name="bool"/></search>';
+
+            const actionManager = await createActionManager({
+                actions: this.actions,
+                archs: this.archs,
+                data: this.data,
+                mockRPC(route, args) {
+                    if (route === '/web/dataset/search_read') {
+                        assert.step(JSON.stringify(args.domain));
+                    }
+                    return this._super(...arguments);
+                },
+            });
+
+            await actionManager.doAction(1);
+
+            await cpHelpers.editSearch(actionManager, "y");
+
+            assert.containsN(actionManager, '.o_searchview_autocomplete li', 2);
+            assert.strictEqual(actionManager.$('.o_searchview_autocomplete li:last-child').text(), "Yes");
+
+            // select "Yes"
+            await testUtils.dom.click(actionManager.el.querySelector('.o_searchview_autocomplete li:last-child'));
+
+            await cpHelpers.removeFacet(actionManager, 0);
+
+            await cpHelpers.editSearch(actionManager, "No");
+
+            assert.containsN(actionManager, '.o_searchview_autocomplete li', 2);
+            assert.strictEqual(actionManager.$('.o_searchview_autocomplete li:last-child').text(), "No");
+
+            // select "No"
+            await testUtils.dom.click(actionManager.el.querySelector('.o_searchview_autocomplete li:last-child'));
+
+
+            assert.verifySteps([
+                JSON.stringify([]), // initial search
+                JSON.stringify([["bool", "=", true]]),
+                JSON.stringify([]),
+                JSON.stringify([["bool", "=", false]]),
+            ]);
+
+            actionManager.destroy();
+        });
+
         QUnit.test("reference fields are supported in search view", async function (assert) {
             assert.expect(7);
 
@@ -582,6 +663,38 @@ odoo.define('web.search_bar_tests', function (require) {
                 '[]',
                 '[["ref","ilike","ref002"]]',
             ]);
+
+            actionManager.destroy();
+        });
+
+        QUnit.test('focus should be on search bar when switching between views', async function (assert) {
+            assert.expect(4);
+
+            this.actions[0].views = [[false, 'list'], [false, 'form']];
+            this.archs['partner,false,form'] = `
+            <form>
+                <group>
+                    <field name="display_name"/>
+                </group>
+            </form>`;
+
+            const actionManager = await createActionManager({
+                actions: this.actions,
+                archs: this.archs,
+                data: this.data,
+            });
+
+            await actionManager.doAction(1);
+
+            assert.containsOnce(actionManager, '.o_list_view');
+            assert.strictEqual(document.activeElement, actionManager.el.querySelector('.o_searchview input.o_searchview_input'),
+                "searchview should have focus");
+
+            await testUtils.dom.click(actionManager.$('.o_list_view .o_data_cell:first'));
+            assert.containsOnce(actionManager, '.o_form_view');
+            await testUtils.dom.click(actionManager.$('.o_back_button'));
+            assert.strictEqual(document.activeElement, actionManager.el.querySelector('.o_searchview input.o_searchview_input'),
+                "searchview should have focus");
 
             actionManager.destroy();
         });

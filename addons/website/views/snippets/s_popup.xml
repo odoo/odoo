@@ -14,7 +14,7 @@
              role="dialog">
             <div class="modal-dialog d-flex">
                 <div class="modal-content oe_structure">
-                    <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable">&amp;times;</div>
+                    <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">×</div>
                     <section class="s_banner oe_img_bg pt96 pb96"
                              data-snippet="s_banner"
                              style="background-image: url('/web/image/website.s_popup_default_image');">
@@ -23,7 +23,7 @@
                                 <div class="col-lg-10 offset-lg-1 text-center o_cc o_cc1 jumbotron pt48 pb48">
                                     <h2><font style="font-size: 62px;">Win $20</font></h2>
                                     <p class="lead">Check out now and get $20 off your first order.</p>
-                                    <a href="#" class="btn btn-primary">New customer</a>
+                                    <a href="#" class="btn btn-primary mb-2">New customer</a>
                                 </div>
                             </div>
                         </div>
@@ -72,6 +72,7 @@
                 <we-button data-select-data-attribute="mouseExit">On Exit</we-button>
             </we-select>
             <we-input string="⌙ Delay"
+                      title="Automatically opens the pop-up if the user stays on a page longer than the specified time."
                       data-select-data-attribute=""
                       data-attribute-name="showAfter"
                       data-unit="s"

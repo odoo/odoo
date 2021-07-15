@@ -3,9 +3,10 @@
 # 	* mrp_product_expiry
 # 
 # Translators:
-# Triine Aavik <triine@avalah.ee>, 2020
 # Martin Trigaux, 2020
 # Helen Sulaoja <helen@avalah.ee>, 2020
+# Eneli Õigus <enelioigus@gmail.com>, 2021
+# Triine Aavik <triine@avalah.ee>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Helen Sulaoja <helen@avalah.ee>, 2020\n"
+"Last-Translator: Triine Aavik <triine@avalah.ee>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,13 +30,13 @@ msgstr "Kinnitage"
 #. module: mrp_product_expiry
 #: model:ir.model,name:mrp_product_expiry.model_expiry_picking_confirmation
 msgid "Confirm Expiry"
-msgstr ""
+msgstr "Kinnita aegumine"
 
 #. module: mrp_product_expiry
 #: code:addons/mrp_product_expiry/models/mrp_production.py:0
 #, python-format
 msgid "Confirmation"
-msgstr "Kinnitusviis"
+msgstr "Kinnitus"
 
 #. module: mrp_product_expiry
 #: model_terms:ir.ui.view,arch_db:mrp_product_expiry.confirm_expiry_view_mrp_inherit
@@ -73,7 +74,7 @@ msgstr "Tootmiskäsk"
 #. module: mrp_product_expiry
 #: model:ir.model.fields,field_description:mrp_product_expiry.field_expiry_picking_confirmation__workorder_id
 msgid "Workorder"
-msgstr ""
+msgstr "Töökäsk"
 
 #. module: mrp_product_expiry
 #: code:addons/mrp_product_expiry/wizard/confirm_expiry.py:0
@@ -82,6 +83,8 @@ msgid ""
 "You are going to use some expired components.\n"
 "Do you confirm you want to proceed ?"
 msgstr ""
+"Te olete kasutamas komponente, mille kehtivus on lõppenud.\n"
+"Kas te kinnitate, et soovite jätkata?"
 
 #. module: mrp_product_expiry
 #: code:addons/mrp_product_expiry/wizard/confirm_expiry.py:0
@@ -90,3 +93,5 @@ msgid ""
 "You are going to use the component %(product_name)s, %(lot_name)s which is expired.\n"
 "Do you confirm you want to proceed ?"
 msgstr ""
+"Te olete kasutamas komponenti %(product_name)s, %(lot_name)s, mis on "
+"kehtivuse kaotanud. Kas kinnitate, et soovite jätkata?"

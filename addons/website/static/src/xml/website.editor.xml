@@ -121,6 +121,8 @@
                            t-att-value="apiKey or ''"
                            placeholder="BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"/>
                 </div>
+                <small id="api_key_help" class="text-danger">
+                </small>
                 <div class="small form-text text-muted">
                     Hint: How to use Google Map on your website (Contact Us page and as a snippet)
                     <br/>
@@ -143,4 +145,12 @@
         <div class="mb-2" t-esc="contentText"/>
         <div class="o_ace_editor_container"/>
     </div>
+
+    <t t-name="website.new_content_loader">
+        <div class="o_new_content_loader_container position-fixed fixed-top fixed-left
+            h-100 w-100 d-flex flex-column align-items-center text-white font-weight-bold">
+            <p id="new_content_loader_text"/>
+            <div class="o_new_content_loader"/>
+        </div>
+    </t>
 </templates>

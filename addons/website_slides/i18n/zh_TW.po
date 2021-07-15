@@ -3,19 +3,20 @@
 # 	* website_slides
 # 
 # Translators:
-# sejun huang <sejun.huang@gmail.com>, 2020
 # nle_odoo, 2020
 # Andy Cheng <andy.cheng@richsoda.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # Martin Trigaux, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# Mandy Choy <mnc@odoo.com>, 2021
+# Manga Tsang <mts@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Manga Tsang <mts@odoo.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -919,7 +920,7 @@ msgstr "活動狀態"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "活動類型圖標"
 
 #. module: website_slides
 #. openerp-web
@@ -1450,7 +1451,7 @@ msgstr "清除過濾器"
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid ""
-"Click here to send a verification email allowing you to participate to the "
+"Click here to send a verification email allowing you to participate at the "
 "eLearning."
 msgstr ""
 
@@ -1633,33 +1634,33 @@ msgstr "配置"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid ""
-"Congratulation you've created your first course.<br/>Click on the title of "
-"this content to see it in fullscreen mode."
-msgstr ""
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-#, python-format
-msgid ""
-"Congratulation! Your first lesson is available. Let's see the options "
-"available here. The tag \"<b>New</b>\" indicate that this lesson has less "
-"than 7 days."
-msgstr ""
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
-#, python-format
-msgid ""
-"Congratulation, your course is created, but there isn't any content yet. "
-"First, let's add a <b>Section</b> to give your course a structure."
+"Congratulations! Your first lesson is available. Let's see the options "
+"available here. The tag \"<b>New</b>\" indicates that this lesson was "
+"created less than 7 days ago."
 msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
 msgid "Congratulations, you have reached the last rank!"
 msgstr "恭喜您，您已經達到了最近的排名！"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"Congratulations, you've created your first course.<br/>Click on the title of"
+" this content to see it in fullscreen mode."
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"Congratulations, your course has been created, but there isn't any content "
+"yet. First, let's add a <b>Section</b> to give your course a structure."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_partner
@@ -1990,10 +1991,10 @@ msgstr ""
 msgid ""
 "Depending the promote strategy, a slide will appear on the top of the course's page :\n"
 " * Latest Published : the slide created last.\n"
-" * Most Voted : the slide which have to most vote.\n"
-" * Most Viewed ; the slide which have been viewed the most.\n"
+" * Most Voted : the slide which has to most votes.\n"
+" * Most Viewed ; the slide which has been viewed the most.\n"
 " * Specific : You choose the slide to appear.\n"
-" * None : There won't be any slide showing.\n"
+" * None : No slides will be shown.\n"
 msgstr ""
 
 #. module: website_slides
@@ -2529,6 +2530,7 @@ msgstr "Google Drive API 密鑰"
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/activity.xml:0
+#: code:addons/website_slides/static/src/xml/activity.xml:0
 #, python-format
 msgid "Grant Access"
 msgstr ""
@@ -2839,7 +2841,7 @@ msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_0_1
-msgid "Interesting informations about home gardening. Keep it close !"
+msgid "Interesting information about home gardening. Keep it close !"
 msgstr ""
 
 #. module: website_slides
@@ -3441,7 +3443,7 @@ msgstr "找不到符合您搜尋條件的課程"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action_report
 msgid "No data yet!"
-msgstr ""
+msgstr "暫無數據！"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -3643,7 +3645,7 @@ msgstr "請 <a href=\"/web/login?redirect=%s\">登錄</a> 投票這一課"
 msgid ""
 "Please <a href=\"/web/signup?redirect=%s\">create an account</a> to join "
 "this course"
-msgstr "請 <a href=\"/web/signup?redirect=%s\">建帳戶</a> 加入此課程"
+msgstr "請 <a href=\"/web/signup?redirect=%s\">建立帳戶</a> 加入此課程"
 
 #. module: website_slides
 #. openerp-web
@@ -3652,7 +3654,7 @@ msgstr "請 <a href=\"/web/signup?redirect=%s\">建帳戶</a> 加入此課程"
 msgid ""
 "Please <a href=\"/web/signup?redirect=%s\">create an account</a> to vote "
 "this lesson"
-msgstr "請 <a href=\"/web/signup?redirect=%s\">創建帳戶</a> 投票這一課"
+msgstr "請 <a href=\"/web/signup?redirect=%s\">建立帳戶</a> 投票這一課"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -3669,17 +3671,17 @@ msgstr "請輸入有效的YouTube或Google文檔網址"
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_quiz_question_form.js:0
+#, python-format
+msgid "Please fill in the question"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Please fill in this field"
 msgstr "請填寫這一欄"
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/slides_course_quiz_question_form.js:0
-#, python-format
-msgid "Please fill up the question"
-msgstr ""
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_course
@@ -3794,7 +3796,7 @@ msgstr ""
 #. module: website_slides
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
-msgid "Question \"%s\" must have 1 correct answer and at least 1 invalid answer"
+msgid "Question \"%s\" must have 1 correct answer and at least 1 incorrect answer"
 msgstr ""
 
 #. module: website_slides
@@ -3908,6 +3910,7 @@ msgstr "收件人"
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/xml/activity.xml:0
 #: code:addons/website_slides/static/src/xml/activity.xml:0
 #, python-format
 msgid "Refuse Access"
@@ -4196,7 +4199,7 @@ msgstr "發送電子信件"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__seo_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "Seo 名稱"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__sequence
@@ -4310,7 +4313,7 @@ msgstr "註冊!"
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Sign in"
-msgstr "打卡-開始"
+msgstr "登入"
 
 #. module: website_slides
 #. openerp-web
@@ -4405,7 +4408,7 @@ msgstr "排序"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__specific
 msgid "Specific"
-msgstr ""
+msgstr "指定日期"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -4694,7 +4697,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
-msgid "This is the correct answer, congratulation"
+msgid "This is the correct answer, congratulations"
 msgstr ""
 
 #. module: website_slides
@@ -5289,7 +5292,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
-msgid "You may now participate to our eLearning."
+msgid "You may now participate in our eLearning."
 msgstr ""
 
 #. module: website_slides
@@ -5325,7 +5328,7 @@ msgstr "您的"
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid ""
-"Your Google API key is invalid, please update it into your settings.\n"
+"Your Google API key is invalid, please update it in your settings.\n"
 "Settings > Website > Features > API Key"
 msgstr ""
 
@@ -5439,9 +5442,9 @@ msgstr "登錄"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"means? The YouTube unlisted meaning is a video which can be viewed only by "
-"the users having the link to it. Your video will never come up in the search"
-" results nor on your channel."
+"means? The YouTube \"unlisted\" means it is a video which can be viewed only"
+" by the users with the link to it. Your video will never come up in the "
+"search results nor on your channel."
 msgstr ""
 
 #. module: website_slides
@@ -5462,7 +5465,7 @@ msgstr "評論"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 #, python-format
 msgid "sign in"
-msgstr "簽到"
+msgstr "登入"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card

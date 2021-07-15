@@ -456,7 +456,7 @@ class account_journal(models.Model):
         action_name = self._select_action_to_open()
 
         # Set 'account.' prefix if missing.
-        if '.' not in action_name:
+        if not action_name.startswith("account."):
             action_name = 'account.%s' % action_name
 
         action = self.env["ir.actions.act_window"]._for_xml_id(action_name)
@@ -480,7 +480,7 @@ class account_journal(models.Model):
             if self.type == 'sale':
                 action['domain'] = [(domain_type_field, 'in', ('out_invoice', 'out_refund', 'out_receipt'))]
             elif self.type == 'purchase':
-                action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt'))]
+                action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt', 'entry'))]
 
         return action
 
@@ -500,7 +500,7 @@ class account_journal(models.Model):
             action_ref = 'account.action_account_payments_transfer'
         else:
             action_ref = 'account.action_account_payments'
-        [action] = self.env.ref(action_ref).read()
+        action = self.env['ir.actions.act_window']._for_xml_id(action_ref)
         action['context'] = dict(ast.literal_eval(action.get('context')), default_journal_id=self.id, search_default_journal_id=self.id)
         if payment_type == 'transfer':
             action['context'].update({
@@ -518,10 +518,9 @@ class account_journal(models.Model):
         ctx = dict(self.env.context, default_journal_id=self.id)
         if ctx.get('search_default_journal', False):
             ctx.update(search_default_journal_id=self.id)
+            ctx['search_default_journal'] = False  # otherwise it will do a useless groupby in bank statements
         ctx.pop('group_by', None)
-        ir_model_obj = self.env['ir.model.data']
-        model, action_id = ir_model_obj.get_object_reference('account', action_name)
-        [action] = self.env[model].browse(action_id).read()
+        action = self.env['ir.actions.act_window']._for_xml_id(f"account.{action_name}")
         action['context'] = ctx
         if ctx.get('use_domain', False):
             action['domain'] = isinstance(ctx['use_domain'], list) and ctx['use_domain'] or ['|', ('journal_id', '=', self.id), ('journal_id', '=', False)]

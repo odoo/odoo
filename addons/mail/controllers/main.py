@@ -143,6 +143,7 @@ class MailController(http.Controller):
                 'partner_id': follower.partner_id.id,
                 'channel_id': follower.channel_id.id,
                 'name': follower.name,
+                'display_name': follower.display_name,
                 'email': follower.email,
                 'is_active': follower.is_active,
                 # When editing the followers, the "pencil" icon that leads to the edition of subtypes
@@ -268,6 +269,7 @@ class MailController(http.Controller):
             'moderation_channel_ids': request.env.user.moderation_channel_ids.ids,
             'partner_root': request.env.ref('base.partner_root').sudo().mail_partner_format(),
             'public_partner': request.env.ref('base.public_partner').sudo().mail_partner_format(),
+            'public_partners': [partner.mail_partner_format() for partner in request.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id],
             'current_partner': request.env.user.partner_id.mail_partner_format(),
             'current_user_id': request.env.user.id,
         }

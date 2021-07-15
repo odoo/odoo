@@ -21,6 +21,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"Any new All Users Lock Date must be posterior (or equal) to the previous "
+"one."
+msgstr ""
+
+#. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
 msgid "Companies"
 msgstr "회사들"
@@ -49,13 +57,6 @@ msgstr "조언자의 잠금 날짜는 되돌릴 수 없으며 제거할 수 없�
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
-msgid ""
-"The new lock date for advisors must be set after the previous lock date."
-msgstr "새 조언자의 잠금 날짜는 이전 잠금 날짜 이후에 설정해야 합니다."
-
-#. module: account_lock
-#: code:addons/account_lock/models/res_company.py:0
-#, python-format
 msgid "The new tax lock date must be set after the previous lock date."
 msgstr "새로운 세금 잠금 날짜는 이전 잠금 날짜 이후에 설정해야 합니다."
 
@@ -69,24 +70,23 @@ msgstr "세금 잠금 날짜는 되돌릴 수 없으며 제거할 수 없습니�
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot define stricter conditions on advisors than on users. Please make"
-" sure that the lock date on advisor is set before the lock date for users."
+"You cannot lock a period that has not yet ended. Therefore, the All Users "
+"Lock Date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
-"사용자보다 엄격한 자문 조건을 정의할 수 없습니다. 사용자의 잠금 날짜 이전에 조언자의 잠금 날짜가 설정되어 있는지 확인합니다."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" lock date for advisors is not set after the last day of the previous month."
+"You cannot lock a period that has not yet ended. Therefore, the tax lock "
+"date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
-"아직 완료되지 않은 기간은 잠글 수 없습니다. 조언자의 잠금 날짜가 전월의 마지막 날 이후로 설정되지 않았는지 확인해 주세요."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" tax lock date is not set after the last day of the previous month."
-msgstr "아직 완료되지 않은 기간은 잠글 수 없습니다. 이전 달의 마지막 날 이후에 세금 잠금 날짜가 설정되지 않았는지 확인하십시오."
+"You cannot set stricter restrictions on advisors than on users. Therefore, "
+"the All Users Lock Date must be anterior (or equal) to the Invoice/Bills "
+"Lock Date."
+msgstr ""

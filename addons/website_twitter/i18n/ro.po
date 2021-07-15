@@ -6,6 +6,7 @@
 # Martin Trigaux, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:23+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +38,8 @@ msgid ""
 "<span class=\"o_form_label\">Twitter Roller</span>\n"
 "                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Twitter Roller</span>\n"
+"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -86,6 +89,8 @@ msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
 "tweets are protected."
 msgstr ""
+"Acreditările de autentificare lipseau sau erau incorecte. Poate că tweet-"
+"urile cu nume de ecran sunt protejate."
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
@@ -125,7 +130,7 @@ msgstr "Nume afișat"
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_screen_name
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
-msgstr ""
+msgstr "Favorite din"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_screen_name
@@ -155,6 +160,8 @@ msgstr "ID"
 #, python-format
 msgid "Internet connection refused: We failed to reach a twitter server."
 msgstr ""
+"Conexiunea la internet a fost refuzată: nu am reușit să ajungem la un server"
+" twitter."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings____last_update
@@ -180,12 +187,15 @@ msgid ""
 "Please set a Twitter screen name to load favorites from, in the Website "
 "Settings (it does not have to be yours)"
 msgstr ""
+"Vă rugăm să setați un nume de ecran Twitter din care să încărcați favoritele"
+" din Setările site-ului web (nu trebuie să fie al dvs.)"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:0
 #, python-format
 msgid "Please set the Twitter API Key and Secret in the Website Settings."
 msgstr ""
+"Vă rugăm să setați cheia și secretul API Twitter în setările site-ului web."
 
 #. module: website_twitter
 #. openerp-web
@@ -214,11 +224,13 @@ msgid ""
 "Screen Name of the Twitter Account from which you want to load favorites.It "
 "does not have to match the API Key/Secret."
 msgstr ""
+"Numele ecranului contului Twitter din care doriți să încărcați favorite. Nu "
+"trebuie să se potrivească cu cheia / secretul API."
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Switch to the API Keys tab: <br/>"
-msgstr ""
+msgstr "Treceți la fila Chei API: <br/>"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -236,6 +248,8 @@ msgid ""
 "The Twitter servers are up, but the request could not be serviced due to "
 "some failure within our stack. Try again later."
 msgstr ""
+"Serverele Twitter sunt în funcțiune, dar solicitarea nu a putut fi reparată "
+"din cauza unor eșecuri din stiva noastră. Încercați mai târziu."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -244,6 +258,8 @@ msgid ""
 "The request is understood, but it has been refused or access is not allowed."
 " Please check your Twitter API Key and Secret."
 msgstr ""
+"Cererea este înțeleasă, dar a fost refuzată sau accesul nu este permis. Vă "
+"rugăm să verificați cheia și secretul API-ului dvs. Twitter."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -274,7 +290,7 @@ msgstr "Tweet-uri"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Twitter API Credentials"
-msgstr ""
+msgstr "Acreditări API Twitter"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
@@ -294,7 +310,7 @@ msgstr "Twitter API key"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
 msgid "Twitter API key you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "Cheia API Twitter o puteți obține de la https://apps.twitter.com/"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
@@ -305,6 +321,7 @@ msgstr "Twitter API secret"
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
 msgid "Twitter API secret you can get it from https://apps.twitter.com/"
 msgstr ""
+"Secretul API-ului Twitter îl puteți obține de la https://apps.twitter.com/"
 
 #. module: website_twitter
 #. openerp-web
@@ -320,12 +337,14 @@ msgid ""
 "Twitter authorization error! Please double-check your Twitter API Key and "
 "Secret!"
 msgstr ""
+"Eroare de autorizare Twitter! Vă rugăm să verificați cheia și secretul API-"
+"ului dvs. Twitter!"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "Twitter is down or being upgraded."
-msgstr ""
+msgstr "Twitter nu funcționează sau se actualizează."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -334,6 +353,9 @@ msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
 "on Twitter forums to get help."
 msgstr ""
+"Twitter pare stricat. Vă rugăm să reîncercați mai târziu. Ați putea lua în "
+"considerare postarea unei probleme pe forumurile Twitter pentru a obține "
+"ajutor."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
@@ -376,7 +398,7 @@ msgstr "Pagină web"
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "Website Twitter"
-msgstr ""
+msgstr "Site-ul Twitter"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form

@@ -10,18 +10,19 @@
 # sao sang <saosangmo@yahoo.com>, 2020
 # Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2020
 # fanha99 <fanha99@hotmail.com>, 2020
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
 # Dung Nguyen Thi <dungnt@trobz.com>, 2020
 # Duy BQ <duybq86@gmail.com>, 2020
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
+# Trần Hà <tranthuha13590@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2020\n"
+"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -563,6 +564,11 @@ msgstr ""
 "                </small>"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<span aria-label=\"Close\">×</span>"
+msgstr "<span aria-label=\"Đóng\">×</span>"
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span class=\"badge badge-info\">Closed</span>"
 msgstr ""
@@ -633,11 +639,6 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "<span class=\"text-muted mx-3\">or</span>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<span>&amp;times;</span>"
 msgstr ""
 
 #. module: website_forum
@@ -738,6 +739,7 @@ msgstr ""
 "diễn đàn."
 
 #. module: website_forum
+#. openerp-web
 #: code:addons/website_forum/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
@@ -1118,9 +1120,9 @@ msgstr "Nhấn để duyệt câu trả lời này."
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid ""
-"Click here to send a verification email allowing you to participate to the "
+"Click here to send a verification email allowing you to participate in the "
 "forum."
-msgstr "Nhấn vào đây để gửi email xác minh cho phép bạn tham gia diễn đàn."
+msgstr ""
 
 #. module: website_forum
 #. openerp-web
@@ -2169,7 +2171,7 @@ msgstr "Kiểm duyệt bài viết"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Moderation"
-msgstr ""
+msgstr "Kiểm duyệt"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
@@ -2456,7 +2458,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Order by"
-msgstr ""
+msgstr "Sắp xếp theo"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
@@ -2486,7 +2488,7 @@ msgstr "Nội dung đơn giản"
 #: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
 #, python-format
 msgid "Please fill in this field"
-msgstr ""
+msgstr "Vui lòng điền vào các thông tin này"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -2621,7 +2623,7 @@ msgstr "Public"
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__privacy
 msgid ""
-"Public: Forum is pubic\n"
+"Public: Forum is public\n"
 "Signed In: Forum is visible for signed in users\n"
 "Some users: Forum and their content are hidden for non members of selected group"
 msgstr ""
@@ -2631,7 +2633,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
 #, python-format
 msgid ""
-"Public: Forum is pubic\\nSigned In: Forum is visible for signed in "
+"Public: Forum is public\\nSigned In: Forum is visible for signed in "
 "users\\nSome users: Forum and their content are hidden for non members of "
 "selected group"
 msgstr ""
@@ -2770,7 +2772,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_rank_global
 msgid "Ranks"
-msgstr ""
+msgstr "Ranks"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -2962,7 +2964,7 @@ msgstr "Tự học"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__seo_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "Tên Seo"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__sequence
@@ -3019,7 +3021,7 @@ msgstr "Đã giải quyết"
 #: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
 #, python-format
 msgid "Some Users"
-msgstr ""
+msgstr "Một số người dùng"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__private
@@ -3353,7 +3355,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
 msgid "Total Views"
-msgstr ""
+msgstr "Tổng lượt xem"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_count
@@ -3635,7 +3637,7 @@ msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid "You may now participate to our forums."
+msgid "You may now participate in our forums."
 msgstr ""
 
 #. module: website_forum
@@ -3972,7 +3974,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.author_box
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
 msgid "xp"
-msgstr ""
+msgstr "xp"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help

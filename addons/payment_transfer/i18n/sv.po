@@ -1,19 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_transfer
+# 	* payment_transfer
 # 
 # Translators:
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
-# Daniel Forslund <daniel.forslund@gmail.com>, 2018
+# Kristoffer Grundström <lovaren@gmail.com>, 2021
+# Martin Trigaux, 2021
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
+# Daniel Forslund <daniel.forslund@gmail.com>, 2021
+# Kim Asplund <kim.asplund@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Daniel Forslund <daniel.forslund@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,19 +24,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:83
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
 msgstr "; flerfaldig beställning funnen"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:81
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "; no order found"
 msgstr "; ingen beställning funnen"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:41
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid ""
 "<div>\n"
@@ -47,51 +49,44 @@ msgid ""
 msgstr ""
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr ""
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:39
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "Bank Account"
 msgstr "Bankkonto"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:39
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "Bank Accounts"
 msgstr "Bankkonton"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Senast redigerad"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
+#: model:ir.model.fields.selection,name:payment_transfer.selection__payment_acquirer__provider__transfer
+msgid "Manual Payment"
 msgstr ""
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Betalväxel"
+msgstr "Betalnings Inlösare"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_transaction
@@ -99,32 +94,12 @@ msgid "Payment Transaction"
 msgstr "Betalningstransaktion"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
-msgstr ""
-
-#. module: payment_transfer
 #: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
 msgid "Provider"
 msgstr "Leverantör"
 
 #. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
-msgstr ""
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:79
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "received data for reference %s"
 msgstr ""

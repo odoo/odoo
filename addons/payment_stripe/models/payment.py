@@ -58,11 +58,13 @@ class PaymentAcquirerStripe(models.Model):
             'line_items[][quantity]': 1,
             'line_items[][name]': tx_values['reference'],
             'client_reference_id': tx_values['reference'],
-            'success_url': urls.url_join(base_url, StripeController._success_url) + '?reference=%s' % tx_values['reference'],
-            'cancel_url': urls.url_join(base_url, StripeController._cancel_url) + '?reference=%s' % tx_values['reference'],
+            'success_url': urls.url_join(base_url, StripeController._success_url) + '?reference=%s' % urls.url_quote_plus(tx_values['reference']),
+            'cancel_url': urls.url_join(base_url, StripeController._cancel_url) + '?reference=%s' % urls.url_quote_plus(tx_values['reference']),
             'payment_intent_data[description]': tx_values['reference'],
             'customer_email': tx_values.get('partner_email') or tx_values.get('billing_partner_email'),
         }
+        if tx_values['type'] == 'form_save':
+            stripe_session_data['payment_intent_data[setup_future_usage]'] = 'off_session'
 
         self._add_available_payment_method_types(stripe_session_data, tx_values)
 
@@ -88,8 +90,8 @@ class PaymentAcquirerStripe(models.Model):
             PMT('p24', ['pl'], ['eur', 'pln'], 'punctual'),
         ]
 
-        existing_icons = [icon.name.lower() for icon in self.env['payment.icon'].search([])]
-        linked_icons = [icon.name.lower() for icon in self.payment_icon_ids]
+        existing_icons = [(icon.name or '').lower() for icon in self.env['payment.icon'].search([])]
+        linked_icons = [(icon.name or '').lower() for icon in self.payment_icon_ids]
 
         # We don't filter out pmt in the case the icon doesn't exist at all as it would be **implicit** exclusion
         icon_filtered = filter(lambda pmt: pmt.name == 'card' or
@@ -441,7 +443,7 @@ class PaymentTransactionStripe(models.Model):
         invalid_parameters = []
         if data.get('amount') != int(self.amount if self.currency_id.name in INT_CURRENCIES else float_round(self.amount * 100, 2)):
             invalid_parameters.append(('Amount', data.get('amount'), self.amount * 100))
-        if data.get('currency').upper() != self.currency_id.name:
+        if data.get('currency') and data.get('currency').upper() != self.currency_id.name:
             invalid_parameters.append(('Currency', data.get('currency'), self.currency_id.name))
         if data.get('payment_intent') and data.get('payment_intent') != self.stripe_payment_intent:
             invalid_parameters.append(('Payment Intent', data.get('payment_intent'), self.stripe_payment_intent))

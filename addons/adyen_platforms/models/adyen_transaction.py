@@ -10,7 +10,7 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class AdyenTransaction(models.Model):
     _name = 'adyen.transaction'
-    _description = 'Adyen for Plaforms Transaction'
+    _description = 'Adyen for Platforms Transaction'
     _order = 'date desc'
 
     adyen_account_id = fields.Many2one('adyen.account')

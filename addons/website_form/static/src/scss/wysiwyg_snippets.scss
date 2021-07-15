@@ -7,14 +7,19 @@
             margin-top: $o-we-sidebar-content-field-spacing;
             max-height: 200px;
             overflow-y: auto;
+
             table {
                 table-layout: fixed;
                 width: 100%;
+
                 input {
-                    background-color: var(--o-we-bg-color-dark);
-                    color: var(--o-we-color);
-                    border: none;
                     width: 100%;
+                    border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+                    border-radius: $o-we-sidebar-content-field-border-radius;
+                    padding: 0 $o-we-sidebar-content-field-clickable-spacing;
+                    background-color: $o-we-sidebar-content-field-input-bg;
+                    color: inherit;
+                    font-family: $o-we-sidebar-content-field-input-font-family;
                 }
                 tr {
                     border: 1px solid rgba(white, 0.1);

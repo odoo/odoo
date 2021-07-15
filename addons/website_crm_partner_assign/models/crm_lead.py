@@ -4,7 +4,7 @@
 import random
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessDenied, AccessError
+from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.tools import html_escape
 
 
@@ -41,7 +41,7 @@ class CrmLead(models.Model):
     def assign_salesman_of_assigned_partner(self):
         salesmans_leads = {}
         for lead in self:
-            if (lead.probability > 0 and lead.probability < 100) or lead.stage_id.sequence == 1:
+            if lead.active and lead.probability < 100:
                 if lead.partner_assigned_id and lead.partner_assigned_id.user_id != lead.user_id:
                     salesmans_leads.setdefault(lead.partner_assigned_id.user_id.id, []).append(lead.id)
 
@@ -62,7 +62,8 @@ class CrmLead(models.Model):
                 partner_id = partner_dict.get(lead.id, False)
             if not partner_id:
                 tag_to_add = self.env.ref('website_crm_partner_assign.tag_portal_lead_partner_unavailable', False)
-                lead.write({'tag_ids': [(4, tag_to_add.id, False)]})
+                if tag_to_add:
+                    lead.write({'tag_ids': [(4, tag_to_add.id, False)]})
                 continue
             lead.assign_geo_localize(lead.partner_latitude, lead.partner_longitude)
             partner = self.env['res.partner'].browse(partner_id)
@@ -235,6 +236,14 @@ class CrmLead(models.Model):
                         'date_deadline': values['activity_date_deadline'],
                     })
             lead.write(lead_values)
+
+    def update_contact_details_from_portal(self, values):
+        self.check_access_rights('write')
+        fields = ['partner_name', 'phone', 'mobile', 'email_from', 'street', 'street2',
+            'city', 'zip', 'state_id', 'country_id']
+        if any([key not in fields for key in values]):
+            raise UserError(_("Not allowed to update the following field(s) : %s.") % ", ".join([key for key in values if not key in fields]))
+        return self.sudo().write(values)
 
     @api.model
     def create_opp_portal(self, values):

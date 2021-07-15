@@ -3,18 +3,18 @@ dc_a_f,10,1,FACTURAS A,A,FACTURA,invoice,FA-A,base.ar,not_zero,True
 dc_a_nd,20,2,NOTAS DE DEBITO A,A,NOTA DE DEBITO,debit_note,ND-A,base.ar,not_zero,True
 dc_a_nc,30,3,NOTAS DE CREDITO A,A,NOTA DE CREDITO,credit_note,NC-A,base.ar,not_zero,True
 dc_a_r,40,4,RECIBOS A,A,RECIBO,invoice,RE-A,base.ar,not_zero,True
-dc_a_nvc,50,5,NOTAS DE VENTA AL CONTADO A,A,,,,base.ar,not_zero,False
+dc_a_nvc,50,5,NOTAS DE VENTA AL CONTADO A,A,,invoice,NVC-A,base.ar,not_zero,False
 dc_b_f,60,6,FACTURAS B,B,FACTURA,invoice,FA-B,base.ar,zero,True
 dc_b_nd,70,7,NOTAS DE DEBITO B,B,NOTA DE DEBITO,debit_note,ND-B,base.ar,zero,True
 dc_b_nc,80,8,NOTAS DE CREDITO B,B,NOTA DE CREDITO,credit_note,NC-B,base.ar,zero,True
 dc_b_r,90,9,RECIBOS B,B,RECIBO,invoice,RE-B,base.ar,zero,True
-dc_b_nvc,100,10,NOTAS DE VENTA AL CONTADO B,B,,,,base.ar,zero,False
+dc_b_nvc,100,10,NOTAS DE VENTA AL CONTADO B,B,,invoice,NVC-B,base.ar,zero,False
 dc_c_f,110,11,FACTURAS C,C,FACTURA,invoice,FA-C,base.ar,zero,True
 dc_c_nd,120,12,NOTAS DE DEBITO C,C,NOTA DE DEBITO,debit_note,ND-C,base.ar,zero,True
 dc_c_nc,130,13,NOTAS DE CREDITO C,C,NOTA DE CREDITO,credit_note,NC-C,base.ar,zero,True
 dc_aduana,140,14,DOCUMENTO ADUANERO,,,,,base.ar,,False
 dc_c_r,150,15,RECIBOS C,C,RECIBO,invoice,RE-C,base.ar,zero,True
-dc_c_nvc,160,16,NOTAS DE VENTA AL CONTADO C,C,,,,base.ar,zero,False
+dc_c_nvc,160,16,NOTAS DE VENTA AL CONTADO C,C,,invoice,NVC-C,base.ar,zero,False
 dc_e_f,170,19,FACTURAS DE EXPORTACION,E,FACTURA,invoice,FA-E,base.ar,not_zero,True
 dc_e_nd,180,20,NOTAS DE DEBITO POR OPERACIONES CON EL EXTERIOR,E,NOTA DE DEBITO,debit_note,ND-E,base.ar,not_zero,True
 dc_e_nc,190,21,NOTAS DE CREDITO POR OPERACIONES CON EL EXTERIOR,E,NOTA DE CREDITO,credit_note,NC-E,base.ar,not_zero,True
@@ -35,13 +35,13 @@ dc_m_f,330,51,FACTURAS M,M,FACTURA,invoice,FA-M,base.ar,not_zero,True
 dc_m_nd,340,52,NOTAS DE DEBITO M,M,NOTA DE DEBITO,debit_note,ND-C,base.ar,not_zero,True
 dc_m_nc,350,53,NOTAS DE CREDITO M,M,NOTA DE CREDITO,credit_note,NC-C,base.ar,not_zero,True
 dc_m_r,360,54,RECIBOS M,M,RECIBO,invoice,RE-M,base.ar,not_zero,True
-dc_m_nvc,370,55,NOTAS DE VENTA AL CONTADO M,M,,,,base.ar,not_zero,False
+dc_m_nvc,370,55,NOTAS DE VENTA AL CONTADO M,M,,invoice,NVC-M,base.ar,not_zero,False
 dc_m_rg1415,380,56,"COMPROBANTES M DEL ANEXO I, APARTADO A, INC. F), R.G. Nº 1415",M,,invoice,,base.ar,not_zero,False
 dc_m_o_rg1415,390,57,OTROS COMPROBANTES M QUE CUMPLAN CON LA R.G. Nº 1415,M,,invoice,,base.ar,not_zero,False
 dc_m_cvl,400,58,CUENTAS DE VENTA Y LIQUIDO PRODUCTO M,M,,invoice,,base.ar,not_zero,False
 dc_m_l,410,59,LIQUIDACIONES M,M,LIQUIDACION,invoice,LI-M,base.ar,not_zero,False
-dc_a_cvl,420,60,CUENTAS DE VENTA Y LIQUIDO PRODUCTO A,A,,invoice,,base.ar,not_zero,False
-dc_b_cvl,430,61,CUENTAS DE VENTA Y LIQUIDO PRODUCTO B,B,,invoice,,base.ar,zero,False
+dc_a_cvl,420,60,CUENTAS DE VENTA Y LIQUIDO PRODUCTO A,A,CTA VTA LIQUIDO PRODUCTO,invoice,LP-A,base.ar,not_zero,False
+dc_b_cvl,430,61,CUENTAS DE VENTA Y LIQUIDO PRODUCTO B,B,CTA VTA LIQUIDO PRODUCTO,invoice,LP-B,base.ar,zero,False
 dc_a_l,440,63,LIQUIDACIONES A,A,LIQUIDACION,invoice,LI-A,base.ar,not_zero,True
 dc_b_l,450,64,LIQUIDACIONES B,B,LIQUIDACION,invoice,LI-B,base.ar,zero,True
 dc_nc,460,65,"NOTAS DE CREDITO DE COMPROBANTES CON COD. 34, 39, 58, 59, 60, 63, 96, 97,",,,credit_note,,base.ar,,False
@@ -79,10 +79,10 @@ dc_nca,770,104,NOTA DE CREDITO DE ASIGNACION,,,credit_note,,base.ar,,False
 dc_remito_x,790,94,REMITOS X,X,REMITO,,RM-X,base.ar,,False
 dc_liq_s_a,800,17,LIQUIDACION DE SERVICIOS PUBLICOS CLASE A,A,,invoice,LS-A,base.ar,not_zero,True
 dc_liq_s_b,810,18,LIQUIDACION DE SERVICIOS PUBLICOS CLASE B,B,,invoice,LS-B,base.ar,zero,True
-dc_com_a_m,820,23,COMPROBANTES "A" DE COMPRA PRIMARIA PARA EL SECTOR PESQUERO MARITIMO,,,,,base.ar,,False
-dc_con_a_m,830,24,COMPROBANTES "A" DE CONSIGNACION PRIMARIA PARA EL SECTOR PESQUERO MARITIMO,,,,,base.ar,,False
-dc_com_b_m,840,25,COMPROBANTES "B" DE COMPRA PRIMARIA PARA EL SECTOR PESQUERO MARITIMO,,,,,base.ar,,False
-dc_con_b_m,850,26,COMPROBANTES "B" DE CONSIGNACION PRIMARIA PARA EL SECTOR PESQUERO MARITIMO,,,,,base.ar,,False
+dc_com_a_m,820,23,"COMPROBANTES ""A"" DE COMPRA PRIMARIA PARA EL SECTOR PESQUERO MARITIMO",,,,,base.ar,,False
+dc_con_a_m,830,24,"COMPROBANTES ""A"" DE CONSIGNACION PRIMARIA PARA EL SECTOR PESQUERO MARITIMO",,,,,base.ar,,False
+dc_com_b_m,840,25,"COMPROBANTES ""B"" DE COMPRA PRIMARIA PARA EL SECTOR PESQUERO MARITIMO",,,,,base.ar,,False
+dc_con_b_m,850,26,"COMPROBANTES ""B"" DE CONSIGNACION PRIMARIA PARA EL SECTOR PESQUERO MARITIMO",,,,,base.ar,,False
 dc_liq_uci_a,860,27,LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE A,A,,invoice,LU-A,base.ar,not_zero,True
 dc_liq_uci_b,870,28,LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE B,B,,invoice,LU-B,base.ar,zero,True
 dc_liq_uci_c,880,29,LIQUIDACION UNICA COMERCIAL IMPOSITIVA CLASE C,C,,invoice,LU-C,base.ar,zero,True
@@ -118,3 +118,30 @@ dc_fce_c_nd,1170,212,NOTA DE DEBITO ELECTRONICA MiPyMEs (FCE) C,C,NOTA DE DEBITO
 dc_fce_c_nc,1180,213,NOTA DE CREDITO ELECTRONICA MiPyMEs (FCE) C,C,NOTA DE CREDITO ELECTRONICA,credit_note,NCE-D,base.ar,zero,True
 fa_exterior,195,,FACTURAS Y COMPROBANTES DEL EXTERIOR,I,,invoice,FA-I,base.ar,zero,True
 nc_exterior,196,,NOTAS DE CREDITO Y REEMBOLSOS DEL EXTERIOR,I,,credit_note,NC-I,base.ar,zero,True
+dc_liq_cpst_a,1190,150,LIQUIDACIÓN DE COMPRA PRIMARIA PARA EL SECTOR TABACALERO A,A,,invoice,LCT-A,base.ar,not_zero,False
+dc_liq_cpst_b,1200,151,LIQUIDACIÓN DE COMPRA PRIMARIA PARA EL SECTOR TABACALERO B,B,,invoice,LCT-B,base.ar,zero,False
+dc_cvl_sa_a,1210,157,CUENTA DE VENTA Y LÍQUIDO PRODUCTO A – SECTOR AVÍCOLA,A,,invoice,CVA-A,base.ar,not_zero,False
+dc_cvl_sa_b,1220,158,CUENTA DE VENTA Y LÍQUIDO PRODUCTO B – SECTOR AVÍCOLA,B,,invoice,CVA-B,base.ar,zero,False
+dc_liq_c_sa_a,1230,159,LIQUIDACIÓN DE COMPRA A – SECTOR AVÍCOLA,A,,invoice,LCA-A,base.ar,not_zero,False
+dc_liq_c_sa_b,1240,160,LIQUIDACIÓN DE COMPRA B – SECTOR AVÍCOLA,B,,invoice,LCA-B,base.ar,zero,False
+dc_liq_cd_sa_a,1250,161,LIQUIDACIÓN DE COMPRA DIRECTA A - SECTOR AVÍCOLA,A,,invoice,LCDA-A,base.ar,not_zero,False
+dc_liq_cd_sa_b,1260,162,LIQUIDACIÓN DE COMPRA DIRECTA B - SECTOR AVÍCOLA,B,,invoice,LCDA-B,base.ar,zero,False
+dc_liq_cd_sa_c,1270,163,LIQUIDACIÓN DE COMPRA DIRECTA C - SECTOR AVÍCOLA,C,,invoice,LCDA-C,base.ar,zero,False
+dc_liq_vd_sa_a,1280,164,LIQUIDACIÓN DE VENTA DIRECTA A - SECTOR AVÍCOLA,A,,invoice,LVDA-A,base.ar,not_zero,False
+dc_liq_vd_sa_b,1290,165,LIQUIDACIÓN DE VENTA DIRECTA B - SECTOR AVÍCOLA,B,,invoice,LVDA-B,base.ar,zero,False
+dc_liq_ccpc_a,1300,166,LIQUIDACIÓN DE CONTRATACIÓN DE CRIANZA POLLOS PARRILLEROS A,A,,invoice,LCCP-A,base.ar,not_zero,False
+dc_liq_ccpc_b,1310,167,LIQUIDACIÓN DE CONTRATACIÓN DE CRIANZA POLLOS PARRILLEROS B,B,,invoice,LCCP-B,base.ar,zero,False
+dc_liq_ccpc_c,1320,168,LIQUIDACIÓN DE CONTRATACIÓN DE CRIANZA POLLOS PARRILLEROS C,C,,invoice,LCCP-C,base.ar,zero,False
+dc_liq_cpc_a,1330,169,LIQUIDACIÓN DE CRIANZA POLLOS PARRILLEROS A,A,,invoice,LCPP-A,base.ar,not_zero,False
+dc_liq_cpc_b,1340,170,LIQUIDACIÓN DE CRIANZA POLLOS PARRILLEROS B,B,,invoice,LCPP-B,base.ar,zero,False
+dc_liq_cca_a,1350,171,LIQUIDACIÓN DE COMPRA DE CAÑA DE AZÚCAR A,A,,invoice,LCCA-A,base.ar,not_zero,False
+dc_liq_cca_b,1360,172,LIQUIDACIÓN DE COMPRA DE CAÑA DE AZÚCAR B,B,,invoice,LCCA-B,base.ar,zero,False
+dc_cvl_sp_a,1370,180,CUENTA DE VENTA Y LÍQUIDO PRODUCTO A - SECTOR PECUARIO,A,,invoice,CVP-A,base.ar,not_zero,False
+dc_cvl_sp_b,1380,182,CUENTA DE VENTA Y LÍQUIDO PRODUCTO B - SECTOR PECUARIO,B,,invoice,CVP-B,base.ar,zero,False
+dc_liq_c_sp_a,1390,183,LIQUIDACIÓN DE COMPRA A - SECTOR PECUARIO,A,,invoice,LCP-A,base.ar,not_zero,False
+dc_liq_c_sp_b,1400,185,LIQUIDACIÓN DE COMPRA B - SECTOR PECUARIO,B,,invoice,LCP-B,base.ar,zero,False
+dc_liq_cd_sp_a,1410,186,LIQUIDACIÓN DE COMPRA DIRECTA A - SECTOR PECUARIO,A,,invoice,LCDP-A,base.ar,not_zero,False
+dc_liq_cd_sp_b,1420,188,LIQUIDACIÓN DE COMPRA DIRECTA B - SECTOR PECUARIO,B,,invoice,LCDP-B,base.ar,zero,False
+dc_liq_cd_sp_c,1430,189,LIQUIDACIÓN DE COMPRA DIRECTA C - SECTOR PECUARIO,C,,invoice,LCDP-C,base.ar,zero,False
+dc_liq_vd_sp_a,1440,190,LIQUIDACIÓN DE VENTA DIRECTA A - SECTOR PECUARIO,A,,invoice,LVDP-A,base.ar,not_zero,False
+dc_liq_vd_sp_b,1450,191,LIQUIDACIÓN DE VENTA DIRECTA B - SECTOR PECUARIO,B,,invoice,LVDP-B,base.ar,zero,False

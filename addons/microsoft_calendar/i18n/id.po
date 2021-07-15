@@ -3,8 +3,8 @@
 # 	* microsoft_calendar
 # 
 # Translators:
-# William Surya Permana <zarambie_game@yahoo.com>, 2020
 # Martin Trigaux, 2020
+# William Surya Permana <zarambie_game@yahoo.com>, 2020
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2020
 # oon arfiandwi <oon.arfiandwi@gmail.com>, 2020
 # pnyet <david@zeromail.us>, 2020
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
 "Last-Translator: Ryanto The <ry.the77@gmail.com>, 2020\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
@@ -70,11 +70,6 @@ msgid ""
 "An administrator needs to configure Outlook Synchronization before you can "
 "use it!"
 msgstr ""
-
-#. module: microsoft_calendar
-#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
-msgid "Calendar"
-msgstr "Kalender"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_event
@@ -155,6 +150,16 @@ msgid "Event Recurrence Rule"
 msgstr ""
 
 #. module: microsoft_calendar
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"For a correct synchronization between Odoo and Outlook Calendar, all attendees must have an email address. However, some events do not respect this condition. As long as the events are incorrect, the calendars will not be synchronized.\n"
+"Either update the events/attendees or archive these events %s:\n"
+"%s"
+msgstr ""
+
+#. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
@@ -262,6 +267,11 @@ msgstr ""
 #, python-format
 msgid "Notification"
 msgstr "Notifikasi"
+
+#. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
+msgid "Outlook Calendar"
+msgstr ""
 
 #. module: microsoft_calendar
 #: model:ir.actions.server,name:microsoft_calendar.ir_cron_sync_all_cals_ir_actions_server

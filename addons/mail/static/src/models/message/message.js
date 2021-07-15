@@ -4,7 +4,8 @@ odoo.define('mail/static/src/models/message/message.js', function (require) {
 const emojis = require('mail.emojis');
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2many } = require('mail/static/src/model/model_field.js');
-const { addLink, htmlToTextContentInline, parseAndTransform } = require('mail.utils');
+const { clear } = require('mail/static/src/model/model_field_command.js');
+const { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } = require('mail.utils');
 
 const { str_to_datetime } = require('web.time');
 
@@ -315,6 +316,13 @@ function factory(dependencies) {
         }
 
         /**
+         * Refreshes the value of `dateFromNow` field to the "current now".
+         */
+        refreshDateFromNow() {
+            this.update({ dateFromNow: this._computeDateFromNow() });
+        }
+
+        /**
          * Action to initiate reply to current message in Discuss Inbox. Assumes
          * that Discuss and Inbox are already opened.
          */
@@ -361,6 +369,16 @@ function factory(dependencies) {
         }
 
         /**
+         * @returns {string}
+         */
+        _computeDateFromNow() {
+            if (!this.date) {
+                return clear();
+            }
+            return timeFromNow(this.date);
+        }
+
+        /**
          * @returns {boolean}
          */
         _computeFailureNotifications() {
@@ -402,11 +420,34 @@ function factory(dependencies) {
         }
 
         /**
+         * The method does not attempt to cover all possible cases of empty
+         * messages, but mostly those that happen with a standard flow. Indeed
+         * it is preferable to be defensive and show an empty message sometimes
+         * instead of hiding a non-empty message.
+         *
+         * The main use case for when a message should become empty is for a
+         * message posted with only an attachment (no body) and then the
+         * attachment is deleted.
+         *
+         * The main use case for being defensive with the check is when
+         * receiving a message that has no textual content but has other
+         * meaningful HTML tags (eg. just an <img/>).
+         *
          * @private
+         * @returns {boolean}
          */
         _computeIsEmpty() {
+            const isBodyEmpty = (
+                !this.body ||
+                [
+                    '',
+                    '<p></p>',
+                    '<p><br></p>',
+                    '<p><br/></p>',
+                ].includes(this.body.replace(/\s/g, ''))
+            );
             return (
-                (!this.body || htmlToTextContentInline(this.body) === '') &&
+                isBodyEmpty &&
                 this.attachments.length === 0 &&
                 this.tracking_value_ids.length === 0 &&
                 !this.subtype_description
@@ -423,6 +464,37 @@ function factory(dependencies) {
                 this.originThread &&
                 this.originThread.isModeratedByCurrentPartner
             );
+        }
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsSubjectSimilarToOriginThreadName() {
+            if (
+                !this.subject ||
+                !this.originThread ||
+                !this.originThread.name
+            ) {
+                return false;
+            }
+            const threadName = this.originThread.name.toLowerCase().trim();
+            const prefixList = ['re:', 'fw:', 'fwd:'];
+            let cleanedSubject = this.subject.toLowerCase();
+            let wasSubjectCleaned = true;
+            while (wasSubjectCleaned) {
+                wasSubjectCleaned = false;
+                if (threadName === cleanedSubject) {
+                    return true;
+                }
+                for (const prefix of prefixList) {
+                    if (cleanedSubject.startsWith(prefix)) {
+                        cleanedSubject = cleanedSubject.replace(prefix, '').trim();
+                        wasSubjectCleaned = true;
+                        break;
+                    }
+                }
+            }
+            return false;
         }
 
         /**
@@ -516,6 +588,15 @@ function factory(dependencies) {
         date: attr({
             default: moment(),
         }),
+        /**
+         * States the time elapsed since date up to now.
+         */
+        dateFromNow: attr({
+            compute: '_computeDateFromNow',
+            dependencies: [
+                'date',
+            ],
+        }),
         email_from: attr(),
         failureNotifications: one2many('mail.notification', {
             compute: '_computeFailureNotifications',
@@ -573,6 +654,7 @@ function factory(dependencies) {
             dependencies: [
                 'attachments',
                 'body',
+                'subtype_description',
                 'tracking_value_ids',
             ],
         }),
@@ -583,6 +665,22 @@ function factory(dependencies) {
                 'moderation_status',
                 'originThread',
                 'originThreadIsModeratedByCurrentPartner',
+            ],
+        }),
+        /**
+         * States whether `originThread.name` and `subject` contain similar
+         * values except it contains the extra prefix at the start
+         * of the subject.
+         *
+         * This is necessary to avoid displaying the subject, if
+         * the subject is same as threadname.
+         */
+        isSubjectSimilarToOriginThreadName: attr({
+            compute: '_computeIsSubjectSimilarToOriginThreadName',
+            dependencies: [
+                'originThread',
+                'originThreadName',
+                'subject',
             ],
         }),
         isTemporary: attr({
@@ -652,10 +750,18 @@ function factory(dependencies) {
         /**
          * Origin thread of this message (if any).
          */
-        originThread: many2one('mail.thread'),
+        originThread: many2one('mail.thread', {
+            inverse: 'messagesAsOriginThread',
+        }),
         originThreadIsModeratedByCurrentPartner: attr({
             default: false,
             related: 'originThread.isModeratedByCurrentPartner',
+        }),
+        /**
+         * Serves as compute dependency for isSubjectSimilarToOriginThreadName
+         */
+        originThreadName: attr({
+            related: 'originThread.name',
         }),
         /**
          * This value is meant to be based on field body which is

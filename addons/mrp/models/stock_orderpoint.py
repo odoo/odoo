@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.tools.float_utils import float_is_zero
 
 
 class StockWarehouseOrderpoint(models.Model):
@@ -41,6 +42,38 @@ class StockWarehouseOrderpoint(models.Model):
             manufacture_route.append(res['route_id'][0])
         for orderpoint in self:
             orderpoint.show_bom = orderpoint.route_id.id in manufacture_route
+
+    def _quantity_in_progress(self):
+        bom_kit_orderpoints = {
+            orderpoint: bom
+            for orderpoint in self
+            for bom in self.env['mrp.bom']._bom_find(product=orderpoint.product_id, bom_type='phantom')
+            if bom
+        }
+        res = super(StockWarehouseOrderpoint, self.filtered(lambda p: p not in bom_kit_orderpoints))._quantity_in_progress()
+        for orderpoint in bom_kit_orderpoints:
+            boms, bom_sub_lines = bom_kit_orderpoints[orderpoint].explode(orderpoint.product_id, 1)
+            ratios_qty_available = []
+            # total = qty_available + in_progress
+            ratios_total = []
+            for bom_line, bom_line_data in bom_sub_lines:
+                component = bom_line.product_id
+                if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
+                    continue
+                uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
+                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
+                if not qty_per_kit:
+                    continue
+                qty_by_product_location, dummy = component._get_quantity_in_progress(orderpoint.location_id.ids)
+                qty_in_progress = qty_by_product_location.get((component.id, orderpoint.location_id.id), 0.0)
+                qty_available = component.qty_available / qty_per_kit
+                ratios_qty_available.append(qty_available)
+                ratios_total.append(qty_available + (qty_in_progress / qty_per_kit))
+            # For a kit, the quantity in progress is :
+            #  (the quantity if we have received all in-progress components) - (the quantity using only available components)
+            product_qty = min(ratios_total or [0]) - min(ratios_qty_available or [0])
+            res[orderpoint.id] = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.product_uom, round=False)
+        return res
 
     def _set_default_route_id(self):
         route_id = self.env['stock.rule'].search([

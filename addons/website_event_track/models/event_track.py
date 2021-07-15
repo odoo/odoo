@@ -54,13 +54,13 @@ class Track(models.Model):
     # speaker
     partner_id = fields.Many2one('res.partner', 'Speaker')
     partner_name = fields.Char(
-        string='Name', compute='_compute_partner_info',
+        string='Name', compute='_compute_partner_name',
         readonly=False, store=True, tracking=10)
     partner_email = fields.Char(
-        string='Email', compute='_compute_partner_info',
+        string='Email', compute='_compute_partner_email',
         readonly=False, store=True, tracking=20)
     partner_phone = fields.Char(
-        string='Phone', compute='_compute_partner_info',
+        string='Phone', compute='_compute_partner_phone',
         readonly=False, store=True, tracking=30)
     partner_biography = fields.Html(
         string='Biography', compute='_compute_partner_biography',
@@ -146,11 +146,21 @@ class Track(models.Model):
     # SPEAKER
 
     @api.depends('partner_id')
-    def _compute_partner_info(self):
+    def _compute_partner_name(self):
         for track in self:
-            if track.partner_id:
+            if not track.partner_name or track.partner_id:
                 track.partner_name = track.partner_id.name
+
+    @api.depends('partner_id')
+    def _compute_partner_email(self):
+        for track in self:
+            if not track.partner_email or track.partner_id:
                 track.partner_email = track.partner_id.email
+
+    @api.depends('partner_id')
+    def _compute_partner_phone(self):
+        for track in self:
+            if not track.partner_phone or track.partner_id:
                 track.partner_phone = track.partner_id.phone
 
     @api.depends('partner_id')
@@ -312,11 +322,13 @@ class Track(models.Model):
         tracks = super(Track, self).create(vals_list)
 
         for track in tracks:
+            email_values = {} if self.env.user.email else {'email_from': self.env.company.catchall_formatted}
             track.event_id.message_post_with_view(
                 'website_event_track.event_track_template_new',
                 values={'track': track},
                 subject=track.name,
                 subtype_id=self.env.ref('website_event_track.mt_event_track').id,
+                **email_values,
             )
             track._synchronize_with_stage(track.stage_id)
 
@@ -343,6 +355,8 @@ class Track(models.Model):
     def _synchronize_with_stage(self, stage):
         if stage.is_done:
             self.is_published = True
+        elif stage.is_cancel:
+            self.is_published = False
 
     # ------------------------------------------------------------
     # MESSAGING

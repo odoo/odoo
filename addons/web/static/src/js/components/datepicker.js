@@ -178,9 +178,9 @@ odoo.define('web.DatePickerOwl', function (require) {
             today: 'fa fa-calendar-check-o',
             up: 'fa fa-chevron-up',
         },
-        locale: moment.locale(),
+        get locale() {return moment.locale();},
         maxDate: moment({ y: 9999, M: 11, d: 31 }),
-        minDate: moment({ y: 1 }),
+        minDate: moment({ y: 1000 }),
         useCurrent: false,
         widgetParent: 'body',
     };
@@ -248,7 +248,7 @@ odoo.define('web.DatePickerOwl', function (require) {
         }
     }
 
-    DateTimePicker.defaultProps = Object.assign({}, DatePicker.defaultProps, {
+    DateTimePicker.defaultProps = Object.assign(Object.create(DatePicker.defaultProps), {
         buttons: {
             showClear: false,
             showClose: true,

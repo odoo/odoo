@@ -1,18 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pos_cache
+# 	* pos_cache
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
-# Kim Asplund <kim.asplund@gmail.com>, 2018
+# Martin Trigaux, 2021
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
+# Kim Asplund <kim.asplund@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-12-16 08:45+0000\n"
+"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_config__cache_ids
 msgid "Cache"
-msgstr "Cache"
+msgstr "Mellanlagring"
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__compute_user_id
@@ -78,7 +79,7 @@ msgstr "Senast uppdaterad"
 
 #. module: pos_cache
 #. openerp-web
-#: code:addons/pos_cache/static/src/js/pos_cache.js:39
+#: code:addons/pos_cache/static/src/js/pos_cache.js:0
 #, python-format
 msgid "Loading"
 msgstr "Laddar"
@@ -96,6 +97,16 @@ msgid "PoS: refresh cache"
 msgstr ""
 
 #. module: pos_cache
+#: model:ir.model,name:pos_cache.model_pos_cache
+msgid "Point of Sale Cache"
+msgstr ""
+
+#. module: pos_cache
+#: model:ir.model,name:pos_cache.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "POS-konfigurering"
+
+#. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__product_domain
 msgid "Product Domain"
 msgstr ""
@@ -104,13 +115,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache__product_fields
 msgid "Product Fields"
 msgstr ""
-
-#. module: pos_cache
-#: model:ir.model,name:pos_cache.model_pos_cache
-msgid "pos.cache"
-msgstr ""
-
-#. module: pos_cache
-#: model:ir.model,name:pos_cache.model_pos_config
-msgid "pos.config"
-msgstr "pos.config"

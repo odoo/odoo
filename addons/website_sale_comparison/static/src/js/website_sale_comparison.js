@@ -105,7 +105,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                 $elem.closest('form').find('.product_template_id').val(),
                 false
             ).then(function (productId) {
-                productId = parseInt(productId, 10);
+                productId = parseInt(productId, 10) || parseInt($elem.data('product-product-id'), 10);
                 if (!productId) {
                     return;
                 }
@@ -287,4 +287,5 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend({
         $target.find('.fa-chevron-circle-down, .fa-chevron-circle-right').toggleClass('fa-chevron-circle-down fa-chevron-circle-right');
     },
 });
+return ProductComparison;
 });

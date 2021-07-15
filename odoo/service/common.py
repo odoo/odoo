@@ -20,7 +20,7 @@ def exp_login(db, login, password):
     return exp_authenticate(db, login, password, None)
 
 def exp_authenticate(db, login, password, user_agent_env):
-    if user_agent_env is None:
+    if not user_agent_env:
         user_agent_env = {}
     res_users = odoo.registry(db)['res.users']
     try:

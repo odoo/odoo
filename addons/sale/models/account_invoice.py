@@ -53,14 +53,14 @@ class AccountMove(models.Model):
 
         # Recompute 'narration' based on 'company.invoice_terms'.
         if self.move_type == 'out_invoice':
-            self.narration = self.company_id.with_context(lang=self.partner_id.lang).invoice_terms
+            self.narration = self.company_id.with_context(lang=self.partner_id.lang or self.env.lang).invoice_terms
 
         return res
 
     @api.onchange('invoice_user_id')
     def onchange_user_id(self):
         if self.invoice_user_id and self.invoice_user_id.sale_team_id:
-            self.team_id = self.invoice_user_id.sale_team_id
+            self.team_id = self.env['crm.team']._get_default_team_id(user_id=self.invoice_user_id.id, domain=[('company_id', '=', self.company_id.id)])
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
         # OVERRIDE

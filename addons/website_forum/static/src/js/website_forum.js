@@ -119,6 +119,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             var editorKarma = $textarea.data('karma') || 0; // default value for backward compatibility
             var $form = $textarea.closest('form');
             var hasFullEdit = parseInt($("#karma").val()) >= editorKarma;
+            // Warning: Do not activate any option that adds inline style.
+            // Because the style is deleted after save.
             var toolbar = [
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
@@ -126,7 +128,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 ['table', ['table']],
             ];
             if (hasFullEdit) {
-                toolbar.push(['insert', ['linkPlugin', 'mediaPlugin']]);
+                toolbar.push(['insert', ['link', 'picture']]);
             }
             toolbar.push(['history', ['undo', 'redo']]);
 
@@ -141,6 +143,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     res_model: 'forum.post',
                     res_id: +window.location.pathname.split('-').pop(),
                 },
+                disableFullMediaDialog: true,
+                disableResizeImage: true,
             };
             if (!hasFullEdit) {
                 options.plugins = {
@@ -151,7 +155,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             wysiwygLoader.load(self, $textarea[0], options).then(wysiwyg => {
                 // float-left class messes up the post layout OPW 769721
                 $form.find('.note-editable').find('img.float-left').removeClass('float-left');
-                $form.on('click', 'button .a-submit', () => {
+                // o_we_selected_image has not always been removed when
+                // saving a post so we need the line below to remove it if it is present.
+                $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
+                $form.on('click', 'button, .a-submit', () => {
+                    $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
                     wysiwyg.save();
                 });
             });
@@ -163,7 +171,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 offset: 10,
                 animation: false,
                 html: true,
-            });
+            }).popover('hide').data('bs.popover').tip.classList.add('o_wforum_bio_popover_container');
         });
 
         this.$('#post_reply').on('shown.bs.collapse', function (e) {

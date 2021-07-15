@@ -2,6 +2,8 @@ odoo.define('mail/static/src/components/emojis_popover/emojis_popover.js', funct
 'use strict';
 
 const emojis = require('mail.emojis');
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
 const { Component } = owl;
 
@@ -13,15 +15,8 @@ class EmojisPopover extends Component {
     constructor(...args) {
         super(...args);
         this.emojis = emojis;
-    }
-
-
-    mounted() {
-        this._update();
-    }
-
-    patched() {
-        this._update();
+        useShouldUpdateBasedOnProps();
+        useUpdate({ func: () => this._update() });
     }
 
     //--------------------------------------------------------------------------

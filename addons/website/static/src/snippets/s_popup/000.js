@@ -28,6 +28,7 @@ const PopupWidget = publicWidget.Widget.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         $(document).off('mouseleave.open_popup');
+        this.$target.find('.modal').modal('hide');
         clearTimeout(this.timeout);
     },
 
@@ -45,7 +46,7 @@ const PopupWidget = publicWidget.Widget.extend({
         let delay = $main.data('showAfter');
 
         if (config.device.isMobile) {
-            if (display === 'onExit') {
+            if (display === 'mouseExit') {
                 display = 'afterDelay';
                 delay = 5000;
             }

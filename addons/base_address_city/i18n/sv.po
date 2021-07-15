@@ -1,17 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_address_city
+# 	* base_address_city
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
+# Kristoffer Grundström <lovaren@gmail.com>, 2021
+# Martin Trigaux, 2021
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
+# Kim Asplund <kim.asplund@gmail.com>, 2021
+# Fredrik Arvas <fredrik.arvas@vertel.se>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Fredrik Arvas <fredrik.arvas@vertel.se>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,15 +31,17 @@ msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
 msgstr ""
+"Markera den här rutan för att säkerställa att varje adress som skapas i det "
+"landet har en \"Stad\" som är vald i listan över landets städer."
 
 #. module: base_address_city
 #: model:ir.actions.act_window,name:base_address_city.action_res_city_tree
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_res_country_city_extended_form
 msgid "Cities"
-msgstr ""
+msgstr "Städer"
 
 #. module: base_address_city
-#: code:addons/base_address_city/models/res_partner.py:29
+#: code:addons/base_address_city/models/res_partner.py:55
 #: model:ir.model,name:base_address_city.model_res_city
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_city_tree
@@ -47,7 +53,7 @@ msgstr "Stad"
 #: model:ir.model.fields,field_description:base_address_city.field_res_partner__city_id
 #: model:ir.model.fields,field_description:base_address_city.field_res_users__city_id
 msgid "City of Address"
-msgstr ""
+msgstr "Adress i Stad"
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_partner
@@ -82,13 +88,16 @@ msgid ""
 "                your partner records. Note that an option can be set on each country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
+"Visa och hantera listan av alla länder som kan tilldelas dina "
+"företagsuppgifter. Du kan skapa eller ta bort länder så att du är säker på "
+"att de som du arbetar med kommer underhållas."
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_country__enforce_cities
 #: model:ir.model.fields,field_description:base_address_city.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,field_description:base_address_city.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
-msgstr ""
+msgstr "Tvinga Städer"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__id
@@ -118,12 +127,12 @@ msgstr "Namn"
 #. module: base_address_city
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
 msgid "Search City"
-msgstr ""
+msgstr "Sök Stad"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__state_id
 msgid "State"
-msgstr "Status"
+msgstr "Stat"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__zipcode

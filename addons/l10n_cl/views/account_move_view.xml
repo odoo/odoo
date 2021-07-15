@@ -21,6 +21,7 @@
         <field name="arch" type="xml">
             <tree decoration-info="state == 'draft'" default_order="create_date" string="Invoices and Refunds" decoration-muted="state == 'cancel'" js_class="account_tree">
                 <field name="l10n_latam_document_type_id_code"/>
+                <field name="l10n_latam_document_number" string="Folio"/>
                 <field name="partner_id_vat"/>
                 <field name="partner_id"/>
                 <field name="invoice_date" optional="show"/>

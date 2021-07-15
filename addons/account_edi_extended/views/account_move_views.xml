@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account_edi.view_move_form_inherit" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(account_edi.action_open_edi_documents)d']" position="after">
+                    <button name="action_retry_edi_documents_error" type="object" class="oe_link oe_inline" string="Retry" />
+                </xpath>
+                <xpath expr="//button[@name='button_cancel_posted_moves']" position="after">
+                    <field name="edi_show_abandon_cancel_button" invisible="1"/>
+                    <button name="button_abandon_cancel_posted_posted_moves"
+                            string="Call off EDI Cancellation"
+                            type="object"
+                            groups="account.group_account_invoice"
+                            attrs="{'invisible' : [('edi_show_abandon_cancel_button', '=', False)]}"/>
+                </xpath>
+                <!-- Nasty xpath to replace the error count warning banner. In master, it will be merged. -->
+                <xpath expr="//div[hasclass('alert-warning')]" position="replace">
+                    <field name="edi_blocking_level" invisible="1" />
+                    <field name="edi_error_count" invisible="1" />
+                    <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
+                        attrs="{'invisible': ['|', ('edi_error_count', '=', 0), ('edi_blocking_level', '!=', 'error')]}">
+                        <div class="o_row">
+                            <field name="edi_error_message" />
+                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" /> 
+                            <button name="action_retry_edi_documents_error" type="object" class="oe_link oe_inline" string="Retry" />
+                        </div>
+                    </div>
+                    <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                        attrs="{'invisible': ['|', ('edi_error_count', '=', 0), ('edi_blocking_level', '!=', 'warning')]}">
+                        <div class="o_row">
+                            <field name="edi_error_message" />
+                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" /> 
+                        </div>
+                    </div>
+                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                        attrs="{'invisible': ['|', ('edi_error_count', '=', 0), ('edi_blocking_level', '!=', 'info')]}">
+                        <div class="o_row">
+                            <field name="edi_error_message" />
+                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" /> 
+                        </div>
+                    </div>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

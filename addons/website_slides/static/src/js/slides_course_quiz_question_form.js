@@ -174,7 +174,7 @@ var QuestionFormWidget = publicWidget.Widget.extend({
         } else {
             this.displayNotification({
                 type: 'warning',
-                message: _t('Please fill up the question'),
+                message: _t('Please fill in the question'),
                 sticky: true
             });
             this.$('.o_wslides_quiz_question input').focus();

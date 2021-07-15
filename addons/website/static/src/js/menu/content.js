@@ -25,6 +25,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         'click input#visibility_password': '_onPasswordClicked',
         'change input#visibility_password': '_onPasswordChanged',
         'change select#visibility': '_onVisibilityChanged',
+        'error.datetimepicker': '_onDateTimePickerError',
     }),
 
     /**
@@ -165,7 +166,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
                   }));
 
         var datepickersOptions = {
-            minDate: moment({ y: 1 }),
+            minDate: moment({ y: 1000 }),
             maxDate: moment().add(200, 'y'),
             calendarWeeks: true,
             icons : {
@@ -423,6 +424,14 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         this.$('.show_visibility_password').toggleClass('d-none', ev.target.value !== 'password');
         this.$('.show_group_id').toggleClass('d-none', ev.target.value !== 'restricted_group');
         this.$('#visibility_password').attr('required', ev.target.value === 'password');
+    },
+    /**
+     * Library clears the wrong date format so just ignore error
+     *
+     * @private
+     */
+    _onDateTimePickerError: function (ev) {
+        return false;
     },
     /**
      * @private

@@ -43,7 +43,7 @@
                         <group>
                             <label for="product_uom_qty" string="Quantity Reserved" attrs="{'invisible': [('state', '=', 'done')]}"/>
                             <div class="o_row" attrs="{'invisible': [('state', '=', 'done')]}">
-                                <field name="product_uom_qty"/>
+                                <field name="product_uom_qty" readonly="1"/>
                                 <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                             </div>
                             <label for="qty_done" string="Quantity Done"/>
@@ -51,7 +51,7 @@
                                 <field name="qty_done"/>
                                 <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                             </div>
-                            <field name="lot_id" groups="stock.group_production_lot" context="{'default_product_id': product_id, 'active_picking_id': picking_id}" attrs="{'invisible': [('lot_id', '=', False),('lot_name', '!=', False)]}"/>
+                            <field name="lot_id" groups="stock.group_production_lot" context="{'default_product_id': product_id, 'active_picking_id': picking_id, 'default_company_id': company_id}" attrs="{'invisible': [('lot_id', '=', False),('lot_name', '!=', False)]}"/>
                             <field name="lot_name" groups="stock.group_production_lot" attrs="{'invisible': ['|',('lot_id', '!=', False),('lot_name', '=', False)]}"/>
                             <field name="package_id" string="Source Package" groups="product.group_stock_packaging"/>
                             <field name="result_package_id" string="Destination Package" groups="stock.group_tracking_lot"/>

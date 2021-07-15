@@ -58,6 +58,7 @@ class PosOrder(models.Model):
             'note',
             'mp_skip',
             'mp_dirty',
+            'full_product_name',
         ]
 
     def _get_order_lines(self, orders):

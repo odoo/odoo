@@ -1179,7 +1179,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'account_id': ref('do_niif_21030308'),
+                    'account_id': ref('do_niif_11080302'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
@@ -1190,7 +1190,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'account_id': ref('do_niif_21030308'),
+                    'account_id': ref('do_niif_11080302'),
                 }),
             ]"/>
         </record>
@@ -1259,6 +1259,109 @@
             <field name="type_tax_use">purchase</field>
             <field eval="[(6, 0, [ref('tax_18_purch'), ref('tax_tip_purch')])]" name="children_tax_ids"/>
             <field name="tax_group_id" ref="group_ret"/>
+        </record>
+
+        <record id="tax_18_10_total_mount" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">18% ITBIS sobre el 10% del Monto Total</field>
+            <field name="description">18% del 10%</field>
+            <field name="amount">1.8</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080102'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_11080102'),
+                }),
+            ]"/>
+        </record>
+
+        <record id="tax_18_property_cost" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">18% ITBIS llevado al Costo Bienes</field>
+            <field name="description">18%</field>
+            <field name="amount">18</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_51010500'),
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_51010500'),
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="tax_18_serv_cost" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">18% ITBIS llevado al Costo Servicios</field>
+            <field name="description">18%</field>
+            <field name="amount">18</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="group_itbis"/>
+            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_51010500'),
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5,0,0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('do_niif_51010500'),
+                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
+                }),
+            ]"/>
         </record>
 
     </data>

@@ -11,18 +11,38 @@ $-editor-messages-margin-x: 2%;
         content: attr(data-editor-message);
         display: block;
         font-size: 20px;
+        line-height: 50px; // Useful for the "wizz" animation on snippet click to be more visible
     }
     &:after {
         content: attr(data-editor-sub-message);
         display: block;
     }
 }
+.o_we_snippet_area_animation {
+    animation-delay: 999ms; // Disable it but allow to inherit the animation
+
+    &::before {
+        animation: inherit;
+        animation-delay: 0ms;
+    }
+}
 
 .o_editable {
     &:not(:empty), &[data-oe-type] {
-        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):not(.o_editable_no_shadow):hover,
+        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):not(.o_editable_no_shadow):not([data-oe-type="image"]):hover,
         &.o_editable_date_field_linked {
             box-shadow: $o-brand-odoo 0 0 5px 2px inset;
+        }
+        &[data-oe-type="image"]:not(.o_editable_no_shadow):hover {
+            position: relative;
+
+            &:after {
+                content: "";
+                pointer-events: none;
+                @include o-position-absolute(0, 0, 0, 0);
+                z-index: 1;
+                box-shadow: $o-brand-odoo 0 0 5px 2px inset;
+            }
         }
     }
     &:focus, &[data-oe-type] {

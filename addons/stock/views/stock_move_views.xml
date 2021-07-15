@@ -164,6 +164,12 @@
                                         title="Assign Serial Numbers">
                                     <span>Assign Serial Numbers</span>
                                 </button>
+                                <button name="action_clear_lines_show_details" type="object"
+                                        class="btn-link"
+                                        title="Clear Lines"
+                                        attrs="{'invisible': [('display_assign_serial', '=', False)]}">
+                                    <span>Clear All</span>
+                                </button>
                             </div>
                         </group>
                     </group>

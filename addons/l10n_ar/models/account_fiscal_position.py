@@ -34,7 +34,7 @@ class AccountFiscalPosition(models.Model):
                     partner_id).l10n_ar_afip_responsibility_type_id.id),
                 ('company_id', '=', company.id),
             ]
-            return self.search(domain, limit=1)
+            return self.sudo().search(domain, limit=1)
         return super().get_fiscal_position(partner_id, delivery_id=delivery_id)
 
     @api.onchange('l10n_ar_afip_responsibility_type_ids', 'country_group_id', 'country_id', 'zip_from', 'zip_to')

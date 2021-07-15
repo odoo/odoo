@@ -1045,3 +1045,31 @@ class TestTax(TestTaxCommon):
             ],
             res3
         )
+
+    def test_mixing_price_included_excluded_with_affect_base(self):
+        tax_10_fix = self.env['account.tax'].create({
+            'name': "tax_10_fix",
+            'amount_type': 'fixed',
+            'amount': 10.0,
+            'include_base_amount': True,
+        })
+        tax_21 = self.env['account.tax'].create({
+            'name': "tax_21",
+            'amount_type': 'percent',
+            'amount': 21.0,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+
+        self._check_compute_all_results(
+            1222.1,     # 'total_included'
+            1000.0,     # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (1000.0, 10.0),
+                (1010.0, 212.1),
+                # ---------------
+            ],
+            (tax_10_fix + tax_21).compute_all(1210),
+        )

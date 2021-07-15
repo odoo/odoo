@@ -638,14 +638,14 @@
         <t t-set="done_alert_classes" t-value="done_alert_classes if done_alert_classes else 'alert alert-success alert-dismissable'"/>
 
         <div t-if="not validation_email_sent and not is_public_user and user.karma == 0" t-att-class="send_alert_classes" role="alert">
-            <button type="button" class="close validation_email_close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+            <button type="button" class="close validation_email_close" data-dismiss="alert" aria-label="Close">×</button>
             It appears your email has not been verified.<br/>
             <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url">
                 <span t-esc="send_validation_email_message"/>
             </a>
         </div>
         <div t-if="validation_email_done" t-att-class="done_alert_classes" role="status">
-            <button type="button" class="close validated_email_close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+            <button type="button" class="close validated_email_close" data-dismiss="alert" aria-label="Close">×</button>
             <span id="email_validated_message">Congratulations! Your email has just been validated.</span>
             <span t-esc="additional_validated_email_message"/>
         </div>

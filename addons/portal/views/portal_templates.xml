@@ -70,7 +70,11 @@
         <t t-set="is_connected" t-value="not user_id._is_public()"/>
         <li t-if="is_connected" t-attf-class="#{_item_class} o_no_autohide_item">
             <a href="#" role="button" data-toggle="dropdown" t-attf-class="dropdown-toggle #{_link_class}">
-                <img t-if="_avatar" t-att-src="image_data_uri(user_id.image_256)" t-attf-class="rounded-circle #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
+                <t t-if="_avatar">
+                    <t t-if="user_id.image_256" t-set="avatar_source" t-value="image_data_uri(user_id.image_256)"/>
+                    <t t-else="" t-set="avatar_source" t-value="'/web/static/src/img/placeholder.png'"/>
+                    <img t-att-src="avatar_source" t-attf-class="rounded-circle #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
+                </t>
                 <i t-if="_icon" t-attf-class="fa fa-1x fa-fw fa-user-circle-o #{_icon_class}"/>
                 <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
             </a>
@@ -292,7 +296,7 @@
                     </div>
                     <t t-raw="0"/>
                 </div>
-                <form t-if="searchbar_inputs" class="form-inline o_portal_search_panel ml-lg-4">
+                <form t-if="searchbar_inputs" class="form-inline o_portal_search_panel ml-lg-4 col-xl-4 col-md-5">
                     <div class="input-group input-group-sm w-100">
                         <div class="input-group-prepend">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"/>
@@ -382,7 +386,8 @@
                             </div>
                             <div t-attf-class="form-group #{error.get('vat') and 'o_has_error' or ''} col-xl-6">
                                 <label class="col-form-label label-optional" for="vat">VAT Number</label>
-                                <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="vat or partner.vat" t-att-readonly="None if partner_can_edit_vat else '1'" t-att-title="None if partner_can_edit_vat else 'Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'" />
+                                <t t-set="vat_not_editable_message">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</t>
+                                <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="vat or partner.vat" t-att-readonly="None if partner_can_edit_vat else '1'" t-att-title="None if partner_can_edit_vat else vat_not_editable_message" />
                             </div>
                             <div t-attf-class="form-group #{error.get('phone') and 'o_has_error' or ''} col-xl-6">
                                 <label class="col-form-label" for="phone">Phone</label>

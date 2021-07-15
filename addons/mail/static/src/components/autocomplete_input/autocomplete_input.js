@@ -1,9 +1,16 @@
 odoo.define('mail/static/src/components/autocomplete_input/autocomplete_input.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
+
 const { Component } = owl;
 
 class AutocompleteInput extends Component {
+
+    constructor(...args) {
+        super(...args);
+        useShouldUpdateBasedOnProps();
+    }
 
     mounted() {
         if (this.props.isFocusOnMount) {
@@ -11,6 +18,7 @@ class AutocompleteInput extends Component {
         }
 
         let args = {
+            autoFocus: true,
             select: (ev, ui) => this._onAutocompleteSelect(ev, ui),
             source: (req, res) => this._onAutocompleteSource(req, res),
             focus: ev => this._onAutocompleteFocus(ev),
@@ -21,7 +29,13 @@ class AutocompleteInput extends Component {
             args.classes = { 'ui-autocomplete': this.props.customClass };
         }
 
-        $(this.el).autocomplete(args);
+        const autoCompleteElem = $(this.el).autocomplete(args);
+        // Resize the autocomplete dropdown options to handle the long strings
+        // By setting the width of dropdown based on the width of the input element.
+        autoCompleteElem.data("ui-autocomplete")._resizeMenu = function () {
+            const ul = this.menu.element;
+            ul.outerWidth(this.element.outerWidth());
+        };
     }
 
     willUnmount() {

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.proxy.user</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='account_vendor_bills']" position="after">
+                <div attrs="{'invisible':[('country_code', '!=', 'IT')]}">
+                    <h2>Electronic Document Invoicing</h2>
+                    <div class="row mt16 o_settings_container" id='account_edi'>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Allow Odoo to process invoices</span>
+                                <div class="text-muted">
+                                    By clicking this button, I accept that Odoo may process my invoices.
+                                </div>
+                                <div class="content-group">
+                                    <field name="is_edi_proxy_active" invisible="True" />
+                                    <div class="row mt8">
+                                        <div class="col-lg-6" title="Register">
+                                            <button name="button_create_proxy_user"
+                                                    type="object"
+                                                    string="Register"
+                                                    class="btn-primary" icon="fa-lg fa-check"
+                                                    attrs="{'invisible':[('is_edi_proxy_active', '=', True)]}"/>
+                                            <button name="button_create_proxy_user"
+                                                    type="object"
+                                                    string="Already registered"
+                                                    disabled="1"
+                                                    class="btn-lnk" icon="fa-lg fa-check"
+                                                    attrs="{'invisible':[('is_edi_proxy_active', '=', False)]}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

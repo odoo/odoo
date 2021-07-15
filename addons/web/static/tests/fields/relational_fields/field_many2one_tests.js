@@ -2926,6 +2926,61 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('search more in many2one: dropdown click', async function (assert) {
+            assert.expect(8);
+
+            for (let i = 0; i < 8; i++) {
+                this.data.partner.records.push({id: 100 + i, display_name: 'test_' + i});
+            }
+
+            // simulate modal-like element rendered by the field html
+            const $fakeDialog = $(`<div>
+                <div class="pouet">
+                    <div class="modal"></div>
+                </div>
+            </div>`);
+            $('body').append($fakeDialog);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="trululu"/></form>',
+                archs: {
+                    'partner,false,list': '<list><field name="display_name"/></list>',
+                    'partner,false,search': '<search></search>',
+                },
+            });
+            await testUtils.fields.many2one.searchAndClickItem('trululu', {
+                item: 'Search More',
+                search: 'test',
+            });
+
+            // dropdown selector
+            let filterMenuCss = '.o_search_options > .o_filter_menu';
+            let groupByMenuCss = '.o_search_options > .o_group_by_menu';
+
+            await testUtils.dom.click(document.querySelector(`${filterMenuCss} > .o_dropdown_toggler_btn`));
+
+            assert.hasClass(document.querySelector(filterMenuCss), 'show');
+            assert.isVisible(document.querySelector(`${filterMenuCss} > .dropdown-menu`),
+                "the filter dropdown menu should be visible");
+            assert.doesNotHaveClass(document.querySelector(groupByMenuCss), 'show');
+            assert.isNotVisible(document.querySelector(`${groupByMenuCss} > .dropdown-menu`),
+                "the Group by dropdown menu should be not visible");
+
+            await testUtils.dom.click(document.querySelector(`${groupByMenuCss} > .o_dropdown_toggler_btn`));
+            assert.hasClass(document.querySelector(groupByMenuCss), 'show');
+            assert.isVisible(document.querySelector(`${groupByMenuCss} > .dropdown-menu`),
+                "the group by dropdown menu should be visible");
+            assert.doesNotHaveClass(document.querySelector(filterMenuCss), 'show');
+            assert.isNotVisible(document.querySelector(`${filterMenuCss} > .dropdown-menu`),
+                "the filter dropdown menu should be not visible");
+
+            $fakeDialog.remove();
+            form.destroy();
+        });
+
         QUnit.test('updating a many2one from a many2many', async function (assert) {
             assert.expect(4);
 
@@ -3293,13 +3348,16 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
+            await testUtils.owlCompatibilityNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
             '', 'keyup');
+            await testUtils.owlCompatibilityNextTick();
             assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+            await testUtils.owlCompatibilityNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
@@ -3386,13 +3444,16 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
+            await testUtils.owlCompatibilityNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
                 '', 'keyup');
+            await testUtils.owlCompatibilityNextTick();
             assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+            await testUtils.owlCompatibilityNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();

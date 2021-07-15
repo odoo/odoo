@@ -56,16 +56,16 @@ class AccountMove(models.Model):
     def _get_tax_grouping_key_from_tax_line(self, tax_line):
         # OVERRIDE to group taxes also by product.
         res = super()._get_tax_grouping_key_from_tax_line(tax_line)
-        res['product_id'] = tax_line.product_id.id
+        if tax_line.move_id.journal_id.company_id.country_id.code == 'IN':
+            res['product_id'] = tax_line.product_id.id
         return res
 
     @api.model
     def _get_tax_grouping_key_from_base_line(self, base_line, tax_vals):
         # OVERRIDE to group taxes also by product.
         res = super()._get_tax_grouping_key_from_base_line(base_line, tax_vals)
-        res.update({
-            'product_id': base_line.product_id.id,
-        })
+        if base_line.move_id.journal_id.company_id.country_id.code == 'IN':
+            res['product_id'] = base_line.product_id.id
         return res
 
     @api.model
@@ -105,7 +105,9 @@ class AccountMove(models.Model):
                 move.l10n_in_state_id = company_unit_partner.state_id
 
             shipping_partner = move._l10n_in_get_shipping_partner()
-            move.l10n_in_gstin = move._l10n_in_get_shipping_partner_gstin(shipping_partner)
+            # In case of shipping address does not have GSTN then also check customer(partner_id) GSTN
+            # This happens when Bill-to Ship-to transaction where shipping(Ship-to) address is unregistered and customer(Bill-to) is registred.
+            move.l10n_in_gstin = move._l10n_in_get_shipping_partner_gstin(shipping_partner) or move.partner_id.vat
             if not move.l10n_in_gstin and move.l10n_in_gst_treatment in ['regular', 'composition', 'special_economic_zone', 'deemed_export']:
                 raise ValidationError(_(
                     "Partner %(partner_name)s (%(partner_id)s) GSTIN is required under GST Treatment %(name)s",

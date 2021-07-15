@@ -6,9 +6,7 @@
         <field name="model">project.task.create.sale.order</field>
         <field name="arch" type="xml">
             <form string="Create a Sales Order">
-                <group>
-                    <field name="link_selection" nolabel="1" widget="radio" options="{'horizontal': true}"/>
-                </group>
+                <field name="link_selection" nolabel="1" widget="radio" options="{'horizontal': true}" invisible="1"/>
                 <group>
                     <group>
                         <field name="task_id" readonly="1"/>

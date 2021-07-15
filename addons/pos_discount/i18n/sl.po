@@ -1,13 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pos_discount
+# 	* pos_discount
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2021
+# Dejan Sraka <dejan.sraka@picolabs.si>, 2021
+# matjaz k <matjaz@mentis.si>, 2021
+# Tadej Lupšina <tadej@hbs.si>, 2021
+# Jasmina Macur <jasmina@hbs.si>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,49 +25,85 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: pos_discount
-#: model:ir.model.fields,help:pos_discount.field_pos_config_iface_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
 msgid "Allow the cashier to give discounts on the whole order."
-msgstr ""
+msgstr "Dovoli v blagajni določanje popustov na celotno naročilo."
 
 #. module: pos_discount
 #. openerp-web
-#: code:addons/pos_discount/static/src/xml/discount_templates.xml:6
+#: code:addons/pos_discount/static/src/xml/DiscountButton.xml:0
 #, python-format
 msgid "Discount"
-msgstr ""
+msgstr "Discount"
 
 #. module: pos_discount
 #: model_terms:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
 msgid "Discount %"
-msgstr ""
+msgstr "Popust %"
 
 #. module: pos_discount
-#: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_pc
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
+#, python-format
 msgid "Discount Percentage"
-msgstr ""
+msgstr "Popust v odstotkih"
 
 #. module: pos_discount
-#: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_product_id
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
 #: model_terms:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
 msgid "Discount Product"
-msgstr ""
+msgstr "Proizvod popusta"
 
 #. module: pos_discount
-#: model:ir.model.fields,field_description:pos_discount.field_pos_config_iface_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config____last_update
+msgid "Last Modified on"
+msgstr "Zadnjič spremenjeno"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#, python-format
+msgid "No discount product found"
+msgstr "Izdelka s popustom ni mogoče najti"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
 msgid "Order Discounts"
 msgstr ""
 
 #. module: pos_discount
-#: model:ir.model.fields,help:pos_discount.field_pos_config_discount_pc
-msgid "The default discount percentage"
-msgstr ""
-
-#. module: pos_discount
-#: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id
-msgid "The product used to model the discount."
-msgstr ""
-
-#. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config
-msgid "pos.config"
+msgid "Point of Sale Configuration"
+msgstr "Nastavitve POS-blagajne"
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
+msgid "The default discount percentage"
+msgstr "Privzeti odstotek popusta"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#, python-format
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
+msgstr ""
+"Izdelek s popustom se zdi napačno konfiguriran. Prepričajte se, da je "
+"označeno kot »Lahko se prodaja« in »Na voljo v POSu«."
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
+msgid "The product used to model the discount."
 msgstr ""

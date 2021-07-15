@@ -109,7 +109,7 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
             public channels are mailing list (e-mail based) and so users should always receive
             updates from public channels until they manually un-subscribe themselves.
         """
-        self.mapped('partner_id.channel_ids').filtered(lambda c: c.public != 'public').write({
+        self.mapped('partner_id.channel_ids').filtered(lambda c: c.public != 'public' and c.channel_type == 'channel').write({
             'channel_partner_ids': [(3, pid) for pid in self.mapped('partner_id').ids]
         })
 

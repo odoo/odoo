@@ -44,9 +44,12 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         };
     }
 
+    // The global posmodel is only present when the posmodel is instanciated
+    // So, wait for everythiong to be loaded
     var steps = [{ // Leave category displayed by default
         content: 'waiting for loading to finish',
-        trigger: 'body:not(:has(.loader))',
+        extra_trigger: 'body .pos:not(:has(.loader))', // Pos has finished loading
+        trigger: 'body:not(.oe_wait)', // WebClient has finished Loading
         run: function () {
             var product_wall_shelf = posmodel.db.search_product_in_category(0, 'Wall Shelf Unit')[0];
             var product_small_shelf = posmodel.db.search_product_in_category(0, 'Small Shelf')[0];

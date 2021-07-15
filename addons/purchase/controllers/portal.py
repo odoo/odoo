@@ -119,6 +119,8 @@ class CustomerPortal(CustomerPortal):
 
         values = self._purchase_order_get_page_view_values(order_sudo, access_token, **kw)
         update_date = kw.get('update')
+        if order_sudo.company_id:
+            values['res_company'] = order_sudo.company_id
         if update_date == 'True':
             return request.render("purchase.portal_my_purchase_order_update_date", values)
         return request.render("purchase.portal_my_purchase_order", values)

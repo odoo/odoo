@@ -24,7 +24,7 @@
                 </xpath>
                 <xpath expr="//header" position="after">
                     <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
-                        attrs="{'invisible': [('edi_web_services_to_process', '=', '')]}">
+                        attrs="{'invisible': ['|', ('edi_web_services_to_process', 'in', ['', False]), ('state', '=', 'draft')]}">
                          <div>The invoice will be sent asynchronously to :
                             <field name="edi_web_services_to_process" class="oe_inline"/>
                          </div>
@@ -39,11 +39,10 @@
                 </xpath>
                 <xpath expr="//div[@name='journal_div']" position="after">
                     <field name="edi_document_ids" invisible="1" />
-                    <field name="edi_state" invisible="1" />
-                    <field name="edi_state" attrs="{'invisible': ['|', ('edi_document_ids', '=', []), ('state', '=', 'draft')]}"/>
+                    <field name="edi_state" attrs="{'invisible': ['|', ('edi_state', '=', False), ('state', '=', 'draft')]}"/>
                 </xpath>
                 <xpath expr="//page[@id='other_tab']" position="after">
-                    <page id="edi_documents" string="EDI Documents" groups="base.group_no_one">
+                    <page id="edi_documents" string="EDI Documents" groups="base.group_no_one" attrs="{'invisible': [('edi_document_ids', '=', [])]}">
                         <field name="edi_document_ids">
                             <tree create="false" delete="false" edit="false" decoration-danger="error">
                                 <field name="name"/>

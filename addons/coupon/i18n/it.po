@@ -9,15 +9,15 @@
 # David Minneci <david@numeko.it>, 2020
 # Luana Andronico <andronicoluana@gmail.com>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +41,7 @@ msgstr ""
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on cheapest product"
-msgstr "%s%% sconto sul prodotto più economico"
+msgstr "%s%% di sconto sul prodotto più economico"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
@@ -53,7 +53,13 @@ msgstr ""
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on total amount"
-msgstr "%s%% sconto sull'importo totale"
+msgstr "%s%% di sconto sull'importo totale"
+
+#. module: coupon
+#: code:addons/coupon/wizard/coupon_generate.py:0
+#, python-format
+msgid "%s, a coupon has been generated for you"
+msgstr ""
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -83,7 +89,7 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "<span class=\"oe_grey\">if 0, no limit</span>"
-msgstr "<span class=\"oe_grey\">se 0, illimitto</span>"
+msgstr "<span class=\"oe_grey\">se 0, nessun limite</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -305,13 +311,13 @@ msgstr "Codice a barre"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_partners_domain
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_partners_domain
 msgid "Based on Customers"
-msgstr "Basato su clienti"
+msgstr "Basata su clienti"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_products_domain
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_products_domain
 msgid "Based on Products"
-msgstr "Basato su prodotti"
+msgstr "Basata su prodotti"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
@@ -325,7 +331,7 @@ msgstr ""
 #. module: coupon
 #: model:coupon.program,name:coupon.3_cabinets_plus_1_free
 msgid "Buy 3 large cabinets, get one for free"
-msgstr "Aquista 3 grandi armadietti e ricevine uno gratis"
+msgstr "Acquista 3 armadietti grandi e ricevine uno gratis"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
@@ -389,12 +395,12 @@ msgstr "Numero buoni sconto"
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__coupon_program
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Coupon Program"
-msgstr "Programma buono sconto"
+msgstr "Programma buoni sconto"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid "Coupon Program Name"
-msgstr ""
+msgstr "Nome programma buoni sconto"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
@@ -404,12 +410,12 @@ msgstr "Nome programma buoni sconto..."
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_coupon_program
 msgid "Coupon Programs"
-msgstr "Programmi buono sconto"
+msgstr "Programmi buoni sconto"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_reward
 msgid "Coupon Reward"
-msgstr ""
+msgstr "Premio buono sconto"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_rule
@@ -442,14 +448,14 @@ msgstr ""
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_partners_domain
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_partners_domain
 msgid "Coupon program will work for selected customers only"
-msgstr "Il programma buono sconto funziona solo per i clienti selezionati"
+msgstr "Il programma buoni sconto funziona solo per i clienti selezionati"
 
 #. module: coupon
 #: model:ir.actions.server,name:coupon.expire_coupon_cron_ir_actions_server
 #: model:ir.cron,cron_name:coupon.expire_coupon_cron
 #: model:ir.cron,name:coupon.expire_coupon_cron
 msgid "Coupon: expire coupon based on date"
-msgstr ""
+msgstr "Buono sconto: scadenza buono sconto in base alla data"
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_action
@@ -486,7 +492,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__create_date
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__currency_id
@@ -534,7 +540,7 @@ msgstr "Sconto applicato su"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_max_amount
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_max_amount
 msgid "Discount Max Amount"
-msgstr "Importo massimo di sconto"
+msgstr "Importo massimo sconto"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_type
@@ -627,7 +633,7 @@ msgstr "Genera"
 #: model:ir.model,name:coupon.model_coupon_generate_wizard
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid "Generate Coupon"
-msgstr "Generare buono sconto"
+msgstr "Genera buono sconto"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
@@ -745,13 +751,13 @@ msgstr "Quantità minima"
 #: code:addons/coupon/models/coupon_rules.py:0
 #, python-format
 msgid "Minimum purchased amount should be greater than 0"
-msgstr "L'importo minimo d'acquisto deve essere superiore a 0"
+msgstr "L'importo minimo di acquisto deve essere maggiore di 0"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_rules.py:0
 #, python-format
 msgid "Minimum quantity should be greater than 0"
-msgstr "La quantità minima deve essere superiore a 0"
+msgstr "La quantità minima deve essere maggiore di 0"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_minimum_amount
@@ -763,7 +769,7 @@ msgstr "Importo minimo richiesto per ottenere il premio"
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_min_quantity
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_min_quantity
 msgid "Minimum required product quantity to get the reward"
-msgstr "Quantità minima di prodotti richiesta per ottenere il premio"
+msgstr "Quantità minima di prodotto richiesta per ottenere il premio"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__name
@@ -879,12 +885,12 @@ msgstr "Programma"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__program_type
 msgid "Program Type"
-msgstr "Tipo programma"
+msgstr "Tipo di programma"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code_usage
 msgid "Promo Code Usage"
-msgstr "Utilizzo del codice promozionale"
+msgstr "Utilizzo codice promozionale"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code
@@ -894,12 +900,12 @@ msgstr "Codice promozionale"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Promotion Program Name"
-msgstr ""
+msgstr "Nome programma promozionale"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Promotion Program Name..."
-msgstr "Nome del programma promozionale..."
+msgstr "Nome programma promozionale..."
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_promo_program
@@ -928,7 +934,7 @@ msgstr "Premio"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_description
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_description
 msgid "Reward Description"
-msgstr "Descrizione del premio"
+msgstr "Descrizione premio"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__discount_line_product_id
@@ -947,13 +953,13 @@ msgstr "Prodotto premio"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_type
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_type
 msgid "Reward Type"
-msgstr "Tipo premio"
+msgstr "Tipo di premio"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_quantity
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_quantity
 msgid "Reward product quantity"
-msgstr "Quantità di prodotto premio"
+msgstr "Quantità prodotto premio"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -1069,8 +1075,8 @@ msgstr "Lo sconto in importo fisso"
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_percentage
 #: model:ir.model.fields,help:coupon.field_coupon_reward__discount_percentage
-msgid "The discount in percentage, between 1 to 100"
-msgstr "Lo sconto in percentuale, tra 1 e 100"
+msgid "The discount in percentage, between 1 and 100"
+msgstr "Sconto in percentuale, tra 1 e 100"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_program.py:0
@@ -1082,7 +1088,7 @@ msgstr "Il codice del programma deve essere univoco."
 #: code:addons/coupon/models/coupon_rules.py:0
 #, python-format
 msgid "The start date must be before the end date"
-msgstr "La data di inizio deve essere prima della data di fine."
+msgstr "La data di inizio deve precedere la data di fine."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_uom_id
@@ -1138,7 +1144,7 @@ msgstr "Durata validità di un buono sconto dopo la creazione"
 #: code:addons/coupon/models/coupon_program.py:0
 #, python-format
 msgid "You can not delete a program in active state"
-msgstr "Non è possibile cancellare un programma attivo"
+msgstr "Impossibile eliminare un programma con stato attivo"
 
 #. module: coupon
 #: model:mail.template,report_name:coupon.mail_template_sale_coupon
