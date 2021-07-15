@@ -225,7 +225,7 @@ class Groups(models.Model):
         # DLE P139
         if self.ids:
             self.env['ir.model.access'].call_cache_clearing_methods()
-            self.env['res.users'].has_group.clear_cache(self.env['res.users'])
+            self.clear_caches()
         return super(Groups, self).write(vals)
 
 
@@ -610,7 +610,7 @@ class Users(models.Model):
             *self._get_session_token_fields()
         }
         if (invalidation_fields & values.keys()) or any(key.startswith('context_') for key in values):
-            self.clear_caches()
+            self and self.clear_caches()
 
         return res
 
@@ -836,8 +836,6 @@ class Users(models.Model):
                             (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                          (self._uid, module, ext_id))
         return bool(self._cr.fetchone())
-    # for a few places explicitly clearing the has_group cache
-    has_group.clear_cache = _has_group.clear_cache
 
     def _action_show(self):
         """If self is a singleton, directly access the form view. If it is a recordset, open a tree view"""

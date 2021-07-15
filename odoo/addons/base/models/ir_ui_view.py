@@ -515,7 +515,7 @@ actual arch.
                         values['arch_updated'] = False
             values.update(self._compute_defaults(values))
 
-        self.clear_caches()
+        vals_list and self.clear_caches()
         return super(View, self).create(vals_list)
 
     def write(self, vals):
@@ -530,7 +530,7 @@ actual arch.
         if custom_view:
             custom_view.unlink()
 
-        self.clear_caches()
+        self and self.clear_caches()
         if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
             vals['arch_prev'] = self.arch_db
 
@@ -1699,11 +1699,6 @@ actual arch.
             raise ValueError('Invalid template id: %r' % template)
         view = self.sudo().search([('key', '=', template)], limit=1)
         return view and view.id or self.env['ir.model.data'].xmlid_to_res_id(template, raise_if_not_found=True)
-
-    def clear_cache(self):
-        """ Deprecated, use `clear_caches` instead. """
-        if 'xml' not in config['dev_mode']:
-            self.clear_caches()
 
     def _contains_branded(self, node):
         return node.tag == 't'\

@@ -194,10 +194,6 @@ class Company(models.Model):
         _logger.warning("The method '_company_default_get' on res.company is deprecated and shouldn't be used anymore")
         return self.env.company
 
-    # deprecated, use clear_caches() instead
-    def cache_restart(self):
-        self.clear_caches()
-
     @api.model
     def create(self, vals):
         if not vals.get('favicon'):
@@ -231,7 +227,7 @@ class Company(models.Model):
         return company
 
     def write(self, values):
-        self.clear_caches()
+        self and self.clear_caches()
         # Make sure that the selected currency is enabled
         if values.get('currency_id'):
             currency = self.env['res.currency'].browse(values['currency_id'])

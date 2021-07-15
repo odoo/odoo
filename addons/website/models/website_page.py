@@ -201,7 +201,7 @@ class Page(models.Model):
     def write(self, vals):
         if 'url' in vals and not vals['url'].startswith('/'):
             vals['url'] = '/' + vals['url']
-        self.clear_caches()  # write on page == write on view that invalid cache
+        self and self.clear_caches()  # write on page == write on view that invalid cache
         return super(Page, self).write(vals)
 
     def get_website_meta(self):

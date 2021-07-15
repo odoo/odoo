@@ -168,11 +168,6 @@ class IrRule(models.Model):
             yield v
 
     @api.model
-    def clear_cache(self):
-        """ Deprecated, use `clear_caches` instead. """
-        self.clear_caches()
-
-    @api.model
     def domain_get(self, model_name, mode='read'):
         # this method is now unsafe, since it returns a list of tables which
         # does not contain the joins present in the generated Query object
@@ -192,17 +187,17 @@ class IrRule(models.Model):
         return [], [], ['"%s"' % self.env[model_name]._table]
 
     def unlink(self):
-        res = super(IrRule, self).unlink()
-        self.clear_caches()
+        res = super().unlink()
+        self and self.clear_caches()
         return res
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(IrRule, self).create(vals_list)
+        rules = super().create(vals_list)
         # DLE P33: tests
-        self.flush()
-        self.clear_caches()
-        return res
+        rules and self.flush()
+        rules and self.clear_caches()
+        return rules
 
     def write(self, vals):
         res = super(IrRule, self).write(vals)
@@ -210,8 +205,8 @@ class IrRule(models.Model):
         # - odoo/addons/test_access_rights/tests/test_feedback.py
         # - odoo/addons/test_access_rights/tests/test_ir_rules.py
         # - odoo/addons/base/tests/test_orm.py (/home/dle/src/odoo/master-nochange-fp/odoo/addons/base/tests/test_orm.py)
-        self.flush()
-        self.clear_caches()
+        self and self.flush()
+        self and self.clear_caches()
         return res
 
     def _make_access_error(self, operation, records):

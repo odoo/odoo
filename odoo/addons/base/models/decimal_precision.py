@@ -35,18 +35,18 @@ class DecimalPrecision(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(DecimalPrecision, self).create(vals_list)
-        self.clear_caches()
-        return res
+        dps = super().create(vals_list)
+        dps and self.clear_caches()
+        return dps
 
     def write(self, data):
-        res = super(DecimalPrecision, self).write(data)
-        self.clear_caches()
+        res = super().write(data)
+        self and self.clear_caches()
         return res
 
     def unlink(self):
-        res = super(DecimalPrecision, self).unlink()
-        self.clear_caches()
+        res = super().unlink()
+        self and self.clear_caches()
         return res
 
     @api.onchange('digits')

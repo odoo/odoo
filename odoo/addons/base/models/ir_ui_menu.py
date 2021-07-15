@@ -21,10 +21,6 @@ class IrUiMenu(models.Model):
     _order = "sequence,id"
     _parent_store = True
 
-    def __init__(self, *args, **kwargs):
-        super(IrUiMenu, self).__init__(*args, **kwargs)
-        self.pool['ir.model.access'].register_cache_clearing_method(self._name, 'clear_caches')
-
     name = fields.Char(string='Menu', required=True, translate=True)
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
@@ -143,14 +139,15 @@ class IrUiMenu(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.clear_caches()
         for values in vals_list:
             if 'web_icon' in values:
                 values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
-        return super(IrUiMenu, self).create(vals_list)
+        menus = super().create(vals_list)
+        menus and self.clear_caches()
+        return menus
 
     def write(self, values):
-        self.clear_caches()
+        self and self.clear_caches()
         if 'web_icon' in values:
             values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
         return super(IrUiMenu, self).write(values)

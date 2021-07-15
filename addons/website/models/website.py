@@ -195,7 +195,7 @@ class Website(models.Model):
         original_company = self.company_id
         self._handle_create_write(values)
 
-        self.clear_caches()
+        self and self.clear_caches()
 
         if 'company_id' in values and 'user_id' not in values:
             public_user_to_change_websites = self.filtered(lambda w: w.sudo().user_id.company_id.id != values['company_id'])

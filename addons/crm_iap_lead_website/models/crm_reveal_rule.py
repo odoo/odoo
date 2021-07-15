@@ -84,21 +84,22 @@ class CRMRevealRule(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.clear_caches() # Clear the cache in order to recompute _get_active_rules
+        rules = super().create(vals_list)
+        rules and self.clear_caches() # Clear the cache in order to recompute _get_active_rules
         self._assert_geoip()
-        return super().create(vals_list)
+        return rules
 
     def write(self, vals):
         fields_set = {
             'country_ids', 'regex_url', 'active'
         }
         if set(vals.keys()) & fields_set:
-            self.clear_caches() # Clear the cache in order to recompute _get_active_rules
+            self and self.clear_caches() # Clear the cache in order to recompute _get_active_rules
         self._assert_geoip()
         return super(CRMRevealRule, self).write(vals)
 
     def unlink(self):
-        self.clear_caches() # Clear the cache in order to recompute _get_active_rules
+        self and self.clear_caches() # Clear the cache in order to recompute _get_active_rules
         return super(CRMRevealRule, self).unlink()
 
     def _compute_lead_count(self):

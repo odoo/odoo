@@ -39,13 +39,6 @@ class ProductPricelist(models.Model):
     code = fields.Char(string='E-commerce Promotional Code', groups="base.group_user")
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
-    def clear_cache(self):
-        # website._get_pl_partner_order() is cached to avoid to recompute at each request the
-        # list of available pricelists. So, we need to invalidate the cache when
-        # we change the config of website price list to force to recompute.
-        website = self.env['website']
-        website._get_pl_partner_order.clear_cache(website)
-
     @api.model
     def create(self, data):
         if data.get('company_id') and not data.get('website_id'):
@@ -53,21 +46,21 @@ class ProductPricelist(models.Model):
             # pricelist for that currency. Do not use user's company in that
             # case as module install are done with OdooBot (company 1)
             self = self.with_context(default_company_id=data['company_id'])
-        res = super(ProductPricelist, self).create(data)
-        self.clear_cache()
-        return res
+        pricelists = super(ProductPricelist, self).create(data)
+        pricelists and self.clear_caches()
+        return pricelists
 
     def write(self, data):
         res = super(ProductPricelist, self).write(data)
         if data.keys() & {'code', 'active', 'website_id', 'selectable', 'company_id'}:
             self._check_website_pricelist()
-        self.clear_cache()
+        self and self.clear_caches()
         return res
 
     def unlink(self):
         res = super(ProductPricelist, self).unlink()
         self._check_website_pricelist()
-        self.clear_cache()
+        self and self.clear_caches()
         return res
 
     def _get_partner_pricelist_multi_search_domain_hook(self, company_id):

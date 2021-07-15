@@ -1822,7 +1822,7 @@ class IrModelAccess(models.Model):
     @api.model
     def call_cache_clearing_methods(self):
         self.invalidate_cache()
-        self.check.clear_cache(self)    # clear the cache of check function
+        self.clear_caches()    # clear the ormcache of check function
         for model, method in self.__cache_clearing_methods:
             if model in self.env:
                 getattr(self.env[model], method)()
@@ -1987,8 +1987,8 @@ class IrModelData(models.Model):
 
     def unlink(self):
         """ Regular unlink method, but make sure to clear the caches. """
-        self.clear_caches()
-        return super(IrModelData, self).unlink()
+        self and self.clear_caches()
+        return super().unlink()
 
     def _lookup_xmlids(self, xml_ids, model):
         """ Look up the given XML ids of the given model. """

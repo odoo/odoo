@@ -24,18 +24,17 @@ class IrDefault(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.clear_caches()
-        return super(IrDefault, self).create(vals_list)
+        defaults = super().create(vals_list)
+        defaults and self.clear_caches()
+        return defaults
 
     def write(self, vals):
-        if self:
-            self.clear_caches()
-        return super(IrDefault, self).write(vals)
+        self and self.clear_caches()
+        return super().write(vals)
 
     def unlink(self):
-        if self:
-            self.clear_caches()
-        return super(IrDefault, self).unlink()
+        self and self.clear_caches()
+        return super().unlink()
 
     @api.model
     def set(self, model_name, field_name, value, user_id=False, company_id=False, condition=False):
