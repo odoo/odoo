@@ -521,7 +521,7 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _redirect(cls, location, code=303):
-        if request and request.db and request.is_frontend:
+        if request and request.db and getattr(request, 'is_frontend', False):
             location = url_for(location)
         return super()._redirect(location, code)
 
