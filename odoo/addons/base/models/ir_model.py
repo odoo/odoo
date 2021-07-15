@@ -1967,14 +1967,6 @@ class IrModelData(models.Model):
             raise AccessError(_('Not enough access rights on the external ID:') + ' %s.%s' % (module, xml_id))
         return model, False
 
-    @api.model
-    def get_object(self, module, xml_id):
-        """ Returns a browsable record for the given module name and xml_id.
-            If not found, raise a ValueError or return None, depending
-            on the value of `raise_exception`.
-        """
-        return self._xmlid_to_object("%s.%s" % (module, xml_id), raise_if_not_found=True)
-
     def unlink(self):
         """ Regular unlink method, but make sure to clear the caches. """
         self.clear_caches()
