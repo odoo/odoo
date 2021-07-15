@@ -1526,8 +1526,8 @@ class TestMrpOrder(TestMrpCommon):
     def test_immediate_validate_uom_2(self):
         """The rounding precision of a component should be based on the UoM used in the MO for this component,
         not on the produced product's UoM nor the default UoM of the component"""
-        uom_units = self.env['ir.model.data']._xmlid_to_object('uom.product_uom_unit')
-        uom_L = self.env['ir.model.data']._xmlid_to_object('uom.product_uom_litre')
+        uom_units = self.env.ref('uom.product_uom_unit')
+        uom_L = self.env.ref('uom.product_uom_litre')
         uom_cL = self.env['uom.uom'].create({
             'name': 'cL',
             'category_id': uom_L.category_id.id,

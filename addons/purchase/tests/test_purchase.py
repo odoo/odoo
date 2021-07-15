@@ -218,8 +218,8 @@ class TestPurchase(AccountTestInvoicingCommon):
 
     def test_with_different_uom(self):
         """ This test ensures that the unit price is correctly computed"""
-        uom_units = self.env['ir.model.data']._xmlid_to_object('uom.product_uom_unit')
-        uom_dozens = self.env['ir.model.data']._xmlid_to_object('uom.product_uom_dozen')
+        uom_units = self.env.ref('uom.product_uom_unit')
+        uom_dozens = self.env.ref('uom.product_uom_dozen')
         uom_pairs = self.env['uom.uom'].create({
             'name': 'Pairs',
             'category_id': uom_units.category_id.id,
