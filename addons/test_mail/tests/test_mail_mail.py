@@ -3,7 +3,7 @@
 
 import psycopg2
 
-from odoo import api
+from odoo import api, Command
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests import common, tagged
 from odoo.tools import mute_logger
@@ -21,6 +21,33 @@ class TestMailMail(TestMailCommon):
             'name': 'Test',
             'email_from': 'ignasse@example.com',
         }).with_context({})
+
+    def test_mail_mail_fields_access(self):
+        mail = self.env['mail.mail'].sudo().create({
+            'subject': 'Test 0',
+            'attachment_ids': [Command.create({'name': 'test file', 'datas': 'data'})],
+            'partner_ids': [Command.link(self.partner_admin.id)],
+            'body_html': '<p>Test</p>',
+        })
+        # Admin tries to read mail and he's also a recipient, so all the mail fields are accessible
+        mail = mail.with_user(self.user_admin)
+        self.assertTrue(mail.can_read_content)
+        self.assertEqual(mail.body_html_access, '<p>Test</p>', "Mail body is accessible")
+        self.assertEqual(len(mail.attachment_access_ids), 1, "Mail attachments are accessible")
+
+    def test_mail_mail_fields_no_access(self):
+        mail = self.env['mail.mail'].sudo().create({
+            'subject': 'Test 0',
+            'attachment_ids': [Command.create({'name': 'test file', 'datas': 'data'})],
+            'partner_ids': [Command.link(self.partner_employee.id)],
+            'body_html': '<p>Test</p>',
+        })
+        # Admin tries to read mail but is not present in recipient / author
+        # so body and attachments are restricted
+        mail = mail.with_user(self.user_admin)
+        self.assertFalse(mail.can_read_content)
+        self.assertFalse(mail.body_html_access, "Mail body is not accessible")
+        self.assertEqual(len(mail.attachment_access_ids), 0, "Mail attachments are not accessible")
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_message_notify_from_mail_mail(self):

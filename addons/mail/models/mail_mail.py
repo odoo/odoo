@@ -15,6 +15,7 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo import tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
+from odoo.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
 
@@ -58,6 +59,43 @@ class MailMail(models.Model):
         help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.")
     scheduled_date = fields.Char('Scheduled Send Date',
         help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible.")
+    can_read_content = fields.Boolean(compute="_compute_can_read_content")
+    body_html_access = fields.Text(
+        string='Rich-text Mail Contents',
+        help="Rich-text/HTML message",
+        compute="_compute_mail_content",
+        inverse="_inverse_body_html_access")
+    attachment_access_ids = fields.Many2many(
+        'ir.attachment',
+        string='Mail Attachments',
+        compute='_compute_mail_content',
+        inverse='_inverse_attachment_access_ids',
+        help='Attachments are linked to a document through model / res_id and to the message '
+             'through this field.')
+
+    @api.depends_context('uid')
+    @api.depends('mail_message_id')
+    def _compute_can_read_content(self):
+        for mail in self:
+            try:
+                mail.mail_message_id.check_access_rule('read')
+                mail.can_read_content = True
+            except AccessError:
+                mail.can_read_content = False
+
+    @api.depends('can_read_content')
+    def _compute_mail_content(self):
+        for mail in self.filtered(lambda m: m.can_read_content):
+            mail.body_html_access = mail.body_html
+            mail.attachment_access_ids = mail.attachment_ids
+
+    def _inverse_body_html_access(self):
+        for mail in self.filtered(lambda m: m.can_read_content):
+            mail.body_html = mail.body_html_access
+
+    def _inverse_attachment_access_ids(self):
+        for mail in self.filtered(lambda m: m.can_read_content):
+            mail.attachment_ids = mail.attachment_access_ids
 
     @api.model_create_multi
     def create(self, values_list):

@@ -28,10 +28,14 @@
                             <field name="email_cc"/>
                             <field name="reply_to"/>
                             <field name="scheduled_date"/>
+                            <field name="can_read_content" invisible="1"/>
                         </group>
                         <notebook>
                             <page string="Body" name="body">
-                                <field name="body_html" widget="html" options="{'style-inline': true}"/>
+                                <field name="body_html_access" widget="html" options="{'style-inline': true}" attrs="{'invisible': [('can_read_content', '=', False)]}"/>
+                                <h3 class="text-info" attrs="{'invisible': [('can_read_content', '=', True)]}">
+                                    You don't have enough access to read the contents of this email.
+                                </h3>
                             </page>
                             <page string="Advanced" name="advanced" groups="base.group_no_one">
                                 <group>
@@ -51,7 +55,7 @@
                                 </group>
                             </page>
                             <page string="Attachments" name="attachments">
-                                <field name="attachment_ids"/>
+                                <field name="attachment_access_ids" attrs="{'readonly': [('can_read_content', '=', False)]}"/>
                             </page>
                             <page string="Failure Reason" name="failure_reason" attrs="{'invisible': [('state', '!=', 'exception')]}">
                                 <field name="failure_reason"/>
