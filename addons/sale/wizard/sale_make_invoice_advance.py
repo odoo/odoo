@@ -65,9 +65,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     @api.onchange('advance_payment_method')
     def onchange_advance_payment_method(self):
+        defaults = self.default_get(['amount', 'fixed_amount'])
         if self.advance_payment_method == 'percentage':
-            amount = self.default_get(['amount']).get('amount')
-            return {'value': {'amount': amount}}
+            return {'value': {'amount': defaults.get('amount'), 'fixed_amount': 0}}
+        elif self.advance_payment_method == 'fixed':
+            return {'value': {'amount': 0, 'fixed_amount': defaults.get('fixed_amount')}}
         return {}
 
     def _prepare_invoice_values(self, order, name, amount, so_line):
@@ -118,9 +120,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _create_invoice(self, order, so_line, amount):
         if (self.advance_payment_method == 'percentage' and self.amount <= 0.00) or (self.advance_payment_method == 'fixed' and self.fixed_amount <= 0.00):
             raise UserError(_('The value of the down payment amount must be positive.'))
-
-        if self.advance_payment_method == 'percentage' and self.amount > 100.0:
-            raise UserError(_('Use a fixed amount if you would like to invoice a down payment greater than the Sales Order value'))
 
         amount, name = self._get_advance_details(order)
 

@@ -42,8 +42,12 @@
                     </group>
                     <footer>
                         <button name="create_invoices" id="create_invoice_open" string="Create and View Invoice" type="object"
-                            context="{'open_invoices': True}" class="btn-primary"/>
-                        <button name="create_invoices" id="create_invoice" string="Create Invoice" type="object"/>
+                            context="{'open_invoices': True}" class="btn-primary" attrs="{'invisible': [('amount','&gt;','100')]}"/>
+                        <button name="create_invoices" id="create_invoice_open" string="Create and View Invoice" type="object"
+                            context="{'open_invoices': True}" class="btn-primary" attrs="{'invisible': [('amount','&gt;=','0'), ('amount','&lt;=','100')]}" confirm="Down payment percentage exceeds 100%, do you want to continue?"/>
+
+                        <button name="create_invoices" id="create_invoice" string="Create Invoice" type="object" attrs="{'invisible': [('amount','&gt;','100')]}"/>
+                        <button name="create_invoices" id="create_invoice" string="Create Invoice" type="object" attrs="{'invisible': [('amount','&gt;=','0'), ('amount','&lt;=','100')]}" confirm="Downpayment percentage exceeds 100%, do you want to continue?"/>
                         <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
