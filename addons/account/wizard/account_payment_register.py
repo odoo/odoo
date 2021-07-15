@@ -308,6 +308,9 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('source_amount', 'source_amount_currency', 'source_currency_id', 'company_id', 'currency_id', 'payment_date')
     def _compute_amount(self):
         for wizard in self:
+            if wizard.amount:
+                continue
+
             if wizard.source_currency_id == wizard.currency_id:
                 # Same currency.
                 wizard.amount = wizard.source_amount_currency
