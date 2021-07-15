@@ -7,6 +7,7 @@ from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCom
 
 from odoo.tests import tagged
 
+
 @tagged('post_install', '-at_install')
 class TestSubcontractingBasic(TransactionCase):
     def test_subcontracting_location_1(self):
@@ -16,6 +17,7 @@ class TestSubcontractingBasic(TransactionCase):
         company2 = self.env['res.company'].create({'name': 'Test Company'})
         self.assertTrue(company2.subcontracting_location_id)
         self.assertTrue(self.env.company.subcontracting_location_id != company2.subcontracting_location_id)
+
 
 class TestSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_flow_1(self):
