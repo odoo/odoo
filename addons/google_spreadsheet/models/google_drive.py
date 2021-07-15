@@ -91,11 +91,7 @@ class GoogleDrive(models.Model):
 
     @api.model
     def set_spreadsheet(self, model, domain, groupbys, view_id):
-        try:
-            config_id = self.env['ir.model.data']._get_object_reference('google_spreadsheet', 'google_spreadsheet_template')[1]
-        except ValueError:
-            raise
-        config = self.browse(config_id)
+        config = self.env.ref('google_spreadsheet.google_spreadsheet_template')
         title = 'Spreadsheet %s' % model
         res = self.copy_doc(False, config.google_drive_resource_id, title, model)
 

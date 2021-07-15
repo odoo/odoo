@@ -637,7 +637,7 @@ class WebsiteForum(WebsiteProfile):
         vote_ids = Vote.search([('user_id', '=', user.id)])
 
         # activity by user.
-        _, comment = Data._get_object_reference('mail', 'mt_comment')
+        comment = Data._xmlid_lookup('mail.mt_comment')[2]
         activities = Activity.search(
             [('res_id', 'in', (user_question_ids + user_answer_ids).ids), ('model', '=', 'forum.post'),
              ('subtype_id', '!=', comment)],
