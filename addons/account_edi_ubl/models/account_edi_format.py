@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, models, fields, tools, _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr
+from odoo import models, fields
 from odoo.tests.common import Form
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
 from pathlib import PureWindowsPath
@@ -17,7 +16,7 @@ class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
     def _create_invoice_from_ubl(self, tree):
-        invoice = self.env['account.move']
+        invoice = self.env['account.move'].create({})
         journal = invoice._get_default_journal()
 
         move_type = 'out_invoice' if journal.type == 'sale' else 'in_invoice'
@@ -26,7 +25,16 @@ class AccountEdiFormat(models.Model):
             move_type = 'in_refund' if move_type == 'in_invoice' else 'out_refund'
 
         invoice = invoice.with_context(default_move_type=move_type, default_journal_id=journal.id)
-        return self._import_ubl(tree, invoice)
+
+        # During the process, if a ValidationError or an UserError is raised, the invoice isn't rollback and is persisted in the DB
+        # Thus we clean the invoice before propagating the error
+        try:
+            res = self._import_ubl(tree, invoice)
+        except (ValidationError, UserError):
+            invoice.unlink()
+            raise
+
+        return res
 
     def _update_invoice_from_ubl(self, tree, invoice):
         invoice = invoice.with_context(default_move_type=invoice.move_type, default_journal_id=invoice.journal_id.id)
@@ -172,8 +180,6 @@ class AccountEdiFormat(models.Model):
                             ], order='sequence ASC', limit=1)
                             if tax:
                                 invoice_line_form.tax_ids.add(tax)
-
-        invoice = invoice_form.save()
 
         # Regenerate PDF
         attachments = self.env['ir.attachment']
