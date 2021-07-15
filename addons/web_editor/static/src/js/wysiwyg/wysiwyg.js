@@ -1101,6 +1101,7 @@ const Wysiwyg = Widget.extend({
                         excluded: ['transparent_grayscale'],
                         $editable: $(this.odooEditor.editable), // Our parent is the root widget, we can't retrieve the editable section from it...
                         selectedColor: backgroundGradient || $(targetElement).css(eventName === "foreColor" ? 'color' : 'backgroundColor'),
+                        selectedTab: backgroundGradient ? 'gradients' : 'theme-colors',
                         withGradients: true,
                     });
                     colorpicker.on('custom_color_picked color_picked', null, ev => {
@@ -1108,6 +1109,10 @@ const Wysiwyg = Widget.extend({
                             this.odooEditor.historyResetLatestComputedSelection(true);
                         }
                         this._processAndApplyColor(eventName, ev.data.color);
+                        // If the palette was already opened (e.g. modifying a gradient), the new
+                        // DOM state must be reflected in the palette, but the tab selection must
+                        // not be impacted.
+                        colorpicker.setSelectedColor(null, ev.data.color, false);
                     });
                     colorpicker.on('color_hover color_leave', null, ev => {
                         if (hadNonCollapsedSelection) {

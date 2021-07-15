@@ -26,6 +26,7 @@ var ColorpickerWidget = Widget.extend({
      * @param {Object} [options]
      * @param {string} [options.defaultColor='#FF0000']
      * @param {string} [options.noTransparency=false]
+     * @param {boolean} [options.stopClickPropagation=false]
      */
     init: function (parent, options) {
         this._super(...arguments);
@@ -303,6 +304,9 @@ var ColorpickerWidget = Widget.extend({
      * @param {Event} ev
      */
     _onClick: function (ev) {
+        if (this.options.stopClickPropagation) {
+            ev.stopPropagation();
+        }
         ev.originalEvent.__isColorpickerClick = true;
         $(ev.target).find('> .o_opacity_pointer, > .o_slider_pointer, > .o_picker_pointer').addBack('.o_opacity_pointer, .o_slider_pointer, .o_picker_pointer').focus();
         if (ev.target.dataset.colorMethod === 'hex' && !this.selectedHexValue) {

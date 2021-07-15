@@ -21,6 +21,16 @@ const ColorPaletteWidget = Widget.extend({
         'mouseenter .o_we_color_btn': '_onColorButtonEnter',
         'mouseleave .o_we_color_btn': '_onColorButtonLeave',
         'click .o_we_colorpicker_switch_pane_btn': '_onSwitchPaneButtonClick',
+        'click .o_custom_gradient_editor .o_custom_gradient_btn': '_onGradientCustomButtonClick',
+        'click .o_custom_gradient_editor': '_onPanelClick',
+        'change .o_custom_gradient_editor input[type="text"]': '_onGradientInputChange',
+        'keypress .o_custom_gradient_editor input[type="text"]': '_onGradientInputKeyPress',
+        'click .o_custom_gradient_editor we-button:not(.o_remove_color)': '_onGradientButtonClick',
+        'mouseenter .o_custom_gradient_editor we-button:not(.o_remove_color)': '_onGradientButtonEnter',
+        'mouseleave .o_custom_gradient_editor we-button:not(.o_remove_color)': '_onGradientButtonLeave',
+        'click .o_custom_gradient_scale': '_onGradientPreviewClick',
+        // Note: _onGradientSliderClick on slider is attached at slider creation.
+        'click .o_custom_gradient_editor .o_remove_color': '_onGradientDeleteClick',
     },
     custom_events: {
         'colorpicker_select': '_onColorPickerSelect',
@@ -77,7 +87,10 @@ const ColorPaletteWidget = Widget.extend({
         },
         {
             id: 'gradients',
-            pickers: this.options.withGradients ? ['predefined_gradients'] : [],
+            pickers: this.options.withGradients ? [
+                'predefined_gradients',
+                'custom_gradient',
+            ] : [],
         }];
 
         this.sections = {};
@@ -161,6 +174,36 @@ const ColorPaletteWidget = Widget.extend({
                     `rgba$1, ${this.options.opacity})`);
                 elem.dataset.color = gradient.replaceAll(/\s+/g, '');
             });
+        }
+
+        // Palette for gradient
+        if (this.pickers['custom_gradient']) {
+            this.gradientColorPicker = new ColorpickerWidget(this, {
+                stopClickPropagation: true,
+            });
+            await this.gradientColorPicker.appendTo(this.sections['gradients']);
+            const editor = this.pickers['custom_gradient'];
+            this.gradientEditorParts = {
+                'customButton': editor.querySelector('.o_custom_gradient_btn'),
+                'customContent': editor.querySelector('.o_color_picker_inputs'),
+                'linearButton': editor.querySelector('we-button[data-gradient-type="linear-gradient"]'),
+                'angleRow': editor.querySelector('.o_angle_row'),
+                'angle': editor.querySelector('input[data-name="angle"]'),
+                'radialButton': editor.querySelector('we-button[data-gradient-type="radial-gradient"]'),
+                'positionRow': editor.querySelector('.o_position_row'),
+                'positionX': editor.querySelector('input[data-name="positionX"]'),
+                'positionY': editor.querySelector('input[data-name="positionY"]'),
+                'sizeRow': editor.querySelector('.o_size_row'),
+                'scale': editor.querySelector('.o_custom_gradient_scale div'),
+                'sliders': editor.querySelector('.o_slider_multi'),
+                'deleteButton': editor.querySelector('.o_remove_color'),
+            };
+            const gradient = weUtils.isColorGradient(this.options.selectedColor) && this.options.selectedColor;
+            this._selectGradient(gradient);
+            const resizeObserver = new window.ResizeObserver(() => {
+                this._adjustActiveSliderDelete();
+            });
+            resizeObserver.observe(this.gradientEditorParts.sliders);
         }
 
         // Switch to the correct tab
@@ -274,12 +317,16 @@ const ColorPaletteWidget = Widget.extend({
         };
     },
     /**
-     * Sets the currently selected colors
+     * Sets the currently selected colors.
+     *
+     * Note: the tab selection is done here because of an optimization to avoid creating the whole
+     * palette hundreds of times when opening the THEME tab.
      *
      * @param {string|number} ccValue
      * @param {string} color rgb[a]
+     * @param {boolean} [selectTab=true]
      */
-    setSelectedColor: function (ccValue, color) {
+    setSelectedColor: function (ccValue, color, selectTab = true) {
         if (color === 'rgba(0, 0, 0, 0)' && this.options.opacity !== 1) {
             color = 'rgba(0, 0, 0, ' + this.options.opacity + ')';
         }
@@ -287,9 +334,11 @@ const ColorPaletteWidget = Widget.extend({
             ccValue: ccValue,
             color: color,
         });
-        // This is called on open, restore default tab selection
-        const selectedButtonIndex = this.tabs.map(tab => tab.id).indexOf(this.options.selectedTab);
-        this._selectTabFromButton(this.el.querySelectorAll('button')[selectedButtonIndex]);
+        if (selectTab) {
+            // This is called on open, restore default tab selection
+            const selectedButtonIndex = this.tabs.map(tab => tab.id).indexOf(this.options.selectedTab);
+            this._selectTabFromButton(this.el.querySelectorAll('button')[selectedButtonIndex]);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -410,10 +459,254 @@ const ColorPaletteWidget = Widget.extend({
             this.trigger_up(eventName, colorInfo);
         }
         this._buildCustomColors();
-        this._markSelectedColor();
         if (this.colorPicker) {
             this.colorPicker.setSelectedColor(colorInfo.color);
         }
+        if (this.gradientColorPicker) {
+            const customGradient = weUtils.isColorGradient(colorInfo.color) ? colorInfo.color : false;
+            this._selectGradient(customGradient);
+        }
+        this._markSelectedColor();
+    },
+    /**
+     * Populates the gradient editor.
+     *
+     * @private
+     * @param {string} gradient CSS string
+     */
+    _selectGradient: function (gradient) {
+        const editor = this.gradientEditorParts;
+        if (this.gradientColorPicker.$el) {
+            this.gradientColorPicker.do_hide();
+        }
+        const colorSplits = [];
+        if (gradient) {
+            gradient = gradient.toLowerCase();
+            // Extract colors and their positions: colors can either be in the #rrggbb format or in the
+            // rgb/rgba(...) format, positions are expected to be expressed as percentages
+            // (lengths are not supported).
+            for (const entry of gradient.matchAll(/(#[0-9a-f]{6}|rgba?\(\s*[0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+\s*[,\s*[0-9.]*]?\s*\))\s*([[0-9]+%]?)/g)) {
+                colorSplits.push([entry[1], entry[2].replace('%', '')]);
+            }
+        }
+        // Consider unsupported gradients as not gradients.
+        if (!gradient || colorSplits.length < 2) {
+            $(editor.customContent).addClass('d-none');
+            editor.customButton.style['background-image'] = '';
+            editor.customButton.dataset.color = false;
+            return;
+        }
+        $(editor.customContent).removeClass('d-none');
+        editor.customButton.style['background-image'] = gradient;
+        editor.customButton.dataset.color = gradient;
+        // The scale display shows the gradient colors horizontally by canceling the type and angle
+        // which are before the first comma.
+        const scaleGradient = gradient.replace(/[^,]+,/, 'linear-gradient(90deg,');
+        editor.scale.style['background-image'] = scaleGradient;
+
+        const isLinear = gradient.startsWith('linear-gradient(');
+        // Keep track of last selected slider's position.
+        let lastSliderPosition;
+        const activeSlider = editor.sliders.querySelector('input.active');
+        if (activeSlider) {
+            lastSliderPosition = activeSlider.value;
+        }
+        let $lastSlider;
+        // Rebuild sliders for each color milestone of the gradient.
+        editor.sliders.replaceChildren();
+        for (const index in colorSplits) {
+            const colorSplit = colorSplits[index];
+            let color = colorSplit[0];
+            const position = colorSplit[1] || 100 * index / colorSplits.length;
+            const $slider = this._createGradientSlider(position, color);
+            if (position === lastSliderPosition) {
+                $lastSlider = $slider;
+            }
+        }
+
+        editor.deleteButton.classList.add('d-none');
+        // Update form elements related to type.
+        if (isLinear) {
+            editor.linearButton.classList.add('active');
+            editor.radialButton.classList.remove('active');
+
+            let angle = gradient.match(/([0-9]+)deg/);
+            angle = angle ? angle[1] : 0;
+            editor.angle.value = angle;
+        } else {
+            editor.linearButton.classList.remove('active');
+            editor.radialButton.classList.add('active');
+
+            const sizeMatch = gradient.match(/(closest|farthest)-(side|corner)/);
+            const size = sizeMatch ? sizeMatch[0] : 'farthest-corner';
+            const $buttons = $(editor.sizeRow).find('we-button');
+            $buttons.removeClass('active');
+            $(editor.sizeRow).find("we-button[data-gradient-size='" + size + "']").addClass('active');
+
+            const position = gradient.match(/ at ([0-9]+)% ([0-9]+)%/) || ['', '50', '50'];
+            editor.positionX.value = position[1];
+            editor.positionY.value = position[2];
+        }
+        this._updateGradientVisibility(isLinear);
+        this._activateGradientSlider($lastSlider || $(this.pickers['custom_gradient'].querySelector('.o_slider_multi input')));
+    },
+    /**
+     * Adjusts the visibility of the gradient editor elements.
+     *
+     * @private
+     * @param {boolean} isLinear
+     */
+    _updateGradientVisibility: function (isLinear) {
+        const editor = this.gradientEditorParts;
+        if (isLinear) {
+            editor.angleRow.classList.remove('d-none');
+            editor.angleRow.classList.add('d-flex');
+            editor.positionRow.classList.add('d-none');
+            editor.positionRow.classList.remove('d-flex');
+            editor.sizeRow.classList.add('d-none');
+            editor.sizeRow.classList.remove('d-flex');
+        } else {
+            editor.angleRow.classList.add('d-none');
+            editor.angleRow.classList.remove('d-flex');
+            editor.positionRow.classList.remove('d-none');
+            editor.positionRow.classList.add('d-flex');
+            editor.sizeRow.classList.remove('d-none');
+            editor.sizeRow.classList.add('d-flex');
+        }
+    },
+    /**
+     * Removes the transparency from an rgba color.
+     *
+     * @private
+     * @param {string} color rgba CSS color string
+     * @returns {string} rgb CSS color string
+     */
+    _opacifyColor: function (color) {
+        if (color.startsWith('rgba')) {
+            return color.replace('rgba', 'rgb').replace(/,\s*[0-9.]+\s*\)/, ')');
+        }
+        return color;
+    },
+    /**
+     * Creates and adds a slider for the gradient color definition.
+     *
+     * @private
+     * @param {int} position between 0 and 100
+     * @param {string} color
+     * @returns {jQuery} created slider
+     */
+    _createGradientSlider: function (position, color) {
+        const $slider = $('<input class="w-100" type="range" min="0" max="100"/>');
+        $slider.attr('value', position);
+        $slider.attr('data-color', color);
+        $slider.css('color', this._opacifyColor(color));
+        $slider.on('click', this._onGradientSliderClick.bind(this));
+        $slider.appendTo(this.gradientEditorParts.sliders);
+        this._sortGradientSliders();
+        return $slider;
+    },
+    /**
+     * Activates a slider of the gradient color definition.
+     *
+     * @private
+     * @param {jQuery} $slider
+     */
+    _activateGradientSlider: function ($slider) {
+        const $sliders = $(this.gradientEditorParts.sliders).find('input');
+        $sliders.removeClass('active');
+        $slider.addClass('active');
+
+        const color = $slider.data('color');
+        // Note: show before marking the selected color as, unfortunately,
+        // setting the color and updating the UI accordinly relies on the widget
+        // already being rendered in the DOM.
+        this.gradientColorPicker.do_show();
+        this.gradientColorPicker.setSelectedColor(color);
+        this._sortGradientSliders();
+        this._adjustActiveSliderDelete();
+    },
+    /**
+     * Adjusts the position of the slider delete button.
+     *
+     * @private
+     */
+    _adjustActiveSliderDelete: function () {
+        const $sliders = $(this.gradientEditorParts.sliders).find('input');
+        const $activeSlider = $(this.gradientEditorParts.sliders).find('input.active');
+        if ($sliders.length > 2 && $activeSlider.length) {
+            this.gradientEditorParts.deleteButton.classList.remove('d-none');
+            const sliderWidth = $activeSlider.width();
+            const thumbWidth = 12; // TODO find a way to access it in CSS
+            const deleteWidth = $(this.gradientEditorParts.deleteButton).width();
+            const pixelOffset = (sliderWidth - thumbWidth) * $activeSlider[0].value / 100 + (thumbWidth - deleteWidth) / 2;
+            this.gradientEditorParts.deleteButton.style['margin-left'] = `${pixelOffset}px`;
+            this.gradientEditorParts.deleteButton.style['margin-right'] = `-${deleteWidth / 2}px`;
+        } else {
+            this.gradientEditorParts.deleteButton.classList.add('d-none');
+        }
+    },
+    /**
+     * Reorders the sliders of the gradient color definition by their position.
+     *
+     * @private
+     */
+    _sortGradientSliders: function () {
+        const $sliderInputs = $(this.gradientEditorParts.sliders).find('input');
+        for (const slider of $sliderInputs.sort((a, b) => parseInt(a.value, 10) - parseInt(b.value, 10))) {
+            this.gradientEditorParts.sliders.appendChild(slider);
+        }
+    },
+    /**
+     * Computes the customized gradient from the custom gradient editor.
+     *
+     * @private
+     * @returns {string} gradient string corresponding to the currently selected options.
+     */
+    _computeGradient: function () {
+        const editor = this.gradientEditorParts;
+
+        const $picker = $(this.pickers['custom_gradient']);
+
+        const colors = [];
+        for (const slider of $(editor.sliders).find('input')) {
+            const color = ColorpickerWidget.convertCSSColorToRgba($(slider).data('color'));
+            const colorText = color.opacity !== 100 ? `rgba(${color.red}, ${color.green}, ${color.blue}, ${color.opacity / 100})`
+                : `rgb(${color.red}, ${color.green}, ${color.blue})`;
+            const position = slider.value;
+            colors.push(`${colorText} ${position}%`);
+        }
+
+        const type = $picker.find('.o_type_row we-button.active').data('gradientType');
+        const isLinear = type === 'linear-gradient';
+        let typeParam;
+        if (isLinear) {
+            const angle = editor.angle.value || 0;
+            typeParam = `${angle}deg`;
+        } else {
+            const positionX = editor.positionX.value || 50;
+            const positionY = editor.positionY.value || 50;
+            const size = $picker.find('.o_size_row we-button.active').data('gradientSize');
+            typeParam = `circle ${size} at ${positionX}% ${positionY}%`;
+        }
+
+        return `${type}(${typeParam}, ${colors.join(', ')})`;
+    },
+    /**
+     * Computes the customized gradient from the custom gradient editor and displays it.
+     *
+     * @private
+     * @param {boolean} isPreview
+     */
+    _updateGradient: function (isPreview) {
+        const gradient = this._computeGradient();
+        // Avoid updating an unchanged gradient.
+        if (weUtils.areCssValuesEqual(gradient, this.selectedColor) && !isPreview) {
+            return;
+        }
+        this.trigger_up(isPreview ? 'color_hover' : 'color_picked', Object.assign(this.getSelectedColors(), {
+            color: gradient,
+            target: this.colorPicker.el,
+        }));
     },
     /**
      * Marks the selected colors.
@@ -444,6 +737,26 @@ const ColorPaletteWidget = Widget.extend({
         this.el.querySelectorAll('.o_colorpicker_sections').forEach(el => {
             el.classList.toggle('d-none', el.dataset.colorTab !== buttonEl.dataset.target);
         });
+    },
+    /**
+     * Updates a gradient color from a selection in the color picker.
+     *
+     * @private
+     * @param {Event} ev from gradient's colorpicker
+     * @param {boolean} isPreview
+     */
+    _updateGradientColor(ev, isPreview) {
+        ev.stopPropagation();
+        const $slider = $(this.gradientEditorParts.sliders).find('input.active');
+        const color = ev.data.cssColor;
+        if (!weUtils.areCssValuesEqual(color, $slider.data('color'))) {
+            const previousColor = $slider.data('color');
+            $slider.data('color', color);
+            this._updateGradient(isPreview);
+            if (isPreview) {
+                $slider.data('color', previousColor);
+            }
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -490,10 +803,14 @@ const ColorPaletteWidget = Widget.extend({
      * @param {Event} ev
      */
     _onColorPickerPreview: function (ev) {
-        this.trigger_up('color_hover', Object.assign(this.getSelectedColors(), {
-            color: ev.data.cssColor,
-            target: this.colorPicker.el,
-        }));
+        if (ev.target === this.gradientColorPicker) {
+            this._updateGradientColor(ev, true);
+        } else {
+            this.trigger_up('color_hover', Object.assign(this.getSelectedColors(), {
+                color: ev.data.cssColor,
+                target: this.colorPicker.el,
+            }));
+        }
     },
     /**
      * Called when a color is selected on the colorpicker (mouseup).
@@ -502,10 +819,14 @@ const ColorPaletteWidget = Widget.extend({
      * @param {Event} ev
      */
     _onColorPickerSelect: function (ev) {
-        this._selectColor(Object.assign(this.getSelectedColors(), {
-            color: ev.data.cssColor,
-            target: this.colorPicker.el,
-        }), 'custom_color_picked');
+        if (ev.target === this.gradientColorPicker) {
+            this._updateGradientColor(ev);
+        } else {
+            this._selectColor(Object.assign(this.getSelectedColors(), {
+                color: ev.data.cssColor,
+                target: this.colorPicker.el,
+            }), 'custom_color_picked');
+        }
     },
     /**
      * @private
@@ -514,6 +835,149 @@ const ColorPaletteWidget = Widget.extend({
     _onSwitchPaneButtonClick(ev) {
         ev.stopPropagation();
         this._selectTabFromButton(ev.currentTarget);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onGradientSliderClick(ev) {
+        ev.stopPropagation();
+        this._activateGradientSlider($(ev.target));
+        this._updateGradient();
+    },
+    /**
+     * Adds a color inside the gradient based on the position clicked within the preview.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onGradientPreviewClick(ev) {
+        ev.stopPropagation();
+        const offset = ev.offsetX;
+        const width = parseInt(window.getComputedStyle(ev.target).width, 10);
+        const position = 100 * offset / width;
+
+        let previousColor;
+        let nextColor;
+        let previousPosition;
+        let nextPosition;
+        for (const slider of $(this.gradientEditorParts.sliders).find('input')) {
+            if (slider.value < position) {
+                previousColor = slider.dataset.color;
+                previousPosition = slider.value;
+            } else {
+                nextColor = slider.dataset.color;
+                nextPosition = slider.value;
+                break;
+            }
+        }
+        let color;
+        if (previousColor && nextColor) {
+            previousColor = ColorpickerWidget.convertCSSColorToRgba(previousColor);
+            nextColor = ColorpickerWidget.convertCSSColorToRgba(nextColor);
+            const previousRatio = (nextPosition - position) / (nextPosition - previousPosition);
+            const nextRatio = 1 - previousRatio;
+            const red = Math.round(previousRatio * previousColor.red + nextRatio * nextColor.red);
+            const green = Math.round(previousRatio * previousColor.green + nextRatio * nextColor.green);
+            const blue = Math.round(previousRatio * previousColor.blue + nextRatio * nextColor.blue);
+            const opacity = Math.round(previousRatio * previousColor.opacity + nextRatio * nextColor.opacity);
+            color = `rgba(${red}, ${green}, ${blue}, ${opacity / 100})`;
+        } else {
+            color = nextColor || previousColor || 'rgba(128, 128, 128, 0.5)';
+        }
+
+        const $slider = this._createGradientSlider(position, color);
+        this._activateGradientSlider($slider);
+        this._updateGradient();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onPanelClick(ev) {
+        // Ignore to avoid closing popup.
+        ev.stopPropagation();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onGradientInputChange(ev) {
+        this._updateGradient();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onGradientInputKeyPress: function (ev) {
+        if (ev.charCode === $.ui.keyCode.ENTER) {
+            ev.preventDefault();
+            this._onGradientInputChange();
+        }
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onGradientButtonClick(ev) {
+        const $buttons = $(ev.target).closest('span').find('we-button');
+        $buttons.removeClass('active');
+        $(ev.target).closest('we-button').addClass('active');
+        this._updateGradient();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onGradientButtonEnter(ev) {
+        ev.stopPropagation();
+        const $activeButton = $(ev.target).closest('span').find('we-button.active');
+        const $buttons = $(ev.target).closest('span').find('we-button');
+        $buttons.removeClass('active');
+        $(ev.target).closest('we-button').addClass('active');
+        this._updateGradient(true);
+        $buttons.removeClass('active');
+        $activeButton.addClass('active');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onGradientButtonLeave(ev) {
+        ev.stopPropagation();
+        this.trigger_up('color_leave', Object.assign(this.getSelectedColors(), {
+            target: ev.target,
+        }));
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onGradientCustomButtonClick(ev) {
+        let gradient = this.gradientEditorParts.customButton.style['backgroundImage'];
+        if (!gradient) {
+            // default to first predefined
+            gradient = this.pickers['predefined_gradients'].querySelector('button').dataset.color;
+        }
+        this._selectColor(Object.assign(this.getSelectedColors(), {
+            color: gradient,
+            target: this.gradientEditorParts.customButton,
+        }), 'custom_color_picked');
+        this._updateGradient();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onGradientDeleteClick(ev) {
+        ev.stopPropagation();
+        const $activeSlider = $(this.pickers['custom_gradient'].querySelector('.o_slider_multi input.active'));
+        $activeSlider.off();
+        $activeSlider.remove();
+        this.gradientEditorParts.deleteButton.classList.add('d-none');
+        this.gradientEditorParts.deleteButton.classList.remove('active');
+        this._updateGradient();
+        this._activateGradientSlider($(this.pickers['custom_gradient'].querySelector('.o_slider_multi input')));
     },
 });
 
