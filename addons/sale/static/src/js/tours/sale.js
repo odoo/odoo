@@ -64,7 +64,7 @@ tour.register("sale_quote_tour", {
         trigger: ".o_form_editable .o_field_many2one[name='partner_id']",
         extra_trigger: ".o_sale_order",
         content: _t("Write a company name to create one, or see suggestions."),
-        position: "bottom",
+        position: "right",
         run: function (actions) {
             actions.text("Agrolait", this.$anchor.find("input"));
         },
