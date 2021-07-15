@@ -139,12 +139,6 @@ QUnit.test("hook", async (assert) => {
 QUnit.test("non-MacOS usability", async (assert) => {
     assert.expect(6);
 
-    patchWithCleanup(browser, {
-        navigator: {
-            platform: "OdooOS",
-        },
-    });
-
     const hotkey = env.services.hotkey;
     const key = "q";
 
@@ -186,7 +180,7 @@ QUnit.test("MacOS usability", async (assert) => {
 
     patchWithCleanup(browser, {
         navigator: {
-            platform: "Mac",
+            userAgent: browser.navigator.userAgent.replace(/\([^)]*\)/, "(MacOs)"),
         },
     });
 
@@ -491,12 +485,6 @@ QUnit.test("registrations and elements belong to the correct UI owner", async (a
 QUnit.test("replace the overlayModifier for non-MacOs", async (assert) => {
     assert.expect(3);
 
-    patchWithCleanup(browser, {
-        navigator: {
-            platform: "OdooOS",
-        },
-    });
-
     const hotkeyService = serviceRegistry.get("hotkey");
     patchWithCleanup(hotkeyService, {
         overlayModifier: "alt+shift",
@@ -531,7 +519,7 @@ QUnit.test("replace the overlayModifier for MacOs", async (assert) => {
 
     patchWithCleanup(browser, {
         navigator: {
-            platform: "Mac",
+            userAgent: browser.navigator.userAgent.replace(/\([^)]*\)/, "(MacOs)"),
         },
     });
 

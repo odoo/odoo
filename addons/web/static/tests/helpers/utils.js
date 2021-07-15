@@ -199,6 +199,7 @@ export function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {
     }
 
     window.dispatchEvent(new KeyboardEvent("keydown", eventAttrs));
+    window.dispatchEvent(new KeyboardEvent("keyup", eventAttrs));
 }
 
 export async function legacyExtraNextTick() {

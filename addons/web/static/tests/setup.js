@@ -113,6 +113,9 @@ function patchBrowserWithCleanup() {
                     originalRemoveEventListener(...arguments);
                 });
             },
+            navigator: {
+                userAgent: browser.navigator.userAgent.replace(/\([^)]*\)/, "(X11; Linux x86_64)"),
+            },
             // in tests, we never want to interact with the real url or reload the page
             location: mockLocation,
             history: {
