@@ -1596,7 +1596,7 @@ export class OdooEditor extends EventTarget {
         } else {
             return (
                 item.nodeType === Node.TEXT_NODE ||
-                item.matches(CLIPBOARD_WHITELISTS.nodes.join(','))
+                (item.matches && item.matches(CLIPBOARD_WHITELISTS.nodes.join(',')))
             );
         }
     }
