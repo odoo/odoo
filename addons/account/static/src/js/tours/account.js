@@ -38,7 +38,7 @@ tour.register('account_tour', {
         trigger: "div[name=partner_id] input",
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
         content: Markup(_t("Write a company name to <b>create one</b> or <b>see suggestions</b>.")),
-        position: "bottom",
+        position: "right",
     }, {
         trigger: ".o_m2o_dropdown_option a:contains('Create')",
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
