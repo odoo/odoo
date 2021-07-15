@@ -406,12 +406,6 @@ QUnit.test("data-command-category", async (assert) => {
 });
 
 QUnit.test("display shortcuts correctly for non-MacOS ", async (assert) => {
-    patchWithCleanup(browser, {
-        navigator: {
-            platform: "OdooOS",
-        },
-    });
-
     class MyComponent extends Component {}
     MyComponent.components = { TestComponent };
     MyComponent.template = xml`
@@ -448,7 +442,7 @@ QUnit.test("display shortcuts correctly for non-MacOS ", async (assert) => {
 QUnit.test("display shortcuts correctly for MacOS ", async (assert) => {
     patchWithCleanup(browser, {
         navigator: {
-            platform: "Mac",
+            userAgent: browser.navigator.userAgent.replace(/\([^)]*\)/, "(MacOs)"),
         },
     });
 
@@ -488,12 +482,6 @@ QUnit.test("display shortcuts correctly for MacOS ", async (assert) => {
 QUnit.test(
     "display shortcuts correctly for non-MacOS with a new overlayModifier",
     async (assert) => {
-        patchWithCleanup(browser, {
-            navigator: {
-                platform: "OdooOS",
-            },
-        });
-
         const hotkeyService = serviceRegistry.get("hotkey");
         patchWithCleanup(hotkeyService, {
             overlayModifier: "alt+control",
@@ -523,7 +511,7 @@ QUnit.test(
 QUnit.test("display shortcuts correctly for MacOS with a new overlayModifier", async (assert) => {
     patchWithCleanup(browser, {
         navigator: {
-            platform: "Mac",
+            userAgent: browser.navigator.userAgent.replace(/\([^)]*\)/, "(MacOs)"),
         },
     });
 
