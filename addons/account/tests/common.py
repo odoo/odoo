@@ -391,7 +391,8 @@ class AccountTestInvoicingCommon(TransactionCase):
                 line_form.price_unit = amount
                 if taxes:
                     line_form.tax_ids.clear()
-                    line_form.tax_ids.add(taxes)
+                    for tax in taxes:
+                        line_form.tax_ids.add(tax)
 
         rslt = move_form.save()
 
