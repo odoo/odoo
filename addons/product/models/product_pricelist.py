@@ -5,7 +5,7 @@ from itertools import chain
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_repr
+from odoo.tools import float_repr, format_datetime
 from odoo.tools.misc import get_lang
 
 
@@ -464,6 +464,13 @@ class PricelistItem(models.Model):
     def _check_recursion(self):
         if any(item.base == 'pricelist' and item.pricelist_id and item.pricelist_id == item.base_pricelist_id for item in self):
             raise ValidationError(_('You cannot assign the Main Pricelist as Other Pricelist in PriceList Item'))
+
+    @api.constrains('date_start', 'date_end')
+    def _check_date_range(self):
+        for item in self:
+            if item.date_start and item.date_end and item.date_start >= item.date_end:
+                raise ValidationError(_('%s : end date (%s) should be greater than start date (%s)', item.display_name, format_datetime(self.env, item.date_end), format_datetime(self.env, item.date_start)))
+        return True
 
     @api.constrains('price_min_margin', 'price_max_margin')
     def _check_margin(self):
