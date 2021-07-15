@@ -250,10 +250,22 @@ class AccountMove(models.Model):
         string='Tax Cash Basis Entry of',
         help="Technical field used to keep track of the tax cash basis reconciliation. "
              "This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
-    tax_cash_basis_move_id = fields.Many2one(
+    tax_cash_basis_origin_move_id = fields.Many2one(
         comodel_name='account.move',
-        string="Origin Tax Cash Basis Entry",
+        string="Cash Basis Origin",
+        readonly=1,
         help="The journal entry from which this tax cash basis journal entry has been created.")
+    tax_cash_basis_created_move_ids = fields.One2many(
+        string="Cash Basis Entries",
+        comodel_name='account.move',
+        inverse_name='tax_cash_basis_origin_move_id',
+        help="The cash basis entries created from the taxes on this entry, when reconciling its lines."
+    )
+    always_tax_exigible = fields.Boolean(
+        compute='_compute_always_tax_exigible',
+        store=True,
+        help="Technical field used by cash basis taxes, telling the lines of the move are always exigible. "
+             "This happens if the move contains no payable or receivable line.")
 
     # ==== Auto-post feature fields ====
     auto_post = fields.Boolean(string='Post Automatically', default=False, copy=False,
@@ -666,6 +678,7 @@ class AccountMove(models.Model):
                 partner=base_line.partner_id,
                 is_refund=is_refund,
                 handle_price_include=handle_price_include,
+                include_caba_tags=move.always_tax_exigible,
             )
 
         taxes_map = {}
@@ -703,16 +716,12 @@ class AccountMove(models.Model):
             if not recompute_tax_base_amount:
                 line.tax_tag_ids = compute_all_vals['base_tags'] or [(5, 0, 0)]
 
-            tax_exigible = True
             for tax_vals in compute_all_vals['taxes']:
                 grouping_dict = self._get_tax_grouping_key_from_base_line(line, tax_vals)
                 grouping_key = _serialize_tax_grouping_key(grouping_dict)
 
                 tax_repartition_line = self.env['account.tax.repartition.line'].browse(tax_vals['tax_repartition_line_id'])
                 tax = tax_repartition_line.invoice_tax_id or tax_repartition_line.refund_tax_id
-
-                if tax.tax_exigibility == 'on_payment':
-                    tax_exigible = False
 
                 taxes_map_entry = taxes_map.setdefault(grouping_key, {
                     'tax_line': None,
@@ -723,8 +732,6 @@ class AccountMove(models.Model):
                 taxes_map_entry['amount'] += tax_vals['amount']
                 taxes_map_entry['tax_base_amount'] += self._get_base_amount_to_display(tax_vals['base'], tax_repartition_line, tax_vals['group'])
                 taxes_map_entry['grouping_dict'] = grouping_dict
-            if not recompute_tax_base_amount:
-                line.tax_exigible = tax_exigible
 
         # ==== Process taxes_map ====
         for taxes_map_entry in taxes_map.values():
@@ -782,7 +789,6 @@ class AccountMove(models.Model):
                     'company_currency_id': line.company_currency_id.id,
                     'tax_base_amount': tax_base_amount,
                     'exclude_from_invoice_tab': True,
-                    'tax_exigible': tax.tax_exigibility == 'on_invoice',
                     **taxes_map_entry['grouping_dict'],
                 })
 
@@ -800,19 +806,6 @@ class AccountMove(models.Model):
            or (tax_rep_ln.refund_tax_id and source_tax.type_tax_use == 'purchase'):
             return -base_amount
         return base_amount
-
-    def update_lines_tax_exigibility(self):
-        if all(account.user_type_id.type not in {'payable', 'receivable'} for account in self.mapped('line_ids.account_id')):
-            self.line_ids.write({'tax_exigible': True})
-        else:
-            tax_lines_caba = self.line_ids.filtered(lambda x: x.tax_line_id.tax_exigibility == 'on_payment')
-            base_lines_caba = self.line_ids.filtered(lambda x: any(tax.tax_exigibility == 'on_payment'
-                                                                   or (tax.amount_type == 'group'
-                                                                       and 'on_payment' in tax.mapped('children_tax_ids.tax_exigibility'))
-                                                               for tax in x.tax_ids))
-            caba_lines = tax_lines_caba + base_lines_caba
-            caba_lines.write({'tax_exigible': False})
-            (self.line_ids - caba_lines).write({'tax_exigible': True})
 
     def _recompute_cash_rounding_lines(self):
         ''' Handle the cash rounding feature on invoices.
@@ -880,7 +873,6 @@ class AccountMove(models.Model):
                     'name': _('%s (rounding)', biggest_tax_line.name),
                     'account_id': biggest_tax_line.account_id.id,
                     'tax_repartition_line_id': biggest_tax_line.tax_repartition_line_id.id,
-                    'tax_exigible': biggest_tax_line.tax_exigible,
                     'exclude_from_invoice_tab': True,
                 })
 
@@ -1696,6 +1688,16 @@ class AccountMove(models.Model):
             else:
                 move.tax_lock_date_message = False
 
+    @api.depends('line_ids.account_id.internal_type')
+    def _compute_always_tax_exigible(self):
+        for record in self:
+            # We need to check is_invoice as well because always_tax_exigible is used to
+            # set the tags as well, during the encoding. So, if no receivable/payable
+            # line has been created yet, the invoice would be detected as always exigible,
+            # and set the tags on some lines ; which would be wrong.
+            record.always_tax_exigible = not record.is_invoice(True) \
+                                         and not record._collect_tax_cash_basis_values()
+
     @api.depends('restrict_mode_hash_table', 'state')
     def _compute_show_reset_to_draft_button(self):
         for move in self:
@@ -2008,11 +2010,7 @@ class AccountMove(models.Model):
             raise UserError(_('You cannot create a move already in the posted state. Please create a draft move and post it after.'))
 
         vals_list = self._move_autocomplete_invoice_lines_create(vals_list)
-        rslt = super(AccountMove, self).create(vals_list)
-        for i, vals in enumerate(vals_list):
-            if 'line_ids' in vals:
-                rslt[i].update_lines_tax_exigibility()
-        return rslt
+        return super(AccountMove, self).create(vals_list)
 
     def write(self, vals):
         for move in self:
@@ -2060,10 +2058,8 @@ class AccountMove(models.Model):
                 res |= super(AccountMove, move).write(vals_hashing)
 
         # Ensure the move is still well balanced.
-        if 'line_ids' in vals:
-            if self._context.get('check_move_validity', True):
-                self._check_balanced()
-            self.update_lines_tax_exigibility()
+        if 'line_ids' in vals and self._context.get('check_move_validity', True):
+            self._check_balanced()
 
         self._synchronize_business_models(set(vals.keys()))
 
@@ -2142,7 +2138,14 @@ class AccountMove(models.Model):
         - Compute the lines to be processed and the amounts needed to compute a percentage.
         :return: A dictionary:
             * move:                     The current account.move record passed as parameter.
-            * to_process_lines:         An account.move.line recordset being not exigible on the tax report.
+            * to_process_lines:         A tuple (caba_treatment, line) where:
+                                            - caba_treatment is either 'tax' or 'base', depending on what should
+                                              be considered on the line when generating the caba entry.
+                                              For example, a line with tax_ids=caba and tax_line_id=non_caba
+                                              will have a 'base' caba treatment, as we only want to treat its base
+                                              part in the caba entry (the tax part is already exigible on the invoice)
+
+                                            - line is an account.move.line record being not exigible on the tax report.
             * currency:                 The currency on which the percentage has been computed.
             * total_balance:            sum(payment_term_lines.mapped('balance').
             * total_residual:           sum(payment_term_lines.mapped('amount_residual').
@@ -2154,7 +2157,7 @@ class AccountMove(models.Model):
 
         values = {
             'move': self,
-            'to_process_lines': self.env['account.move.line'],
+            'to_process_lines': [],
             'total_balance': 0.0,
             'total_residual': 0.0,
             'total_amount_currency': 0.0,
@@ -2167,17 +2170,20 @@ class AccountMove(models.Model):
             if line.account_internal_type in ('receivable', 'payable'):
                 sign = 1 if line.balance > 0.0 else -1
 
-                currencies.add(line.currency_id or line.company_currency_id)
+                currencies.add(line.currency_id)
                 has_term_lines = True
                 values['total_balance'] += sign * line.balance
                 values['total_residual'] += sign * line.amount_residual
                 values['total_amount_currency'] += sign * line.amount_currency
                 values['total_residual_currency'] += sign * line.amount_residual_currency
 
-            elif not line.tax_exigible:
+            elif line.tax_line_id.tax_exigibility == 'on_payment':
+                values['to_process_lines'].append(('tax', line))
+                currencies.add(line.currency_id)
 
-                values['to_process_lines'] += line
-                currencies.add(line.currency_id or line.company_currency_id)
+            elif 'on_payment' in line.tax_ids.mapped('tax_exigibility'):
+                values['to_process_lines'].append(('base', line))
+                currencies.add(line.currency_id)
 
         if not values['to_process_lines'] or not has_term_lines:
             return None
@@ -2189,7 +2195,7 @@ class AccountMove(models.Model):
             # Don't support the case where there is multiple involved currencies.
             return None
 
-        # Determine is the move is now fully paid.
+        # Determine whether the move is now fully paid.
         values['is_fully_paid'] = self.company_id.currency_id.is_zero(values['total_residual']) \
                                   or values['currency'].is_zero(values['total_residual_currency'])
 
@@ -2560,6 +2566,17 @@ class AccountMove(models.Model):
             'views': [(False, 'form')],
         }
 
+    def open_created_caba_entries(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Cash Basis Entries"),
+            'res_model': 'account.move',
+            'view_mode': 'form',
+            'domain': [('id', 'in', self.tax_cash_basis_created_move_ids.ids)],
+            'views': [(self.env.ref('account.view_move_tree').id, 'tree'), (False, 'form')],
+        }
+
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         # OVERRIDE
@@ -2798,7 +2815,12 @@ class AccountMove(models.Model):
         for move in self:
             if move in move.line_ids.mapped('full_reconcile_id.exchange_move_id'):
                 raise UserError(_('You cannot reset to draft an exchange difference journal entry.'))
-            if move.tax_cash_basis_rec_id:
+            if move.tax_cash_basis_rec_id or move.tax_cash_basis_origin_move_id:
+                # If the reconciliation was undone, move.tax_cash_basis_rec_id will be empty;
+                # but we still don't want to allow setting the caba entry to draft
+                # (it'll have been reversed automatically, so no manual intervention is required),
+                # so we also check tax_cash_basis_origin_move_id, which stays unchanged
+                # (we need both, as tax_cash_basis_origin_move_id did not exist in older versions).
                 raise UserError(_('You cannot reset to draft a tax cash basis journal entry.'))
             if move.restrict_mode_hash_table and move.state == 'posted' and move.id not in excluded_move_ids:
                 raise UserError(_('You cannot modify a posted entry of this journal because it is in strict mode.'))
@@ -3280,10 +3302,6 @@ class AccountMoveLine(models.Model):
         help='technical field for widget tax-group-custom-field')
     tax_base_amount = fields.Monetary(string="Base Amount", store=True, readonly=True,
         currency_field='company_currency_id')
-    tax_exigible = fields.Boolean(string='Appears in VAT report', default=True, readonly=True,
-        help="Technical field used to mark a tax line as exigible in the vat report or not (only exigible journal items"
-             " are displayed). By default all new journal items are directly exigible, but with the feature cash_basis"
-             " on taxes, some will become exigible only when the payment is recorded.")
     tax_repartition_line_id = fields.Many2one(comodel_name='account.tax.repartition.line',
         string="Originator Tax Distribution Line", ondelete='restrict', readonly=True,
         check_company=True,
@@ -3761,6 +3779,40 @@ class AccountMoveLine(models.Model):
             vals = {'price_unit': 0.0}
         return vals
 
+    @api.model
+    def _get_tax_exigible_domain(self):
+        """ Returns a domain to be used to identify the move lines that are allowed
+        to be taken into account in the tax report.
+        """
+        return [
+            # Lines on moves without any payable or receivable line are always exigible
+            '|', ('move_id.always_tax_exigible', '=', True),
+
+            # Lines with only tags are always exigible
+            '|', '&', ('tax_line_id', '=', False), ('tax_ids', '=', False),
+
+            # Lines from CABA entries are always exigible
+            '|', ('move_id.tax_cash_basis_rec_id', '!=', False),
+
+            # Lines from non-CABA taxes are always exigible
+            '|', ('tax_line_id.tax_exigibility', '!=', 'on_payment'),
+            ('tax_ids.tax_exigibility', '!=', 'on_payment'), # So: exigible if at least one tax from tax_ids isn't on_payment
+        ]
+
+    def belongs_to_refund(self):
+        """ Tells whether or not this move line corresponds to a refund operation.
+        """
+        self.ensure_one()
+
+        if self.tax_repartition_line_id:
+            return self.tax_repartition_line_id.refund_tax_id
+
+        elif self.move_id.move_type == 'entry':
+            tax_type = self.tax_ids[0].type_tax_use if self.tax_ids else None
+            return (tax_type == 'sale' and self.debit) or (tax_type == 'purchase' and self.credit)
+
+        return self.move_id.move_type in ('in_refund', 'out_refund')
+
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
@@ -4076,6 +4128,47 @@ class AccountMoveLine(models.Model):
                 raise UserError(_("You cannot do this modification on a reconciled journal entry. "
                                   "You can just change some non legal fields or you must unreconcile first.\n"
                                   "Journal Entry (id): %s (%s)") % (line.move_id.name, line.move_id.id))
+
+    @api.constrains('tax_ids', 'tax_repartition_line_id')
+    def _check_caba_non_caba_shared_tags(self):
+        """ When mixing cash basis and non cash basis taxes, it is important
+        that those taxes don't share tags on the repartition creating
+        a single account.move.line.
+
+        Shared tags in this context cannot work, as the tags would need to
+        be present on both the invoice and cash basis move, leading to the same
+        base amount to be taken into account twice; which is wrong.This is
+        why we don't support that. A workaround may be provided by the use of
+        a group of taxes, whose children are type_tax_use=None, and only one
+        of them uses the common tag.
+
+        Note that taxes of the same exigibility are allowed to share tags.
+        """
+        def get_base_repartition(base_aml, taxes):
+            if not taxes:
+                return self.env['account.tax.repartition.line']
+
+            is_refund = base_aml.belongs_to_refund()
+            repartition_field = is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids'
+            return taxes.mapped(repartition_field)
+
+        for aml in self:
+            caba_taxes = aml.tax_ids.filtered(lambda x: x.tax_exigibility == 'on_payment')
+            non_caba_taxes = aml.tax_ids - caba_taxes
+
+            caba_base_tags = get_base_repartition(aml, caba_taxes).filtered(lambda x: x.repartition_type == 'base').tag_ids
+            non_caba_base_tags = get_base_repartition(aml, non_caba_taxes).filtered(lambda x: x.repartition_type == 'base').tag_ids
+
+            common_tags = caba_base_tags & non_caba_base_tags
+
+            if not common_tags:
+                # When a tax is affecting another one with different tax exigibility, tags cannot be shared either.
+                tax_tags = aml.tax_repartition_line_id.tag_ids
+                comparison_tags = non_caba_base_tags if aml.tax_repartition_line_id.tax_id.tax_exigibility == 'on_payment' else caba_base_tags
+                common_tags = tax_tags & comparison_tags
+
+            if common_tags:
+                raise ValidationError(_("Taxes exigible on payment and on invoice cannot be mixed on the same journal item if they share some tag."))
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
@@ -4647,7 +4740,7 @@ class AccountMoveLine(models.Model):
                 # to compute the residual amount for each of them.
                 # ==========================================================================
 
-                for line in move_values['to_process_lines']:
+                for caba_treatment, line in move_values['to_process_lines']:
 
                     vals = {
                         'currency_id': line.currency_id.id,
@@ -4658,7 +4751,7 @@ class AccountMoveLine(models.Model):
                         'credit': line.credit,
                     }
 
-                    if line.tax_repartition_line_id:
+                    if caba_treatment == 'tax':
                         # Tax line.
                         grouping_key = self.env['account.partial.reconcile']._get_cash_basis_tax_line_grouping_key_from_record(line)
                         if grouping_key in account_vals_to_fix:
@@ -4678,7 +4771,7 @@ class AccountMoveLine(models.Model):
                                 'tax_base_amount': line.tax_base_amount,
                                 'tax_repartition_line_id': line.tax_repartition_line_id.id,
                             }
-                    elif line.tax_ids:
+                    elif caba_treatment == 'base':
                         # Base line.
                         account_to_fix = line.company_id.account_cash_basis_base_account_id
                         if not account_to_fix:
@@ -4702,7 +4795,7 @@ class AccountMoveLine(models.Model):
                 # in order to retrieve the residual balance of each involved transfer account.
                 # ==========================================================================
 
-                cash_basis_moves = self.env['account.move'].search([('tax_cash_basis_move_id', '=', move.id)])
+                cash_basis_moves = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', move.id)])
                 for line in cash_basis_moves.line_ids:
                     grouping_key = None
                     if line.tax_repartition_line_id:

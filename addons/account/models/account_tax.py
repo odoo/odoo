@@ -359,7 +359,7 @@ class AccountTax(models.Model):
         rep_lines = self.mapped(is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids')
         return rep_lines.filtered(lambda x: x.repartition_type == repartition_type).mapped('tag_ids')
 
-    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True):
+    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True, include_caba_tags=False):
         """ Returns all information required to apply taxes (in self + their children in case of a tax group).
             We consider the sequence of the parent for group of taxes.
                 Eg. considering letters as taxes and alphabetic order as sequence :
@@ -569,6 +569,10 @@ class AccountTax(models.Model):
             subsequent_tags = self.env['account.account.tag']
             if tax.include_base_amount:
                 subsequent_taxes = taxes[i+1:].filtered('is_base_affected')
+
+                if not include_caba_tags:
+                    subsequent_taxes = subsequent_taxes.filtered(lambda x: x.tax_exigibility != 'on_payment')
+
                 subsequent_tags = subsequent_taxes.get_tax_tags(is_refund, 'base')
 
             # Compute the tax line amounts by multiplying each factor with the tax amount.
@@ -590,6 +594,11 @@ class AccountTax(models.Model):
                     line_amount += rounding_error
                     nber_rounding_steps -= 1
 
+                if not include_caba_tags and tax.tax_exigibility == 'on_payment':
+                    repartition_line_tags = self.env['account.account.tag']
+                else:
+                    repartition_line_tags = repartition_line.tag_ids
+
                 taxes_vals.append({
                     'id': tax.id,
                     'name': partner and tax.with_context(lang=partner.lang).name or tax.name,
@@ -602,7 +611,7 @@ class AccountTax(models.Model):
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': repartition_line.id,
                     'group': groups_map.get(tax),
-                    'tag_ids': (repartition_line.tag_ids + subsequent_tags).ids,
+                    'tag_ids': (repartition_line_tags + subsequent_tags).ids,
                     'tax_ids': subsequent_taxes.ids,
                 })
 
@@ -618,8 +627,14 @@ class AccountTax(models.Model):
             total_included += factorized_tax_amount
             i += 1
 
+        base_taxes_for_tags = taxes
+        if not include_caba_tags:
+            base_taxes_for_tags = base_taxes_for_tags.filtered(lambda x: x.tax_exigibility != 'on_payment')
+
+        base_rep_lines = base_taxes_for_tags.mapped(is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids').filtered(lambda x: x.repartition_type == 'base')
+
         return {
-            'base_tags': taxes.mapped(is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids').filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids').ids,
+            'base_tags': base_rep_lines.tag_ids.ids,
             'taxes': taxes_vals,
             'total_excluded': sign * total_excluded,
             'total_included': sign * currency.round(total_included),

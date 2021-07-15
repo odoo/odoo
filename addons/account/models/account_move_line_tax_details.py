@@ -387,7 +387,11 @@ class AccountMoveLine(models.Model):
                     comp_curr.decimal_places AS comp_curr_prec,
                     curr.id AS currency_id,
                     curr.decimal_places AS curr_prec,
-                    tax_line.tax_exigible,
+                    (
+                        tax.tax_exigibility != 'on_payment'
+                        OR tax_move.tax_cash_basis_rec_id IS NOT NULL
+                        OR tax_move.always_tax_exigible
+                    ) AS tax_exigible,
                     base_line.account_id AS base_account_id,
 
                     sub.base_amount,
@@ -423,6 +427,8 @@ class AccountMoveLine(models.Model):
                 FROM base_tax_matching_base_amounts sub
                 JOIN account_move_line tax_line ON
                     tax_line.id = sub.tax_line_id
+                JOIN account_move tax_move ON
+                    tax_move.id = tax_line.move_id
                 JOIN account_move_line base_line ON
                     base_line.id = sub.base_line_id
                 JOIN account_tax tax ON

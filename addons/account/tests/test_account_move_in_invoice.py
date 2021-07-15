@@ -34,7 +34,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'debit': 800.0,
             'credit': 0.0,
             'date_maturity': False,
-            'tax_exigible': True,
         }
         cls.product_line_vals_2 = {
             'name': cls.product_b.name,
@@ -54,7 +53,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'debit': 160.0,
             'credit': 0.0,
             'date_maturity': False,
-            'tax_exigible': True,
         }
         cls.tax_line_vals_1 = {
             'name': cls.tax_purchase_a.name,
@@ -74,7 +72,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'debit': 144.0,
             'credit': 0.0,
             'date_maturity': False,
-            'tax_exigible': True,
         }
         cls.tax_line_vals_2 = {
             'name': cls.tax_purchase_b.name,
@@ -94,7 +91,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'debit': 24.0,
             'credit': 0.0,
             'date_maturity': False,
-            'tax_exigible': True,
         }
         cls.term_line_vals_1 = {
             'name': '',
@@ -114,7 +110,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'debit': 0.0,
             'credit': 1128.0,
             'date_maturity': fields.Date.from_string('2019-01-01'),
-            'tax_exigible': True,
         }
         cls.move_vals = {
             'partner_id': cls.partner_a.id,
@@ -759,7 +754,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'price_subtotal': 800.0,
                 'price_total': 1176.0,
                 'tax_ids': (self.tax_purchase_a + self.tax_armageddon).ids,
-                'tax_exigible': False,
             },
             self.product_line_vals_2,
             self.tax_line_vals_1,
@@ -782,7 +776,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 64.0,
                 'credit': 0.0,
                 'date_maturity': False,
-                'tax_exigible': False,
             },
             {
                 'name': child_tax_1.name,
@@ -802,7 +795,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 96.0,
                 'credit': 0.0,
                 'date_maturity': False,
-                'tax_exigible': False,
             },
             {
                 'name': child_tax_2.name,
@@ -822,7 +814,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 96.0,
                 'credit': 0.0,
                 'date_maturity': False,
-                'tax_exigible': False,
             },
             {
                 **self.term_line_vals_1,
@@ -878,7 +869,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 0.01,
                 'credit': 0.0,
                 'date_maturity': False,
-                'tax_exigible': True,
             },
             {
                 **self.product_line_vals_1,
@@ -929,7 +919,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 0.0,
                 'credit': 0.04,
                 'date_maturity': False,
-                'tax_exigible': True,
             },
             {
                 **self.term_line_vals_1,

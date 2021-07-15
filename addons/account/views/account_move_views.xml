@@ -42,7 +42,6 @@
                                         <field name="tax_line_id" readonly="1" attrs="{'invisible': [('tax_line_id','=',False)]}"/>
                                         <field name="tax_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('tax_ids','=',[])]}"/>
                                         <field name="tax_tag_invert" readonly="1" groups="base.group_no_one"/>
-                                        <field name="tax_exigible" readonly="1"/>
                                         <field name="tax_audit"/>
                                     </group>
                                     <group string="Matching" attrs="{'invisible':[('matched_debit_ids', '=', []),('matched_credit_ids', '=', [])]}">
@@ -696,6 +695,13 @@
                                     attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('has_reconciled_entries', '=', False)]}"
                                     string="Reconciled Entries">
                             </button>
+                            <button name="open_created_caba_entries"
+                                    class="oe_stat_button"
+                                    icon="fa-usd"
+                                    type="object"
+                                    attrs="{'invisible': [('tax_cash_basis_created_move_ids', '=', [])]}"
+                                    string="Cash Basis Entries">
+                            </button>
                         </div>
 
                         <!-- Payment status for invoices / receipts -->
@@ -737,6 +743,7 @@
                         <field name="statement_id" invisible="1"/>
                         <field name="payment_id" invisible="1"/>
                         <field name="tax_country_id" invisible="1"/>
+                        <field name="tax_cash_basis_created_move_ids" invisible="1"/>
 
                         <div class="oe_title">
                             <!-- Invoice draft header -->
@@ -770,6 +777,7 @@
                                        attrs="{'invisible':[('move_type', 'not in', ('in_invoice', 'in_receipt', 'in_refund'))]}" />
                                 <field name="ref" nolabel="1" attrs="{'invisible':[('move_type', 'not in', ('in_invoice', 'in_receipt', 'in_refund'))]}" />
                                 <field name="ref" attrs="{'invisible':[('move_type', 'in', ('in_invoice', 'in_receipt', 'in_refund', 'out_invoice', 'out_refund'))]}"/>
+                                <field name="tax_cash_basis_origin_move_id" attrs="{'invisible': [('tax_cash_basis_origin_move_id', '=', False)]}"/>
                                 <field name="payment_reference"
                                        attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="partner_bank_id"
@@ -904,7 +912,6 @@
                                         <field name="tax_repartition_line_id" invisible="1"/>
                                         <field name="tax_tag_ids" invisible="1"/>
                                         <field name="tax_base_amount" invisible="1"/>
-                                        <field name="tax_exigible" invisible="1"/>
                                         <field name="company_id" invisible="1"/>
                                         <field name="company_currency_id" invisible="1"/>
                                         <field name="recompute_tax_line" invisible="1" force_save="1"/>
@@ -981,7 +988,6 @@
                                         <field name="tax_repartition_line_id" invisible="1"/>
                                         <field name="tax_tag_ids" invisible="1"/>
                                         <field name="tax_base_amount" invisible="1"/>
-                                        <field name="tax_exigible" invisible="1"/>
                                         <field name="company_id" invisible="1"/>
                                         <field name="company_currency_id" invisible="1"/>
                                         <field name="recompute_tax_line" invisible="1" force_save="1"/>
@@ -1134,7 +1140,6 @@
                                         <field name="tax_group_id" invisible="1"/>
                                         <field name="tax_repartition_line_id" invisible="1" force_save="1"/>
                                         <field name="tax_base_amount" invisible="1" force_save="1"/>
-                                        <field name="tax_exigible" invisible="1" force_save="1"/>
                                         <field name="company_id" invisible="1"/>
                                         <field name="company_currency_id" invisible="1"/>
                                         <field name="recompute_tax_line" invisible="1" force_save="1"/>
