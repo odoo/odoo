@@ -30,8 +30,8 @@ class AccountJournal(models.Model):
             AND acquirer.company_id IN %(company_ids)s
         ''', {'company_ids': tuple(self.company_id.ids)})
         ids = [r[0] for r in self._cr.fetchall()]
-        acquirers = self.env['payment.acquirer'].browse(ids)
-        if acquirers:
+        if ids:
+            acquirers = self.env['payment.acquirer'].sudo().browse(ids)
             raise UserError(_("You can't delete a payment method that is linked to an acquirer in the enabled or test state.\n"
                               "Linked acquirer(s): %s", ', '.join(a.display_name for a in acquirers)))
 
@@ -44,7 +44,7 @@ class AccountJournal(models.Model):
     def _compute_available_payment_method_ids(self):
         super()._compute_available_payment_method_ids()
 
-        installed_acquirers = self.env['payment.acquirer'].search([])
+        installed_acquirers = self.env['payment.acquirer'].sudo().search([])
         method_information = self.env['account.payment.method']._get_payment_method_information()
         pay_methods = self.env['account.payment.method'].search([('code', 'in', list(method_information.keys()))])
         pay_method_by_code = {x.code + x.payment_type: x for x in pay_methods}

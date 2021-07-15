@@ -44,7 +44,6 @@ class AccountPaymentMethod(models.Model):
         self.ensure_one()
         information = self._get_payment_method_information().get(self.code)
 
-        unique = information.get('mode') == 'unique'
         currency_id = information.get('currency_id')
         country_id = information.get('country_id')
         default_domain = [('type', 'in', ('bank', 'cash'))]
@@ -58,11 +57,6 @@ class AccountPaymentMethod(models.Model):
 
         if country_id:
             domains += [[('company_id.account_fiscal_country_id', '=', country_id)]]
-
-        if unique:
-            company_ids = self.env['payment.acquirer'].search([('provider', '=', self.code)]).mapped('company_id')
-            if company_ids:
-                domains += [[('company_id', 'in', company_ids.ids)]]
 
         return expression.AND(domains)
 
