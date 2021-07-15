@@ -22,14 +22,14 @@ class ProductMargin(models.TransientModel):
         self.ensure_one()
         context = dict(self.env.context, create=False, edit=False)
 
-        def ref(module, xml_id):
+        def ref(xml_id):
             proxy = self.env['ir.model.data']
-            return proxy._get_object_reference(module, xml_id)
+            return proxy._xmlid_lookup(xml_id)[2]
 
-        model, search_view_id = ref('product', 'product_search_form_view')
-        model, graph_view_id = ref('product_margin', 'view_product_margin_graph')
-        model, form_view_id = ref('product_margin', 'view_product_margin_form')
-        model, tree_view_id = ref('product_margin', 'view_product_margin_tree')
+        search_view_id = ref('product.product_search_form_view')
+        graph_view_id = ref('product_margin.view_product_margin_graph')
+        form_view_id = ref('product_margin.view_product_margin_form')
+        tree_view_id = ref('product_margin.view_product_margin_tree')
 
         context.update(invoice_state=self.invoice_state)
 

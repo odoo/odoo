@@ -54,7 +54,7 @@ class GoogleDrive(models.Model):
         user_is_admin = self.env.is_admin()
         if not google_drive_refresh_token:
             if user_is_admin:
-                dummy, action_id = self.env['ir.model.data']._get_object_reference('base_setup', 'action_general_configuration')
+                action_id = self.env['ir.model.data']._xmlid_lookup('base_setup.action_general_configuration')[2]
                 msg = _("There is no refresh code set for Google Drive. You can set it up from the configuration panel.")
                 raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
@@ -75,7 +75,7 @@ class GoogleDrive(models.Model):
             req.raise_for_status()
         except requests.HTTPError:
             if user_is_admin:
-                dummy, action_id = self.env['ir.model.data']._get_object_reference('base_setup', 'action_general_configuration')
+                action_id = self.env['ir.model.data']._xmlid_lookup('base_setup.action_general_configuration')[2]
                 msg = _("Something went wrong during the token generation. Please request again an authorization code .")
                 raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
