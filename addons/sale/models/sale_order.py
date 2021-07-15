@@ -709,16 +709,15 @@ class SaleOrder(models.Model):
     def action_quotation_send(self):
         """ Opens a wizard to compose an email, with relevant mail template loaded by default """
         self.ensure_one()
-        template_id = self._find_mail_template()
         lang = self.env.context.get('lang')
-        template = self.env['mail.template'].browse(template_id)
-        if template.lang:
-            lang = template._render_lang(self.ids)[self.id]
+        mail_template = self._find_mail_template()
+        if mail_template and mail_template.lang:
+            lang = mail_template._render_lang(self.ids)[self.id]
         ctx = {
             'default_model': 'sale.order',
             'default_res_id': self.ids[0],
-            'default_use_template': bool(template_id),
-            'default_template_id': template_id,
+            'default_use_template': bool(mail_template),
+            'default_template_id': mail_template.id if mail_template else None,
             'default_composition_mode': 'comment',
             'mark_so_as_sent': True,
             'default_email_layout_xmlid': "mail.mail_notification_paynow",
@@ -737,17 +736,30 @@ class SaleOrder(models.Model):
         }
 
     def _find_mail_template(self, force_confirmation_template=False):
-        template_id = False
+        """ Get the appropriate mail template for the current sales orders based on their state.
 
-        if force_confirmation_template or (self.state == 'sale' and not self.env.context.get('proforma', False)):
-            template_id = int(self.env['ir.config_parameter'].sudo().get_param('sale.default_confirmation_template'))
-            template_id = self.env['mail.template'].search([('id', '=', template_id)]).id
-            if not template_id:
-                template_id = self.env['ir.model.data']._xmlid_to_res_id('sale.mail_template_sale_confirmation', raise_if_not_found=False)
-        if not template_id:
-            template_id = self.env['ir.model.data']._xmlid_to_res_id('sale.email_template_edi_sale', raise_if_not_found=False)
+        If all SOs are confirmed or ``force_confirmation_template`` is `True`, we return the mail
+        template for the sale confirmation. Otherwise, we return the quotation email template.
 
-        return template_id
+        :param bool force_confirmation_template: Allows to force the confirmation template to be
+        used in any case
+        :return: The correct mail template based on the current status
+        :rtype: record of `mail.template` or `None` if not found
+        """
+        if force_confirmation_template or (
+            all(order.state == 'sale' for order in self) and not self.env.context.get('proforma')
+        ):
+            default_confirmation_template_id = self.env['ir.config_parameter'].sudo().get_param(
+                'sale.default_confirmation_template'
+            )
+            default_confirmation_template = default_confirmation_template_id \
+                and self.env['mail.template'].browse(int(default_confirmation_template_id)).exists()
+            if default_confirmation_template:
+                return default_confirmation_template
+            else:
+                return self.env.ref('sale.mail_template_sale_confirmation', raise_if_not_found=False)
+        else:
+            return self.env.ref('sale.email_template_edi_sale', raise_if_not_found=False)
 
     def action_quotation_sent(self):
         if self.filtered(lambda so: so.state != 'draft'):
@@ -804,10 +816,13 @@ class SaleOrder(models.Model):
         if self.env.su:
             # sending mail in sudo was meant for it being sent from superuser
             self = self.with_user(SUPERUSER_ID)
-        template_id = self._find_mail_template(force_confirmation_template=True)
-        if template_id:
+        mail_template = self._find_mail_template(force_confirmation_template=True)
+        if mail_template:
             for order in self:
-                order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', email_layout_xmlid="mail.mail_notification_paynow")
+                order.with_context(force_send=True).message_post_with_template(
+                    mail_template.id, composition_mode='comment',
+                    email_layout_xmlid="mail.mail_notification_paynow"
+                )
 
     def action_done(self):
         for order in self:
