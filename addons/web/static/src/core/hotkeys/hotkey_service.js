@@ -88,7 +88,7 @@ export const hotkeyService = {
                 _originalEvent: event,
             };
             dispatch(infos);
-            removeHotkeyOverlays();
+            removeHotkeyOverlays(event);
         }
 
         /**
