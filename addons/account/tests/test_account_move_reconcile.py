@@ -179,6 +179,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         if not expected_values:
             return
 
+        self.env['account.move.line'].flush(self.env['account.move.line']._fields)
+
         self.cr.execute('''
             SELECT
                 line.account_id,

@@ -1713,13 +1713,40 @@ class AccountMove(models.Model):
             ))
 
     def _check_balanced(self):
-        ''' Assert the move is fully balanced debit = credit.
-        An error is raised if it's not the case.
-        '''
+        """ Process request to check that moves are balanced: either do it immediately
+            or postpone till the end of transaction for performance sake"""
+
         moves = self.filtered(lambda move: move.line_ids)
         if not moves:
             return
 
+        if not self.env.context.get("account_check_balanced_immediatly"):
+            return moves._postpone_check_balanced()
+
+        self._do_check_balanced(moves.ids)
+
+    def _postpone_check_balanced(self):
+        """ Use precommit.data to aggregate move_ids to check balance at the end
+            of transaction. This allows to make query once for all move_ids and
+            save execution time"""
+        precommit_key = 'account.postpone_check_balanced'
+        if precommit_key in self.env.cr.precommit.data:
+            postpone_check_balanced = self.env.cr.precommit.data[precommit_key]
+        else:
+            postpone_check_balanced = set()
+            self.env.cr.precommit.data[precommit_key] = postpone_check_balanced
+
+            @self.env.cr.precommit.add
+            def check_balanced():
+                postpone_check_balanced = self.env.cr.precommit.data.pop(precommit_key, [])
+                self._do_check_balanced(postpone_check_balanced)
+
+        postpone_check_balanced |= set(self.ids)
+
+    def _do_check_balanced(self, move_ids):
+        ''' Assert the move is fully balanced debit = credit.
+        An error is raised if it's not the case.
+        '''
         # /!\ As this method is called in create / write, we can't make the assumption the computed stored fields
         # are already done. Then, this query MUST NOT depend of computed stored fields (e.g. balance).
         # It happens as the ORM makes the create with the 'no_recompute' statement.
@@ -1735,7 +1762,7 @@ class AccountMove(models.Model):
             WHERE line.move_id IN %s
             GROUP BY line.move_id, currency.decimal_places
             HAVING ROUND(SUM(line.debit - line.credit), currency.decimal_places) != 0.0;
-        ''', [tuple(self.ids)])
+        ''', [tuple(move_ids)])
 
         query_res = self._cr.fetchall()
         if query_res:
@@ -3723,7 +3750,8 @@ class AccountMoveLine(models.Model):
         for record in self:
             record.cumulated_balance = result[record.id]
 
-    @api.depends('debit', 'credit', 'amount_currency', 'account_id', 'currency_id', 'move_id.state', 'company_id',
+    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'move_id.state', 'company_id',
+                 'account_id.reconcile', 'account_id.internal_type',
                  'matched_debit_ids', 'matched_credit_ids')
     def _compute_amount_residual(self):
         """ Computes the residual amount of a move line from a reconcilable account in the company currency and the line's currency.

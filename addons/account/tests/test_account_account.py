@@ -61,7 +61,6 @@ class TestAccountAccount(AccountTestInvoicingCommon):
 
         # Set the account as reconcile and fully reconcile something.
         account.reconcile = True
-        self.env['account.move.line'].invalidate_cache()
 
         self.assertRecordValues(move.line_ids, [
             {'reconciled': False, 'amount_residual': 100.0, 'amount_residual_currency': 200.0},
