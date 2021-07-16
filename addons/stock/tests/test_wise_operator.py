@@ -129,8 +129,7 @@ class TestWiseOperator(TransactionCase):
         # put the move lines from delivery_order_wise2 into delivery_order_wise1
         for pack_id2 in pack_ids2:
             new_pack_id1 = pack_id2.copy(default={'picking_id': delivery_order_wise1.id, 'move_id': move1.id})
-            new_pack_id1.qty_done = new_pack_id1.product_qty
-            new_pack_id1.with_context(bypass_reservation_update=True).product_uom_qty = 0
+            new_pack_id1.qty_done = pack_id2.product_qty
 
         new_move_lines = delivery_order_wise1.move_line_ids.filtered(lambda p: p.qty_done)
         self.assertEqual(sum(new_move_lines.mapped('product_qty')), 0)
@@ -141,8 +140,7 @@ class TestWiseOperator(TransactionCase):
 
         # put the move line from delivery_order_wise1 into delivery_order_wise2
         new_pack_id2 = pack_ids1.copy(default={'picking_id': delivery_order_wise2.id, 'move_id': move2.id})
-        new_pack_id2.qty_done = new_pack_id2.product_qty
-        new_pack_id2.with_context(bypass_reservation_update=True).product_uom_qty = 0
+        new_pack_id2.qty_done = pack_ids1.product_qty
 
         new_move_lines = delivery_order_wise2.move_line_ids.filtered(lambda p: p.qty_done)
         self.assertEqual(len(new_move_lines), 1)
