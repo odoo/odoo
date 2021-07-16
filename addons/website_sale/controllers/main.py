@@ -16,7 +16,7 @@ from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.controllers import main
-from odoo.addons.website_form.controllers.main import WebsiteForm
+from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.osv import expression
 from odoo.tools.json import scriptsafe as json_scriptsafe
 _logger = logging.getLogger(__name__)
@@ -92,7 +92,7 @@ class TableCompute(object):
 
 class WebsiteSaleForm(WebsiteForm):
 
-    @http.route('/website_form/shop.sale.order', type='http', auth="public", methods=['POST'], website=True)
+    @http.route('/website/form/shop.sale.order', type='http', auth="public", methods=['POST'], website=True)
     def website_form_saleorder(self, **kwargs):
         model_record = request.env.ref('sale.model_sale_order')
         try:

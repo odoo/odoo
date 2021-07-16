@@ -1,9 +1,10 @@
-odoo.define('website_form.s_website_form', function (require) {
+odoo.define('website.s_website_form', function (require) {
     'use strict';
 
     var core = require('web.core');
     var time = require('web.time');
     const {ReCaptcha} = require('google_recaptcha.ReCaptchaV3');
+    const session = require('web.session');
     var ajax = require('web.ajax');
     var publicWidget = require('web.public.widget');
     const dom = require('web.dom');
@@ -36,7 +37,7 @@ odoo.define('website_form.s_website_form', function (require) {
 
     publicWidget.registry.s_website_form = publicWidget.Widget.extend({
         selector: '.s_website_form form, form.s_website_form', // !compatibility
-        xmlDependencies: ['/website_form/static/src/xml/website_form.xml'],
+        xmlDependencies: ['/website/static/src/xml/website_form.xml'],
         events: {
             'click .s_website_form_send, .o_website_form_send': 'send', // !compatibility
         },
@@ -49,12 +50,22 @@ odoo.define('website_form.s_website_form', function (require) {
             this._recaptcha = new ReCaptcha();
             this.__started = new Promise(resolve => this.__startResolve = resolve);
         },
-        willStart: function () {
+        willStart: async function () {
             const res = this._super(...arguments);
             if (!this.$target[0].classList.contains('s_website_form_no_recaptcha')) {
                 this._recaptchaLoaded = true;
                 this._recaptcha.loadLibs();
             }
+            // fetch user data (required by fill-with behavior)
+            this.preFillValues = {};
+            if (session.user_id) {
+                this.preFillValues = (await this._rpc({
+                    model: 'res.users',
+                    method: 'read',
+                    args: [session.user_id, this._getUserPreFillFields()],
+                }))[0] || {};
+            }
+
             return res;
         },
         start: function () {
@@ -91,18 +102,20 @@ odoo.define('website_form.s_website_form', function (require) {
             // Display form values from tag having data-for attribute
             // It's necessary to handle field values generated on server-side
             // Because, using t-att- inside form make it non-editable
-            var $values = $('[data-for=' + this.$target.attr('id') + ']');
-            if ($values.length) {
-                var values = JSON.parse($values.data('values').replace('False', '""').replace('None', '""').replace(/'/g, '"'));
+            // Data-fill-with attribute is given during registry and is used by
+            // to know which user data should be used to prfill fields.
+            var $dataFor = $('[data-for=' + this.$target.attr('id') + ']');
+            if ($dataFor.length || !_.isEmpty(this.preFillValues)) {
+                var dataForValues = $dataFor.length ? JSON.parse($dataFor.data('values').replace('False', '""').replace('None', '""').replace(/'/g, '"')) : [];
                 var fields = _.pluck(this.$target.serializeArray(), 'name');
                 _.each(fields, function (field) {
-                    if (_.has(values, field)) {
-                        var $field = self.$target.find('input[name="' + field + '"], textarea[name="' + field + '"]');
-                        if (!$field.val()) {
-                            $field.val(values[field]);
-                            $field.data('website_form_original_default_value', $field.val());
-                        }
+                    var $field = self.$target.find('input[name="' + field + '"], textarea[name="' + field + '"]');
+                    if (!$field.val() && _.has(dataForValues, field) && dataForValues[field]) {
+                        $field.val(dataForValues[field]);
+                    } else if (!$field.val() && $field.data('fill-with')) {
+                        $field.val(self.preFillValues[$field.data('fill-with')]);
                     }
+                    $field.data('website_form_original_default_value', $field.val());
                 });
             }
 
@@ -378,9 +391,17 @@ odoo.define('website_form.s_website_form', function (require) {
             // before any qweb rendering which depends on xmlDependencies
             // because the event handlers are binded before the call to
             // willStart for public widgets...
-            this.__started.then(() => $result.replaceWith(qweb.render(`website_form.status_${status}`, {
+            this.__started.then(() => $result.replaceWith(qweb.render(`website.s_website_form_status_${status}`, {
                 message: message,
             })));
+        },
+        /**
+         * Gets the user's field needed to be fetched to pre-fill the form.
+         *
+         * @returns {string[]} List of user's field that have to be fetched.
+         */
+        _getUserPreFillFields() {
+            return ['name', 'phone', 'email', 'commercial_company_name'];
         },
     });
 });

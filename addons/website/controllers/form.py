@@ -16,13 +16,13 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br
 
 class WebsiteForm(http.Controller):
 
-    @http.route('/website_form/', type='http', auth="public", methods=['POST'], multilang=False)
+    @http.route('/website/form/', type='http', auth="public", methods=['POST'], multilang=False)
     def website_form_empty(self, **kwargs):
-        # This is a workaround to don't add language prefix to <form action="/website_form/" ...>
+        # This is a workaround to don't add language prefix to <form action="/website/form/" ...>
         return ""
 
     # Check and insert values from the form on the model <model>
-    @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True, csrf=False)
+    @http.route('/website/form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True, csrf=False)
     def website_form(self, model_name, **kwargs):
         # Partial CSRF check, only performed when session is authenticated, as there
         # is no real risk for unauthenticated sessions here. It's a common case for
