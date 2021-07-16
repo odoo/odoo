@@ -304,14 +304,11 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('payment_type', 'journal_id')
     def _compute_payment_method_line_id(self):
         for wizard in self:
-            if wizard.payment_type == 'inbound':
-                available_payment_methods = wizard.journal_id.inbound_payment_method_line_ids
-            else:
-                available_payment_methods = wizard.journal_id.outbound_payment_method_line_ids
+            available_payment_method_lines = wizard.journal_id._get_available_payment_method_lines(wizard.payment_type)
 
             # Select the first available one by default.
-            if available_payment_methods:
-                wizard.payment_method_line_id = available_payment_methods[0]._origin
+            if available_payment_method_lines:
+                wizard.payment_method_line_id = available_payment_method_lines[0]._origin
             else:
                 wizard.payment_method_line_id = False
 

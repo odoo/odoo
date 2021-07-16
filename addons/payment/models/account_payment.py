@@ -36,11 +36,12 @@ class AccountPayment(models.Model):
             )._origin
 
             if payment.use_electronic_payment_method:
-                payment.suitable_payment_token_ids = self.env['payment.token'].search([
+                payment.suitable_payment_token_ids = self.env['payment.token'].sudo().search([
                     ('company_id', '=', payment.company_id.id),
                     ('acquirer_id.capture_manually', '=', False),
                     ('partner_id', 'in', related_partner_ids.ids),
-                ]).filtered(lambda t: t.acquirer_id.journal_id == payment.journal_id.id)
+                    ('acquirer_id.journal_id', '=', payment.journal_id.id),
+                ])
             else:
                 payment.suitable_payment_token_ids = [Command.clear()]
 
@@ -50,17 +51,24 @@ class AccountPayment(models.Model):
             # Get a list of all electronic payment method codes.
             # These codes are comprised of 'electronic' and the providers of each payment acquirer.
             codes = [key for key in dict(self.env['payment.acquirer']._fields['provider']._description_selection(self.env))]
-            codes.append('electronic')
             payment.use_electronic_payment_method = payment.payment_method_code in codes
 
     @api.onchange('partner_id', 'payment_method_line_id', 'journal_id')
     def _onchange_set_payment_token_id(self):
-        if not (self.payment_method_code == 'electronic' and self.partner_id and self.journal_id):
+        codes = [key for key in dict(self.env['payment.acquirer']._fields['provider']._description_selection(self.env))]
+        if not (self.payment_method_code in codes and self.partner_id and self.journal_id):
             self.payment_token_id = False
             return
 
-        self.payment_token_id = self.env['payment.token'].search([
-            ('partner_id', 'in', self.related_partner_ids.ids),
+        related_partner_ids = (
+                self.partner_id
+                | self.partner_id.commercial_partner_id
+                | self.partner_id.commercial_partner_id.child_ids
+        )._origin
+
+        self.payment_token_id = self.env['payment.token'].sudo().search([
+            ('company_id', '=', self.company_id.id),
+            ('partner_id', 'in', related_partner_ids.ids),
             ('acquirer_id.capture_manually', '=', False),
             ('acquirer_id.journal_id', '=', self.journal_id.id),
          ], limit=1)
@@ -108,7 +116,9 @@ class AccountPayment(models.Model):
         payments_need_tx = self.filtered(
             lambda p: p.payment_token_id and not p.payment_transaction_id
         )
-        transactions = payments_need_tx._create_payment_transaction()
+        # creating the transaction require to access data on payment acquirers, not always accessible to users
+        # able to create payments
+        transactions = payments_need_tx.sudo()._create_payment_transaction()
 
         res = super(AccountPayment, self - payments_need_tx).action_post()
 

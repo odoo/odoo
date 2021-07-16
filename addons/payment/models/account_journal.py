@@ -24,7 +24,7 @@ class AccountJournal(models.Model):
             SELECT acquirer.id
             FROM payment_acquirer acquirer
             JOIN account_payment_method apm ON apm.code = acquirer.provider
-            LEFT JOIN account_payment_method_line apml ON apm.id = apml.payment_method_id
+            LEFT JOIN account_payment_method_line apml ON apm.id = apml.payment_method_id AND apml.journal_id IS NOT NULL
             WHERE acquirer.state IN ('enabled', 'test') AND apm.payment_type = 'inbound'
             AND apml.id IS NULL
             AND acquirer.company_id IN %(company_ids)s
