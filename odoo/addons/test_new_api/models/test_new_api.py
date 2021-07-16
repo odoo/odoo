@@ -451,15 +451,28 @@ class Move(models.Model):
     _name = 'test_new_api.move'
     _description = 'Move'
 
+    name = fields.Char()
+    name_prefix = fields.Char(compute='_compute_name_prefix', store=True)
     line_ids = fields.One2many('test_new_api.move_line', 'move_id', domain=[('visible', '=', True)])
     quantity = fields.Integer(compute='_compute_quantity', store=True)
     tag_id = fields.Many2one('test_new_api.multi.tag')
     tag_name = fields.Char(related='tag_id.name')
+    # uncommenting line belows allows to pass test test_41_search_in_compute2
+    #payment_ids = fields.One2many('test_new_api.payment', 'move_id')
 
     @api.depends('line_ids.quantity')
     def _compute_quantity(self):
         for record in self:
             record.quantity = sum(line.quantity for line in record.line_ids)
+
+    @api.depends('name')
+    def _compute_name_prefix(self):
+        for record in self:
+            record.name_prefix = record.name.split(" ")[0]
+
+    def search(self, *args, **kwargs):
+        # extend to allow patching
+        return super().search(*args, **kwargs)
 
 
 class MoveLine(models.Model):
@@ -488,6 +501,20 @@ class Payment(models.Model):
     def search(self, *args, **kwargs):
         # extend to allow patching
         return super().search(*args, **kwargs)
+
+    def create(self, vals):
+        res = super().create(vals)
+        # Simplified version of what we have in `account.payment`
+        res.move_id.write({
+            'line_ids': [
+                (0, 0, {
+                    'quantity': 1,
+                }),
+                (0, 0, {
+                    'quantity': -1,
+                }),
+            ]})
+        return res
 
 
 class CompanyDependent(models.Model):

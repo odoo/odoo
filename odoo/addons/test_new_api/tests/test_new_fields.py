@@ -1751,6 +1751,17 @@ class TestFields(TransactionCaseWithUserDemo):
         payment = self.env['test_new_api.payment'].create({'move_id': move.id})
         self.assertEqual(payment.all_lines_visible, True)
 
+    def test_41_search_in_compute2(self):
+        """ Check recomputation of fields on new records. """
+        with patch('odoo.addons.test_new_api.models.test_new_api.Payment.search') as payment_mock:
+            self.env['test_new_api.payment'].search([])
+            payment_mock.search.assert_not_called()
+            payment = self.env['test_new_api.payment'].create({'name': 'Payment 777', 'ref': '123456'})
+            payment.flush()
+            payment_mock.search.assert_not_called()
+        self.assertEqual(payment.name_prefix, 'Payment')
+        self.assertEqual(payment.all_lines_visible, True)
+
     def test_41_new_one2many(self):
         """ Check command on one2many field on new record. """
         move = self.env['test_new_api.move'].create({})
