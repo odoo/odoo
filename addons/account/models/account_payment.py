@@ -352,8 +352,15 @@ class AccountPayment(models.Model):
     def _compute_partner_bank_id(self):
         ''' The default partner_bank_id will be the first available on the partner. '''
         for pay in self:
+<<<<<<< HEAD
             if pay.is_internal_transfer:
                 pay.partner_bank_id = self.destination_journal_id.bank_account_id
+=======
+            available_partner_bank_accounts = pay.partner_id.bank_ids.filtered(lambda x: x.company_id in (False, pay.company_id))
+            if available_partner_bank_accounts:
+                if pay.partner_bank_id not in available_partner_bank_accounts:
+                    pay.partner_bank_id = available_partner_bank_accounts[0]._origin
+>>>>>>> e6629504e38... temp
             else:
                 available_partner_bank_accounts = pay.partner_id.bank_ids.filtered(lambda x: x.company_id in (False, pay.company_id))
                 if available_partner_bank_accounts:
