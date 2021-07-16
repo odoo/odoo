@@ -90,7 +90,7 @@ class AccountEdiFormat(models.Model):
             errors.append(_("%s must have a street.", buyer.display_name))
         if not buyer.zip:
             errors.append(_("%s must have a post code.", buyer.display_name))
-        if len(buyer.zip) != 5 and buyer.country_id.code == 'IT':
+        elif len(buyer.zip) != 5 and buyer.country_id.code == 'IT':
             errors.append(_("%s must have a post code of length 5.", buyer.display_name))
         if not buyer.city:
             errors.append(_("%s must have a city.", buyer.display_name))
