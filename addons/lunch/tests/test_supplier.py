@@ -86,7 +86,8 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
                 with patch.object(fields.Date, 'context_today', return_value=self.monday_1pm.date()) as _:
                     line = self.env['lunch.order'].create({
                         'product_id': self.product_pizza.id,
-                        'date': self.monday_1pm.date()
+                        'date': self.monday_1pm.date(),
+                        'supplier_id': self.supplier_pizza_inn.id,
                     })
 
                     line.action_order()
@@ -99,11 +100,13 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
                     line = self.env['lunch.order'].create({
                         'product_id': self.product_pizza.id,
                         'topping_ids_1': [(6, 0, [self.topping_olives.id])],
-                        'date': self.monday_1pm.date()
+                        'date': self.monday_1pm.date(),
+                        'supplier_id': self.supplier_pizza_inn.id,
                     })
                     line2 = self.env['lunch.order'].create({
                         'product_id': self.product_sandwich_tuna.id,
-                        'date': self.monday_1pm.date()
+                        'date': self.monday_1pm.date(),
+                        'supplier_id': self.supplier_coin_gourmand.id,
                     })
 
                     (line | line2).action_order()
@@ -118,19 +121,22 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
                     line_1 = self.env['lunch.order'].create({
                         'product_id': self.product_pizza.id,
                         'quantity': 2,
-                        'date': self.monday_1pm.date()
+                        'date': self.monday_1pm.date(),
+                        'supplier_id': self.product_pizza.id,
                     })
 
                     line_2 = self.env['lunch.order'].create({
                         'product_id': self.product_pizza.id,
                         'topping_ids_1': [(6, 0, [self.topping_olives.id])],
-                        'date': self.monday_1pm.date()
+                        'date': self.monday_1pm.date(),
+                        'supplier_id': self.product_pizza.id,
                     })
 
                     line_3 = self.env['lunch.order'].create({
                         'product_id': self.product_sandwich_tuna.id,
                         'quantity': 2,
-                        'date': self.monday_1pm.date()
+                        'date': self.monday_1pm.date(),
+                        'supplier_id': self.supplier_coin_gourmand.id,
                     })
 
                     (line_1 | line_2 | line_3).action_order()

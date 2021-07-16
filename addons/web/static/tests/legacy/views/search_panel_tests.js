@@ -1996,6 +1996,7 @@ QUnit.module('Views', {
                         search_domain: [],
                         comodel_domain: [['parent_id', '=', false]],
                         group_domain: [],
+                        context: {},
                         enable_counters: true,
                         limit: 200,
                     });

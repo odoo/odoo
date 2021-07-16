@@ -90,6 +90,25 @@ class LunchSupplier(models.Model):
         ('no_delivery', 'No Delivery')
     ], default='no_delivery')
 
+    topping_label_1 = fields.Char('Extra 1 Label', required=True, default='Extras')
+    topping_label_2 = fields.Char('Extra 2 Label', required=True, default='Beverages')
+    topping_label_3 = fields.Char('Extra 3 Label', required=True, default='Extra Label 3')
+    topping_ids_1 = fields.One2many('lunch.topping', 'supplier_id', domain=[('topping_category', '=', 1)])
+    topping_ids_2 = fields.One2many('lunch.topping', 'supplier_id', domain=[('topping_category', '=', 2)])
+    topping_ids_3 = fields.One2many('lunch.topping', 'supplier_id', domain=[('topping_category', '=', 3)])
+    topping_quantity_1 = fields.Selection([
+        ('0_more', 'None or More'),
+        ('1_more', 'One or More'),
+        ('1', 'Only One')], 'Extra 1 Quantity', default='0_more', required=True)
+    topping_quantity_2 = fields.Selection([
+        ('0_more', 'None or More'),
+        ('1_more', 'One or More'),
+        ('1', 'Only One')], 'Extra 2 Quantity', default='0_more', required=True)
+    topping_quantity_3 = fields.Selection([
+        ('0_more', 'None or More'),
+        ('1_more', 'One or More'),
+        ('1', 'Only One')], 'Extra 3 Quantity', default='0_more', required=True)
+
     _sql_constraints = [
         ('automatic_email_time_range',
          'CHECK(automatic_email_time >= 0 AND automatic_email_time <= 12)',
@@ -132,6 +151,11 @@ class LunchSupplier(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            for topping in vals.get('topping_ids_2', []):
+                topping[2].update({'topping_category': 2})
+            for topping in vals.get('topping_ids_3', []):
+                topping[2].update({'topping_category': 3})
         crons = self.env['ir.cron'].sudo().create([
             {
                 'user_id': self.env.ref('base.user_root').id,
@@ -155,6 +179,16 @@ class LunchSupplier(models.Model):
         return suppliers
 
     def write(self, values):
+        for topping in values.get('topping_ids_2', []):
+            topping_values = topping[2]
+            if topping_values:
+                topping_values.update({'topping_category': 2})
+        for topping in values.get('topping_ids_3', []):
+            topping_values = topping[2]
+            if topping_values:
+                topping_values.update({'topping_category': 3})
+        if values.get('company_id'):
+            self.env['lunch.order'].search([('supplier_id', 'in', self.ids)]).write({'company_id': values['company_id']})
         super().write(values)
         if not CRON_DEPENDS.isdisjoint(values):
             self._sync_cron()
@@ -167,9 +201,11 @@ class LunchSupplier(models.Model):
     def toggle_active(self):
         """ Archiving related lunch product """
         res = super().toggle_active()
+        active_suppliers = self.filtered(lambda s: s.active)
+        inactive_suppliers = self - active_suppliers
         Product = self.env['lunch.product'].with_context(active_test=False)
-        all_products = Product.search([('supplier_id', 'in', self.ids)])
-        all_products._sync_active_from_related()
+        Product.search([('supplier_id', 'in', active_suppliers.ids)]).write({'active': True})
+        Product.search([('supplier_id', 'in', inactive_suppliers.ids)]).write({'active': False})
         return res
 
     def _send_auto_email(self):
@@ -187,7 +223,7 @@ class LunchSupplier(models.Model):
             ('supplier_id', '=', self.id),
             ('state', '=', 'ordered'),
             ('date', '=', fields.Date.context_today(self.with_context(tz=self.tz))),
-        ])
+        ], order="user_id, name")
         if not orders:
             return
 
