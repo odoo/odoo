@@ -7,6 +7,7 @@ import { registry } from "@web/core/registry";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { popoverService } from "@web/core/popover/popover_service";
 import { registerCleanup } from "../helpers/cleanup";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService, makeFakeRPCService } from "../helpers/mock_services";
@@ -245,6 +246,7 @@ QUnit.test("dialog component crashes", async (assert) => {
     serviceRegistry.add("notification", notificationService);
     serviceRegistry.add("error", errorService);
     serviceRegistry.add("localization", makeFakeLocalizationService());
+    serviceRegistry.add("popover", popoverService);
 
     pseudoWebClient = await mount(PseudoWebClient, { env, target });
 

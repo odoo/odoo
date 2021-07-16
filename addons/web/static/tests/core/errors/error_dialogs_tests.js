@@ -12,6 +12,7 @@ import {
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { popoverService } from "@web/core/popover/popover_service";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { makeFakeDialogService, makeFakeLocalizationService } from "../../helpers/mock_services";
 import { click, getFixture, nextTick, patchWithCleanup } from "../../helpers/utils";
@@ -27,6 +28,7 @@ QUnit.module("Error dialogs", {
         target = getFixture();
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("hotkey", hotkeyService);
+        serviceRegistry.add("popover", popoverService);
         serviceRegistry.add("localization", makeFakeLocalizationService());
         serviceRegistry.add("dialog", makeFakeDialogService());
     },
@@ -176,6 +178,65 @@ QUnit.test("button clipboard copy error traceback", async (assert) => {
     const clipboardButton = target.querySelector(".fa-clipboard");
     click(clipboardButton);
     await nextTick();
+});
+
+QUnit.test("button clipboard copy error traceback with copied popover", async (assert) => {
+    assert.expect(2);
+
+    const mainComponents = registry.category("main_components");
+
+    const error = new Error();
+    error.name = "ERROR_NAME";
+    error.message = "This is the message";
+    error.traceback = "This is a traceback";
+    class PseudoWebClient extends Component {
+        setup() {
+            this.Components = mainComponents.getEntries();
+            this.message = error.message;
+            this.name = "ERROR_NAME";
+            this.traceback = "This is a traceback";
+        }
+    }
+    PseudoWebClient.template = tags.xml`
+        <div>
+            <div id="anchor">Anchor</div>
+            <div id="close">Close</div>
+            <div>
+                <t t-foreach="Components" t-as="Component" t-key="Component[0]">
+                    <t t-component="Component[1].Component" t-props="Component[1].props"/>
+                </t>
+            </div>
+            <ErrorDialog traceback="traceback" name="name" message="message" data="data"/>
+        </div>
+    `;
+    PseudoWebClient.components = { ErrorDialog };
+
+    const fixture = getFixture();
+    env = await makeTestEnv();
+    parent = await mount(PseudoWebClient, {
+        env,
+        target: fixture,
+    });
+
+    patchWithCleanup(browser, {
+        setTimeout: (callback, delay) => {
+        },
+        navigator: {
+            clipboard: {
+                writeText: (value) => {
+                    assert.strictEqual(
+                        value,
+                        `${error.name}\n${error.message}\n${error.traceback}`
+                    );
+                },
+            },
+        },
+    });
+
+    const clipboardButton = parent.el.querySelector(".fa-clipboard");
+    click(clipboardButton);
+    await nextTick();
+    assert.containsOnce(parent, "#copied");
 });
 
 QUnit.test("WarningDialog", async (assert) => {

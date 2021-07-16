@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { errorService } from "@web/core/errors/error_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { notificationService } from "@web/core/notifications/notification_service";
+import { popoverService } from "@web/core/popover/popover_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
@@ -29,6 +30,7 @@ QUnit.module("base_automation", {}, function () {
             serviceRegistry.add("ui", uiService);
             serviceRegistry.add("error", errorService);
             serviceRegistry.add("hotkey", hotkeyService);
+            serviceRegistry.add("popover", popoverService);
             serviceRegistry.add("localization", makeFakeLocalizationService());
             serviceRegistry.add("action", { start: () => {} });
             serviceRegistry.add("orm", { start: () => {} });

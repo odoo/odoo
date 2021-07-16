@@ -5,10 +5,12 @@ import { Dialog } from "../dialog/dialog";
 import { _lt } from "../l10n/translation";
 import { registry } from "../registry";
 import { useService } from "@web/core/utils/hooks";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { capitalize } from "../utils/strings";
 
-const { hooks } = owl;
+const { Component, hooks } = owl;
 const { useState } = hooks;
+const { xml } = owl.tags;
 
 export const odooExceptionTitleMap = new Map(
     Object.entries({
@@ -33,8 +35,15 @@ export class ErrorDialog extends Dialog {
         this.state = useState({
             showTraceback: false,
         });
+        this.popover = usePopover();
     }
     onClickClipboard() {
+        // show copied popover and close it after 1 second so user can know text is copied
+        class Comp extends Component { }
+        Comp.template = xml`<div class="p-1" t-att-id="props.id">Copied !</div>`;
+        const closeFn = this.popover.add(this.el.querySelector('.btn-primary'), Comp, { id: "copied" });
+        browser.setTimeout(() => { closeFn("copied"); }, 1000);
+
         browser.navigator.clipboard.writeText(
             `${this.props.name}\n${this.props.message}\n${this.props.traceback}`
         );
@@ -67,6 +76,7 @@ export class RPCErrorDialog extends ErrorDialog {
         if (this.props.data && this.props.data.debug) {
             this.traceback = `${this.props.data.debug}`;
         }
+        this.popover = usePopover();
     }
     inferTitle() {
         // If the server provides an exception name that we have in a registry.
@@ -90,6 +100,12 @@ export class RPCErrorDialog extends ErrorDialog {
     }
 
     onClickClipboard() {
+        // show copied popover and close it after 1 second so user can know text is copied
+        class Comp extends Component { }
+        Comp.template = xml`<div class="p-1" t-att-id="props.id">Copied !</div>`;
+        const closeFn = this.popover.add(this.el.querySelector('.btn-primary'), Comp, { id: "copied" });
+        browser.setTimeout(() => { closeFn("copied"); }, 1000);
+
         browser.navigator.clipboard.writeText(
             `${this.props.name}\n${this.props.message}\n${this.traceback}`
         );
