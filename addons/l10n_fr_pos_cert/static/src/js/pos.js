@@ -49,9 +49,15 @@ models.Order = models.Order.extend({
         this.l10n_fr_hash = this.l10n_fr_hash || false;
         this.save_to_db();
     },
+    init_from_JSON: function (json) {
+        _super_order.init_from_JSON.apply(this, arguments);
+        this.set_l10n_fr_hash(json.l10n_fr_hash || false);
+    },
     export_for_printing: function() {
       var result = _super_order.export_for_printing.apply(this,arguments);
       result.l10n_fr_hash = this.get_l10n_fr_hash();
+      // If a paid order is load from database it is considered already printed
+      result.l10n_fr_is_printed = this.locked || this._printed;
       return result;
     },
     set_l10n_fr_hash: function (l10n_fr_hash){
