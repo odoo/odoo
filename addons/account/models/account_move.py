@@ -252,6 +252,11 @@ class AccountMove(models.Model):
         check_company=True)
     reversal_move_id = fields.One2many('account.move', 'reversed_entry_id')
 
+    # ==== Hacky fields ====
+    # Technical fields to activate cache mechanism on aggregating computed fields to recompute
+    payment_ids = fields.One2many('account.payment', 'move_id', string='Inversed field for account.payment')
+    statement_line_ids = fields.One2many('account.bank.statement.line', 'move_id', string='Inversed field for account.bank.statement.line')
+
     # =========================================================
     # Invoice related fields
     # =========================================================
