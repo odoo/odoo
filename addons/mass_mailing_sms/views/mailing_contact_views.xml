@@ -78,14 +78,16 @@
     </record>
 
     <record id="mailing_contact_action_sms" model="ir.actions.act_window">
-        <field name="name">Contacts</field>
+        <field name="name">Mailing List Contacts</field>
         <field name="res_model">mailing.contact</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{'mailing_sms': True, 'search_default_filter_not_phone_bl': 1, }</field>
         <field name="view_id" ref="mailing_contact_view_tree"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new contact
+                Create a mailing contact
+            </p><p>
+                Mailing contacts allow you to separate your marketing audience from your contact directory.
             </p>
         </field>
     </record>
