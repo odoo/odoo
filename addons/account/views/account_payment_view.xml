@@ -174,6 +174,7 @@
                         <field name="is_move_sent" invisible="1"/>
                         <field name="is_reconciled" invisible="1"/>
                         <field name="is_matched" invisible="1"/>
+                        <field name="is_partner_required" invisible="1"/>
                         <field name="payment_method_code" invisible="1"/>
                         <field name="show_partner_bank_account" invisible="1"/>
                         <field name="require_partner_bank_account" invisible="1"/>
@@ -242,11 +243,11 @@
                                 <field name="partner_id" context="{'default_is_company': True}" string="Customer"
                                        attrs="{'readonly':[('state', '!=', 'draft')],
                                              'invisible':['|', ('partner_type','!=','customer'), ('is_internal_transfer', '=', True)],
-                                             'required': [('partner_type','=','customer')]}"/>
+                                             'required': [('is_partner_required', '=', True), ('partner_type','=','customer')]}"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Vendor"
                                        attrs="{'readonly':[('state', '!=', 'draft')],
                                                'invisible':['|', ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True)],
-                                               'required': [('partner_type','=','supplier')]}"/>
+                                               'required': [('is_partner_required', '=', True), ('partner_type','=','supplier')]}"/>
                                 <label for="amount"/>
                                 <div name="amount_div" class="o_row">
                                     <field name="amount"

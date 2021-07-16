@@ -46,6 +46,11 @@ class AccountPayment(models.Model):
         help="QR-code report URL to use to generate the QR-code to scan with a banking app to perform this payment.")
     paired_internal_transfer_payment_id = fields.Many2one('account.payment', help="When an internal transfer is posted, a paired payment is created. "
         "They cross referenced trough this field")
+    is_partner_required = fields.Boolean(
+        string="Is partner Required",
+        default=True,
+        help="Technical field telling if 'partner_id' is required on the view or not.",
+    )
 
     # == Payment methods fields ==
     payment_method_line_id = fields.Many2one('account.payment.method.line', string='Payment Method',
@@ -607,6 +612,12 @@ class AccountPayment(models.Model):
             if not pay.payment_method_line_id:
                 raise ValidationError(_("Please define a payment method line on your payment."))
 
+    @api.constrains('partner_id', 'is_partner_required')
+    def _check_partner_id_required(self):
+        for pay in self:
+            if pay.is_partner_required and not pay.partner_id:
+                raise ValidationError(_("Please define a customer/vendor on your payment."))
+
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
@@ -635,6 +646,10 @@ class AccountPayment(models.Model):
             if 'currency_id' not in vals:
                 journal = self.env['account.journal'].browse(vals['journal_id'])
                 vals['currency_id'] = journal.currency_id.id or journal.company_id.currency_id.id
+
+            # The payment has been created without a partner, thus this field is not required.
+            if not vals.get('partner_id') and 'is_partner_required' not in vals:
+                vals['is_partner_required'] = False
 
         payments = super().create(vals_list)
 
