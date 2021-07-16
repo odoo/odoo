@@ -727,7 +727,7 @@ class SaleOrder(models.Model):
                             sequence=invoice_item_sequence,
                         )),
                     )
-                    dp_section = True
+                    down_payment_section_added = True
                     invoice_item_sequence += 1
                 invoice_line_vals.append(
                     (0, 0, line._prepare_invoice_line(
