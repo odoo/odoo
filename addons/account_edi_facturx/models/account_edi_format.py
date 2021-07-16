@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, models, fields, tools, _
+from odoo import models, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr
 from odoo.tests.common import Form
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 from datetime import datetime
-from lxml import etree
-from PyPDF2 import PdfFileReader
 import base64
-
-import io
 
 import logging
 
@@ -127,7 +123,15 @@ class AccountEdiFormat(models.Model):
     def _create_invoice_from_xml_tree(self, filename, tree):
         self.ensure_one()
         if self._is_facturx(filename, tree):
-            return self._import_facturx(tree, self.env['account.move'])
+            invoice = self.env['account.move'].create({})
+            # During the process, if an Error is raised, the invoice isn't rollback and is persisted in the DB
+            # Thus we clean the invoice before propagating the error
+            try:
+                res = self._import_facturx(tree, invoice)
+            except (ValidationError, UserError):
+                invoice.unlink()
+                raise
+            return res
         return super()._create_invoice_from_xml_tree(filename, tree)
 
     def _update_invoice_from_xml_tree(self, filename, tree, invoice):
