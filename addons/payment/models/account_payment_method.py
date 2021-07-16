@@ -23,7 +23,16 @@ class AccountPaymentMethodLine(models.Model):
             ('provider', 'in', self.mapped('code')),
             ('company_id', 'in', self.journal_id.company_id.ids),
         ])
-        acquirers_map = {(x.provider, x.company_id): x for x in acquirers}
+
+        # Make sure to pick the active acquirer, if any.
+        acquirers_map = dict()
+        for acquirer in acquirers:
+            current_value = acquirers_map.get((acquirer.provider, acquirer.company_id), False)
+            if current_value and current_value.state != 'disabled':
+                continue
+
+            acquirers_map[(acquirer.provider, acquirer.company_id)] = acquirer
+
         for line in self:
             code = line.payment_method_id.code
             company = line.journal_id.company_id

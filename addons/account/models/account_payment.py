@@ -383,16 +383,13 @@ class AccountPayment(models.Model):
         This field is not computed in '_compute_payment_method_fields' because it's a stored editable one.
         '''
         for pay in self:
-            if pay.payment_type == 'inbound':
-                available_payment_methods = pay.journal_id.inbound_payment_method_line_ids
-            else:
-                available_payment_methods = pay.journal_id.outbound_payment_method_line_ids
+            available_payment_method_lines = pay.journal_id._get_available_payment_method_lines(pay.payment_type)
 
             # Select the first available one by default.
-            if pay.payment_method_line_id in available_payment_methods:
+            if pay.payment_method_line_id in available_payment_method_lines:
                 pay.payment_method_line_id = pay.payment_method_line_id
-            elif available_payment_methods:
-                pay.payment_method_line_id = available_payment_methods[0]._origin
+            elif available_payment_method_lines:
+                pay.payment_method_line_id = available_payment_method_lines[0]._origin
             else:
                 pay.payment_method_line_id = False
 
