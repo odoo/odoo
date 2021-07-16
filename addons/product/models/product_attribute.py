@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from random import randint
+
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
@@ -90,6 +92,9 @@ class ProductAttributeValue(models.Model):
     _order = 'attribute_id, sequence, id'
     _description = 'Attribute Value'
 
+    def _get_default_color(self):
+        return randint(1, 11)
+
     name = fields.Char(string='Value', required=True, translate=True)
     sequence = fields.Integer(string='Sequence', help="Determine the display order", index=True)
     attribute_id = fields.Many2one('product.attribute', string="Attribute", ondelete='cascade', required=True, index=True,
@@ -104,6 +109,7 @@ class ProductAttributeValue(models.Model):
         string='Color',
         help="Here you can set a specific HTML color index (e.g. #ff0000) to display the color if the attribute type is 'Color'.")
     display_type = fields.Selection(related='attribute_id.display_type', readonly=True)
+    color = fields.Integer('Color Index', default=_get_default_color)
 
     _sql_constraints = [
         ('value_company_uniq', 'unique (name, attribute_id)', "You cannot create two values with the same name for the same attribute.")
@@ -387,6 +393,9 @@ class ProductTemplateAttributeValue(models.Model):
     _description = "Product Template Attribute Value"
     _order = 'attribute_line_id, product_attribute_value_id, id'
 
+    def _get_default_color(self):
+        return randint(1, 11)
+
     # Not just `active` because we always want to show the values except in
     # specific case, as opposed to `active_test`.
     ptav_active = fields.Boolean("Active", default=True)
@@ -421,6 +430,7 @@ class ProductTemplateAttributeValue(models.Model):
     html_color = fields.Char('HTML Color Index', related="product_attribute_value_id.html_color")
     is_custom = fields.Boolean('Is custom value', related="product_attribute_value_id.is_custom")
     display_type = fields.Selection(related='product_attribute_value_id.display_type', readonly=True)
+    color = fields.Integer('Color', default=_get_default_color)
 
     _sql_constraints = [
         ('attribute_value_unique', 'unique(attribute_line_id, product_attribute_value_id)', "Each value should be defined only once per attribute per product."),

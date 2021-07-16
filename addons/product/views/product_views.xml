@@ -369,6 +369,7 @@
                     <field name="id"/>
                     <field name="lst_price"/>
                     <field name="activity_state"/>
+                    <field name="color"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
                         <t t-name="kanban-box">
@@ -383,7 +384,7 @@
                                         <small t-if="record.default_code.value">[<field name="default_code"/>]</small>
                                     </strong>
                                     <div class="o_kanban_tags_section">
-                                        <field name="product_template_attribute_value_ids" groups="product.group_product_variant"/>
+                                        <field name="product_template_attribute_value_ids" groups="product.group_product_variant" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     </div>
                                     <ul>
                                         <li><strong>Price: <field name="lst_price"></field></strong></li>
