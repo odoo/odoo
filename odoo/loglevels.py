@@ -17,6 +17,7 @@ def get_encodings(hint_encoding='utf-8'):
     fallbacks = {
         'latin1': 'latin9',
         'iso-8859-1': 'iso8859-15',
+        'iso-8859-8-i': 'iso8859-8',
         'cp1252': '1252',
     }
     if hint_encoding:
