@@ -67,7 +67,7 @@ class SaleOrderLine(models.Model):
         super(SaleOrderLine, self)._compute_qty_delivered()
         for order_line in self:
             if order_line.qty_delivered_method == 'stock_move':
-                boms = order_line.move_ids.mapped('bom_line_id.bom_id')
+                boms = order_line.move_ids.filtered(lambda m: m.state != 'cancel').mapped('bom_line_id.bom_id')
                 dropship = False
                 if not boms and any(m._is_dropshipped() for m in order_line.move_ids):
                     boms = boms._bom_find(order_line.product_id, company_id=order_line.company_id.id, bom_type='phantom')[order_line.product_id]
