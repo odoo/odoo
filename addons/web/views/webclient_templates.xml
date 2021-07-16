@@ -378,6 +378,7 @@
 
     <template id="web.login" name="Login">
         <t t-call="web.login_layout">
+            <t t-set="head" t-value="" />
             <form class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post" onsubmit="this.action = this.action + location.hash">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 

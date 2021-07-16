@@ -38,6 +38,7 @@
 
         <template id="auth_signup.signup" name="Sign up login">
             <t t-call="web.login_layout">
+                <t t-set="head" t-value="" />
                 <form class="oe_signup_form" role="form" method="post" t-if="not message">
                   <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
@@ -61,6 +62,7 @@
 
         <template id="auth_signup.reset_password" name="Reset password">
             <t t-call="web.login_layout">
+                <t t-set="head" t-value="" />
                 <div t-if="message">
                     <p class="alert alert-success" t-if="message" role="status">
                         <t t-esc="message"/>
