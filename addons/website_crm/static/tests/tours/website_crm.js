@@ -3,6 +3,27 @@ odoo.define('website_crm.tour', function(require) {
 
     var tour = require('web_tour.tour');
 
+    tour.register('website_crm_pre_tour', {
+        test: true,
+        url: '/contactus?enable_editor=1',
+    }, [{
+        content: "Select contact form",
+        trigger: "section.s_website_form",
+    }, {
+        content: "Open action select",
+        trigger: "we-select:has(we-button:contains('Create an Opportunity')) we-toggler",
+    }, {
+        content: "Select 'Create an Opportunity' as form action",
+        trigger: "we-select we-button:contains('Create an Opportunity')",
+    }, {
+        content: "Save the settings",
+        trigger: "button[data-action=save]",
+    }, {
+        content: "Ensure form model has changed and page reload is done after save",
+        trigger: "section.s_website_form form[data-model_name='crm.lead']",
+        extra_trigger: "a[data-action=edit]",
+    }]);
+
     tour.register('website_crm_tour', {
         test: true,
         url: '/contactus',
