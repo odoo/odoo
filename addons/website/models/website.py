@@ -409,6 +409,7 @@ class Website(models.Model):
                         'key': image['name'],
                         'type': 'binary',
                         'raw': response.content,
+                        'public': True,
                     })
 
         website = self.get_current_website()
