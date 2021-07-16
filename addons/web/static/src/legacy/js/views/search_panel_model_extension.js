@@ -548,6 +548,9 @@
                         limit: filter.limit,
                         search_domain: this.searchDomain,
                     },
+                    params: {
+                        context: this.config.context,
+                    },
                 });
                 this._createFilterTree(filter.id, result);
             }));

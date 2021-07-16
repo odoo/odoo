@@ -10,6 +10,16 @@
                 <field name="supplier_id"/>
                 <field name="description"/>
                 <separator/>
+                <filter name="available_today" string="Available Today" domain="[('supplier_id.available_today', '=', True)]"/>
+                <separator/>
+                <filter name="available_on_mon" string="Monday" domain="[('supplier_id.mon', '=', True)]"/>
+                <filter name="available_on_tue" string="Tuesday" domain="[('supplier_id.tue', '=', True)]"/>
+                <filter name="available_on_wed" string="Wednesday" domain="[('supplier_id.wed', '=', True)]"/>
+                <filter name="available_on_thu" string="Thursday" domain="[('supplier_id.thu', '=', True)]"/>
+                <filter name="available_on_fri" string="Friday" domain="[('supplier_id.fri', '=', True)]"/>
+                <filter name="available_on_sat" string="Saturday" domain="[('supplier_id.sat', '=', True)]"/>
+                <filter name="available_on_sun" string="Sunday" domain="[('supplier_id.sun', '=', True)]"/>
+                <separator/>
                 <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_supplier" string="Vendor" context="{'group_by': 'supplier_id'}"/>
@@ -18,27 +28,6 @@
                 <searchpanel>
                     <field name="category_id" select="multi" string="Categories" icon="fa-cutlery" color="#875A7B" enable_counters="1"/>
                     <field name="supplier_id" select="multi" string="Vendors" icon="fa-truck" enable_counters="1"/>
-                </searchpanel>
-            </search>
-        </field>
-    </record>
-
-    <record id="lunch_product_report_view_search" model="ir.ui.view">
-        <field name="name">lunch.product.report.search</field>
-        <field name="model">lunch.product.report</field>
-        <field name="arch" type="xml">
-            <search string="Product Search">
-                <field name="name" string="Product"/>
-                <field name="category_id" string="Category"/>
-                <field name="supplier_id"/>
-                <field name="description"/>
-                <group expand="0" string="Group By">
-                    <filter name="group_by_supplier" string="Vendor" context="{'group_by': 'supplier_id'}"/>
-                    <filter name="group_by_category" string="Category" context="{'group_by': 'category_id'}"/>
-                </group>
-                <searchpanel>
-                    <field name="category_id" select="multi" string="Categories" icon="fa-cutlery" color="#875A7B"/>
-                    <field name="supplier_id" select="multi" string="Vendors" icon="fa-truck"/>
                 </searchpanel>
             </search>
         </field>
@@ -93,26 +82,10 @@
             </form>
         </field>
     </record>
-    <record id="lunch_product_report_view_tree" model="ir.ui.view">
-        <field name="name">lunch.product.tree</field>
-        <field name="model">lunch.product.report</field>
-        <field name="priority">999</field>
-        <field name="arch" type="xml">
-            <tree js_class="lunch_list">
-                <field name="name"/>
-                <field name="category_id"/>
-                <field name="supplier_id"/>
-                <field name="description"/>
-                <field name="product_id" invisible="1"/>
-                <field name="price" widget="monetary"/>
-                <field name="currency_id" invisible="1"/>
-            </tree>
-        </field>
-    </record>
 
     <record id="view_lunch_product_kanban_order" model="ir.ui.view">
         <field name="name">lunch.product.kanban</field>
-        <field name="model">lunch.product.report</field>
+        <field name="model">lunch.product</field>
         <field name="priority">999</field>
         <field name="arch" type="xml">
             <kanban js_class="lunch_kanban" create="0" edit="0" group_create="0" class="o_kanban_mobile">
@@ -122,8 +95,7 @@
                 <field name="supplier_id"/>
                 <field name="description"/>
                 <field name="currency_id"/>
-                <field name="user_id"/>
-                <field name="product_id"/>
+                <field name="company_id"/>
                 <field name="is_new"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -252,48 +224,6 @@
                     </div>
                     <label for="company_id" groups="base.group_multi_company"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <group>
-                        <group>
-                            <field name="active" invisible="1"/>
-                            <field name="topping_label_1"/>
-                            <field name="topping_quantity_1"/>
-                        </group>
-                        <div>
-                            <field name="topping_ids_1" nolabel="1">
-                                <tree editable="bottom">
-                                    <field name="name"/>
-                                    <field name="currency_id" invisible="1"/>
-                                    <field name="price" widget="monetary"/>
-                                </tree>
-                            </field>
-                        </div>
-                        <group>
-                            <field name="topping_label_2"/>
-                            <field name="topping_quantity_2"/>
-                        </group>
-                        <div>
-                            <field name="topping_ids_2" nolabel="1">
-                                <tree editable="bottom">
-                                    <field name="name"/>
-                                    <field name="currency_id" invisible="1"/>
-                                    <field name="price" widget="monetary"/>
-                                </tree>
-                            </field>
-                        </div>
-                        <group>
-                            <field name="topping_label_3"/>
-                            <field name="topping_quantity_3"/>
-                        </group>
-                        <div>
-                            <field name="topping_ids_3" nolabel="1">
-                                <tree editable="bottom">
-                                    <field name="name"/>
-                                    <field name="currency_id" invisible="1"/>
-                                    <field name="price" widget="monetary"/>
-                                </tree>
-                            </field>
-                        </div>
-                    </group>
                 </sheet>
             </form>
         </field>
@@ -361,11 +291,12 @@
 
     <record id="lunch_product_action_order" model="ir.actions.act_window">
         <field name="name">Order Your Lunch</field>
-        <field name="res_model">lunch.product.report</field>
+        <field name="res_model">lunch.product</field>
         <field name="view_mode">kanban,tree</field>
         <field name="view_id" ref="view_lunch_product_kanban_order"/>
-        <field name="search_view_id" ref="lunch_product_report_view_search"/>
-        <field name="domain">[('supplier_id.available_today', '=', True), '|', ('user_id', '=', False), ('user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="lunch_product_view_search"/>
+        <field name="context">{'search_default_available_today': 1}</field>
+        <field name="domain">[]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             There is no product available today

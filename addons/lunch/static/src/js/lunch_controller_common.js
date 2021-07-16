@@ -140,7 +140,6 @@ var LunchControllerCommon = {
             },
         };
 
-        // YTI TODO Maybe don't always pass the default_product_id
         var action = {
             res_model: 'lunch.order',
             name: _t('Configure Your Order'),
