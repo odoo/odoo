@@ -31,21 +31,18 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <tree string="Mailings" sample="1" decoration-info="state in ['draft', 'in_queue']">
+                    <field name="calendar_date" string="Date" widget="date"/>
                     <field name="subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
-                    <field name="mailing_type" invisible="1"/>
-                    <field name="mailing_model_id" string="Recipients"/>
+                    <field name="mailing_model_id" string="Recipients" optional="hide"/>
                     <field name="user_id" widget="many2one_avatar_user"/>
-                    <field name="schedule_date" string="Scheduled" widget="remaining_days"/>
-                    <field name="sent_date" widget="date"/>
-                    <field name="state" decoration-info="state == 'draft' or state == 'in_queue'" decoration-success="state == 'sending' or state == 'done'" widget="badge"/>
-                    <field name="campaign_id" string="Campaign"
-                        groups="mass_mailing.group_mass_mailing_campaign"/>
+                    <field name="campaign_id" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign" optional="hide"/>
                     <field name="sent"/>
+                    <field name="received_ratio" class="d-flex align-items-center pl-0 pl-lg-5" widget="progressbar" string="Delivered (%)"/>
+                    <field name="opened_ratio" class="d-flex align-items-center pl-0 pl-lg-5" widget="progressbar" string="Opened (%)"/>
                     <field name="bounced_ratio" string="Bounced (%)"/>
-                    <field name="received_ratio" string="Delivered (%)"/>
-                    <field name="opened_ratio" string="Opened (%)"/>
                     <field name="clicks_ratio" string="Clicked (%)"/>
                     <field name="replied_ratio" string="Replied (%)"/>
+                    <field name="state" decoration-info="state == 'draft'" decoration-success="state == 'sending' or state == 'done'" widget="badge"/>
                 </tree>
             </field>
         </record>
@@ -461,7 +458,7 @@
         <record id="mailing_mailing_action_mail" model="ir.actions.act_window">
             <field name="name">Mailings</field>
             <field name="res_model">mailing.mailing</field>
-            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="view_mode">tree,kanban,form,calendar,graph</field>
             <field name="domain">[('mailing_type', '=', 'mail')]</field>
             <field name="context">{
                     'search_default_assigned_to_me': 1,
