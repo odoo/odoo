@@ -39,7 +39,7 @@ class ResPartner(models.Model):
     @api.onchange('vat')
     def _l10n_it_onchange_vat(self):
         if not self.l10n_it_codice_fiscale:
-            self.l10n_it_codice_fiscale = self._l10n_it_normalize_codice_fiscale(self.vat)
+            self.l10n_it_codice_fiscale = self._l10n_it_normalize_codice_fiscale(self.vat or '')
 
     @api.constrains('l10n_it_codice_fiscale')
     def validate_codice_fiscale(self):
