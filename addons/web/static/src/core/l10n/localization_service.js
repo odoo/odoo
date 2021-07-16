@@ -10,7 +10,7 @@ import { session } from "@web/session";
 export const localizationService = {
     dependencies: ["user"],
     start: async (env, { user }) => {
-        const cacheHashes = session.cache_hashes;
+        const cacheHashes = session.cache_hashes || {};
         const translationsHash = cacheHashes.translations || new Date().getTime().toString();
         const lang = user.lang || null;
         const translationURL = session.translationURL || "/web/webclient/translations";
