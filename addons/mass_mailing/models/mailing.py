@@ -82,7 +82,7 @@ class MassMailing(models.Model):
                                     states={'draft': [('readonly', False)], 'in_queue': [('readonly', False)]},
                                     compute='_compute_schedule_date', store=True, copy=True)
     calendar_date = fields.Datetime('Calendar Date', compute='_compute_calendar_date', store=True, copy=False,
-        help="Technical field for the calendar view.")
+        help="Date at which the mailing was or will be sent.")
     # don't translate 'body_arch', the translations are only on 'body_html'
     body_arch = fields.Html(string='Body', translate=False)
     body_html = fields.Html(string='Body converted to be sent by mail', sanitize_attributes=False)
