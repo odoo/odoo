@@ -445,8 +445,9 @@ class AccountBankStatement(models.Model):
             raise UserError(_("Only validated statements can be reset to new."))
 
         self.write({'state': 'open'})
-        self.line_ids.move_id.button_draft()
-        self.line_ids.button_undo_reconciliation()
+        not_reconciled_lines = self.line_ids.filtered(lambda x: not x.is_reconciled)
+        not_reconciled_lines.move_id.button_draft()
+        not_reconciled_lines.button_undo_reconciliation()
 
     def button_reprocess(self):
         """Move the bank statements back to the 'posted' state."""
@@ -1299,6 +1300,8 @@ class AccountBankStatementLine(models.Model):
         self.payment_ids.unlink()
 
         for st_line in self:
+            if st_line.move_id.state == 'posted' and st_line.statement_id.state == 'open':
+                st_line.move_id.button_draft()
             st_line.with_context(force_delete=True).write({
                 'to_check': False,
                 'line_ids': [(5, 0)] + [(0, 0, line_vals) for line_vals in st_line._prepare_move_line_default_vals()],

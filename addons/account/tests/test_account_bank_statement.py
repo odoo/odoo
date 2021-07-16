@@ -1358,6 +1358,23 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
                 {'name': 'whatever', 'account_id': random_acc_1.id, 'balance': -100.0},
             ])
 
+        # Reset the statement to the 'open' state.
+        self.statement.button_reopen()
+
+        self.assertRecordValues(self.statement_line, [{
+            'state': 'open',
+            'is_reconciled': True,
+        }])
+        self.assertRecordValues(self.statement_line.move_id, [{'state': 'posted'}])
+
+        self.statement_line.button_undo_reconciliation()
+
+        self.assertRecordValues(self.statement_line, [{
+            'state': 'open',
+            'is_reconciled': False,
+        }])
+        self.assertRecordValues(self.statement_line.move_id, [{'state': 'draft'}])
+
     def test_reconciliation_statement_line_with_generated_payments(self):
         self.statement.button_post()
 

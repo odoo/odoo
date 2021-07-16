@@ -203,25 +203,26 @@
                                     <!-- Visible fields -->
                                     <field name="sequence" widget="handle"/>
                                     <field name="date"
-                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
-                                    <field name="payment_ref"/>
+                                           attrs="{'readonly': ['|', ('is_reconciled', '=', True), ('parent.state', '!=', 'open')]}"/>
+                                    <field name="payment_ref"
+                                           attrs="{'readonly': [('is_reconciled', '=', True)]}"/>
                                     <field name="partner_id"
-                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"
+                                           attrs="{'readonly': ['|', ('is_reconciled', '=', True), ('parent.state', '!=', 'open')]}"
                                            domain="['|', ('parent_id','=', False), ('is_company','=',True)]"/>
                                     <field name="ref" optional="hidden"/>
                                     <field name="transaction_type" optional="hidden"/>
                                     <field name="narration" string="Notes" optional="hidden"/>
                                     <field name="amount"
-                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
+                                           attrs="{'readonly': ['|', ('is_reconciled', '=', True), ('parent.state', '!=', 'open')]}"/>
                                     <field name="amount_currency" optional="hidden" groups="base.group_multi_currency"
-                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
+                                           attrs="{'readonly': ['|', ('is_reconciled', '=', True), ('parent.state', '!=', 'open')]}"/>
                                     <field name="account_number" optional="hidden"/>
                                     <field name="foreign_currency_id" optional="hidden" groups="base.group_multi_currency"
-                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
+                                           attrs="{'readonly': ['|', ('is_reconciled', '=', True), ('parent.state', '!=', 'open')]}"/>
 
                                     <!-- Buttons -->
                                     <button name="button_undo_reconciliation" type="object"
-                                            attrs="{'invisible': [('is_reconciled', '=', False)], 'column_invisible': [('parent.state', '!=', 'posted')]}"
+                                            attrs="{'invisible': [('is_reconciled', '=', False)]}"
                                             string="Revert reconciliation" icon="fa-undo"/>
                                 </tree>
                             </field>
