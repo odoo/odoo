@@ -173,6 +173,7 @@ msgstr ""
 "ចំនួនដែលត្រូវទទួលបានប្រាក់ចំណេញដោយមិនគិតទំាងថ្លៃដឹកជាសាច់ប្រាក់មកពីក្រុមហ៊ុនផ្សេងៗ"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
 msgstr "ទុកជាឯកសារ"
@@ -1117,6 +1118,16 @@ msgstr "ទទឹង"
 #: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_width
 msgid "Width must be positive"
 msgstr "ទទឹងត្រូវតែមានលក្ខណៈវិជ្ជមាន"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

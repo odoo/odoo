@@ -12,7 +12,7 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2020
 # Joan Ignasi Florit <jfloritmir@gmail.com>, 2020
 # Carles Antoli <carlesantoli@hotmail.com>, 2021
-# Josep Anton Belchi, 2021
+# jabelchi, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Josep Anton Belchi, 2021\n"
+"Last-Translator: jabelchi, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -241,7 +241,7 @@ msgstr "Referència del mètode de pagament"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__acquirer_ids
 msgid "Acquirers"
-msgstr ""
+msgstr "Mètodes de pagament"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form_view
@@ -897,7 +897,7 @@ msgstr "ID"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "If not defined, the acquirer name will be used."
-msgstr ""
+msgstr "Si no es defineix, s'utilitza el nom del mètode de pagament."
 
 #. module: payment
 #. openerp-web
@@ -979,7 +979,7 @@ msgstr "S'ha trobat un token no vàlid. Token del partner %s != %s"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
-msgstr ""
+msgstr "Factura(es)"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1170,6 +1170,8 @@ msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Acquirer menu."
 msgstr ""
+"No s'ha trobat mètode de pagament manual per aquesta companyia. Si us plau, "
+"creeu-ne un des del menú de mètodes de pagament."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1262,7 +1264,7 @@ msgstr "Altres"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__other
 msgid "Other payment acquirer"
-msgstr ""
+msgstr "Un altre mètode de pagament"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_pdt_token
@@ -1542,7 +1544,7 @@ msgstr "Referència"
 #. module: payment
 #: model:ir.model.constraint,message:payment.constraint_payment_transaction_reference_uniq
 msgid "Reference must be unique!"
-msgstr ""
+msgstr "La referencia ha d'ésser única."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
@@ -1822,6 +1824,8 @@ msgid ""
 "This partner has no email, which may cause issues with some payment "
 "acquirers. Setting an email for this partner is advised."
 msgstr ""
+"Aquest partner no té adreça de correu, la qual cosa pot provocar problemes "
+"amb alguns mètodes de pagament. Es recomana facilitar una adreça de correu. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
@@ -1985,7 +1989,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr ""
+msgstr "Esperem que la entitat del mètode de pagament confirmi el pagament. "
 
 #. module: payment
 #. openerp-web
@@ -2010,7 +2014,7 @@ msgstr ""
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
 #, python-format
 msgid "You have to set a journal for your payment acquirer %s."
-msgstr ""
+msgstr "Cal que definiu un diari pel mètode de pagament %s."
 
 #. module: payment
 #. openerp-web

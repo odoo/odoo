@@ -44,13 +44,13 @@ msgstr "Abbrechen"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
 msgid "Copy Lines"
-msgstr ""
+msgstr "Zeilen kopieren"
 
 #. module: account_debit_note
 #: model:ir.actions.act_window,name:account_debit_note.action_view_account_move_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
 msgid "Create Debit Note"
-msgstr ""
+msgstr "Lastschrift erstellen"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_uid
@@ -94,6 +94,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
 msgstr ""
+"Wenn leer, wird das Journal des zu belastenden Journaleintrags verwendet."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
@@ -101,6 +102,9 @@ msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
 msgstr ""
+"Für den Fall, dass Sie Korrekturen für jede Zeile vornehmen müssen, kann es "
+"praktisch sein, diese zu kopieren. Wir werden sie nicht für Lastschriften "
+"aus Gutschriften kopieren. "
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_move
@@ -143,7 +147,7 @@ msgstr "Umzugstyp"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_count
 #: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_note_count
 msgid "Number of Debit Notes"
-msgstr ""
+msgstr "Anzahl der Lastschriften"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_id
@@ -162,7 +166,7 @@ msgstr "Grund"
 #: model:ir.model.fields,help:account_debit_note.field_account_move__debit_note_ids
 #: model:ir.model.fields,help:account_debit_note.field_account_payment__debit_note_ids
 msgid "The debit notes created for this invoice"
-msgstr ""
+msgstr "Die für diese Rechnung erstellten Belastungsanzeigen"
 
 #. module: account_debit_note
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0

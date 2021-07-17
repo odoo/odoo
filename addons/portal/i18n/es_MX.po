@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,13 +25,13 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "%d days overdue"
-msgstr "%d días de retraso"
+msgstr "%d días atrasados"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "%s is not the reference of a report"
-msgstr "%sno es la referencia de un informe"
+msgstr "%sno es la referencia de un reporte"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -54,7 +55,7 @@ msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil mx-1\"/>Editar los ajustes de seguridad"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -175,7 +176,7 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Su cuenta<br/>\n"
+"                    <span style=\"font-size: 10px;\">Su cuenta</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        ${object.user_id.name}\n"
 "                    </span>\n"
@@ -194,15 +195,15 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Estimado ${object.user_id.name or ''},<br/> <br/>\n"
-"                        Se le ha dado acceso al portal de ${object.user_id.company_id.name}.<br/>\n"
-"                        Los datos de su cuenta de inicio de sesión son:\n"
+"                        Estimado/a ${object.user_id.name or ''},<br/> <br/>\n"
+"                        Le dieron acceso al portal ${object.user_id.company_id.name}.<br/>\n"
+"                        Su información de inicio de sesión es:\n"
 "                        <ul>\n"
 "                            <li>Nombre de usuario: ${object.user_id.login or ''}</li>\n"
 "                            <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
 "                            <li>Base de datos: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
 "                        </ul>\n"
-"                        Puede establecer o cambiar su contraseña a través de la siguiente URL:\n"
+"                        Puede configurar o cambiar tu contraseña en el siguiente URL:\n"
 "                        <ul>\n"
 "                            <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
 "                        </ul>\n"
@@ -243,7 +244,7 @@ msgstr ""
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Desarrollado por <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        Con tecnología de <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -278,7 +279,7 @@ msgstr "Agregar nota"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Add attachment"
-msgstr "Añadir adjunto"
+msgstr "Añadir archivo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -339,8 +340,8 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"No se permite cambiar el nombre de la empresa una vez que se han emitidos "
-"documentos para su cuenta. Póngase en contacto con nosotros directamente "
+"No se permite cambiar el nombre de la empresa una vez que se han emitido los"
+" documentos para su cuenta. Póngase en contacto con nosotros directamente "
 "para esta operación."
 
 #. module: portal
@@ -348,7 +349,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Check failed"
-msgstr ""
+msgstr "Falló la comprobación"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -377,7 +378,9 @@ msgstr "Nombre de la compañía"
 msgid ""
 "Confirm\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "Confirmar"
+msgstr ""
+"Confirmar\n"
+"<span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: portal
 #. openerp-web
@@ -407,7 +410,7 @@ msgstr "Contactos"
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
 msgid "Could not save file <strong>%s</strong>"
-msgstr ""
+msgstr "No se pudo guardar el archivo <strong>%s</strong>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -441,6 +444,8 @@ msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
 msgstr ""
+"Por ahora está disponible a todos los que puedan ver este documento, de clic"
+" aquí para restringirlo a empleados internos."
 
 #. module: portal
 #. openerp-web
@@ -450,6 +455,8 @@ msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
+"Por ahora está restringido solo para empleados internos, de clic aquí para "
+"hacerlo disponible a cualquiera que esté viendo el documento."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -459,7 +466,7 @@ msgstr "URL del portal de cliente"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "Dear"
-msgstr "Querido"
+msgstr "Estimado/a"
 
 #. module: portal
 #. openerp-web
@@ -485,7 +492,7 @@ msgstr "Detalles"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
 #: model:ir.model.fields,field_description:portal.field_res_partner__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre en pantalla"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
@@ -497,14 +504,14 @@ msgstr "Documentos"
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due in %d days"
-msgstr "Vence en %d días"
+msgstr "Se debe entregar en %d días"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due today"
-msgstr "Fecha de vencimiento hoy"
+msgstr "Hoy es la fecha de entrega"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
@@ -522,7 +529,7 @@ msgstr "Hilo de mensajes"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Employees Only"
-msgstr ""
+msgstr "Solo empleados"
 
 #. module: portal
 #. openerp-web
@@ -535,7 +542,7 @@ msgstr "¿Olvidó su contraseña?"
 #: model:ir.model,name:portal.model_portal_wizard
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Portal Access"
-msgstr "Otorgar Acceso al Portal "
+msgstr "Otorgar acceso al portal "
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
@@ -545,7 +552,7 @@ msgstr "Otorgar acceso al portal "
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
 msgid "HTTP Routing"
-msgstr "Ruta HTTP "
+msgstr "Enrutamiento HTTP "
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -624,7 +631,7 @@ msgstr "Escriba un comentario"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
 msgid "Link"
-msgstr "Vínculo"
+msgstr "Enlace"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -648,6 +655,8 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
 msgstr ""
+"El modelo %(model_name)s no es compatible con la firma de token, ya que no "
+"tiene el campo %(field_name)s."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -662,7 +671,7 @@ msgstr "Nombre"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "New Password:"
-msgstr "Nueva contraseña:"
+msgstr "Contraseña nueva:"
 
 #. module: portal
 #. openerp-web
@@ -688,8 +697,7 @@ msgstr "Logo de Odoo"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
-"Upps! Algo anda mal. Intente recargar la pagina e ingresar nuevamente."
+msgstr "¡Uy! Algo anda mal. Intente recargar la pagina e ingresar nuevamente."
 
 #. module: portal
 #. openerp-web
@@ -706,7 +714,7 @@ msgstr "¡Contraseña actualizada!"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password:"
-msgstr ""
+msgstr "Contraseña:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -718,7 +726,7 @@ msgstr "Teléfono"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Please confirm your password to continue"
-msgstr ""
+msgstr "Confirme su contraseña para continuar "
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
@@ -738,7 +746,7 @@ msgstr "Compartir Portal"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr "Configuración usuario portal"
+msgstr "Configuración del portal del usuario"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -809,7 +817,7 @@ msgid ""
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
-"Seleccione que contactos deben pertenecer al portal en la siguiente lista.\n"
+"Seleccione qué contactos deben pertenecer al portal en la siguiente lista.\n"
 "La dirección de correo electrónico de cada contacto seleccionado debe ser válida y única.\n"
 "Si es necesario, puede corregir una dirección de correo de un contacto directamente en la lista."
 
@@ -866,7 +874,7 @@ msgstr "Algunos campos requeridos están vacíos."
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "State / Province"
-msgstr "Provincia"
+msgstr "Estado / Provincia"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -885,7 +893,7 @@ msgstr "¡Gracias!"
 #, python-format
 msgid "The attachment %s cannot be removed because it is linked to a message."
 msgstr ""
-"El archivo adjunto %sno se puede eliminar porque está vinculado a un "
+"El archivo adjunto %s no se puede eliminar porque está vinculado a un "
 "mensaje."
 
 #. module: portal
@@ -928,7 +936,7 @@ msgstr ""
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "The new password and its confirmation must be identical."
-msgstr "La nueva contraseña y su confirmación deben ser idénticas."
+msgstr "La nueva contraseña y la confirmación deben ser idénticas."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -936,8 +944,8 @@ msgstr "La nueva contraseña y su confirmación deben ser idénticas."
 msgid ""
 "The old password you provided is incorrect, your password was not changed."
 msgstr ""
-"La antigua contraseña que se ha introducido no es correcta. Su contraseña no"
-" se ha cambiado."
+"La antigua contraseña que introdujo no es correcta. Su contraseña no se ha "
+"cambiado."
 
 #. module: portal
 #. openerp-web
@@ -1011,7 +1019,7 @@ msgstr "NIF"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Verify New Password:"
-msgstr ""
+msgstr "Verifique la nueva contraseña "
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
@@ -1091,7 +1099,7 @@ msgstr "Mensajes del sitio web"
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
-msgstr "Historial de comunicaciones del sitio web"
+msgstr "Historial de comunicación del sitio web"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
@@ -1121,7 +1129,7 @@ msgstr "No puede dejar vacía ninguna contraseña"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "You have been invited to access the following document:"
-msgstr "Ha sido invitado a acceder al siguiente documento:"
+msgstr "Se le invitó a acceder al siguiente documento:"
 
 #. module: portal
 #. openerp-web
@@ -1136,8 +1144,8 @@ msgstr "Usted debe ser"
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
-"Debe tener una dirección email en sus preferencias de usuario para enviar "
-"emails"
+"Debe tener una dirección de correo electrónico en sus preferencias de "
+"usuario para enviar correos"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -1190,7 +1198,7 @@ msgstr "odoo"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
-msgstr ""
+msgstr "contraseña"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details

@@ -15,7 +15,7 @@
 # ChinaMaker <liuct@chinamaker.net>, 2020
 # Felix Yuen <fyu@odoo.com>, 2020
 # Jeanphy <hzh0292@qq.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# Felix Yang <felixyangsh@aliyun.com>, 2020
 # as co02 <asco02@163.com>, 2020
 # Datasource International <Hennessy@datasourcegroup.com>, 2020
 # GritLuo <dooms21day@163.com>, 2020
@@ -28,9 +28,9 @@
 # ljsrzc007 <ljsrzc007@gmail.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
 # Mandy Choy <mnc@odoo.com>, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -38,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Mandy Choy <mnc@odoo.com>, 2021\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2586,7 +2586,7 @@ msgstr "有效"
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__name
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__name
 msgid "Value"
-msgstr "价值"
+msgstr "值"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
@@ -2894,6 +2894,14 @@ msgid ""
 msgstr ""
 "不能删除值 %s ，因为该值已经用于以下产品:\n"
 "%s"
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot delete this pricelist (%s), it is used in other pricelist(s) : \n"
+"%s"
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product.py:0

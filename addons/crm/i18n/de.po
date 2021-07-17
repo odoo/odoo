@@ -14,7 +14,6 @@
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2020
 # Florian Pose <fp@igh.de>, 2020
 # Max-Milan Stoyanov, 2020
-# Martin Trigaux, 2020
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2020
 # Tobias Arndt, 2020
 # Leon Grill <leg@odoo.com>, 2020
@@ -23,6 +22,7 @@
 # Robert Förster <hello@suppliot.eu>, 2021
 # Andreas Schmidt <schmigo@gmail.com>, 2021
 # Ermin Trevisan <trevi@twanda.com>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Ermin Trevisan <trevi@twanda.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,7 +73,7 @@ msgstr "# Nicht zugewiesene Interessenten"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "% else"
-msgstr "% andere"
+msgstr "% else"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -83,7 +83,7 @@ msgstr "% endif"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "% if record and record.alias_domain"
-msgstr "% if record und record.alias_domain"
+msgstr "% if record and record.alias_domain"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -321,15 +321,15 @@ msgstr ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
-"                            Hallo ${object.partner_id und object.partner_id.name oder ''},<br/><br/>\n"
+"                            Hallo ${object.partner_id and object.partner_id.name or ''},<br/><br/>\n"
 "                            Willkommen bei ${object.company_id.name}.\n"
 "                            Es ist toll, Sie kennenzulernen! Jetzt, wo Sie an Bord sind, werden Sie entdecken, was ${object.company_id.name} zu bieten hat. Mein Name ist ${object.user_id.name} und ich werde Ihnen helfen, das Beste aus Odoo herauszuholen. Könnten wir bald eine kurze Demo planen?<br/>\n"
 "                            Sprechen Sie mich jederzeit gerne an!<br/><br/>\n"
 "                            Mit freundlichen Grüßen,<br/>\n"
 "                            % if object.user_id:\n"
 "                               <b>${object.user_id.name}\n"
-"</b>                               <br/> Email: ${object.user_id.email oder ''}\n"
-"                                <br/> Telefon: ${object.user_id.phone oder ''}\n"
+"</b>                               <br/> Email: ${object.user_id.email or ''}\n"
+"                                <br/> Telefon: ${object.user_id.phone or ''}\n"
 "                            % e lse:\n"
 "                                ${object.company_id.name}\n"
 "                            % endif\n"
