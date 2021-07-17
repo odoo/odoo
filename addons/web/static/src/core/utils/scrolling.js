@@ -4,9 +4,9 @@
  * Ensures that `element` will be visible in its `scrollable`.
  *
  * @param {HTMLElement} element
- * @param {HTMLElement} scrollable
+ * @param {HTMLElement} [scrollable]
  */
-export function scrollTo(element, scrollable) {
+export function scrollTo(element, scrollable = null) {
     function _getScrollParent(node) {
         if (node == null) {
             return null;
