@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from functools import partial
 from itertools import groupby
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.misc import formatLang, get_lang
 from odoo.osv import expression
@@ -1090,6 +1090,14 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            if line.order_id.pricelist_id and line.product_id and line.discount:
+                date = fields.Date.today()
+                prod_tmpl_ids = line.product_id.product_tmpl_id.ids
+                prod_ids = line.product_id.ids
+                categ_ids = line.product_id.categ_id.ids
+                rule_id = line.order_id.pricelist_id._compute_price_rule_get_items(None, date, None, prod_tmpl_ids, prod_ids, categ_ids)
+                if rule_id and rule_id[0].price_round:
+                    price = tools.float_round(price, precision_rounding=rule_id[0].price_round)
             taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
             line.update({
                 'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
