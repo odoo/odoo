@@ -10,11 +10,11 @@
 # Jan Meyer, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2019
-# Chris Egal <sodaswed@web.de>, 2019
 # Ermin Trevisan <trevi@twanda.com>, 2020
 # Kevin Harrings <kha@odoo.com>, 2020
 # Florian Pose <fp@igh.de>, 2020
 # Andreas Schmidt <schmigo@gmail.com>, 2021
+# Chris Egal <sodaswed@web.de>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Andreas Schmidt <schmigo@gmail.com>, 2021\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,7 +85,7 @@ msgstr "Unternehmen und deren Kontakte"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__company_size_min
 msgid "Company Size"
-msgstr ""
+msgstr "Unternehmen Größe"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__company_size_max
@@ -110,7 +110,7 @@ msgstr "Erstellt am"
 #. module: crm_iap_lead_website
 #: model_terms:ir.actions.act_window,help:crm_iap_lead_website.crm_reveal_rule_action
 msgid "Create a conversion rule"
-msgstr ""
+msgstr "Erstellen einer Konvertierungsregel"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.actions.act_window,help:crm_iap_lead_website.crm_reveal_rule_action
@@ -132,7 +132,7 @@ msgstr "Erstellt am"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__lead_for
 msgid "Data Tracking"
-msgstr ""
+msgstr "Datenverfolgung"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__display_name
@@ -144,17 +144,17 @@ msgstr "Anzeigename"
 #: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Enter Valid Regex."
-msgstr ""
+msgstr "Enter Valid Regex."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__contact_filter_type
 msgid "Filter On"
-msgstr ""
+msgstr "Filter an"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__filter_on_size
 msgid "Filter companies based on their size."
-msgstr ""
+msgstr "Filtern Sie Unternehmen nach ihrer Größe."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__filter_on_size
@@ -288,7 +288,7 @@ msgstr ""
 #. module: crm_iap_lead_website
 #: model:ir.model.constraint,message:crm_iap_lead_website.constraint_crm_reveal_rule_limit_extra_contacts
 msgid "Maximum 5 contacts are allowed!"
-msgstr ""
+msgstr "Es sind maximal 5 Kontakte erlaubt!"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__priority__1
@@ -299,7 +299,7 @@ msgstr "Mittel"
 #: code:addons/crm_iap_lead_website/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Missing Library"
-msgstr ""
+msgstr "Fehlende Bibliothek"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_view__reveal_state__not_found
@@ -412,7 +412,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__seniority_id
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_rule__contact_filter_type__seniority
 msgid "Seniority"
-msgstr ""
+msgstr "Dienstalter"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_reveal_rule__sequence
@@ -446,6 +446,10 @@ msgid ""
 "criteria. Their details will show up in the history thread of generated "
 "leads/opportunities. One credit is consumed per tracked contact."
 msgstr ""
+"Dies ist die Anzahl der zu verfolgenden Kontakte, wenn deren "
+"Rolle/Seniorität Ihren Kriterien entspricht. Ihre Details werden im "
+"Verlaufsfaden der generierten Leads/Opportunities angezeigt. Für jeden "
+"verfolgten Kontakt wird ein Credit verbraucht."
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,help:crm_iap_lead_website.field_crm_reveal_rule__suffix
@@ -453,6 +457,8 @@ msgid ""
 "This will be appended in name of generated lead so you can identify "
 "lead/opportunity is generated with this rule"
 msgstr ""
+"Dies wird an den Namen des generierten Leads angehängt, damit Sie erkennen "
+"können, dass der Lead/die Opportunity mit dieser Regel generiert wurde"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields.selection,name:crm_iap_lead_website.selection__crm_reveal_view__reveal_state__to_process
@@ -503,27 +509,29 @@ msgstr "Website"
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "Website Traffic Conditions"
-msgstr ""
+msgstr "Website Traffic-Bedingungen"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "additional credit(s) are consumed if the company matches this rule."
 msgstr ""
+"zusätzliche Gutschrift(en) verbraucht werden, wenn die Firma dieser Regel "
+"entspricht."
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "e.g. /page"
-msgstr ""
+msgstr "z.B. /Seite"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "e.g. US Visitors"
-msgstr ""
+msgstr "z.B. US-Besucher"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
 msgid "employees"
-msgstr ""
+msgstr "Mitarbeiter"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
