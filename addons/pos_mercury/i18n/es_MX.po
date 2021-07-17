@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +23,7 @@ msgstr ""
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Buy a card reader"
-msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>"
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Comprar un lector de tarjetas"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -34,10 +35,10 @@ msgid ""
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
 "Las <i>configuraciones de Vantiv</i> definen qué cuenta de Vantiv se utilizará cuando\n"
-"                                 se procesa transacciones con tarjeta de crédito en el punto de venta. Configurar un configuración  de Vantiv\n"
-"                                  le permitirá permitir pagos con varias tarjetas de crédito\n"
-"                                 (por ejemplo, Visa, MasterCard, Discovery, American Express, ...). Después de configurar esta\n"
-"                                 configuración, debe asociarla con un método de pago de Punto de Venta."
+"                                 se procesen transacciones con tarjeta de crédito en el punto de venta. Configurar Vantiv le permitirá\n"
+"                                  realizar pagos con varias tarjetas de crédito\n"
+"                                 (por ejemplo, Visa, MasterCard, Discovery, American Express, ...). Después de realizar la\n"
+"                                 configuración, debe asociarla con uno de los métodos de pago del punto de venta."
 
 #. module: pos_mercury
 #. openerp-web
@@ -63,7 +64,7 @@ msgstr "Regla de código de barras"
 #: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "CARDHOLDER WILL PAY CARD ISSUER"
-msgstr "EL TITULAR DE LA TARJETA PAGARÁ EL EMISOR DE LA TARJETA"
+msgstr "EL TITULAR DE LA TARJETA LE PAGARÁ AL EMISOR DE LA TARJETA"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_brand
@@ -84,13 +85,13 @@ msgstr "Prefijo de número de tarjeta"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_owner_name
 msgid "Card Owner Name"
-msgstr "Propietario de tarjeta"
+msgstr "Nombre del titular de la tarjeta"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_tree
 msgid "Card Reader"
-msgstr "Lector de Tarjetas"
+msgstr "Lector de tarjetas"
 
 #. module: pos_mercury
 #: model_terms:ir.actions.act_window,help:pos_mercury.action_configuration_form
@@ -119,7 +120,7 @@ msgstr "Creado el"
 #. module: pos_mercury
 #: model:ir.model.fields.selection,name:pos_mercury.selection__barcode_rule__type__credit
 msgid "Credit Card"
-msgstr "Tarjetas de Crédito"
+msgstr "Tarjeta de Crédito"
 
 #. module: pos_mercury
 #. openerp-web
@@ -132,7 +133,7 @@ msgid ""
 msgstr ""
 "No se puede procesar reembolsos de tarjetas de crédito. En su lugar, "
 "seleccione el método de pago de su tarjeta de crédito, haga clic en "
-"'Validar' y reembolse el cargo original manualmente a través del backend "
+"'Validar' y reembolse el cargo original manualmente a través del backend de "
 "Vantiv."
 
 #. module: pos_mercury
@@ -143,7 +144,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment_method__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre en pantalla"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -152,8 +153,8 @@ msgid ""
 "                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
-"Para gestionar pedidos rápidamente: simplemente pasando una tarjeta de crédito\n"
-"cuando se esté en la pantalla de pago (sin haber presionado nada más) se cargará\n"
+"Para gestionar pedidos rápidamente: solo debe pasar la tarjeta de crédito\n"
+"cuando esté en la pantalla de pago (sin haber presionado nada más) para que se cobre\n"
 "la cantidad total del pedido en la tarjeta."
 
 #. module: pos_mercury
@@ -161,14 +162,14 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "Go to payment screen to use cards"
-msgstr "Ir a pantalla de pago para usar tarjetas"
+msgstr "Ir a la pantalla de pago para usar tarjetas"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Handling transaction..."
-msgstr "Gestionando transacción..."
+msgstr "Gestionar transacción..."
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_barcode_rule__id
@@ -183,8 +184,7 @@ msgstr "ID"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_id
 msgid "ID of the merchant to authenticate him on the payment provider server"
-msgstr ""
-"ID del comerciante para identificarlo en el servidor del proveedor de pagos"
+msgstr "ID del vendedor para autenticarlo en el servidor del método de pago"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -230,7 +230,7 @@ msgstr "ID de comerciante"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_pwd
 msgid "Merchant Password"
-msgstr "Contraseña del comerciante"
+msgstr "Contraseña del vendedor"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__name
@@ -260,14 +260,14 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "No response from Vantiv (Vantiv down?)"
-msgstr "No hay respuesta de Vantiv (¿Vantiv caído?)"
+msgstr "No hay respuesta de Vantiv (¿el servidor de Vantiv está inactivo?)"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "No response from server (connected to network?)"
-msgstr "Si respuesta del servidor (¿está conectado a la red?)"
+msgstr "El servidor no responde (¿está conectado a la red?)"
 
 #. module: pos_mercury
 #. openerp-web
@@ -275,7 +275,7 @@ msgstr "Si respuesta del servidor (¿está conectado a la red?)"
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Odoo error while processing transaction."
-msgstr "Error de Odoo al momento de procesar a transacción."
+msgstr "Ocurrió un erro dentro de Odoo al momento de procesar a transacción."
 
 #. module: pos_mercury
 #. openerp-web
@@ -314,12 +314,12 @@ msgstr "Número de referencia de pago de Vantiv Pay"
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Please setup your Vantiv merchant account."
-msgstr "Configure su cuenta de comerciante Vantiv."
+msgstr "Configure su cuenta de vendedor de Vantiv."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Pedidos del TPV"
+msgstr "Pedidos del PdV"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment_method
@@ -346,7 +346,7 @@ msgstr "Transacción Vantiv en Punto de Venta"
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Refunds not supported"
-msgstr "Reembolsos no se pueden procesar"
+msgstr "Los reembolsos no se pueden procesar"
 
 #. module: pos_mercury
 #. openerp-web
@@ -409,8 +409,8 @@ msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
 "layout set to US QWERTY (not US International)."
 msgstr ""
-"Esto puede ser causado por un pase mal ejecutado o por no tener su "
-"configuración de teclado a QWERTY de EE.UU. (no internacional de EE.UU.)."
+"Esto pudo ocurrir porque no se pasó bien la tarjeta o por que su teclado no "
+"está configurado a QWERTY de EE. UU (no internacional de EE. UU.)."
 
 #. module: pos_mercury
 #. openerp-web
@@ -433,7 +433,7 @@ msgid ""
 "                                can be swiped through the card reader device."
 msgstr ""
 "Usar la integración de Vantiv en el Punto de Venta es fácil: solo presione el\n"
-"                                 método de pago asociado. Después de eso, la cantidad se puede ajustar (por ejemplo, para devolución de dinero)\n"
+"                                 método de pago asociado. Puede ajustar la cantidad después de eso (por ejemplo, para regresar dinero)\n"
 "                                 al igual que en cualquier otra línea de pago. Cada vez que se configura la línea de pago, una tarjeta\n"
 "                                 se puede pasar por el dispositivo lector de tarjetas."
 
@@ -480,7 +480,7 @@ msgstr "VoidSale exitoso"
 #: code:addons/pos_mercury/static/src/xml/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "WAITING FOR SWIPE"
-msgstr "ESPERANDO PASE DE TARJETA"
+msgstr "ESPERANDO A QUE PASE LA TARJETA"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -488,7 +488,7 @@ msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
 "                                directly to the Point Of Sale device or it can be connected to the IoTBox."
 msgstr ""
-"Actualmente admitimos el dispositivo lector de tarjetas MagTek Dynamag. Se puede conectar\n"
+"Actualmente aceptamos el dispositivo lector de tarjetas MagTek Dynamag. Se puede conectar\n"
 "                                 directamente al dispositivo de punto de venta o se puede conectar a la caja de IoT."
 
 #. module: pos_mercury
