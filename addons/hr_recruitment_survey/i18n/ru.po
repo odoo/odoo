@@ -3,15 +3,19 @@
 # 	* hr_recruitment_survey
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# Gennady Marchenko <gennadym@gmail.com>, 2017
+# Collex100, 2017
+# Sergey Vilizhanin, 2017
+# Martin Trigaux, 2017
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-26 11:13+0000\n"
 "Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -23,11 +27,9 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid ""
-"<span class=\"o_stat_text\">Print</span>\n"
+"<span class=\"o_stat_text\">Consult</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Пчать</span>\n"
-"                        <span class=\"o_stat_text\">Интервью</span>"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -49,19 +51,6 @@ msgid "Applicant"
 msgstr "Соискатель"
 
 #. module: hr_recruitment_survey
-#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__category
-msgid "Category"
-msgstr "Категория"
-
-#. module: hr_recruitment_survey
-#: model:ir.model.fields,help:hr_recruitment_survey.field_survey_survey__category
-msgid ""
-"Category is used to know in which context the survey is used. Various apps "
-"may define their own categories when they use survey like jobs recruitment "
-"or employee appraisal surveys."
-msgstr ""
-
-#. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
 msgid ""
@@ -73,6 +62,11 @@ msgstr ""
 "на эту работу"
 
 #. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+msgid "Create Interview Form"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_job_survey_inherit
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Display Interview Form"
@@ -80,9 +74,14 @@ msgstr "Открыть схему собеседования"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__survey_id
-#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interview Form"
 msgstr "Форма интервью"
+
+#. module: hr_recruitment_survey
+#: code:addons/hr_recruitment_survey/models/hr_job.py:0
+#, python-format
+msgid "Interview Form : %s"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
@@ -96,18 +95,8 @@ msgstr "Должность"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
-msgid "No Interview Form"
-msgstr "Без плана собеседования"
-
-#. module: hr_recruitment_survey
-#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
-msgid "Print interview report"
-msgstr "Печать отчета собеседования"
-
-#. module: hr_recruitment_survey
-#: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__category__hr_recruitment
-msgid "Recruitment"
-msgstr "Найм"
+msgid "Preview Interview"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_id
@@ -115,7 +104,13 @@ msgid "Response"
 msgstr "Ответ"
 
 #. module: hr_recruitment_survey
-#: model:ir.model,name:hr_recruitment_survey.model_survey_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
+msgid "See interview report"
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: code:addons/hr_recruitment_survey/models/hr_job.py:0
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
+#, python-format
 msgid "Survey"
 msgstr "Опрос"

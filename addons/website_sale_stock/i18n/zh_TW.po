@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# JustinC <dev@dottdot.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:14+0000\n"
+"Last-Translator: JustinC <dev@dottdot.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +66,7 @@ msgstr "自定義消息"
 msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
-msgstr ""
+msgstr "在新創建的可庫存產品上設置預設可用性模式。這可以在產品級別更改。"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -101,12 +102,12 @@ msgstr "模式"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product"
-msgstr "商品"
+msgstr "產品"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_template
 msgid "Product Template"
-msgstr "产品模板"
+msgstr "產品模板"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
@@ -116,7 +117,7 @@ msgstr "銷售訂單"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "銷售訂單明細"
+msgstr "銷售訂單行"
 
 #. module: website_sale_stock
 #: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__never
@@ -140,7 +141,7 @@ msgstr "在網站上顯示庫存並且如果沒有足夠的庫存，則阻止銷
 msgid ""
 "Show inventory when below the threshold and prevent sales if not enough "
 "stock"
-msgstr ""
+msgstr "在低於門檻數量時顯示庫存，如果庫存不足，則無法進行銷售"
 
 #. module: website_sale_stock
 #: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__custom
@@ -166,7 +167,7 @@ msgstr "暫時缺貨"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Threshold"
-msgstr ""
+msgstr "門檻數量"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -182,6 +183,8 @@ msgstr "倉庫"
 
 #. module: website_sale_stock
 #. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__warning_stock
@@ -201,7 +204,7 @@ msgstr "網站"
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website this picking belongs to."
-msgstr ""
+msgstr "這個網站的所屬公司"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -209,6 +212,13 @@ msgstr ""
 #, python-format
 msgid "You already added"
 msgstr "您已經添加"
+
+#. module: website_sale_stock
+#: code:addons/website_sale_stock/controllers/main.py:0
+#, python-format
+msgid ""
+"You ask for %(quantity)s products but only %(available_qty)s is available"
+msgstr "您想要的產品數量為 %(quantity)s ，但目前只剩下 %(available_qty)s 庫存"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:0

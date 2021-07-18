@@ -3,51 +3,36 @@
 # 	* web
 # 
 # Translators:
-# Davor Bojkić <davor.bojkic@storm.hr>, 2019
-# Martin Trigaux, 2019
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
-# Jasmina Otročak <jasmina@uvid.hr>, 2019
+# Filip Cuk <filipcuk2@gmail.com>, 2017
+# Jasmina Otročak <jasmina@uvid.hr>, 2017
 # Mario Jureša <mario.juresa@uvid.hr>, 2019
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
-# Tina Milas, 2019
-# Bole <bole@dajmi5.com>, 2019
+# Milan Tribuson <one.mile.code@gmail.com>, 2019
+# Vojislav Opačić <vojislav.opacic@gmail.com>, 2019
+# Igor Krizanovic <krizanovic.igor@gmail.com>, 2020
+# Davor Bojkić <davor.bojkic@storm.hr>, 2020
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2020
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2020
+# Tina Milas, 2020
+# Hrvoje Sić <hrvoje.sic@gmail.com>, 2021
+# Martin Trigaux, 2021
+# Bole <bole@dajmi5.com>, 2021
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2021
+# Helena Viher <viherhelena@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
+"Last-Translator: Helena Viher <viherhelena@gmail.com>, 2021\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/calendar/calendar_model.js:0
-#, python-format
-msgid " [Me]"
-msgstr " [Ja]"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#, python-format
-msgid " and "
-msgstr "i"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_facet.js:0
-#, python-format
-msgid " or "
-msgstr "ili"
 
 #. module: web
 #. openerp-web
@@ -61,22 +46,7 @@ msgstr "zapisa"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "# Code editor"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#, python-format
-msgid "%(field)s %(operator)s"
-msgstr "%(field)s %(operator)s"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#, python-format
-msgid "%(field)s %(operator)s \"%(value)s\""
-msgstr "%(field)s %(operator)s \"%(value)s\""
+msgstr "# Uređivanje koda"
 
 #. module: web
 #. openerp-web
@@ -114,19 +84,18 @@ msgid "%d years ago"
 msgstr "%d godina prije"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.webclient_bootstrap
-msgid ""
-"&lt;!--[if lt IE 10]&gt;\n"
-"                        &lt;body class=\"ie9\"&gt;\n"
-"                    &lt;![endif]--&gt;"
-msgstr ""
+#. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_mixin.js:0
+#, python-format
+msgid "%s Files"
+msgstr "%s datoteka"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/notification.xml:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "&times;"
-msgstr "&times;"
+msgid "%s days ago"
+msgstr "Prije %s dana"
 
 #. module: web
 #. openerp-web
@@ -168,7 +137,7 @@ msgstr "'%s' nije ispravna cjelobrojna vrijednost"
 #: code:addons/web/static/src/js/fields/field_utils.js:0
 #, python-format
 msgid "'%s' is not a correct monetary field"
-msgstr ""
+msgstr "'%s' nije ispravno monetarno polje"
 
 #. module: web
 #. openerp-web
@@ -179,18 +148,38 @@ msgstr "Interpretacija '%s' ne reultira datumom ili vremenom"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/debug.xml:0
+#: code:addons/web/static/src/js/views/basic/basic_model.js:0
 #, python-format
-msgid "(change)"
+msgid "'%s' is unsynchronized with '%s'."
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/js/views/file_upload_progress_card.js:0
+#, python-format
+msgid "(%s/%sMb)"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
+msgid "(change)"
+msgstr "(izmjena)"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "(count)"
-msgstr ""
+msgstr "(računati)"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/control_panel/search_bar.js:0
+#, python-format
+msgid "(no result)"
+msgstr "(nema rezultata)"
 
 #. module: web
 #. openerp-web
@@ -207,43 +196,193 @@ msgid "(nolabel)"
 msgstr "(bez natpisa)"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "07/08/2020"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "08/07/2020"
+msgstr ""
+
+#. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/field_utils.js:0
 #, python-format
 msgid "1 record"
-msgstr ""
+msgstr "1 zapis"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
+msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span class=\"text-nowrap\">$ 18,750.00</span>"
 msgstr ""
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.frontend_layout
-msgid "<span>Copyright &amp;copy;</span>"
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
+"                                                       143,750.00</span></span>"
 msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">117,500.00</span></span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">7,500.00</span></span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span class=\"text-nowrap\">1,500.00</span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span class=\"text-nowrap\">23,500.00</span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span class=\"text-nowrap\">Tax 15%</span>"
+msgstr "<span class=\"text-nowrap\">Porez 15%</span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
+"                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span id=\"line_tax_ids\">15.00%</span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span itemprop=\"name\">Deco Addict</span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span>$ <span class=\"oe_currency_value\">125,000.00</span></span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span>5.000</span>"
+msgstr ""
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span>Amount</span>"
+msgstr "<span>Količina</span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span>Description</span>"
+msgstr "<span>Opis</span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"<span>Invoice</span>\n"
+"                           <span>INV/2020/07/0003</span>"
+msgstr ""
+"<span>Račun</span>\n"
+"                           <span>INV/2020/07/0003</span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span>Payment terms: 30 Days</span>"
+msgstr "<span>Uvjeti plaćanja: 30 dana</span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span>Quantity</span>"
+msgstr "<span>Količina</span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span>Taxes</span>"
+msgstr "<span>Porezi</span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<span>Unit Price</span>"
+msgstr "<span>Jedinična cijena</span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"<span>[FURN_8220] Four Person Desk<br/>\n"
+"                                       Four person modern office workstation</span>"
+msgstr ""
+"<span>[FURN_8220] Stol za četiri osobe<br/>\n"
+"                                       Moderna uredska radna stanica za četiri osobe</span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"<span>[FURN_8999] Three-Seat Sofa<br/>\n"
+"                                       Three Seater Sofa with Lounger in Steel Grey Colour</span>"
+msgstr ""
+"<span>[FURN_8999] Sofa s tri sjedala<br/>\n"
+"                                       Sofa s tri sjedala s ležaljkom u čelično sivoj boji</span>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<strong>Due Date:</strong>"
+msgstr "<strong>Datum dospijeća:</strong>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<strong>Invoice Date:</strong>"
+msgstr "<strong>Datum računa:</strong>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<strong>Subtotal</strong>"
+msgstr "<strong>Podzbroj</strong>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "<strong>Total</strong>"
+msgstr "<strong>Ukupno</strong>"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/add_new_favorite_menu.js:0
+#: code:addons/web/static/src/js/control_panel/custom_favorite_item.js:0
 #, python-format
-msgid "A name for your favorite is required."
-msgstr ""
+msgid "A name for your favorite filter is required."
+msgstr "Ime Vašeg najdražeg filtera je obavezno."
 
 #. module: web
 #. openerp-web
@@ -253,6 +392,8 @@ msgid ""
 "A popup window has been blocked. You may need to change your browser "
 "settings to allow popup windows for this page."
 msgstr ""
+"Skočni prozor je blokiran. Možda ćete trebati promijeniti postavke "
+"preglednika da biste omogućili skočne prozore za ovu stranicu."
 
 #. module: web
 #. openerp-web
@@ -262,20 +403,23 @@ msgid ""
 "A popup window with your report was blocked. You may need to change your "
 "browser settings to allow popup windows for this page."
 msgstr ""
+"Skočni prozor s vašim izvješćem bio je blokiran. Možda ćete trebati "
+"promijeniti postavke preglednika da biste omogućili skočne prozore za ovu "
+"stranicu."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "ALL"
-msgstr ""
+msgstr "SVI"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "ANY"
-msgstr ""
+msgstr "BILO KOJI"
 
 #. module: web
 #. openerp-web
@@ -300,13 +444,6 @@ msgstr "Pristup svim aplikacijama za poduzeća"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome/sidebar.js:0
-#, python-format
-msgid "Action"
-msgstr "Akcija"
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Action ID:"
@@ -315,21 +452,21 @@ msgstr "ID akcije:"
 #. module: web
 #: model:ir.model,name:web.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr ""
+msgstr "Radni prozor"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Activate Assets Debugging"
-msgstr ""
+msgstr "Aktivirajte debugiranje imovine"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Activate Tests Assets Debugging"
-msgstr ""
+msgstr "Aktivirajte debugiranje testne imovine"
 
 #. module: web
 #. openerp-web
@@ -345,7 +482,7 @@ msgstr "Dodaj"
 #: code:addons/web/static/src/js/views/calendar/calendar_renderer.js:0
 #, python-format
 msgid "Add %s"
-msgstr ""
+msgstr "Dodati %s"
 
 #. module: web
 #. openerp-web
@@ -359,14 +496,14 @@ msgstr "Dodaj filtar"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add Custom Group"
-msgstr ""
+msgstr "Dodaj grupiranje"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add a Column"
-msgstr ""
+msgstr "Dodajte stupac"
 
 #. module: web
 #. openerp-web
@@ -386,58 +523,57 @@ msgstr "Dodaj stavku"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add branch"
-msgstr ""
+msgstr "Dodajte podružnicu"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add column"
-msgstr ""
+msgstr "Dodajte stupac"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add filter"
-msgstr ""
+msgstr "Dodaj filter"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add new value"
-msgstr ""
+msgstr "Dodajte novu vrijednost"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add node"
-msgstr ""
+msgstr "Dodajte čvor"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add tag"
-msgstr ""
+msgstr "Dodaj oznaku"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Add to Favorites"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Add..."
-msgstr "Dodaj…"
+msgstr "Dodaj u omiljene"
 
 #. module: web
 #. openerp-web
@@ -448,24 +584,17 @@ msgstr "Dodaj: "
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/signature.js:0
+#: code:addons/web/static/src/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt Your Signature"
 msgstr "Usvoji svoj potpis"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/signature.js:0
+#: code:addons/web/static/src/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt and Sign"
 msgstr "Usvoji i potpiši"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Advanced Search..."
-msgstr "Napredno pretraživanje..."
 
 #. module: web
 #. openerp-web
@@ -476,9 +605,10 @@ msgstr "Alarm"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/search_panel_model_extension.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
-#: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "All"
 msgstr "Sve"
@@ -525,14 +655,14 @@ msgstr "Alt"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Among the"
-msgstr ""
+msgstr "Između"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/crash_manager.xml:0
 #, python-format
 msgid "An error occurred"
-msgstr ""
+msgstr "Došlo je do greške"
 
 #. module: web
 #. openerp-web
@@ -543,6 +673,10 @@ msgid ""
 "JavaScript file served from a different origin. (Opening your browser "
 "console might give you a hint on the error.)"
 msgstr ""
+"Dogodila se nepoznata CORS greška. Ova greška najvjerojatnije potječe iz "
+"JavaScript datoteke koja je preuzeta iz drugog izvora. (Otvaranjem konzole u"
+" Vašem pretraživaču mogli biste dobiti ideju o tome o kakvoj se grešci "
+"radi.)"
 
 #. module: web
 #. openerp-web
@@ -560,13 +694,21 @@ msgid "Any"
 msgstr "Bilokoji"
 
 #. module: web
+#: model:ir.model.fields,help:web.field_base_document_layout__report_header
+msgid ""
+"Appears by default on the top right corner of your printed documents (report"
+" header)."
+msgstr ""
+"Pojavljuje se u gornjem desnom kutu ispisanih dokumenata ( zaglavlje "
+"izvještaja)"
+
+#. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Apply"
-msgstr "Primijeni"
+msgstr "Primjeni"
 
 #. module: web
 #. openerp-web
@@ -581,7 +723,7 @@ msgstr "Arhiviraj"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Archive All"
-msgstr ""
+msgstr "Arhiviraj sve"
 
 #. module: web
 #. openerp-web
@@ -589,21 +731,21 @@ msgstr ""
 #, python-format
 msgid ""
 "Are you sure that you want to archive all the records from this column?"
-msgstr ""
+msgstr "Jeste li sigurni da želite da arhivirate sve zapise iz ove kolone?"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive all the selected records?"
-msgstr ""
+msgstr "Jeste li sigurni da želite da arhivirate sve izabrane zapise?"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive this record?"
-msgstr ""
+msgstr "Jeste li sigurni da želite arhivirati ovaj zapis?"
 
 #. module: web
 #. openerp-web
@@ -614,14 +756,27 @@ msgstr "Sigurno želite ukloniti ovaj stupac?"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/favorite_menu.js:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Are you sure that you want to remove this filter?"
 msgstr "Sigurno želite obrisati ovaj filtar?"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/list/list_controller.js:0
+#, python-format
+msgid "Are you sure you want to delete these records ?"
+msgstr "Jeste li sigurni da želite izbrisati ove zapise?"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
+#, python-format
+msgid "Are you sure you want to delete these records?"
+msgstr "Jeste li sigurni da želite izbrisati ove zapise?"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete this record ?"
@@ -629,17 +784,33 @@ msgstr "Sigurno želite obrisati ovaj zapis?"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #, python-format
-msgid "Are you sure you want to perform the following update on those"
-msgstr ""
+msgid "Are you sure you want to delete this record?"
+msgstr "Jeste li sigurni da želite izbrisati ovaj zapis?"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
+msgid "Are you sure you want to perform the following update on those"
+msgstr "Jeste li sigurni da želite provesti sljedeća ažuriranja na ovim"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Ascending"
+msgstr "Uzlazni"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
 msgid "Attach"
-msgstr ""
+msgstr "Privitak"
 
 #. module: web
 #. openerp-web
@@ -647,13 +818,6 @@ msgstr ""
 #, python-format
 msgid "Attachment"
 msgstr "Prilog"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Attachment :"
-msgstr "Privitak:"
 
 #. module: web
 #. openerp-web
@@ -672,14 +836,21 @@ msgstr "Dostupna polja"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/web_calendar.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Avatar"
 msgstr "Avatar"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields_owl.js:0
+#, python-format
+msgid "Badge"
+msgstr "Značka"
 
 #. module: web
 #. openerp-web
@@ -690,6 +861,7 @@ msgstr "Značke"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Bar Chart"
@@ -702,17 +874,10 @@ msgstr "Osnovica"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Based On"
-msgstr ""
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Become Superuser"
-msgstr ""
+msgstr "Postani superkorisnik"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -721,6 +886,8 @@ msgid ""
 "Binary fields can not be exported to Excel unless their content is "
 "base64-encoded. That does not seem to be the case for %s."
 msgstr ""
+"Binarna polja se ne mogu izvesti u Excel ukoliko njihov sadržaj nije "
+"base64-enkodiran. Čini se da to nije slučaj sa %s."
 
 #. module: web
 #. openerp-web
@@ -729,13 +896,6 @@ msgstr ""
 #, python-format
 msgid "Binary file"
 msgstr "Binarna datoteka"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/colorpicker_dialog.xml:0
-#, python-format
-msgid "Blue"
-msgstr "Plavo"
 
 #. module: web
 #. openerp-web
@@ -783,17 +943,17 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "CLEAR"
-msgstr ""
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/js/views/calendar/calendar_view.js:0
 #, python-format
 msgid "Calendar"
 msgstr "Kalendar"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/web_calendar.xml:0
+#, python-format
+msgid "Calendar toolbar"
+msgstr "Alatna traka kalendara"
 
 #. module: web
 #. openerp-web
@@ -807,32 +967,34 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/core/dialog.js:0
-#: code:addons/web/static/src/js/fields/relational_fields.js:0
-#: code:addons/web/static/src/js/fields/signature.js:0
 #: code:addons/web/static/src/js/fields/upgrade_fields.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/js/views/list/list_confirm_dialog.js:0
+#: code:addons/web/static/src/js/views/signature_dialog.js:0
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
 msgid "Cancel"
 msgstr "Odustani"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
+#: code:addons/web/static/src/xml/file_upload_progress_bar.xml:0
+#: code:addons/web/static/src/xml/file_upload_progress_bar.xml:0
 #, python-format
-msgid "Cannot render chart with mode : "
-msgstr ""
+msgid "Cancel Upload"
+msgstr "Otkaži prijenos"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "Card color: %s"
-msgstr ""
+msgstr "Boja kartice: %s"
 
 #. module: web
 #. openerp-web
@@ -853,27 +1015,46 @@ msgstr "Promjeni zadano:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Change graph"
+msgstr "Izmijeni grafikon"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/_deprecated/basic_fields.js:0
+#: code:addons/web/static/src/js/fields/basic_fields_owl.js:0
 #, python-format
 msgid "Checkbox"
-msgstr ""
+msgstr "Potvrdni okvir"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Checkboxes"
-msgstr ""
+msgstr "Potvrdni okviri"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/colorpicker_dialog.js:0
+#: code:addons/web/static/src/js/widgets/colorpicker.js:0
 #, python-format
 msgid "Choose"
 msgstr "Odaberite"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Choose File"
+msgstr "Odaberite datoteku"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
@@ -887,7 +1068,7 @@ msgstr "Očisti"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Clear Events"
-msgstr ""
+msgstr "Očistite događaje"
 
 #. module: web
 #. openerp-web
@@ -899,20 +1080,31 @@ msgstr "Jasan potpis"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
+#: code:addons/web/static/src/js/views/kanban/kanban_column_quick_create.js:0
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #: code:addons/web/static/src/js/widgets/domain_selector_dialog.js:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/dialog.xml:0
+#: code:addons/web/static/src/xml/notification.xml:0
 #, python-format
 msgid "Close"
 msgstr "Zatvori"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
+msgid "Colors"
+msgstr "Boje"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Column %s"
-msgstr ""
+msgstr "Stupac %s"
 
 #. module: web
 #. openerp-web
@@ -922,16 +1114,46 @@ msgid "Column title"
 msgstr "Naziv kolone"
 
 #. module: web
+#: model:ir.model,name:web.model_res_company
+msgid "Companies"
+msgstr "Tvrtke"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__company_id
+msgid "Company"
+msgstr "Tvrtka"
+
+#. module: web
+#: model:ir.model,name:web.model_base_document_layout
+msgid "Company Document Layout"
+msgstr "Izgled dokumenata tvrtke"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__logo
+msgid "Company Logo"
+msgstr "Logo tvtke"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__name
+msgid "Company Name"
+msgstr "Tvrtka"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__report_header
+msgid "Company Tagline"
+msgstr "Slogan tvrtke"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
 msgid "Company name"
 msgstr "Naziv tvrtke"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/js/control_panel/comparison_menu.js:0
 #, python-format
-msgid "Compare To"
-msgstr ""
+msgid "Comparison"
+msgstr "Usporedba"
 
 #. module: web
 #. openerp-web
@@ -939,6 +1161,11 @@ msgstr ""
 #, python-format
 msgid "Condition:"
 msgstr "Stanje:"
+
+#. module: web
+#: model:ir.actions.act_window,name:web.action_base_document_layout_configurator
+msgid "Configure your document layout"
+msgstr "Podesite izgled dokumenata"
 
 #. module: web
 #. openerp-web
@@ -960,15 +1187,15 @@ msgstr "Potvrda"
 #. openerp-web
 #: code:addons/web/static/src/js/chrome/abstract_web_client.js:0
 #, python-format
-msgid "Connection lost"
-msgstr "Izgubljena veza"
+msgid "Connection lost. Trying to reconnect..."
+msgstr "Veza je prekinuta. Pokušavamo se ponovno povezati..."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/chrome/abstract_web_client.js:0
 #, python-format
-msgid "Connection restored"
-msgstr "Veza oporavljena"
+msgid "Connection restored. You are back online."
+msgstr "Veza je ponovno uspostavljena. Ponovno ste online."
 
 #. module: web
 #. openerp-web
@@ -994,49 +1221,70 @@ msgstr "Kontrola"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Control panel buttons"
+msgstr "Tipke upravljačke ploče"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Copied !"
-msgstr ""
+msgstr "Kopirano !"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
-msgid "Copy Text"
-msgstr ""
+msgid "Copy"
+msgstr "Kopija"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/crash_manager.xml:0
 #, python-format
 msgid "Copy the full error to clipboard"
-msgstr ""
+msgstr "Kopiraj cijelu grešku u spremnik"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Copy to Clipboard"
-msgstr ""
+msgstr "Kopiraj u međuspremnik"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.frontend_layout
+msgid "Copyright &amp;copy;"
+msgstr "Copyright &amp;copy;"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/core/ajax.js:0
 #, python-format
 msgid "Could not connect to the server"
-msgstr ""
+msgstr "Neuspješno povezivanje na server"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
-msgid "Could not display the selected image."
+msgid "Could not display the selected image"
 msgstr "Odabranu sliku nije moguće prikazati."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
+#, python-format
+msgid "Could not display the specified image url."
+msgstr "Url odabrane slike nije moguće prikazati."
 
 #. module: web
 #. openerp-web
@@ -1053,6 +1301,8 @@ msgid ""
 "Could not set the cover image: incorrect field (\"%s\") is provided in the "
 "view."
 msgstr ""
+"Nije moguće postaviti naslovnu sliku: netočno polje (\"%s\") nalazi se u "
+"pogledu."
 
 #. module: web
 #. openerp-web
@@ -1060,21 +1310,26 @@ msgstr ""
 #: code:addons/web/static/src/js/views/graph/graph_view.js:0
 #: code:addons/web/static/src/js/views/pivot/pivot_view.js:0
 #: code:addons/web/static/src/js/views/pivot/pivot_view.js:0
-#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Count"
 msgstr "Broj stavaka"
 
 #. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__country_id
+msgid "Country"
+msgstr "Država"
+
+#. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
-#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:0
 #: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_controller.js:0
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Create"
 msgstr "Kreiraj"
@@ -1085,7 +1340,7 @@ msgstr "Kreiraj"
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #, python-format
 msgid "Create "
-msgstr ""
+msgstr "Kreiraj"
 
 #. module: web
 #. openerp-web
@@ -1093,13 +1348,6 @@ msgstr ""
 #, python-format
 msgid "Create \"<strong>%s</strong>\""
 msgstr "Kreirati \"<strong>%s</strong>\""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/relational_fields.js:0
-#, python-format
-msgid "Create a %s"
-msgstr "Kreiraj %s"
 
 #. module: web
 #. openerp-web
@@ -1119,29 +1367,18 @@ msgstr "Kreiraj i uredi..."
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
-msgid "Create and edit"
-msgstr "Kreiraj i uredi"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/relational_fields.js:0
-#, python-format
 msgid "Create: "
 msgstr "Kreiraj: "
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:0
-#, python-format
-msgid "Create: %s"
-msgstr ""
+#: model:ir.model.fields,field_description:web.field_base_document_layout__create_uid
+msgid "Created by"
+msgstr "Kreirao"
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Created by :"
-msgstr "Kreirao:"
+#: model:ir.model.fields,field_description:web.field_base_document_layout__create_date
+msgid "Created on"
+msgstr "Kreirano"
 
 #. module: web
 #. openerp-web
@@ -1162,25 +1399,30 @@ msgstr "Kreirao korisnik:"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Current state"
-msgstr ""
+msgstr "Trenutno stanje"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__custom_colors
+msgid "Custom Colors"
+msgstr "Prilagođene boje"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
-#: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Dark blue"
-msgstr ""
+msgstr "Tamno plava"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
-#: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Dark purple"
-msgstr ""
+msgstr "Tamno ljubičasta"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -1199,12 +1441,11 @@ msgstr "Datum"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Date & Time"
-msgstr ""
+msgstr "Datum i vrijeme"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Day"
@@ -1215,13 +1456,22 @@ msgstr "Dan"
 msgid ""
 "Debug mode is activated#{debug_mode_help}. Click here to exit debug mode."
 msgstr ""
+"Aktiviran je način rada za debugiranje#{debug_mode_help}. Kliknite ovdje da "
+"izađete iz debug načina rada."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Decimal"
-msgstr ""
+msgstr "Decimala"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
+msgid "Default"
+msgstr "Zadano"
 
 #. module: web
 #. openerp-web
@@ -1237,6 +1487,9 @@ msgstr "Zadano:"
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
@@ -1247,22 +1500,31 @@ msgstr "Obriši"
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
+msgid "Delete item"
+msgstr "Izbrišite stavku"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
 msgid "Delete node"
-msgstr ""
+msgstr "Obriši čvor"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/list/list_editable_renderer.js:0
 #, python-format
 msgid "Delete row "
-msgstr ""
+msgstr "Obriši red"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
-msgid "Delete this attachment"
-msgstr "Obriši privitak"
+msgid "Descending"
+msgstr "Silazni"
 
 #. module: web
 #. openerp-web
@@ -1273,14 +1535,14 @@ msgstr "Opis"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
-#: code:addons/web/static/src/js/widgets/colorpicker_dialog.js:0
+#: code:addons/web/static/src/js/widgets/colorpicker.js:0
 #: code:addons/web/static/src/js/widgets/domain_selector_dialog.js:0
 #: code:addons/web/static/src/js/widgets/translation_dialog.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
-#: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Discard"
 msgstr "Odbaci"
@@ -1290,21 +1552,31 @@ msgstr "Odbaci"
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Discard a record modification"
-msgstr ""
+msgstr "Odbaci izmjenu zapisa"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
+msgid "Display Name"
+msgstr "Naziv"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_progress_bar.js:0
+#, python-format
+msgid "Do you really want to cancel the upload of %s?"
+msgstr "Doista želite prekinuti prijenos %s?"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Do you really want to delete this export template?"
-msgstr ""
+msgstr "Da li zaista želite da izbrišete ovaj izvozni predložak?"
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/calendar/calendar_renderer.js:0
-#, python-format
-msgid "Do you really want to delete this filter from favorites ?"
-msgstr "Zaista želite ovaj filter ukloniti iz omiljenih?"
+#: model:ir.model.fields,field_description:web.field_base_document_layout__external_report_layout_id
+msgid "Document Template"
+msgstr "Predložak dokumenta"
 
 #. module: web
 #. openerp-web
@@ -1317,16 +1589,31 @@ msgstr "Dokumentacija"
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector_dialog.js:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Domain"
 msgstr "Domena"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Domain node"
+msgstr "Čvor domene"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
-msgid "Domain error"
-msgstr ""
+msgid "Domain not properly formed"
+msgstr "Domena nije pravilno oblikovana"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/domain_selector.js:0
+#, python-format
+msgid "Domain not supported"
+msgstr "Domena nije podržana"
 
 #. module: web
 #. openerp-web
@@ -1346,8 +1633,16 @@ msgstr "Još malo strpljenja,<br />učitavanje..."
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
-msgid "Download xls"
-msgstr "Preuzmi xls"
+msgid "Download"
+msgstr "Preuzimanje"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Download xlsx"
+msgstr "Preuzmite xlsx"
 
 #. module: web
 #. openerp-web
@@ -1377,6 +1672,7 @@ msgstr "Dupliciraj"
 #: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
@@ -1402,14 +1698,14 @@ msgstr "Uredi stupac"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Edit ControlPanelView"
-msgstr ""
+msgstr "Uredi ControlPanelView"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Edit Domain"
-msgstr ""
+msgstr "Izmijenite domenu"
 
 #. module: web
 #. openerp-web
@@ -1423,7 +1719,7 @@ msgstr "Uredi fazu"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Edit View:"
-msgstr ""
+msgstr "Uredi prikaz:"
 
 #. module: web
 #. openerp-web
@@ -1435,21 +1731,22 @@ msgstr "Uredi zapis"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
+#: model:ir.model.fields,field_description:web.field_base_document_layout__email
 #: model_terms:ir.ui.view,arch_db:web.login
 #, python-format
 msgid "Email"
 msgstr "E-pošta"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-msgid "Email:"
-msgstr "E-mail:"
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
+msgid "Enable profiling"
+msgstr ""
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/add_new_favorite_menu.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/add_new_favorite_menu.js:0
 #, python-format
 msgid "Error"
 msgstr "Greška"
@@ -1465,7 +1762,7 @@ msgstr "Greška. Zaporka nije promijenjena!"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Esc to discard"
-msgstr ""
+msgstr "Esc za odbacivanje"
 
 #. module: web
 #. openerp-web
@@ -1479,10 +1776,11 @@ msgstr "Svi kalendari"
 #: code:addons/web/static/src/js/views/calendar/calendar_model.js:0
 #, python-format
 msgid "Everything"
-msgstr ""
+msgstr "Sve"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Expand all"
@@ -1499,9 +1797,10 @@ msgstr "Izvoz"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Export All"
-msgstr ""
+msgstr "Izvezi sve"
 
 #. module: web
 #. openerp-web
@@ -1515,13 +1814,13 @@ msgstr "Izvoz podataka"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Export Format:"
-msgstr ""
+msgstr "Izvozni format:"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid "Exporting grouped data to csv is not supported."
-msgstr ""
+msgstr "Izvoz grupiranih podataka u csv nije podržan."
 
 #. module: web
 #. openerp-web
@@ -1534,23 +1833,17 @@ msgstr "Vanjski ID"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "External link"
 msgstr "Vanjska poveznica"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/js/control_panel/control_panel_model_extension.js:0
 #, python-format
-msgid "FILTER"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/control_panel_model.js:0
-#, python-format
-msgid "Failed to evaluate search criterions"
-msgstr "Neuspješno obrađeni uvjeti za pretraživanje"
+msgid "Failed to evaluate search context"
+msgstr "Evaluacija konteksta pretrage nije uspjela"
 
 #. module: web
 #. openerp-web
@@ -1561,7 +1854,7 @@ msgstr "Netočno"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/favorite_menu.js:0
+#: code:addons/web/static/src/js/control_panel/favorite_menu.js:0
 #, python-format
 msgid "Favorites"
 msgstr "Omiljeni"
@@ -1600,39 +1893,26 @@ msgstr "Datoteka"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "File Upload"
-msgstr "Slanje datoteke"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
-#, python-format
 msgid "File upload"
 msgstr "Pošalji datoteku"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_bar_autocomplete_sources.js:0
-#, python-format
-msgid "Filter on: %s"
-msgstr "Filtriraj po: %s"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/add_new_favorite_menu.js:0
+#: code:addons/web/static/src/js/control_panel/custom_favorite_item.js:0
 #, python-format
 msgid "Filter with same name already exists."
 msgstr "Filtar s istim nazivom već postoji."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/filter_menu.js:0
+#: code:addons/web/static/src/js/control_panel/filter_menu.js:0
 #, python-format
 msgid "Filters"
 msgstr "Filteri"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Flip axis"
@@ -1648,19 +1928,38 @@ msgstr "Skupi"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Followed by"
-msgstr ""
+msgstr "Praćen od"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__font
+msgid "Font"
+msgstr "Font"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
+msgid "Footer"
+msgstr "Podnožje"
+
+#. module: web
+#: model:ir.model.fields,help:web.field_base_document_layout__report_footer
+msgid "Footer text displayed at the bottom of all reports."
+msgstr "Tekst podnožja prikazan na dnu svih izvještaja."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/pivot/pivot_controller.js:0
 #, python-format
 msgid ""
-"For Excel compatibility, data cannot be exported if there are more than 256 columns.\n"
+"For Excel compatibility, data cannot be exported if there are more than 16384 columns.\n"
 "\n"
 "Tip: try to flip axis, filter further or reduce the number of measures."
 msgstr ""
+"Za Excel kompatibilnost, podaci ne mogu biti izvezeni ako postoji više od 16384 stupaca.\n"
+"\n"
+"Savjet: pokušajte okrenuti os, dalje filtrirati ili smanjiti broj mjera."
 
 #. module: web
 #. openerp-web
@@ -1674,7 +1973,7 @@ msgstr "Forma"
 #: code:addons/web/static/src/js/views/qweb/qweb_view.js:0
 #, python-format
 msgid "Freedom View"
-msgstr ""
+msgstr "Slobodni pogled"
 
 #. module: web
 #. openerp-web
@@ -1685,12 +1984,12 @@ msgstr "Puno ime"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
-#: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Fushia"
-msgstr ""
+msgstr "Fuksija"
 
 #. module: web
 #. openerp-web
@@ -1701,20 +2000,6 @@ msgstr "Omogućite ovo svojstvo i puno više sa Odoo Enterprize!"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/services/crash_manager.js:0
-#, python-format
-msgid "Global Business Error"
-msgstr "Globalna greška"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/kanban/kanban_column_quick_create.js:0
-#, python-format
-msgid "Got it"
-msgstr ""
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/js/views/graph/graph_view.js:0
 #, python-format
 msgid "Graph"
@@ -1722,32 +2007,25 @@ msgstr "Dijagram"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
-#: code:addons/web/static/src/xml/colorpicker_dialog.xml:0
-#: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Green"
 msgstr "Zeleno"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/groupby_menu.js:0
+#: code:addons/web/static/src/js/control_panel/groupby_menu.js:0
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #, python-format
 msgid "Group By"
 msgstr "Grupiraj po"
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_bar_autocomplete_sources.js:0
-#, python-format
-msgid "Group by: %s"
-msgstr "Grupiraj po: %s"
-
-#. module: web
 #: model:ir.model,name:web.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP usmjeravanje"
 
 #. module: web
 #. openerp-web
@@ -1761,63 +2039,62 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hide in Kanban"
-msgstr ""
+msgstr "Sakrij u kanbanu"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit DOWN to navigate to the list below"
-msgstr ""
+msgstr "Stisnite DOWN za prelazak na listu ispod"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to"
-msgstr ""
+msgstr "Stisnite ENTER za"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to CREATE"
-msgstr ""
+msgstr "Stisnite ENTER za CREATE"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to SAVE"
-msgstr ""
+msgstr "Stisnite ENTER za SAVE"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ESCAPE to DISCARD"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/colorpicker_dialog.xml:0
-#, python-format
-msgid "Hue"
-msgstr ""
+msgstr "Pritisnite ESCAPE za ODBACIVANJE"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/core/dialog.js:0
 #, python-format
 msgid "I am sure about this."
-msgstr ""
+msgstr "Siguran sam."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "I want to update data (import-compatible export)"
-msgstr ""
+msgstr "Želim ažurirati podatke (izvoz kompatibilan s uvozom)"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__id
+msgid "ID"
+msgstr "ID"
 
 #. module: web
 #. openerp-web
@@ -1828,13 +2105,28 @@ msgstr "ID:"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/basic/basic_model.js:0
+#, python-format
+msgid ""
+"If you change %s or %s, the synchronization will be reapplied and the data "
+"will be modified."
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
 msgid "Image"
 msgstr "Slika"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
+#, python-format
+msgid "In %s days"
+msgstr "Za %s dana"
 
 #. module: web
 #. openerp-web
@@ -1845,7 +2137,13 @@ msgstr "Cijeli broj"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
+msgid "Interval"
+msgstr "Razdoblje"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
 msgid "Invalid data"
@@ -1858,41 +2156,56 @@ msgid ""
 "Invalid database name. Only alphanumerical characters, underscore, hyphen "
 "and dot are allowed."
 msgstr ""
+"Ime baze podataka nije valjano. Moguće je koristiti samo alfanumeričke "
+"znakove, podvlaku, minus i točku."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Invalid domain"
-msgstr ""
+msgstr "Nepostojeća domena"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Invalid field chain"
+msgstr "Nepostojeći lanac polja"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/model_field_selector.js:0
-#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
-msgid "Invalid field chain"
+msgid ""
+"Invalid field chain. You may have used a non-existing field name or followed"
+" a non-relational field."
 msgstr ""
+"Lanac polja nije valjan. Možda ste koristili ime polja koje ne postoji ili "
+"ste pratili polje koje nije u relaciji."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/basic/basic_controller.js:0
+#: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:0
+#: code:addons/web/static/src/js/widgets/attach_document.js:0
+#, python-format
+msgid "Invalid fields:"
+msgstr "Nevaljana polja:"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid "Invalid inherit mode. Module %s and template name %s"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
-#, python-format
-msgid "Invalid mode for chart"
-msgstr ""
+msgstr "Način rada nasljeđivanja nije valjan. Modul %s i ime predloška %s"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #, python-format
 msgid "JS Mobile Tests"
-msgstr ""
+msgstr "JS mobilni testovi"
 
 #. module: web
 #. openerp-web
@@ -1910,6 +2223,13 @@ msgstr "Kanban"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
+#, python-format
+msgid "Kanban: no action for type: "
+msgstr "Kanban: nema radnji za tip: "
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/chrome/user_menu.js:0
 #, python-format
 msgid "Keyboard Shortcuts"
@@ -1922,60 +2242,19 @@ msgid "Languages"
 msgstr "Jezici"
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#, python-format
-msgid "Last 30 Days"
-msgstr ""
+#: model:ir.model.fields,field_description:web.field_base_document_layout____last_update
+msgid "Last Modified on"
+msgstr "Zadnja promjena"
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#, python-format
-msgid "Last 365 Days"
-msgstr ""
+#: model:ir.model.fields,field_description:web.field_base_document_layout__write_uid
+msgid "Last Updated by"
+msgstr "Promijenio"
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#, python-format
-msgid "Last 5 Years"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#, python-format
-msgid "Last 7 Days"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#, python-format
-msgid "Last Month"
-msgstr "Prošli mjesec"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#, python-format
-msgid "Last Quarter"
-msgstr "Prošli kvartal"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#, python-format
-msgid "Last Week"
-msgstr "Prošli tjedan"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#, python-format
-msgid "Last Year"
-msgstr "Protekla godina"
+#: model:ir.model.fields,field_description:web.field_base_document_layout__write_date
+msgid "Last Updated on"
+msgstr "Vrijeme promjene"
 
 #. module: web
 #. openerp-web
@@ -1992,30 +2271,29 @@ msgid "Latest Modification by:"
 msgstr "Zadnju promjenu napravio:"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
+msgid "Layout"
+msgstr "Izgled"
+
+#. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Leave the Developer Tools"
-msgstr ""
+msgstr "Izađite iz programerskih alata"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
-#: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Light blue"
-msgstr ""
+msgstr "Svijetlo plava"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/colorpicker_dialog.xml:0
-#, python-format
-msgid "Lightness %"
-msgstr ""
-
-#. module: web
-#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Line Chart"
@@ -2060,9 +2338,10 @@ msgstr "Učitavanje (%d)"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Loading, please wait..."
-msgstr ""
+msgstr "Učitavanje, molimo sačekajte..."
 
 #. module: web
 #. openerp-web
@@ -2082,7 +2361,7 @@ msgstr "Prijava"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Log in as superuser"
-msgstr ""
+msgstr "Logujte se kao superkorisnik"
 
 #. module: web
 #. openerp-web
@@ -2102,16 +2381,39 @@ msgid "Logo"
 msgstr "Logo"
 
 #. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__logo_primary_color
+msgid "Logo Primary Color"
+msgstr "Primarna boja logotipa"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__logo_secondary_color
+msgid "Logo Secondary Color"
+msgstr "Sekundarna boja logotipa"
+
+#. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Mac"
+msgstr "Mac"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/services/crash_manager.js:0
+#, python-format
+msgid "MailDeliveryException"
 msgstr ""
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-msgid "Mail:"
-msgstr ""
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Main actions"
+msgstr "Glavne radnje"
 
 #. module: web
 #. openerp-web
@@ -2119,7 +2421,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Manage Attachments"
-msgstr ""
+msgstr "Upravljajte privitcima"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
@@ -2153,21 +2455,21 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Match"
-msgstr ""
+msgstr "Odgovarajuće"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Match records with"
-msgstr ""
+msgstr "Usklađivanje zapisa sa"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Match records with the following rule:"
-msgstr ""
+msgstr "Usklađivanje zapisa sa sljedećim pravilom:"
 
 #. module: web
 #. openerp-web
@@ -2178,7 +2480,7 @@ msgstr "Izgleda da je potrebno ponovno učitavanje aplikacije (F5)..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Measures"
@@ -2186,11 +2488,25 @@ msgstr "Mjere"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
-#: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Medium blue"
+msgstr "Umjereno plava"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:0
+#, python-format
+msgid "Meeting Subject"
+msgstr "Tema sastanka"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/web_calendar.xml:0
+#, python-format
+msgid "Meeting Subject:"
 msgstr ""
 
 #. module: web
@@ -2223,10 +2539,17 @@ msgstr "Podrška za mobitele"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #, python-format
-msgid "Modified by :"
-msgstr "Izmijenio:"
+msgid "Model Access"
+msgstr "Pristup modelu"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
+#, python-format
+msgid "Model Record Rules"
+msgstr "Pravila modela zapisa"
 
 #. module: web
 #. openerp-web
@@ -2243,18 +2566,19 @@ msgid ""
 "Module %s not loaded or inexistent, or templates of addon being loaded (%s) "
 "are misordered"
 msgstr ""
+"Modul %s nije učitan ili ne postoji, ili predlošci dodatka koji se učitava "
+"(%s) nisu pravilno raspoređeni."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Monetary"
-msgstr ""
+msgstr "Monetarni"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Month"
@@ -2287,14 +2611,7 @@ msgstr "Moj Odoo.com račun"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "NONE"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Name:"
-msgstr "Naziv:"
+msgstr "NIŠTA"
 
 #. module: web
 #. openerp-web
@@ -2302,6 +2619,21 @@ msgstr "Naziv:"
 #, python-format
 msgid "New"
 msgstr "Novi"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/relational_fields.js:0
+#, python-format
+msgid "New %s"
+msgstr "Novi %s"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:0
+#: code:addons/web/static/src/js/views/calendar/calendar_controller.js:0
+#, python-format
+msgid "New Event"
+msgstr "Novi događaj"
 
 #. module: web
 #. openerp-web
@@ -2323,11 +2655,13 @@ msgstr "Novi dizajn"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "New template"
-msgstr ""
+msgstr "Novi predložak"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/web_calendar.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Next"
@@ -2335,7 +2669,7 @@ msgstr "Sljedeći"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_bar_autocomplete_sources.js:0
+#: code:addons/web/static/src/js/control_panel/search_bar.js:0
 #, python-format
 msgid "No"
 msgstr "Ne"
@@ -2352,22 +2686,21 @@ msgstr "Ne ažuriraj:"
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #, python-format
 msgid "No attachment available"
-msgstr ""
+msgstr "Nema dostupnih privitaka"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
-#: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "No color"
-msgstr ""
+msgstr "Nema boje"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
 msgid "No data"
-msgstr ""
+msgstr "Nema podataka"
 
 #. module: web
 #. openerp-web
@@ -2381,7 +2714,7 @@ msgstr "Nema podataka za prikaz"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "No match found."
-msgstr ""
+msgstr "Nije pronađeno nijedno podudaranje."
 
 #. module: web
 #. openerp-web
@@ -2395,14 +2728,14 @@ msgstr "Nema dostupnih metapodataka"
 #: code:addons/web/static/src/js/fields/field_utils.js:0
 #, python-format
 msgid "No records"
-msgstr ""
+msgstr "Nema zapisa"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #, python-format
 msgid "No records found!"
-msgstr ""
+msgstr "Nisu pronađeni zapisi!"
 
 #. module: web
 #. openerp-web
@@ -2416,6 +2749,8 @@ msgstr "Nema rezultata za prikaz..."
 #, python-format
 msgid "No template found to inherit from. Module %s and template name %s"
 msgstr ""
+"Nije pronađen predložak iz kojeg se može nasljeđivati. Modul %s i ime "
+"predloška %s"
 
 #. module: web
 #. openerp-web
@@ -2423,7 +2758,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
 #, python-format
 msgid "No valid record to save"
-msgstr ""
+msgstr "Nema valjanog zapisa za spremanje"
 
 #. module: web
 #. openerp-web
@@ -2437,21 +2772,21 @@ msgstr "Ništa"
 #: code:addons/web/models/models.py:0
 #, python-format
 msgid "Not Set"
-msgstr ""
+msgstr "Nije postavljeno"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Not active state"
-msgstr ""
+msgstr "Nije aktivno stanje"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Not active state, click to change it"
-msgstr ""
+msgstr "Stanje nije aktivno, kliknite da ga promijenite"
 
 #. module: web
 #. openerp-web
@@ -2484,35 +2819,45 @@ msgstr "Odoo Apps će uskoro biti dostupan"
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Odoo Client Error"
-msgstr ""
+msgstr "Odoo klijentska greška"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/upgrade_fields.js:0
 #, python-format
 msgid "Odoo Enterprise"
-msgstr "Odoo Enterprise"
+msgstr "doo Enterprise"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Odoo Error"
-msgstr ""
+msgstr "Odoo greška"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Odoo Session Expired"
-msgstr ""
+msgstr "Odoo sesija istekla"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Odoo Warning"
+msgstr "Odoo upozorenje"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list/list_controller.js:0
+#, python-format
+msgid ""
+"Of the %d records selected, only the first %d have been archived/unarchived."
 msgstr ""
+"Od %d zapisa koji su označeni, samo prvih %d je arhivirano/maknuto iz "
+"arhive."
 
 #. module: web
 #. openerp-web
@@ -2520,8 +2865,11 @@ msgstr ""
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/core/dialog.js:0
+#: code:addons/web/static/src/js/services/crash_manager.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/js/views/list/list_confirm_dialog.js:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Ok"
 msgstr "U redu"
@@ -2548,18 +2896,20 @@ msgid "One2many"
 msgstr ""
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
-#, python-format
-msgid "Only Integer or Float Value should be valid."
-msgstr "Samo cjelobrojne ili decimalne vrijednosti bi trebala biti ispravne."
-
-#. module: web
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid ""
-"Only employee can access this database. Please contact the administrator."
+"Only employees can access this database. Please contact the administrator."
 msgstr ""
+"Samo zaposlenici mogu pristupiti bazi podataka. Molimo kontaktirajte "
+"administatora."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list/list_controller.js:0
+#, python-format
+msgid "Only the first %d records have been deleted (out of %d selected)"
+msgstr "Samo prvih %d zapisa je izbirsano (od %d označenih)"
 
 #. module: web
 #: code:addons/web/models/models.py:0
@@ -2568,6 +2918,8 @@ msgid ""
 "Only types %(supported_types)s are supported for category (found type "
 "%(field_type)s)"
 msgstr ""
+"Samo tipovi %(supported_types)s su podržani za kategoriju (pronađeni tipovi "
+"%(field_type)s)"
 
 #. module: web
 #: code:addons/web/models/models.py:0
@@ -2576,6 +2928,8 @@ msgid ""
 "Only types %(supported_types)s are supported for filter (found type "
 "%(field_type)s)"
 msgstr ""
+"Samo tipovi %(supported_types)s su podržani za filter (pronađeni tipovi "
+"%(field_type)s)"
 
 #. module: web
 #. openerp-web
@@ -2586,10 +2940,10 @@ msgstr "Samo vi"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/colorpicker_dialog.xml:0
+#: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
-msgid "Opacity %"
-msgstr ""
+msgid "Open Developer Tools"
+msgstr "Otvori razvojne alate"
 
 #. module: web
 #. openerp-web
@@ -2639,12 +2993,19 @@ msgstr "Otvori: "
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
+#: code:addons/web/static/src/js/views/list/list_renderer.js:0
+#, python-format
+msgid "Optional columns"
+msgstr "Neobavezni stupci"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
-#: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Orange"
-msgstr ""
+msgstr "Narančasta"
 
 #. module: web
 #. openerp-web
@@ -2658,7 +3019,14 @@ msgstr "Ostalo"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "PDF Viewer"
-msgstr ""
+msgstr "PDF preglednik"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "PDF controls"
+msgstr "PDF kontrole"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
@@ -2668,12 +3036,33 @@ msgid ""
 "                    of\n"
 "                    <span class=\"topage\"/>"
 msgstr ""
+"Stranica:\n"
+"                    <span class=\"page\"/>\n"
+"                    od\n"
+"                    <span class=\"topage\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
-msgstr ""
+msgstr "Stranica: <span class=\"page\"/> / <span class=\"topage\"/>"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pager"
+msgstr "Dojavljivač"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__paperformat_id
+msgid "Paper format"
+msgstr "Format papira"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__partner_id
+msgid "Partner"
+msgstr "Partner"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -2692,29 +3081,26 @@ msgstr "Postotak"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Percentage Pie"
-msgstr ""
+msgstr "Kružni graf s postocima"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
+#: model:ir.model.fields,field_description:web.field_base_document_layout__phone
 #, python-format
 msgid "Phone"
 msgstr "Telefon"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-msgid "Phone:"
-msgstr "Telefon:"
-
-#. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/colorpicker_dialog.js:0
+#: code:addons/web/static/src/js/widgets/colorpicker.js:0
 #, python-format
 msgid "Pick a color"
-msgstr ""
+msgstr "Izaberite boju"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Pie Chart"
@@ -2724,23 +3110,9 @@ msgstr "Tortni grafikon"
 #. openerp-web
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
-msgid ""
-"Pie chart cannot display all zero numbers.. Try to change your domain to "
-"display positive results"
+msgid "Pie chart cannot mix positive and negative numbers. "
 msgstr ""
-"Tortni grafikon se ne može prikazati ako su svi brojevi nula. Pokušajte "
-"promijeniti podatke kako bi prikazali željeni rezultat."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
-#, python-format
-msgid ""
-"Pie chart cannot mix positive and negative numbers. Try to change your "
-"domain to only display positive results"
-msgstr ""
-"Ne smijete koristiti pozitivne i negativne brojeve za tortni grafikon. "
-"Pokušajte promijeniti podatke kako bi prikazali željeni rezultat."
+"U kružnom grafikonu ne mogu se miješati pozitivni i negativni brojevi."
 
 #. module: web
 #. openerp-web
@@ -2750,12 +3122,32 @@ msgid "Pivot"
 msgstr "Pivot"
 
 #. module: web
+#: code:addons/web/controllers/pivot.py:0
+#, python-format
+msgid "Pivot %(title)s (%(model_name)s)"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pivot settings"
+msgstr "Ključne postavke"
+
+#. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/js/views/list/list_renderer.js:0
 #, python-format
-msgid "Please click on the \"save\" button first."
-msgstr ""
+msgid "Please click on the \"save\" button first"
+msgstr "Molimo prvo kliknite \"Sačuvaj\" dugme"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
+#, python-format
+msgid "Please enter a numerical value"
+msgstr "Unesite brojčanu vrijednost"
 
 #. module: web
 #. openerp-web
@@ -2763,6 +3155,13 @@ msgstr ""
 #, python-format
 msgid "Please enter save field list name"
 msgstr "Molim unesite ime liste za izvoz"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/attach_document.js:0
+#, python-format
+msgid "Please save before attaching a file"
+msgstr "Molimo spremite prije dodavanja datoteke u privitak"
 
 #. module: web
 #. openerp-web
@@ -2783,7 +3182,7 @@ msgstr "Za pohranu izvozne liste, odaberite polja za izvoz..."
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Please update translations of :"
-msgstr ""
+msgstr "Molimo ažurirajte prevode:"
 
 #. module: web
 #. openerp-web
@@ -2792,11 +3191,22 @@ msgstr ""
 msgid ""
 "Please use the copy button to report the error to your support service."
 msgstr ""
+"Molimo koristite dugme za kopiranje pri prijavljivanju greške korisničkoj "
+"podršci"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid ""
+"Please use the following communication for your payment : <b><span>\n"
+"                           INV/2020/07/0003</span></b>"
+msgstr ""
+"Molimo koristite sljedeće podatke za komunikaciju pri Vašem plaćanju : <b><span>\n"
+"                           INV/2020/07/0003</span></b>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
 msgid "Powered by %s%s"
-msgstr ""
+msgstr "Pokreće %s%s"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
@@ -2811,6 +3221,11 @@ msgid "Preferences"
 msgstr "Postavke"
 
 #. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__preview
+msgid "Preview"
+msgstr "Pregled"
+
+#. module: web
 #: model:ir.actions.report,name:web.action_report_externalpreview
 msgid "Preview External Report"
 msgstr "Pregled vanjskog izvještaja"
@@ -2821,9 +3236,17 @@ msgid "Preview Internal Report"
 msgstr "Pregled internog izvještaja"
 
 #. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__preview_logo
+msgid "Preview logo"
+msgstr "Pretpregled logotipa"
+
+#. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/web_calendar.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Previous"
@@ -2831,21 +3254,26 @@ msgstr "Prethodni"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Previous Period"
 msgstr "Prethodni period"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Previous Year"
-msgstr ""
+msgstr "Prethodna godina"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__primary_color
+msgid "Primary Color"
+msgstr "Primarna boja"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome/sidebar.js:0
+#: code:addons/web/static/src/xml/report.xml:0
 #: code:addons/web/static/src/xml/report.xml:0
 #, python-format
 msgid "Print"
@@ -2860,44 +3288,53 @@ msgstr "Prioritet"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
+#: code:addons/web/static/src/js/views/file_upload_progress_card.js:0
+#: code:addons/web/static/src/xml/file_upload_progress_card.xml:0
+#: code:addons/web/static/src/xml/file_upload_progress_card.xml:0
 #, python-format
-msgid "Progress Bar"
-msgstr ""
+msgid "Processing..."
+msgstr "Obrađuje se..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
+#, python-format
+msgid "Progress Bar"
+msgstr "Traka napretka"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
-#: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Purple"
 msgstr "Ljubičasta"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Q1"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Q2"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Q3"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Q4"
 msgstr ""
@@ -2909,8 +3346,7 @@ msgstr "QWeb"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Quarter"
 msgstr "Kvartal"
@@ -2918,20 +3354,36 @@ msgstr "Kvartal"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Quick add"
-msgstr ""
+msgstr "Brzo dodavanje"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Quick search: %s"
-msgstr ""
+msgstr "Brzo pretraživanje: %s"
 
 #. module: web
 #: model:ir.model,name:web.model_ir_qweb_field_image
+#: model:ir.model,name:web.model_ir_qweb_field_image_url
 msgid "Qweb Field Image"
+msgstr "Qweb Polje Slika"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/colorpicker.xml:0
+#, python-format
+msgid "RGB"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/colorpicker.xml:0
+#, python-format
+msgid "RGBA"
 msgstr ""
 
 #. module: web
@@ -2943,17 +3395,23 @@ msgstr "Radio"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
-msgid "Range"
-msgstr "Raspon"
+msgid "Record sql"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
+msgid "Record traces"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
-#: code:addons/web/static/src/xml/colorpicker_dialog.xml:0
-#: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Red"
 msgstr "Crveno"
@@ -2963,21 +3421,22 @@ msgstr "Crveno"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Regenerate Assets Bundles"
-msgstr ""
+msgstr "Regeneriraj pakete imovine"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/model_field_selector.js:0
 #, python-format
 msgid "Relation not allowed"
-msgstr ""
+msgstr "Relacija nije dozvoljena"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Relation to follow"
-msgstr ""
+msgstr "Relacija za praćenje"
 
 #. module: web
 #. openerp-web
@@ -2988,7 +3447,15 @@ msgstr "Relacija:"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
+#, python-format
+msgid "Remaining Days"
+msgstr "Ostalo dana"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Remove"
@@ -3006,24 +3473,26 @@ msgstr "Ukloni naslovnu sliku"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Remove field"
-msgstr ""
+msgstr "Izbriši polje"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Remove from Favorites"
-msgstr ""
+msgstr "Ukloni iz omiljenih"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Remove tag"
-msgstr ""
+msgstr "Ukloni oznaku"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/web_calendar.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Remove this favorite from the list"
@@ -3037,62 +3506,63 @@ msgid "Report"
 msgstr "Izvješće"
 
 #. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__report_footer
+msgid "Report Footer"
+msgstr "Podnožje izvještaja"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__report_layout_id
+msgid "Report Layout"
+msgstr "Izgled izvještaja"
+
+#. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Request timeout"
-msgstr ""
+msgstr "Zatraži pauzu"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
+msgid "Reset to logo colors"
+msgstr "Resetiraj boje logotipa"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Run Click Everywhere Test"
-msgstr ""
+msgstr "Pokreni test za klikanje svugdje"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Run JS Mobile Tests"
-msgstr ""
+msgstr "Pokreni JS mobilne testove"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Run JS Tests"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "SEE RESULT"
-msgstr ""
+msgstr "Pokreni JS testove"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
 msgid "SIGNATURE"
-msgstr ""
+msgstr "POTPIS"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
-#: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Salmon pink"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/colorpicker_dialog.xml:0
-#, python-format
-msgid "Saturation %"
-msgstr ""
+msgstr "Losos ružičasta"
 
 #. module: web
 #. openerp-web
@@ -3102,6 +3572,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
 msgid "Save"
 msgstr "Spremi"
@@ -3111,7 +3582,7 @@ msgstr "Spremi"
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #, python-format
 msgid "Save & Close"
-msgstr ""
+msgstr "Spremi i zatvori"
 
 #. module: web
 #. openerp-web
@@ -3119,20 +3590,6 @@ msgstr ""
 #, python-format
 msgid "Save & New"
 msgstr "Spremi i novi"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
-#, python-format
-msgid "Save As..."
-msgstr "Spremi kao..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Save Current Search"
-msgstr ""
 
 #. module: web
 #. openerp-web
@@ -3146,7 +3603,14 @@ msgstr "Spremi zapis"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Save as :"
-msgstr ""
+msgstr "Spremi kao :"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Save current search"
+msgstr "Spremi trenutno pretraživanje"
 
 #. module: web
 #. openerp-web
@@ -3159,23 +3623,12 @@ msgstr "Spremi zadano"
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Search"
 msgstr "Traži"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_bar_autocomplete_sources.js:0
-#, python-format
-msgid "Search %(field)s at: %(value)s"
-msgstr "Traži %(field)s po: %(value)s"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_bar_autocomplete_sources.js:0
-#, python-format
-msgid "Search %(field)s for: %(value)s"
-msgstr "Traži %(field)s za: %(value)s"
 
 #. module: web
 #. openerp-web
@@ -3186,6 +3639,8 @@ msgstr "Traži dalje..."
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
@@ -3200,23 +3655,30 @@ msgid "Search: "
 msgstr "Traži: "
 
 #. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__secondary_color
+msgid "Secondary Color"
+msgstr "Sekundarna boja"
+
+#. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/crash_manager.xml:0
 #, python-format
 msgid "See details"
-msgstr ""
+msgstr "Pogledaj detalje"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "See examples"
-msgstr ""
+msgstr "Vidi primjere"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
@@ -3231,6 +3693,8 @@ msgid ""
 "Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
 "title=\"Database\"/>"
 msgstr ""
+"Odaberi <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
+"title=\"Database\"/>"
 
 #. module: web
 #. openerp-web
@@ -3244,7 +3708,7 @@ msgstr "Odaberi stil potpisa"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Select a model to add a filter."
-msgstr ""
+msgstr "Odaberite model za dodavanje filtra."
 
 #. module: web
 #. openerp-web
@@ -3257,8 +3721,15 @@ msgstr "Odabir pogleda"
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
+msgid "Select all"
+msgstr "Označi sve"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
 msgid "Select field"
-msgstr ""
+msgstr "Označi polje"
 
 #. module: web
 #. openerp-web
@@ -3307,10 +3778,11 @@ msgstr "Postavi naslovnu sliku"
 #: code:addons/web/static/src/js/fields/special_fields.js:0
 #, python-format
 msgid "Set a timezone on your user"
-msgstr ""
+msgstr "Postavite vremensku zonu na Vašem korisniku"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Settings"
@@ -3333,9 +3805,10 @@ msgstr "Prečaci"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Show sub-fields"
-msgstr ""
+msgstr "Prikaži potpolja"
 
 #. module: web
 #. openerp-web
@@ -3359,6 +3832,15 @@ msgid "Size:"
 msgstr "Veličina:"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/core/ajax.js:0
+#, python-format
+msgid ""
+"Something happened while trying to contact the server, check that the server"
+" is online and that you still have a working network connection."
+msgstr ""
+
+#. module: web
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid "Something horrible happened"
@@ -3369,7 +3851,14 @@ msgstr "Dogodilo se nešto strašno"
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Something went wrong !"
-msgstr ""
+msgstr "Nešto je pošlo po krivu !"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Sort graph"
+msgstr "Sortiraj grafove"
 
 #. module: web
 #. openerp-web
@@ -3381,9 +3870,17 @@ msgstr "Posebno:"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Stacked"
-msgstr ""
+msgstr "Složeni"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/relational_fields.js:0
+#, python-format
+msgid "Start typing..."
+msgstr "Počnite pisati..."
 
 #. module: web
 #. openerp-web
@@ -3416,20 +3913,6 @@ msgstr "Stil"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:0
-#, python-format
-msgid "Summary"
-msgstr "Sažetak"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/web_calendar.xml:0
-#, python-format
-msgid "Summary:"
-msgstr "Sažetak:"
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Support"
@@ -3437,10 +3920,17 @@ msgstr "Podrška"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Switch to this company"
+msgstr "Prebacite se na ovu tvrtku"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Syntax error"
-msgstr ""
+msgstr "Sintaksna greška"
 
 #. module: web
 #. openerp-web
@@ -3457,11 +3947,9 @@ msgid "Take a minute to get a coffee,<br />because it's loading..."
 msgstr "Pravo je vrijeme za pauzu, kavu,<br />jer će učitavanje potrajati..."
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Tap on the list to change company"
-msgstr ""
+#: model:ir.model.fields,field_description:web.field_base_document_layout__vat
+msgid "Tax ID"
+msgstr "PDV ID / OIB"
 
 #. module: web
 #. openerp-web
@@ -3471,7 +3959,6 @@ msgid "Technical Translation"
 msgstr "Tehnički prijevod"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_clean
 msgid "Tel:"
 msgstr "Tel:"
@@ -3480,14 +3967,14 @@ msgstr "Tel:"
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid "Template %s already exists in module %s"
-msgstr ""
+msgstr "Predložak %s već postoji u modulu %s"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Template:"
-msgstr ""
+msgstr "Predložak:"
 
 #. module: web
 #. openerp-web
@@ -3497,51 +3984,28 @@ msgid "Text"
 msgstr "Tekst"
 
 #. module: web
+#: model:ir.model.fields,help:web.field_base_document_layout__vat
+msgid ""
+"The Tax Identification Number. Complete it if the contact is subjected to "
+"government taxes. Used in some legal statements."
+msgstr ""
+
+#. module: web
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid ""
 "The content of this cell is too long for an XLSX file (more than %s "
 "characters). Please use the CSV format for this export."
 msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/widgets/domain_selector.js:0
-#: code:addons/web/static/src/js/widgets/domain_selector.js:0
-#, python-format
-msgid "The domain you entered is not properly formed"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/widgets/model_field_selector.js:0
-#, python-format
-msgid ""
-"The field chain is not valid. Did you maybe use a non-existing field name or"
-" followed a non-relational field?"
-msgstr ""
+"Sadržaj ove ćelije predugačak je za XLSX datoteku (više od %s znakova). "
+"Molimo koristite CSV format za izvoz ove datoteke."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "The field is empty, there's nothing to save !"
-msgstr "Polje je prazno. Nemate što spremiti !"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:0
-#, python-format
-msgid "The following field is invalid:"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/basic/basic_controller.js:0
-#: code:addons/web/static/src/js/widgets/attach_document.js:0
-#, python-format
-msgid "The following fields are invalid:"
-msgstr "Popis neispravnih polja:"
+msgid "The field is empty, there's nothing to save."
+msgstr "Ovo polje je prazno, nemate što spremiti."
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -3564,15 +4028,8 @@ msgid ""
 "The operation was interrupted. This usually means that the current operation"
 " is taking too much time."
 msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/basic/basic_controller.js:0
-#, python-format
-msgid ""
-"The record has been modified, your changes will be discarded. Do you want to"
-" proceed?"
-msgstr ""
+"Operacija je prekinuta. Ovo uobičajeno znači da trenutna operacija traje "
+"isuviše dugo."
 
 #. module: web
 #. openerp-web
@@ -3599,13 +4056,15 @@ msgid ""
 "There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 "
 "(.xlsx) format. Consider splitting the export."
 msgstr ""
+"Postoji previše redaka (%s redaka, limit: %s) za izvoz u Excel 2007-2013 "
+"(.xlsx) formatu. Razmislite o dijeljenju izvozne datoteke."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "There is no available image to be set as cover."
-msgstr ""
+msgstr "Ne postoji dostupna slika koju je moguće postaviti kao naslovnu."
 
 #. module: web
 #. openerp-web
@@ -3616,56 +4075,36 @@ msgstr "Pojavio se problem kod učitavanja vaše datoteke"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#, python-format
-msgid "This Month"
-msgstr "Ovaj mjesec"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#, python-format
-msgid "This Quarter"
-msgstr "Ovaj kvartal"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#, python-format
-msgid "This Week"
-msgstr "Ovaj tjedan"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#, python-format
-msgid "This Year"
-msgstr "Ova godina"
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/js/widgets/date_picker.js:0
+#, python-format
+msgid "This date is in the future. Make sure this is what you expect."
+msgstr "Ovaj datum je u budućnosti. Provjerite da je ovo ono što očekujete."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "This date is on the future. Make sure it is what you expected."
 msgstr ""
+"Taj datum je o budućnosti. Uvjerite se da je to ono što ste očekivali."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "This domain is not supported."
-msgstr ""
+msgstr "Domena nije podržana."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/name_and_signature.xml:0
 #, python-format
 msgid "This file is invalid. Please select an image."
-msgstr ""
+msgstr "Ova datoteka nije valjana. Molimo odaberite sliku."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/favorite_menu.js:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid ""
 "This filter is global and will be removed for everybody if you continue."
@@ -3684,17 +4123,17 @@ msgstr "Ovo je primjer internog izvješća."
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "This update will only consider the records of the current page."
+msgstr "Ovo ažuriranje u obzir će uzeti samo zapise s trenutne stranice."
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Time"
 msgstr "Vrijeme"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Time Ranges"
-msgstr ""
 
 #. module: web
 #. openerp-web
@@ -3704,11 +4143,12 @@ msgid ""
 "Timezone Mismatch : This timezone is different from that of your browser.\n"
 "Please, set the same timezone as your browser's to avoid time discrepancies in your system."
 msgstr ""
+"Vremenske zone se ne podudaraju : Ova vremenska zona drugačija je od one u Vašem pregledniku.\n"
+"Molimo postavite vremensku zonu koja se podudara s onom u Vašem pregledniku kako bi se izbjegla vremenska odstupanja u Vašem sustavu."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/web_calendar.xml:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Today"
@@ -3719,14 +4159,27 @@ msgstr "Danas"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Toggle"
-msgstr ""
+msgstr "Uključi / isključi "
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Toggle Timelines"
-msgstr ""
+msgstr "Uključi / isključi vremenske crte"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
+#, python-format
+msgid "Tomorrow"
+msgstr "Sutra"
+
+#. module: web
+#: code:addons/web/models/models.py:0
+#, python-format
+msgid "Too many items to display."
+msgstr "Previše proizvoda za prikazati."
 
 #. module: web
 #. openerp-web
@@ -3750,23 +4203,14 @@ msgstr "Povijest:"
 #: code:addons/web/static/src/js/widgets/translation_dialog.js:0
 #, python-format
 msgid "Translate: "
-msgstr ""
+msgstr "Prevedi:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/field_utils.js:0
 #, python-format
 msgid "True"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/pivot/pivot_renderer.js:0
-#, python-format
-msgid ""
-"Try to add some records, or make sure that there is at least one measure and"
-" no active filter in the search bar."
-msgstr ""
+msgstr "točno"
 
 #. module: web
 #. openerp-web
@@ -3776,13 +4220,16 @@ msgid ""
 "Try to add some records, or make sure that there is no\n"
 "                active filter in the search bar."
 msgstr ""
+"Pokušajte dodati neke izvještaje, ili provjerite da ne postoji\n"
+"                aktivni filter u traci za pretraživanje."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome/abstract_web_client.js:0
+#: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
-msgid "Trying to reconnect..."
-msgstr "Pokušavam se ponovo povezati..."
+msgid "Try to change your domain to only display positive results"
+msgstr ""
+"Pokušajte izmijeniti svoju domenu da prikazuje samo pozitivne rezultate"
 
 #. module: web
 #. openerp-web
@@ -3805,6 +4252,8 @@ msgstr "URL"
 msgid ""
 "Unable to find Wkhtmltopdf on this system. The report will be shown in html."
 msgstr ""
+"Wkhtmltopdf nije pronađen na ovom sustavu. Izvještaj će biti prikazan u "
+"html-u."
 
 #. module: web
 #. openerp-web
@@ -3819,7 +4268,7 @@ msgstr "Vrati iz arhive"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Unarchive All"
-msgstr ""
+msgstr "Odarhiviraj sve"
 
 #. module: web
 #. openerp-web
@@ -3829,7 +4278,6 @@ msgstr ""
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
-#: code:addons/web/static/src/js/views/kanban/kanban_renderer_mobile.js:0
 #: code:addons/web/static/src/js/views/list/list_renderer.js:0
 #: code:addons/web/static/src/js/views/list/list_renderer.js:0
 #: code:addons/web/static/src/js/views/pivot/pivot_model.js:0
@@ -3840,6 +4288,7 @@ msgstr "Nedefiniran"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Unfold"
 msgstr "Raširi"
@@ -3849,7 +4298,7 @@ msgstr "Raširi"
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Unknown CORS error"
-msgstr ""
+msgstr "Nepoznata CORS greška"
 
 #. module: web
 #. openerp-web
@@ -3863,28 +4312,31 @@ msgstr "Nepoznata vrsta podatka "
 #: code:addons/web/static/src/js/views/list/list_editable_renderer.js:0
 #, python-format
 msgid "Unlink row "
-msgstr ""
+msgstr "Prekini vezu s retkom"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/_deprecated/data.js:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Unnamed"
 msgstr "Bezimeno"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/graph/graph_view.js:0
 #: code:addons/web/static/src/js/views/pivot/pivot_view.js:0
 #, python-format
 msgid "Untitled"
-msgstr ""
+msgstr "Bez naslova"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Update to:"
-msgstr ""
+msgstr "Ažuriraj na:"
 
 #. module: web
 #. openerp-web
@@ -3898,7 +4350,7 @@ msgstr "Nadogradi sada"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Upgrade to enterprise"
-msgstr ""
+msgstr "Unaprijedi u Enterprise"
 
 #. module: web
 #. openerp-web
@@ -3912,7 +4364,14 @@ msgstr "Nadogradnja na buduće verzije"
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "Upload and Set"
-msgstr ""
+msgstr "Prenesi i postavi"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_progress_bar.js:0
+#, python-format
+msgid "Upload cancelled"
+msgstr "Prijenos prekinut"
 
 #. module: web
 #. openerp-web
@@ -3925,9 +4384,10 @@ msgstr "Umetnite svoju datoteku"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Uploaded"
-msgstr ""
+msgstr "Učitano"
 
 #. module: web
 #. openerp-web
@@ -3954,6 +4414,20 @@ msgstr "Slanje podataka..."
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_progress_card.js:0
+#, python-format
+msgid "Uploading... (%s%%)"
+msgstr "Učitavanje... (%s%%)"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/kanban/kanban_column_quick_create.js:0
+#, python-format
+msgid "Use This For My Kanban"
+msgstr "Koristi ovo za moj Kanban"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Use by default"
@@ -3961,13 +4435,21 @@ msgstr "Koristi kao zadano"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/services/crash_manager.js:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
-msgid "User Error"
-msgstr ""
+msgid "User"
+msgstr "Korisnik"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/services/crash_manager.js:0
+#, python-format
+msgid "User Error"
+msgstr "Korisnička greška"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Users"
@@ -3982,10 +4464,32 @@ msgstr "Greška kod provjere"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/basic/basic_renderer.js:0
+#, python-format
+msgid "Values set here are company-specific."
+msgstr ""
+"Vrijednosti koje su ovdje postavljene specifične su za pojedine tvrtke."
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/pivot/pivot_model.js:0
 #, python-format
 msgid "Variation"
-msgstr ""
+msgstr "Varijacija"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View %s"
+msgstr "Pogledaj %s"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
+msgid "View Access Rights"
+msgstr "Pregledaj prava pristupa"
 
 #. module: web
 #. openerp-web
@@ -4003,58 +4507,60 @@ msgid "View Metadata"
 msgstr "Pokaži metapodatke"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
+msgid "View Record Rules"
+msgstr "Pregledaj prava izvještaja"
+
+#. module: web
 #: model:ir.model.fields,field_description:web.field_ir_actions_act_window_view__view_mode
 msgid "View Type"
 msgstr "Tip pogleda"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome/action_manager.js:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View switcher"
+msgstr "Izmjena pogleda"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/chrome/action_manager_report.js:0
-#: code:addons/web/static/src/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
-#: code:addons/web/static/src/js/views/basic/basic_controller.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/favorite_menu.js:0
-#: code:addons/web/static/src/js/views/list/list_renderer.js:0
+#: code:addons/web/static/src/js/views/list/list_controller.js:0
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Warning"
 msgstr "Upozorenje"
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/widgets/attach_document.js:0
-#, python-format
-msgid "Warning : You have to save first before attaching a file."
-msgstr ""
-
-#. module: web
 #: model_terms:ir.ui.view,arch_db:web.benchmark_suite
 msgid "Web Benchmarks"
-msgstr ""
+msgstr "Web mjerila"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_mobile_suite
 msgid "Web Mobile Tests"
-msgstr ""
+msgstr "Web mobilno testiranje"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_suite
 msgid "Web Tests"
-msgstr ""
+msgstr "Web testiranje"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
-#: model_terms:ir.ui.view,arch_db:web.external_layout_standard
-msgid "Web:"
-msgstr ""
+#: model:ir.model.fields,field_description:web.field_base_document_layout__website
+msgid "Website Link"
+msgstr "Link web stranice"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/js/views/calendar/calendar_model.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Week"
@@ -4065,7 +4571,7 @@ msgstr "Tjedan"
 #: code:addons/web/static/src/js/widgets/rainbow_man.js:0
 #, python-format
 msgid "Well Done!"
-msgstr ""
+msgstr "Dobro napravljeno!"
 
 #. module: web
 #. openerp-web
@@ -4082,17 +4588,17 @@ msgid "Windows/Linux"
 msgstr "Windows/Linux"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/special_fields.js:0
+#, python-format
+msgid "Wrap raw html within an iframe"
+msgstr "Omotaj čisti html unutar iframe-a"
+
+#. module: web
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid "Wrong login/password"
 msgstr "Pogrešno korisničko ime/lozinka"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
-#, python-format
-msgid "Wrong value entered!"
-msgstr "Unesena pogrešna vrijednost!"
 
 #. module: web
 #. openerp-web
@@ -4103,24 +4609,24 @@ msgstr "XML ID:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
-#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Year"
 msgstr "Godina"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
-#: code:addons/web/static/src/xml/kanban.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Yellow"
 msgstr "Žuta"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_bar_autocomplete_sources.js:0
+#: code:addons/web/static/src/js/control_panel/search_bar.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Yes"
@@ -4128,31 +4634,17 @@ msgstr "Da"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Yesterday"
 msgstr "Jučer"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome/abstract_web_client.js:0
-#, python-format
-msgid "You are back online"
-msgstr "Ponovo ste povezani"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/relational_fields.js:0
-#, python-format
-msgid "You are creating a new %s, are you sure it does not exist yet?"
-msgstr "Kreirate %s. Jeste li sigurni da već ne postoji?"
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/js/widgets/model_field_selector.js:0
 #, python-format
 msgid "You cannot follow relations for this field chain construction"
-msgstr ""
+msgstr "Nije moguće pratiti relacije za ovaj lanac konstrukcije polja"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -4176,6 +4668,8 @@ msgid ""
 "You need to save this new record before editing the translation. Do you want"
 " to proceed?"
 msgstr ""
+"Morate spremiti ovaj novi izvještaj prije uređivanja prijevoda. Želite li "
+"nastaviti?"
 
 #. module: web
 #. openerp-web
@@ -4185,6 +4679,8 @@ msgid ""
 "You need to start Odoo with at least two workers to print a pdf version of "
 "the reports."
 msgstr ""
+"Morate pokrenuti Odoo s barem dva zaposlenika kako bi ste mogli isprintati "
+"pdf verziju izvještaja."
 
 #. module: web
 #. openerp-web
@@ -4195,13 +4691,17 @@ msgid ""
 "to get a correct display of headers and footers as well as support for "
 "table-breaking between pages."
 msgstr ""
+"Ažurirajte svoju verziju Wkhtmltopdf-a barem u verziju 0.12.0 kako bi ste "
+"pravilno prikazali zaglavlja i podnožja te preuzeli podršku za slamanje "
+"tablica između stranica."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
-msgid "Your Odoo session expired. Please refresh the current web page."
-msgstr "Istekala je vaša Odoo sesija. Osvježite trenutnu web stranicu."
+msgid "Your Odoo session expired. The current page is about to be refreshed."
+msgstr ""
+"Vaša Odoo sesija je istekla. Trenutno otvorena stranica biti će osvježena."
 
 #. module: web
 #. openerp-web
@@ -4211,6 +4711,8 @@ msgid ""
 "Your installation of Wkhtmltopdf seems to be broken. The report will be "
 "shown in html."
 msgstr ""
+"Vaša instalacija Wkhtmltopdf-a čini se pokvarena. Izvještaj će biti prikazan"
+" u html-u."
 
 #. module: web
 #. openerp-web
@@ -4221,19 +4723,24 @@ msgid "Your name"
 msgstr "Vaše ime "
 
 #. module: web
-#: code:addons/web/controllers/main.py:0
-#, python-format
-msgid ""
-"Your password is the default (admin)! If this system is exposed to untrusted"
-" users it is important to change it immediately for security reasons. I will"
-" keep nagging you about it!"
-msgstr ""
-
-#. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "[No widget %s]"
+msgstr "[Nema widgeta %s]"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "_onItemRemoved"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/pivot.xml:0
+#, python-format
+msgid "_onToggleCustomGroupbyItem"
 msgstr ""
 
 #. module: web
@@ -4276,25 +4783,39 @@ msgstr "otprilike sat prije"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "all records"
-msgstr ""
+msgstr "svi zapisi"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "are valid for this update."
-msgstr ""
+msgstr "validirani su za ovo ažuriranje."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "as a new"
+msgstr "kao nov"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "at:"
+msgstr "na:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "child of"
-msgstr ""
+msgstr "dijete od"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "contains"
@@ -4305,42 +4826,65 @@ msgstr "sadrži"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "does not contain"
-msgstr ""
+msgstr "ne sadrži"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "doesn't contain"
 msgstr "ne sadrži"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
+msgid "e.g. Global Business Solutions"
+msgstr "npr. globalna rješenja"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
+msgid "e.g. Opening hours, bank accounts (one per line)"
+msgstr "npr. Radno vrijeme, bankovni računi (jedan po stavci)"
+
+#. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "for:"
+msgstr "za:"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "greater than"
 msgstr "veće od"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "greater than or equal to"
 msgstr "veće ili jednako od"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/domain_selector.js:0
+#: code:addons/web/static/src/xml/colorpicker.xml:0
 #, python-format
-msgid "in"
+msgid "hex"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/widgets/domain_selector.js:0
+#, python-format
+msgid "in"
+msgstr "u"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
@@ -4349,65 +4893,64 @@ msgstr "je"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "is after"
-msgstr ""
+msgstr "nakon"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "is after or equal to"
-msgstr ""
+msgstr "nakon ili jednak"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "is before"
-msgstr ""
+msgstr "prije"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "is before or equal to"
-msgstr ""
+msgstr "prije ili jednak"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "is between"
 msgstr "je između"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "is equal to"
 msgstr "je jednako"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "is false"
 msgstr "je laž"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "is not"
@@ -4418,27 +4961,26 @@ msgstr "nije"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "is not ="
-msgstr ""
+msgstr "nije ="
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "is not equal to"
 msgstr "nije jednako"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "is not set"
@@ -4446,12 +4988,12 @@ msgstr "nije upisano"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "is set"
@@ -4459,7 +5001,7 @@ msgstr "je upisano"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "is true"
 msgstr "je istina"
@@ -4473,8 +5015,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "less than"
 msgstr "manje od"
@@ -4488,65 +5029,57 @@ msgstr "prije manje od minute"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "less than or equal to"
 msgstr "manje ili jednako od"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/file_upload_mixin.js:0
+#, python-format
+msgid "message: %s"
+msgstr "poruka: %s"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "not"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_bar_autocomplete_sources.js:0
-#, python-format
-msgid "not a valid integer"
-msgstr "nije cijeli broj"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_bar_autocomplete_sources.js:0
-#, python-format
-msgid "not a valid number"
-msgstr "nije ispravan broj"
+msgstr "nije"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "not in"
-msgstr ""
+msgstr "nije u"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "not set (false)"
-msgstr ""
+msgstr "nije postavljeno (lažno)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "of the following rules:"
-msgstr ""
+msgstr "od sljedećih pravila:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "of:"
-msgstr ""
+msgstr "od:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/control_panel/search/search_facet.js:0
-#: code:addons/web/static/src/js/views/control_panel/search/search_facet.js:0
+#: code:addons/web/static/src/js/views/action_model.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
@@ -4558,26 +5091,21 @@ msgstr "ili"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "parent of"
-msgstr ""
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.brand_promotion
-msgid "portal"
-msgstr ""
+msgstr "Nadređeni"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "record(s)"
-msgstr ""
+msgstr "zapis (i)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "records ?"
-msgstr ""
+msgstr "zapisi ?"
 
 #. module: web
 #. openerp-web
@@ -4590,19 +5118,34 @@ msgstr "preostalo)"
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
+msgid "search"
+msgstr "pretraživanje"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "selected"
+msgstr "odabrani"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
 msgid "selected records,"
-msgstr ""
+msgstr "odabrani zapisi,"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "set"
-msgstr ""
+msgstr "postavi"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "set (true)"
-msgstr ""
+msgstr "postavi(točno)"

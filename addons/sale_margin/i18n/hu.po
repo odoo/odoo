@@ -3,16 +3,16 @@
 # 	* sale_margin
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Martin Trigaux, 2016
 # krnkris, 2019
 # gezza <geza.nagy@oregional.hu>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -27,20 +27,17 @@ msgid "Cost"
 msgstr "Költség"
 
 #. module: sale_margin
-#: model:ir.model.fields,help:sale_margin.field_sale_order__margin
-msgid ""
-"It gives profitability by calculating the difference between the Unit Price "
-"and the cost."
-msgstr ""
-"Jövedelmezhetőséget mutat az egységár és a költség különbségének "
-"kiszámításával."
-
-#. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order__margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_report__margin
 msgid "Margin"
 msgstr "Árrés"
+
+#. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order__margin_percent
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__margin_percent
+msgid "Margin (%)"
+msgstr ""
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_report
@@ -55,4 +52,4 @@ msgstr "Vásárlói megrendelés"
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Értékesítési megrendelés sor"
+msgstr "Vásárlói megrendelés tételsor"

@@ -8,10 +8,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2019-12-16 11:09+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
 #: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
 msgid "Add product mode"
-msgstr ""
+msgstr "Додати режим товару"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
@@ -33,6 +33,8 @@ msgid ""
 "Configurator: choose attribute values to add the matching         product variant to the order.\n"
 "Grid: add several variants at once from the grid of attribute values"
 msgstr ""
+"Конфігуратор: оберіть значення атрибуту, щоби додати співставлення варіанта товару до замовлення.\n"
+"Сітка: додайте кілька варіантів за раз із сітки значень атрибуту"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
@@ -50,16 +52,18 @@ msgid ""
 "If set, the matrix of the products configurable by matrix will be shown on "
 "the report of the order."
 msgstr ""
+"Якщо встановлено, матриця товарів, яка налаштовується матрицею буде "
+"відображатися у звіті замовлення."
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
 msgid "Matrix local storage"
-msgstr ""
+msgstr "Локальне сховище матриці"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
 msgid "Order Grid Entry"
-msgstr ""
+msgstr "Запис сітки замовлення"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
@@ -84,7 +88,7 @@ msgstr "Замовлення на продаж"
 #. module: sale_product_matrix
 #: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
 msgid "Sales Variant Selection"
-msgstr ""
+msgstr "Вибір варіанта продажів"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_product_tmpl_id
@@ -98,6 +102,9 @@ msgid ""
 "If grid_update, will be loaded on the SO. \n"
 "If not, represents the matrix to open."
 msgstr ""
+"Технічне локальне сховище сітки. \n"
+"Якщо grid_update, буде завантажено на ЗНП. \n"
+"Якщо ні, представляє матрицю для відкриття."
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_update
@@ -108,8 +115,7 @@ msgstr "Чи містить поле сітки нову матрицю, яку 
 #: code:addons/sale_product_matrix/models/sale_order.py:0
 #, python-format
 msgid ""
-"You cannot change the quantity of a product present in multiple purchase "
-"lines."
+"You cannot change the quantity of a product present in multiple sale lines."
 msgstr ""
-"Ви не можете змінити кількість товару, яка представлена у кількох рядках "
-"купівлі."
+"Ви не можете змінити кількість товару, присутнього в декількох рядках "
+"продажу."

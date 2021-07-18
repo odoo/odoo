@@ -3,23 +3,36 @@
 # 	* website_sale_coupon
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Martin Trigaux, 2018
 # grazziano <gra.negocia@gmail.com>, 2019
-# mariana rodrigues <mariana12v@gmail.com>, 2019
+# Lauro de Lima <lauro@ciclix.com>, 2020
+# Keli Brugalli <kbr@odoo.com>, 2020
+# mariana rodrigues <mariana12v@gmail.com>, 2020
+# Éder Brito <britoederr@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: mariana rodrigues <mariana12v@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2017-02-15 11:47+0000\n"
+"Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: website_sale_coupon
+#: model:ir.model,name:website_sale_coupon.model_coupon_coupon
+msgid "Coupon"
+msgstr "Cupom"
+
+#. module: website_sale_coupon
+#: model:ir.model,name:website_sale_coupon.model_coupon_program
+msgid "Coupon Program"
+msgstr "Programa de cupom"
 
 #. module: website_sale_coupon
 #: model:ir.ui.menu,name:website_sale_coupon.menu_coupon_type_config
@@ -35,12 +48,12 @@ msgstr "Desconto:"
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.cart_discount
 msgid "Discounted amount"
-msgstr ""
+msgstr "Valor de desconto"
 
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.sale_coupon_result
 msgid "Invalid or expired promo code."
-msgstr ""
+msgstr "Código promocional expirado ou inválido."
 
 #. module: website_sale_coupon
 #: model:ir.ui.menu,name:website_sale_coupon.menu_promotion_type_config
@@ -49,9 +62,9 @@ msgid "Promotion Programs"
 msgstr "Programas de Promoção"
 
 #. module: website_sale_coupon
-#: model:ir.model,name:website_sale_coupon.model_sale_coupon_program
-msgid "Sales Coupon Program"
-msgstr "Programa de cupom de vendas"
+#: model:ir.model.fields,help:website_sale_coupon.field_coupon_program__website_id
+msgid "Restrict publishing to this website."
+msgstr "Restringir publicação a este site."
 
 #. module: website_sale_coupon
 #: model:ir.model,name:website_sale_coupon.model_sale_order
@@ -59,22 +72,27 @@ msgid "Sales Order"
 msgstr "Ordem de Venda"
 
 #. module: website_sale_coupon
-#: code:addons/website_sale_coupon/models/sale_coupon_program.py:23
+#: code:addons/website_sale_coupon/models/sale_coupon_program.py:0
 #, python-format
 msgid "The program code must be unique by website!"
-msgstr ""
+msgstr "O código de programa deve ser único por site!"
+
+#. module: website_sale_coupon
+#: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program__website_id
+msgid "Website"
+msgstr "Website"
 
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.sale_coupon_result
 msgid "You have successfully applied following promo code:"
-msgstr ""
+msgstr "Você aplicou o seguinte código de desconto com sucesso:"
 
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.sale_coupon_result
 msgid "Your reward"
-msgstr ""
+msgstr "Sua recompensa"
 
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.sale_coupon_result
 msgid "is available on a next order with this promo code:"
-msgstr ""
+msgstr "está disponível em um próximo pedido com este código promocional:"

@@ -3,18 +3,24 @@
 # 	* hr_gamification
 # 
 # Translators:
-# Martin Trigaux, 2019
-# snow wang <147156565@qq.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
+# Lei Xu <xulei8@qq.com>, 2017
+# v2exerer <9010446@qq.com>, 2017
+# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2018
+# e2f <projects@e2f.com>, 2018
+# waveyeung <waveyeung@qq.com>, 2018
+# bf2549c5415a9287249cba2b8a5823c7, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# snow wang <147156565@qq.com>, 2018
+# 稀饭~~ <wangwhai@qq.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
 "Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -28,9 +34,7 @@ msgstr ""
 msgid ""
 "A goal is defined by a user and a goal type.\n"
 "                    Goals can be created automatically by using challenges."
-msgstr ""
-"目标是由用户和目标类型定义的。\n"
-"可以通过使用挑战自动创建目标。"
+msgstr "用户定义目标和目标类型。用挑战可以自动创建目标"
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__badge_ids
@@ -39,7 +43,7 @@ msgstr ""
 msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
-msgstr "所有员工徽章，直接或通过用户与雇员联系"
+msgstr "所有雇员的徽章，要么直接与雇员链接，要么通过用户链接"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
@@ -47,7 +51,7 @@ msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
 "                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                    The goals are created for the specified users or member of the group."
-msgstr "给选定的用户分配一个目标列表以进行评估，自动创建的挑战可以是一段时期（每周，每月……）目标是根据指定的用户或者组成员创建的"
+msgstr "给选定的用户分配一个目标列表，自动创建目标的挑战可以是一段时期（每周，每月……）目标是为指定的用户或者组成员创建的"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__badge_ids
@@ -60,14 +64,14 @@ msgstr "徽章"
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid ""
 "Badges are rewards of good work. Give them to people you believe deserve it."
-msgstr "徽章是对良好的工作成员的奖励。授予您认为应得的那些人"
+msgstr "徽章是对良好的工作的奖励。授予您认为应得的那些人"
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__direct_badge_ids
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__direct_badge_ids
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Badges directly linked to the employee"
-msgstr "与雇员相关联的徽章"
+msgstr "直接与雇员链接的徽章"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee_base
@@ -77,7 +81,7 @@ msgstr "基本员工"
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Cancel"
-msgstr "取消日期"
+msgstr "取消"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.challenge_list_action2
@@ -99,7 +103,7 @@ msgstr "创建一个新的目标"
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Describe what they did and why it matters (will be public)"
-msgstr "描述他们做了什么，以及为什么它很重要（会被公开）"
+msgstr "描述他们做了什么，以及为什么它很重要（将公开）"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__direct_badge_ids
@@ -131,17 +135,17 @@ msgstr "员工人力资源目标"
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
 msgid "Gamification Badge"
-msgstr "积分制管理奖章"
+msgstr "游戏化徽章"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr "积分制管理员工奖章"
+msgstr "游戏化用户徽章"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user_wizard
 msgid "Gamification User Badge Wizard"
-msgstr "积分制管理员工奖章向导"
+msgstr "游戏化用户徽章向导"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__goal_ids
@@ -192,13 +196,13 @@ msgstr "回收徽章"
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_gamification_badge_user_wizard__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "管理资源访问权限的相关用户名"
+msgstr "用于管理资源访问权限的相关用户名。"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee"
-msgstr "奖励员工"
+msgstr "需要奖励的职员"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -206,7 +210,7 @@ msgid "Reward Employee with"
 msgstr "奖励给职员"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/models/gamification.py:18
+#: code:addons/hr_gamification/models/gamification.py:0
 #, python-format
 msgid "The selected employee does not correspond to the selected user."
 msgstr "选中的职员和选中的用户不一致"
@@ -227,13 +231,13 @@ msgid "What are you thankful for?"
 msgstr "你要感谢什么？"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:22
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 #, python-format
 msgid "You can not send a badge to yourself."
 msgstr "不允许给自己颁发徽章"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:19
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 #, python-format
 msgid "You can send badges only to employees linked to a user."
 msgstr "只能将徽章授予存在的职员用户"

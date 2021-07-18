@@ -3,23 +3,24 @@
 # 	* crm_iap_lead
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
-# Carlos Lopez <celm1990@hotmail.com>, 2019
-# José Vicente <txusev@gmail.com>, 2019
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2019
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
+# José Vicente <txusev@gmail.com>, 2019
 # Gustavo Valverde, 2019
-# VivianMontana23 <vivianpvm@gmail.com>, 2019
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
+# Jesse Garza <jga@odoo.com>, 2020
+# VivianMontana23 <vivianpvm@gmail.com>, 2020
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Mariana Santos Romo <msn@odoo.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2019-03-20 14:55+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,68 +35,41 @@ msgid "%d credits will be consumed to find %d companies."
 msgstr "se consumirán %d créditos para encontrar %d empresas"
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "(Time Now)"
-msgstr "(Tiempo Ahora)"
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.enrich_company
 msgid "<b>Contacts</b>"
 msgstr "<b>Contactos</b>"
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "<b>Phone :</b>"
-msgstr "<b>Teléfono :</b>"
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "<b>Timezone : </b>"
-msgstr "<b>Zona Horaria : </b>"
 
 #. module: crm_iap_lead
 #: model:mail.template,body_html:crm_iap_lead.lead_generation_no_credits
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
-"    <p>There is no more credits on your IAP Lead Generation account.<br/>\n"
+"    <p>There are no more credits on your IAP Lead Generation account.<br/>\n"
 "    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p>Estimado/a,</p>\n"
+"    <p>No quedan más créditos en su cuenta para la creación de iniciativas.<br/>\n"
+"    Puede cambiar su cuenta para la creación de iniciativas en la configuración de la aplicación de CRM.<br/></p>\n"
+"    <p>Atentamente,</p>\n"
+"    <p>Odoo S.A.</p>\n"
+"</div>"
 
 #. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid ""
-"<p class=\"o_view_nocontent_empty_folder\">\n"
-"            No leads found\n"
-"        </p><p>\n"
-"            No leads could be generated according to your search criteria\n"
-"        </p>"
+"<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Your "
+"request did not return any result (no credits were used). Try removing some "
+"filters.</span>"
 msgstr ""
-" <p class=\"o_view_nocontent_empty_folder\">\n"
-"            No se han encontrado iniciativas\n"
-"</p><p>\n"
-"No se pueden generar iniciativas de acuerdo a sus criterios de búsqueda\n"
-"</p>"
 
 #. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
-#, python-format
-msgid ""
-"<p class=\"o_view_nocontent_empty_folder\">\n"
-"            No opportunities found\n"
-"        </p><p>\n"
-"            No opportunities could be generated according to your search criteria\n"
-"        </p>"
-msgstr ""
-" <p class=\"o_view_nocontent_empty_folder\">\n"
-"           No se han encontrado oportunidades\n"
-"</p><p>\n"
-"No se pueden generar oportunidades de acuerdo a sus criterios de búsqueda\n"
-"</p>"
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "<span class=\"col-md-6\">Extra contacts per Company</span>"
+msgstr "<span class=\"col-md-6\">Contactos extra por empresa</span>"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
@@ -113,14 +87,34 @@ msgid "Automobiles & Components"
 msgstr "Automóviles y Componentes"
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_157
-msgid "Banks"
-msgstr "Bancos"
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__available_state_ids
+msgid "Available State"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_69_157
+msgid "Banks & Insurance"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "Buy credits."
+msgstr ""
+
+#. module: crm_iap_lead
+#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_1
+msgid "CEO"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_industry
+msgid "CRM IAP Lead Industry"
+msgstr ""
 
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_mining_request
 msgid "CRM Lead Mining Request"
-msgstr ""
+msgstr "Solicitud de minado de iniciativas de CRM"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
@@ -145,7 +139,6 @@ msgstr "Servicios Comerciales y Profesionales"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__search_type__companies
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "Companies"
 msgstr "Compañías"
 
@@ -165,9 +158,9 @@ msgid "Construction Materials"
 msgstr "Materiales de construcción"
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_30
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_30_155
 msgid "Consumer Discretionary"
-msgstr "Bienes de Consumo "
+msgstr "Bienes de consumo "
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_239
@@ -175,7 +168,7 @@ msgid "Consumer Durables & Apparel"
 msgstr "Bienes de Consumo Duraderos y Ropa"
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_150
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_150_151
 msgid "Consumer Services"
 msgstr "Servicios al Consumidor"
 
@@ -183,11 +176,6 @@ msgstr "Servicios al Consumidor"
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_33
 msgid "Consumer Staples"
 msgstr "Bienes de Consumo"
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "Contacts"
-msgstr "Contactos"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__country_ids
@@ -198,7 +186,7 @@ msgstr "Países"
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Create a Lead Mining Request"
-msgstr ""
+msgstr "Crear una solicitud de minado de iniciativas"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__create_uid
@@ -219,6 +207,16 @@ msgid "Created on"
 msgstr "Creado el"
 
 #. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "Default Tags"
+msgstr "Etiquetas predeterminadas"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__display_lead_label
+msgid "Display Lead Label"
+msgstr "Mostrar etiqueta del lead"
+
+#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__display_name
@@ -228,19 +226,9 @@ msgid "Display Name"
 msgstr "Nombre mostrado"
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_151
-msgid "Diversified Consumer Services"
-msgstr "Servicios Diversificados al Consumidor"
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_158
-msgid "Diversified Financial Services"
-msgstr "Servicios Financieros Diversificados"
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_159
-msgid "Diversified Financials"
-msgstr "Finanzas Diversificadas"
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_158_159
+msgid "Diversified Financials & Financial Services"
+msgstr ""
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__done
@@ -255,21 +243,25 @@ msgid "Draft"
 msgstr "Borrador"
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.enrich_company
 msgid "Email"
 msgstr "Correo electrónico"
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_156
-msgid "Energy Equipment & Services"
-msgstr "Equipos y Servicios de Energía"
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_138_156
+msgid "Energy & Utilities "
+msgstr ""
 
 #. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__error
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__error
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Error"
 msgstr "Error"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__error_type
+msgid "Error Type"
+msgstr ""
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_filter_type
@@ -282,23 +274,20 @@ msgid "Filter on Size"
 msgstr "Filtrar por Tamaño"
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_153
-msgid "Food & Staples Retailing"
-msgstr "Venta al por menor de alimentos y artículos de primera necesidad"
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_154
+#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_153_154
 msgid "Food, Beverage & Tobacco"
 msgstr "Alimentos, Bebidas y Tabaco"
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "From"
-msgstr "Desde"
+msgstr "De"
 
 #. module: crm_iap_lead
 #. openerp-web
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #: code:addons/crm_iap_lead/static/src/xml/leads_tree_generate_leads_views.xml:0
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 #, python-format
 msgid "Generate Leads"
 msgstr "Generar Clientes Potenciales"
@@ -328,17 +317,13 @@ msgstr "Equipos y Servicios de Atención Médica"
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_helpers
 msgid "Helper methods for crm_iap_lead modules"
-msgstr ""
+msgstr "Métodos de soporte para los módulos crm_iap_lead"
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_155
-msgid "Household & Personal Products"
-msgstr "Productos para el Hogar y Personales"
-
-#. module: crm_iap_lead
+#: model:mail.template,name:crm_iap_lead.lead_generation_no_credits
 #: model:mail.template,subject:crm_iap_lead.lead_generation_no_credits
 msgid "IAP Lead Generation Notification"
-msgstr ""
+msgstr "Notificación de generación de iniciativas"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__id
@@ -355,24 +340,24 @@ msgid "Independent Power and Renewable Electricity Producers"
 msgstr "Productores independientes de energía y electricidad renovable"
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_146
-msgid "Industrials"
-msgstr "Industriales"
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__industry_ids
 msgid "Industries"
 msgstr "Industrias"
 
 #. module: crm_iap_lead
-#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_industry
-msgid "Industry Tag"
-msgstr "Etiqueta de Industria"
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__name
+msgid "Industry"
+msgstr "Sector"
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_69
-msgid "Insurance"
-msgstr "Seguro"
+#: model:ir.model.constraint,message:crm_iap_lead.constraint_crm_iap_lead_industry_name_uniq
+msgid "Industry name already exists!"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__error_type__credits
+msgid "Insufficient Credits"
+msgstr ""
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers____last_update
@@ -402,11 +387,6 @@ msgid "Last Updated on"
 msgstr "Última actualización el"
 
 #. module: crm_iap_lead
-#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__lead
-msgid "Lead"
-msgstr "Iniciativa"
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_contacts_credits
 msgid "Lead Contacts Credits"
 msgstr "Créditos de Contactos de Clientes Potenciales"
@@ -422,21 +402,16 @@ msgid "Lead Generation"
 msgstr "Generación de Iniciativas"
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "Lead Information"
-msgstr "Información de Clientes Potenciales"
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__lead_mining_request_id
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Lead Mining Request"
-msgstr ""
+msgstr "Solicitud de minado de iniciativas"
 
 #. module: crm_iap_lead
 #: model:ir.actions.act_window,name:crm_iap_lead.crm_iap_lead_mining_request_action
 #: model:ir.ui.menu,name:crm_iap_lead.crm_iap_lead_mining_request_menu_action
 msgid "Lead Mining Requests"
-msgstr ""
+msgstr "Solicitudes de minado de iniciativas"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_total_credits
@@ -449,18 +424,25 @@ msgid "Lead/Opportunity"
 msgstr "Iniciativa/Oportunidad"
 
 #. module: crm_iap_lead
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Leads"
 msgstr "Iniciativas"
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid ""
-"Make sure you know if you have to be GDPR compliant for storing personal "
-"data."
+#: model:ir.model.fields,help:crm_iap_lead.field_crm_iap_lead_mining_request__available_state_ids
+msgid "List of available states based on selected countries"
 msgstr ""
-"Asegúrese de saber si tiene que ser compatible con GDPR para almacenar datos"
-" personales."
+
+#. module: crm_iap_lead
+#. openerp-web
+#: code:addons/crm_iap_lead/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid ""
+"Looking for more opportunities ?<br>Try the <b>Lead Generation</b> tool."
+msgstr ""
+"¿Estás buscando más oportunidades?<br>Prueba la herramienta de <b>Generador "
+"de lead</b>."
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_148
@@ -474,7 +456,7 @@ msgstr "Media"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__name
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.enrich_company
 msgid "Name"
 msgstr "Nombre"
 
@@ -493,32 +475,42 @@ msgid "New"
 msgstr "Nuevo"
 
 #. module: crm_iap_lead
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__error_type__no_result
+msgid "No Result"
+msgstr ""
+
+#. module: crm_iap_lead
+#. openerp-web
+#: code:addons/crm_iap_lead/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Now, just let the magic happen!"
+msgstr "¡Ahora solo deja que la magia suceda!"
+
+#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_number
 msgid "Number of Contacts"
 msgstr "Número de contactos"
 
 #. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__leads_count
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_count
 msgid "Number of Generated Leads"
 msgstr "Número de Iniciativas Generadas"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_number
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_tree
 msgid "Number of Leads"
 msgstr "Número de Iniciativas"
 
 #. module: crm_iap_lead
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__opportunity
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Opportunities"
 msgstr "Oportunidades"
 
 #. module: crm_iap_lead
-#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__opportunity
-msgid "Opportunity"
-msgstr "Oportunidad"
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+#, python-format
 msgid "Opportunity created by Odoo Lead Generation"
 msgstr "Oportunidad creada por la Generación de Iniciativas de Odoo"
 
@@ -530,7 +522,7 @@ msgstr "Otros Roles"
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_role
 msgid "People Role"
-msgstr ""
+msgstr "Rol humano"
 
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_seniority
@@ -543,7 +535,7 @@ msgid "Pharmaceuticals, Biotechnology & Life Sciences"
 msgstr "Productos farmacéuticos, biotecnología y ciencias de la vida"
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.enrich_company
 msgid "Phone"
 msgstr "Teléfono"
 
@@ -556,11 +548,6 @@ msgstr "Rol preferido"
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_114
 msgid "Real Estate"
 msgstr "Bienes Raíces"
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "Request"
-msgstr "Solicitud"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__name
@@ -578,16 +565,11 @@ msgid "Retry"
 msgstr "Reintentar"
 
 #. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__reveal_id
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__reveal_ids
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__reveal_id
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__reveal_id
 msgid "Reveal"
 msgstr "Revelar"
-
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__reveal_id
-msgid "Reveal ID"
-msgstr "Mostrar ID "
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__contact_filter_type__role
@@ -617,15 +599,15 @@ msgid "Salesperson"
 msgstr "Comercial"
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_164
-msgid "Semiconductors & Semiconductor Equipment"
-msgstr "Semiconductores y Equipos para Semiconductores"
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__seniority_id
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__contact_filter_type__seniority
 msgid "Seniority"
 msgstr "Antigüedad"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__sequence
+msgid "Sequence"
+msgstr "Secuencia"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__company_size_min
@@ -653,16 +635,6 @@ msgid "Submit"
 msgstr "Enviar"
 
 #. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__name
-msgid "Tag Name"
-msgstr "Nombre de etiqueta"
-
-#. module: crm_iap_lead
-#: model:ir.model.constraint,message:crm_iap_lead.constraint_crm_iap_lead_industry_name_uniq
-msgid "Tag name already exists!"
-msgstr "¡El nombre de la etiqueta ya existe!"
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__tag_ids
 msgid "Tags"
 msgstr "Categorías"
@@ -675,12 +647,7 @@ msgstr "Objetivo"
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_166
 msgid "Technology Hardware & Equipment"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "Technology Used :"
-msgstr "Tecnología Utilizada :"
+msgstr "Tecnología, hardware y equipo"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_149
@@ -688,15 +655,15 @@ msgid "Telecommunication Services"
 msgstr "Servicios de Telecomunicaciones"
 
 #. module: crm_iap_lead
+#: model:ir.model.fields,help:crm_iap_lead.field_crm_iap_lead_industry__reveal_ids
+msgid "The list of reveal_ids for this industry, separated with ','"
+msgstr ""
+
+#. module: crm_iap_lead
 #: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "This makes a total of %d credits for this request."
 msgstr "Esto hace un total de %d créditos para esta solicitud."
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "Title"
-msgstr "Título"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_136
@@ -720,14 +687,27 @@ msgstr ""
 " %dcontactos por empresa."
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_138
-msgid "Utilities"
-msgstr "Utilidades"
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "What do you need ?"
+msgstr "¿Qué necesitas?"
 
 #. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_1
-msgid "ceo"
-msgstr "ceo"
+#. openerp-web
+#: code:addons/crm_iap_lead/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Which Industry do you want to target?"
+msgstr "¿En qué tipo de industria te quieres enfocar?"
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "You do not have enough credits to submit this request."
+msgstr ""
+
+#. module: crm_iap_lead
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "Your request could not be executed: %s"
+msgstr ""
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_2
