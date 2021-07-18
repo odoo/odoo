@@ -1,9 +1,7 @@
 import logging
 from odoo import http
 
-import jinja2
 
-#
 _logger = logging.getLogger(__name__)
 
 
