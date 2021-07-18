@@ -692,7 +692,7 @@ var RTEWidget = Widget.extend({
             $editable.find('[_moz_abspos]').removeAttr('_moz_abspos');
         });
 
-        if (isLink) {
+        if (isLink && !$target.closest('.o_not_editable').length) {
             /**
              * Remove content editable everywhere and add it on the link only so that characters can be added
              * and removed at the start and at the end of it.

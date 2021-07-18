@@ -31,17 +31,10 @@ class PurchaseOrder(models.Model):
         help="Completion date of the first receipt order.")
     on_time_rate = fields.Float(related='partner_id.on_time_rate', compute_sudo=False)
 
-    @api.depends('order_line.move_ids.returned_move_ids',
-                 'order_line.move_ids.state',
-                 'order_line.move_ids.picking_id')
+    @api.depends('order_line.move_ids.picking_id')
     def _compute_picking(self):
         for order in self:
-            pickings = self.env['stock.picking']
-            for line in order.order_line:
-                # We keep a limited scope on purpose. Ideally, we should also use move_orig_ids and
-                # do some recursive search, but that could be prohibitive if not done correctly.
-                moves = line.move_ids | line.move_ids.mapped('returned_move_ids')
-                pickings |= moves.mapped('picking_id')
+            pickings = order.order_line.mapped('move_ids.picking_id')
             order.picking_ids = pickings
             order.picking_count = len(pickings)
 
@@ -477,7 +470,6 @@ class PurchaseOrderLine(models.Model):
             'origin': self.order_id.name,
             'description_picking': description_picking,
             'propagate_cancel': self.propagate_cancel,
-            'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,

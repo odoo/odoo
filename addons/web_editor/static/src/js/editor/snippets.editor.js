@@ -1050,7 +1050,7 @@ var SnippetsMenu = Widget.extend({
 
         // Active snippet editor on click in the page
         var lastElement;
-        this.$document.on('click.snippets_menu', '*', ev => {
+        const onClick = ev => {
             var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;
             if (!srcElement || lastElement === srcElement) {
                 return;
@@ -1061,7 +1061,7 @@ var SnippetsMenu = Widget.extend({
             });
 
             var $target = $(srcElement);
-            if (!$target.closest('we-button, we-toggler, .o_we_color_preview').length) {
+            if (!$target.closest('we-button, we-toggler, we-select, .o_we_color_preview').length) {
                 this._closeWidgets();
             }
             if (!$target.closest('body > *').length) {
@@ -1078,7 +1078,11 @@ var SnippetsMenu = Widget.extend({
                 return;
             }
             this._activateSnippet($target);
-        });
+        };
+
+        this.$document.on('click.snippets_menu', '*', onClick);
+        // Needed as bootstrap stop the propagation of click events for dropdowns
+        this.$document.on('mouseup.snippets_menu', '.dropdown-toggle', onClick);
 
         core.bus.on('deactivate_snippet', this, this._onDeactivateSnippet);
 
@@ -1123,7 +1127,7 @@ var SnippetsMenu = Widget.extend({
                     editor.cover();
                 }
             }, 250);
-        }, 50)
+        }, 50);
         // We use addEventListener instead of jQuery because we need 'capture'.
         // Setting capture to true allows to take advantage of event bubbling
         // for events that otherwise don’t support it. (e.g. useful when
@@ -1766,7 +1770,8 @@ var SnippetsMenu = Widget.extend({
             .addClass('oe_snippet')
             .each((i, el) => {
                 const $snippet = $(el);
-                const name = el.getAttribute('name');
+                const name = _.escape(el.getAttribute('name'));
+                const thumbnailSrc = _.escape(el.dataset.oeThumbnail);
                 const $sbody = $snippet.children().addClass('oe_snippet_body');
                 const isCustomSnippet = !!el.closest('#snippet_custom');
 
@@ -1783,7 +1788,7 @@ var SnippetsMenu = Widget.extend({
                 // Create the thumbnail
                 const $thumbnail = $(`
                     <div class="oe_snippet_thumbnail">
-                        <div class="oe_snippet_thumbnail_img" style="background-image: url(${el.dataset.oeThumbnail});"/>
+                        <div class="oe_snippet_thumbnail_img" style="background-image: url(${thumbnailSrc});"/>
                         <span class="oe_snippet_thumbnail_title">${name}</span>
                     </div>
                 `);
@@ -2041,7 +2046,6 @@ var SnippetsMenu = Widget.extend({
                         return;
                     }
 
-                    self._activateSnippet(false);
                     self._activateInsertionZones($selectorSiblings, $selectorChildren);
 
                     self.getEditableArea().find('.oe_drop_zone').droppable({

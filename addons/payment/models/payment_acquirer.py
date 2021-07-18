@@ -877,7 +877,7 @@ class PaymentTransaction(models.Model):
             'date': fields.Datetime.now(),
             'state_message': msg,
         })
-        self._log_payment_transaction_received()
+        tx_to_process._log_payment_transaction_received()
 
     def _post_process_after_done(self):
         self._reconcile_after_transaction_done()

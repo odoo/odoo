@@ -19,7 +19,6 @@
 # Martin Trigaux, 2020
 # Richard Mathot <rim@odoo.com>, 2020
 # Lucas Deliege <lud@odoo.com>, 2020
-# Eloïse Stilmant <est@odoo.com>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
 # Emmanuel Partsafas <epa@odoo.com>, 2020
 # Celia Tydgat <cty@odoo.com>, 2020
@@ -39,6 +38,8 @@
 # Geoffrey_GMF <gmf@odoo.com>, 2021
 # Luc N, 2021
 # Alexandra Jubert <aju@odoo.com>, 2021
+# Eloïse Stilmant <est@odoo.com>, 2021
+# Gwladys Jouble <g.jouble@vieconnect.io>, 2021
 # 
 msgid ""
 msgstr ""
@@ -46,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2021\n"
+"Last-Translator: Gwladys Jouble <g.jouble@vieconnect.io>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,7 +58,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
 msgid "# Leads/Opps assigned this month"
-msgstr "# Pistes/Opps assignés ce mois"
+msgstr "# Pistes/Opps assignées ce mois"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_count
@@ -112,7 +113,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "%s's opportunity"
-msgstr ""
+msgstr "Opportunité %s"
 
 #. module: crm
 #. openerp-web
@@ -207,6 +208,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "<span class=\"o_stat_text\"> Leads</span>"
 msgstr "<span class=\"o_stat_text\"> Pistes</span>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
+"<p>Etant donné que vous ne faites partie d'aucune équipe commerciale, Odoo "
+"ouvre la première par défaut.</p>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1349,7 +1360,7 @@ msgstr "De%(source_name)s : %(source_subject)s"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "From %(source_name)s"
-msgstr ""
+msgstr "De %(source_name)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2217,6 +2228,11 @@ msgid ""
 "manually, but if you let Odoo do the job the score is updated while the "
 "opportunity moves forward in your sales cycle."
 msgstr ""
+"Le moteur d'intelligence artificielle d'Odoo prévoit le taux de réussite de "
+"chaque opportunité en fonction de son historique. Vous pouvez toujours "
+"actualiser le taux de réussite manuellement, mais si vous laissez Odoo le "
+"faire, le taux est actualisé pendant que l'opportunité avance dans votre "
+"cycle de vente."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
@@ -2270,6 +2286,12 @@ msgstr ""
 "délais manqués ou encore le nombre d'interactions par opportunité. Ce "
 "rapport est principalement utilisé par les managers commerciaux afin de "
 "passer en revue le pipeline avec l'équipe commerciale."
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr "Nombre d'opportunités"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
@@ -2381,6 +2403,7 @@ msgstr "Sur 5 ans"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "Opportunités en retard"
 
@@ -2936,6 +2959,12 @@ msgstr "Étiquettes"
 #: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
 msgid "Teams"
 msgstr "Équipes"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr "Champ technique utilisé à des fins statistiques"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id

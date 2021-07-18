@@ -67,6 +67,7 @@ exports.PosModel = Backbone.Model.extend({
         this.config = null;
         this.units = [];
         this.units_by_id = {};
+        this.uom_unit_id = null;
         this.default_pricelist = null;
         this.order_sequence = 1;
         window.posmodel = this;
@@ -208,6 +209,13 @@ exports.PosModel = Backbone.Model.extend({
             _.each(units, function(unit){
                 self.units_by_id[unit.id] = unit;
             });
+        }
+    },{
+        model:  'ir.model.data',
+        fields: ['res_id'],
+        domain: function(){ return [['name', '=', 'product_uom_unit']]; },
+        loaded: function(self,unit){
+            self.uom_unit_id = unit[0].res_id;
         }
     },{
         model:  'res.partner',
@@ -1929,6 +1937,7 @@ exports.Orderline = Backbone.Model.extend({
             id: this.id,
             quantity:           this.get_quantity(),
             unit_name:          this.get_unit().name,
+            is_in_unit:         this.get_unit().id == this.pos.uom_unit_id,
             price:              this.get_unit_display_price(),
             discount:           this.get_discount(),
             product_name:       this.get_product().display_name,
@@ -2076,9 +2085,9 @@ exports.Orderline = Backbone.Model.extend({
         }
         return taxes;
     },
-    _map_tax_fiscal_position: function(tax) {
+    _map_tax_fiscal_position: function(tax, order = false) {
         var self = this;
-        var current_order = this.pos.get_order();
+        var current_order = order || this.pos.get_order();
         var order_fiscal_position = current_order && current_order.fiscal_position;
         var taxes = [];
 
@@ -2206,7 +2215,7 @@ exports.Orderline = Backbone.Model.extend({
                     else if(tax.amount_type === 'division')
                         incl_division_amount += tax.amount;
                     else if(tax.amount_type === 'fixed')
-                        incl_fixed_amount += quantity * tax.amount
+                        incl_fixed_amount += Math.abs(quantity) * tax.amount
                     else{
                         var tax_amount = self._compute_all(tax, base, quantity);
                         incl_fixed_amount += tax_amount;
@@ -2284,7 +2293,7 @@ exports.Orderline = Backbone.Model.extend({
             var tax = _.detect(taxes, function(t){
                 return t.id === el;
             });
-            product_taxes.push.apply(product_taxes, self._map_tax_fiscal_position(tax));
+            product_taxes.push.apply(product_taxes, self._map_tax_fiscal_position(tax, self.order));
         });
         product_taxes = _.uniq(product_taxes, function(tax) { return tax.id; });
 
@@ -2315,7 +2324,7 @@ exports.Orderline = Backbone.Model.extend({
             var new_included_taxes = [];
             var self = this;
             _(taxes).each(function(tax) {
-                var line_taxes = self._map_tax_fiscal_position(tax);
+                var line_taxes = self._map_tax_fiscal_position(tax, order);
                 if (line_taxes.length && line_taxes[0].price_include){
                     new_included_taxes = new_included_taxes.concat(line_taxes);
                 }
@@ -2502,7 +2511,7 @@ exports.Paymentline = Backbone.Model.extend({
      * Paymentline is done if there is no payment status or the payment status is done.
      */
     is_done: function() {
-        return this.get_payment_status() ? this.get_payment_status() === 'done' : true;
+        return this.get_payment_status() ? this.get_payment_status() === 'done' || this.get_payment_status() === 'reversed': true;
     },
 
     /**
@@ -2991,14 +3000,14 @@ exports.Order = Backbone.Model.extend({
             line.set_quantity(options.quantity);
         }
 
-        if(options.price !== undefined){
-            line.set_unit_price(options.price);
-            this.fix_tax_included_price(line);
-        }
-
         if (options.price_extra !== undefined){
             line.price_extra = options.price_extra;
             line.set_unit_price(line.product.get_price(this.pricelist, line.get_quantity(), options.price_extra));
+            this.fix_tax_included_price(line);
+        }
+
+        if(options.price !== undefined){
+            line.set_unit_price(options.price);
             this.fix_tax_included_price(line);
         }
 

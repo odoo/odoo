@@ -23,6 +23,10 @@ class ResPartner(models.Model):
              '3 - End consumer (only receipts)\n'
              '4 - Foreigner')
 
+    @api.model
+    def _commercial_fields(self):
+        return super()._commercial_fields() + ['l10n_cl_sii_taxpayer_type']
+
     def _format_vat_cl(self, values):
         identification_types = [self.env.ref('l10n_latam_base.it_vat').id, self.env.ref('l10n_cl.it_RUT').id,
                                 self.env.ref('l10n_cl.it_RUN').id]
@@ -37,6 +41,11 @@ class ResPartner(models.Model):
                 'CL', '').upper()
         else:
             return values['vat']
+
+    def _format_dotted_vat_cl(self, vat):
+        vat_l = vat.split('-')
+        n_vat, n_dv = vat_l[0], vat_l[1]
+        return '%s-%s' % (format(int(n_vat), ',d').replace(',', '.'), n_dv)
 
     @api.model
     def create(self, values):

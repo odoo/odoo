@@ -8,11 +8,6 @@
         <field name="arch" type="xml">
             <div class="oe_button_box" position="inside">
                 <button string="Project Overview" class="oe_stat_button" type="object" name="action_view_timesheet" icon="fa-puzzle-piece" attrs="{'invisible': [('allow_billable', '=', False)]}"/>
-                <button class="d-none d-md-inline oe_stat_button"
-                        type="object" name="action_view_so" icon="fa-dollar"
-                        attrs="{'invisible': ['|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('bill_type', '!=', 'customer_project')]}"
-                        string="Sales Order"
-                        groups="sales_team.group_sale_salesman"/>
             </div>
             <xpath expr="//header" position="inside">
                 <button name="action_make_billable" string="Create Sales Order" type="object" attrs="{'invisible': [('display_create_order', '=', False)]}" groups="sales_team.group_sale_salesman"/>

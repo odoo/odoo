@@ -39,7 +39,7 @@ msgstr "<b>Numero modello:</b>"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 msgid "<b>Request to:</b>"
-msgstr "<b>Richiedi a:</b>"
+msgstr "<b>Richiesta per:</b>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
@@ -199,12 +199,12 @@ msgstr "Modello con alias"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "All"
-msgstr "Tutti"
+msgstr "Tutte"
 
 #. module: maintenance
 #: model:ir.model.constraint,message:maintenance.constraint_maintenance_equipment_serial_no
 msgid "Another asset already exists with this serial number!"
-msgstr "Esiste già un'attrezzatura con lo stesso numero di serie!"
+msgstr "Esiste già un altro bene con lo stesso numero di serie."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__archive
@@ -253,7 +253,7 @@ msgstr "Numero allegati"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Blocked"
-msgstr "Bloccata"
+msgstr "Bloccate"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -347,7 +347,7 @@ msgstr "Creato da utente"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__create_date
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_open_count
@@ -431,7 +431,7 @@ msgstr "Nome visualizzato"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Done"
-msgstr "Completata"
+msgstr "Completate"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -543,7 +543,7 @@ msgstr "Minimizzata nel flusso di manutenzione"
 #: model_terms:ir.actions.act_window,help:maintenance.maintenance_request_action_reports
 msgid ""
 "Follow the process of the request and communicate with the collaborator."
-msgstr "Segui il processo di richiesta e comunica con il collaboratore."
+msgstr "Segui il procedimento di richiesta e comunica con il collaboratore."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_follower_ids
@@ -865,7 +865,7 @@ msgstr "Team di manutenzione"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__maintenance_type
 msgid "Maintenance Type"
-msgstr "Tipo manutenzione"
+msgstr "Tipo di manutenzione"
 
 #. module: maintenance
 #: model:ir.actions.server,name:maintenance.maintenance_requests_cron_ir_actions_server
@@ -1051,7 +1051,7 @@ msgstr "Modello primario"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID discussione record genitore"
+msgstr "ID discussione record primario"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_parent_model_id
@@ -1085,7 +1085,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__maintenance_type__preventive
 msgid "Preventive"
-msgstr "Preventivo"
+msgstr "Preventiva"
 
 #. module: maintenance
 #: code:addons/maintenance/models/maintenance.py:0
@@ -1141,7 +1141,7 @@ msgstr "Riapri richiesta"
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_3
 msgid "Repaired"
-msgstr "Riparato"
+msgstr "Riparata"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.maintenance_reporting
@@ -1228,12 +1228,12 @@ msgstr "Data programmata"
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_4
 msgid "Scrap"
-msgstr "Scarto"
+msgstr "Rottamata"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__scrap_date
 msgid "Scrap Date"
-msgstr "Data scarto"
+msgstr "Data rottamazione"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
@@ -1257,7 +1257,7 @@ msgstr "Numero di serie"
 msgid ""
 "Set archive to true to hide the maintenance request without deleting it."
 msgstr ""
-"Imposta archivio su vero per nascondere la richiesta di manutenzione senza "
+"Imposta archivio a vero per nascondere la richiesta di manutenzione senza "
 "eliminarla."
 
 #. module: maintenance
@@ -1314,7 +1314,7 @@ msgstr "Subappaltatore"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__name
 msgid "Subjects"
-msgstr "Oggetti"
+msgstr "Argomenti"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__maintenance_team_id
@@ -1363,7 +1363,7 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "Il nome dell’alias e-mail, es. “lavori” per intercettare le e-mail a "
-"<lavori@esempio.odoo.com>"
+"<lavori@example.odoo.com>"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_user_id
@@ -1403,7 +1403,7 @@ msgstr "Attività odierne"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Top Priorities"
-msgstr "Massime priorità"
+msgstr "Priorità principali"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_action
@@ -1412,8 +1412,8 @@ msgid ""
 "Track equipments and link it to an employee or department.\n"
 "                You will be able to manage allocations, issues and maintenance of your equipment."
 msgstr ""
-"Traccia le attrezzature e le collega ad un dipendente o dipartimento.\n"
-"                Sarà possibile gestire allocazioni, problemi e manutenzione delle attrezzature."
+"Tiene traccia delle attrezzature e le collega a un dipendente o a un ufficio.\n"
+"                Sarà possibile gestire assegnazioni, problematiche e manutenzioni delle attrezzature."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_decoration
@@ -1451,12 +1451,12 @@ msgstr "Numero messaggi non letti"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Unscheduled"
-msgstr "Non programmata"
+msgstr "Non programmate"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Used in location"
-msgstr "In uso nella ubicazione"
+msgstr "Luogo di utilizzo"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__partner_id

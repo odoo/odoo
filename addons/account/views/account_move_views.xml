@@ -716,7 +716,7 @@
                                         groups="base.group_multi_currency"> in </span>
                                     <field name="currency_id"
                                         groups="base.group_multi_currency"
-                                        attrs="{'readonly': [('posted_before', '=', True)]}"/>
+                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </div>
                             </group>
                         </group>

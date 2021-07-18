@@ -453,6 +453,8 @@ class Move(models.Model):
 
     line_ids = fields.One2many('test_new_api.move_line', 'move_id', domain=[('visible', '=', True)])
     quantity = fields.Integer(compute='_compute_quantity', store=True)
+    tag_id = fields.Many2one('test_new_api.multi.tag')
+    tag_name = fields.Char(related='tag_id.name')
 
     @api.depends('line_ids.quantity')
     def _compute_quantity(self):
@@ -467,6 +469,14 @@ class MoveLine(models.Model):
     move_id = fields.Many2one('test_new_api.move', required=True, ondelete='cascade')
     visible = fields.Boolean(default=True)
     quantity = fields.Integer()
+
+
+class Payment(models.Model):
+    _name = 'test_new_api.payment'
+    _description = 'Payment inherits from Move'
+    _inherits = {'test_new_api.move': 'move_id'}
+
+    move_id = fields.Many2one('test_new_api.move', required=True, ondelete='cascade')
 
 
 class CompanyDependent(models.Model):

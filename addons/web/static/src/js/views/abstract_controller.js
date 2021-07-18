@@ -119,6 +119,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     on_attach_callback: function () {
         ActionMixin.on_attach_callback.call(this);
         this.searchModel.on('search', this, this._onSearch);
+        this.searchModel.trigger('focus-control-panel');
         if (this.withControlPanel) {
             this.searchModel.on('get-controller-query-params', this, this._onGetOwnedQueryParams);
         }

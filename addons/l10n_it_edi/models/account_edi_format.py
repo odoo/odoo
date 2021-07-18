@@ -4,12 +4,13 @@
 from odoo import api, models, fields, _
 from odoo.tests.common import Form
 from odoo.exceptions import UserError
-from odoo.tools import float_repr
+from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
+from odoo.osv.expression import OR, AND
 
+from lxml import etree
+from datetime import datetime
 import re
-from datetime import date, datetime
 import logging
-import base64
 
 
 _logger = logging.getLogger(__name__)
@@ -89,7 +90,7 @@ class AccountEdiFormat(models.Model):
             errors.append(_("%s must have a street.", buyer.display_name))
         if not buyer.zip:
             errors.append(_("%s must have a post code.", buyer.display_name))
-        if len(buyer.zip) != 5 and buyer.country_id.code == 'IT':
+        elif len(buyer.zip) != 5 and buyer.country_id.code == 'IT':
             errors.append(_("%s must have a post code of length 5.", buyer.display_name))
         if not buyer.city:
             errors.append(_("%s must have a city.", buyer.display_name))
@@ -196,6 +197,39 @@ class AccountEdiFormat(models.Model):
                 return self._import_fattura_pa(tree, invoice)
         return super()._update_invoice_from_xml_tree(filename, tree, invoice)
 
+    def _decode_p7m_to_xml(self, filename, content):
+        decoded_content = remove_signature(content)
+        if not decoded_content:
+            return None
+
+        try:
+            # Some malformed XML are accepted by FatturaPA, this expends compatibility
+            parser = etree.XMLParser(recover=True)
+            xml_tree = etree.fromstring(decoded_content, parser)
+        except Exception as e:
+            _logger.exception("Error when converting the xml content to etree: %s", e)
+            return None
+        if not len(xml_tree):
+            return None
+
+        return xml_tree
+
+    def _create_invoice_from_binary(self, filename, content, extension):
+        self.ensure_one()
+        if extension.lower() == '.xml.p7m':
+            decoded_content = self._decode_p7m_to_xml(filename, content)
+            if decoded_content is not None and self._is_fattura_pa(filename, decoded_content):
+                return self._import_fattura_pa(decoded_content, self.env['account.move'])
+        return super()._create_invoice_from_binary(filename, content, extension)
+
+    def _update_invoice_from_binary(self, filename, content, extension, invoice):
+        self.ensure_one()
+        if extension.lower() == '.xml.p7m':
+            decoded_content = self._decode_p7m_to_xml(filename, content)
+            if decoded_content is not None and self._is_fattura_pa(filename, decoded_content):
+                return self._import_fattura_pa(decoded_content, invoice)
+        return super()._update_invoice_from_binary(filename, content, extension, invoice)
+
     def _import_fattura_pa(self, tree, invoice):
         """ Decodes a fattura_pa invoice into an invoice.
 
@@ -254,7 +288,15 @@ class AccountEdiFormat(models.Model):
                 partner = elements and self.env['res.partner'].search(['&', ('vat', 'ilike', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
                 if not partner:
                     elements = tree.xpath('//CedentePrestatore//CodiceFiscale')
-                    partner = elements and self.env['res.partner'].search(['&', ('l10n_it_codice_fiscale', '=', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
+                    if elements:
+                        codice = elements[0].text
+                        domains = [[('l10n_it_codice_fiscale', '=', codice)]]
+                        if re.match(r'^[0-9]{11}$', codice):
+                            domains.append([('l10n_it_codice_fiscale', '=', 'IT' + codice)])
+                        elif re.match(r'^IT[0-9]{11}$', codice):
+                            domains.append([('l10n_it_codice_fiscale', '=', self.env['res.partner']._l10n_it_normalize_codice_fiscale(codice))])
+                        partner = elements and self.env['res.partner'].search(
+                            AND([OR(domains), OR([[('company_id', '=', company.id)], [('company_id', '=', False)]])]), limit=1)
                 if not partner:
                     elements = tree.xpath('//DatiTrasmissione//Email')
                     partner = elements and self.env['res.partner'].search(['&', '|', ('email', '=', elements[0].text), ('l10n_it_pec_email', '=', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
@@ -560,4 +602,5 @@ class AccountEdiFormat(models.Model):
                 new_invoice.message_post(body=message)
 
             invoices += new_invoice
+
         return invoices

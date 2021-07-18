@@ -221,7 +221,7 @@ class Project(models.Model):
 
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
-    rating_active = fields.Boolean('Customer Ratings', default=True)
+    rating_active = fields.Boolean('Customer Ratings', default=lambda self: self.env.user.has_group('project.group_project_rating'))
     rating_status = fields.Selection(
         [('stage', 'Rating when changing stage'),
          ('periodic', 'Periodical Rating')

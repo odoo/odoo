@@ -345,6 +345,15 @@ class Pricelist(models.Model):
             'label': _('Import Template for Pricelists'),
             'template': '/product/static/xls/product_pricelist.xls'
         }]
+    
+    def unlink(self):
+        for pricelist in self:
+            linked_items = self.env['product.pricelist.item'].sudo().with_context(active_test=False).search(
+                [('base', '=', 'pricelist'), ('base_pricelist_id', '=', pricelist.id), ('pricelist_id', 'not in', self.ids)])
+            if linked_items:
+                raise UserError(_('You cannot delete this pricelist (%s), it is used in other pricelist(s) : \n%s',
+                    pricelist.display_name, '\n'.join(linked_items.pricelist_id.mapped('display_name'))))
+        return super().unlink()
 
 
 class ResCountryGroup(models.Model):
@@ -507,6 +516,7 @@ class PricelistItem(models.Model):
             self.percent_price = 0.0
         if self.compute_price != 'formula':
             self.update({
+                'base': 'list_price',
                 'price_discount': 0.0,
                 'price_surcharge': 0.0,
                 'price_round': 0.0,

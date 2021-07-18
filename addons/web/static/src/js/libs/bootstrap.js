@@ -96,6 +96,17 @@ $.fn.scrollspy.Constructor.prototype.refresh = function () {
     }
 };
 
+/**
+ * In some cases, we need to keep the first element of navbars selected.
+ */
+const bootstrapSpyProcessFunction = $.fn.scrollspy.Constructor.prototype._process;
+$.fn.scrollspy.Constructor.prototype._process = function () {
+    bootstrapSpyProcessFunction.apply(this, arguments);
+    if (this._activeTarget === null && this._config.alwaysKeepFirstActive) {
+        this._activate(this._targets[0]);
+    }
+};
+
 /* Bootstrap modal scrollbar compensation on non-body */
 const bsSetScrollbarFunction = $.fn.modal.Constructor.prototype._setScrollbar;
 $.fn.modal.Constructor.prototype._setScrollbar = function () {
