@@ -19,6 +19,8 @@
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2020
 # Milan Tribuson <one.mile.code@gmail.com>, 2020
 # Bole <bole@dajmi5.com>, 2021
+# Helena Viher <viherhelena@gmail.com>, 2021
+# Hrvoje Sić <hrvoje.sic@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -26,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2021\n"
+"Last-Translator: Hrvoje Sić <hrvoje.sic@gmail.com>, 2021\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -550,6 +552,10 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Proizvod koji se može skladištiti je proizvod čijim zalihama možete upravljati. \n"
+"Potrebno je instalirati aplikaciju Inventar.\n"
+"Potrošni proizvod je proizvod za koji se ne upravlja zalihama.\n"
+"Usluga je nematerijalni proizvod koji pružate."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -1209,32 +1215,32 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr ""
+msgstr "Izračunajte troškove dostave i šaljite DHL-om"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr ""
+msgstr "Izračunajte troškove dostave i šaljite Easypost-om"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr ""
+msgstr "Izračunajte troškove dostave i šaljite FedEx-om"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr ""
+msgstr "Izračunajte troškove dostave i šaljite UPS-om"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr ""
+msgstr "Izračunajte troškove dostave i šaljite USPS-om"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr ""
+msgstr "Izračunajte troškove dostave i šaljite Bpost-om"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_config_settings
@@ -1574,7 +1580,7 @@ msgstr "Lokacije kupca"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL USA Connector"
-msgstr ""
+msgstr "DHL USA priključak"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -1672,7 +1678,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_quant__product_uom_id
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_uom
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "Predefinirana mjerna jedinica za sve funkcije zalihe."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_stock
@@ -1802,6 +1808,8 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
+"Vrijeme isporuke, u danima. To je broj dana, obećanih kupcu, između potvrde "
+"prodajnog naloga i dostave."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_qty
@@ -2074,7 +2082,7 @@ msgstr "Prijenosi nacrta"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr ""
+msgstr "Easypost priključak"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -2235,7 +2243,7 @@ msgstr "FIFO, LIFO..."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
 msgid "FedEx Connector"
-msgstr ""
+msgstr "FedEx priključak"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
@@ -2810,7 +2818,7 @@ msgstr "Neposredni prijenos?"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_config_settings__module_procurement_jit__1
 msgid "Immediately after sales order confirmation"
-msgstr ""
+msgstr "Odmah nakon potvrde prodajnog naloga"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_inventory__state__confirm
@@ -3836,7 +3844,7 @@ msgstr "Na ovom lotu još nije bilo operacija."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
-msgstr ""
+msgstr "Artikl nije pronađen. Stvorimo ga!"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -5668,7 +5676,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr ""
+msgstr "Prodajte i kupujte proizvode u različitim mjernim jedinicama"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6935,12 +6943,12 @@ msgstr "Vrsta aktivnosti iznimke na zapisu."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
 msgid "UPS Connector"
-msgstr ""
+msgstr "UPS priključak"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
 msgid "USPS Connector"
-msgstr ""
+msgstr "USPS priključak"
 
 #. module: stock
 #. openerp-web
@@ -7054,6 +7062,13 @@ msgstr "Brojač nepročitanih poruka"
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Unreserve"
 msgstr "Poništi rezervaciju"
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
@@ -7518,6 +7533,10 @@ msgid ""
 "                routes can be assigned to a product, a product category or be fixed\n"
 "                on procurement or sales order."
 msgstr ""
+"Ovdje možete definirati glavne rute koje prolaze\n"
+"               vašim skladištem i koje definiraju tokove vaših proizvoda. Ove\n"
+"               rute se mogu dodijeliti proizvodu, kategoriji proizvoda ili biti fiksna\n"
+"               na nabavi ili prodajnom nalogu."
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -7839,7 +7858,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr ""
+msgstr "Bpost priključak"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0

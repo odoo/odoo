@@ -18,6 +18,8 @@
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2020
 # Milan Tribuson <one.mile.code@gmail.com>, 2020
 # Bole <bole@dajmi5.com>, 2021
+# Helena Viher <viherhelena@gmail.com>, 2021
+# Hrvoje Sić <hrvoje.sic@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2021\n"
+"Last-Translator: Hrvoje Sić <hrvoje.sic@gmail.com>, 2021\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,7 +92,7 @@ msgstr " # zadataka"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Upitnik o zadovoljstvu"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -105,6 +107,7 @@ msgstr "%s (kopija)"
 #, python-format
 msgid "%s Use the %s icon to organize your daily activities."
 msgstr ""
+"%s Koristite %s ikonu za organiziranje svojih svakodnevnih aktivnosti."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__10
@@ -244,6 +247,8 @@ msgstr "31"
 #, python-format
 msgid "<b>Drag &amp; drop</b> the card to change your task from stage."
 msgstr ""
+"<b>Drag &amp; odbacite </b> karticu kako biste izmijenili status svog "
+"zadatka."
 
 #. module: project
 #. openerp-web
@@ -368,12 +373,14 @@ msgid ""
 "<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> "
 "Customer Ratings</b> are disabled on the following project(s) : <br/>"
 msgstr ""
+"<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> "
+"Ocjene kupaca </b> onemogućene su na sljedećim projektima : <br/>"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "<p><em>Number of tasks: %(tasks_count)s</em></p>"
-msgstr ""
+msgstr "<p><em>Broj zadataka: %(tasks_count)s</em></p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -392,7 +399,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"fa fa-check-circle\"/> Next Occurrences:"
-msgstr ""
+msgstr "<span class=\"fa fa-check-circle\"/> Sljedeće pojavljivanje:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -409,7 +416,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"o_label\">Profitability</span>"
-msgstr ""
+msgstr "<span class=\"o_label\">Profitabilnost</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -418,6 +425,9 @@ msgid ""
 "                                    Customer Satisfaction\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Zadovljstvo kupaca\n"
+"                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -427,7 +437,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "<span>Are you sure you want to delete this project ?</span>"
-msgstr ""
+msgstr "<span> Jeste li sigurni da želite izbrisati ovaj projekt? </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -435,11 +445,13 @@ msgid ""
 "<span>You cannot delete a project containing tasks. You can either archive "
 "it or first delete all of its tasks.</span>"
 msgstr ""
+"<span>Nije moguće izbrisati projekt koji sadrži zadatke. Možete ih ili "
+"arhivirati ili obrisati sve zadatke prije brisanja.</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Attachments</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">Privitci</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -549,13 +561,15 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
+"Dodajte stupce za organiziranje Vaših zadataka u <b>faze</b> <i>npr. Novo - "
+"U tijeku - Završeno</i>."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Add your task once it is ready."
-msgstr ""
+msgstr "Dodajte svoj zadatak kada je spreman."
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -603,7 +617,7 @@ msgstr "Sve"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
-msgstr ""
+msgstr "Svi interni korisnici"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__all
@@ -618,17 +632,17 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_internal_user_ids
 msgid "Allowed Internal Users"
-msgstr ""
+msgstr "Odobreni interni korisnici"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_portal_user_ids
 msgid "Allowed Portal Users"
-msgstr ""
+msgstr "Odobreni korisnici portala"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_user_ids
 msgid "Allowed User"
-msgstr ""
+msgstr "Odobreni korisnici"
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
@@ -642,6 +656,9 @@ msgid ""
 "Analytic account to which this project is linked for financial management. "
 "Use an analytic account to record cost and revenue on your project."
 msgstr ""
+"Račun za analitiku na koji je ovaj projekt povezan u svrhu financijskog "
+"upravljanja. Koristite analitički račun za stvaranje zapisa o troškovima i "
+"prihodima na Vašem projektu."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
@@ -657,12 +674,12 @@ msgstr "Arhiviraj"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Archive Stages"
-msgstr ""
+msgstr "Arhiviraj stanja"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "Archive project"
-msgstr ""
+msgstr "Arhiviraj projekt"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -677,24 +694,24 @@ msgstr "Arhivirano"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 msgid "Are you sure you want to continue?"
-msgstr ""
+msgstr "Jeste li sigurni da želite nastaviti?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete those stages ?"
-msgstr ""
+msgstr "Jeste li sigurni da želite izbrisati ove stadije?"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Assembling"
-msgstr ""
+msgstr "Sastavljanje"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
-msgstr ""
+msgstr "Dodijeli mi"
 
 #. module: project
 #. openerp-web
@@ -730,7 +747,7 @@ msgstr "Datum dodjeljivanja"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_assign
 msgid "Assignment Date"
-msgstr ""
+msgstr "Datum dodjeljivanja"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -752,7 +769,7 @@ msgstr "Broj priloga"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachment that don't come from message."
-msgstr ""
+msgstr "Privitci koji ne dolaze iz poruke."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__august
@@ -764,7 +781,7 @@ msgstr "Kolovoz"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Auto-generate tasks for regular activities"
-msgstr ""
+msgstr "Automatski generiraj zadatke za redovite aktivnosti"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
@@ -778,6 +795,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Automatski izmijeni kanban stanje kada korisnik odgovori na povratne informacije za ovaj stadij.\n"
+" * korisnikov pozitivni povratni odgovor ažurirati će kanban stanje na \"spremno za novij stadij\" (zelena oznaka).\n"
+" * korisnikov srednje dobar ili negativan povratni odgovor ažurirati će kanban stanje na \"blokirano\" (crvena oznaka).\n"
 
 #. module: project
 #. openerp-web
@@ -813,7 +833,7 @@ msgstr "Blokirano"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Brainstorm"
-msgstr ""
+msgstr "Razmjena ideja"
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_10
@@ -836,18 +856,21 @@ msgid ""
 "By saving this change, the customer email and phone number will also be "
 "updated."
 msgstr ""
+"Spremanjem ove izmjene, korisnikov e-mail i broj telefona također će biti "
+"ažurirani."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "By saving this change, the customer email will also be updated."
-msgstr ""
+msgstr "Spremanjem ove izmjene, korisnikov e-mail također će biti ažuriran."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "By saving this change, the customer phone number will also be updated."
 msgstr ""
+"Spremanjem ove izmjene, korisnikov broj telefona također će biti ažuriran."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -872,6 +895,8 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
 "     of a product, of a team, of a construction site...</i>"
 msgstr ""
+"Odaberite <b>ime</b> za svoj projekt. <i>Ime može biti što god želite: ime klijenta,\n"
+"     proizvoda, tima, gradilišta...</i>"
 
 #. module: project
 #. openerp-web
@@ -880,6 +905,8 @@ msgstr ""
 msgid ""
 "Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>"
 msgstr ""
+"Odaberite <b>ime</b> zadatka <i>(npr. Dizajn mrežne stranice, Kupljena "
+"dobra...) </i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_city
@@ -891,13 +918,13 @@ msgstr "Grad"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Client Review"
-msgstr ""
+msgstr "Recenzija klijenta"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
 #: model:ir.model.fields,field_description:project.field_project_task_type__is_closed
 msgid "Closing Stage"
-msgstr ""
+msgstr "Zatvaranje stadija"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -925,6 +952,10 @@ msgid ""
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
 " %s"
 msgstr ""
+"Komunicirajte s korisnicima o zadatku koristeći e-mail gateway. Zadacima "
+"dodajte dizajne logotipa, kako biste omogućili protok informacija od "
+"dizajnera do radnika koji izrađuju majice. Organizirajte prioritete u "
+"narudžbama %s koristeći ikonu. %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -979,7 +1010,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
 msgid "Cover Image"
-msgstr ""
+msgstr "Naslovna slika"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
@@ -995,17 +1026,17 @@ msgstr "Kreiraj projekt"
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
 msgid "Create a new stage in the task pipeline"
-msgstr ""
+msgstr "Dodajte novu fazu u tok zadataka"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Create tasks by sending an email"
-msgstr ""
+msgstr "Stvorite zadatke slanjem e-maila"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create tasks by sending an email to"
-msgstr ""
+msgstr "Stvorite zadatke slanjem e-maila"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
@@ -1046,7 +1077,7 @@ msgstr "Valuta"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "Current project of the task"
-msgstr ""
+msgstr "Trenutni projekt zadatka"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -1088,13 +1119,13 @@ msgstr "E-mail kupca"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Customer Feedback"
-msgstr ""
+msgstr "Povratne informacije kupca"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
 #: model:ir.model.fields,help:project.field_project_task__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "URL portala za kupce"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -1107,12 +1138,12 @@ msgstr "Ocjene kupaca"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
 msgid "Customer Ratings Status"
-msgstr ""
+msgstr "Status ocjena kupaca"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_task
 msgid "Customer Ratings on Task"
-msgstr ""
+msgstr "Kupčeve ocjene zadatka"
 
 #. module: project
 #. openerp-web
@@ -1123,6 +1154,10 @@ msgid ""
 "you can communicate on the task directly. Your managers decide which "
 "feedback is accepted %s and which feedback is moved to the %s column. %s"
 msgstr ""
+"Kupci predlažu slanje povratnih informacija e-mailom; Odoo stvara zadatke "
+"automatski i moguće je komunicirati o zadatku direktno. Vaši menadžeri mogu "
+"odabrati koje povratne informacije su prihvaćene%s te koje su povratne "
+"informacije prebačene u %s stupac. %s"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -1320,7 +1355,7 @@ msgstr "Naziv"
 #: code:addons/project/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "Nemate pristup, preskočite ove podatke za sažetak e-pošte korisnika"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1735,6 +1770,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"Ako je postavljeno, ovaj sadržaj bit će automatsku poslan neovlaštenim "
+"korisnicima umjesto zadane poruke."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -2021,7 +2058,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
 msgid "List of cc from incoming emails."
-msgstr ""
+msgstr "Lista cc kopija ulaznih e-mailova."
 
 #. module: project
 #. openerp-web
@@ -2552,7 +2589,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__access_url
 #: model:ir.model.fields,field_description:project.field_project_task__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "URL za pristup portalu"
 
 #. module: project
 #. openerp-web
@@ -2877,7 +2914,7 @@ msgstr "Ponavljanje"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_update
 msgid "Recurrence Update"
-msgstr ""
+msgstr "Ažuriranje ponavljanja"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_task

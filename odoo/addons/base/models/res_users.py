@@ -1450,36 +1450,28 @@ class UsersView(models.Model):
 
                 # FIXME: in Accounting, the groups in the selection are not
                 # totally ordered, and their order therefore partially depends
-                # on their name, which is translated!  So we generate all the
-                # possible field names according to the partial order.
-                gs_list = [gs]
+                # on their name, which is translated!  However, the group name
+                # used in the "user groups view" corresponds to the group order
+                # without translations.
+                field_name_gs = gs
                 if app.xml_id == 'base.module_category_accounting_accounting':
-                    # ranks = {0: [A, B], 2: [C], 3: [D]}
-                    ranks = defaultdict(list)
-                    for g in gs:
-                        ranks[len(g.trans_implied_ids & gs)].append(g)
-                    # perms = [[AB, BA], [C], [D]]
-                    perms = [
-                        [Group.concat(*perm) for perm in itertools.permutations(rank)]
-                        for k, rank in sorted(ranks.items())
-                    ]
-                    # gs_list = [ABCD, BACD]
-                    gs_list = [Group.concat(*perm) for perm in itertools.product(*perms)]
+                    # put field_name_gs in the same order as in the user form view
+                    order = {g: len(g.trans_implied_ids & gs) for g in gs}
+                    field_name_gs = gs.with_context(lang=None).sorted('name').sorted(order.get)
 
-                for gs in gs_list:
-                    field_name = name_selection_groups(gs.ids)
-                    if allfields and field_name not in allfields:
-                        continue
-                    # selection group field
-                    tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
-                    res[field_name] = {
-                        'type': 'selection',
-                        'string': app.name or _('Other'),
-                        'selection': selection_vals + [(g.id, g.name) for g in gs],
-                        'help': '\n'.join(tips),
-                        'exportable': False,
-                        'selectable': False,
-                    }
+                field_name = name_selection_groups(field_name_gs.ids)
+                if allfields and field_name not in allfields:
+                    continue
+                # selection group field
+                tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
+                res[field_name] = {
+                    'type': 'selection',
+                    'string': app.name or _('Other'),
+                    'selection': selection_vals + [(g.id, g.name) for g in gs],
+                    'help': '\n'.join(tips),
+                    'exportable': False,
+                    'selectable': False,
+                }
             else:
                 # boolean group fields
                 for g in gs:

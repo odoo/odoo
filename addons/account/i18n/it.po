@@ -23,9 +23,9 @@
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2020
 # Luana Andronico <andronicoluana@gmail.com>, 2020
-# Mauro Sacchini <sacchini.sf@gmail.com>, 2020
 # AndreaNichil <Andrea.nichil@gmail.com>, 2021
 # Cécile Collart <cco@odoo.com>, 2021
+# Vortex Storm <vortexstorm@protonmail.com>, 2021
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
@@ -170,7 +170,7 @@ msgstr "→ Registrazioni parzialmente riconciliate "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
-msgstr ". In questo caso dovresti usare un numero più alto."
+msgstr ". Per un valore superiore impostare un numero qui."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -615,6 +615,8 @@ msgid ""
 "<span class=\"oe_inline o_form_label mr-3 ml-5 oe_edit_only\" "
 "groups=\"base.group_multi_currency\"> in </span>"
 msgstr ""
+"<span class=\"oe_inline o_form_label mr-3 ml-5 oe_edit_only\" "
+"groups=\"base.group_multi_currency\"> in </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -622,6 +624,8 @@ msgid ""
 "<span class=\"oe_inline o_form_label mx-3 oe_read_only\" "
 "groups=\"base.group_multi_currency\"> in </span>"
 msgstr ""
+"<span class=\"oe_inline o_form_label mx-3 oe_read_only\" "
+"groups=\"base.group_multi_currency\"> in </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -1457,8 +1461,8 @@ msgstr "Conto con registrazioni"
 #: model:ir.cron,name:account.ir_cron_auto_post_draft_entry
 msgid "Account; Post draft entries with auto_post set to True up to today"
 msgstr ""
-"Contabilità; conferma le registrazioni in bozza fino ad oggi con auto_post "
-"impostato a Vero"
+"Contabilità: conferma registrazioni in bozza fino ad oggi con auto_post a "
+"Vero"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -2050,13 +2054,13 @@ msgstr "% abbinamento importo"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount_max
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_amount_max
 msgid "Amount Max Parameter"
-msgstr "Parametro max per l'importo"
+msgstr "Parametro importo massimo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount_min
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_amount_min
 msgid "Amount Min Parameter"
-msgstr "Parametro min per l'importo"
+msgstr "Parametro importo minimo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_nature
@@ -2703,7 +2707,7 @@ msgid ""
 "Bank statements transactions will be posted on the suspense account until "
 "the final reconciliation allowing finding the right account."
 msgstr ""
-"Le operazioni su estratti conto bancari verranno registrate nel conto "
+"Le operazioni su estratti conto bancari vengono registrate nel conto "
 "provvisorio finché la riconciliazione finale non permetterà di trovare "
 "quello corretto."
 
@@ -2813,7 +2817,7 @@ msgstr "Digitalizzazione fattura"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Bill Reference"
-msgstr "Riferimento ricevuta"
+msgstr "Riferimento fattura/ricevuta"
 
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
@@ -3367,7 +3371,7 @@ msgstr "Assegni"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__children_line_ids
 msgid "Children Lines"
-msgstr "Righe figlie"
+msgstr "Righe secondarie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__children_tax_ids
@@ -3375,7 +3379,7 @@ msgstr "Righe figlie"
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Children Taxes"
-msgstr "Imposte figlie"
+msgstr "Imposte secondarie"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -4087,7 +4091,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__create_date
 #: model:ir.model.fields,field_description:account.field_validate_account_move__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -4732,7 +4736,7 @@ msgid ""
 "Determines where the tax is selectable. Note : 'None' means a tax can't be "
 "used by itself, however it can still be used in a group."
 msgstr ""
-"Determina dove l'imposta è selezionabile. Nota: \"Nessuna\" indica "
+"Determina dove è selezionabile l'imposta. Nota: \"Nessuna\" indica "
 "un'imposta che non può essere usata da sola, ma può essere utilizzata in un "
 "gruppo."
 
@@ -5660,7 +5664,7 @@ msgstr "Formula"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
 msgid "Free"
-msgstr "Gratuito"
+msgstr "Libera"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_from
@@ -7190,10 +7194,9 @@ msgid ""
 " anglo-saxon accounting with automated valuation method is configured, the "
 "expense account on the product category will be used."
 msgstr ""
-"Mantieni vuoto questo campo per utilizzare il valore predefinito dalla "
-"categoria del prodotto. Se viene configurata la contabilità anglosassone con"
-" metodo di valutazione automatizzato, verrà utilizzato il conto spese della "
-"categoria di prodotto."
+"Lasciare il campo vuoto per usare il valore predefinito della categoria del "
+"prodotto. Se è stata configurata la contabilità anglosassone con metodo di "
+"valutazione automatico, viene utilizzato il conto di costo."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
@@ -7557,6 +7560,7 @@ msgstr "Le righe dei conti \"fuori bilancio\" non possono essere riconciliate"
 #: model:ir.model.fields,help:account.field_account_tax_report_line__children_line_ids
 msgid "Lines that should be rendered as children of this one"
 msgstr ""
+"Righe che devono essere rappresentate come secondarie rispetto a questa"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__type__liquidity
@@ -8840,17 +8844,17 @@ msgstr "Pagato il"
 #: model:ir.model.fields,field_description:account.field_account_group_template__parent_id
 #: model:ir.model.fields,field_description:account.field_account_root__parent_id
 msgid "Parent"
-msgstr "Padre"
+msgstr "Principale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__parent_id
 msgid "Parent Chart Template"
-msgstr "Modello di piano padre"
+msgstr "Modello piano principale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__parent_id
 msgid "Parent Line"
-msgstr ""
+msgstr "Riga principale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__parent_id
@@ -10131,6 +10135,8 @@ msgstr "Limita l'utilizzo delle imposte a una tipologia di prodotto."
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
 msgstr ""
+"Limitare le proposte che hanno la stessa valuta della casella di "
+"dichiarazione."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
@@ -10541,10 +10547,9 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "company, it will automatically take this as an analytic account)"
 msgstr ""
-"Seleziona una azienda che utilizzerà il conto analitico specificato nel "
-"conto analitico predefinito (es.: crea nuova fattura cliente o ordine di "
-"vendita, se viene selezionata questa azienda, essa prenderà automaticamente "
-"il conto analitico impostato)"
+"Azienda che utilizzerà il conto analitico specificato come predefinito (es. "
+"Con l'azienda selezionata creare una nuova fattura cliente o un ordine di "
+"vendita, utilizzerà automaticamente il conto analitico)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__partner_id
@@ -10553,10 +10558,9 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "partner, it will automatically take this as an analytic account)"
 msgstr ""
-"Seleziona un partner che utilizzerà il conto analitico specificato nel conto"
-" analitico  predefinito (es.: crea nuova fattura cliente o ordine di "
-"vendita, se viene selezionato questo partner, esso prenderà automaticamente "
-"il conto analitico impostato)"
+"Partner che utilizzerà il conto analitico specificato come predefinito (es. "
+"Creare una nuova fattura cliente o un ordine di vendita selezionando il "
+"partner, utilizzerà automaticamente il conto analitico)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__product_id
@@ -10565,18 +10569,16 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "product, it will automatically take this as an analytic account)"
 msgstr ""
-"Seleziona un prodotto che utilizzerà il conto analitico specificato nel "
-"conto analitico predefinito (es.: crea nuova fattura cliente o ordine di "
-"vendita, se viene selezionato questo prodotto, esso prenderà automaticamente"
-" il conto analitico impostato)"
+"Prodotto che utilizzerà il conto analitico specificato come predefinito (es."
+" Creare una nuova fattura cliente o un ordine di vendita selezionando il "
+"prodotto, utilizzerà automaticamente il conto analitico)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__user_id
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
 msgstr ""
-"Seleziona un partner che utilizzerà il conto analitico specificato nelle "
-"impostazioni analitiche predefinite."
+"Partner che utilizzerà il conto analitico specificato come predefinito."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__account_id
@@ -10585,6 +10587,9 @@ msgid ""
 "analytic default (e.g. create new customer invoice or Sales order if we "
 "select this account, it will automatically take this as an analytic account)"
 msgstr ""
+"Conto che utilizzerà il conto analitico specificato come predefinito (es. "
+"Creare una nuova fattura cliente o un ordine di vendita selezionando il "
+"conto, utilizzerà automaticamente il conto analitico)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12097,9 +12102,9 @@ msgid ""
 "accounts: liquidity type is for cash or bank accounts, payable/receivable is"
 " for vendor/customer accounts."
 msgstr ""
-"Il campo \"Tipo interno\" viene usato per funzionalità disponibili in "
-"diversi tipi di conti: il tipo liquidità serve per conti cassa o banca, il "
-"tipo debito/credito è per conti fornitori/clienti."
+"Il campo \"Tipo interno\" viene usato per funzionalità disponibili in vari "
+"tipi di conti: il tipo liquidità serve per conti cassa o banca, "
+"debito/credito per conti fornitori/clienti."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12170,6 +12175,8 @@ msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
+"Conto già in uso in un registro \"Vendita\" o \"Acquisto\", la sua tipologia"
+" non può essere \"Credito\" o \"Debito\"."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12205,8 +12212,8 @@ msgid ""
 "The accounting journal where automatic exchange differences will be "
 "registered"
 msgstr ""
-"Il registro contabile dove vengono registrate automaticamente le differenze "
-"di cambio"
+"Registro contabile dove vengono registrate automaticamente le differenze di "
+"cambio"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__amount_currency
@@ -12363,7 +12370,7 @@ msgstr "La valuta utilizzata per inserire l'estratto conto"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "The current highest number is"
-msgstr ""
+msgstr "Attualmente il numero più alto è"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__state
@@ -12443,7 +12450,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "The following Journal Entries will be generated"
-msgstr "Verranno generate le seguenti registrazioni contabili"
+msgstr "Vengono generate le seguenti registrazioni contabili"
 
 #. module: account
 #: code:addons/account/models/res_bank.py:0
@@ -12997,6 +13004,8 @@ msgid ""
 "The tax set to apply this distribution on invoices. Mutually exclusive with "
 "refund_tax_id"
 msgstr ""
+"Imposta definita per applicare la distribuzione alle fatture. Mutualmente "
+"esclusivo con refund_tax_id"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__refund_tax_id
@@ -13101,8 +13110,8 @@ msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
 msgstr ""
-"Questo conto viene usato, al posto del predefinito, come conto fornitore per"
-" il partner corrente."
+"Conto utilizzato, al posto di quello predefinito, come conto fornitore per "
+"il partner corrente."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_receivable_id
@@ -13111,8 +13120,8 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr ""
-"Questo conto viene usato, al posto del predefinito, come conto cliente per "
-"il partner corrente."
+"Conto utilizzato, al posto di quello predefinito, come conto cliente per il "
+"partner corrente."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_income_categ_id
@@ -13770,7 +13779,7 @@ msgstr "Usa registro specifico"
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__use_active_domain
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__use_active_domain
 msgid "Use active domain"
-msgstr "Utilizza dominio attivo"
+msgstr "Usa dominio attivo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__anglo_saxon_accounting
@@ -14272,6 +14281,8 @@ msgid ""
 "You can only set an account having the payable type on payment terms lines "
 "for vendor bill."
 msgstr ""
+"Può essere impostato solo un conto che abbia, per la fattura fornitore, la "
+"tipologia debito nelle righe dei termini di pagamento."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14280,6 +14291,8 @@ msgid ""
 "You can only set an account having the receivable type on payment terms "
 "lines for customer invoice."
 msgstr ""
+"Può essere impostato solo un conto che abbia, per la fattura cliente, la "
+"tipologia credito nelle righe dei termini di pagamento."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -14882,7 +14895,7 @@ msgstr "es. GAAP, IFRS ecc..."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. Give a phone call, check with others , ..."
-msgstr "Es. Fai una telefonata, controlla con altri, ..."
+msgstr "Es. Fare una telefonata, Controllare con altri..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

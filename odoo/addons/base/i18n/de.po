@@ -18,10 +18,10 @@
 # Martin Trigaux, 2020
 # Ermin Trevisan <trevi@twanda.com>, 2020
 # Leon Grill <leg@odoo.com>, 2020
-# EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
-# Chris Egal <sodaswed@web.de>, 2021
 # Andreas Schmidt <schmigo@gmail.com>, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
+# EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
+# Chris Egal <sodaswed@web.de>, 2021
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Robert Förster <hello@suppliot.eu>, 2021\n"
+"Last-Translator: Chris Egal <sodaswed@web.de>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1007,6 +1007,28 @@ msgid ""
 "        you have not already sent to the government to reuse its number.\n"
 "    "
 msgstr ""
+"\n"
+"E-Faktur Menü(Indonesien)\n"
+"Format : 010.000-16.00000001\n"
+"* 2 (dua) digit pertama adalah Kode Transaksi\n"
+"* 1 (satu) digit berikutnya adalah Kode Status\n"
+"* 3 (tiga) Stelle berikutnya adalah Kode Cabang\n"
+"* 2 (dua) digit pertama adalah Tahun Penerbitan\n"
+"* 8 (delapan) digit berikutnya adalah Nomor Urut\n"
+"\n"
+"Um Kundenrechnungen als e-Faktur exportieren zu können,\n"
+"müssen Sie die Nummernkreise, die Ihnen\n"
+"von der Regierung in Buchhaltung > Kunden > e-Faktur\n"
+"\n"
+"Wenn Sie eine Rechnung validieren, bei der der Partner das Feld ID PKP\n"
+"angekreuzt hat, wird dieser Rechnung eine Steuernummer zugewiesen.\n"
+"Anschließend können Sie die noch zu exportierenden Rechnungen in der\n"
+"Rechnungen filtern und auf Aktion > Download e-Faktur klicken, um die\n"
+"die csv-Datei herunterzuladen und auf die Website der Regierung hochzuladen.\n"
+"\n"
+"Sie können eine bereits gesendete Rechnung durch eine andere ersetzen, indem Sie\n"
+"Sie können eine bereits gesendete Rechnung durch eine andere ersetzen, indem Sie die ersetzte Rechnung und die neue Rechnung angeben, und Sie können eine Rechnung zurücksetzen\n"
+"die Sie noch nicht an die Regierung gesendet haben, zurücksetzen, um ihre Nummer erneut zu verwenden."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -1854,6 +1876,9 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"Buchhaltungsberichte für Dänemark\n"
+"================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_reports
@@ -1864,6 +1889,9 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Buchhaltungsberichte für Finnland\n"
+"================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_reports
@@ -3477,6 +3505,46 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EU Mini One Stop Shop (MOSS) Mehrwertsteuer für Telekommunikation, Rundfunk und elektronische Dienstleistungen\n"
+"=============================================================================================\n"
+"\n"
+"Ab dem 1. Januar 2015 müssen Telekommunikations-, Rundfunk- und\n"
+"und elektronische Dienstleistungen, die innerhalb der Europäischen Union\n"
+"immer in dem Land versteuert werden, in dem der Kunde ansässig ist.\n"
+"gehört. Um die Anwendung dieser EU-Richtlinie zu vereinfachen\n"
+"Richtlinie zu vereinfachen, ermöglicht das Mini One Stop Shop (MOSS)-Registrierungssystem\n"
+"erlaubt es Unternehmen, eine eindeutige Steuererklärung abzugeben.\n"
+"\n"
+"Dieses Modul macht es möglich, indem es hilft bei der Erstellung\n"
+"der erforderlichen EU-Steuerpositionen und Steuern, um die\n"
+"automatisch die erforderlichen Steuern anzuwenden und zu erfassen.\n"
+"\n"
+"Dieses Modul installiert einen Assistenten, der bei der Einrichtung von Steuerpositionen\n"
+"und Steuern für den Verkauf von elektronischen Dienstleistungen innerhalb der EU.\n"
+"\n"
+"Mit dem Assistenten können Sie wählen:\n"
+"- die EU-Länder, in die Sie diese verkaufen\n"
+"Dienstleistungen\n"
+"- Ihre nationale Mehrwertsteuer für Dienstleistungen, die abgebildet werden soll\n"
+"auf die Steuer des Ziellandes\n"
+"- optional: eine Vorlage für die Steuerposition, um\n"
+"die Kontenzuordnung zu kopieren. Sollte Ihre\n"
+"bestehende B2C-Intra-EU-Steuerposition sein. (Standardmäßig\n"
+"auf keine Kontenzuordnung)\n"
+"- optional: ein Konto, das für die Erfassung der\n"
+"Steuerbeträge (standardmäßig das Konto, das von Ihrer\n"
+"nationalen Umsatzsteuer für Dienstleistungen)\n"
+"\n"
+"Es werden die entsprechenden Steuerpositionen und Steuern erstellt,\n"
+"automatisch anwendbar für EU-Verkäufe mit einem Kunden\n"
+"in den ausgewählten Ländern.\n"
+"Der Assistent kann erneut ausgeführt werden, um weitere Länder hinzuzufügen.\n"
+"\n"
+"Referenzen\n"
+"++++++++++\n"
+"- Richtlinie 2008/8/EG\n"
+"- Durchführungsverordnung (EU) Nr. 1042/2013 des Rates."
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr
@@ -8690,6 +8758,14 @@ msgid ""
 "                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_form_label\" name=\"address_name\">\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Hauptadresse</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Rechnungsadresse</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Lieferadresse</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Andere Adresse</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Privatadresse</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Adresse</b>\n"
+"                            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -17931,6 +18007,8 @@ msgid ""
 "Invalid server name !\n"
 " %s"
 msgstr ""
+"Ungültiger Servername !\n"
+" %s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -18855,7 +18933,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__link_field_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__link_field_id
 msgid "Link Field"
-msgstr ""
+msgstr "Link-Feld"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_link_tracker
@@ -23931,6 +24009,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record used "
 "by the server action."
 msgstr ""
+"Geben Sie das Feld an, das zur Verknüpfung des neu erstellten Datensatzes "
+"mit dem von der Serveraktion verwendeten Datensatz verwendet wird."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_mobile
@@ -25668,6 +25748,8 @@ msgid ""
 "Server replied with following exception:\n"
 " %s"
 msgstr ""
+"Der Server antwortete mit folgender Ausnahme:\n"
+" %s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
@@ -27686,6 +27768,13 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"Dieses Modul hilft bei der Analyse von Veranstaltungsanmeldungen.\n"
+"Zu diesem Zweck fügt es hinzu\n"
+"\n"
+"* eine Kohortenanalyse über Teilnehmer;\n"
+"* eine Gantt-Ansicht für Veranstaltungen;\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides_survey
@@ -28829,7 +28918,7 @@ msgstr "Benutzer:"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "User: %s"
-msgstr ""
+msgstr "Benutzer: %s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_user
@@ -29639,7 +29728,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
 msgid "Write down your key"
-msgstr ""
+msgstr "Notieren Sie Ihre Schlüssel"
 
 #. module: base
 #: model:res.country,name:base.ye
@@ -29673,6 +29762,8 @@ msgid ""
 "You are not allowed to access '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
+"Sie haben keinen Zugriff auf '%(document_kind)s' (%(document_model)s) "
+"Datensätze."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -29753,6 +29844,8 @@ msgstr "Zwei Benuzter dürfen nicht den gleichen Benutzernamen verwenden!"
 msgid ""
 "You can not remove API keys unless they're yours or you are a system user"
 msgstr ""
+"Sie können einen API-Schlüssel nicht entfernen, es sei denn, sie gehören "
+"Ihnen oder Sie sind ein Systembenutzer"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -29785,6 +29878,8 @@ msgstr "Sie können den Superuser nicht aktivieren."
 #, python-format
 msgid "You cannot archive a contact linked to a portal or internal user."
 msgstr ""
+"Sie können einen Kontakt, der mit einem Portal oder einem internen Benutzer "
+"verknüpft ist, nicht archivieren."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -29860,6 +29955,8 @@ msgstr "Sie haben nicht genügend Rechte, um diese Aktion auszuführen."
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
 msgstr ""
+"Sie haben nicht die Rechte, um Daten zu exportieren. Bitte wenden Sie sich "
+"an einen Administrator."
 
 #. module: base
 #: code:addons/base/wizard/base_partner_merge.py:0
@@ -29907,6 +30004,8 @@ msgid ""
 "You won't be able to reduce the number of decimal places of a currency which"
 " has already been used to make accounting entries."
 msgstr ""
+"Sie können die Anzahl der Dezimalstellen einer Währung, die bereits für "
+"Buchungseinträge verwendet wurde, nicht reduzieren."
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
@@ -29959,7 +30058,7 @@ msgstr "PLZ"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__zip_required
 msgid "Zip Required"
-msgstr ""
+msgstr "Zip Erforderlich"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -29996,7 +30095,7 @@ msgstr "Erlaubt für Gruppen %s"
 #: code:addons/models.py:0
 #, python-format
 msgid "always forbidden"
-msgstr ""
+msgstr "stets verboten"
 
 #. module: base
 #: code:addons/base/models/res_currency.py:0
@@ -30186,6 +30285,8 @@ msgid ""
 "has been successfully installed.\n"
 "Users can choose his favorite language in their preferences."
 msgstr ""
+"wurde erfolgreich installiert.\n"
+"Die Benutzer können Ihre bevorzugte Sprache in den Einstellungen wählen."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -30263,7 +30364,7 @@ msgstr "many2one_reference"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "minute"
-msgstr ""
+msgstr "minute"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -30367,7 +30468,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "second"
-msgstr ""
+msgstr "sekunde"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__selection
@@ -30382,7 +30483,7 @@ msgstr "snailmail_account"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "test"
-msgstr ""
+msgstr "test"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mimetypes
@@ -30505,7 +30606,7 @@ msgstr "Woche"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "year"
-msgstr ""
+msgstr "jahr"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0

@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2020
 # Iacopo Simonelli <lsi@odoo.com>, 2020
 # Luigi Di Naro <gigidn@gmail.com>, 2020
 # Paolo Valier, 2020
@@ -43,7 +42,7 @@ msgstr "<span>Rendicontazione</span>"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>View</span>"
-msgstr "<span>Visualizza</span>"
+msgstr "<span>Vista</span>"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
@@ -66,6 +65,8 @@ msgid ""
 "Add members to automatically assign their documents to this sales team. You "
 "can only be member of one team."
 msgstr ""
+"Aggiungere iscritti per assegnare automaticamente i loro documenti al team "
+"di vendita. È possibile essere iscritti a un solo team."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -97,7 +98,7 @@ msgstr "Avatar"
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Big Pretty Button :)"
-msgstr "Big Pretty Button :)"
+msgstr "Grande pulsante carino :)"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_tag
@@ -157,8 +158,8 @@ msgid ""
 "Create tags that fit your business (product structure, sales type, etc.) to "
 "better manage and track your opportunities."
 msgstr ""
-"Creare etichette che si adattano alla propria attività (struttura del "
-"prodotto, tipo di vendita ecc.) per gestire e seguire meglio le opportunità."
+"Crea etichette adatte all'attività (struttura del prodotto, tipo di vendita "
+"ecc.) per gestire e seguire meglio le opportunità."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
@@ -170,7 +171,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_date
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__currency_id
@@ -221,9 +222,7 @@ msgstr "Iscritti preferiti"
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
 msgid ""
 "Favorite teams to display them in the dashboard and access them easily."
-msgstr ""
-"Aggiungi gruppi ai tuoi preferiti per vederli nella bacheca e poter "
-"accederci facilmente."
+msgstr "Team preferiti per visualizzazione in bacheca e accesso facilitato."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -231,8 +230,8 @@ msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
 msgstr ""
-"Seguendo questo Team di Vendita viene tenuta automaticamente traccia degli "
-"eventi associati agli utenti di questo team."
+"Seguire questo team di vendita per tenere traccia in modo automatico degli "
+"eventi associati agli utenti del team."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -281,7 +280,7 @@ msgid ""
 "this partner"
 msgstr ""
 "Se impostato, il team di vendita viene utilizzato per vendite e assegnazioni"
-" collegate a questo partner"
+" correlate al partner"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -500,6 +499,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
+"Usa i team per organizzare gli uffici vendite.\n"
+"                Il flusso di lavoro viene separato per ciascun team."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
@@ -536,12 +537,13 @@ msgstr "eBay"
 msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
-msgstr "l'utente avrà accesso a tutti i dati del modulo vendite."
+msgstr "Utente con accesso a tutti i record dell'applicazione vendite."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
-msgstr "l'utente avrà accesso solo ai propri dati nel modulo vendite."
+msgstr ""
+"Utente con accesso ai propri dati personali nell'applicazione vendite."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
@@ -549,5 +551,4 @@ msgid ""
 "the user will have an access to the sales configuration as well as statistic"
 " reports."
 msgstr ""
-"L'utente avrà accesso al menu configurazione delle vendite così come ai "
-"report statistici."
+"Utente con accesso alla configurazione delle vendite e alle statistiche."

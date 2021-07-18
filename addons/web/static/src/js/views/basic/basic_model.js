@@ -381,6 +381,11 @@ var BasicModel = AbstractModel.extend({
                     if (parent && parent.type === 'list') {
                         parent.data = _.without(parent.data, record.id);
                         delete self.localData[record.id];
+                        // Check if we are on last page and all records are deleted from current
+                        // page i.e. if there is no state.data.length then go to previous page
+                        if (!parent.data.length && parent.offset > 0) {
+                            parent.offset = Math.max(parent.offset - parent.limit, 0);
+                        }
                     } else {
                         record.res_ids.splice(record.offset, 1);
                         record.offset = Math.min(record.offset, record.res_ids.length - 1);
@@ -1302,14 +1307,27 @@ var BasicModel = AbstractModel.extend({
                 // optionally clear the DataManager's cache
                 self._invalidateCache(parent);
                 if (!_.isEmpty(action)) {
-                    return self.do_action(action, {
-                        on_close: function () {
-                            return self.trigger_up('reload');
-                        }
+                    return new Promise(function (resolve, reject) {
+                        self.do_action(action, {
+                            on_close: function (result) {
+                                return self.trigger_up('reload', {
+                                    onSuccess: resolve,
+                                });
+                            }
+                        });
                     });
                 } else {
                     return self.reload(parentID);
                 }
+            }).then(function (datapoint) {
+                // if there are no records to display and we are not on first page(we check it
+                // by checking offset is greater than limit i.e. we are not on first page)
+                // reason for adding logic after reload to make sure there is no records after operation
+                if (parent && parent.type === 'list' && !parent.data.length && parent.offset > 0) {
+                    parent.offset = Math.max(parent.offset - parent.limit, 0);
+                    return self.reload(parentID);
+                }
+                return datapoint;
             });
     },
     /**
@@ -1331,14 +1349,27 @@ var BasicModel = AbstractModel.extend({
                 // optionally clear the DataManager's cache
                 self._invalidateCache(parent);
                 if (!_.isEmpty(action)) {
-                    return self.do_action(action, {
-                        on_close: function () {
-                            return self.trigger_up('reload');
-                        }
+                    return new Promise(function (resolve, reject) {
+                        self.do_action(action, {
+                            on_close: function () {
+                                return self.trigger_up('reload', {
+                                    onSuccess: resolve,
+                                });
+                            }
+                        });
                     });
                 } else {
                     return self.reload(parentID);
                 }
+            }).then(function (datapoint) {
+                // if there are no records to display and we are not on first page(we check it
+                // by checking offset is greater than limit i.e. we are not on first page)
+                // reason for adding logic after reload to make sure there is no records after operation
+                if (parent && parent.type === 'list' && !parent.data.length && parent.offset > 0) {
+                    parent.offset = Math.max(parent.offset - parent.limit, 0);
+                    return self.reload(parentID);
+                }
+                return datapoint;
             });
     },
     /**

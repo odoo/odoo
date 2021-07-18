@@ -8,7 +8,7 @@
 # Manami Hashi <manami@roomsfor.hk>, 2020
 # 城谷 龍弥 <tatsuya.shirotani@pro-spire.co.jp>, 2020
 # Martin Trigaux, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2020
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2020
 # kent_ocean <ke.tanabe@gmail.com>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
@@ -18,6 +18,7 @@
 # Noma Yuki, 2020
 # Shigekazu N. <shigekazu.noka@gmail.com>, 2020
 # Tsuda Ryoko <ryoko04nov@gmail.com>, 2021
+# Yabe Takahiro <yabe@quartile.co>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Tsuda Ryoko <ryoko04nov@gmail.com>, 2021\n"
+"Last-Translator: Yabe Takahiro <yabe@quartile.co>, 2021\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,7 +58,7 @@ msgstr ""
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Drag this card</b>, to qualify him for a first interview."
-msgstr ""
+msgstr "この<b>名刺をドラッグ</b>して、初回面談を設定しましょう。"
 
 #. module: hr_recruitment
 #. openerp-web
@@ -67,6 +68,8 @@ msgid ""
 "<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All "
 "emails sent or received are saved in the history here</i>"
 msgstr ""
+"<div>志望者に<b>メールを送信</b>しましょう！</div><div><i>注意: "
+"送受信されたメールの履歴はすべてここの履歴に保存されます。</i>"
 
 #. module: hr_recruitment
 #. openerp-web
@@ -598,7 +601,7 @@ msgstr "添付"
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Attachments, like resumes, get indexed automatically."
-msgstr ""
+msgstr "履歴書などの添付書類には自動でインデックスが付与されます。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__availability
@@ -1476,7 +1479,7 @@ msgstr ""
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let's have a look at how to <b>improve</b> your <b>hiring process</b>."
-msgstr ""
+msgstr "<b>雇用プロセスを改善する</b>方法を見てみましょう。"
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1720,14 +1723,14 @@ msgstr "未読メッセージ件数"
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "                process and follow up all operations: meetings, interviews, etc."
-msgstr ""
+msgstr "Odooは各候補者の選考状況を追跡し、管理作業や面談・面接の設定などのすべてを支援します。"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "            process and follow up all operations: meetings, interviews, etc."
-msgstr ""
+msgstr "Odooは各候補者の選考状況を追跡し、管理作業や面談・面接の設定などのすべてを支援します。"
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
@@ -1737,7 +1740,7 @@ msgstr "オフィサー"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Ongoing"
-msgstr ""
+msgstr "選考中"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_website_hr_recruitment
@@ -1947,12 +1950,12 @@ msgstr "却下"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #, python-format
 msgid "Refuse Reason"
-msgstr ""
+msgstr "不採用事由"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_refuse_reason
 msgid "Refuse Reason of Applicant"
-msgstr ""
+msgstr "候補者の不採用事由"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_refuse_reason_action
@@ -2028,17 +2031,17 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Schedule Interview"
-msgstr ""
+msgstr "面談の日程調整"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Schedule interview with this applicant"
-msgstr ""
+msgstr "この候補者との面談日程を調整する"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Search Applicants"
-msgstr ""
+msgstr "候補者を探す"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_view_search
@@ -2153,7 +2156,7 @@ msgstr "採用開始"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Start recruitment"
-msgstr ""
+msgstr "採用を開始する"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_state

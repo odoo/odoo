@@ -828,13 +828,17 @@ body.editor_enable.editor_has_snippets {
                 }
             }
             .o_we_pager_next, .o_we_pager_prev {
+                margin: 0.3em;
                 padding: $o-we-sidebar-content-field-label-spacing;
                 cursor: pointer;
+                border: $o-we-item-border-width solid currentColor;
+                border-radius: $o-we-item-border-radius;
             }
             we-select-page {
                 display: none;
                 width: 100%;
-                max-height: 600px;
+                // Cut the last visible option in the list to understand that we can scroll.
+                max-height: 75px * 7.5;
                 overflow-y: auto;
 
                 &.active {
@@ -1441,11 +1445,27 @@ body.editor_enable.editor_has_snippets {
             border: 0;
             background-color: transparent;
             background-clip: padding-box;
+
+            // Borders instead of margins so that the user smoothly goes from
+            // one button to another without leaving them.
             border-top: $o-we-sidebar-content-field-spacing solid transparent;
             border-bottom: $o-we-sidebar-content-field-spacing solid transparent;
 
             + .o_we_color_combination_btn {
                 margin-top: $o-we-sidebar-content-field-spacing * -.5;
+            }
+
+            &.selected {
+                > .o_we_cc_preview_wrapper {
+                    box-shadow: 0 0 0 1px $o-we-color-success !important;
+                }
+                .o_we_color_combination_btn_title::before {
+                    content: "\f00c";
+                    margin-right: $o-we-sidebar-content-field-spacing;
+                    font-size: 0.8em;
+                    font-family: FontAwesome;
+                    color: $o-we-color-success;
+                }
             }
 
             .o_we_cc_preview_wrapper:after {

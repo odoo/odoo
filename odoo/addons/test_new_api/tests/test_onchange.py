@@ -536,6 +536,39 @@ class TestOnChange(SavepointCaseWithUserDemo):
 
         self.assertFalse(called[0], "discussion.messages has been read")
 
+    def test_onchange_inherited(self):
+        """ Setting an inherited field should assign the field on the parent record. """
+        foo, bar = self.env['test_new_api.multi.tag'].create([{'name': 'Foo'}, {'name': 'Bar'}])
+        view = self.env['ir.ui.view'].create({
+            'name': 'Payment form view',
+            'model': 'test_new_api.payment',
+            'arch': """
+                <form>
+                    <field name="move_id" readonly="1" required="0"/>
+                    <field name="tag_id"/>
+                    <field name="tag_name"/>
+                </form>
+            """,
+        })
+
+        # both fields 'tag_id' and 'tag_name' are inherited through 'move_id';
+        # assigning 'tag_id' should modify 'move_id.tag_id' accordingly, which
+        # should in turn recompute `move.tag_name` and `tag_name`
+        form = Form(self.env['test_new_api.payment'], view)
+        form.tag_id = foo
+        self.assertEqual(form.tag_name, 'Foo')
+
+        payment = form.save()
+        self.assertEqual(payment.tag_id, foo)
+        self.assertEqual(payment.tag_name, 'Foo')
+
+        with Form(payment, view) as form:
+            form.tag_id = bar
+            self.assertEqual(form.tag_name, 'Bar')
+
+        self.assertEqual(payment.tag_id, bar)
+        self.assertEqual(payment.tag_name, 'Bar')
+
 
 class TestComputeOnchange(common.TransactionCase):
 

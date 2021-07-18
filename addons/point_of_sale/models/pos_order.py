@@ -6,6 +6,7 @@ from functools import partial
 
 import psycopg2
 import pytz
+import re
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, float_round
@@ -63,6 +64,7 @@ class PosOrder(models.Model):
             'cardholder_name': ui_paymentline.get('cardholder_name'),
             'transaction_id': ui_paymentline.get('transaction_id'),
             'payment_status': ui_paymentline.get('payment_status'),
+            'ticket': ui_paymentline.get('ticket'),
             'pos_order_id': order.id,
         }
 
@@ -165,8 +167,7 @@ class PosOrder(models.Model):
         order_bank_statement_lines= self.env['pos.payment'].search([('pos_order_id', '=', order.id)])
         order_bank_statement_lines.unlink()
         for payments in pos_order['statement_ids']:
-            if not float_is_zero(payments[2]['amount'], precision_digits=prec_acc):
-                order.add_payment(self._payment_fields(order, payments[2]))
+            order.add_payment(self._payment_fields(order, payments[2]))
 
         order.amount_paid = sum(order.payment_ids.mapped('amount'))
 
@@ -685,7 +686,7 @@ class PosOrder(models.Model):
             'lines': [[0, 0, line] for line in order.lines.export_for_ui()],
             'statement_ids': [[0, 0, payment] for payment in order.payment_ids.export_for_ui()],
             'name': order.pos_reference,
-            'uid': order.pos_reference[6:],
+            'uid': re.search('([0-9]|-){14}', order.pos_reference).group(0),
             'amount_paid': order.amount_paid,
             'amount_total': order.amount_total,
             'amount_tax': order.amount_tax,

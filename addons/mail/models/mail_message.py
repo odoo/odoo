@@ -13,6 +13,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import groupby
+from odoo.tools.misc import clean_context
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
@@ -602,7 +603,7 @@ class Message(models.Model):
                 values['attachment_ids'] = []
             # extract base64 images
             if 'body' in values:
-                Attachments = self.env['ir.attachment']
+                Attachments = self.env['ir.attachment'].with_context(clean_context(self._context))
                 data_to_url = {}
                 def base64_to_boundary(match):
                     key = match.group(2)

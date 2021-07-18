@@ -13,17 +13,17 @@
 # lhmflexerp <lhm@flexerp.dk>, 2020
 # walther_b <wba@miracle.dk>, 2020
 # Joe Hansen <joedalton2@yahoo.dk>, 2020
-# Martin Trigaux, 2020
 # jonas jensen <j.jensen@tcomp.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
+# Martin Trigaux, 2020
 # Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
 "Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
@@ -606,8 +606,8 @@ msgstr "Indeholdt kvantitet"
 #. module: product
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
-msgid "Corner Desk Black"
-msgstr "Hjørne skrivebord sort"
+msgid "Corner Desk Left Sit"
+msgstr "Hjørne Skrivebord Venstre Sid"
 
 #. module: product
 #: model:product.product,name:product.product_product_5
@@ -856,6 +856,7 @@ msgstr "Rabatter"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:product.field_res_country_group__display_name
 #: model:ir.model.fields,field_description:product.field_res_partner__display_name
+#: model:ir.model.fields,field_description:product.field_uom_uom__display_name
 msgid "Display Name"
 msgstr "Vis navn"
 
@@ -1085,6 +1086,7 @@ msgstr "Timer"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__id
 #: model:ir.model.fields,field_description:product.field_res_country_group__id
 #: model:ir.model.fields,field_description:product.field_res_partner__id
+#: model:ir.model.fields,field_description:product.field_uom_uom__id
 msgid "ID"
 msgstr "ID"
 
@@ -1308,6 +1310,7 @@ msgstr "Stort mødebord"
 #: model:ir.model.fields,field_description:product.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:product.field_res_country_group____last_update
 #: model:ir.model.fields,field_description:product.field_res_partner____last_update
+#: model:ir.model.fields,field_description:product.field_uom_uom____last_update
 msgid "Last Modified on"
 msgstr "Sidst ændret den"
 
@@ -1938,6 +1941,11 @@ msgid "Product Type"
 msgstr "Produkttype"
 
 #. module: product
+#: model:ir.model,name:product.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Vareenhed"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
@@ -2456,6 +2464,18 @@ msgstr ""
 "aktuelle kunde"
 
 #. module: product
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid ""
+"This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
+"This may cause inconsistencies in computations.\n"
+"Please set a precision between %s and 1."
+msgstr ""
+"Denne afrundings præcision er højere end Decimalpræcisionen (%s cifre).\n"
+"Dette kan forårsage uoverensstemmelser i udregninger.\n"
+"Vær venlig at angive en præcision mellem %s og 1."
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
@@ -2781,6 +2801,13 @@ msgid "Volume unit of measure label"
 msgstr "Volumen måleenhed mærkat"
 
 #. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid "Warning!"
+msgstr "Advarsel!"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Warnings"
 msgstr "Advarsler"
@@ -2812,6 +2839,20 @@ msgstr "Vægtens måleenhed for mærkat"
 #: model:product.template.attribute.value,name:product.product_4_attribute_2_value_1
 msgid "White"
 msgstr "Hvid"
+
+#. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOMs:\n"
+"%s\n"
+"This may cause inconsistencies in computations.\n"
+"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+msgstr ""
+"Du angiver en Decimalpræcision som er mindre præcis end Måleenhedens:\n"
+"%s\n"
+"Dette kan forårsage uoverensstemmelser i udregninger.\n"
+"Vær venlig at forøge afrundingen for de måleenheder, eller for antal cifre i denne Decimalpræcision."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -2904,6 +2945,14 @@ msgid ""
 msgstr ""
 "Du kan ikke slette værdien %s fordi den anvendes på følgende produkter:\n"
 "%s"
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot delete this pricelist (%s), it is used in other pricelist(s) : \n"
+"%s"
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product.py:0

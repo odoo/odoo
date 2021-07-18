@@ -572,6 +572,8 @@ class InventoryLine(models.Model):
             result = False
         else:
             raise NotImplementedError()
+        if not self.env.context.get('default_inventory_id'):
+            raise NotImplementedError(_('Unsupported search on %s outside of an Inventory Adjustment', 'difference_qty'))
         lines = self.search([('inventory_id', '=', self.env.context.get('default_inventory_id'))])
         line_ids = lines.filtered(lambda line: float_is_zero(line.difference_qty, line.product_id.uom_id.rounding) == result).ids
         return [('id', 'in', line_ids)]
@@ -582,6 +584,8 @@ class InventoryLine(models.Model):
                 value = not value
             else:
                 raise NotImplementedError()
+        if not self.env.context.get('default_inventory_id'):
+            raise NotImplementedError(_('Unsupported search on %s outside of an Inventory Adjustment', 'outdated'))
         lines = self.search([('inventory_id', '=', self.env.context.get('default_inventory_id'))])
         line_ids = lines.filtered(lambda line: line.outdated == value).ids
         return [('id', 'in', line_ids)]

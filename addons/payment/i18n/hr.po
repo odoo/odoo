@@ -15,6 +15,7 @@
 # Vojislav Opačić <vojislav.opacic@gmail.com>, 2020
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2020
 # Bole <bole@dajmi5.com>, 2021
+# Hrvoje Sić <hrvoje.sic@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2021\n"
+"Last-Translator: Hrvoje Sić <hrvoje.sic@gmail.com>, 2021\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -151,13 +152,13 @@ msgstr ""
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A journal must be specified for the acquirer %s."
-msgstr ""
+msgstr "Za primatelja mora biti naveden dnevnik %s."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr ""
+msgstr "Primatelj plaćanja dužan je stvoriti transakciju."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -330,6 +331,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Jeste li sigurni da želite poništiti autoriziranu transakciju? Ova radnja ne"
+" može se poništiti."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
@@ -688,7 +691,7 @@ msgstr "Onemogućen"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Dismiss"
-msgstr ""
+msgstr "Odbaciti"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_chart_template__display_name
@@ -837,12 +840,12 @@ msgstr "Generiraj link za plaćanje"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Generirajte link za plaćanje prodaje"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_invoice_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "Generiraj link za plaćanje"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_search
@@ -969,13 +972,13 @@ msgstr "Interna pogreška poslužitelja"
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "Pronađen je nevažeći token! Stjecatelj tokena %s != %s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "Pronađen je nevažeći token! Partnerov token %s != %s"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
@@ -1260,12 +1263,12 @@ msgstr "Ostalo"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__other
 msgid "Other payment acquirer"
-msgstr ""
+msgstr "Drugi stjecatelj plaćanja"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "PDT token identiteta"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_id
@@ -1446,7 +1449,7 @@ msgstr "Paypal"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_user_type
 msgid "Paypal User Type"
-msgstr ""
+msgstr "Vrsta korisnika Paypal-a"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__pending
@@ -1659,7 +1662,7 @@ msgstr "Greška poslužitelja:"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Set payments"
-msgstr ""
+msgstr "Postavite isplate"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__short_name

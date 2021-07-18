@@ -46,7 +46,7 @@
     box-shadow: 0px 6px 0px -3px rgba(0,0,0,0.07) inset;
     background: #D8D7D7;
     background-repeat: no-repeat;
-    overflow: hidden;
+    overflow: auto;
     background-size: cover;
     transition: all 300ms ease-in-out;
 }
@@ -118,7 +118,7 @@
     z-index: 50;
 }
 .floor-map .edit-button.editing {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     font-size: 20px;
@@ -136,7 +136,7 @@
     color: white;
 }
 .floor-map .edit-bar {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 40px;
     margin: 8px;
@@ -575,4 +575,9 @@
     border: none;
     outline: none;
     border-bottom: solid 1px #555555;
+}
+
+.multiprint-flex {
+    display: flex;
+    justify-content: space-between;
 }

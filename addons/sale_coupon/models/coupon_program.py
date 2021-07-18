@@ -41,7 +41,7 @@ class CouponProgram(models.Model):
             )}
         elif self.promo_code and self.promo_code == order.promo_code:
             message = {'error': _('The promo code is already applied on this order')}
-        elif not self.promo_code and self in order.no_code_promo_program_ids:
+        elif self in order.no_code_promo_program_ids:
             message = {'error': _('The promotional offer is already applied on this order')}
         elif not self.active:
             message = {'error': _('Promo code is invalid')}

@@ -48,7 +48,7 @@ class PurchaseOrder(models.Model):
         for line in requisition.line_ids:
             # Compute name
             product_lang = line.product_id.with_context(
-                lang=partner.lang,
+                lang=partner.lang or self.env.user.lang,
                 partner_id=partner.id
             )
             name = product_lang.display_name

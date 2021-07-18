@@ -16,7 +16,7 @@
 # Susanna Pujol, 2020
 # Carles Antoli <carlesantoli@hotmail.com>, 2021
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
-# Josep Anton Belchi Riera, 2021
+# jabelchi, 2021
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Josep Anton Belchi Riera, 2021\n"
+"Last-Translator: jabelchi, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2668,7 +2668,7 @@ msgstr "Altra informació"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__other
 msgid "Other payment acquirer"
-msgstr ""
+msgstr "Un altre mètode de pagament"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
@@ -3185,7 +3185,7 @@ msgstr "Comanda de venda"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Comptador de comandes"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
@@ -3830,6 +3830,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"La factura es genera automàticament i està disponible al portal de client quan la transacció es confirma pel mètode de pagament. \n"
+"La factura es marca com a pagada y el pagament s'enregistra al diari de pagaments definit a la configuració del mètode de pagament. \n"
+"S'aconsella aquest mode si emeteu la factura final a la comanda i no després del lliurament."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3853,6 +3856,8 @@ msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
 msgstr ""
+"La comanda no ha estat confirmada malgrat la resposta de l'entitat de "
+"pagament (%s): el total de la comanda es %r però l'entitat ha respost %r."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0

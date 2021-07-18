@@ -14,6 +14,9 @@
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
 # Martin Trigaux, 2020
 # Bole <bole@dajmi5.com>, 2021
+# Marko Carević <marko.carevic@live.com>, 2021
+# Helena Viher <viherhelena@gmail.com>, 2021
+# Hrvoje Sić <hrvoje.sic@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -21,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2021\n"
+"Last-Translator: Hrvoje Sić <hrvoje.sic@gmail.com>, 2021\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,7 +99,7 @@ msgstr "1 godina"
 #: model:product.product,description_sale:product.product_product_4d
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs."
-msgstr ""
+msgstr "160x80cm, sa velikim(dugim) nogama"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_6
@@ -126,6 +129,9 @@ msgid ""
 "                              <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                              <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Prodajna cijena  -  </span>\n"
+"                              <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Trošak  -  </span>\n"
+"                              <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Ostali cjenici  -  </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -136,12 +142,12 @@ msgstr "<span class=\"o_stat_text\"> Proizvodi</span>"
 #: model_terms:ir.ui.view,arch_db:product.report_simple_barcode
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label
 msgid "<span class=\"text-muted\">No barcode available</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Nema dostupnog barkoda</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr ""
+msgstr "<span>Svim općim postavkama proizvoda upravlja se na</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label
@@ -193,6 +199,10 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Proizvod koji se može skladištiti je proizvod čijim zalihama možete upravljati. \n"
+"Potrebno je instalirati aplikaciju Inventar.\n"
+"Potrošni proizvod je proizvod za koji se ne upravlja zalihama.\n"
+"Usluga je nematerijalni proizvod koji pružate."
 
 #. module: product
 #: model:product.product,name:product.product_product_25
@@ -692,7 +702,7 @@ msgstr "Šifra kupca"
 #: model:product.product,name:product.product_product_4d
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk (CONFIG)"
-msgstr ""
+msgstr "Podesiv stol (CONFIG)"
 
 #. module: product
 #: model:product.product,uom_name:product.expense_hotel
@@ -717,7 +727,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__uom_id
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "Predefinirana mjerna jedinica za sve funkcije zalihe."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_po_id
@@ -1759,7 +1769,7 @@ msgstr "Značajke proizvoda"
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "Prilagođena vrijednost značajke artikla"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
@@ -2063,12 +2073,12 @@ msgstr "Prodaja"
 #: model:ir.model.fields,field_description:product.field_product_template__description_sale
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Sales Description"
-msgstr ""
+msgstr "Opis prodaje"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_matrix
 msgid "Sales Grid Entry"
-msgstr ""
+msgstr "Unos u prodajnu mrežu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__list_price
@@ -2330,6 +2340,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Configure"
 " Variants' button to set the extra attribute prices."
 msgstr ""
+"Prodajnom cijenom upravlja se od predloška proizvoda. Kliknite gumb "
+"\"Konfiguriraj varijante\" da biste postavili cijene dodatnih atributa."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2368,7 +2380,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is added to sales orders and invoices."
-msgstr ""
+msgstr "Ova bilješka je dodana nalozima za nabavu."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2775,6 +2787,8 @@ msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
 msgstr ""
+"Svojim kupcima možete dodijeliti cjenike ili ih odabrati prilikom izrade "
+"nove ponude za prodaju."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -2848,6 +2862,14 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot delete this pricelist (%s), it is used in other pricelist(s) : \n"
+"%s"
+msgstr ""
+
+#. module: product
 #: code:addons/product/models/product.py:0
 #, python-format
 msgid ""
@@ -2877,6 +2899,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"Sve što prodajete ili kupujete potrebno je definirati kao atrikl,\n"
+"                bez obzira na to radi li se o artiklu koji je moguće pohraniti, potrošnom materijalu ili usluzi."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
@@ -2886,6 +2910,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Morate definirati artikl za sve što prodate, bilo da je fizički artikl,\n"
+"                potrošni materijal ili usluga koju nudite kupcima.\n"
+"                Obrazac artikala sadrži podatke za pojednostavljivanje postupka prodaje:\n"
+"                cijena, bilješke u ponudi, računovodstveni podaci, načini nabave itd."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -2895,6 +2923,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Morate definirati artikl za sve što prodate, bilo da je fizički artikl,\n"
+"                potrošni materijal ili usluga koju nudite kupcima.\n"
+"                Obrazac artikala sadrži podatke za pojednostavljivanje postupka prodaje:\n"
+"                cijena, bilješke u ponudi, računovodstveni podaci, načini nabave itd."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view

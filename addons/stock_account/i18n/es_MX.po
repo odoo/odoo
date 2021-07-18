@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-02 14:11+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,8 +42,8 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - "
 "%(product)s"
 msgstr ""
-"%(user)s cambió la valoración de stock de %(previous)s a %(new_value)s - "
-"%(product)s"
+"%(user)s cambió la valoración de existencias de %(previous)s a %(new_value)s"
+" - %(product)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -61,7 +62,7 @@ msgstr "<b>Configure otras cuentas de entrada / salida</b>"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Plantilla de Plan de Cuentas"
+msgstr "Plantilla de plan de cuentas"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
@@ -71,7 +72,7 @@ msgstr "Movimiento de cuenta"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
-msgstr "Propiedades de cuenta de stock"
+msgstr "Propiedades de cuenta de existencias"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory__accounting_date
@@ -106,12 +107,12 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Added Value"
-msgstr "Valor añadido"
+msgstr "Valor agregado"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
 msgid "Added value"
-msgstr "Valor añadido"
+msgstr "Valor agregado"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -145,8 +146,8 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
-"No se puede encontrar una cuenta de entrada de stock para el producto %s. "
-"Debe definir una en la categoría de producto o en la ubicación antes de "
+"No se puede encontrar una cuenta de entrada de existencias para el producto "
+"%s. Debe definir una en la categoría de producto o en la ubicación antes de "
 "procesar esta operación."
 
 #. module: stock_account
@@ -157,9 +158,9 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
-"No se puede encontrar una cuenta de salida de stock del producto %s. Debe "
-"definir una en la categoría de producto o en la ubicación antes de procesar "
-"esta operación."
+"No se puede encontrar una cuenta de salida de existencias del producto %s. "
+"Debe definir una en la categoría de producto o en la ubicación antes de "
+"procesar esta operación."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -168,19 +169,19 @@ msgid ""
 "Changing your cost method is an important change that will impact your "
 "inventory valuation. Are you sure you want to make that change?"
 msgstr ""
-"Cambiar el método de coste es un cambio importante que repercutirá en su "
+"Cambiar el método de costo es un cambio importante que repercutirá en su "
 "valoración de inventario. ¿Seguro que desea efectuar tal cambio?"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__company_id
 msgid "Company"
-msgstr "Compañía"
+msgstr "Empresa"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de configuración"
+msgstr "Ajustes de configuración"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -197,18 +198,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template__cost_method
 msgid "Costing Method"
-msgstr "Método de coste"
+msgstr "Método de costo"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
-msgstr "Cambio de método de costo para categoría de producto %s: de %s a %s."
+msgstr ""
+"Cambio de método de costo para la categoría de producto %s: de %s a %s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
 msgid "Counterpart Account"
-msgstr "Contrapartida"
+msgstr "Cuenta contraparte"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -216,8 +218,8 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
-"Los artículos del diario de contraparte para todos los movimientos de stock entrantes se contabilizarán en esta cuenta, a menos que haya una cuenta de valoración específica.\n"
-"                establecido en la ubicación de origen. Este es el valor predeterminado para todos los productos de esta categoría. También se puede configurar directamente en cada producto."
+"Los artículos del diario de contraparte para todos los movimientos de existencias entrantes se contabilizarán en esta cuenta, a menos que haya una cuenta de valoración específica.\n"
+"                establecida en la ubicación de origen. Este es el valor predeterminado para todos los productos de esta categoría. También se puede configurar directamente en cada producto."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
@@ -236,7 +238,7 @@ msgstr "Creado el"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__currency_id
 msgid "Currency"
-msgstr "Moneda"
+msgstr "Divisa"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
@@ -268,7 +270,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
 msgid "Default unit of measure used for all stock operations."
 msgstr ""
-"Unidad de medida por defecto utilizada para todas las operaciones de stock."
+"Unidad de medida predeterminada utilizada para todas las operaciones de "
+"existencias."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__description
@@ -296,7 +299,7 @@ msgstr "Descripción"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre en pantalla"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -312,13 +315,13 @@ msgid ""
 " to %s."
 msgstr ""
 "Debido al cambio en la categoría del producto ( de %s a %s), el método de "
-"costeo                                ha cambiado para la plantilla del "
+"costo                                ha cambiado para la plantilla del "
 "producto %s: de %s a %s."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
 msgid "First In First Out (FIFO)"
-msgstr "Primeras entradas, primeras salidas (FIFO)"
+msgstr "Primeras entradas, primeras salidas (PEPS)"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -328,7 +331,7 @@ msgstr "Agrupar por..."
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory__has_account_moves
 msgid "Has Account Moves"
-msgstr "Tiene Movimientos Contables"
+msgstr "Tiene movimientos contables"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_chart_template__id
@@ -402,7 +405,7 @@ msgstr "Apunte contable"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
 msgid "Landed Costs"
-msgstr "Costes en destino"
+msgstr "Costos en destino"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_chart_template____last_update
@@ -453,7 +456,7 @@ msgstr "Manual"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: %s."
-msgstr "Valoración de stock manual: %s."
+msgstr "Valoración manual de existencias: %s."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
@@ -471,8 +474,8 @@ msgid ""
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
-"Manual: Los registros contables de valoración del inventario no se publican automáticamente.\n"
-"        Automatizado: Se crea automáticamente un registro contable para evaluar el inventario cuando un producto entra o sale de la empresa.\n"
+"Manual: Los asientos contables de valoración del inventario no se publican automáticamente.\n"
+"        Automatizado: Se crea automáticamente un asiento contable para evaluar el inventario cuando un producto entra o sale de la empresa.\n"
 "        "
 
 #. module: stock_account
@@ -488,12 +491,12 @@ msgstr "Nuevo valor por cantidad"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_product_product_replenishment
 msgid "On Hand Value"
-msgstr "Valor en Mano"
+msgstr "Valor disponible"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
 msgid "Other Info"
-msgstr "Otra Información"
+msgstr "Otra información"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -502,8 +505,8 @@ msgid ""
 "Please define an expense account for this product: \"%s\" (id:%d) - or for "
 "its category: \"%s\"."
 msgstr ""
-"Por favor defina una cuenta de gasto para este producto: \"%s\" (id:%d) - o "
-"a su categoría: \"%s\"."
+"Por favor, defina una cuenta de gasto para este producto: \"%s\" (id:%d) - o"
+" para su categoría: \"%s\"."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
@@ -521,14 +524,14 @@ msgstr "Categoría de producto"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Movimientos de Producto (Stock Move Line)"
+msgstr "Movimientos de producto (Línea de movimiento de existencias)"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 #, python-format
 msgid "Product Revaluation"
-msgstr "Revaluación de Producto"
+msgstr "Revaluación de producto"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -566,17 +569,17 @@ msgstr "Motivo"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason of the revaluation"
-msgstr "Razón de la revaluación"
+msgstr "Razón de la reevaluación"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
 msgid "Related product"
-msgstr "Productos relacionado"
+msgstr "Producto relacionado"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
 msgid "Remaining Qty"
-msgstr "Cantidad restante"
+msgstr "Cant. restante"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_value
@@ -586,23 +589,23 @@ msgstr "Valor restante"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Albarán de devolución"
+msgstr "Recolección de devolución"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr "Línea de Albarán de devolución"
+msgstr "Línea de recolección de devolución"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Revaluation of %s"
-msgstr "Revaluación de %s"
+msgstr "Reevaluación de %s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Revalue"
-msgstr "Revalorizar"
+msgstr "Reevaluar"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__categ_id
@@ -624,20 +627,20 @@ msgid ""
 "        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
-"Precio estándar: Los productos se valoran según su coste estándar definido en el producto.\n"
-"        Coste promedio (AVCO): Los productos se valoran según su coste promedio ponderado\n"
-"        Primeras entradas, primeras salidas (FIFO): Los productos se valoran dando por hecho que los primeros en entrar en la empresa son también los primeros en salir.\n"
+"Precio estándar: Los productos se valoran según su costo estándar definido en el producto.\n"
+"        Costo promedio (AVCO): Los productos se valoran según su costo promedio ponderado\n"
+"        Primeras entradas, primeras salidas (PEPS): Los productos se valoran dando por hecho que los primeros en entrar en la empresa son también los primeros en salir.\n"
 "        "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
 msgid "Stock Input Account"
-msgstr "Cuenta de entrada de stock"
+msgstr "Cuenta de entrada de existencias"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
 msgid "Stock Journal"
-msgstr "Diario de stock"
+msgstr "Diario de existencias"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -651,37 +654,37 @@ msgstr "Movimiento de existencias"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
 msgid "Stock Output Account"
-msgstr "Cuenta de salida de stock"
+msgstr "Cuenta de salida de existencias"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quantity_history
 msgid "Stock Quantity History"
-msgstr "Historia de Stock Quant"
+msgstr "Historial de cantidad de existencias"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr "Informe de reabastecimiento de existencias"
+msgstr "Reporte de reabastecimiento de existencias"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
 msgid "Stock Valuation"
-msgstr "Valoración de stock"
+msgstr "Valoración de existencias"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
 msgid "Stock Valuation Account"
-msgstr "Cuenta de valoración de stock"
+msgstr "Cuenta de valoración de existencias"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_in_account_id
 msgid "Stock Valuation Account (Incoming)"
-msgstr "Cuenta de valoracion de stock (entrada)"
+msgstr "Cuenta de valoración de existencias (entrada)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_out_account_id
 msgid "Stock Valuation Account (Outgoing)"
-msgstr "Cuenta de valoracion de stock (salida)"
+msgstr "Cuenta de valoración de existencias (salida)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer
@@ -692,7 +695,7 @@ msgstr "Cuenta de valoracion de stock (salida)"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr "Capa de valoración de stock"
+msgstr "Capa de valoración de existencias"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__is_anglo_saxon_line
@@ -706,8 +709,8 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
-"Las cuentas de Entrada y/o Salida de Stock no pueden ser las mismas que la "
-"cuenta de Valoración de Stock."
+"Las cuentas de entrada y/o salida de existencias no pueden ser las mismas "
+"que la cuenta de valoración de existencias."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -724,7 +727,8 @@ msgstr ""
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
-msgstr "El valor añadido no tiene ningún impacto en la valoración del stock"
+msgstr ""
+"El valor agregado no tiene ningún impacto en la valoración de existencias"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -744,9 +748,9 @@ msgid ""
 "intercompany in a single step while they should go through the intercompany "
 "transit location."
 msgstr ""
-"Las líneas de movimiento no se encuentran en estados consistentes, pues "
-"están llevando a cabo una operación interna de la empresa en un solo paso "
-"mientras deberían pasar por la ubicación de tránsito interno de la empresa."
+"Las líneas de movimiento no están en estados consistentes: están llevando a "
+"cabo una operación interna de la empresa en un solo paso mientras deberían "
+"pasar por la ubicación de tránsito interno de la empresa."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -755,8 +759,8 @@ msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
 msgstr ""
-"Las líneas de movimiento no se encuentran en estados consistentes, puesto "
-"que no comparten la misma empresa de origen o de destino."
+"Las líneas de movimiento no se encuentran en estados consistentes: no "
+"comparten la misma empresa de origen o de destino."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
@@ -765,7 +769,7 @@ msgid ""
 " moves should impact the valuation of the stock."
 msgstr ""
 "No hay capas de valoración. Las capas de valoración se crean cuando algunos "
-"movimientos de productos deberían afectar la valoración del stock."
+"movimientos de productos deberían afectar la valoración de existencias."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
@@ -776,7 +780,7 @@ msgstr "Valor total"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
-msgstr "Albarán"
+msgstr "Traslado"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
@@ -785,8 +789,8 @@ msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale"
 " Order/Purchase Order"
 msgstr ""
-"Originar una disminución de la cantidad entregada/recibida en el pedido de "
-"venta/compra asociado"
+"Activar una disminución de la cantidad entregada/recibida en la orden de "
+"venta/compra asociada"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
@@ -803,7 +807,7 @@ msgstr "Unidad de medida"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
-msgstr "Actualizar cantidades en PV/OC"
+msgstr "Actualizar cantidades en órdenes de venta o compra"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -833,9 +837,9 @@ msgstr ""
 "Usado para una valoración en tiempo real del inventario. Cuando está "
 "establecido en una ubicación virtual (no de tipo interno), esta cuenta se "
 "usará para mantener el valor de los productos que son movidos fuera de la "
-"ubicación a una ubicación interna, en lugar de la cuenta de salida de stock "
-"genérica establecida en el producto. No tiene efecto para ubicaciones "
-"internas."
+"ubicación a una ubicación interna, en lugar de la cuenta de salida de "
+"existencias genérica establecida en el producto. No tiene efecto para "
+"ubicaciones internas."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -865,7 +869,7 @@ msgstr "Valor Svl"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Warning"
-msgstr "Alerta"
+msgstr "Advertencia"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
@@ -883,9 +887,9 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"Al realizar una valoración de inventario automatizada, los artículos de diario de contrapartida para todos los movimientos de stock salientes se registrarán en esta cuenta,\n"
-"                 a menos que haya una cuenta de valoración específica establecida en la ubicación de destino. Este es el valor predeterminado para todos los productos de esta categoría.\n"
-"                 También se puede configurar directamente en cada producto."
+"Al realizar una valoración de inventario automatizada, los apuntes de diario contraparte para todos los movimientos de existencias salientes se registrarán en esta cuenta,\n"
+"                a menos que haya una cuenta de valoración específica establecida en la ubicación de destino. Este es el valor predeterminado para todos los productos de esta categoría.\n"
+"                También se puede configurar directamente en cada producto."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
@@ -893,9 +897,9 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
-"Al realizar una valoración de inventario automatizada, este es el diario de "
-"contabilidad en el que las entradas se contabilizarán automáticamente cuando"
-" se procesen los movimientos de stock."
+"Al realizar una valoración de inventario automatizada, este es el diario "
+"contable en el que las entradas se contabilizarán automáticamente cuando se "
+"procesen los movimientos de existencias."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
@@ -914,7 +918,7 @@ msgstr "No puede revaluar un producto con un método de costo estándar."
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
-msgstr "No se puede revalorizar un producto con stock vacío o negativo."
+msgstr "No puede reevaluar un producto con inventario vacío o negativo."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -936,7 +940,7 @@ msgid ""
 " You must define one before processing this operation."
 msgstr ""
 "No tiene ninguna cuenta de valoración de entrada definida en su categoría de"
-" producto. Debe definir uno antes de procesar esta operación."
+" producto. Debe definir una antes de procesar esta operación."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -958,8 +962,8 @@ msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
-"No tiene ninguna cuenta de valoración de stock definida en su categoría de "
-"producto. Debe definir uno antes de procesar esta operación."
+"No tiene ninguna cuenta de valoración de existencias definida en su "
+"categoría de producto. Debe definir una antes de procesar esta operación."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0

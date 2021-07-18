@@ -666,5 +666,37 @@ odoo.define('web.search_bar_tests', function (require) {
 
             actionManager.destroy();
         });
+
+        QUnit.test('focus should be on search bar when switching between views', async function (assert) {
+            assert.expect(4);
+
+            this.actions[0].views = [[false, 'list'], [false, 'form']];
+            this.archs['partner,false,form'] = `
+            <form>
+                <group>
+                    <field name="display_name"/>
+                </group>
+            </form>`;
+
+            const actionManager = await createActionManager({
+                actions: this.actions,
+                archs: this.archs,
+                data: this.data,
+            });
+
+            await actionManager.doAction(1);
+
+            assert.containsOnce(actionManager, '.o_list_view');
+            assert.strictEqual(document.activeElement, actionManager.el.querySelector('.o_searchview input.o_searchview_input'),
+                "searchview should have focus");
+
+            await testUtils.dom.click(actionManager.$('.o_list_view .o_data_cell:first'));
+            assert.containsOnce(actionManager, '.o_form_view');
+            await testUtils.dom.click(actionManager.$('.o_back_button'));
+            assert.strictEqual(document.activeElement, actionManager.el.querySelector('.o_searchview input.o_searchview_input'),
+                "searchview should have focus");
+
+            actionManager.destroy();
+        });
     });
 });

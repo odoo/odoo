@@ -86,7 +86,8 @@ class SaleOrderLine(models.Model):
                     # the products for this PO will set the qty_delivered. We might need to check the
                     # state of all PO as well... but sale_mrp doesn't depend on purchase.
                     if dropship:
-                        if order_line.move_ids and all(m.state == 'done' for m in order_line.move_ids):
+                        moves = order_line.move_ids.filtered(lambda m: m.state != 'cancel')
+                        if moves and all(m.state == 'done' for m in moves):
                             order_line.qty_delivered = order_line.product_uom_qty
                         else:
                             order_line.qty_delivered = 0.0
@@ -115,7 +116,7 @@ class SaleOrderLine(models.Model):
         for line, line_data in lines:
             product = line.product_id.id
             uom = line.product_uom_id
-            qty = line.product_qty
+            qty = line_data['qty']
             if components.get(product, False):
                 if uom.id != components[product]['uom']:
                     from_uom = uom

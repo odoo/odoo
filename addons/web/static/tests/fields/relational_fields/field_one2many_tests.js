@@ -9888,6 +9888,72 @@ QUnit.module('fields', {}, function () {
             form.destroy();
             delete fieldRegistry.map.my_relational_field;
         });
+
+        QUnit.test('reordering embedded one2many with handle widget starting with same sequence', async function (assert) {
+            assert.expect(3);
+
+            this.data.turtle = {
+                fields: {turtle_int: {string: "int", type: "integer", sortable: true}},
+                records: [
+                    {id: 1, turtle_int: 1},
+                    {id: 2, turtle_int: 1},
+                    {id: 3, turtle_int: 1},
+                    {id: 4, turtle_int: 2},
+                    {id: 5, turtle_int: 3},
+                    {id: 6, turtle_int: 4},
+                ],
+            };
+            this.data.partner.records[0].turtles = [1, 2, 3, 4, 5, 6];
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form string="Partners">
+                        <sheet>
+                            <notebook>
+                                <page string="P page">
+                                    <field name="turtles">
+                                        <tree default_order="turtle_int">
+                                            <field name="turtle_int" widget="handle"/>
+                                            <field name="id"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </sheet>
+                    </form>`,
+                res_id: 1,
+            });
+
+            await testUtils.form.clickEdit(form);
+
+            assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "123456", "default should be sorted by id");
+
+            // Drag and drop the fourth line in first position
+            await testUtils.dom.dragAndDrop(
+                form.$('.ui-sortable-handle').eq(3),
+                form.$('tbody tr').first(),
+                {position: 'top'}
+            );
+            assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "412356", "should still have the 6 rows in the correct order");
+
+            await testUtils.form.clickSave(form);
+
+            assert.deepEqual(_.map(this.data.turtle.records, function (turtle) {
+                return _.pick(turtle, 'id', 'turtle_int');
+            }), [
+                {id: 1, turtle_int: 2},
+                {id: 2, turtle_int: 3},
+                {id: 3, turtle_int: 4},
+                {id: 4, turtle_int: 1},
+                {id: 5, turtle_int: 5},
+                {id: 6, turtle_int: 6},
+            ], "should have saved the updated turtle_int sequence");
+
+            form.destroy();
+        });
     });
 });
 });
