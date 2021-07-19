@@ -1544,48 +1544,59 @@ class AccountMove(models.Model):
 
     @api.depends('line_ids.price_subtotal', 'line_ids.tax_base_amount', 'line_ids.tax_line_id', 'partner_id', 'currency_id')
     def _compute_invoice_taxes_by_group(self):
-        ''' Helper to get the taxes grouped according their account.tax.group.
-        This method is only used when printing the invoice.
-        '''
         for move in self:
+
+            # Not working on something else than invoices.
+            if not move.is_invoice(include_receipts=True):
+                move.amount_by_group = []
+                continue
+
             lang_env = move.with_context(lang=move.partner_id.lang).env
-            tax_lines = move.line_ids.filtered(lambda line: line.tax_line_id)
-            tax_balance_multiplicator = -1 if move.is_inbound(True) else 1
-            res = {}
-            # There are as many tax line as there are repartition lines
-            done_taxes = set()
-            for line in tax_lines:
-                res.setdefault(line.tax_line_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                res[line.tax_line_id.tax_group_id]['amount'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
-                tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
-                if tax_key_add_base not in done_taxes:
-                    if line.currency_id and line.company_currency_id and line.currency_id != line.company_currency_id:
-                        amount = line.company_currency_id._convert(line.tax_base_amount, line.currency_id, line.company_id, line.date or fields.Date.context_today(self))
-                    else:
-                        amount = line.tax_base_amount
-                    res[line.tax_line_id.tax_group_id]['base'] += amount
-                    # The base should be added ONCE
-                    done_taxes.add(tax_key_add_base)
+            balance_multiplicator = -1 if move.is_inbound() else 1
 
-            # At this point we only want to keep the taxes with a zero amount since they do not
-            # generate a tax line.
-            zero_taxes = set()
-            for line in move.line_ids:
-                for tax in line.tax_ids.flatten_taxes_hierarchy():
-                    if tax.tax_group_id not in res or tax.tax_group_id in zero_taxes:
-                        res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                        res[tax.tax_group_id]['base'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
-                        zero_taxes.add(tax.tax_group_id)
+            tax_lines = move.line_ids.filtered('tax_line_id')
+            base_lines = move.line_ids.filtered('tax_ids')
 
-            res = sorted(res.items(), key=lambda l: l[0].sequence)
-            move.amount_by_group = [(
-                group.name, amounts['amount'],
-                amounts['base'],
-                formatLang(lang_env, amounts['amount'], currency_obj=move.currency_id),
-                formatLang(lang_env, amounts['base'], currency_obj=move.currency_id),
-                len(res),
-                group.id
-            ) for group, amounts in res]
+            tax_group_mapping = defaultdict(lambda: {
+                'base_lines': set(),
+                'base_amount': 0.0,
+                'tax_amount': 0.0,
+            })
+
+            # Compute base amounts.
+            for base_line in base_lines:
+                base_amount = balance_multiplicator * (base_line.amount_currency if base_line.currency_id else base_line.balance)
+
+                for tax in base_line.tax_ids.flatten_taxes_hierarchy():
+
+                    if base_line.tax_line_id.tax_group_id == tax.tax_group_id:
+                        continue
+
+                    tax_group_vals = tax_group_mapping[tax.tax_group_id]
+                    if base_line not in tax_group_vals['base_lines']:
+                        tax_group_vals['base_amount'] += base_amount
+                        tax_group_vals['base_lines'].add(base_line)
+
+            # Compute tax amounts.
+            for tax_line in tax_lines:
+                tax_amount = balance_multiplicator * (tax_line.amount_currency if tax_line.currency_id else tax_line.balance)
+                tax_group_vals = tax_group_mapping[tax_line.tax_line_id.tax_group_id]
+                tax_group_vals['tax_amount'] += tax_amount
+
+            tax_groups = sorted(tax_group_mapping.keys(), key=lambda x: x.sequence)
+            amount_by_group = []
+            for tax_group in tax_groups:
+                tax_group_vals = tax_group_mapping[tax_group]
+                amount_by_group.append((
+                    tax_group.name,
+                    tax_group_vals['tax_amount'],
+                    tax_group_vals['base_amount'],
+                    formatLang(lang_env, tax_group_vals['tax_amount'], currency_obj=move.currency_id),
+                    formatLang(lang_env, tax_group_vals['base_amount'], currency_obj=move.currency_id),
+                    len(tax_group_mapping),
+                    tax_group.id
+                ))
+            move.amount_by_group = amount_by_group
 
     @api.model
     def _get_tax_key_for_group_add_base(self, line):
@@ -1594,6 +1605,7 @@ class AccountMove(models.Model):
         must be consistent with _get_tax_grouping_key_from_tax_line
          @return list
         """
+        # DEPRECATED: TO BE REMOVED IN MASTER
         return [line.tax_line_id.id]
 
     @api.depends('date', 'line_ids.debit', 'line_ids.credit', 'line_ids.tax_line_id', 'line_ids.tax_ids', 'line_ids.tax_tag_ids')
