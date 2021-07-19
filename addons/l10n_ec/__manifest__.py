@@ -27,7 +27,6 @@ Accounting chart and localization for Ecuador.
         'data/account_data.xml',
         'data/account_tax_data.xml',
         'data/account_chart_template_data.xml',
-        'data/res.country.state.csv',
     ],
     'demo': [
         'demo/demo_company.xml',
