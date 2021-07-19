@@ -378,6 +378,17 @@ export class MockServer {
     }
 
     _performRPC(route, args) {
+        // Check if there is an handler in the mockRegistry: either specific for this model
+        // (with key 'model/method'), or global (with key 'method')
+        // This allows to mock routes/methods defined outside web.
+        const methodName = args.method || route;
+        const mockFunction =
+            registry.category("mock_server").get(`${args.model}/${methodName}`, null) ||
+            registry.category("mock_server").get(methodName, null);
+        if (mockFunction) {
+            return mockFunction.call(this, route, args);
+        }
+
         switch (route) {
             case "/web/webclient/load_menus":
                 return Promise.resolve(this.mockLoadMenus());
