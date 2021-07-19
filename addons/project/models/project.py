@@ -8,7 +8,7 @@ from datetime import timedelta, datetime
 from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, AccessError, ValidationError, RedirectWarning
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv.expression import OR
 
 from .project_task_recurrence import DAYS, WEEKS
@@ -696,19 +696,19 @@ class Task(models.Model):
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
         store=True, readonly=False, ondelete='restrict', tracking=True, index=True,
         default=_get_default_stage_id, group_expand='_read_group_stage_ids',
-        domain="[('project_ids', '=', project_id)]", copy=False)
+        domain="[('project_ids', '=', project_id)]", copy=False, task_dependency_tracking=True)
     tag_ids = fields.Many2many('project.tags', string='Tags')
     kanban_state = fields.Selection([
         ('normal', 'In Progress'),
         ('done', 'Ready'),
         ('blocked', 'Blocked')], string='Status',
         copy=False, default='normal', required=True)
-    kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True)
+    kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True, task_dependency_tracking=True)
     create_date = fields.Datetime("Created On", readonly=True, index=True)
     write_date = fields.Datetime("Last Updated On", readonly=True, index=True)
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
-    date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True)
+    date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True, task_dependency_tracking=True)
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         index=True,
         copy=False,
@@ -1103,6 +1103,19 @@ class Task(models.Model):
         )
         return super(Task, self).get_empty_list_help(help)
 
+    def _valid_field_parameter(self, field, name):
+        # If the field has `task_dependency_tracking` on we track the changes made in the dependent task on the parent task
+        return name == 'task_dependency_tracking' or super()._valid_field_parameter(field, name)
+
+    @tools.ormcache('self.env.uid', 'self.env.su')
+    def _get_depends_tracked_fields(self):
+        """ Returns the set of tracked field names for the current model.
+        Those fields are the ones tracked in the parent task when using task dependencies.
+
+        See :meth:`mail.models.MailThread._get_tracked_fields`"""
+        fields = {name for name, field in self._fields.items() if getattr(field, 'task_dependency_tracking', None)}
+        return fields and set(self.fields_get(fields))
+
     # ----------------------------------------
     # Case management
     # ----------------------------------------
@@ -1304,6 +1317,35 @@ class Task(models.Model):
     # ---------------------------------------------------
     # Mail gateway
     # ---------------------------------------------------
+
+    def _mail_track(self, tracked_fields, initial_values):
+        result = super()._mail_track(tracked_fields, initial_values)
+        changes, tracking_value_ids = result
+        # Track changes on depending tasks
+        depends_tracked_fields = self._get_depends_tracked_fields()
+        depends_changes = changes & depends_tracked_fields
+        if depends_changes and self.user_has_groups('project.group_project_task_dependencies') and self.allow_task_dependencies:
+            parent_ids = self.env['project.task'].search([('depend_on_ids', 'in', self.ids)])
+            if parent_ids:
+                fields_to_ids = self.env['ir.model.fields']._get_ids('project.task')
+                field_ids = [fields_to_ids.get(name) for name in depends_changes]
+                depends_tracking_value_ids = [
+                    tracking_values for tracking_values in tracking_value_ids
+                    if tracking_values[2]['field'] in field_ids
+                ]
+                subtype = self.env.ref('project.mt_task_dependency_change')
+                # We want to include the original subtype message coming from the child task
+                # for example when the stage changes the message in the chatter starts with 'Stage Changed'
+                child_subtype = self._track_subtype(dict((col_name, initial_values[col_name]) for col_name in changes))
+                child_subtype_info = child_subtype.description or child_subtype.name if child_subtype else False
+                # NOTE: the subtype does not have a description on purpose, otherwise the description would be put
+                #  at the end of the message instead of at the top, we use the name here
+                body = self.env['ir.qweb']._render('project.task_track_depending_tasks', {
+                    'child': self,
+                    'child_subtype': child_subtype_info,
+                })
+                parent_ids.message_post(body=body, subtype_id=subtype.id, tracking_value_ids=depends_tracking_value_ids)
+        return result
 
     def _track_template(self, changes):
         res = super(Task, self)._track_template(changes)
