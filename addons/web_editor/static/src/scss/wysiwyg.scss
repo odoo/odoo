@@ -1,6 +1,19 @@
 $o-we-overlay-zindex: ($zindex-fixed + $zindex-modal-backdrop) / 2 !default;
 $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
+// Floating Toolbar Variables
+$o-we-toolbar-entries-gap: $o-we-sidebar-content-field-control-item-spacing * .7;
+$o-we-toolbar-entries-border-width: 1px;
+$o-we-toolbar-entries-padding: $o-we-sidebar-content-padding-base * .7;
+
+$o-we-toolbar-bg: #FFF;
+$o-we-toolbar-bg-active: rgba($o-we-fg-light, .2);
+$o-we-toolbar-border: $o-we-fg-light;
+$o-we-toolbar-color-text: $o-we-bg-light;
+$o-we-toolbar-color-accent: #018597;
+$o-we-toolbar-color-clickable: $o-we-bg-lightest;
+$o-we-toolbar-color-clickable-active: $o-we-bg-darkest;
+
 // Use css variables to control the default style of the editor so that an
 // external assets bundle can influence it without duplicating the css.
 :root {
@@ -29,61 +42,263 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     padding: 0;
 }
 
+// Colorpicker - Generic rules shared among backend & frontend
+.colorpicker {
+
+    // Controll the design using css variables. These values can be customized
+    // in any bundle/layout avoiding the need to override.
+    --bg: #{$o-we-toolbar-bg};
+    --text-rgb: #{red($o-we-toolbar-color-text)}, #{green($o-we-toolbar-color-text)}, #{blue($o-we-toolbar-color-text)};
+    --border-rgb: var(--text-rgb);
+
+    --tab-border-top: transparent;
+    --tab-border-bottom: #{$o-we-toolbar-border};
+
+    --btn-color-active: inset 0 0 0 2px #{$o-we-accent},
+                        inset 0 0 0 3px var(--bg),
+                        inset 0 0 0 4px rgba(var(--border-rgb), .5);
+
+    &, input {
+        color: rgba(var(--text-rgb), 1);
+    }
+
+    label {
+        color: rgba(var(--text-rgb), .5);
+    }
+
+    button {
+        outline: none;
+    }
+
+    .o_we_colorpicker_switch_panel {
+        font-size: $o-we-font-size;
+        border-bottom: 1px solid var(--tab-border-bottom);
+        box-shadow: inset 0 1px 0 var(--tab-border-top);
+    }
+
+    .o_we_colorpicker_switch_pane_btn {
+        flex: 0 0 auto;
+    }
+
+    .o_colorpicker_reset {
+        max-width: 40%;
+    }
+
+    .o_colorpicker_sections {
+        background: var(--bg);
+
+        > * {
+            padding-top: $o-we-sidebar-content-field-spacing;
+
+            &:first-child {
+                padding-top: 0;
+            }
+        }
+
+        .o_colorpicker_widget {
+            .o_hex_div, .o_rgba_div  {
+                &:focus-within {
+                    border-color: $o-we-sidebar-content-field-input-border-color;
+                }
+            }
+            .o_color_picker_inputs {
+                input, input:focus {
+                    border: none;
+                    outline: none;
+                }
+            }
+        }
+
+        .o_we_color_btn, .o_color_pick_area, .o_color_slider, .o_opacity_slider:before, .o_hex_div, .o_rgba_div {
+            box-shadow: inset 0 0 0 1px rgba(var(--border-rgb), .5);
+        }
+
+        .o_we_color_btn {
+            position: relative;
+            float: left;
+            width: percentage(1 / 8);
+            padding-top: percentage(1 / 10);
+            margin: 0;
+            border: 1px solid var(--bg);
+
+            &.o_colorpicker_reset {
+                background-color: transparent;
+
+                &::before {
+                    @include o-position-absolute(0, 0, 0, 0);
+                    font-family: FontAwesome !important;
+                    content: "\f00d" !important;// fa-times
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: $o-we-color-danger;
+                }
+            }
+
+            &.selected {
+                box-shadow: var(--btn-color-active);
+            }
+
+            &.o_btn_transparent::before {
+                background-color: transparent;
+            }
+        }
+
+        .o_colorpicker_section {
+            &::after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            &[data-name="transparent_grayscale"], &[data-name="theme"], &[data-name="reset"], &[data-name="custom"] {
+                .o_we_color_btn {
+                    @extend %o-preview-alpha-background;
+
+                    &::before, &::after {
+                        box-shadow: inherit;
+                    }
+                }
+            }
+        }
+    }
+}
+
 // Toolbar - Generic rules shared among backend & frontend
 .oe-toolbar {
+    display: grid;
+
     .btn {
         display: flex;
         align-items: center;
         justify-content: center;
     }
+
+    .colorpicker-menu {
+        height: auto!important;
+        box-sizing: content-box;
+        min-height: fit-content;
+    }
+
+    .dropdown-item {
+        &.active, &.selected {
+            &:not(.o_dropdown_item_active_noarrow):before {
+                transform: translate(-1.5em, 0);
+                height: 100%;
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
 }
 
 // Floating Toolbar
 .oe-toolbar.oe-floating {
-    padding-bottom: 0;
-    border-bottom: $o-we-border-width solid $o-we-fg-light;
-    background-color: $o-we-bg;
-    color: $o-we-color;
+    gap: 0 $o-we-sidebar-content-field-control-item-spacing * .7;
+    grid-auto-flow: column;
+    align-items: stretch;
+    height: auto;
+    min-height: $o-we-toolbar-height;
+    max-width: none;
+    border-radius: $o-we-item-border-radius;
+    padding: 0 $o-we-sidebar-content-field-control-item-spacing;
+    background-color: $o-we-toolbar-bg;
+    box-shadow: 0 0 4px rgba(#000, .1), 0 4px 18px rgba(#000, .25);
+    color: $o-we-toolbar-color-text;
     font-family: $o-we-font-family;
+
+    &.toolbar-bottom:before {
+        border-bottom-color: $o-we-toolbar-bg;
+    }
+
+    &:not(.toolbar-bottom):before {
+        border-top-color: $o-we-toolbar-bg;
+    }
 
     &.noarrow::before {
         display: none;
     }
 
+    > .btn-group:not(.d-none) ~ .btn-group:not(.d-none), .oe-toolbar-separator {
+        &:before {
+            content: "";
+            width: $o-we-toolbar-entries-border-width;
+            margin-right: calc(#{$o-we-toolbar-entries-gap} - #{$o-we-toolbar-entries-border-width});
+            background: $o-we-toolbar-border;
+            transform: scaleY(.6)
+        }
+
+        // Adjust dropdown-menu position, but not when already handled in js
+        .dropdown-menu:not([x-placement]) {
+            margin-left: $o-we-toolbar-entries-gap;
+        }
+    }
+
     // Main layout of buttons
-    .btn-group, .btn {
-        width: auto !important;
-        margin-top: 0;
-        margin-bottom: 0;
-        background: transparent;
+    .btn, .dropdown-item {
+        padding: ($o-we-toolbar-entries-padding * .5) $o-we-toolbar-entries-padding;
+        color: $o-we-toolbar-color-clickable;
+
+        &:hover:not(.active) {
+            color: $o-we-toolbar-color-clickable-active;
+            background-color: transparent;
+        }
+
+        &.active {
+            background: $o-we-toolbar-bg-active;
+            box-shadow: inset 0 0 3px rgba($o-we-toolbar-bg-active, .5);
+        }
+    }
+
+    .btn {
         border: none;
         border-radius: 0;
-    }
-    .btn-secondary {
-        color: inherit;
-    }
-    .btn-group.show {
-        > .btn {
-            @extend %we-active-button;
-        }
-        &::after {
-            content: '';
-            @include o-position-absolute(100%, $o-we-border-width, auto, $o-we-border-width);
-            height: $o-we-border-width;
+        background: transparent;
+        font-weight: 400;
+
+        &.active {
+            color: $o-we-toolbar-color-accent;
         }
     }
-    %we-active-button {
-        background: $o-we-sidebar-content-field-pressed-bg;
-        color: $o-we-sidebar-content-field-pressed-color;
-        box-shadow: none !important;
-        outline: none !important;
+
+    > .btn-group {
+        > .btn, > .colorpicker-group {
+            margin: 4px auto;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
     }
+
+    .show > .btn {
+        &, &:hover, &:focus {
+            color: $o-we-toolbar-color-clickable-active;
+        }
+    }
+
+    .dropdown-toggle::after {
+        @include o-caret-down();
+        margin-left: .3em
+    }
+
     .dropdown-menu {
-        margin-top: $o-we-dropdown-spacing;
+        margin: 0;
+        border: 0;
         padding: 0;
-        border: $o-we-dropdown-border-width solid $o-we-dropdown-border-color;
-        background-color: $o-we-dropdown-bg;
-        box-shadow: $o-we-dropdown-shadow;
+        max-height: none;
+        overflow: visible;
+        border-top: 1px solid $o-we-toolbar-border;
+        background-color: $o-we-toolbar-bg;
+        box-shadow: 0 18px 18px rgba(#000, .23);
+        @include border-top-radius(0);
+        @include border-bottom-radius($o-we-item-border-radius);
+
+        &.show { // To overcome .note-XXX .dropdown-menu rules
+            min-width: 0;
+        }
+
+        &:not(.colorpicker-menu) > li:last-child {
+            margin-bottom: 1em;
+        }
 
         &.colorpicker-menu {
             margin-top: 0;
@@ -91,43 +306,41 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             min-width: 222px !important;
         }
     }
-    .dropdown-toggle::after {
-        display: none;
-    }
-    .dropdown-menu.show { // To overcome .note-XXX .dropdown-menu rules
-        min-width: 0;
-    }
-    .dropdown-item { // To overcome wysiwyg rules breaking this in iframes
-        display: block;
-        max-width: none;
-        overflow: visible;
-        margin-top: 0;
-        padding: 0 1em;
-        border: none;
-        background: none;
-        background-clip: padding-box;
-        background-color: $o-we-dropdown-item-bg;
-        color: $o-we-dropdown-item-color;
-        line-height: $o-we-dropdown-item-height;
 
-        &:not(.d-none) ~ .dropdown-item {
-            // Use a border-top instead of a margin-top as when the
-            // mouse goes from one select button to another, the
-            // option preview should switch from the first button's
-            // option to the second one without reset to selected
-            // state in between.
-            border-top: $o-we-dropdown-item-spacing solid transparent;
+    .dropdown-item { // To overcome wysiwyg rules breaking this in iframes
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0 $o-we-dropdown-item-height * .8;
+        min-height: $o-we-dropdown-item-height;
+
+        > * {
+            color: inherit;
         }
 
         &.active {
-            color: $o-we-dropdown-item-active-color;
+            &, &:hover, &:focus {
+                color: $o-we-bg-darker;
+
+                &:before {
+                    top: 0;
+                    transform: translate($o-we-dropdown-item-height * -.5, 0);
+                    line-height: $o-we-dropdown-item-height;
+                }
+            }
         }
-    }
-    li > .dropdown-item {
-        border-top: $o-we-dropdown-item-spacing solid transparent;
     }
 
     // Specific elements
+    #decoration {
+        #removeFormat {
+            display: none;
+        }
+        .active ~ #removeFormat {
+            display: flex;
+        }
+    }
+
     #colorInputButtonGroup {
         label:last-of-type .btn {
             margin: 0 1px 0 -1px;
@@ -138,18 +351,64 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             left: -52px;
         }
     }
-    .oe-tablepicker {
-        margin: 1px 2px -8px 2px !important;
 
-        .oe-tablepicker-cell {
-            width: 5px !important;
+    .colorpicker-group {
+        .dropdown-toggle::after {
+            display: none;
+        }
+
+        .colorpicker-menu {
+            bottom: 100%;
+        }
+
+        .o_we_colorpicker_switch_panel button {
+            @extend .btn;
+            margin-bottom: -1px;
+
+            &.active {
+                border-bottom: 1px solid $o-we-toolbar-color-accent;
+                background: none;
+                box-shadow: none;
+                color: $o-we-toolbar-color-clickable-active;
+            }
+
+            &.o_colorpicker_reset {
+                background: $o-brand-primary;
+
+                &, &:hover {
+                    color: color-yiq($o-brand-primary);
+                }
+
+                &:hover {
+                    background: darken($o-brand-primary, 5%);
+                }
+            }
         }
     }
+
+    .colorpicker {
+        background: $o-we-toolbar-bg;
+        box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.2);
+    }
+
     .o_image_alt {
         @include o-text-overflow();
         max-width: 150px;
     }
 }
+
+// Floating Table Picker
+.oe-tablepicker-wrapper .oe-tablepicker {
+    .oe-tablepicker-cell {
+        border-radius: 0;
+
+        &.active {
+            background: $o-we-toolbar-color-accent;
+        }
+    }
+}
+
+
 body:not(.editor_has_snippets) {
     .oe-toolbar {
         // Bootstrap sets .modal z-index at 1050. Ensure toolbar is visible in

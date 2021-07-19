@@ -483,26 +483,41 @@ body.editor_enable.editor_has_snippets {
             width: $o-we-sidebar-content-available-room * .6;
         }
 
-        we-button, we-toggler, .oe-toolbar .btn {
+        we-button, we-toggler {
             @extend %we-generic-button;
+        }
+
+        #removeFormat, #oe-table-delete-table {
+            @extend %we-generic-link;
         }
 
         .oe-toolbar {
             position: relative;
-            border: none;
-            border-radius: unset;
             background: transparent;
-            margin-top: 10px;
-            padding: 0 8px 0 13px;
-            display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
+            margin-top: $o-we-sidebar-content-field-spacing;
+            padding: 0 $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
+            grid-template-areas: "typo typo style colors" "size align list link" "options options options options";
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-rows: minmax($o-we-sidebar-content-field-height, auto) minmax($o-we-sidebar-content-field-height, auto) auto ;
+            row-gap: $o-we-sidebar-content-field-spacing;
+            column-gap: $o-we-sidebar-content-field-multi-spacing;
             width: 100%;
 
+            &::before {
+                display: none; // remove ballon
+            }
+
+            .btn {
+                @extend %we-generic-button;
+                display: flex;
+                padding-top: $o-we-sidebar-content-field-height * .12;
+                padding-bottom: $o-we-sidebar-content-field-height * .12;
+            }
+
             we-customizeblock-option {
-                color: #D9D9D9;
-                padding: 0;
-                /* Ensure an extra option in the toolbar takes its whole width. */
-                grid-column-end: span 5;
+                grid-area: options;
+                padding-left: 0;
+                padding-right: 0;
 
                 we-title {
                     &.o_short_title {
@@ -545,120 +560,126 @@ body.editor_enable.editor_has_snippets {
                 input::placeholder {
                     font-style: italic;
                 }
-            }
 
-            &::before {
-                border: none !important;
-            }
-            .btn-group {
-                margin: 0 2px 5px 2px;
-
-                label {
-                    margin: 0;
-                }
-
-                .btn {
-                    color: white;
-                    box-sizing: border-box;
-                    padding: 2px 6px 2px 6px !important;
-                    height: 100%;
-
-                    &:focus, &:active, &:focus:active {
-                        background-color: black;
-                    }
-
-                    &.color-button {
-                        padding-top: 0 !important;
-                    }
-
-                    .color-indicator {
-                        border-bottom: 3px solid;
-
-                        &.fore-color {
-                            border-color: var(--fore-color);
-                        }
-                        &.hilite-color {
-                            border-color: var(--hilite-color);
-                        }
-                    }
+                we-input, we-input div, we-input input {
+                    width: 100% !important;
                 }
             }
-            .dropdown-menu {
-                .btn-group {
-                    margin: 0;
-                }
-                .dropdown-item, .dropdown-item > * {
-                    line-height: 34px !important;
-                }
-                .oe-tablepicker {
-                    margin-top: 2px;
 
-                    .oe-tablepicker-row {
-                        line-height: normal;
-
-                        .oe-tablepicker-cell {
-                            display: inline-block !important;
-                            width: 15px !important;
-                            height: 15px !important;
-                            background-color: white !important;
-                            margin-bottom: 0 !important;
-
-                            &.active {
-                                background: #01bad2 !important;
-                            }
-                        }
-                    }
-                }
-            }
-            we-input, we-input div, we-input input {
-                width: 100% !important;
-            }
-            #decoration {
-                grid-column-end: span 4;
-                display: grid;
-                grid-template-columns: repeat(4, minmax(0, 1fr));
-            }
             #colorInputButtonGroup {
-                grid-column-end: span 2;
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-            #table {
-                grid-column-end: span 2;
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-            #link {
-                grid-column-end: span 3;
-                display: grid;
-                grid-template-columns: repeat(4, minmax(0, 1fr));
-            }
-            #media-description {
-                grid-column-end: span 2;
-            }
-            #image-shape {
-                grid-column-end: span 4;
-                display: grid;
-                grid-template-columns: repeat(4, minmax(0, 1fr));
-            }
-            #image-width {
-                grid-column-end: span 5;
-                display: grid;
-                grid-template-columns: repeat(4, minmax(0, 1fr));
-            }
-            #image-edit {
-                grid-column-end: span 3;
-                display: grid;
-                grid-template-columns: repeat(3, minmax(0, 1fr));
+                grid-area: colors;
 
-                #media-replace {
-                    grid-column-end: span 2;
+                .dropdown-toggle:after {
+                    display: none; // remove ballon
+                }
+
+                .colorpicker-group {
+                    display: flex;
+                    align-items: stretch;
+                    position: initial;
+                }
+
+                #oe-text-color {
+                    border-right:0;
+                    @include border-right-radius(0);
+                }
+
+                #oe-fore-color {
+                    @include border-left-radius(0);
                 }
             }
-            #fa-resize {
-                grid-column-end: span 5;
-                display: grid;
-                grid-template-columns: repeat(5, minmax(0, 1fr));
+
+            .btn + .btn {
+                @include border-left-radius(0);
+            }
+
+            .btn-group > .btn:not(:last-of-type) {
+                @include border-right-radius(0);
+            }
+
+            #list {
+                grid-area: list;
+            }
+
+            #link {
+                grid-area: link;
+
+                #unlink {
+                    display: none;
+                }
+            }
+
+            #font-size {
+                grid-area: size;
+            }
+
+            #decoration {
+                grid-area: style;
+            }
+
+            #style {
+                grid-area: typo;
+
+                .dropdown-toggle {
+                    justify-content: space-between;
+
+                    span {
+                        color: white;
+
+                        pre, blockquote {
+                            padding: 0;
+                            border: 0;
+                            color: inherit;
+                        }
+                    }
+
+                }
+            }
+
+            #justify {
+                grid-area: align;
+
+                .dropdown-menu {
+                    padding: 0;
+
+                    .btn {
+                        padding:$o-we-sidebar-content-field-height * .3 $o-we-sidebar-content-field-height * .5;
+                        border-width: 0;
+
+                        &:hover {
+                            z-index: 0;
+                        }
+
+                        + .btn {
+                            border-left-width: 1px;
+                        }
+                    }
+                }
+            }
+
+            .dropdown-menu.colorpicker-menu {
+                left: auto;
+                right: 0;
+                border: $o-we-sidebar-content-field-dropdown-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
+                border-radius: $o-we-item-border-radius;
+                padding: 0;
+            }
+        }
+        // END toolbar
+
+        #oe-table-options {
+            @extend we-customizeblock-option;
+
+            .btn {
+                @extend %we-generic-button;
+            }
+
+            .oe-table-row {
+                @extend we-row;
+            }
+
+            .oe-table-label {
+                @extend we-title;
             }
         }
 
@@ -1650,69 +1671,28 @@ body.editor_enable.editor_has_snippets {
 }
 
 // SNIPPET OPTIONS
-.colorpicker {
-    background-color: $o-we-sidebar-content-field-colorpicker-dropdown-bg;
-    color: $o-we-sidebar-content-field-colorpicker-dropdown-color;
+#oe_snippets .colorpicker {
+    $-wb-txt: $o-we-sidebar-content-field-colorpicker-dropdown-color;
 
-    .o_we_colorpicker_switch_panel {
-        font-size: $o-we-font-size;
-        border-bottom: 1px solid $o-we-bg-dark;
-        box-shadow: inset 0 1px 0 rgba(white, .2);
-    }
+    --bg: #{$o-we-sidebar-content-field-colorpicker-dropdown-bg};
+    --text-rgb: #{red($-wb-txt)}, #{green($-wb-txt)}, #{blue($-wb-txt)};
+    --border-rgb: var(--text-rgb);
+
+    --tab-border-top: rgba(255, 255, 255, .2);
+    --tab-border-bottom: #{$o-we-bg-dark};
+
+    --btn-color-active: inset 0 0 0 1px #{$o-we-sidebar-content-field-colorpicker-dropdown-bg},
+                        inset 0 0 0 3px #{$o-we-accent},
+                        inset 0 0 0 4px white;
+
     .o_we_colorpicker_switch_pane_btn {
         @extend %we-generic-tab-button;
-        flex: 0 0 auto;
     }
     .o_colorpicker_reset {
-        max-width: 40%;
         @extend %we-generic-button;
     }
+
     .o_colorpicker_sections {
-        > * {
-            padding-top: $o-we-sidebar-content-field-spacing;
-            &:first-child {
-                padding-top: 0;
-            }
-        }
-
-        .o_colorpicker_widget {
-            .o_hex_div, .o_rgba_div  {
-                &:focus-within {
-                    border-color: $o-we-sidebar-content-field-input-border-color;
-                }
-            }
-            .o_color_picker_inputs {
-                input {
-                    border: none;
-                    &:focus {
-                        outline: none;
-                    }
-                }
-            }
-        }
-
-        .o_we_color_btn, .o_we_color_combination_btn {
-            float: left;
-            width: percentage(1 / 8);
-            padding-top: percentage(1 / 10);
-            margin: 0;
-            border: 1px solid $o-we-sidebar-content-field-colorpicker-dropdown-bg;
-            box-shadow: $o-we-sidebar-content-field-colorpicker-shadow;
-
-            &.o_colorpicker_reset {
-                background-color: transparent;
-
-                &::before {
-                    @include o-position-absolute(0, 0, 0, 0);
-                    font-family: FontAwesome !important;
-                    content: "\f00d" !important;// fa-times
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    color: $o-we-color-danger;
-                }
-            }
-        }
         .o_we_color_combination_btn {
             float: none;
             width: 100%;
@@ -1749,37 +1729,6 @@ body.editor_enable.editor_has_snippets {
                 // compensate a 1px gap between the flex container and the
                 // absolute positioned pseudo-element that generates the bg.
                 bottom: -1px;
-            }
-        }
-        .o_colorpicker_section {
-            &::after {
-                content: "";
-                display: table;
-                clear: both;
-            }
-
-            .o_we_color_btn {
-                position: relative;
-
-                &.selected {
-                    box-shadow: inset 0 0 0 1px $o-we-sidebar-content-field-colorpicker-dropdown-bg,
-                                inset 0 0 0 3px $o-we-accent,
-                                inset 0 0 0 4px white;
-                }
-
-                &.o_btn_transparent::before {
-                    background-color: transparent;
-                }
-            }
-
-            &[data-name="transparent_grayscale"], &[data-name="theme"], &[data-name="reset"], &[data-name="custom"] {
-                .o_we_color_btn {
-                    @extend %o-preview-alpha-background;
-
-                    &::before, &::after {
-                        box-shadow: inherit;
-                    }
-                }
             }
         }
     }

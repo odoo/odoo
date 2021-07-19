@@ -256,7 +256,7 @@ export class OdooEditor extends EventTarget {
 
         if (this.options.toolbar) {
             this.toolbar = this.options.toolbar;
-            this._bindToolbar();
+            this.bindExecCommand(this.toolbar);
             // Ensure anchors in the toolbar don't trigger a hash change.
             const toolbarAnchors = this.toolbar.querySelectorAll('a');
             toolbarAnchors.forEach(a => a.addEventListener('click', e => e.preventDefault()));
@@ -867,6 +867,25 @@ export class OdooEditor extends EventTarget {
     execCommand(...args) {
         this._computeHistoryCursor();
         return this._applyCommand(...args);
+    }
+
+    /**
+     * Find all descendants of `element` with a `data-call` attribute and bind
+     * them on mousedown to the execution of the command matching that
+     * attribute.
+     */
+    bindExecCommand(element) {
+        for (const buttonEl of element.querySelectorAll('[data-call]')) {
+            buttonEl.addEventListener('mousedown', ev => {
+                const sel = this.document.getSelection();
+                if (sel.anchorNode && ancestors(sel.anchorNode).includes(this.editable)) {
+                    this.execCommand(buttonEl.dataset.call, buttonEl.dataset.arg1);
+
+                    ev.preventDefault();
+                    this._updateToolbar();
+                }
+            });
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -2345,19 +2364,6 @@ export class OdooEditor extends EventTarget {
         this.historyStep();
     }
 
-    _bindToolbar() {
-        for (const buttonEl of this.toolbar.querySelectorAll('[data-call]')) {
-            buttonEl.addEventListener('mousedown', ev => {
-                const sel = this.document.getSelection();
-                if (sel.anchorNode && ancestors(sel.anchorNode).includes(this.editable)) {
-                    this.execCommand(buttonEl.dataset.call, buttonEl.dataset.arg1);
-
-                    ev.preventDefault();
-                    this._updateToolbar();
-                }
-            });
-        }
-    }
     _onTabulationInTable(ev) {
         const sel = this.document.getSelection();
         const closestTable = closestElement(sel.anchorNode, 'table');
