@@ -224,7 +224,6 @@
             'http://test.external.link/style2.css',
         ],
         'website.website_configurator_assets_js': [
-            '/web/static/lib/owl/owl.js',
             '/website/static/src/components/configurator/configurator.js',
         ],
         'website.website_configurator_assets_scss': [
