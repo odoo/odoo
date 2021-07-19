@@ -2370,7 +2370,7 @@ var AttachmentImage = AbstractField.extend({
     _render: function () {
         if (this.value) {
             this.$el.empty().append($('<img>/', {
-                src: "/web/image/" + this.value.data.id + "?unique=1",
+                src: "/web/image/" + this.value.data.id + "?unique=" + new Date(),
                 title: this.value.data.display_name,
                 alt: _t("Image")
             }));
