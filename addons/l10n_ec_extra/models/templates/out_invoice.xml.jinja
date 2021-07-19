@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="2.1.0">
+  <infoTributaria>
+    <ambiente>{{ ambiente }}</ambiente>
+    <tipoEmision>{{ tipoEmision }}</tipoEmision>
+    <razonSocial>{{ razonSocial }}</razonSocial>
+    <nombreComercial>{{ razonSocial }}</nombreComercial>
+    <ruc>{{ ruc }}</ruc>
+    <claveAcceso>{{ claveAcceso }}</claveAcceso>
+    <codDoc>{{ codDoc }}</codDoc>
+    <estab>{{ estab }}</estab>
+    <ptoEmi>{{ ptoEmi }}</ptoEmi>
+    <secuencial>{{ secuencial }}</secuencial>
+    <dirMatriz>{{ dirMatriz }}</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>{{ fechaEmision }}</fechaEmision> {# dd/mm/aaaa #}
+    <contribuyenteEspecial>{{ contribuyenteEspecial }}</contribuyenteEspecial>
+    <obligadoContabilidad>{{ obligadoContabilidad }}</obligadoContabilidad>
+    <tipoIdentificacionComprador>{{ tipoIdentificacionComprador }}</tipoIdentificacionComprador>
+    <razonSocialComprador>{{ razonSocialComprador }}</razonSocialComprador>
+    <identificacionComprador>{{ identificacionComprador }}</identificacionComprador>
+    <direccionComprador>{{ direccionComprador }}</direccionComprador>
+    <totalSinImpuestos>{{ totalSinImpuestos }}</totalSinImpuestos>
+    <totalDescuento>{{ totalDescuento }}</totalDescuento>
+    <totalConImpuestos>{% for item in totalConImpuestos %}
+      <totalImpuesto>
+        <codigo>{{ item['codigo'] }}</codigo>
+        <codigoPorcentaje>{{ item['codigoPorcentaje'] }}</codigoPorcentaje>
+        <baseImponible>{{ item['baseImponible'] }}</baseImponible>
+        <tarifa>{{ item['tarifa'] }}</tarifa>
+        <valor>{{ item['valor'] }}</valor>
+      </totalImpuesto>
+      {% endfor %}</totalConImpuestos>{% if compensaciones %}
+    <compensaciones>{% for c in comp %}
+        <compensacion>
+            <codigo>{{ c['codigo'] }}</codigo>
+            <tarifa>{{ c['tarifa'] }}</tarifa>
+            <valor>{{ c['valor'] }}</valor>
+        </compensacion>{% endfor %}
+    </compensaciones>{% endif %}
+    <propina>0.00</propina>
+    <importeTotal>{{ importeTotal }}</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+        <pago>
+            <formaPago>{{ formaPago }}</formaPago>
+            <total>{{ importeTotal }}</total>
+        </pago>
+    </pagos>
+    <valorRetIva>{{ valorRetIva }}</valorRetIva>
+    <valorRetRenta>{{ valorRetRenta }}</valorRetRenta>
+  </infoFactura>
+  <detalles>{% for item in detalles %}
+    <detalle>
+      <codigoPrincipal>{{ item['codigoPrincipal'] }}</codigoPrincipal>
+      <descripcion>{{ item['descripcion'] }}</descripcion>
+      <cantidad>{{ item['cantidad'] }}</cantidad>
+      <precioUnitario>{{ item['precioUnitario'] }}</precioUnitario>
+      <descuento>{{ item['descuento'] }}</descuento>
+      <precioTotalSinImpuesto>{{ item['precioTotalSinImpuesto'] }}</precioTotalSinImpuesto>
+      <impuestos>{% for tax in item['impuestos'] %}
+        <impuesto>
+          <codigo>{{ tax['codigo'] }}</codigo>
+          <codigoPorcentaje>{{ tax['codigoPorcentaje'] }}</codigoPorcentaje>
+          <tarifa>{{ tax['tarifa'] }}</tarifa>
+          <baseImponible>{{ tax['baseImponible'] }}</baseImponible>
+          <valor>{{ tax['valor'] }}</valor>
+        </impuesto>{% endfor %}
+      </impuestos>
+    </detalle>{% endfor %}
+  </detalles>
+</factura>

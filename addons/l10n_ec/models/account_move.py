@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+<<<<<<< HEAD
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
 from odoo.tools.misc import formatLang
 
@@ -16,6 +17,15 @@ class AccountMove(models.Model):
     l10n_ec_auth_type = fields.Selection(related="l10n_latam_document_type_id.l10n_ec_authorization")
     l10n_ec_is_electronic = fields.Boolean(default=False, compute="_l10n_ec_is_electronic")
 
+=======
+from odoo.exceptions import UserError, ValidationError
+import odoo.addons.decimal_precision as dp
+
+
+class AccountMove(models.Model):
+    _inherit='account.move'
+    
+>>>>>>> [WIP] l10n_ec Port changes from v14 to master
     def _get_l10n_latam_documents_domain(self):
         #Filter document types according to ecuadorian move_type
         domain = super(AccountMove, self)._get_l10n_latam_documents_domain()
