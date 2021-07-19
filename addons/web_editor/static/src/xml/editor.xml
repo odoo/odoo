@@ -55,7 +55,7 @@
 
             <div id="colorInputButtonGroup" class="btn-group">
                 <div class="colorpicker-group note-fore-color-preview" data-name="color">
-                    <div class="btn color-button dropdown-toggle editor-ignore"
+                    <div id="oe-text-color" class="btn color-button dropdown-toggle editor-ignore"
                         data-toggle="dropdown" title="Font Color" tabindex="-1"
                         data-original-title="Font Color">
                         <i class="fa fa-font color-indicator fore-color"></i>
@@ -65,7 +65,7 @@
                     </ul>
                 </div>
                 <div class="colorpicker-group note-back-color-preview" data-name="color">
-                    <button type="button" class="btn dropdown-toggle editor-ignore"
+                    <button id="oe-fore-color" type="button" class="btn dropdown-toggle editor-ignore"
                         data-toggle="dropdown" title="Background Color" tabindex="-1"
                         data-original-title="Background Color">
                         <i class="fa fa-paint-brush color-indicator hilite-color"></i>
@@ -106,25 +106,21 @@
                 </button>
                 <div class="dropdown-menu">
                     <div class="btn-group">
-                        <div class="btn" id="justifyLeft" data-call='justifyLeft'><i class="fa fa-align-left fa-fw btn"></i></div>
-                        <div class="btn" id="justifyCenter" data-call='justifyCenter'><i class="fa fa-align-center fa-fw btn"></i></div>
-                        <div class="btn" id="justifyRight" data-call='justifyRight'><i class="fa fa-align-right fa-fw btn"></i></div>
-                        <div class="btn" id="justifyFull" data-call='justifyFull'><i class="fa fa-align-justify fa-fw btn"></i></div>
+                        <div class="btn" id="justifyLeft" data-call='justifyLeft'><i class="fa fa-align-left fa-fw"></i></div>
+                        <div class="btn" id="justifyCenter" data-call='justifyCenter'><i class="fa fa-align-center fa-fw"></i></div>
+                        <div class="btn" id="justifyRight" data-call='justifyRight'><i class="fa fa-align-right fa-fw"></i></div>
+                        <div class="btn" id="justifyFull" data-call='justifyFull'><i class="fa fa-align-justify fa-fw"></i></div>
                     </div>
                 </div>
             </div>
 
-            <div id="list" class="btn-group dropdown">
-                <button type="button" class="btn dropdown-toggle"
-                    data-toggle="dropdown" title="Toggle List" tabindex="-1"
-                    data-original-title="List" aria-expanded="false">
-                    <i id="justifyDropdownButton" class="fa fa-list-ul fa-fw"></i>
-                </button>
-                <div class="dropdown-menu">
-                    <div class="btn-group">
-                        <div id="unordered" data-call="toggleList" data-arg1="UL" title="Toggle unordered list" class="fa fa-list-ul fa-fw btn"></div>
-                        <div id="ordered" data-call="toggleList" data-arg1="OL" title="Toggle ordered list" class="fa fa-list-ol fa-fw btn"></div>
-                        <div id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="fa fa-tasks fa-fw btn"></div>
+            <div id="list" class="btn-group">
+                <div data-call="toggleList" data-arg1="UL" title="Toggle unordered list" class="oe-toggle-unordered fa fa-list-ul fa-fw btn"></div>
+                <div data-call="toggleList" data-arg1="OL" title="Toggle ordered list" class="oe-toggle-ordered fa fa-list-ol fa-fw btn"></div>
+                <div data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="oe-toggle-checklist btn fa-fw">
+                    <div class="small">
+                        <div class="fa fa-square-o d-block small"/>
+                        <div class="fa fa-check-square d-block small"/>
                     </div>
                 </div>
             </div>
@@ -199,8 +195,10 @@
                 <div id="image-crop" title="Crop Image" class="btn fa fa-crop editor-ignore"></div>
                 <div id="image-transform" class="btn editor-ignore fa fa-object-ungroup"
                     title="Transform the picture (click twice to reset transformation)"></div>
+                <span class="oe-toolbar-separator d-flex"/>
                 <div id="media-replace" title="Replace media" class="btn o_we_bg_brand_primary editor-ignore">Replace</div>
-                <div id="image-delete" class="btn editor-ignore fa fa-trash-o" title="Remove (DELETE)"></div>
+                <span class="oe-toolbar-separator d-flex"/>
+                <div id="image-delete" class="btn btn-link text-danger editor-ignore fa fa-trash" title="Remove (DELETE)"></div>
             </div>
 
             <div id="fa-resize" class="btn-group only_fa">
@@ -215,6 +213,58 @@
                 <div id="fa-spin" title="Toggle icon spin" class="editor-ignore btn fa fa-refresh"></div>
             </div>
         </div>
+    </t>
+
+    <t t-name="web_editor.toolbar.table-options">
+        <we-customizeblock-options id="o-we-editor-table-container">
+            <we-title>
+                <span>Table Options</span>
+                <div id="oe-table-delete-table" data-call="deleteTable" class="o_we_hover_danger">
+                    <i class="fa fa-trash"/>
+                </div>
+            </we-title>
+            <div id="oe-table-options">
+                <div class="oe-table-row">
+                    <span class="oe-table-label">Add Column</span>
+                    <div class="w-100">
+                        <div class="oe-table-selection btn-group w-100">
+                            <button class="btn w-50" data-call="addColumnLeft">
+                                <i class="small fa fa-fw fa-step-backward"/> Left
+                            </button>
+                            <button class="btn w-50" data-call="addColumnRight">
+                                Right <i class="small fa fa-fw fa-step-forward"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe-table-row">
+                    <span class="oe-table-label">Add Row</span>
+                    <div class="w-100">
+                        <div class="oe-table-selection btn-group w-100">
+                            <button class="btn w-50" data-call="addRowAbove">
+                                <i class="small fa fa-fw fa-step-backward fa-rotate-90"/> Above
+                            </button>
+                            <button class="btn w-50" data-call="addRowBelow">
+                                Below <i class="small fa fa-fw fa-step-forward fa-rotate-90"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe-table-row mt-3">
+                    <span class="oe-table-label">Remove Current</span>
+                    <div class="w-100">
+                        <div class="oe-table-selection btn-group w-100">
+                            <button class="btn w-50" data-call="removeColumn">
+                                <i class="small fa fa-fw fa-columns"/> Column
+                            </button>
+                            <button class="btn w-50" data-call="removeRow">
+                                <i class="small fa fa-fw fa-bars"/> Row
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </we-customizeblock-options>
     </t>
 
     <!--=================-->
