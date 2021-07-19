@@ -326,12 +326,11 @@ class CRMRevealRule(models.Model):
     def _perform_reveal_service(self, server_payload):
         result = False
         account_token = self.env['iap.account'].get('reveal')
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT) + '/iap/clearbit/1/reveal'
         params = {
             'account_token': account_token.account_token,
             'data': server_payload
         }
-        result = iap_tools.iap_jsonrpc(endpoint, params=params, timeout=300)
+        result = self._iap_contact_reveal(params, timeout=300)
         for res in result.get('reveal_data', []):
             if not res.get('not_found'):
                 lead = self._create_lead_from_response(res)
@@ -346,6 +345,10 @@ class CRMRevealRule(models.Model):
         else:
             self.env['ir.config_parameter'].sudo().set_param('reveal.already_notified', False)
         return True
+
+    def _iap_contact_reveal(self, params, timeout=300):
+        endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT) + '/iap/clearbit/1/reveal'
+        return iap_tools.iap_jsonrpc(endpoint, params=params, timeout=timeout)
 
     def _create_lead_from_response(self, result):
         """ This method will get response from service and create the lead accordingly """
