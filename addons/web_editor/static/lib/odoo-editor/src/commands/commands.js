@@ -21,8 +21,7 @@ import {
     isShrunkBlock,
     isVisible,
     isVisibleStr,
-    leftDeepFirstPath,
-    nodeSize,
+    leftLeafFirstPath,
     preserveCursor,
     rightPos,
     setCursor,
@@ -391,9 +390,9 @@ export const editorCommands = {
     // List
     indentList: (editor, mode = 'indent') => {
         const [pos1, pos2] = getCursors(editor.document);
-        const end = leftDeepFirstPath(...pos1).next().value;
+        const end = leftLeafFirstPath(...pos1).next().value;
         const li = new Set();
-        for (const node of leftDeepFirstPath(...pos2)) {
+        for (const node of leftLeafFirstPath(...pos2)) {
             const cli = closestBlock(node);
             if (
                 cli &&
