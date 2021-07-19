@@ -559,7 +559,7 @@ QUnit.module("Views", (hooks) => {
                 `,
                 domains,
             });
-            checkLabels(assert, graph, ["W5 2021", "W7 2021", "", ""]);
+            checkLabels(assert, graph, ["W05 2021", "W07 2021", "", ""]);
             checkDatasets(
                 assert,
                 graph,
@@ -585,7 +585,7 @@ QUnit.module("Views", (hooks) => {
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "W5 2021 / February 2021", value: "14" }],
+                    lines: [{ label: "W05 2021 / February 2021", value: "14" }],
                 },
                 0,
                 0
@@ -595,7 +595,7 @@ QUnit.module("Views", (hooks) => {
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "W1 2021 / January 2021", value: "12" }],
+                    lines: [{ label: "W01 2021 / January 2021", value: "12" }],
                 },
                 0,
                 1
@@ -605,7 +605,7 @@ QUnit.module("Views", (hooks) => {
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "W2 2021 / January 2021", value: "5" }],
+                    lines: [{ label: "W02 2021 / January 2021", value: "5" }],
                 },
                 1,
                 1
@@ -615,7 +615,7 @@ QUnit.module("Views", (hooks) => {
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "W3 2021 / January 2021", value: "15" }],
+                    lines: [{ label: "W03 2021 / January 2021", value: "15" }],
                 },
                 2,
                 1
@@ -625,7 +625,7 @@ QUnit.module("Views", (hooks) => {
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "W4 2021 / January 2021", value: "2" }],
+                    lines: [{ label: "W04 2021 / January 2021", value: "2" }],
                 },
                 3,
                 1
@@ -684,40 +684,40 @@ QUnit.module("Views", (hooks) => {
                         backgroundColor: "#1f77b4",
                         borderColor: undefined,
                         data: [14, 0],
-                        label: "February 2021 / W5 2021",
+                        label: "February 2021 / W05 2021",
                     },
                     {
                         backgroundColor: "#ff7f0e",
                         borderColor: undefined,
                         data: [0, 0],
-                        label: "February 2021 / W7 2021",
+                        label: "February 2021 / W07 2021",
                     },
                     {
                         backgroundColor: "#aec7e8",
                         borderColor: undefined,
                         data: [12, 0],
-                        label: "January 2021 / W1 2021",
+                        label: "January 2021 / W01 2021",
                     },
                     {
                         backgroundColor: "#ffbb78",
                         borderColor: undefined,
                         data: [0, 5],
-                        label: "January 2021 / W2 2021",
+                        label: "January 2021 / W02 2021",
                     },
                 ]
             );
             checkLegend(assert, graph, [
-                "February 2021 / W5 2021",
-                "February 2021 / W7 2021",
-                "January 2021 / W1 2021",
-                "January 2021 / W2 2021",
+                "February 2021 / W05 2021",
+                "February 2021 / W07 2021",
+                "January 2021 / W01 2021",
+                "January 2021 / W02 2021",
             ]);
             checkTooltip(
                 assert,
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "true / February 2021 / W5 2021", value: "14" }],
+                    lines: [{ label: "true / February 2021 / W05 2021", value: "14" }],
                 },
                 0,
                 0
@@ -727,7 +727,7 @@ QUnit.module("Views", (hooks) => {
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "true / January 2021 / W1 2021", value: "12" }],
+                    lines: [{ label: "true / January 2021 / W01 2021", value: "12" }],
                 },
                 0,
                 2
@@ -737,7 +737,7 @@ QUnit.module("Views", (hooks) => {
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "false / January 2021 / W2 2021", value: "5" }],
+                    lines: [{ label: "false / January 2021 / W02 2021", value: "5" }],
                 },
                 1,
                 3
@@ -1041,7 +1041,7 @@ QUnit.module("Views", (hooks) => {
                 `,
                 domains,
             });
-            checkLabels(assert, graph, ["W5 2021", "W7 2021", "", ""]);
+            checkLabels(assert, graph, ["W05 2021", "W07 2021", "", ""]);
             checkDatasets(
                 assert,
                 graph,
@@ -1068,8 +1068,8 @@ QUnit.module("Views", (hooks) => {
                 {
                     title: "Revenue",
                     lines: [
-                        { label: "W5 2021 / February 2021", value: "14" },
-                        { label: "W1 2021 / January 2021", value: "12" },
+                        { label: "W05 2021 / February 2021", value: "14" },
+                        { label: "W01 2021 / January 2021", value: "12" },
                     ],
                 },
                 0
@@ -1080,8 +1080,8 @@ QUnit.module("Views", (hooks) => {
                 {
                     title: "Revenue",
                     lines: [
-                        { label: "W2 2021 / January 2021", value: "5" },
-                        { label: "W7 2021 / February 2021", value: "0" },
+                        { label: "W02 2021 / January 2021", value: "5" },
+                        { label: "W07 2021 / February 2021", value: "0" },
                     ],
                 },
                 1
@@ -1091,7 +1091,7 @@ QUnit.module("Views", (hooks) => {
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "W3 2021 / January 2021", value: "15" }],
+                    lines: [{ label: "W03 2021 / January 2021", value: "15" }],
                 },
                 2
             );
@@ -1100,7 +1100,7 @@ QUnit.module("Views", (hooks) => {
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "W4 2021 / January 2021", value: "2" }],
+                    lines: [{ label: "W04 2021 / January 2021", value: "2" }],
                 },
                 3
             );
@@ -1158,33 +1158,33 @@ QUnit.module("Views", (hooks) => {
                         backgroundColor: undefined,
                         borderColor: "#1f77b4",
                         data: [14, 0],
-                        label: "February 2021 / W5 2021",
+                        label: "February 2021 / W05 2021",
                     },
                     {
                         backgroundColor: undefined,
                         borderColor: "#ff7f0e",
                         data: [0, 0],
-                        label: "February 2021 / W7 2021",
+                        label: "February 2021 / W07 2021",
                     },
                     {
                         backgroundColor: undefined,
                         borderColor: "#aec7e8",
                         data: [12, 0],
-                        label: "January 2021 / W1 2021",
+                        label: "January 2021 / W01 2021",
                     },
                     {
                         backgroundColor: undefined,
                         borderColor: "#ffbb78",
                         data: [0, 5],
-                        label: "January 2021 / W2 2021",
+                        label: "January 2021 / W02 2021",
                     },
                 ]
             );
             checkLegend(assert, graph, [
-                "February 2021 / W5 2021",
-                "February 2021 / W7 2021",
-                "January 2021 / W1 2021",
-                "January 2021 / W2 2021",
+                "February 2021 / W05 2021",
+                "February 2021 / W07 2021",
+                "January 2021 / W01 2021",
+                "January 2021 / W02 2021",
             ]);
             checkTooltip(
                 assert,
@@ -1192,10 +1192,10 @@ QUnit.module("Views", (hooks) => {
                 {
                     title: "Revenue",
                     lines: [
-                        { label: "true / February 2021 / W5 2021", value: "14" },
-                        { label: "true / January 2021 / W1 2021", value: "12" },
-                        { label: "true / February 2021 / W7 2021", value: "0" },
-                        { label: "true / January 2021 / W2 2021", value: "0" },
+                        { label: "true / February 2021 / W05 2021", value: "14" },
+                        { label: "true / January 2021 / W01 2021", value: "12" },
+                        { label: "true / February 2021 / W07 2021", value: "0" },
+                        { label: "true / January 2021 / W02 2021", value: "0" },
                     ],
                 },
                 0
@@ -1206,10 +1206,10 @@ QUnit.module("Views", (hooks) => {
                 {
                     title: "Revenue",
                     lines: [
-                        { label: "false / January 2021 / W2 2021", value: "5" },
-                        { label: "false / February 2021 / W5 2021", value: "0" },
-                        { label: "false / February 2021 / W7 2021", value: "0" },
-                        { label: "false / January 2021 / W1 2021", value: "0" },
+                        { label: "false / January 2021 / W02 2021", value: "5" },
+                        { label: "false / February 2021 / W05 2021", value: "0" },
+                        { label: "false / February 2021 / W07 2021", value: "0" },
+                        { label: "false / January 2021 / W01 2021", value: "0" },
                     ],
                 },
                 1
@@ -1494,10 +1494,10 @@ QUnit.module("Views", (hooks) => {
                 domains,
             });
             checkLabels(assert, graph, [
-                "W5 2021, W1 2021",
-                "W7 2021, W2 2021",
-                "W3 2021",
-                "W4 2021",
+                "W05 2021, W01 2021",
+                "W07 2021, W02 2021",
+                "W03 2021",
+                "W04 2021",
             ]);
             checkDatasets(
                 assert,
@@ -1519,16 +1519,16 @@ QUnit.module("Views", (hooks) => {
                 ]
             );
             checkLegend(assert, graph, [
-                "W5 2021, W1 2021",
-                "W7 2021, W2 2021",
-                "W3 2021",
-                "W4 2021",
+                "W05 2021, W01 2021",
+                "W07 2021, W02 2021",
+                "W03 2021",
+                "W04 2021",
             ]);
             checkTooltip(
                 assert,
                 graph,
                 {
-                    lines: [{ label: "February 2021 / W5 2021", value: "1" }],
+                    lines: [{ label: "February 2021 / W05 2021", value: "1" }],
                 },
                 0,
                 0
@@ -1537,7 +1537,7 @@ QUnit.module("Views", (hooks) => {
                 assert,
                 graph,
                 {
-                    lines: [{ label: "January 2021 / W1 2021", value: "1" }],
+                    lines: [{ label: "January 2021 / W01 2021", value: "1" }],
                 },
                 0,
                 1
@@ -1546,7 +1546,7 @@ QUnit.module("Views", (hooks) => {
                 assert,
                 graph,
                 {
-                    lines: [{ label: "February 2021 / W7 2021", value: "1" }],
+                    lines: [{ label: "February 2021 / W07 2021", value: "1" }],
                 },
                 1,
                 0
@@ -1555,7 +1555,7 @@ QUnit.module("Views", (hooks) => {
                 assert,
                 graph,
                 {
-                    lines: [{ label: "January 2021 / W2 2021", value: "1" }],
+                    lines: [{ label: "January 2021 / W02 2021", value: "1" }],
                 },
                 1,
                 1
@@ -1564,7 +1564,7 @@ QUnit.module("Views", (hooks) => {
                 assert,
                 graph,
                 {
-                    lines: [{ label: "January 2021 / W3 2021", value: "1" }],
+                    lines: [{ label: "January 2021 / W03 2021", value: "1" }],
                 },
                 2,
                 1
@@ -1573,7 +1573,7 @@ QUnit.module("Views", (hooks) => {
                 assert,
                 graph,
                 {
-                    lines: [{ label: "January 2021 / W4 2021", value: "1" }],
+                    lines: [{ label: "January 2021 / W04 2021", value: "1" }],
                 },
                 3,
                 1
@@ -1622,7 +1622,7 @@ QUnit.module("Views", (hooks) => {
                 `,
                 domains,
             });
-            checkLabels(assert, graph, ["true / W5 2021", "true / W1 2021", "false / W2 2021"]);
+            checkLabels(assert, graph, ["true / W05 2021", "true / W01 2021", "false / W02 2021"]);
             checkDatasets(
                 assert,
                 graph,
@@ -1642,13 +1642,13 @@ QUnit.module("Views", (hooks) => {
                     },
                 ]
             );
-            checkLegend(assert, graph, ["true / W5 2021", "true / W1 2021", "false / W2 2021"]);
+            checkLegend(assert, graph, ["true / W05 2021", "true / W01 2021", "false / W02 2021"]);
             checkTooltip(
                 assert,
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "February 2021 / true / W5 2021", value: "14" }],
+                    lines: [{ label: "February 2021 / true / W05 2021", value: "14" }],
                 },
                 0,
                 0
@@ -1658,7 +1658,7 @@ QUnit.module("Views", (hooks) => {
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "January 2021 / true / W1 2021", value: "12" }],
+                    lines: [{ label: "January 2021 / true / W01 2021", value: "12" }],
                 },
                 1,
                 1
@@ -1668,7 +1668,7 @@ QUnit.module("Views", (hooks) => {
                 graph,
                 {
                     title: "Revenue",
-                    lines: [{ label: "January 2021 / false / W2 2021", value: "5" }],
+                    lines: [{ label: "January 2021 / false / W02 2021", value: "5" }],
                 },
                 2,
                 1

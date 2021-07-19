@@ -7,6 +7,7 @@ import { registry } from "@web/core/registry";
 import * as utils from "@web/core/utils/arrays";
 import { makeFakeRPCService, makeMockFetch } from "./mock_services";
 import { patchWithCleanup } from "./utils";
+import { parseDate } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 const serviceRegistry = registry.category("services");
@@ -242,7 +243,10 @@ export class MockServer {
                     // TODO
                     // const pyevalContext = window.py.dict.fromJSON(context || {});
                     // var v = pyUtils.py_eval(mod, {context: pyevalContext}) ? true : false;
-                    console.info("MockServer: naive parse of modifier value in", QUnit.config.current.testName);
+                    console.info(
+                        "MockServer: naive parse of modifier value in",
+                        QUnit.config.current.testName
+                    );
                     const v = JSON.parse(mod);
                     if (inTreeView && !inListHeader && attr === "invisible") {
                         modifiers.column_invisible = v;
@@ -506,7 +510,9 @@ export class MockServer {
         if (!action) {
             // when the action doesn't exist, the real server doesn't crash, it
             // simply returns false
-            console.warn(`No action found for ID ${kwargs.action_id} during test ${QUnit.config.current.testName}`);
+            console.warn(
+                `No action found for ID ${kwargs.action_id} during test ${QUnit.config.current.testName}`
+            );
         }
         return action || false;
     }
@@ -766,7 +772,7 @@ export class MockServer {
                 if (aggregateFunction === "day") {
                     return date.toFormat("yyyy-MM-dd");
                 } else if (aggregateFunction === "week") {
-                    return `W${date.toFormat("W yyyy")}`;
+                    return `W${date.toFormat("WW yyyy")}`;
                 } else if (aggregateFunction === "quarter") {
                     return `Q${date.toFormat("q yyyy")}`;
                 } else if (aggregateFunction === "year") {
@@ -816,24 +822,26 @@ export class MockServer {
                     res[groupByField] = val;
                 }
                 if (field.type === "date" && val) {
-                    console.info("Mock Server: read group not fully implemented (moment stuff) in", QUnit.config.current.testName);
-                    // const aggregateFunction = groupByField.split(':')[1];
-                    // let startDate;
-                    // let endDate;
-                    // if (aggregateFunction === 'day') {
-                    //     startDate = moment(val, 'YYYY-MM-DD');
-                    //     endDate = startDate.clone().add(1, 'days');
-                    // } else if (aggregateFunction === 'week') {
-                    //     startDate = moment(val, 'ww YYYY');
-                    //     endDate = startDate.clone().add(1, 'weeks');
-                    // } else if (aggregateFunction === 'year') {
-                    //     startDate = moment(val, 'Y');
-                    //     endDate = startDate.clone().add(1, 'years');
-                    // } else {
-                    //     startDate = moment(val, 'MMMM YYYY');
-                    //     endDate = startDate.clone().add(1, 'months');
-                    // }
-                    // res.__domain = [[fieldName, '>=', startDate.format('YYYY-MM-DD')], [fieldName, '<', endDate.format('YYYY-MM-DD')]].concat(res.__domain);
+                    const aggregateFunction = groupByField.split(":")[1];
+                    let startDate;
+                    let endDate;
+                    if (aggregateFunction === "day") {
+                        startDate = parseDate(val, { format: "yyyy-MM-dd" });
+                        endDate = startDate.plus({ days: 1 });
+                    } else if (aggregateFunction === "week") {
+                        startDate = parseDate(val, { format: "WW kkkk" });
+                        endDate = startDate.plus({ weeks: 1 });
+                    } else if (aggregateFunction === "year") {
+                        startDate = parseDate(val, { format: "y" });
+                        endDate = startDate.plus({ years: 1 });
+                    } else {
+                        startDate = parseDate(val, { format: "MMMM yyyy" });
+                        endDate = startDate.plus({ months: 1 });
+                    }
+                    res.__domain = [
+                        [fieldName, ">=", startDate.toFormat("yyyy-MM-dd")],
+                        [fieldName, "<", endDate.toFormat("yyyy-MM-dd")],
+                    ].concat(res.__domain);
                 } else {
                     res.__domain = Domain.combine(
                         [[[fieldName, "=", val]], res.__domain],
