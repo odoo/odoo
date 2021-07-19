@@ -1552,7 +1552,7 @@ export class OdooEditor extends EventTarget {
      */
     _cleanForPaste(node) {
         if (!this._isWhitelisted(node) || this._isBlacklisted(node)) {
-            if (node.matches(CLIPBOARD_BLACKLISTS.remove.join(','))) {
+            if (!node.matches || node.matches(CLIPBOARD_BLACKLISTS.remove.join(','))) {
                 node.remove();
             } else {
                 // Unwrap the illegal node's contents.
