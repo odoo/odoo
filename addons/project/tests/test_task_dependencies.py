@@ -6,6 +6,7 @@ from odoo.tests import tagged
 
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 
+from datetime import date
 
 @tagged('-at_install', 'post_install', 'task_dependencies')
 class TestTaskDependencies(TestProjectCommon):
@@ -22,6 +23,11 @@ class TestTaskDependencies(TestProjectCommon):
             'user_id': cls.user_projectuser.id,
             'project_id': cls.project_pigs.id,
         })
+
+    def flush_tracking(self):
+        """ Force the creation of tracking values. """
+        self.env['base'].flush()
+        self.cr.precommit.run()
 
     def test_task_dependencies(self):
         """ Test the task dependencies feature
@@ -85,3 +91,39 @@ class TestTaskDependencies(TestProjectCommon):
                 'depend_on_ids': [Command.link(self.task_1.id)],
             })
         self.assertEqual(len(self.task_2.depend_on_ids), 1, "The number of dependencies should no change in the task 2 because of a cyclic dependency.")
+
+    def test_tracking_dependencies(self):
+        # Enable the company setting
+        self.env['res.config.settings'].create({
+            'group_project_task_dependencies': True
+        }).execute()
+        self.task_1.write({
+            'depend_on_ids': [Command.link(self.task_2.id)]
+        })
+        self.cr.precommit.clear()
+        # Check that changing a dependency tracked field in task_2 logs a message in task_1.
+        self.task_2.write({'date_deadline': date(1983, 3, 1)}) # + 1 message in task_1 and task_2
+        self.flush_tracking()
+        self.assertEqual(len(self.task_1.message_ids), 1,
+            'Changing the deadline on task 2 should have logged a message in task 1.')
+
+        # Check that changing a dependency tracked field in task_1 does not log a message in task_2.
+        self.task_1.date_deadline = date(2020, 1, 2) # + 1 message in task_1
+        self.flush_tracking()
+        self.assertEqual(len(self.task_2.message_ids), 1,
+            'Changing the deadline on task 1 should not have logged a message in task 2.')
+
+        # Check that changing a field that is not tracked at all on task 2 does not impact task 1.
+        self.task_2.color = 100 # no new message
+        self.flush_tracking()
+        self.assertEqual(len(self.task_1.message_ids), 2,
+            'Changing the color on task 2 should not have logged a message in task 1 since it is not tracked.')
+
+        # Check that changing multiple fields does not log more than one message.
+        self.task_2.write({
+            'date_deadline': date(2020, 1, 1),
+            'kanban_state': 'blocked',
+        }) # + 1 message in task_1 and task_2
+        self.flush_tracking()
+        self.assertEqual(len(self.task_1.message_ids), 3,
+            'Changing multiple fields on task 2 should only log one message in task 1.')
