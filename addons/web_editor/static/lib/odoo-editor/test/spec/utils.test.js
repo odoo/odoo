@@ -28,6 +28,7 @@ import {
     setCursorEnd,
     getCursorDirection,
     DIRECTIONS,
+    isBlock,
 } from '../../src/utils/utils.js';
 import { BasicEditor, testEditor } from '../utils.js';
 
@@ -310,16 +311,6 @@ describe('Utils', () => {
 
     // TODO: test path functions:
     // - closestPath
-    // - leftDeepFirstPath
-    // - leftDeepOnlyPath
-    // - leftDeepFirstInlinePath
-    // - leftDeepOnlyInlinePath
-    // - leftDeepOnlyInlineInScopePath
-    // - rightDeepFirstPath
-    // - rightDeepOnlyPath
-    // - rightDeepFirstInlinePath
-    // - rightDeepOnlyInlinePath
-    // - rightDeepOnlyInlineInScopePath
     // - findNode
     // - createDOMPathGenerator
     describe('closestElement', () => {
@@ -391,7 +382,7 @@ describe('Utils', () => {
             const [div] = insertTestHtml(
                 '<div><div><p>ab<span>cd</span><b><i><u>ef</u></i></b></p></div></div>',
             );
-            const result = lastLeaf(div, true);
+            const result = lastLeaf(div, isBlock);
             window.chai.expect(result).to.equal(div);
         });
         it('should find no last closest block descendant of a child-rich inline and return its last leaf instead', () => {
@@ -400,7 +391,7 @@ describe('Utils', () => {
             );
             const b = div.firstChild.firstChild.childNodes[2];
             const ef = b.firstChild.firstChild.firstChild;
-            const result = lastLeaf(b, true);
+            const result = lastLeaf(b, isBlock);
             window.chai.expect(result).to.equal(ef);
         });
     });
@@ -418,7 +409,7 @@ describe('Utils', () => {
             const [div] = insertTestHtml(
                 '<div><div><p>ab<span>cd</span><b><i><u>ef</u></i></b></p></div></div>',
             );
-            const result = firstLeaf(div, true);
+            const result = firstLeaf(div, isBlock);
             window.chai.expect(result).to.equal(div);
         });
         it('should find no first closest block descendant of a child-rich inline and return its first leaf instead', () => {
@@ -427,7 +418,7 @@ describe('Utils', () => {
             );
             const b = div.firstChild.firstChild.firstChild;
             const ab = b.firstChild.firstChild.firstChild;
-            const result = firstLeaf(b, true);
+            const result = firstLeaf(b, isBlock);
             window.chai.expect(result).to.equal(ab);
         });
     });
