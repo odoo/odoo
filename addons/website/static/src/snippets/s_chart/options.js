@@ -87,6 +87,11 @@ options.registry.InnerChart = options.Class.extend({
         });
     },
 
+    onBuilt: function () {
+        this.$target.find('.s_preview').remove();
+        this.$target.find('canvas').removeAttr('style');
+    },
+
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------

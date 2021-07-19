@@ -41,6 +41,10 @@ options.registry.facebookPage = options.Class.extend({
         return Promise.all(defs).then(() => this._markFbElement()).then(() => this._refreshPublicWidgets());
     },
 
+    onBuilt: function () {
+        this.$target.find('.s_preview').remove();
+    },
+
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------

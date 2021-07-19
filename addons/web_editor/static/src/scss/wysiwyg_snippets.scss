@@ -40,6 +40,31 @@ body.editor_enable.editor_has_snippets {
     }
 }
 
+@mixin cursor_grab {
+    cursor: move; // fallback
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    cursor: grab;
+}
+
+@mixin cursor_grabbing {
+    cursor: move; // fallback
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+    cursor: grabbing;
+}
+
+@mixin display_title {
+    font-size: 12px;
+
+    & .oe_snippet_thumbnail_title {
+        color: white;
+        display: block;
+        padding: $o-we-sidebar-blocks-content-spacing / 2;
+        text-align: center;
+    }
+}
+
 .oe_snippet {
     // No root because can be drag and drop (and the helper is in the body)
     position: relative;
@@ -48,9 +73,9 @@ body.editor_enable.editor_has_snippets {
     background-color: $o-we-sidebar-blocks-content-snippet-bg;
 
     &.ui-draggable-dragging {
-        transform: rotate(-3deg) scale(1.2);
-        box-shadow: 0 5px 25px -10px black;
-        transition: transform 0.3s, box-shadow 0.3s;
+        @include cursor_grabbing;
+        @include display_title;
+        transform: rotate(-12deg) translate(7px, 7px);
     }
 
     > .oe_snippet_body {
@@ -68,6 +93,10 @@ body.editor_enable.editor_has_snippets {
             background-position: top center;
             overflow: hidden;
         }
+    }
+
+    &.o_we_child_is_moved {
+        opacity: 0;
     }
 
     .oe_snippet_thumbnail_title {
@@ -371,9 +400,15 @@ body.editor_enable.editor_has_snippets {
                 margin-bottom: $o-we-sidebar-blocks-content-snippet-spacing;
                 user-select: none;
 
-                cursor: pointer;
-                cursor: copy;
-                cursor: grab;
+                @include cursor_grab;
+
+                &.oe_grabbing {
+                    @include cursor_grabbing;
+                    @include display_title;
+                    box-shadow: 0 5px 25px -10px black;
+                    transform: rotate(-12deg);
+                    transition: transform 0.3s, box-shadow 0.3s;
+                }
 
                 .oe_snippet_thumbnail_title {
                     display: block;
@@ -1882,6 +1917,26 @@ body.editor_enable.editor_has_snippets {
     }
 }
 
+// SNIPPET PREVIEWS
+.s_countdown_preview {
+    display: flex;
+    justify-content: center;
+
+    > img {
+        max-height: 175px;
+        max-width: 25%;
+    }
+}
+
+.s_facebook_preview {
+    height: 70px;
+
+    > iframe {
+        min-width: 180px;
+        width: 100%;
+    }
+}
+
 // DROPZONES
 @keyframes dropZoneInsert {
     to {
@@ -2094,7 +2149,10 @@ body.editor_enable.editor_has_snippets {
                     }
                 }
                 > .o_overlay_move_options > .o_move_handle {
-                    cursor: move;
+                    @include cursor_grab;
+                    &.oe_grabbing {
+                        @include cursor_grabbing;
+                    }
                     width: 30px;
                     height: 22px;
                     background-image: url('/web_editor/static/src/img/snippets_options/o_overlay_move_drag.svg');
@@ -2172,10 +2230,6 @@ body.editor_enable.editor_has_snippets {
 
 .w-resize-important * {
     cursor: w-resize !important;
-}
-
-.move-important * {
-    cursor: move !important;
 }
 
 .dropdown-menu label .o_switch {

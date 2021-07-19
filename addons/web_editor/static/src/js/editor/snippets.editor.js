@@ -130,6 +130,8 @@ var SnippetEditor = Widget.extend({
     xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
     events: {
         'click .oe_snippet_remove': '_onRemoveClick',
+        'mousedown .o_move_handle': '_onMouseDownHandle',
+        'mouseup .o_move_handle': '_onMouseUpHandle',
         'wheel': '_onMouseWheel',
     },
     custom_events: {
@@ -192,13 +194,29 @@ var SnippetEditor = Widget.extend({
             this.dropped = false;
             const smoothScrollOptions = this.options.getScrollOptions({
                 jQueryDraggableOptions: {
-                    cursorAt: {
-                        left: 10,
-                        top: 10
-                    },
                     handle: '.o_move_handle',
                     helper: () => {
-                        var $clone = this.$el.clone().css({width: '24px', height: '24px', border: 0});
+                        const getSnippetEditorThumbnail = (name) => {
+                            let snippet = document.querySelector(
+                                `#oe_snippets [data-snippet="${name}"]`
+                            );
+                            return snippet && snippet.parentNode;
+                        };
+                        // Try to get the thumbnail of the current element
+                        let template = getSnippetEditorThumbnail(this.$target.data('snippet'));
+                        /* If no template is found for the current element,
+                        create one using the Text Block image, whose title is
+                        then set to either the name of its customize block,
+                        or to a generic "Snippet" if not found */
+                        if (!template) {
+                            template = getSnippetEditorThumbnail('s_text_block').cloneNode(true);
+                            $(template).find('.oe_snippet_thumbnail_title').text(
+                                this.$optionsSection.find('we-title > span')[0].textContent
+                                || _t("Snippet")
+                            );
+                        }
+
+                        let $clone = $(template).clone();
                         $clone.appendTo(this.$body).removeClass('d-none');
                         return $clone;
                     },
@@ -211,6 +229,9 @@ var SnippetEditor = Widget.extend({
                         setTimeout(() => {
                             this._onDragAndDropStop(...args);
                         }, 0);
+                        /* If the snippet was dragged, dropping it won't trigger
+                        the mouseup event, so we need to clear the cursor style */
+                        $(this).removeClass('oe_grabbing');
                     },
                 },
             });
@@ -873,8 +894,6 @@ var SnippetEditor = Widget.extend({
             $selectorChildren: $selectorChildren,
         });
 
-        this.$body.addClass('move-important');
-
         this.$editable.find('.oe_drop_zone').droppable({
             over: function () {
                 if (self.dropped) {
@@ -944,7 +963,6 @@ var SnippetEditor = Widget.extend({
         var $from = $clone.parent();
 
         this.$el.removeClass('d-none');
-        this.$body.removeClass('move-important');
         $clone.remove();
 
         if (this.dropped) {
@@ -972,6 +990,25 @@ var SnippetEditor = Widget.extend({
         if (!samePositionAsStart) {
             this.options.wysiwyg.odooEditor.historyStep();
         }
+    },
+    /**
+     * Called when clicking on a snippet's move handle on the page,
+     * before releasing the click (mousedown).
+     * Changes the cursor style to grabbing to make drag and drop clearer.
+     *
+     * @private
+     */
+    _onMouseDownHandle: function (ev) {
+        $(ev.target).addClass('oe_grabbing');
+    },
+    /**
+     * Called when releasing a click on a snippet's move handle (mouseup).
+     * Resets the style applied by the mousedown event.
+     *
+     * @private
+     */
+    _onMouseUpHandle: function (ev) {
+        $(ev.target).removeClass('oe_grabbing');
     },
     /**
      * @private
@@ -1108,6 +1145,8 @@ var SnippetsMenu = Widget.extend({
         'click #snippet_custom .o_rename_btn': '_onRenameBtnClick',
         'click #snippet_custom .o_delete_btn': '_onDeleteBtnClick',
         'mousedown': '_onMouseDown',
+        'mousedown .oe_snippet': '_onMouseDownSnippet',
+        'mouseup .oe_snippet': '_onMouseUpSnippet',
         'input .o_snippet_search_filter_input': '_onSnippetSearchInput',
         'click .o_snippet_search_filter_reset': '_onSnippetSearchResetClick',
         'click .o_we_website_top_actions button[data-action=save]': '_onSaveRequest',
@@ -1557,8 +1596,10 @@ var SnippetsMenu = Widget.extend({
      * @param {jQuery} [$selectorChildren]
      *        elements which must have child drop zones between each of existing
      *        child
+     * @param {boolean} hidden
+     *        whether to hide drop zones or not, default false
      */
-    _activateInsertionZones: function ($selectorSiblings, $selectorChildren) {
+    _activateInsertionZones: function ($selectorSiblings, $selectorChildren, hidden = false) {
         var self = this;
 
         // If a modal is open, the drop zones must be created only in this modal
@@ -1635,12 +1676,18 @@ var SnippetsMenu = Widget.extend({
                 if (!$zone.children().last().is('.oe_drop_zone')) {
                     data = testPreviousSibling($zone[0].lastChild, $zone)
                         || setDropZoneDirection($zone, $zone, $children.last());
+                    if (hidden) {
+                        data.style.display = 'none';
+                    }
                     self._insertDropzone($('<we-hook/>').appendTo($zone), data.vertical, data.style);
                 }
 
                 if (!$zone.children().first().is('.oe_drop_clone')) {
                     data = testPreviousSibling($zone[0].firstChild, $zone)
                         || setDropZoneDirection($zone, $zone, $children.first());
+                    if (hidden) {
+                        data.style.display = 'none';
+                    }
                     self._insertDropzone($('<we-hook/>').prependTo($zone), data.vertical, data.style);
                 }
             });
@@ -1661,6 +1708,9 @@ var SnippetsMenu = Widget.extend({
                 }
                 if (!$zoneToCheck.prev('.oe_drop_zone:visible, .oe_drop_clone').length) {
                     data = setDropZoneDirection($zone, $zone.parent());
+                    if (hidden) {
+                        data.style.display = 'none';
+                    }
                     self._insertDropzone($('<we-hook/>').insertBefore($zone), data.vertical, data.style);
                 }
 
@@ -1670,6 +1720,9 @@ var SnippetsMenu = Widget.extend({
                 }
                 if (!$zoneToCheck.next('.oe_drop_zone:visible, .oe_drop_clone').length) {
                     data = setDropZoneDirection($zone, $zone.parent());
+                    if (hidden) {
+                        data.style.display = 'none';
+                    }
                     self._insertDropzone($('<we-hook/>').insertAfter($zone), data.vertical, data.style);
                 }
             });
@@ -2316,9 +2369,10 @@ var SnippetsMenu = Widget.extend({
                     );
                     return dragSnip;
                 },
-                start: function () {
+                start: function (ev) {
                     self.options.wysiwyg.odooEditor.automaticStepUnactive();
                     self.$el.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging');
+                    $(ev.target).addClass('o_we_child_is_moved');
 
                     dropped = false;
                     $snippet = $(this);
@@ -2355,7 +2409,23 @@ var SnippetsMenu = Widget.extend({
                         return;
                     }
 
-                    self._activateInsertionZones($selectorSiblings, $selectorChildren);
+                    let hidden = false;
+                    if ($snippet.attr('name').includes("Popup")) {
+                        hidden = true;
+                        self.$body.find('#wrapwrap').droppable({
+                            over: function () {
+                                $toInsert.addClass('oe_snippet_body');
+                                self.$body.find('#wrap').prepend($toInsert);
+                                $toInsert.find('.modal').modal('show');
+                                $toInsert.removeClass('oe_snippet_body');
+                            },
+                            out: function () {
+                                $toInsert.detach();
+                                $toInsert.addClass('oe_snippet_body');
+                            },
+                        });
+                    }
+                    self._activateInsertionZones($selectorSiblings, $selectorChildren, hidden);
 
                     self.getEditableArea().find('.oe_drop_zone').droppable({
                         over: function () {
@@ -2420,6 +2490,9 @@ var SnippetsMenu = Widget.extend({
                         }
                     }
 
+                    if ($snippet.attr("name").includes("Popup")) {
+                        self.$body.find('#wrapwrap').droppable('destroy');
+                    }
                     self.getEditableArea().find('.oe_drop_zone').droppable('destroy').remove();
 
                     if (dropped) {
@@ -2485,6 +2558,9 @@ var SnippetsMenu = Widget.extend({
                         dragAndDropResolve();
                         self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
                     }
+                    /* If the snippet was dragged, dropping it won't trigger
+                    the mouseup event, so we need to clear the cursor style */
+                    $('.o_we_child_is_moved').removeClass('o_we_child_is_moved oe_grabbing');
                 },
             },
         });
@@ -2931,6 +3007,28 @@ var SnippetsMenu = Widget.extend({
             clearTimeout(enableTimeoutID);
             reenable();
         });
+    },
+    /**
+     * Called when clicking on a snippet, before releasing the click (mousedown).
+     * Changes the cursor style to grabbing to make drag and drop clearer.
+     * We use jQuery .closest() here because the click won't actually be on the
+     * snippet, but either on the title or thumbnail.
+     *
+     * @private
+     */
+    _onMouseDownSnippet: function (ev) {
+        $(ev.target).closest('.oe_snippet.ui-draggable').addClass('oe_grabbing');
+    },
+    /**
+     * Called when releasing a click on a snippet (mouseup).
+     * Resets the style applied by the mousedown event.
+     * We use jQuery .closest() here because the click won't actually be on the
+     * snippet, but either on the title or thumbnail.
+     *
+     * @private
+     */
+    _onMouseUpSnippet: function (ev) {
+        $(ev.target).closest('.oe_snippet.ui-draggable').removeClass('oe_grabbing');
     },
     /**
      * @private

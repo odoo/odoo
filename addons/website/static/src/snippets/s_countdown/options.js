@@ -64,6 +64,10 @@ options.registry.countdown = options.Class.extend({
         this.$target[0].dataset.layout = widgetValue;
     },
 
+    onBuilt: function () {
+        this.$target.find('.s_preview').remove();
+    },
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------

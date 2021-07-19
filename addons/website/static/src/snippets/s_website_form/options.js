@@ -17,6 +17,10 @@ const FormEditor = options.Class.extend({
         '/google_recaptcha/static/src/xml/recaptcha.xml',
     ],
 
+    onBuilt: function () {
+        this.$target.find('.s_preview').remove();
+    },
+
     //----------------------------------------------------------------------
     // Private
     //----------------------------------------------------------------------
