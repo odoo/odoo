@@ -54,7 +54,7 @@
                     <field name="date_deadline"/>
                     <field name="date_last_stage_update"/>
                     <filter string="My Projects" name="own_projects" domain="[('project_id.user_id', '=', uid)]"/>
-                    <filter string="My Tasks" name="my_tasks" domain="[('task_id.user_id', '=', uid)]"/>
+                    <filter string="My Tasks" name="my_tasks" domain="[('task_id.user_ids', 'in', uid)]"/>
                     <separator/>
                     <filter string="Starred" name="starred" domain="[('task_id.priority', 'in', [0, 1])]"/>
                     <separator/>

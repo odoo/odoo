@@ -103,8 +103,8 @@
                                 <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> in stage:</em>
                                 <span class="text-truncate" t-field="tasks[0].sudo().stage_id.name"/></th>
                             <th t-if="groupby == 'user'">
-                                <em class="font-weight-normal text-muted" t-if="tasks[0].sudo().user_id"><span t-field="tasks[0].sudo().project_id.label_tasks"/> assigned to:</em>
-                                <span class="text-truncate" t-field="tasks[0].sudo().user_id.name"/></th>
+                                <em class="font-weight-normal text-muted" t-if="tasks[0].sudo().user_ids"><span t-field="tasks[0].sudo().project_id.label_tasks"/> assigned to:</em>
+                                <span class="text-truncate" t-esc="', '.join(tasks[0].sudo().mapped('user_ids.name'))"/></th>
                             <th t-if="groupby == 'customer'">
                                 <em class="font-weight-normal text-muted" t-if="tasks[0].sudo().partner_id"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for customer:</em>
                                 <span class="text-truncate" t-field="tasks[0].sudo().partner_id.name"/></th>
@@ -119,7 +119,7 @@
                                     #<span t-esc="task.id"/>
                                 </td>
                                 <td>
-                                    <a t-attf-href="/my/#{task_url}/#{task.id}?{{ keep_query() }}"><span t-field="task.name"/></a>
+                                    <a t-attf-href="/my/task/#{task.id}?{{ keep_query() }}"><span t-field="task.name"/></a>
                                 </td>
                                 <td t-if="groupby != 'project'" class="text-center">
                                     <span class="badge badge-pill badge-info" title="Current project of the task" t-esc="task.project_id.name" />
@@ -177,18 +177,20 @@
                     </div>
                 </t>
                 <t t-set="card_body">
-                    <div class="row" t-if="task.user_id or task.partner_id">
-                        <div class="col-12 col-md-6 pb-2" t-if="task.user_id">
+                    <div class="row" t-if="task.user_ids or task.partner_id">
+                        <div class="col-12 col-md-6 pb-2" t-if="task.user_ids">
                             <strong>Assigned to</strong>
                             <div class="row">
-                                <div class="col d-flex align-items-center flex-grow-0 pr-3">
-                                    <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(task.user_id.avatar_1024)" alt="Contact"/>
-                                </div>
-                                <div class="col pl-md-0">
-                                    <div t-field="task.user_id" t-options='{"widget": "contact", "fields": ["name"]}'/>
-                                    <a t-attf-href="mailto:{{task.user_id.email}}" t-if="task.user_id.email"><div t-field="task.user_id" t-options='{"widget": "contact", "fields": ["email"]}'/></a>
-                                    <a t-attf-href="tel:{{task.user_id.phone}}" t-if="task.user_id.phone"><div t-field="task.user_id" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
-                                </div>
+                                <t t-foreach="task.user_ids" t-as="user">
+                                    <div class="col d-flex align-items-center flex-grow-0 pr-3">
+                                        <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(user.avatar_1024)" alt="Contact"/>
+                                    </div>
+                                    <div class="col pl-md-0">
+                                        <div t-esc="user" t-options='{"widget": "contact", "fields": ["name"]}'/>
+                                        <a t-attf-href="mailto:{{user.email}}" t-if="user.email"><div t-esc="user" t-options='{"widget": "contact", "fields": ["email"]}'/></a>
+                                        <a t-attf-href="tel:{{user.phone}}" t-if="user.phone"><div t-esc="user" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
+                                    </div>
+                                </t>
                             </div>
                         </div>
                         <div class="coll-12 col-md-6 pb-2" t-if="task.partner_id">

@@ -89,7 +89,7 @@
                 '|',
                     ('message_partner_ids', 'in', [user.partner_id.id]),
                     # to subscribe check access to the record, follower is not enough at creation
-                    ('user_id', '=', user.id)
+                    ('user_ids', 'in', user.id)
         ]</field>
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
@@ -101,10 +101,52 @@
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
     </record>
 
+    <record model="ir.rule" id="task_type_manager_rule">
+        <field name="name">Project/Task Type: manager sees all</field>
+        <field name="model_id" ref="model_project_task_type"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record model="ir.rule" id="task_type_visibility_rule">
+        <field name="name">Project/Task Type: see own or unowned stages</field>
+        <field name="model_id" ref="model_project_task_type"/>
+        <field name="domain_force">[('user_id', 'in', (False, user.id))]</field>
+    </record>
+
+    <record model="ir.rule" id="task_type_own_write_rule">
+        <field name="name">Project/Task Type: write own stages</field>
+        <field name="model_id" ref="model_project_task_type"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
+    </record>
+
     <record model="ir.rule" id="report_project_task_user_report_comp_rule">
         <field name="name">Task Analysis multi-company</field>
         <field name="model_id" ref="model_report_project_task_user"/>
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_project_personal_stage_my" model="ir.rule">
+        <field name="name">Project: See my own personal stage</field>
+        <field name="model_id" ref="project.model_project_task_stage_personal"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+    </record>
+
+    <record id="ir_rule_private_task" model="ir.rule">
+        <field name="name">Project: See private tasks</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="domain_force">[
+            ('project_id.privacy_visibility', '!=', 'followers'),
+            '|', '|', ('project_id', '!=', False),
+                      ('parent_id', '!=', False),
+                 ('user_ids', 'in', user.id),
+        ]</field>
+        <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
     </record>
 
      <!-- Portal -->

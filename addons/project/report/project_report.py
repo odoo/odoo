@@ -55,7 +55,7 @@ class ReportProjectTaskUser(models.Model):
                     t.date_end as date_end,
                     t.date_last_stage_update as date_last_stage_update,
                     t.date_deadline as date_deadline,
-                    t.user_id,
+                    tu.user_id,
                     t.project_id,
                     t.priority,
                     t.name as name,
@@ -82,7 +82,7 @@ class ReportProjectTaskUser(models.Model):
                     t.date_end,
                     t.date_deadline,
                     t.date_last_stage_update,
-                    t.user_id,
+                    tu.user_id,
                     t.project_id,
                     t.priority,
                     t.name,
@@ -98,6 +98,7 @@ class ReportProjectTaskUser(models.Model):
             CREATE view %s as
               %s
               FROM project_task t
+              LEFT JOIN project_task_user_rel tu on t.id=tu.task_id
                 WHERE t.active = 'true'
                 %s
         """ % (self._table, self._select(), self._group_by()))

@@ -59,7 +59,7 @@ WITH all_moves_stage_task AS (
            COALESCE(LAG(mm.date) OVER (PARTITION BY mm.res_id ORDER BY mm.id), pt.create_date) as date_begin,
            mm.date as date_end,
            mtv.old_value_integer as stage_id,
-           pt.user_id,
+           usr_rel.user_id,
            pt.date_assign,
            pt.date_deadline,
            pt.partner_id
@@ -71,6 +71,7 @@ WITH all_moves_stage_task AS (
       JOIN ir_model_fields imf ON mtv.field = imf.id
                               AND imf.model = 'project.task'
                               AND imf.name = 'stage_id'
+      JOIN project_task_user_rel usr_rel ON pt.id=usr_rel.task_id
      WHERE pt.active
 
     --We compute the last reached stage
@@ -82,7 +83,7 @@ WITH all_moves_stage_task AS (
            COALESCE(md.date, pt.create_date) as date_begin,
            (CURRENT_DATE + interval '1 month')::date as date_end,
            pt.stage_id,
-           pt.user_id,
+           usr_rel.user_id,
            pt.date_assign,
            pt.date_deadline,
            pt.partner_id
@@ -98,6 +99,7 @@ WITH all_moves_stage_task AS (
                        AND mm.model = 'project.task'
                   ORDER BY mm.id DESC
                      FETCH FIRST ROW ONLY) md ON TRUE
+      JOIN project_task_user_rel usr_rel ON pt.id=usr_rel.task_id
      WHERE pt.active
 )
 SELECT (task_id*10^7 + 10^6 + to_char(d, 'YYMMDD')::integer)::bigint as id,

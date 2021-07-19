@@ -29,7 +29,7 @@
         <!-- Project Task -->
         <record id="project_task_internal" model="project.task">
             <field name="name">Internal training</field>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
         </record>
@@ -167,7 +167,7 @@
         <!-- Assign sale order's task to admin -->
         <function model="project.task" name="write">
             <value model="project.task" eval="obj().search([('sale_line_id', '=', ref('sale_line_13'))]).ids"/>
-            <value eval="{'user_id': ref('base.user_admin')}"/>
+            <value eval="{'user_ids': [(4, ref('base.user_admin'))]}"/>
         </function>
 
         <!-- Timesheets on sale_order_1 -->
@@ -482,7 +482,7 @@
             <field name="sale_line_id" ref="sale_timesheet.sale_line_13" />
             <field name="sale_order_id" ref="sale_timesheet.sale_order_1" />
             <field name="partner_id" ref="base.res_partner_2" />
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
         </record>
 
         <!-- Timesheet for those tasks -->

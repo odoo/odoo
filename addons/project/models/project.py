@@ -43,7 +43,7 @@ PROJECT_TASK_WRITABLE_FIELDS = {
     'name',
     'partner_id',
     'partner_email',
-    'user_id',
+    'user_ids',
     'date_deadline',
     'tag_ids',
     'sequence',
@@ -52,7 +52,6 @@ PROJECT_TASK_WRITABLE_FIELDS = {
     'child_ids',
     'parent_id',
 }
-
 
 class ProjectTaskType(models.Model):
     _name = 'project.task.type'
@@ -96,6 +95,8 @@ class ProjectTaskType(models.Model):
             " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n")
     is_closed = fields.Boolean('Closing Stage', help="Tasks in this stage are considered as closed.")
     disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning')
+
+    user_id = fields.Many2one('res.users', 'Stage Owner', index=True)
 
     def unlink_wizard(self, stage_view=False):
         self = self.with_context(active_test=False)
@@ -846,6 +847,10 @@ class Task(models.Model):
         stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
 
+    @api.model
+    def _read_group_personal_stage_type_ids(self, stages, domain, order):
+        return stages.search(['|', ('id', 'in', stages.ids), ('user_id', '=', self.env.user.id)])
+
     active = fields.Boolean(default=True)
     name = fields.Char(string='Title', tracking=True, required=True, index=True)
     description = fields.Html(string='Description')
@@ -886,10 +891,24 @@ class Task(models.Model):
     planned_hours = fields.Float("Initially Planned Hours", help='Time planned to achieve this task (including its sub-tasks).', tracking=True)
     subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours',
         help="Sum of the time planned of all the sub-tasks linked to this task. Usually less than or equal to the initially planned time of this task.")
-    user_id = fields.Many2one('res.users',
-        string='Assigned to',
-        default=lambda self: self.env.uid,
-        index=True, tracking=True)
+    # Tracking of this field is done in the write function
+    user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
+        string='Assignees', default=lambda self: self.env.user)
+    # Second Many2many containing the actual personal stage for the current user
+    # See project_task_stage_personal.py for the model defininition
+    personal_stage_type_ids = fields.Many2many('project.task.type', 'project_task_user_rel', column1='task_id', column2='stage_id',
+        ondelete='restrict', group_expand='_read_group_personal_stage_type_ids',
+        domain="[('user_id', '=', user.id)]", depends=['user_ids'], string='Personal Stage')
+    # Personal Stage computed from the user
+    personal_stage_id = fields.Many2one('project.task.stage.personal', string='Personal Stage State', compute_sudo=False,
+        compute='_compute_personal_stage_id', help="The current user's personal stage.")
+    # This field is actually a related field on personal_stage_id.stage_id
+    # However due to the fact that personal_stage_id is computed, the orm throws out errors
+    # saying the field cannot be searched.
+    personal_stage_type_id = fields.Many2one('project.task.type', string='Personal User Stage',
+        compute='_compute_personal_stage_type_id', inverse='_inverse_personal_stage_type_id', store=False,
+        search='_search_personal_stage_type_id',
+        help="The current user's personal task stage.")
     partner_id = fields.Many2one('res.partner',
         string='Customer',
         compute='_compute_partner_id', recursive=True, store=True, readonly=False, tracking=True,
@@ -908,7 +927,6 @@ class Task(models.Model):
         'res.company', string='Company', compute='_compute_company_id', store=True, readonly=False,
         required=True, copy=True, default=_default_company_id)
     color = fields.Integer(string='Color Index')
-    user_email = fields.Char(related='user_id.email', string='User Email', readonly=True, related_sudo=False)
     attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",
         help="Attachments that don't come from a message.")
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
@@ -932,9 +950,11 @@ class Task(models.Model):
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working Days to Close', store=True, group_operator="avg")
     # customer portal: include comment and incoming emails in communication history
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
+    is_private = fields.Boolean(compute='_compute_is_private')
 
     # Task Dependencies fields
     allow_task_dependencies = fields.Boolean(related='project_id.allow_task_dependencies')
+    # Tracking of this field is done in the write function
     depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id", column2="depends_on_id", string="Blocked By", domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
 
     # recurrence fields
@@ -1027,6 +1047,64 @@ class Task(models.Model):
     @property
     def SELF_WRITABLE_FIELDS(self):
         return PROJECT_TASK_WRITABLE_FIELDS
+
+    @api.depends('project_id', 'parent_id')
+    def _compute_is_private(self):
+        # Modify accordingly, this field is used to display the lock on the task's kanban card
+        for task in self:
+            task.is_private = not task.project_id and not task.parent_id
+
+    @api.depends_context('uid')
+    @api.depends('user_ids')
+    def _compute_personal_stage_id(self):
+        # An user may only access his own 'personal stage' and there can only be one pair (user, task_id)
+        personal_stages = self.env['project.task.stage.personal'].search([('user_id', '=', self.env.uid), ('task_id', 'in', self.ids)])
+        self.personal_stage_id = False
+        for personal_stage in personal_stages:
+            personal_stage.task_id.personal_stage_id = personal_stage
+
+    @api.depends('personal_stage_id')
+    def _compute_personal_stage_type_id(self):
+        for task in self:
+            task.personal_stage_type_id = task.personal_stage_id.stage_id
+
+    def _inverse_personal_stage_type_id(self):
+        for task in self:
+            task.personal_stage_id.stage_id = task.personal_stage_type_id
+
+    @api.model
+    def _search_personal_stage_type_id(self, operator, value):
+        return [('personal_stage_type_ids', operator, value)]
+
+    @api.model
+    def _get_default_personal_stage_create_vals(self, user_id):
+        return [
+            {'sequence': 1, 'name': _('Inbox'), 'user_id': user_id, 'fold': False},
+            {'sequence': 2, 'name': _('Today'), 'user_id': user_id, 'fold': False},
+            {'sequence': 3, 'name': _('This Week'), 'user_id': user_id, 'fold': False},
+            {'sequence': 4, 'name': _('This Month'), 'user_id': user_id, 'fold': False},
+            {'sequence': 5, 'name': _('Later'), 'user_id': user_id, 'fold': False},
+            {'sequence': 6, 'name': _('Done'), 'user_id': user_id, 'fold': True},
+            {'sequence': 7, 'name': _('Canceled'), 'user_id': user_id, 'fold': True},
+        ]
+
+    def _populate_missing_personal_stages(self):
+        # Assign the default personal stage for those that are missing
+        personal_stages_without_stage = self.env['project.task.stage.personal'].sudo().search([('task_id', 'in', self.ids), ('stage_id', '=', False)])
+        if personal_stages_without_stage:
+            user_ids = personal_stages_without_stage.user_id
+            personal_stage_by_user = defaultdict(lambda: self.env['project.task.stage.personal'])
+            for personal_stage in personal_stages_without_stage:
+                personal_stage_by_user[personal_stage.user_id] |= personal_stage
+            for user_id in user_ids:
+                stage = self.env['project.task.type'].sudo().search([('user_id', '=', user_id.id)], limit=1)
+                # In the case no stages have been found, we create the default stages for the user
+                if not stage:
+                    stages = self.env['project.task.type'].sudo().with_context(lang=user_id.partner_id.lang, default_project_id=False).create(
+                        self._get_default_personal_stage_create_vals(user_id.id)
+                    )
+                    stage = stages[0]
+                personal_stage_by_user[user_id].sudo().write({'stage_id': stage.id})
 
     @api.constrains('depend_on_ids')
     def _check_no_cyclic_dependencies(self):
@@ -1449,8 +1527,8 @@ class Task(models.Model):
                         default_project_id=project_id
                     ).default_get(['stage_id']).get('stage_id')
                 vals["stage_id"] = default_stage[project_id]
-            # user_id change: update date_assign
-            if vals.get('user_id'):
+            # user_ids change: update date_assign
+            if vals.get('user_ids'):
                 vals['date_assign'] = fields.Datetime.now()
             # Stage change: Update date_end if folded stage and date_last_stage_update
             if vals.get('stage_id'):
@@ -1475,6 +1553,7 @@ class Task(models.Model):
             }
             self = self.with_context(ctx).sudo()
         tasks = super(Task, self).create(vals_list)
+        tasks._populate_missing_personal_stages()
         if is_portal_user:
             # since we use sudo to create tasks, we need to check
             # if the portal user could really create the tasks based on the ir rule.
@@ -1506,8 +1585,8 @@ class Task(models.Model):
             # reset kanban state when changing stage
             if 'kanban_state' not in vals:
                 vals['kanban_state'] = 'normal'
-        # user_id change: update date_assign
-        if vals.get('user_id') and 'date_assign' not in vals:
+        # user_ids change: update date_assign
+        if vals.get('user_ids') and 'date_assign' not in vals:
             vals['date_assign'] = now
 
         # recurrence fields
@@ -1542,7 +1621,45 @@ class Task(models.Model):
         if portal_can_write:
             tasks = tasks.sudo()
 
+        # X2Many Field Tracking
+        # Extract to a separate function if necessary
+        x2m_tracked_fields = {'user_ids', 'depend_on_ids'}
+        x2m_vals_common_fields = vals.keys() & x2m_tracked_fields
+        x2m_tracking_values = dict()
+        # Structured like so
+        # {
+        #     task: {
+        #         field_name: (value, display_value)
+        #     }
+        # }
+        if not self._context.get('mail_notrack') and x2m_vals_common_fields:
+            # Compute the value before the changes
+            for task in self:
+                task_values = x2m_tracking_values.setdefault(task, {})
+                for field in x2m_vals_common_fields:
+                    task_values[field] = (task[field], ', '.join(record.display_name for record in task[field]))
+
         result = super(Task, tasks).write(vals)
+        if x2m_tracking_values:
+            for task, tracking_values in x2m_tracking_values.items():
+                # Compile the different changes
+                MailTracking = self.env['mail.tracking.value']
+                tracking_value_ids = []
+                # Use mail.tracking.value to track our changes, this is to use the same format as the default tracking one
+                #  we just hack the record to think it is a text field and compile the data ourself beforehand
+                for field in tracking_values:
+                    if task[field] != tracking_values[field][0]:
+                        field_desc = task._fields[field]._description_string(self.env)
+                        old_value = tracking_values[field][1]
+                        new_value = ', '.join(record.display_name for record in task[field])
+                        tracking_value_ids.append((0, 0, MailTracking.create_tracking_values(
+                            old_value, new_value, field, {'type': 'char', 'string': field_desc}, 100, self._name)))
+                if tracking_value_ids:
+                    task._message_log(tracking_value_ids=tracking_value_ids)
+
+        if 'user_ids' in vals:
+            tasks._populate_missing_personal_stages()
+
         # rating on stage
         if 'stage_id' in vals and vals.get('stage_id'):
             self.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
@@ -1567,11 +1684,6 @@ class Task(models.Model):
     # ---------------------------------------------------
     # Subtasks
     # ---------------------------------------------------
-
-    @api.depends('parent_id.user_id')
-    def _compute_user_id(self):
-        for task in self:
-            task.user_id = task.user_id or task.parent_id.user_id or self.env.uid
 
     @api.depends('parent_id', 'project_id', 'display_project_id')
     def _compute_partner_id(self):
@@ -1673,7 +1785,7 @@ class Task(models.Model):
 
         project_user_group_id = self.env.ref('project.group_project_user').id
         new_group = ('group_project_user', lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'], {})
-        if not self.user_id and not self.stage_id.fold:
+        if not self.user_ids and not self.stage_id.fold:
             take_action = self._notify_get_action_link('assign', **local_msg_vals)
             project_actions = [{'url': take_action, 'title': _('I take it')}]
             new_group[2]['actions'] = project_actions
@@ -1720,7 +1832,7 @@ class Task(models.Model):
         # want the gateway user to be responsible if no other responsible is
         # found.
         create_context = dict(self.env.context or {})
-        create_context['default_user_id'] = False
+        create_context['default_user_ids'] = False
         if custom_values is None:
             custom_values = {}
         defaults = {
@@ -1783,7 +1895,7 @@ class Task(models.Model):
         return super(Task, self)._message_post_after_hook(message, msg_vals)
 
     def action_assign_to_me(self):
-        self.write({'user_id': self.env.user.id})
+        self.write({'user_ids': [(4, self.env.user.id)]})
 
     # If depth == 1, return only direct children
     # If depth == 3, return children to third generation

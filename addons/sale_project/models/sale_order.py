@@ -259,7 +259,7 @@ class SaleOrderLine(models.Model):
             'sale_line_id': self.id,
             'sale_order_id': self.order_id.id,
             'company_id': project.company_id.id,
-            'user_id': False,  # force non assigned task, as created as sudo()
+            'user_ids': False,  # force non assigned task, as created as sudo()
         }
 
     def _timesheet_create_task(self, project):
