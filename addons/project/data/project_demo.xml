@@ -88,10 +88,88 @@
             <field name="stage_id" ref="project.project_project_stage_2"/>
         </record>
 
+        <!-- Personal Stages: Mitchell Admin-->
+        <record id="project_personal_stage_admin_0" model="project.task.type">
+            <field name="sequence">1</field>
+            <field name="name">Inbox</field>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="project_personal_stage_admin_1" model="project.task.type">
+            <field name="sequence">2</field>
+            <field name="name">Today</field>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="project_personal_stage_admin_2" model="project.task.type">
+            <field name="sequence">3</field>
+            <field name="name">This Week</field>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="project_personal_stage_admin_3" model="project.task.type">
+            <field name="sequence">4</field>
+            <field name="name">This Month</field>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="project_personal_stage_admin_4" model="project.task.type">
+            <field name="sequence">5</field>
+            <field name="name">Later</field>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="project_personal_stage_admin_5" model="project.task.type">
+            <field name="sequence">6</field>
+            <field name="name">Done</field>
+            <field name="fold" eval="True"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="project_personal_stage_admin_6" model="project.task.type">
+            <field name="sequence">7</field>
+            <field name="name">Canceled</field>
+            <field name="fold" eval="True"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
+        <!-- Personal Stages: Marc Demo -->
+        <record id="project_personal_stage_demo_0" model="project.task.type">
+            <field name="sequence">1</field>
+            <field name="name">Inbox</field>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="project_personal_stage_demo_1" model="project.task.type">
+            <field name="sequence">2</field>
+            <field name="name">Today</field>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="project_personal_stage_demo_2" model="project.task.type">
+            <field name="sequence">3</field>
+            <field name="name">This Week</field>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="project_personal_stage_demo_3" model="project.task.type">
+            <field name="sequence">4</field>
+            <field name="name">This Month</field>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="project_personal_stage_demo_4" model="project.task.type">
+            <field name="sequence">5</field>
+            <field name="name">Later</field>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="project_personal_stage_demo_5" model="project.task.type">
+            <field name="sequence">6</field>
+            <field name="name">Done</field>
+            <field name="fold" eval="True"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="project_personal_stage_demo_6" model="project.task.type">
+            <field name="sequence">7</field>
+            <field name="name">Canceled</field>
+            <field name="fold" eval="True"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+
         <!-- Tasks -->
         <record id="project_task_1" model="project.task">
             <field name="planned_hours" eval="40.0"/>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="user_ids" eval="[(4, ref('base.user_demo'))]"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Meeting Room Furnitures</field>
@@ -101,7 +179,7 @@
         </record>
         <record id="project_task_2" model="project.task">
             <field name="planned_hours" eval="32.0"/>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="user_ids" eval="[(4, ref('base.user_demo'))]"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Lunch Room: kitchen</field>
@@ -147,7 +225,7 @@
 
         <record id="project_task_3" model="project.task">
             <field name="planned_hours" eval="10.0"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Noise Reduction</field>
@@ -195,7 +273,7 @@
 
         <record id="project_task_4" model="project.task">
             <field name="planned_hours" eval="60.0"/>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="user_ids" eval="[(4, ref('base.user_demo'))]"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Black Chairs for managers</field>
@@ -228,7 +306,7 @@
 
         <record id="project_task_5" model="project.task">
             <field name="planned_hours" eval="76.0"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Room 1: Decoration</field>
@@ -261,7 +339,7 @@
 
         <record id="project_task_6" model="project.task">
             <field name="planned_hours" eval="24.0"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Room 2: Decoration</field>
@@ -289,7 +367,7 @@
 
         <record id="project_task_7" model="project.task">
             <field name="planned_hours" eval="15.0"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Energy Certificate</field>
@@ -317,7 +395,7 @@
 
         <record id="project_task_8" model="project.task">
             <field name="planned_hours" eval="22.0"/>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="user_ids" eval="[(4, ref('base.user_demo'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">New portal system</field>
@@ -366,7 +444,7 @@
 
         <record id="project_task_9" model="project.task">
             <field name="planned_hours" eval="18.0"/>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="user_ids" eval="[(4, ref('base.user_demo'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">Document management</field>
@@ -375,7 +453,7 @@
         </record>
         <record id="project_task_10" model="project.task">
             <field name="planned_hours" eval="38.0"/>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="user_ids" eval="[(4, ref('base.user_demo'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">Social network integration</field>
@@ -404,7 +482,7 @@
 
         <record id="project_task_11" model="project.task">
             <field name="planned_hours" eval="16.0"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">User interface improvements</field>
@@ -435,7 +513,7 @@
 
         <record id="project_task_12" model="project.task">
             <field name="planned_hours" eval="40.0"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">Planning and budget</field>
@@ -447,7 +525,7 @@
         <record id="project_task_19" model="project.task">
             <field name="planned_hours">24.0</field>
             <field name="stage_id" ref="project_stage_3"/>
-            <field name="user_id" eval="False"/>
+            <field name="user_ids" eval="False"/>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">Basic outline</field>
             <field name="tag_ids" eval="[(6, 0, [
@@ -493,7 +571,7 @@
 
         <record id="project_task_20" model="project.task">
             <field name="planned_hours">42.0</field>
-            <field name="user_id" eval="False"/>
+            <field name="user_ids" eval="False"/>
             <field name="stage_id" ref="project_stage_0"/>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">Create new components</field>
@@ -502,7 +580,7 @@
 
         <record id="project_task_21" model="project.task">
             <field name="planned_hours">14.0</field>
-            <field name="user_id" eval="False"/>
+            <field name="user_ids" eval="False"/>
             <field name="stage_id" ref="project_stage_1"/>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">Useablity review</field>
@@ -532,7 +610,7 @@
         <record id="project_task_22" model="project.task">
             <field name="planned_hours">12.0</field>
             <field name="stage_id" ref="project_stage_1"/>
-            <field name="user_id" eval="False"/>
+            <field name="user_ids" eval="False"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">Customer analysis + Architecture</field>
@@ -562,7 +640,7 @@
             <field name="sequence">17</field>
             <field name="planned_hours">8.0</field>
             <field name="stage_id" ref="project_stage_2"/>
-            <field name="user_id" eval="False"/>
+            <field name="user_ids" eval="False"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Modifications asked by the customer</field>
@@ -610,7 +688,7 @@
         <record id="project_task_25" model="project.task">
             <field name="sequence">20</field>
             <field name="planned_hours">20.0</field>
-            <field name="user_id" eval="False"/>
+            <field name="user_ids" eval="False"/>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Office planning</field>
             <field name="stage_id" ref="project_stage_0"/>
@@ -620,7 +698,7 @@
         <record id="project_task_26" model="project.task">
             <field name="sequence">20</field>
             <field name="planned_hours">35.0</field>
-            <field name="user_id" eval="False"/>
+            <field name="user_ids" eval="False"/>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">Unit Testing</field>
             <field name="stage_id" ref="project_stage_2"/>
@@ -665,7 +743,7 @@
 
         <record id="project_task_30" model="project.task">
             <field name="planned_hours" eval="40.0"/>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="user_ids" eval="[(4, ref('base.user_demo'))]"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_3"/>
             <field name="name">Entry Hall</field>
@@ -674,7 +752,7 @@
         </record>
         <record id="project_task_31" model="project.task">
             <field name="planned_hours" eval="10.0"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_3"/>
             <field name="name">Check Lift</field>
@@ -684,7 +762,7 @@
         </record>
         <record id="project_task_32" model="project.task">
             <field name="planned_hours" eval="24.0"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_3"/>
             <field name="name">Room 1: Paint</field>
@@ -696,7 +774,7 @@
         </record>
         <record id="project_task_33" model="project.task">
             <field name="planned_hours" eval="76.0"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_3"/>
             <field name="name">Bathroom</field>

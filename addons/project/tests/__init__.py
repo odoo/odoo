@@ -14,4 +14,5 @@ from . import test_project_update_flow
 from . import test_project_update_ui
 from . import test_portal
 from . import test_multicompany
+from . import test_personal_stages
 from . import test_task_dependencies

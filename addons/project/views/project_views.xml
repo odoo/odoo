@@ -18,14 +18,13 @@
                <search string="Tasks">
                     <field name="name" string="Task"/>
                     <field name="tag_ids"/>
-                    <field name="user_id"/>
+                    <field name="user_ids"/>
                     <field string="Project" name="display_project_id"/>
                     <field name="stage_id"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="parent_id"/>
-                    <filter string="My Tasks" name="my_tasks" domain="[('user_id', '=', uid)]"/>
-                    <filter string="Followed Tasks" name="my_followed_tasks" domain="[('message_is_follower', '=', True)]" />
-                    <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
+                    <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
                     <separator/>
                     <filter string="Starred" name="starred" domain="[('priority', 'in', [0, 1])]"/>
                     <separator/>
@@ -46,7 +45,8 @@
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
-                        <filter string="Assigned to" name="user" context="{'group_by': 'user_id'}"/>
+                        <filter string="Personal Stage" name="personal_stage" context="{'group_by': 'personal_stage_type_ids'}"/>
+                        <filter string="Assigned to" name="user" context="{'group_by': 'user_ids'}"/>
                         <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
                         <filter string="Customer" name="customer" context="{'group_by': 'partner_id'}"/>
                         <filter string="Kanban State" name="kanban_state" context="{'group_by': 'kanban_state'}"/>
@@ -78,7 +78,7 @@
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
             <field name="domain">[('display_project_id', '=', active_id)]</field>
             <field name="context">{
-                'pivot_row_groupby': ['user_id'],
+                'pivot_row_groupby': ['user_ids'],
                 'default_project_id': active_id,
                 'show_project_update': True,
             }</field>
@@ -184,6 +184,7 @@
                     <field name="rating_template_id" optional="hide" groups="project.group_project_rating"/>
                     <field name="project_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color'}" />
                     <field name="fold" optional="show"/>
+                    <field name="user_id" optional="show"/>
                 </tree>
             </field>
         </record>
@@ -783,7 +784,7 @@
                     <field name="allow_task_dependencies" invisible="1" />
                     <header>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
-                            attrs="{'invisible' : [('user_id', '!=', False)]}" data-hotkey="q"/>
+                            attrs="{'invisible' : [('user_ids', '!=', False)]}" data-hotkey="q"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}"/>
                     </header>
                     <div class="alert alert-info oe_edit_only mb-0" role="status" attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_id', '=', False)]}">
@@ -816,12 +817,18 @@
                     </div>
                     <group>
                         <group>
-                            <field name="project_id" attrs="{'required': [('parent_id', '=', False)], 'invisible': [('parent_id', '!=', False)]}" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
+                            <label for="project_id" class="oe_read_only"/>
+                            <div colspan="1" class="oe_read_only">
+                                <i class="o_project_task_project_field text-danger" attrs="{'invisible': [('project_id', '!=', False)]}">Private</i>
+                                <field name="project_id" attrs="{'invisible': [('project_id', '=', False)]}" nolabel="1"/>
+                            </div>
+                            <field name="project_id" attrs="{'invisible': [('parent_id', '!=', False)]}" domain="[('active', '=', True), ('company_id', '=', company_id)]"
+                                placeholder="Private" class="o_project_task_project_field oe_edit_only"/>
                             <field name="display_project_id" string="Project" attrs="{'invisible': [('parent_id', '=', False)]}" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
-                            <field name="user_id"
+                            <field name="user_ids"
                                 class="o_task_user_field"
                                 options="{'no_open': True}"
-                                widget="many2one_avatar_user"
+                                widget="many2many_avatar_user"
                                 domain="[('share', '=', False)]"/>
                             <field name="parent_id"
                                 domain="[('parent_id', '=', False)]"
@@ -846,7 +853,7 @@
                             <field name="description" type="html"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
-                            <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_id': user_id, 'default_parent_id': id, 'default_partner_id': partner_id}">
+                            <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id, 'default_partner_id': partner_id}">
                                 <tree editable="bottom">
                                     <field name="project_id" invisible="1"/>
                                     <field name="is_closed" invisible="1"/>
@@ -854,7 +861,7 @@
                                     <field name="name"/>
                                     <field name="display_project_id" string="Project" optional="hide"/>
                                     <field name="partner_id" optional="hide"/>
-                                    <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                                    <field name="user_ids" widget="many2many_avatar_user" optional="show"/>
                                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                                     <field name="activity_ids" widget="list_activity" optional="hide"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show"/>
@@ -871,7 +878,7 @@
                                     <field name="is_closed" invisible="1" />
                                     <field name="name" />
                                     <field name="project_id" optional="hide" />
-                                    <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                                    <field name="user_ids" widget="many2many_avatar_user" optional="show"/>
                                     <field name="company_id" optional="hide" groups="base.group_multi_company" />
                                     <field name="activity_ids" widget="list_activity" optional="hide"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show" />
@@ -980,7 +987,8 @@
                 <form>
                     <group>
                         <field name="name" string = "Task Title" placeholder="e.g. New Design"/>
-                        <field name="user_id" options="{'no_open': True,'no_create': True}" domain="[('share', '=', False)]"/>
+                        <field name="user_ids" options="{'no_open': True,'no_create': True}" domain="[('share', '=', False)]"
+                            widget="many2many_tags"/>
                         <field name="company_id" invisible="1"/>
                         <field name="parent_id" invisible="1" groups="base.group_no_one"/>
                     </group>
@@ -993,11 +1001,12 @@
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create" quick_create_view="project.quick_create_task_form" examples="project" js_class="project_task_kanban" sample="1">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create"
+                    quick_create_view="project.quick_create_task_form" examples="project" js_class="project_task_kanban" sample="1">
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
-                    <field name="user_id"/>
+                    <field name="user_ids"/>
                     <field name="partner_id"/>
                     <field name="sequence"/>
                     <field name="is_closed"/>
@@ -1013,6 +1022,7 @@
                     <field name="rating_ids"/>
                     <field name="allow_subtasks"/>
                     <field name="child_text"/>
+                    <field name="is_private"/>
                     <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "muted"}'/>
                     <templates>
                     <t t-name="kanban-box">
@@ -1024,7 +1034,13 @@
                                             <s t-if="!record.active.raw_value"><field name="name" widget="name_with_subtask_count"/></s>
                                             <t t-else=""><field name="name" widget="name_with_subtask_count"/></t>
                                         </strong>
-                                        <span invisible="context.get('default_project_id', False)"><br/><field name="project_id" required="1"/></span>
+                                        <t t-if="!record.is_private.raw_value">
+                                            <span invisible="context.get('default_project_id', False)"><br/><field name="project_id" required="1"/></span>
+                                        </t>
+                                        <t t-else="">
+                                            <br/>
+                                            <span class="fa fa-lock text-muted"/><span class="text-muted"> Private</span>
+                                        </t> 
                                         <br />
                                         <t t-if="record.partner_id.value">
                                             <span t-if="!record.partner_is_company.raw_value">
@@ -1070,7 +1086,7 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
                                         <field name="kanban_state" widget="state_selection" groups="base.group_user" invisible="context.get('fsm_mode', False)"/>
-                                        <t t-if="record.user_id.raw_value"><field name="user_id" widget="many2one_avatar_user"/></t>
+                                        <t t-if="record.user_ids.raw_value"><field name="user_ids" widget="many2many_avatar_user"/></t>
                                     </div>
                                 </div>
                             </div>
@@ -1098,7 +1114,7 @@
                     <field name="project_id" optional="show" readonly="1"/>
                     <field name="partner_id" optional="hide"/>
                     <field name="parent_id" optional="hide" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
-                    <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                    <field name="user_ids" optional="show" widget="many2many_avatar_user"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
@@ -1131,10 +1147,10 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="date_deadline" string="Tasks" mode="month" color="user_id" event_limit="5"
+                <calendar date_start="date_deadline" string="Tasks" mode="month" color="user_ids" event_limit="5"
                           hide_time="true" js_class="project_calendar" event_open_popup="true" quick_add="false">
-                    <field name="project_id"/>
-                    <field name="user_id" avatar_field="avatar_128" filters="1"/>
+                    <field name="project_id" filters="1"/>
+                    <field name="user_ids" widget="many2many_avatar_user"/>
                     <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                     <field name="priority" widget="priority"/>
                     <field name="date_deadline"/>
@@ -1181,10 +1197,10 @@
             <field name="model">project.task</field>
             <field name="arch" type="xml">
                 <activity string="Project Tasks" js_class="project_activity">
-                    <field name="user_id"/>
+                    <field name="user_ids"/>
                     <templates>
                         <div t-name="activity-box">
-                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="user_ids" widget="many2many_avatar_user"/>
                             <div>
                                 <field name="name" display="full"/>
                                 <field name="project_id" muted="1" display="full" invisible="context.get('default_project_id', False)"/>
@@ -1213,10 +1229,10 @@
         </record>
 
         <record id="action_view_all_task" model="ir.actions.act_window">
-            <field name="name">Tasks</field>
+            <field name="name">My Tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
-            <field name="context">{'search_default_my_tasks': 1, 'all_task': 0}</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
+            <field name="context">{'search_default_my_tasks': 1, 'search_default_personal_stage': 1, 'all_task': 0}</field>
             <field name="search_view_id" ref="view_task_search_form_extended"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -1239,7 +1255,7 @@
             <field name="act_window_id" ref="action_view_task"/>
         </record>
 
-        <menuitem name="Tasks" id="menu_project_management" parent="menu_main_pm"
+        <menuitem name="My Tasks" id="menu_project_management" parent="menu_main_pm"
             action="action_view_all_task" sequence="2" groups="base.group_no_one,group_project_user"/>
 
         <record id="project_task_action_from_partner" model="ir.actions.act_window">
@@ -1283,7 +1299,7 @@
             <field name="name">Assigned Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="context">{'search_default_user_id': [active_id], 'default_user_id': active_id}</field>
+            <field name="context">{'search_default_user_ids': [active_id], 'default_user_ids': active_id}</field>
             <field name="domain">[('display_project_id', '!=', False)]</field>
             <field name="binding_model_id" ref="base.model_res_users"/>
             <field name="binding_view_types">form</field>
