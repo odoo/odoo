@@ -406,7 +406,8 @@ class Survey(http.Controller):
                 errors.update(question.validate_question(post, answer_tag))
 
         ret = {}
-        if len(errors):
+        go_back = post.get('button_submit', False) == 'previous'
+        if len(errors) and not go_back:
             # Return errors messages to webpage
             ret['errors'] = errors
         else:
@@ -415,12 +416,10 @@ class Survey(http.Controller):
                     answer_tag = "%s_%s" % (survey_sudo.id, question.id)
                     request.env['survey.user_input_line'].sudo().save_lines(answer_sudo.id, question, post, answer_tag)
 
-            go_back = False
             vals = {}
             if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
                 answer_sudo._mark_done()
             elif 'button_submit' in post:
-                go_back = post['button_submit'] == 'previous'
                 next_page, last = request.env['survey.survey'].next_page_or_question(answer_sudo, page_or_question_id, go_back=go_back)
                 vals = {'last_displayed_page_id': page_or_question_id}
 
