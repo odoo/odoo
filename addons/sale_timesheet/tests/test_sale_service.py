@@ -246,7 +246,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.assertTrue(so_line1.project_id, "SO confirmation should create a project and link it to SOL")
         self.assertEqual(self.sale_order.tasks_count, 1, "The SO should have only one task")
         self.assertEqual(so_line1.task_id.sale_line_id, so_line1, "The created task is also linked to its origin sale line, for invoicing purpose.")
-        self.assertFalse(so_line1.task_id.user_id, "The created task should be unassigned")
+        self.assertFalse(so_line1.task_id.user_ids, "The created task should be unassigned")
         self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.planned_hours, "The planned hours should be the same as the ordered quantity of the native SO line")
 
         so_line1.write({'product_uom_qty': 20})

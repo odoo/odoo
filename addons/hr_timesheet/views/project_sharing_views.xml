@@ -147,7 +147,7 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.project_sharing_project_task_view_tree" />
         <field name="arch" type="xml">
-            <field name="user_id" position="after">
+            <field name="user_ids" position="after">
                 <field name="allow_subtasks" invisible="1"/>
                 <field name="allow_timesheets" invisible="1"/>
                 <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" optional="hide" attrs="{'column_invisible': [('allow_timesheets', '=', False)]}"/>

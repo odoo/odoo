@@ -34,9 +34,9 @@ class TestNestedTaskUpdate(TransactionCase):
     #----------------------------------
 
     def test_creating_subtask_user_id_on_parent_dont_go_on_child(self):
-        parent = self.env['project.task'].create({'name': 'parent', 'user_id': self.user.id})
-        child = self.env['project.task'].create({'name': 'child', 'parent_id': parent.id, 'user_id': False})
-        self.assertFalse(child.user_id)
+        parent = self.env['project.task'].create({'name': 'parent', 'user_ids': [(4, self.user.id)]})
+        child = self.env['project.task'].create({'name': 'child', 'parent_id': parent.id, 'user_ids': False})
+        self.assertFalse(child.user_ids)
 
     def test_creating_subtask_partner_id_on_parent_goes_on_child(self):
         parent = self.env['project.task'].create({'name': 'parent', 'partner_id': self.user.partner_id.id})
@@ -88,13 +88,13 @@ class TestNestedTaskUpdate(TransactionCase):
     #----------------------------------------
 
     def test_write_user_id_on_parent_dont_write_on_child(self):
-        parent = self.env['project.task'].create({'name': 'parent', 'user_id': False})
-        child = self.env['project.task'].create({'name': 'child', 'user_id': False, 'parent_id': parent.id})
-        self.assertFalse(child.user_id)
-        parent.write({'user_id': self.user.id})
-        self.assertFalse(child.user_id)
-        parent.write({'user_id': False})
-        self.assertFalse(child.user_id)
+        parent = self.env['project.task'].create({'name': 'parent', 'user_ids': False})
+        child = self.env['project.task'].create({'name': 'child', 'user_ids': False, 'parent_id': parent.id})
+        self.assertFalse(child.user_ids)
+        parent.write({'user_ids': [(4, self.user.id)]})
+        self.assertFalse(child.user_ids)
+        parent.write({'user_ids': False})
+        self.assertFalse(child.user_ids)
 
     def test_write_partner_id_on_parent_write_on_child(self):
         parent = self.env['project.task'].create({'name': 'parent', 'partner_id': False})
@@ -148,11 +148,11 @@ class TestNestedTaskUpdate(TransactionCase):
     #----------------------------------
 
     def test_linking_user_id_on_parent_dont_write_on_child(self):
-        parent = self.env['project.task'].create({'name': 'parent', 'user_id': self.user.id})
-        child = self.env['project.task'].create({'name': 'child', 'user_id': False})
-        self.assertFalse(child.user_id)
+        parent = self.env['project.task'].create({'name': 'parent', 'user_ids': [(4, self.user.id)]})
+        child = self.env['project.task'].create({'name': 'child', 'user_ids': False})
+        self.assertFalse(child.user_ids)
         child.write({'parent_id': parent.id})
-        self.assertFalse(child.user_id)
+        self.assertFalse(child.user_ids)
 
     def test_linking_partner_id_on_parent_write_on_child(self):
         parent = self.env['project.task'].create({'name': 'parent', 'partner_id': self.user.partner_id.id})
@@ -195,8 +195,8 @@ class TestNestedTaskUpdate(TransactionCase):
         self.assertFalse(child.sale_line_id)
 
     def test_writing_on_parent_with_multiple_tasks(self):
-        parent = self.env['project.task'].create({'name': 'parent', 'user_id': False, 'partner_id': self.partner.id})
-        children_values = [{'name': 'child%s' % i, 'user_id': False, 'parent_id': parent.id} for i in range(5)]
+        parent = self.env['project.task'].create({'name': 'parent', 'user_ids': False, 'partner_id': self.partner.id})
+        children_values = [{'name': 'child%s' % i, 'user_ids': False, 'parent_id': parent.id} for i in range(5)]
         children = self.env['project.task'].create(children_values)
         children._compute_partner_id()
         # test writing sale_line_id
@@ -207,17 +207,17 @@ class TestNestedTaskUpdate(TransactionCase):
             self.assertEqual(child.sale_line_id, self.order_line)
 
     def test_linking_on_parent_with_multiple_tasks(self):
-        parent = self.env['project.task'].create({'name': 'parent', 'partner_id': self.partner.id, 'sale_line_id': self.order_line.id, 'user_id': self.user.id})
-        children_values = [{'name': 'child%s' % i, 'user_id': False} for i in range(5)]
+        parent = self.env['project.task'].create({'name': 'parent', 'partner_id': self.partner.id, 'sale_line_id': self.order_line.id, 'user_ids': [(4, self.user.id)]})
+        children_values = [{'name': 'child%s' % i, 'user_ids': False} for i in range(5)]
         children = self.env['project.task'].create(children_values)
-        # test writing user_id and sale_line_id
+        # test writing user_ids and sale_line_id
 
         for child in children:
-            self.assertFalse(child.user_id)
+            self.assertFalse(child.user_ids)
             self.assertFalse(child.sale_line_id)
 
         children.write({'parent_id': parent.id})
 
         for child in children:
             self.assertEqual(child.sale_line_id, self.order_line)
-            self.assertFalse(child.user_id)
+            self.assertFalse(child.user_ids)

@@ -296,7 +296,7 @@
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='my_tasks']" position='after'>
-                    <filter string="My Team's Tasks" name="my_team_tasks" domain="[('user_id.employee_parent_id.user_id', '=', uid)]"/>
+                    <filter string="My Team's Tasks" name="my_team_tasks" domain="[('user_ids.employee_parent_id.user_id', '=', uid)]"/>
                 </xpath>
                 <xpath expr="//filter[@name='late']" position='after'>
                     <filter string="Tasks in Overtime" name="overtime" domain="[('overtime', '&gt;', 0)]"/>

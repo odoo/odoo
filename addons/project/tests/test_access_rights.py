@@ -235,13 +235,13 @@ class TestProjectPortalCommon(TestProjectCommon):
             'groups_id': [(6, 0, [])]})
 
         self.task_3 = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
-            'name': 'Test3', 'user_id': self.user_portal.id, 'project_id': self.project_pigs.id})
+            'name': 'Test3', 'user_ids': self.user_portal, 'project_id': self.project_pigs.id})
         self.task_4 = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
-            'name': 'Test4', 'user_id': self.user_public.id, 'project_id': self.project_pigs.id})
+            'name': 'Test4', 'user_ids': self.user_public, 'project_id': self.project_pigs.id})
         self.task_5 = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
-            'name': 'Test5', 'user_id': False, 'project_id': self.project_pigs.id})
+            'name': 'Test5', 'user_ids': False, 'project_id': self.project_pigs.id})
         self.task_6 = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
-            'name': 'Test5', 'user_id': False, 'project_id': self.project_pigs.id})
+            'name': 'Test5', 'user_ids': False, 'project_id': self.project_pigs.id})
 
 class TestPortalProject(TestProjectPortalCommon):
 
