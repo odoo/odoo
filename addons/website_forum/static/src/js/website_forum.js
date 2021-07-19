@@ -251,6 +251,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             title: title,
             sticky: false,
             type: "warning",
+            messageIsHtml: true,
         });
     },
     /**
