@@ -198,7 +198,8 @@ class AccountEdiDocument(models.Model):
             try:
                 with self.env.cr.savepoint(flush=False):
                     self._cr.execute('SELECT * FROM account_edi_document WHERE id IN %s FOR UPDATE NOWAIT', [tuple(documents.ids)])
-                    self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(move_to_lock.ids)])
+                    if move_to_lock:
+                        self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(move_to_lock.ids)])
 
                     # Locks the attachments that might be unlinked
                     if attachments_potential_unlink:
