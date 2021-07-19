@@ -409,6 +409,9 @@ actual arch.
     def _check_xml(self):
         # Sanity checks: the view should not break anything upon rendering!
         # Any exception raised below will cause a transaction rollback.
+        partial_validation = self.env.context.get('ir_ui_view_partial_validation')
+        self = self.with_context(validate_views=(self if partial_validation else True))
+
         for view in self:
             try:
                 # verify the view is valid xml and that the inheritance resolves
@@ -434,6 +437,8 @@ actual arch.
                     # A <data> element is a wrapper for multiple root nodes
                     combined_archs = combined_archs[0]
                 for view_arch in combined_archs:
+                    for node in view_arch.xpath('//*[@__validate__]'):
+                        del node.attrib['__validate__']
                     check = valid_view(view_arch, env=self.env, model=view.model)
                     if not check:
                         view_name = ('%s (%s)' % (view.name, view.xml_id)) if view.xml_id else view.name
@@ -531,7 +536,8 @@ actual arch.
             values.update(self._compute_defaults(values))
 
         self.clear_caches()
-        return super(View, self).create(vals_list)
+        result = super(View, self.with_context(ir_ui_view_partial_validation=True)).create(vals_list)
+        return result.with_env(self.env)
 
     def write(self, vals):
         # Keep track if view was modified. That will be useful for the --dev mode
@@ -783,6 +789,52 @@ actual arch.
                 node.set('data-oe-field', 'arch')
         return specs_tree
 
+    def _add_validation_flag(self, combined_arch, view=None, arch=None):
+        """ Add a validation flag on elements in ``combined_arch`` or ``arch``.
+        This is part of the partial validation of views.
+
+        :param Element combined_arch: the architecture to be modified by ``arch``
+        :param view: an optional view inheriting ``self``
+        :param Element arch: an optional modifying architecture from inheriting
+            view ``view``
+        """
+        # validate_views is either falsy (no validation), True (full validation)
+        # or a recordset (partial validation)
+        validate_views = self.env.context.get('validate_views')
+        if not validate_views:
+            return
+
+        if validate_views is True or self in validate_views:
+            # optimization, flag the root node
+            combined_arch.set('__validate__', '1')
+            return
+
+        if view is None or view not in validate_views:
+            return
+
+        for node in arch.xpath('//*[@position]'):
+            if node.get('position') in ('after', 'before', 'inside'):
+                # validate the elements being inserted, except the ones that
+                # specify a move, as in:
+                #   <field name="foo" position="after">
+                #       <field name="bar" position="move"/>
+                #   </field>
+                for child in node.iterchildren(tag=etree.Element):
+                    if not child.get('position'):
+                        child.set('__validate__', '1')
+            if node.get('position') == 'replace':
+                # validate everything, since this impacts the whole arch
+                combined_arch.set('__validate__', '1')
+                break
+            if node.get('position') == 'attributes':
+                # validate the element being modified by adding
+                # attribute "__validate__" on it:
+                #   <field name="foo" position="attributes">
+                #       <attribute name="readonly">1</attribute>
+                #       <attribute name="__validate__">1</attribute>    <!-- add this -->
+                #   </field>
+                node.append(E.attribute('1', name='__validate__'))
+
     @api.model
     def apply_inheritance_specs(self, source, specs_tree, pre_locate=lambda s: True):
         """ Apply an inheriting view (a descendant of the base view)
@@ -854,6 +906,7 @@ actual arch.
                 'data-oe-id': str(self.id),
                 'data-oe-field': 'arch',
             })
+        self._add_validation_flag(combined_arch)
 
         # The depth-first traversal is implemented with a double-ended queue.
         # The queue is traversed from left to right, and after each view in the
@@ -868,6 +921,7 @@ actual arch.
             arch = etree.fromstring(view.arch)
             if view.env.context.get('inherit_branding'):
                 view.inherit_branding(arch)
+            self._add_validation_flag(combined_arch, view, arch)
             combined_arch = view.apply_inheritance_specs(combined_arch, arch)
 
             for child_view in reversed(hierarchy[view]):
@@ -1200,7 +1254,7 @@ actual arch.
     # view validation
     #-------------------------------------------------------------------
 
-    def _validate_view(self, node, model_name, editable=True):
+    def _validate_view(self, node, model_name, editable=True, full=False):
         """ Validate the given architecture node, and return its corresponding
         NameManager.
 
@@ -1208,6 +1262,7 @@ actual arch.
         :param node: the combined architecture as an etree
         :param model_name: the reference model name for the given architecture
         :param editable: whether the view is considered editable
+        :param full: whether the whole view must be validated
         :return: the combined architecture's NameManager
         """
         self.ensure_one()
@@ -1220,14 +1275,16 @@ actual arch.
         name_manager = NameManager(model)
 
         # use a stack to recursively traverse the tree
-        stack = [(node, editable)]
+        stack = [(node, editable, full)]
         while stack:
-            node, editable = stack.pop()
+            node, editable, validate = stack.pop()
 
             # compute default
             tag = node.tag
+            validate = validate or node.get('__validate__')
             node_info = {
                 'editable': editable and self._editable_node(node, name_manager),
+                'validate': validate,
             }
 
             # tag-specific validation
@@ -1235,10 +1292,11 @@ actual arch.
             if validator is not None:
                 validator(node, name_manager, node_info)
 
-            self._validate_attrs(node, name_manager, node_info)
+            if validate:
+                self._validate_attrs(node, name_manager, node_info)
 
             for child in reversed(node):
-                stack.append((child, node_info['editable']))
+                stack.append((child, node_info['editable'], validate))
 
         name_manager.check(self)
 
@@ -1253,6 +1311,8 @@ actual arch.
     def _validate_tag_tree(self, node, name_manager, node_info):
         # reuse form view validation
         self._validate_tag_form(node, name_manager, node_info)
+        if not node_info['validate']:
+            return
         allowed_tags = ('field', 'button', 'control', 'groupby', 'widget', 'header')
         for child in node.iterchildren(tag=etree.Element):
             if child.tag not in allowed_tags and not isinstance(child, etree._Comment):
@@ -1263,6 +1323,8 @@ actual arch.
                 self._raise_view_error(msg, child)
 
     def _validate_tag_graph(self, node, name_manager, node_info):
+        if not node_info['validate']:
+            return
         for child in node.iterchildren(tag=etree.Element):
             if child.tag != 'field' and not isinstance(child, etree._Comment):
                 msg = _('A <graph> can only contains <field> nodes, found a <%s>', child.tag)
@@ -1277,7 +1339,7 @@ actual arch.
                 name_manager.has_field(f.get('name'))
 
     def _validate_tag_search(self, node, name_manager, node_info):
-        if not list(node.iterdescendants(tag="field")):
+        if node_info['validate'] and not node.iterdescendants(tag="field"):
             # the field of the search view may be within a group node, which is why we must check
             # for all descendants containing a node with a field tag, if this is not the case
             # then a search is not possible.
@@ -1288,16 +1350,19 @@ actual arch.
             if len(searchpanels) > 1:
                 self._raise_view_error(_('Search tag can only contain one search panel'), node)
             node.remove(searchpanels[0])
-            self._validate_view(searchpanels[0], name_manager.model._name, editable=False)
+            self._validate_view(searchpanels[0], name_manager.model._name,
+                                editable=False, full=node_info['validate'])
 
     def _validate_tag_field(self, node, name_manager, node_info):
+        validate = node_info['validate']
+
         name = node.get('name')
         if not name:
             self._raise_view_error(_("Field tag must have a \"name\" attribute defined"), node)
 
         field = name_manager.model._fields.get(name)
         if field:
-            if field.relational:
+            if validate and field.relational:
                 domain = (
                     node.get('domain')
                     or node_info['editable'] and field._description_domain(self.env)
@@ -1312,7 +1377,7 @@ actual arch.
                     if vnames:
                         name_manager.must_have_fields(vnames, f"{desc} ({domain})")
 
-            elif node.get('domain'):
+            elif validate and node.get('domain'):
                 msg = _(
                     'Domain on non-relational field "%(name)s" makes no sense (domain:%(domain)s)',
                     name=name, domain=node.get('domain'),
@@ -1323,11 +1388,13 @@ actual arch.
                 if child.tag not in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                     continue
                 node.remove(child)
-                sub_manager = self._validate_view(child, field.comodel_name, node_info['editable'])
+                sub_manager = self._validate_view(
+                    child, field.comodel_name, editable=node_info['editable'], full=validate,
+                )
                 for fname, use in sub_manager.mandatory_parent_fields.items():
                     name_manager.must_have_field(fname, use)
 
-        elif name not in name_manager.field_info:
+        elif validate and name not in name_manager.field_info:
             msg = _(
                 'Field "%(field_name)s" does not exist in model "%(model_name)s"',
                 field_name=name, model_name=name_manager.model._name,
@@ -1336,18 +1403,21 @@ actual arch.
 
         name_manager.has_field(name, {'id': node.get('id'), 'select': node.get('select')})
 
-        for attribute in ('invisible', 'readonly', 'required'):
-            val = node.get(attribute)
-            if val:
-                res = quick_eval(val, {'context': self._context})
-                if res not in (1, 0, True, False, None):
-                    msg = _(
-                        'Attribute %(attribute)s evaluation expects a boolean, got %(value)s',
-                        attribute=attribute, value=val,
-                    )
-                    self._raise_view_error(msg, node)
+        if validate:
+            for attribute in ('invisible', 'readonly', 'required'):
+                val = node.get(attribute)
+                if val:
+                    res = quick_eval(val, {'context': self._context})
+                    if res not in (1, 0, True, False, None):
+                        msg = _(
+                            'Attribute %(attribute)s evaluation expects a boolean, got %(value)s',
+                            attribute=attribute, value=val,
+                        )
+                        self._raise_view_error(msg, node)
 
     def _validate_tag_filter(self, node, name_manager, node_info):
+        if not node_info['validate']:
+            return
         domain = node.get('domain')
         if domain:
             name = node.get('name')
@@ -1358,6 +1428,8 @@ actual arch.
                 name_manager.must_have_fields(vnames, f"{desc} ({domain})")
 
     def _validate_tag_button(self, node, name_manager, node_info):
+        if not node_info['validate']:
+            return
         name = node.get('name')
         special = node.get('special')
         type_ = node.get('type')
@@ -1427,28 +1499,32 @@ actual arch.
             return
         field = name_manager.model._fields.get(name)
         if field:
-            if field.type != 'many2one':
-                msg = _(
-                    "Field '%(name)s' found in 'groupby' node can only be of type many2one, found %(type)s",
-                    name=field.name, type=field.type,
-                )
-                self._raise_view_error(msg, node)
-            domain = node_info['editable'] and field._description_domain(self.env)
-            if isinstance(domain, str):
-                desc = f"domain of field '{name}'"
-                fnames, vnames = self._get_domain_identifiers(node, domain, desc)
-                self._check_field_paths(node, fnames, field.comodel_name, f"{desc} ({domain})")
-                if vnames:
-                    name_manager.must_have_fields(vnames, f"{desc} ({domain})")
+            if node_info['validate']:
+                if field.type != 'many2one':
+                    msg = _(
+                        "Field '%(name)s' found in 'groupby' node can only be of type many2one, found %(type)s",
+                        name=field.name, type=field.type,
+                    )
+                    self._raise_view_error(msg, node)
+                domain = node_info['editable'] and field._description_domain(self.env)
+                if isinstance(domain, str):
+                    desc = f"domain of field '{name}'"
+                    fnames, vnames = self._get_domain_identifiers(node, domain, desc)
+                    self._check_field_paths(node, fnames, field.comodel_name, f"{desc} ({domain})")
+                    if vnames:
+                        name_manager.must_have_fields(vnames, f"{desc} ({domain})")
 
             # move all children nodes into a new node <groupby>
             groupby_node = E.groupby(*node)
             # validate the node as a nested view
-            sub_manager = self._validate_view(groupby_node, field.comodel_name, editable=False)
+            sub_manager = self._validate_view(
+                groupby_node, field.comodel_name, editable=False, full=node_info['validate'],
+            )
             name_manager.has_field(name)
             for fname, use in sub_manager.mandatory_parent_fields.items():
                 name_manager.must_have_field(fname, use)
-        else:
+
+        elif node_info['validate']:
             msg = _(
                 "Field '%(field)s' found in 'groupby' node does not exist in model %(model)s",
                 field=name, model=name_manager.model._name,
@@ -1456,12 +1532,16 @@ actual arch.
             self._raise_view_error(msg, node)
 
     def _validate_tag_searchpanel(self, node, name_manager, node_info):
+        if not node_info['validate']:
+            return
         for child in node.iterchildren(tag=etree.Element):
             if child.get('domain') and child.get('select') != 'multi':
                 msg = _('Searchpanel item with select multi cannot have a domain.')
                 self._raise_view_error(msg, child)
 
     def _validate_tag_label(self, node, name_manager, node_info):
+        if not node_info['validate']:
+            return
         # replace return not arch.xpath('//label[not(@for) and not(descendant::input)]')
         for_ = node.get('for')
         if not for_:
@@ -1472,26 +1552,31 @@ actual arch.
             name_manager.must_have_name(for_, '<label for="...">')
 
     def _validate_tag_page(self, node, name_manager, node_info):
+        if not node_info['validate']:
+            return
         if node.getparent() is None or node.getparent().tag != 'notebook':
             self._raise_view_error(_('Page direct ancestor must be notebook'), node)
 
     def _validate_tag_img(self, node, name_manager, node_info):
-        if not any(node.get(alt) for alt in att_names('alt')):
+        if node_info['validate'] and not any(node.get(alt) for alt in att_names('alt')):
             self._log_view_warning('<img> tag must contain an alt attribute', node)
 
     def _validate_tag_a(self, node, name_manager, node_info):
         #('calendar', 'form', 'graph', 'kanban', 'pivot', 'search', 'tree', 'activity')
-        if any('btn' in node.get(cl, '') for cl in att_names('class')):
+        if node_info['validate'] and any('btn' in node.get(cl, '') for cl in att_names('class')):
             if node.get('role') != 'button':
                 msg = '"<a>" tag with "btn" class must have "button" role'
                 self._log_view_warning(msg, node)
 
     def _validate_tag_ul(self, node, name_manager, node_info):
-        self._check_dropdown_menu(node) # was applied to all node, but in practice, only used on div and ul
+        if node_info['validate']:
+            # was applied to all nodes, but in practice only used on div and ul
+            self._check_dropdown_menu(node)
 
     def _validate_tag_div(self, node, name_manager, node_info):
-        self._check_dropdown_menu(node)
-        self._check_progress_bar(node)
+        if node_info['validate']:
+            self._check_dropdown_menu(node)
+            self._check_progress_bar(node)
 
     #------------------------------------------------------
     # Validation tools
