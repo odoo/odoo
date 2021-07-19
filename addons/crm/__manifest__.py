@@ -46,7 +46,6 @@
 
         'views/calendar_views.xml',
         'views/crm_recurring_plan_views.xml',
-        'views/crm_menu_views.xml',
         'views/crm_lost_reason_views.xml',
         'views/crm_stage_views.xml',
         'views/crm_lead_views.xml',
