@@ -3110,6 +3110,8 @@ var SnippetsMenu = Widget.extend({
                 break;
         }
 
+        this.options.wysiwyg.toolbar.el.classList.remove('oe-floating');
+
         const $customizeBlock = $('<WE-CUSTOMIZEBLOCK-OPTIONS id="o_we_editor_toolbar_container"/>');
         const $title = $("<we-title><span>" + titleText + "</span></we-title>");
 
