@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { groupBy as arrayGroupBy, sortBy as arraySortBy } from "@web/core/utils/arrays";
-import { Registry } from "@web/core/registry";
+import { registry } from "@web/core/registry";
 
 class UnimplementedRouteError extends Error {}
 
@@ -114,12 +114,17 @@ export class SampleServer {
                 return this._mockRead(params);
         }
         // this rpc can't be mocked by the SampleServer itself, so check if there is an handler
-        // in the mockRegistry: either specific for this model (with key 'model/method'), or
+        // in the registry: either specific for this model (with key 'model/method'), or
         // global (with key 'method')
         const method = params.method || params.route;
+        // This allows to register mock version of methods or routes,
+        // for all models:
+        // registry.category("sample_server").add('some_route', () => "abcd");
+        // for a specific model (e.g. 'res.partner'):
+        // registry.category("sample_server").add('res.partner/some_method', () => 23);
         const mockFunction =
-            SampleServer.mockRegistry.get(`${params.model}/${method}`) ||
-            SampleServer.mockRegistry.get(method);
+            registry.category("sample_server").get(`${params.model}/${method}`, null) ||
+            registry.category("sample_server").get(method, null);
         if (mockFunction) {
             return mockFunction.call(this, params);
         }
@@ -686,10 +691,3 @@ SampleServer.PEOPLE_MODELS = [
 ];
 
 SampleServer.UnimplementedRouteError = UnimplementedRouteError;
-
-// mockRegistry allows to register mock version of methods or routes,
-// for all models:
-//   SampleServer.mockRegistry.add('some_route', () => "abcd");
-// for a specific model (e.g. 'res.partner'):
-//   SampleServer.mockRegistry.add('res.partner/some_method', () => 23);
-SampleServer.mockRegistry = new Registry();
