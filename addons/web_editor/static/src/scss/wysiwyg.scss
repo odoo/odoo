@@ -28,7 +28,18 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     margin: 0;
     padding: 0;
 }
+
+// Toolbar - Generic rules shared among backend & frontend
 .oe-toolbar {
+    .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+// Floating Toolbar
+.oe-toolbar.oe-floating {
     padding-bottom: 0;
     border-bottom: $o-we-border-width solid $o-we-fg-light;
     background-color: $o-we-bg;
