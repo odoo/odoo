@@ -6,19 +6,19 @@
           beforeOpen="beforeOpenDropdown"
           t-on-dropdown-item-selected.stop="onDropdownItemSelected"
           togglerClass="'btn btn-link'">
-            <span class="fa fa-bug"/>
-            <t t-set-slot="menu">
-                <t t-foreach="getElements()" t-as="element" t-key="element_index">
-                    <t t-if="!element.hide">
-                        <t t-if="element.type == 'item'">
-                            <DropdownItem payload="{ callback: element.callback }">
-                                <a t-if="element.href" t-att-href="element.href" t-esc="element.description" t-on-click.prevent=""/>
-                                <span t-else="" t-esc="element.description"/>
-                            </DropdownItem>
-                        </t>
-                        <div t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>
-                        <t t-if="element.type == 'component'" t-component="element.Component" t-props="element.props"/>
+            <t t-set-slot="toggler">
+                <span class="fa fa-bug"/>
+            </t>
+            <t t-foreach="getElements()" t-as="element" t-key="element_index">
+                <t t-if="!element.hide">
+                    <t t-if="element.type == 'item'">
+                        <DropdownItem payload="{ callback: element.callback }">
+                            <a t-if="element.href" t-att-href="element.href" t-esc="element.description" t-on-click.prevent=""/>
+                            <span t-else="" t-esc="element.description"/>
+                        </DropdownItem>
                     </t>
+                    <div t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>
+                    <t t-if="element.type == 'component'" t-component="element.Component" t-props="element.props"/>
                 </t>
             </t>
         </Dropdown>

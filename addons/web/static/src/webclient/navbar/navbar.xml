@@ -44,19 +44,19 @@
 
   <t t-name="web.NavBar.AppsMenu" owl="1">
     <Dropdown hotkey="'h'" title="'Home Menu'" class="o_navbar_apps_menu">
-      <i class="fa fa-th-large" />
-      <t t-set-slot="menu">
-        <MenuItem
-          t-foreach="apps"
-          t-as="app"
-          t-key="app.id"
-          class="o_app"
-          t-att-class="{ o_dropdown_active: menuService.getCurrentApp() === app }"
-          payload="app"
-        >
-          <a t-att-href="getMenuItemHref(app)" t-esc="app.name" t-on-click.prevent="" />
-        </MenuItem>
+      <t t-set-slot="toggler">
+        <i class="fa fa-th-large" />
       </t>
+      <MenuItem
+        t-foreach="apps"
+        t-as="app"
+        t-key="app.id"
+        class="o_app"
+        t-att-class="{ o_dropdown_active: menuService.getCurrentApp() === app }"
+        payload="app"
+      >
+        <a t-att-href="getMenuItemHref(app)" t-esc="app.name" t-on-click.prevent="" />
+      </MenuItem>
     </Dropdown>
   </t>
 
@@ -93,11 +93,11 @@
             title="section.name"
             xmlid="section.xmlid"
           >
-            <span t-esc="section.name" t-att-data-section="section.id" />
-            <t t-set-slot="menu">
-              <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
-                <t t-set="items" t-value="section.childrenTree" />
-              </t>
+            <t t-set-slot="toggler">
+              <span t-esc="section.name" t-att-data-section="section.id" />
+            </t>
+            <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
+              <t t-set="items" t-value="section.childrenTree" />
             </t>
           </MenuDropdown>
         </t>
@@ -135,23 +135,23 @@
 
   <t t-name="web.NavBar.SectionsMenu.MoreDropdown" owl="1">
     <Dropdown tag="'li'" class="o_menu_sections_more" title="'More Menu'" hotkey="hotkey">
-      <i class="fa fa-plus" />
-      <t t-set-slot="menu">
-        <t t-foreach="sections" t-as="section" t-key="section.id">
+      <t t-set-slot="toggler">
+        <i class="fa fa-plus" />
+      </t>
+      <t t-foreach="sections" t-as="section" t-key="section.id">
 
-          <t t-if="!section.childrenTree.length">
-            <MenuItem class="o_more_dropdown_section" payload="section">
-              <a t-att-href="getMenuItemHref(section)" t-esc="section.name" t-on-click.prevent="" />
-            </MenuItem>
-          </t>
-          <t t-else="">
-            <div
-              class="o_more_dropdown_section o_more_dropdown_section_group bg-200 font-weight-bold"
-              t-esc="section.name"
-            />
-            <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
-              <t t-set="items" t-value="section.childrenTree" />
-            </t>
+        <t t-if="!section.childrenTree.length">
+          <MenuItem class="o_more_dropdown_section" payload="section">
+            <a t-att-href="getMenuItemHref(section)" t-esc="section.name" t-on-click.prevent="" />
+          </MenuItem>
+        </t>
+        <t t-else="">
+          <div
+            class="o_more_dropdown_section o_more_dropdown_section_group bg-200 font-weight-bold"
+            t-esc="section.name"
+          />
+          <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
+            <t t-set="items" t-value="section.childrenTree" />
           </t>
         </t>
       </t>
