@@ -574,7 +574,12 @@ $o-wslides-fs-side-width: 300px;
         background-image: linear-gradient(120deg, $o-wslides-color-dark1, $o-wslides-color-dark2);
     }
 
-    .oe_slides_panel_footer a, .oe_slides_share_bar a {
+    .oe_slides_panel_footer span[role="button"],
+    .oe_slides_panel_footer a,
+    .oe_slides_share_bar span[role="button"],
+    .oe_slides_share_bar a {
+        cursor: pointer;
+        user-select: none;
         @include o-hover-text-color(rgba(white, 0.7), white);
 
         &.disabled {
