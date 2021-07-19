@@ -42,12 +42,12 @@ class TestProjectSharingCommon(TestProjectCommon):
 
         cls.task_cow = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Cow UserTask',
-            'user_id': cls.user_projectuser.id,
+            'user_ids': cls.user_projectuser,
             'project_id': cls.project_cows.id,
         })
         cls.task_portal = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Portal UserTask',
-            'user_id': cls.user_projectuser.id,
+            'user_ids': cls.user_projectuser,
             'project_id': cls.project_portal.id,
         })
 
@@ -123,7 +123,7 @@ class TestProjectSharing(TestProjectSharingCommon):
             task = form.save()
             self.assertEqual(task.name, 'Test')
             self.assertEqual(task.project_id, self.project_portal)
-            self.assertEqual(task.user_id, self.user_portal)
+            self.assertEqual(task.user_ids, self.user_portal)
             # 3.1) Try to change the project of the new task with this user.
             with self.assertRaises(AssertionError, msg="Should not accept the portal user changes the project of the task."):
                 form.project_id = self.project_cows
@@ -172,4 +172,4 @@ class TestProjectSharing(TestProjectSharingCommon):
             form.save()
             self.assertEqual(task.child_ids.name, 'Test Subtask')
             self.assertEqual(task.child_ids.project_id, self.project_cows)
-            self.assertEqual(task.child_ids.user_id, self.user_portal)
+            self.assertEqual(task.child_ids.user_ids, self.user_portal)

@@ -42,7 +42,7 @@
                     <filter string="My Team's Projects" name="my_team_projects"  domain="[('project_id.user_id.employee_id.parent_id.user_id', '=', uid), ('project_id.user_id', '!=', uid), ('user_id', '!=', uid), ('user_id', '!=', False)]"/>
                 </xpath>
                 <xpath expr="//filter[@name='my_tasks']" position="after">
-                    <filter string="My Team's Tasks" name="my_team_tasks" domain="[('task_id.user_id.employee_id.parent_id.user_id', '=', uid)]" />
+                    <filter string="My Team's Tasks" name="my_team_tasks" domain="[('task_id.user_ids.employee_id.parent_id.user_id', '=', uid)]" />
                 </xpath>
              </field>
          </record>
