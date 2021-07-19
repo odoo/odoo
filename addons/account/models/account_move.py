@@ -2414,10 +2414,15 @@ class AccountMove(models.Model):
                         base_line = self.line_ids.filtered(lambda line: tax in line.tax_ids.flatten_taxes_hierarchy())[0]
                         account_id = base_line.account_id.id
 
+                tags = refund_repartition_line.tag_ids
+                if line_vals.get('tax_ids'):
+                    subsequent_taxes = self.env['account.tax'].browse(line_vals['tax_ids'][0][2])
+                    tags += subsequent_taxes.refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'base').tag_ids
+
                 line_vals.update({
                     'tax_repartition_line_id': refund_repartition_line.id,
                     'account_id': account_id,
-                    'tax_tag_ids': [(6, 0, refund_repartition_line.tag_ids.ids)],
+                    'tax_tag_ids': [(6, 0, tags.ids)],
                 })
             elif line_vals.get('tax_ids') and line_vals['tax_ids'][0][2]:
                 # Base line.
