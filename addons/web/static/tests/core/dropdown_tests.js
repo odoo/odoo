@@ -74,9 +74,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends owl.Component {}
         Parent.template = owl.tags.xml`
         <Dropdown class="one" togglerClass="'two'" menuClass="'three'">
-          <t t-set-slot="menu">
             <DropdownItem class="four" />
-          </t>
         </Dropdown>
       `;
         env = await makeTestEnv();
@@ -179,9 +177,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends owl.Component {}
         Parent.template = owl.tags.xml`
         <Dropdown>
-          <t t-set-slot="menu">
             <DropdownItem/>
-          </t>
         </Dropdown>
       `;
         env = await makeTestEnv();
@@ -199,9 +195,7 @@ QUnit.module("Components", (hooks) => {
         }
         Parent.template = owl.tags.xml`
         <Dropdown t-on-dropdown-item-selected="onItemSelected">
-          <t t-set-slot="menu">
             <DropdownItem payload="{ answer: 42 }"/>
-          </t>
         </Dropdown>
       `;
         env = await makeTestEnv();
@@ -214,13 +208,9 @@ QUnit.module("Components", (hooks) => {
         class Parent extends owl.Component {}
         Parent.template = owl.tags.xml`
         <Dropdown>
-          <t t-set-slot="menu">
             <Dropdown>
-              <t t-set-slot="menu">
                 <Dropdown/>
-              </t>
             </Dropdown>
-          </t>
         </Dropdown>
       `;
         env = await makeTestEnv();
@@ -235,13 +225,9 @@ QUnit.module("Components", (hooks) => {
         class Parent extends owl.Component {}
         Parent.template = owl.tags.xml`
         <Dropdown startOpen="true">
-          <t t-set-slot="menu">
             <Dropdown startOpen="true">
-              <t t-set-slot="menu">
                 <Dropdown startOpen="true"/>
-              </t>
             </Dropdown>
-          </t>
         </Dropdown>
       `;
         env = await makeTestEnv();
@@ -255,13 +241,9 @@ QUnit.module("Components", (hooks) => {
         <div>
           <div class="outside">outside</div>
           <Dropdown>
-            <t t-set-slot="menu">
               <Dropdown>
-                <t t-set-slot="menu">
                   <Dropdown/>
-                </t>
               </Dropdown>
-            </t>
           </Dropdown>
         </div>
       `;
@@ -290,13 +272,9 @@ QUnit.module("Components", (hooks) => {
         Parent.template = owl.tags.xml`
             <div>
                 <Dropdown>
-                    <t t-set-slot="menu">
-                        <Dropdown>
-                            <t t-set-slot="menu">
-                                <Dropdown/>
-                            </t>
-                        </Dropdown>
-                    </t>
+                    <Dropdown>
+                        <Dropdown/>
+                    </Dropdown>
                 </Dropdown>
                 <t t-component="dc.Component" t-props="dc.props" />
             </div>
@@ -323,13 +301,9 @@ QUnit.module("Components", (hooks) => {
         class Parent extends owl.Component {}
         Parent.template = owl.tags.xml`
         <Dropdown>
-          <t t-set-slot="menu">
             <Dropdown>
-              <t t-set-slot="menu">
                 <DropdownItem/>
-              </t>
             </Dropdown>
-          </t>
         </Dropdown>
       `;
         env = await makeTestEnv();
@@ -345,16 +319,12 @@ QUnit.module("Components", (hooks) => {
         class Parent extends owl.Component {}
         Parent.template = owl.tags.xml`
         <Dropdown>
-          <t t-set-slot="menu">
             <Dropdown>
-              <t t-set-slot="menu">
                 <DropdownItem class="item1" parentClosingMode="'none'" />
                 <DropdownItem class="item2" parentClosingMode="'closest'" />
                 <DropdownItem class="item3" parentClosingMode="'all'" />
                 <DropdownItem class="item4" />
-              </t>
             </Dropdown>
-          </t>
         </Dropdown>
       `;
         env = await makeTestEnv();
@@ -393,13 +363,9 @@ QUnit.module("Components", (hooks) => {
         }
         Parent.template = owl.tags.xml`
         <Dropdown t-on-dropdown-item-selected="onItemSelected">
-          <t t-set-slot="menu">
             <Dropdown t-on-dropdown-item-selected="onItemSelected">
-              <t t-set-slot="menu">
                 <DropdownItem payload="{ answer: 42 }" />
-              </t>
             </Dropdown>
-          </t>
         </Dropdown>
       `;
         env = await makeTestEnv();
@@ -414,8 +380,9 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("multi-level dropdown: recursive template can be rendered", async (assert) => {
         const recursiveTemplate = `
         <Dropdown startOpen="true">
-          <t t-esc="name" />
-          <t t-set-slot="menu">
+            <t t-set-slot="toggler">
+                <t t-esc="name" />
+            </t>
             <t t-foreach="items" t-as="item">
 
               <t t-if="!item.children.length">
@@ -428,7 +395,6 @@ QUnit.module("Components", (hooks) => {
               </t>
 
             </t>
-          </t>
         </Dropdown>
     `;
         class Parent extends owl.Component {
@@ -642,11 +608,9 @@ QUnit.module("Components", (hooks) => {
         }
         Parent.template = owl.tags.xml`
         <Dropdown hotkey="'m'" t-on-dropdown-item-selected="onItemSelected">
-          <t t-set-slot="menu">
             <DropdownItem class="item1" payload="{val:1}">item1</DropdownItem>
             <DropdownItem class="item2" hotkey="'2'" payload="{val:2}">item2</DropdownItem>
             <DropdownItem class="item3" payload="{val:3}">item3</DropdownItem>
-          </t>
         </Dropdown>
       `;
         env = await makeTestEnv();

@@ -3,14 +3,14 @@
 
 <t t-name="web.SwitchCompanyMenu" owl="1">
     <Dropdown class="o_switch_company_menu" menuClass="'o_dropdown_menu_right'">
-        <span t-attf-class="{{env.isSmall ? 'fa fa-building-o' : 'oe_topbar_name'}}">
-            <t t-if="!env.isSmall"><t t-esc="currentCompany.name"/></t>
-        </span>
-        <t t-set-slot="menu">
-            <t t-foreach="Object.values(companyService.availableCompanies)" t-as="company">
-                <t t-call="web.SwitchCompanyItem">
-                    <t t-set="company" t-value="company" />
-                </t>
+        <t t-set-slot="toggler">
+            <span t-attf-class="{{env.isSmall ? 'fa fa-building-o' : 'oe_topbar_name'}}">
+                <t t-if="!env.isSmall"><t t-esc="currentCompany.name"/></t>
+            </span>
+        </t>
+        <t t-foreach="Object.values(companyService.availableCompanies)" t-as="company">
+            <t t-call="web.SwitchCompanyItem">
+                <t t-set="company" t-value="company" />
             </t>
         </t>
     </Dropdown>
