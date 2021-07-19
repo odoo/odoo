@@ -8,6 +8,7 @@
       t-on-dropdown-item-selected="onItemSelected"
     >
       <button
+        t-if="props.toggler !== 'parent'"
         t-attf-class="o_dropdown_toggler {{ props.togglerClass || '' }}"
         t-att-class="{ 'o_dropdown_active': state.open }"
         t-on-click="onTogglerClick"
