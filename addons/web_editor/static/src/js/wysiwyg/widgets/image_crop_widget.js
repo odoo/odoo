@@ -98,7 +98,26 @@ const ImageCropWidget = Widget.extend({
             this.document.removeEventListener('mousedown', this._onDocumentMousedown, {capture: true});
         }
         this.media.setAttribute('src', this.initialSrc);
+        this.$media.trigger('image_cropper_destroyed');
         return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Resets the crop
+     */
+    async reset() {
+        if (this.$cropperImage) {
+            this.$cropperImage.cropper('reset');
+            if (this.aspectRatio !== '0/0') {
+                this.aspectRatio = '0/0';
+                this.$cropperImage.cropper('setAspectRatio', this.aspectRatios[this.aspectRatio].value);
+            }
+            await this._save(false);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -111,8 +130,9 @@ const ImageCropWidget = Widget.extend({
      * attachments will be created).
      *
      * @private
+     * @param {boolean} [cropped=true]
      */
-    async _save() {
+    async _save(cropped = true) {
         // Mark the media for later creation of cropped attachment
         this.media.classList.add('o_modified_image_to_save');
 
@@ -125,6 +145,7 @@ const ImageCropWidget = Widget.extend({
         });
         delete this.media.dataset.resizeWidth;
         this.initialSrc = await applyModifications(this.media);
+        this.media.classList.toggle('o_we_image_cropped', cropped);
         this.$media.trigger('image_cropped');
         this.destroy();
     },
