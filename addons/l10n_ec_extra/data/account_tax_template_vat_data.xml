@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- 
+        VAT TAXES *IMPUESTO AL VALOR AGREGADO
+        -->
+        <record id="l10n_ec.tax_vat_411" model="account.tax.template">
+            <!-- IVA EN VENTAS LOCALES (EXCLUYE ACTIVOS FIJOS) -->
+            <field name="l10n_ec_code_base">411</field>
+            <field name="l10n_ec_code_applied">421</field>
+        </record>
+        <record id="l10n_ec.tax_vat_412" model="account.tax.template">
+            <!-- IVA EN VENTAS DE ACTIVOS FIJOS -->
+            <field name="l10n_ec_code_base">412</field>
+            <field name="l10n_ec_code_applied">422</field>
+        </record>
+        <record id="l10n_ec.tax_vat_415" model="account.tax.template">
+            <!-- IVA EN VENTAS LOCALES 0% (EXCLUYE ACTIVOS FIJOS) CON DERECHO A CREDITO TRIBUTARIO -->
+            <field name="l10n_ec_code_base">415</field>
+        </record>
+        <record id="l10n_ec.tax_vat_416" model="account.tax.template">
+            <!-- IVA VENTAS DE ACTIVOS FIJOS GRAVADAS TARIFA 0% CON DERECHO A CREDITO TRIBUTARIO -->
+            <field name="l10n_ec_code_base">416</field>
+        </record>
+        <record id="l10n_ec.tax_vat_413" model="account.tax.template">
+            <!-- IVA EN VENTAS LOCALES 0% (EXCLUYE ACTIVOS FIJOS) SIN DERECHO A CREDITO TRIBUTARIO -->
+            <field name="l10n_ec_code_base">413</field>
+        </record>
+        <record id="l10n_ec.tax_vat_414" model="account.tax.template">
+            <!-- IVA EN VENTAS DE ACTIVOS FIJOS GRAVADAS 0% SIN DERECHO A CREDITO TRIBUTARIO -->
+            <field name="l10n_ec_code_base">414</field>
+        </record>
+        <record id="l10n_ec.tax_vat_417" model="account.tax.template">
+            <!-- IVA 0% POR EXPORTACIONES DE BIENES -->
+            <field name="l10n_ec_code_base">417</field>
+        </record>
+        <record id="l10n_ec.tax_vat_418" model="account.tax.template">
+            <!-- IVA POR EXPORTACIONES DE SERVICIOS -->
+            <field name="l10n_ec_code_base">418</field>
+        </record>
+        <record id="l10n_ec.tax_vat_419" model="account.tax.template">
+            <!-- TRANSFERENCIAS EN VENTAS NO OBJETO O EXENTAS DE IVA -->
+            <field name="l10n_ec_code_base">419</field>
+        </record>
+        <record id="l10n_ec.tax_vat_444" model="account.tax.template">
+            <!-- IVA EN VENTAS POR REEMBOLSO COMO INTERMEDIARIO -->
+            <field name="l10n_ec_code_base">444</field>
+            <field name="l10n_ec_code_applied">454</field>
+        </record>
+        <record id="l10n_ec.tax_vat_510" model="account.tax.template">
+            <!-- IVA EN COMPRAS LOCALES (EXCLUYE ACTIVOS FIJOS) CON DERECHO A CREDITO TRIBUTARIO -->
+            <field name="l10n_ec_code_base">510</field>
+            <field name="l10n_ec_code_applied">520</field>
+        </record>
+        <record id="l10n_ec.tax_vat_511" model="account.tax.template">
+            <!-- IVA EN COMPRAS LOCALES DE ACTIVOS FIJOS CON DERECHO A CREDITO TRIBUTARIO -->
+            <field name="l10n_ec_code_base">511</field>
+            <field name="l10n_ec_code_applied">521</field>
+        </record>
+        <record id="l10n_ec.tax_vat_512" model="account.tax.template">
+            <!-- IVA EN OTRAS ADQUISICIONES SIN DERECHO A CREDITO TRIBUTARIO -->
+            <field name="l10n_ec_code_base">512</field>
+            <field name="l10n_ec_code_applied">522</field>
+        </record>
+        <record id="l10n_ec.tax_vat_513" model="account.tax.template">
+            <!-- IVA EN IMPORTACIONES DE SERVICIOS -->
+            <field name="l10n_ec_code_base">513</field>
+            <field name="l10n_ec_code_applied">523</field>
+        </record>
+        <record id="l10n_ec.tax_vat_514" model="account.tax.template">
+            <!-- IVA EN IMPORTACIONES DE BIENES (EXCLUYE ACTIVOS FIJOS) -->
+            <field name="l10n_ec_code_base">514</field>
+            <field name="l10n_ec_code_applied">524</field>
+        </record>
+        <record id="l10n_ec.tax_vat_515" model="account.tax.template">
+            <!-- IVA EN IMPORTACIONES DE ACTIVOS FIJOS -->
+            <field name="l10n_ec_code_base">515</field>
+            <field name="l10n_ec_code_applied">525</field>
+        </record>
+        <record id="l10n_ec.tax_vat_517" model="account.tax.template">
+            <!-- IVA EN COMPRAS 0% (INCLUYE ACTIVOS FIJOS) -->
+            <field name="l10n_ec_code_base">517</field>
+        </record>
+        <record id="l10n_ec.tax_vat_516" model="account.tax.template">
+            <!-- IVA 0% EN IMPORTACIONES DE BIENES (INCLUYE ACTIVOS FIJOS) -->
+            <field name="l10n_ec_code_base">516</field>
+        </record>
+        <record id="l10n_ec.tax_vat_518" model="account.tax.template">
+            <!-- ADQUISICIONES REALIZADAS A CONTRIBUYENTES RISE -->
+            <field name="l10n_ec_code_base">518</field>
+        </record>
+        <record id="l10n_ec.tax_vat_541" model="account.tax.template">
+            <!-- ADQUISICIONES NO OBJETO DE IVA -->
+            <field name="l10n_ec_code_base">541</field>
+        </record>
+        <record id="l10n_ec.tax_vat_542" model="account.tax.template">
+            <!-- ADQUISICIONES EXENTAS DEL PAGO DE IVA -->
+            <field name="l10n_ec_code_base">542</field>
+        </record>
+        <record id="l10n_ec.tax_vat_545" model="account.tax.template">
+            <!-- IVA EN COMPRAS POR REEMBOLSO COMO INTERMEDIARIO -->
+            <field name="l10n_ec_code_base">545</field>
+            <field name="l10n_ec_code_applied">555</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="ec_tax_group_vat12" model="account.tax.group">
+            <field name="name">VAT 12%</field>
+            
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="ec_tax_group_vat14" model="account.tax.group">
+            <field name="name">VAT 14%</field>
+            
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="ec_tax_group_vat0" model="account.tax.group">
+            <field name="name">VAT 0%</field>
+            
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="ec_tax_group_vat_not_charged" model="account.tax.group">
+            <field name="name">VAT Not Charged</field>
+            
+            <field name="sequence">40</field>
+        </record>
+
+        <record id="ec_tax_group_vat_excempt" model="account.tax.group">
+            <field name="name">VAT Excempt</field>
+            
+            <field name="sequence">50</field>
+        </record>
+
+
+        <record id="ec_tax_group_ice" model="account.tax.group">
+            <field name="name">Special Consumptions (ICE)</field>
+            
+            <field name="sequence">60</field>
+        </record>
+
+        <record id="ec_tax_group_irbpnr" model="account.tax.group">
+            <field name="name">Plastic Bottles (IRBPNR)</field>
+            
+            <field name="sequence">70</field>
+        </record>
+
+        <record id="ec_tax_group_withhold_vat" model="account.tax.group">
+            <field name="name">VAT Withhold</field>
+            
+            <field name="sequence">80</field>
+        </record>
+
+        <record id="ec_tax_group_withhold_income" model="account.tax.group">
+            <field name="name">Profit Withhold</field>
+            
+            <field name="sequence">90</field>
+        </record>
+
+        <record id="ec_tax_group_outflows" model="account.tax.group">
+            <field name="name">Exchange Outflows</field>
+            
+            <field name="sequence">100</field>
+        </record>
+
+        <record id="ec_tax_group_others" model="account.tax.group">
+            <field name="name">Others</field>
+            
+            <field name="sequence">110</field>
+        </record>
+
+    </data>
+</odoo>

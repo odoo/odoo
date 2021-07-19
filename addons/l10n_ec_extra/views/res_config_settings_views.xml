@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.account</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='fiscal_localization_setting_container']" position="after">
+                    <h2 attrs="{'invisible': [('country_code', '!=', 'EC')]}">Electronic Documents</h2>
+                    <div class="row mt16 o_settings_container" name="l10n_ec_edi_setting_container" attrs="{'invisible': [('country_code', '!=', 'EC')]}">
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Electronic Documents</span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                <div class="text-muted">
+                                    Configuration for electronic documents.
+                                </div>
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label for="l10n_ec_edi_certificate" string="Certificate" class="col-lg-3 o_light_label"/>
+                                        <field name="l10n_ec_edi_certificate" widget="binary" filename="l10n_ec_edi_cert_name"/>
+                                        <field name="l10n_ec_edi_cert_name" invisible="1"/>
+                                    </div>
+                                    <div class="row mt16">
+                                        <label for="l10n_ec_edi_password" string="Password" class="col-lg-3 o_light_label"/>
+                                        <field name="l10n_ec_edi_password" password="1"/>
+                                    </div>
+                                    <div class="row mt16">
+                                        <label for="l10n_ec_edi_env" string="Environment" class="col-lg-3 o_light_label"/>
+                                        <field name="l10n_ec_edi_env" widget="selection"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_account_config" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'account', 'bin_size': False}</field>
+        </record>
+
+    </data>
+</odoo>
