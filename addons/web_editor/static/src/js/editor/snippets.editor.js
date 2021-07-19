@@ -10,6 +10,7 @@ var options = require('web_editor.snippets.options');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 const SmoothScrollOnDrag = require('web/static/src/js/core/smooth_scroll_on_drag.js');
 const {getCSSVariableValue} = require('web_editor.utils');
+const QWeb = core.qweb;
 
 var _t = core._t;
 
@@ -3112,12 +3113,24 @@ var SnippetsMenu = Widget.extend({
 
         this.options.wysiwyg.toolbar.el.classList.remove('oe-floating');
 
+        // Create toolbar custom container.
         const $customizeBlock = $('<WE-CUSTOMIZEBLOCK-OPTIONS id="o_we_editor_toolbar_container"/>');
         const $title = $("<we-title><span>" + titleText + "</span></we-title>");
 
         $customizeBlock.append($title);
         $customizeBlock.append(this.options.wysiwyg.toolbar.$el);
         $(this.customizePanel).append($customizeBlock);
+
+        // Create table-options custom container.
+        const $customizeTableBlock = $(QWeb.render('web_editor.toolbar.table-options'));
+        this.options.wysiwyg.odooEditor.bindExecCommand($customizeTableBlock[0]);
+
+        $(this.customizePanel).append($customizeTableBlock);
+
+        this._$removeFormatButton = this._$removeFormatButton || this.options.wysiwyg.toolbar.$el.find('#removeFormat');
+        $title.append(this._$removeFormatButton);
+        this.options.wysiwyg.toolbar.$el.find('#table').remove();
+
         this._checkEditorToolbarVisibility();
     },
     /**
@@ -3125,6 +3138,7 @@ var SnippetsMenu = Widget.extend({
      */
     _checkEditorToolbarVisibility: function (e) {
         const $toolbarContainer = this.$('#o_we_editor_toolbar_container');
+        const $toolbarTableContainer = this.$('#o-we-editor-table-container');
         const docSelection = document.getSelection();
         const $currentSelectionTarget = docSelection && docSelection.rangeCount > 0 ? $(docSelection.getRangeAt(0).commonAncestorContainer) : $();
         // Do not  toggle visibility if the target is inside the toolbar ( eg. during link edition).
@@ -3147,6 +3161,13 @@ var SnippetsMenu = Widget.extend({
         } else {
             $toolbarContainer.show();
         }
+
+        const isInsideTD = !!(
+            range &&
+            $(range.startContainer).closest('.o_editable td').length &&
+            $(range.endContainer).closest('.o_editable td').length
+        );
+        $toolbarTableContainer.toggleClass('d-none', !isInsideTD);
     },
     /**
      * On click on discard button.
