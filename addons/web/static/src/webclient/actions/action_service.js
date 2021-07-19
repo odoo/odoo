@@ -407,9 +407,13 @@ function makeActionManager(env) {
         }
 
         const specialKeys = ["help", "useSampleModel", "limit", "count"];
-        for (const key in specialKeys) {
+        for (const key of specialKeys) {
             if (key in action) {
-                viewProps[key] = action;
+                if (key === "help") {
+                    viewProps.noContentHelp = action.help;
+                } else {
+                    viewProps[key] = action[key];
+                }
             }
         }
 

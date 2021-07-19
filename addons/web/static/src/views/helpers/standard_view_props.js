@@ -24,6 +24,7 @@ export const standardViewProps = {
     domains: { type: Array, elements: Object },
     fields: { type: Object, elements: Object },
     groupBy: { type: Array, elements: String },
+    limit: { type: Number, optional: 1 },
     orderBy: { type: Array, elements: String },
     useSampleModel: { type: Boolean },
     state: { type: Object, optional: 1 },
