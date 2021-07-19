@@ -842,19 +842,12 @@ const Wysiwyg = Widget.extend({
                         }
                         manualOpening = true;
                         $dropdown.children('.dropdown-toggle').dropdown('show');
-                        const $colorpickerMenu = $dropdown.find('.colorpicker-menu');
                         const $colorpicker = $dropdown.find('.colorpicker');
                         const colorpickerHeight = $colorpicker.outerHeight();
                         const toolbarPos = this.toolbar.$el.offset();
-                        let top;
-                        if (colorpickerHeight < toolbarPos.top) {
-                            top = 'auto';
-                        } else {
-                            const colorpickerBottom = toolbarPos.top + this.toolbar.$el.outerHeight() + colorpickerHeight;
-                            const clientHeight = this.odooEditor.document.documentElement.clientHeight;
-                            top = colorpickerBottom > clientHeight ? colorpickerHeight - clientHeight : '';
-                        }
-                        $colorpickerMenu.css({top, height: $colorpicker.outerHeight() + 2});
+                        const colorpickerBottom = toolbarPos.top + this.toolbar.$el.outerHeight() + colorpickerHeight;
+                        const clientHeight = this.odooEditor.document.documentElement.clientHeight;
+                        $dropdown[0].classList.toggle('dropup', colorpickerBottom > clientHeight);
                         manualOpening = false;
                     });
                 });
