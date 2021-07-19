@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
         return res
 
     def unlink(self):
-        self.order_line._unlink_associated_registrations()
+        self.mapped('order_line')._unlink_associated_registrations()
         super(SaleOrder, self).unlink()
 
 
