@@ -407,10 +407,16 @@
             placeholder="Title tag"
             title="'Title tag' is shown as a tooltip when you hover the picture."/>
 
-        <we-row string="Transform">
-            <we-button data-crop="" data-no-preview="true" title="Crop Image"><i class="fa fa-crop"></i></we-button>
-            <we-button data-transform="" data-no-preview="true" title="Transform the picture (click twice to reset transformation)">
+        <we-row string="Transform" class="o_we_full_row">
+            <we-button data-crop="true" data-no-preview="true" title="Crop Image"><i class="fa fa-crop"></i></we-button>
+            <we-button class="ml-0 border-left-0" data-reset-crop="" data-no-preview="true" title="Reset crop">
+                Reset
+            </we-button>
+            <we-button data-transform="true" data-no-preview="true" title="Transform the picture">
                 <i class="fa fa-object-ungroup"></i>
+            </we-button>
+            <we-button class="ml-0 border-left-0" data-reset-transform="" data-no-preview="true" title="Reset transformation">
+                Reset
             </we-button>
         </we-row>
 
