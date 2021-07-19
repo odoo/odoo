@@ -15,8 +15,9 @@ import {
     patchWithCleanup,
     triggerHotkey,
 } from "../helpers/utils";
+import { registerCleanup } from "../helpers/cleanup";
 
-const { mount } = owl;
+const { mount, hooks } = owl;
 const serviceRegistry = registry.category("services");
 const mainComponentsRegistry = registry.category("main_components");
 
@@ -24,14 +25,12 @@ let env;
 let parent;
 let target;
 
-QUnit.module("Components", (hooks) => {
-    hooks.beforeEach(async () => {
+QUnit.module("Components", ({ beforeEach }) => {
+    beforeEach(async () => {
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("ui", uiService);
         target = getFixture();
-    });
-    hooks.afterEach(() => {
-        parent.destroy();
+        registerCleanup(() => parent.destroy());
     });
 
     QUnit.module("Dropdown");
@@ -687,5 +686,66 @@ QUnit.module("Components", (hooks) => {
         assert.containsNone(parent.el, ".o_dropdown_menu", "menu is closed after item selection");
 
         assert.verifySteps(["1", "2"], "items should have been selected in this order");
+    });
+
+    QUnit.test("props toggler='parent'", async (assert) => {
+        class Parent extends owl.Component {}
+        Parent.template = owl.tags.xml`
+            <div>
+                <div class="my_custom_toggler">
+                    Click Me
+                    <Dropdown toggler="'parent'">
+                        <DropdownItem>Element 1</DropdownItem>
+                        <DropdownItem>Element 2</DropdownItem>
+                    </Dropdown>
+                </div>
+            </div>`;
+
+        env = await makeTestEnv();
+        parent = await mount(Parent, { env, target });
+        assert.containsOnce(parent, ".o_dropdown");
+        assert.containsNone(parent, ".o_dropdown .o_dropdown_menu");
+        assert.containsNone(parent, ".o_dropdown button.o_dropdown_toggler");
+        await click(parent.el, ".my_custom_toggler");
+        assert.containsOnce(parent, ".o_dropdown .o_dropdown_menu");
+        assert.containsN(parent, ".o_dropdown .o_dropdown_menu li", 2);
+    });
+
+    QUnit.test("props toggler='parent' with nested dropdowns", async (assert) => {
+        class Parent extends owl.Component {}
+        Parent.template = owl.tags.xml`
+            <div>
+                <Dropdown>
+                    <t t-set-slot="toggler">
+                        Outer dropdown toggler
+                    </t>
+                    <DropdownItem> Element A </DropdownItem>
+                    <DropdownItem> Element B </DropdownItem>
+                    <DropdownItem parentClosingMode="'none'">
+                        <div class="my_custom_toggler">
+                            Inner dropdown toggler
+                            <Dropdown toggler="'parent'">
+                                <DropdownItem>Element 1</DropdownItem>
+                                <DropdownItem>Element 2</DropdownItem>
+                            </Dropdown>
+                        </div>
+                    </DropdownItem>
+                </Dropdown>
+            </div>`;
+
+        env = await makeTestEnv();
+        parent = await mount(Parent, { env, target });
+        assert.containsOnce(parent, ".o_dropdown");
+        assert.containsOnce(parent, ".o_dropdown button.o_dropdown_toggler");
+        assert.containsNone(parent, ".o_dropdown .o_dropdown_menu");
+        await click(parent.el, ".o_dropdown_toggler");
+        assert.containsOnce(parent, ".o_dropdown .o_dropdown_menu");
+        assert.containsN(parent, ".o_dropdown .o_dropdown_menu li", 3);
+        assert.containsOnce(parent, ".o_dropdown .o_dropdown");
+        assert.containsNone(parent, ".o_dropdown .o_dropdown .o_dropdown_menu");
+        assert.containsNone(parent, ".o_dropdown .o_dropdown button.o_dropdown_toggler");
+        await click(parent.el, ".o_dropdown .my_custom_toggler");
+        assert.containsOnce(parent, ".o_dropdown .o_dropdown .o_dropdown_menu");
+        assert.containsN(parent, ".o_dropdown .o_dropdown .o_dropdown_menu li", 2);
     });
 });
