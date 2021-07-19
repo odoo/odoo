@@ -2,6 +2,7 @@
 
 import { groupBy as arrayGroupBy, sortBy as arraySortBy } from "@web/core/utils/arrays";
 import { registry } from "@web/core/registry";
+import { ORM } from "../../core/orm_service";
 
 class UnimplementedRouteError extends Error {}
 
@@ -691,3 +692,13 @@ SampleServer.PEOPLE_MODELS = [
 ];
 
 SampleServer.UnimplementedRouteError = UnimplementedRouteError;
+
+export function buildSampleORM(resModel, fields, user) {
+    const sampleServer = new SampleServer(resModel, fields);
+    const fakeRPC = async (_, params) => {
+        const { kwargs, method, model } = params;
+        const { groupby: groupBy } = kwargs;
+        return sampleServer.mockRpc({ method, model, ...kwargs, groupBy });
+    };
+    return new ORM(fakeRPC, user);
+}
