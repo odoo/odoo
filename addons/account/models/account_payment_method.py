@@ -81,7 +81,7 @@ class AccountPaymentMethod(models.Model):
 class AccountPaymentMethodLine(models.Model):
     _name = "account.payment.method.line"
     _description = "Payment Methods"
-    _order = 'sequence'
+    _order = 'sequence, id'
 
     # == Business fields ==
     name = fields.Char(compute='_compute_name', readonly=False, store=True)
