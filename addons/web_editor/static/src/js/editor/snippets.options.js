@@ -4172,16 +4172,35 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
  * General options of an image.
  */
 registry.ImageTools = SnippetOptionWidget.extend({
-    crop() {
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Displays the image cropping tools
+     *
+     * @see this.selectClass for parameters
+     */
+    async crop() {
         this.trigger_up('hide_overlay');
+        this.trigger_up('disable_loading_effect');
         new weWidgets.ImageCropWidget(this, this.$target[0]).appendTo(this.options.wysiwyg.$editable);
+
+        await new Promise(resolve => {
+            this.$target.one('image_cropper_destroyed', resolve);
+        });
+        this.trigger_up('enable_loading_effect');
     },
-    transform() {
-        if (this.$target.data('transfo-destroy')) {
-            this.$target.removeData('transfo-destroy');
-            return;
-        }
+    /**
+     * Displays the image transformation tools
+     *
+     * @see this.selectClass for parameters
+     */
+    async transform() {
         this.trigger_up('hide_overlay');
+        this.trigger_up('disable_loading_effect');
+
         const document = this.$target[0].ownerDocument;
         this.$target.transfo({document});
         const mousedown = mousedownEvent => {
@@ -4189,21 +4208,51 @@ registry.ImageTools = SnippetOptionWidget.extend({
                 this.$target.transfo('destroy');
                 $(document).off('mousedown', mousedown);
             }
-            if ($(mousedownEvent.target).closest('#image-transform').length) {
-                this.$target
-                    .data('transfo-destroy', true)
-                    .attr('style', (this.$target.attr('style') || '')
-                    .replace(/[^;]*transform[\w:]*;?/g, ''));
-            }
-            this.$target.trigger('content_changed');
         };
         $(document).on('mousedown', mousedown);
+
+        await new Promise(resolve => {
+            document.addEventListener('mouseup', resolve, {once: true});
+        });
+        this.trigger_up('enable_loading_effect');
+    },
+    /**
+     * Resets the image cropping
+     * 
+     * @see this.selectClass for parameters
+     */
+    async resetCrop() {
+        const cropper = new weWidgets.ImageCropWidget(this, this.$target[0]);
+        await cropper.appendTo(this.options.wysiwyg.$editable);
+        await cropper.reset();
+    },
+    /**
+     * Resets the image rotation and translation
+     * 
+     * @see this.selectClass for parameters
+     */
+    async resetTransform() {
+        this.$target
+            .attr('style', (this.$target.attr('style') || '')
+            .replace(/[^;]*transform[\w:]*;?/g, ''));
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+￼    * @private
+￼    */
+    _isTransformed() {
+        return this.$target.is('[style*="transform"]');
+    },
+    /**
+￼    * @private
+￼    */
+    _isCropped() {
+        return this.$target.hasClass('o_we_image_cropped');
+    },
     /**
      * @override
      */
@@ -4218,7 +4267,23 @@ registry.ImageTools = SnippetOptionWidget.extend({
             } else {
                 return '';
             }
+        } else if (methodName === 'transform') {
+            return this._isTransformed() ? 'true' : '';
+        } else if (methodName === 'crop') {
+            return this._isCropped() ? 'true' : '';
         }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if (params.optionsPossibleValues.resetTransform) {
+            return this._isTransformed();
+        } 
+        if (params.optionsPossibleValues.resetCrop) {
+            return this._isCropped();
+        } 
         return this._super(...arguments);
     },
 });
