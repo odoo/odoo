@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Juand David Hurtado G. yaazkal@gmail.com https://github.com/yaazkal
+Juan David Hurtado G. yaazkal@gmail.com https://github.com/yaazkal
