@@ -414,7 +414,7 @@
         </we-button-group>
     </div>
 
-    <div data-js="ImageTools" data-selector="img">
+    <div data-selector="img">
         <we-input string="Description" class="o_we_large_input"
             data-select-attribute="" data-attribute-name="alt"
             placeholder="Alt tag"
@@ -515,9 +515,15 @@
 
     <div data-js="ImageTools" data-selector="img">
         <we-row string="Transform">
-            <we-button data-crop="" data-no-preview="true" title="Crop Image"><i class="fa fa-crop"></i></we-button>
-            <we-button data-transform="" data-no-preview="true" title="Transform the picture (click twice to reset transformation)">
+            <we-button data-crop="true" data-no-preview="true" title="Crop Image"><i class="fa fa-crop"></i></we-button>
+            <we-button class="ml-0 border-left-0" data-reset-crop="" data-no-preview="true" title="Reset crop">
+                Reset
+            </we-button>
+            <we-button data-transform="true" data-no-preview="true" title="Transform the picture">
                 <i class="fa fa-object-ungroup"></i>
+            </we-button>
+            <we-button class="ml-0 border-left-0" data-reset-transform="" data-no-preview="true" title="Reset transformation">
+                Reset
             </we-button>
         </we-row>
 
