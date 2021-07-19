@@ -98,7 +98,7 @@
                     <div class="h4 text-center">
                         <b>Detect</b> from Logo</div>
                     <div class="d-flex flex-column flex-grow-1 py-4">
-                        <a href="#" t-on-click="uploadLogo" t-attf-class="o_configurator_logo_upload position-relative btn-link rounded bg-100 overflow-hidden d-flex flex-grow-1 justify-content-center align-items-center text-decoration-none {{state.logo? 'h-50' : ''}}">
+                        <div t-on-click="uploadLogo" t-attf-class="o_configurator_logo_upload position-relative btn-link rounded bg-100 overflow-hidden d-flex flex-grow-1 justify-content-center align-items-center text-decoration-none {{state.logo? 'h-50' : ''}}">
                             <input type="file" class="logo_selection_input" t-on-change="changeLogo" style="display:none" name="logo_selection" t-ref="logoSelectionInput" accept="image/*"/>
                             <div class="o_configurator_logo_button text-center">
                                 <i t-attf-class="fa fa-cloud-upload {{state.logo? 'fa-4x' : 'fa-6x'}}"></i>
@@ -108,7 +108,7 @@
                             <div t-if="state.logo" class="o_configurator_logo_wrapper position-absolute d-flex justify-content-center align-items-center w-100 h-100">
                                 <img style="height: 120px" t-attf-src="{{state.logo}}"/>
                             </div>
-                        </a>
+                        </div>
                         <div t-if="state.recommendedPalette" class="w-75 mx-auto px-2 pt-3" style="max-width: 184px;">
                             <h6 class="text-center text-success d-block badge mb-0 mt-n2">Detected Colors</h6>
                             <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{getters.getSelectedPaletteName() == 'recommendedPalette' ? 'selected' : ''}}"
