@@ -5,15 +5,12 @@
     'name': 'Lead Generation',
     'summary': 'Generate Leads/Opportunities based on country, industries, size, etc.',
     'category': 'Sales/CRM',
-    'version': '1.2',
+    'version': '1.3',
     'depends': [
         'iap_crm',
         'iap_mail',
     ],
     'data': [
-        'data/crm.iap.lead.industry.csv',
-        'data/crm.iap.lead.role.csv',
-        'data/crm.iap.lead.seniority.csv',
         'data/ir_sequence_data.xml',
         'security/ir.model.access.csv',
         'views/crm_lead_views.xml',

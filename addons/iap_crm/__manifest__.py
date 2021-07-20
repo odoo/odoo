@@ -7,7 +7,7 @@
     'summary': """Bridge between IAP and CRM""",
     'description': """Bridge between IAP and CRM""",
     'category': 'Hidden/Tools',
-    'version': '1.0',
+    'version': '1.1',
     'depends': [
         'crm',
         'iap_mail',
@@ -16,6 +16,10 @@
     'installable': True,
     'auto_install': True,
     'data': [
+        'data/crm.iap.lead.industry.csv',
+        'data/crm.iap.lead.role.csv',
+        'data/crm.iap.lead.seniority.csv',
+        'security/ir.model.access.csv',
     ],
     'license': 'LGPL-3',
 }
