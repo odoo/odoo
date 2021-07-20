@@ -1510,6 +1510,7 @@ class StockMove(models.Model):
         if self.env.context.get('source_location_id'):
             defaults['location_id'] = self.env.context['source_location_id']
         new_move = self.with_context(rounding_method='HALF-UP').copy(defaults)
+        new_move.write({'reference': self.reference})
 
         # FIXME: pim fix your crap
         # Update the original `product_qty` of the move. Use the general product's decimal
