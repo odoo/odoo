@@ -13,10 +13,6 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
     const FAVORITE_SHARED_GROUP = 2;
     const DISABLE_FAVORITE = "search_disable_custom_filters";
 
-    let filterId = 1;
-    let groupId = 1;
-    let groupNumber = 0;
-
     /**
      * Control panel model
      *
@@ -214,6 +210,9 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
          */
         prepareState() {
             Object.assign(this.state, {
+                nextGroupId: 1,
+                nextGroupNumber: 1,
+                nextId: 1,
                 filters: {},
                 query: [],
             });
@@ -271,13 +270,13 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
             const preFavorite = await this._saveQuery(preFilter);
             this.clearQuery();
             const filter = Object.assign(preFavorite, {
-                groupId,
-                id: filterId,
+                groupId: this.state.nextGroupId,
+                id: this.state.nextId,
             });
-            this.state.filters[filterId] = filter;
-            this.state.query.push({ groupId, filterId });
-            groupId++;
-            filterId++;
+            this.state.filters[this.state.nextId] = filter;
+            this.state.query.push({ groupId: this.state.nextGroupId, filterId: this.state.nextId });
+            this.state.nextGroupId++;
+            this.state.nextId++;
         }
 
         /**
@@ -293,18 +292,18 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
             const newFilterIdS = [];
             prefilters.forEach(preFilter => {
                 const filter = Object.assign(preFilter, {
-                    groupId,
-                    groupNumber,
-                    id: filterId,
+                    groupId: this.state.nextGroupId,
+                    groupNumber: this.state.nextGroupNumber,
+                    id: this.state.nextId,
                     type: 'filter',
                 });
-                this.state.filters[filterId] = filter;
-                this.state.query.push({ groupId, filterId });
-                newFilterIdS.push(filterId);
-                filterId++;
+                this.state.filters[this.state.nextId] = filter;
+                this.state.query.push({ groupId: this.state.nextGroupId, filterId: this.state.nextId });
+                newFilterIdS.push(this.state.nextId);
+                this.state.nextId++;
             });
-            groupId++;
-            groupNumber++;
+            this.state.nextGroupId++;
+            this.state.nextGroupNumber++;
             return newFilterIdS;
         }
 
@@ -319,22 +318,22 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                 description: field.string || field.name,
                 fieldName: field.name,
                 fieldType: field.type,
-                groupId: groupBy ? groupBy.groupId : groupId++,
-                groupNumber,
-                id: filterId,
+                groupId: groupBy ? groupBy.groupId : this.state.nextGroupId++,
+                groupNumber: this.state.nextGroupNumber,
+                id: this.state.nextId,
                 type: 'groupBy',
                 custom: true,
             };
-            this.state.filters[filterId] = filter;
+            this.state.filters[this.state.nextId] = filter;
             if (['date', 'datetime'].includes(field.type)) {
                 filter.hasOptions = true;
                 filter.defaultOptionId = DEFAULT_INTERVAL;
-                this.toggleFilterWithOptions(filterId);
+                this.toggleFilterWithOptions(this.state.nextId);
             } else {
-                this.toggleFilter(filterId);
+                this.toggleFilter(this.state.nextId);
             }
-            groupNumber++;
-            filterId++;
+            this.state.nextGroupNumber++;
+            this.state.nextId++;
         }
 
         /**
@@ -685,14 +684,14 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
          */
         _createGroupOfFilters(pregroup) {
             pregroup.forEach(preFilter => {
-                const filter = Object.assign(preFilter, { groupId, id: filterId });
-                this.state.filters[filterId] = filter;
+                const filter = Object.assign(preFilter, { groupId: this.state.nextGroupId, id: this.state.nextId });
+                this.state.filters[this.state.nextId] = filter;
                 if (!this.defaultFavoriteId && filter.isDefault && filter.type === 'field') {
                     this._prepareDefaultLabel(filter);
                 }
-                filterId++;
+                this.state.nextId++;
             });
-            groupId++;
+            this.state.nextGroupId++;
         }
 
         /**
@@ -737,7 +736,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                     }
                     currentTag = preFilter.tag;
                     currentGroup = [];
-                    groupNumber++;
+                    this.state.nextGroupNumber++;
                 }
                 if (preFilter.tag !== 'separator') {
                     const filter = {
@@ -764,7 +763,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                         }
                     }
                     if (filter.type === 'filter' || filter.type === 'groupBy') {
-                        filter.groupNumber = groupNumber;
+                        filter.groupNumber = this.state.nextGroupNumber;
                     }
                     this._extractAttributes(filter, preFilter.attrs);
                     currentGroup.push(filter);

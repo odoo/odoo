@@ -3,7 +3,7 @@
 // TODO: add this in info props description
 
 // breadcrumbs: { type: Array, optional: 1 },
-// __exportState__: { type: CallbackRecorder, optional: 1 },
+// __exportLocalState__: { type: CallbackRecorder, optional: 1 },
 // __saveParams__: { type: CallbackRecorder, optional: 1 },
 // display: { type: Object, optional: 1 },
 // displayName: { type: String, optional: 1 },

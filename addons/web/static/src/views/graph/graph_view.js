@@ -152,7 +152,7 @@ export class GraphView extends Component {
         this.model = useModel(this.constructor.Model, modelParams);
 
         useSetupView({
-            exportState: () => this.model.metaData,
+            exportLocalState: () => this.model.metaData,
             saveParams: () => this.saveParams(),
         });
     }

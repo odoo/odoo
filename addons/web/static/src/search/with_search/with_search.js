@@ -7,8 +7,6 @@ import { useBus, useService } from "@web/core/utils/hooks";
 const { Component, hooks } = owl;
 const { useSubEnv } = hooks;
 
-const searchModelStateSymbol = Symbol("searchModelState");
-
 export const SEARCH_KEYS = ["context", "domain", "domains", "groupBy", "orderBy"];
 const OTHER_SEARCH_KEYS = ["irFilters", "searchViewArch", "searchViewFields", "searchViewId"];
 
@@ -34,9 +32,9 @@ export class WithSearch extends Component {
         });
 
         useSetupAction({
-            exportSearchState: () => {
+            exportGlobalState: () => {
                 return {
-                    [searchModelStateSymbol]: this.searchModel.exportState(),
+                    searchModel: JSON.stringify(this.searchModel.exportState()),
                 };
             },
         });
@@ -44,9 +42,9 @@ export class WithSearch extends Component {
 
     async willStart() {
         const config = Object.assign({}, this.props);
-        if (config.searchState && config.searchState[searchModelStateSymbol]) {
-            config.state = config.searchState[searchModelStateSymbol];
-            delete config.searchState;
+        if (config.globalState && config.globalState.searchModel) {
+            config.state = JSON.parse(config.globalState.searchModel);
+            delete config.globalState;
         }
         await this.searchModel.load(config);
     }
@@ -93,8 +91,7 @@ WithSearch.props = {
     actionId: { type: [Number, false], optional: 1 },
     displayName: { type: String, optional: 1 },
 
-    // search state
-    searchState: { type: Object, optional: 1 },
+    globalState: { type: Object, optional: 1 },
 
     // search query elements
     context: { type: Object, optional: 1 },

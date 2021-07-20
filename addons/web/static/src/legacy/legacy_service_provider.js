@@ -5,7 +5,7 @@ import Context from "web.Context";
 
 import { browser } from "../core/browser/browser";
 import { registry } from "../core/registry";
-import { mapDoActionOptionAPI } from "./utils";
+import { mapDoActionOptionAPI } from "./backend_utils";
 
 export const legacyServiceProvider = {
     dependencies: ["effect", "action"],

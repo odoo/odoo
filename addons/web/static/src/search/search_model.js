@@ -94,17 +94,7 @@ function arraytoMap(array) {
  * @param {Object} target
  */
 function execute(op, source, target) {
-    const {
-        domainParts,
-        resModel,
-        query,
-        nextId,
-        nextGroupId,
-        nextGroupNumber,
-        searchItems,
-        sections,
-    } = source;
-    target.resModel = resModel;
+    const { query, nextId, nextGroupId, nextGroupNumber, searchItems, sections } = source;
 
     target.nextGroupId = nextGroupId;
     target.nextGroupNumber = nextGroupNumber;
@@ -112,8 +102,6 @@ function execute(op, source, target) {
 
     target.query = query;
     target.searchItems = searchItems;
-
-    target.domainParts = domainParts;
 
     target.sections = op(sections);
     for (const [_, section] of target.sections) {
@@ -258,14 +246,11 @@ export class SearchModel extends EventBus {
         }
 
         if (config.state) {
-            const { resModel } = JSON.parse(config.state);
-            // check that state is consistent with other props
-            if (this.resModel === resModel) {
-                this._importState(config.state);
-                this.searchDomain = this.getDomain({ full: false });
-                this.sectionsPromise = Promise.resolve();
-                return;
-            }
+            this._importState(config.state);
+            this.domainParts = {};
+            this.searchDomain = this._getDomain({ full: false });
+            this.sectionsPromise = Promise.resolve();
+            return;
         }
 
         this.blockNotification = true;
@@ -730,12 +715,12 @@ export class SearchModel extends EventBus {
     }
 
     /**
-     * @returns {string}
+     * @returns {Object}
      */
     exportState() {
         const state = {};
         execute(mapToArray, this, state);
-        return JSON.stringify(state);
+        return state;
     }
 
     getDomainParts() {
@@ -1854,10 +1839,10 @@ export class SearchModel extends EventBus {
     }
 
     /**
-     * @param {string} state
+     * @param {Object} state
      */
     _importState(state) {
-        execute(arraytoMap, JSON.parse(state), this);
+        execute(arraytoMap, state, this);
     }
 
     /**

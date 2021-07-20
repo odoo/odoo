@@ -7,11 +7,11 @@ import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { legacyServiceProvider } from "@web/legacy/legacy_service_provider";
 import {
-    makeLegacyActionManagerService,
     makeLegacyNotificationService,
     mapLegacyEnvToWowlEnv,
     makeLegacySessionService,
 } from "@web/legacy/utils";
+import { makeLegacyActionManagerService } from "@web/legacy/backend_utils";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
 import { effectService } from "@web/core/effects/effect_service";

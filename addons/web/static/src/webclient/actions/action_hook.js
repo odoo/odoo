@@ -62,23 +62,23 @@ export function useSetupAction(params = {}) {
     const component = useComponent();
     const {
         __beforeLeave__,
-        __exportSearchState__,
-        __exportState__,
+        __exportGlobalState__,
+        __exportLocalState__,
         __saveParams__,
     } = component.env;
 
     if (__beforeLeave__ && params.beforeLeave) {
         useCallbackRecorder(__beforeLeave__, params.beforeLeave);
     }
-    if (__exportSearchState__ && params.exportSearchState) {
-        useCallbackRecorder(__exportSearchState__, params.exportSearchState);
+    if (__exportGlobalState__ && params.exportGlobalState) {
+        useCallbackRecorder(__exportGlobalState__, params.exportGlobalState);
     }
-    if (__exportState__) {
-        useCallbackRecorder(__exportState__, () => {
+    if (__exportLocalState__) {
+        useCallbackRecorder(__exportLocalState__, () => {
             const state = {};
             state[scrollSymbol] = getScrollPosition(component);
-            if (params.exportState) {
-                Object.assign(state, params.exportState());
+            if (params.exportLocalState) {
+                Object.assign(state, params.exportLocalState());
             }
             return state;
         });

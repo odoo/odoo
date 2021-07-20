@@ -51,7 +51,7 @@ const { Component } = owl;
  *  @property {Object[]} [dynamicFilters]
  *  @property {boolean} [loadSearchPanel]
  *  @property {string[]} [searchMenuTypes]
- *  @property {Object} [searchState]
+ *  @property {Object} [globalState]
  */
 
 const STANDARD_PROPS = new Set([
@@ -88,7 +88,7 @@ const STANDARD_PROPS = new Set([
     "breadcrumbs",
     "viewSwitcherEntries",
 
-    "searchState",
+    "globalState",
 
     // LEGACY: remove this later (clean when mappings old state <-> new state are established)
     "searchPanel",

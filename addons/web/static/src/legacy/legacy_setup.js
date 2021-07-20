@@ -3,12 +3,12 @@
 import { registry } from "../core/registry";
 import {
     makeLegacyNotificationService,
-    makeLegacyActionManagerService,
     makeLegacyRpcService,
     makeLegacySessionService,
     makeLegacyDialogMappingService,
     makeLegacyCrashManagerService,
 } from "./utils";
+import { makeLegacyActionManagerService } from "./backend_utils";
 import * as AbstractService from "web.AbstractService";
 import * as legacyEnv from "web.env";
 import * as session from "web.session";

@@ -151,7 +151,7 @@ odoo.define("web.Model", function (require) {
      * 3. Registration of the extension into the main model
      * @see Registry()
      * ```
-     *  ActionModel.registry.add("SearchPanel", ControlPanelModelExtension, 10);
+     *  ActionModel.registry.add("ControlPanel", ControlPanelModelExtension, 10);
      * ```
      *
      *-------------------------------------------------------------------------

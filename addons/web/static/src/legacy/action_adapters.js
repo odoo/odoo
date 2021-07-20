@@ -8,7 +8,8 @@ import { useDebugCategory } from "../core/debug/debug_context";
 import { Dialog } from "../core/dialog/dialog";
 import { useEffect, useService } from "@web/core/utils/hooks";
 import { ViewNotFoundError } from "../webclient/actions/action_service";
-import { cleanDomFromBootstrap, wrapSuccessOrFail, mapDoActionOptionAPI } from "./utils";
+import { cleanDomFromBootstrap, wrapSuccessOrFail } from "./utils";
+import { mapDoActionOptionAPI } from "./backend_utils";
 
 const { Component, tags, hooks } = owl;
 
@@ -335,7 +336,6 @@ export class ViewAdapter extends ActionAdapter {
     async _trigger_up(ev) {
         const payload = ev.data;
         if (ev.name === "switch_view") {
-            const state = ev.target.exportState();
             try {
                 const props = {};
                 if (payload.mode) {
@@ -345,11 +345,6 @@ export class ViewAdapter extends ActionAdapter {
                 // if make 'open a record, come back, and create a new record' crash
                 props.resId = payload.res_id;
                 // }
-                for (const key of ["resIds", "searchModel", "searchPanel"]) {
-                    if (state[key]) {
-                        props[key] = state[key];
-                    }
-                }
                 await this.actionService.switchView(payload.view_type, props);
             } catch (e) {
                 if (e instanceof ViewNotFoundError) {
