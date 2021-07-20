@@ -370,7 +370,7 @@ class Website(models.Model):
                 try:
                     view_id = self.env['website'].with_context(website_id=website.id).viewref(snippet)
                     if view_id:
-                        el = html.fromstring(view_id._render(values=cta_data))
+                        el = html.fromstring(view_id._render(values=cta_data).decode())
 
                         # Add the data-snippet attribute to identify the snippet
                         # for compatibility code
