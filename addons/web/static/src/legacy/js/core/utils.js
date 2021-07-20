@@ -8,6 +8,7 @@ odoo.define('web.utils', function (require) {
  */
 
 var translation = require('web.translation');
+var cookieUtils = require('web.utils.cookies');
 
 var _t = translation._t;
 var id = -1;
@@ -311,7 +312,7 @@ function Markup(v, ...exprs) {
     return new _Markup(s);
 }
 
-var utils = {
+var utils = Object.assign({
     AlreadyDefinedPatchError,
     UnknownPatchError,
     Markup,
@@ -389,25 +390,6 @@ var utils = {
      */
     generateID: function () {
         return ++id;
-    },
-    /**
-     * Read the cookie described by c_name
-     *
-     * @param {string} c_name
-     * @returns {string}
-     */
-    get_cookie: function (c_name) {
-        var cookies = document.cookie ? document.cookie.split('; ') : [];
-        for (var i = 0, l = cookies.length; i < l; i++) {
-            var parts = cookies[i].split('=');
-            var name = parts.shift();
-            var cookie = parts.join('=');
-
-            if (c_name && c_name === name) {
-                return cookie;
-            }
-        }
-        return "";
     },
     /**
      * Gets dataURL (base64 data) from the given file or blob.
@@ -850,21 +832,6 @@ var utils = {
         return str + new Array(size - str.length + 1).join('0');
     },
     /**
-     * Create a cookie
-     * @param {String} name the name of the cookie
-     * @param {String} value the value stored in the cookie
-     * @param {Integer} ttl time to live of the cookie in millis. -1 to erase the cookie.
-     */
-    set_cookie: function (name, value, ttl) {
-        ttl = ttl || 24*60*60*365;
-        document.cookie = [
-            name + '=' + value,
-            'path=/',
-            'max-age=' + ttl,
-            'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
-        ].join(';');
-    },
-    /**
      * Return a shallow copy of a given array sorted by a given criterion or a default one.
      * The given criterion can either be:
      * - a string: a property name on the array elements returning the sortable primitive
@@ -1174,7 +1141,7 @@ var utils = {
             ['name', '=like', '%.report_assets\_%.css'],
         ];
     },
-};
+}, cookieUtils);
 
 return utils;
 
