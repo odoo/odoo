@@ -109,8 +109,17 @@ class Job(models.Model):
                 'job_id': self.id,
                 'department_id': self.department_id.id,
                 'company_id': self.department_id.company_id.id if self.department_id else self.company_id.id,
+                'user_id': self.user_id.id,
             })
         return values
+
+    def write(self, vals):
+        res = super(Job, self).write(vals)
+        if 'user_id' in vals:
+            alias_defaults = ast.literal_eval(self.alias_defaults or "{}")
+            alias_defaults['user_id'] = self.user_id.id
+            self.alias_defaults = str(alias_defaults)
+        return res
 
     @api.model
     def create(self, vals):
