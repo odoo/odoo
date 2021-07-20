@@ -614,9 +614,10 @@
                 <form string="Contact Tag">
                     <sheet>
                         <group col="4">
-                            <field name="name"/>
-                            <field name="active" widget="boolean_toggle"/>
+                            <field name="name" placeholder='e.g. "Consulting Services"'/>
+                            <field name="color" widget="color_picker"/>
                             <field name="parent_id"/>
+                            <field name="active" widget="boolean_toggle"/>
                         </group>
                     </sheet>
                 </form>
@@ -630,6 +631,7 @@
             <field name="arch" type="xml">
                 <tree string="Contact Tags">
                     <field name="display_name"/>
+                    <field name="color" widget="color_picker"/>
                 </tree>
             </field>
         </record>
