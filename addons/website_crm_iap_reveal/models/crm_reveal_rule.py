@@ -331,18 +331,29 @@ class CRMRevealRule(models.Model):
             'data': server_payload
         }
         result = self._iap_contact_reveal(params, timeout=300)
+
+        all_ips, done_ips = list(server_payload['ips'].keys()), []
         for res in result.get('reveal_data', []):
+            done_ips.append(res['ip'])
             if not res.get('not_found'):
                 lead = self._create_lead_from_response(res)
                 self.env['crm.reveal.view'].search([('reveal_ip', '=', res['ip'])]).unlink()
             else:
-                self.env['crm.reveal.view'].search([('reveal_ip', '=', res['ip'])]).write({
-                    'reveal_state': 'not_found'
-                })
+                views = self.env['crm.reveal.view'].search([('reveal_ip', '=', res['ip'])])
+                views.write({'reveal_state': 'not_found'})
+                views.flush()
+
         if result.get('credit_error'):
             self.env['crm.iap.lead.helpers'].notify_no_more_credit('reveal', self._name, 'reveal.already_notified')
             return False
         else:
+            # avoid loops if IAP return result is broken: otherwise some IP may create loops
+            views = self.env['crm.reveal.view'].search([
+                ('reveal_ip', 'in', [ip for ip in all_ips if ip not in done_ips])
+            ])
+            views.write({'reveal_state': 'not_found'})
+            views.flush()
+            # reset notified parameter to re-send credit notice if appears again
             self.env['ir.config_parameter'].sudo().set_param('reveal.already_notified', False)
         return True
 
