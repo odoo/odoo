@@ -11264,7 +11264,7 @@ QUnit.module('Views', {
 
         // double click selecting text doesn't start quick edit
         window.getSelection().removeAllRanges();
-        await testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
+        testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
         range.selectNode(form.$('.o_field_widget[name="display_name"]')[0]);
         window.getSelection().addRange(range);
         await testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
