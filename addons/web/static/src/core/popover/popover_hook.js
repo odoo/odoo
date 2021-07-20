@@ -24,10 +24,10 @@ export function usePopover() {
          * @param {Object}                  props
          * @param {Object}                  [options]
          * @param {boolean}                 [options.closeOnClickAway=true]
-         * @param {() => void}              [options.onClose]
+         * @param {function()}              [options.onClose]
          * @param {string}                  [options.popoverClass]
          * @param {string}                  [options.position]
-         * @returns {() => void}
+         * @returns {function()}
          */
         add(target, Component, props, options = {}) {
             const newOptions = Object.create(options);
