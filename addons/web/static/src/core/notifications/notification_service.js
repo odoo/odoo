@@ -12,16 +12,16 @@ const AUTOCLOSE_DELAY = 4000;
  * @typedef {Object} NotificationButton
  * @property {string} name
  * @property {string} [icon]
- * @property {boolean} [primary]
- * @property {() => void} onClick
+ * @property {boolean} [primary=false]
+ * @property {function()} onClick
  *
  * @typedef {Object} NotificationOptions
  * @property {string} [title]
  * @property {"warning" | "danger" | "success" | "info"} [type]
- * @property {boolean} [sticky]
+ * @property {boolean} [sticky=false]
  * @property {string} [className]
- * @property {() => void} [onClose]
- * @property {NotificationButton} [buttons]
+ * @property {function()} [onClose]
+ * @property {NotificationButton[]} [buttons]
  */
 
 export const notificationService = {
