@@ -76,20 +76,39 @@ export function makeMockXHR(response, sendCb, def) {
             addEventListener(type, listener) {
                 if (type === "load") {
                     this._loadListener = listener;
+                } else if (type === "error") {
+                    this._errorListener = listener;
                 }
+            },
+            set onload(listener) {
+                this._loadListener = listener;
+            },
+            set onerror(listener) {
+                this._errorListener = listener;
             },
             open(method, url) {
                 this.url = url;
             },
+            getResponseHeader() {},
             setRequestHeader() {},
             async send(data) {
+                let listener = this._loadListener;
                 if (sendCb) {
-                    sendCb.call(this, JSON.parse(data));
+                    if (typeof data === "string") {
+                        try {
+                            data = JSON.parse(data);
+                        } catch (e) {}
+                    }
+                    try {
+                        await sendCb.call(this, data);
+                    } catch (e) {
+                        listener = this._errorListener;
+                    }
                 }
                 if (def) {
                     await def;
                 }
-                this._loadListener();
+                listener.call(this);
             },
             response: JSON.stringify(response || ""),
         };
