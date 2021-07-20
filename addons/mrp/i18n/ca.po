@@ -13,8 +13,8 @@
 # M Palau <mpalau@tda.ad>, 2020
 # Arnau Ros, 2020
 # Susanna Pujol, 2020
-# jabelchi, 2021
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
+# jabelchi, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: José Cabrera Lozano <jose.cabrera@edukative.es>, 2021\n"
+"Last-Translator: jabelchi, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -345,7 +345,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
-msgstr ""
+msgstr "Una ordre de fabricació ja ha estat acabada o cancel·lada."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -1096,7 +1096,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
 msgid "Create a new work center"
-msgstr ""
+msgstr "Crear un nou centre de trebal"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_report
@@ -1872,7 +1872,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "It has already been unblocked."
-msgstr ""
+msgstr "Ja ha estat desbloquejat."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__phantom
@@ -4312,7 +4312,7 @@ msgstr "Unitats"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unlock"
-msgstr "Desboquejar"
+msgstr "Desbloquejar"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4904,6 +4904,14 @@ msgid "You have to produce at least one %s."
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -4943,7 +4951,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
 #, python-format
 msgid "You need to provide a lot for the finished product."
-msgstr ""
+msgstr "Cal que faciliteu un lot pel producte final."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4957,7 +4965,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You should provide a lot number for the final product."
-msgstr ""
+msgstr "Cal que faciliteu un lot pel producte final."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0

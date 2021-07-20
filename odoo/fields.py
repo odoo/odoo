@@ -929,8 +929,7 @@ class Field(MetaField('DummyField', (object,), {})):
         indexname = '%s_%s_index' % (model._table, self.name)
         if self.index:
             try:
-                with model._cr.savepoint(flush=False):
-                    sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
+                sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
             except psycopg2.OperationalError:
                 _schema.error("Unable to add index for %s", self)
         else:
@@ -2528,7 +2527,10 @@ class Many2one(_Relational):
             # value is either a pair (id, name), or a tuple of ids
             id_ = value[0] if value else None
         elif isinstance(value, dict):
-            id_ = record.env[self.comodel_name].new(value).id
+            # return a new record (with the given field 'id' as origin)
+            comodel = record.env[self.comodel_name]
+            origin = comodel.browse(value.get('id'))
+            id_ = comodel.new(value, origin=origin).id
         else:
             id_ = None
 
@@ -2880,7 +2882,7 @@ class _RelationalMulti(_Relational):
 
     def _setup_regular_full(self, model):
         super(_RelationalMulti, self)._setup_regular_full(model)
-        if isinstance(self.domain, list):
+        if not self.compute and isinstance(self.domain, list):
             self.depends += tuple(
                 self.name + '.' + arg[0]
                 for arg in self.domain

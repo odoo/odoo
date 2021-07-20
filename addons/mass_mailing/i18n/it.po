@@ -216,7 +216,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"failed_text\">emails could not be sent.</span>"
-msgstr ""
+msgstr "<span name=\"failed_text\">e-mail non possono essere inviate.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -224,6 +224,8 @@ msgid ""
 "<span name=\"ignored_text\">emails have been ignored and will not be "
 "sent.</span>"
 msgstr ""
+"<span name=\"ignored_text\">e-mail sono state ignorate e non verranno "
+"inviate.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -238,6 +240,8 @@ msgid ""
 "<span name=\"scheduled_text\">emails are in queue and will be sent "
 "soon.</span>"
 msgstr ""
+"<span name=\"scheduled_text\">e-mail sono in coda e verranno inviate a "
+"breve.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
@@ -261,6 +265,10 @@ msgid ""
 "                            <span attrs=\"{'invisible': [('bounced', '=', False)]}\"> appears to be invalid</span>\n"
 "                            </strong>"
 msgstr ""
+"<strong><span name=\"trace_type_name_mail\">L'e-mail</span>\n"
+"                            <span attrs=\"{'invisible': [('exception', '=', False)]}\"> non può essere inviata</span>\n"
+"                            <span attrs=\"{'invisible': [('bounced', '=', False)]}\"> non sembra essere valida</span>\n"
+"                            </strong>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
@@ -425,6 +433,8 @@ msgid ""
 "At least one of the mailing list you are trying to archive is used in an "
 "ongoing mailing campaign."
 msgstr ""
+"Almeno una delle mailing list che si sta tentando di archiviare è utilizzata"
+" in una campagna di invio e-mail in corso."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -531,6 +541,8 @@ msgstr "Campagne"
 msgid ""
 "Campaigns are the perfect tool to track results across multiple mailings."
 msgstr ""
+"Le campagne sono lo strumento perfetto per monitorare i risultati di invii "
+"e-mail multipli."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
@@ -821,7 +833,7 @@ msgstr "Consegnate"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered to"
-msgstr ""
+msgstr "Consegnate a"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__medium_id
@@ -1078,7 +1090,7 @@ msgstr "Icona"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare un'attività di eccezione."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_needaction
@@ -1352,6 +1364,8 @@ msgid ""
 "Mailing contacts allow you to separate your marketing audience from your "
 "business contact directory."
 msgstr ""
+"I contatti per invio e-mail consentono di separare la platea del marketing "
+"dall'elenco dei contatti aziendali."
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_create_mass_mailings_from_campaign
@@ -2000,6 +2014,7 @@ msgstr "Invia un messaggio campione"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send a sample email for testing purpose to the address below."
 msgstr ""
+"Invio di una e-mail campione all'indirizzo sottostante a scopo di prova."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
@@ -2173,7 +2188,7 @@ msgstr "Grazie! Il commento è stato inviato con successo!"
 #. module: mass_mailing
 #: model_terms:mailing.list,toast_content:mass_mailing.mass_mail_list_2
 msgid "Thanks for subscribing!"
-msgstr ""
+msgstr "Grazie per l'iscrizione!"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
@@ -2301,6 +2316,8 @@ msgid ""
 "Trackers are used to collect count stat about click on links and generate "
 "short URLs."
 msgstr ""
+"I monitoraggi servono a raccogliere statistiche riguardo il numero di clic "
+"sui link e a generare URL brevi."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__trace_type
@@ -2311,7 +2328,7 @@ msgstr "Tipologia"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di attività di eccezione sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_utm_campaign
@@ -2362,7 +2379,7 @@ msgstr "Modello invio massivo e-mail %s non supportato"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 msgid "Update my subscriptions"
-msgstr ""
+msgstr "Aggiorna iscrizioni"
 
 #. module: mass_mailing
 #. openerp-web
@@ -2503,6 +2520,8 @@ msgid ""
 "You don't need to import your mailing lists, you can easily\n"
 "                send emails<br> to any contact saved in other Odoo apps."
 msgstr ""
+"È possibile inviare e-mail in modo facile a tutti i contatti salvati in\n"
+"                altre applicazioni<br> Odoo, senza dover importare le mailing list."
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
@@ -2510,6 +2529,8 @@ msgid ""
 "You don't need to import your mailing lists, you can easily\n"
 "            send emails<br> to any contact saved in other Odoo apps."
 msgstr ""
+"È possibile inviare e-mail in modo facile a tutti i contatti salvati in\n"
+"            altre applicazioni<br> Odoo, senza dover importare le mailing list."
 
 #. module: mass_mailing
 #. openerp-web

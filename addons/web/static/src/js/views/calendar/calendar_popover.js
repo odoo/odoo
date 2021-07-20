@@ -119,9 +119,8 @@ var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
                 var $fieldContainer = $('<div>', {class: 'flex-grow-1'});
                 $fieldContainer.appendTo($field);
 
-                defs.push(fieldWidget.appendTo($fieldContainer).then(function () {
-                    self.$fieldsList.push($field);
-                }));
+                self.$fieldsList.push($field);
+                defs.push(fieldWidget.appendTo($fieldContainer));
             });
             return Promise.all(defs);
         });

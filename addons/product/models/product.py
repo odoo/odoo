@@ -423,6 +423,12 @@ class ProductProduct(models.Model):
             args.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
         return super(ProductProduct, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
+    @api.depends_context('display_default_code')
+    def _compute_display_name(self):
+        # `display_name` is calling `name_get()`` which is overidden on product
+        # to depend on `display_default_code`
+        return super()._compute_display_name()
+
     def name_get(self):
         # TDE: this could be cleaned a bit I think
 

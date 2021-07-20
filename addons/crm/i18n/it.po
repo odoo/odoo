@@ -10,12 +10,12 @@
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
 # Romica Paun <roa@odoo.com>, 2019
 # David Minneci <david@numeko.it>, 2019
-# Léonie Bouchat <lbo@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Luigi Di Naro <gigidn@gmail.com>, 2019
 # Paolo Valier, 2019
 # efaOdoo <efa@odoo.com>, 2020
 # Iacopo Simonelli <lsi@odoo.com>, 2020
+# Léonie Bouchat <lbo@odoo.com>, 2021
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
@@ -199,6 +199,16 @@ msgstr ""
 "<p><b>Invia messaggi</b> al tuo potenziale cliente e ottieni risposte "
 "allegate automaticamente a questa opportunità.</p><p class=\"mb0\">Digita "
 "<i>\"@\"</i> per menzionare le persone - corrisponde al CC delle e-mail.</p>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
+"<p>Dato che non fai parte di alcun team di vendita, Odoo apre il primo in "
+"modo predefinito.</p>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1188,7 +1198,7 @@ msgstr "Icona"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare un'attività di eccezione."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
@@ -1935,6 +1945,12 @@ msgstr ""
 "con i canali del flusso di vendita."
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr "Totale opportunità"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr "Ricavi delle opportunità"
@@ -2027,6 +2043,7 @@ msgstr "Altro"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "Opportunità in ritardo"
 
@@ -2499,6 +2516,12 @@ msgid "Team Pipelines"
 msgstr "Flussi del team"
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr "Campo tecnico usato per il pulsante statistiche"
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
@@ -2616,6 +2639,16 @@ msgid "Title"
 msgstr "Titolo"
 
 #. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"To prevent data loss, Leads and Opportunities can only be merged by groups "
+"of 5."
+msgstr ""
+"Per evitare la perdita di dati, i contatti e le opportunità possono essere "
+"uniti solo a gruppi di 5."
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Today Activities"
@@ -2657,7 +2690,7 @@ msgstr "La tipologia è usata per separare i contatti e le opportunità"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di attività di eccezione sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: crm
 #: model:ir.model,name:crm.model_utm_campaign

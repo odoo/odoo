@@ -16,7 +16,7 @@
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2019
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
 # Tiago Rigo <tiagomrigo@gmail.com>, 2020
-# Vanderlei Romera <vanderleiromera@gmail.com>, 2020
+# Vanderlei P. Romera <vanderleiromera@gmail.com>, 2020
 # Fernando Colus <fcolus1@gmail.com>, 2020
 # Éder Brito <britoederr@gmail.com>, 2020
 # 
@@ -1091,6 +1091,16 @@ msgid ""
 msgstr ""
 "Você está enviando diferentes tipos de encomenda na mesma entrega.\n"
 "Tipos de Encomenda: %s"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

@@ -24,6 +24,7 @@
 # efraimbiffi <eab@odoo.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Iacopo Simonelli <lsi@odoo.com>, 2020
+# Alex Comba <alex.comba@agilebg.com>, 2021
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
@@ -2219,6 +2220,8 @@ msgid ""
 "Error without exception. Probably due do concurrent access update of "
 "notification records. Please see with an administrator."
 msgstr ""
+"Errore senza eccezione. È dovuto probabilmente all'aggiornamento di accesso "
+"simultaneo ai record di notifica. Contattare un amministratore."
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:0
@@ -2267,7 +2270,7 @@ msgstr "Filtri estesi..."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__fail_counter
 msgid "Fail Mail"
-msgstr "Invio email fallito"
+msgstr "E-mail con errore"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -2568,7 +2571,7 @@ msgstr "Gestire tramite Odoo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__has_cancel
 msgid "Has Cancel"
-msgstr "Ha cancellato"
+msgstr "Ha annullato"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
@@ -2684,7 +2687,7 @@ msgstr "Icona"
 #: model:ir.model.fields,help:mail.field_res_partner__activity_exception_icon
 #: model:ir.model.fields,help:mail.field_res_users__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare un'attività di eccezione."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__res_id
@@ -4277,6 +4280,7 @@ msgstr "In linea"
 #, python-format
 msgid "Only administrators are allowed to export mail message"
 msgstr ""
+"L'esportazione dei messaggi di posta è consentita solo agli amministratori"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -4784,7 +4788,7 @@ msgstr "Re:"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__read_date
 msgid "Read Date"
-msgstr ""
+msgstr "Data lettura"
 
 #. module: mail
 #. openerp-web
@@ -5754,7 +5758,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "This record has an exception activity."
-msgstr ""
+msgstr "Il record ha un'attività eccezione."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -5908,7 +5912,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner__activity_exception_decoration
 #: model:ir.model.fields,help:mail.field_res_users__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di attività di eccezione sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__uuid
@@ -6231,6 +6235,8 @@ msgid ""
 "View \"mail.mail_channel_send_guidelines\" was not found. No email has been "
 "sent. Please contact an administrator to fix this issue."
 msgstr ""
+"Vista \"mail.mail_channel_send_guidelines\" non trovata, non è stata inviata"
+" alcuna e-mail. Per risolvere il problema contattare un amministratore."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -6578,6 +6584,9 @@ msgid ""
 " users it is important to change it immediately for security reasons. I will"
 " keep nagging you about it!"
 msgstr ""
+"La password risulta quella predefinita (admin). Se il sistema viene esposto "
+"a utenti non fidati, è essenziale cambiarla immediatamente per motivi di "
+"sicurezza. Tale avviso verrà riproposto in modo insistente."
 
 #. module: mail
 #. openerp-web
@@ -6885,7 +6894,7 @@ msgstr "senza nome"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 msgid "using"
-msgstr ""
+msgstr "usando"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks

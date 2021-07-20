@@ -350,7 +350,10 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         if (this.bannerRoute !== undefined) {
             var self = this;
             return this.dp
-                .add(this._rpc({route: this.bannerRoute}))
+                .add(this._rpc({
+                    route: this.bannerRoute,
+                    params: {context: session.user_context},
+                }))
                 .then(function (response) {
                     if (!response.html) {
                         self.$el.removeClass('o_has_banner');

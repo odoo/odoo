@@ -1055,6 +1055,31 @@ class TestMrpOrder(TestMrpCommon):
         mo.move_finished_ids._action_done()
         produce_wizard.do_produce()
 
+    def test_product_produce_13(self):
+        """ Check that the production cannot be completed without any consumption."""
+        mo, bom, _, _, _ = self.generate_mo(qty_final=1)
+        bom.consumption = 'flexible'
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.qty_producing = 1
+        for i in range(len(produce_form.raw_workorder_line_ids)):
+            with produce_form.raw_workorder_line_ids.edit(i) as line:
+                line.qty_done = 0
+        produce_wizard = produce_form.save()
+        produce_wizard.do_produce()
+
+        # can't produce with no consumption
+        with self.assertRaises(UserError):
+            mo.button_mark_done()
+
+        for line in mo.move_raw_ids:
+            line.quantity_done = 1
+        # can produce once consumption added
+        mo.button_mark_done()
+
     def test_product_produce_uom(self):
         """ Produce a finished product tracked by serial number. Set another
         UoM on the bom. The produce wizard should keep the UoM of the product (unit)

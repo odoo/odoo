@@ -85,7 +85,7 @@ class ResPartnerBank(models.Model):
     def _compute_l10n_ch_show_subscription(self):
         for bank in self:
             if bank.partner_id:
-                bank.l10n_ch_show_subscription = bool(bank.partner_id.ref_company_ids)
+                bank.l10n_ch_show_subscription = bank.partner_id.ref_company_ids.country_id.code =='CH'
             elif bank.company_id:
                 bank.l10n_ch_show_subscription = bank.company_id.country_id.code == 'CH'
             else:

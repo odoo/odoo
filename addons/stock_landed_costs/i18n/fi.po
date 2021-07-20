@@ -16,7 +16,7 @@
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2019
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2019
-# Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
+# Johanna Valkonen <johanna@vividi.fi>, 2019
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2019
 # Simo Suurla <simo@suurla.fi>, 2019
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2019
@@ -714,4 +714,12 @@ msgid ""
 "You cannot apply landed costs on the chosen transfer(s). Landed costs can "
 "only be applied for products with automated inventory valuation and FIFO or "
 "average costing method."
+msgstr ""
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/product.py:0
+#, python-format
+msgid ""
+"You cannot change the product type or disable landed cost option because the"
+" product is used in an account move line."
 msgstr ""

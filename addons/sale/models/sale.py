@@ -138,6 +138,22 @@ class SaleOrder(models.Model):
             """, (list(value),))
             so_ids = self.env.cr.fetchone()[0] or []
             return [('id', 'in', so_ids)]
+        elif operator == '=' and not value:
+            # special case for [('invoice_ids', '=', False)], i.e. "Invoices is not set"
+            #
+            # We cannot just search [('order_line.invoice_lines', '=', False)]
+            # because it returns orders with uninvoiced lines, which is not
+            # same "Invoices is not set" (some lines may have invoices and some
+            # doesn't)
+            #
+            # A solution is making inverted search first ("orders with invoiced
+            # lines") and then invert results ("get all other orders")
+            #
+            # Domain below returns subset of ('order_line.invoice_lines', '!=', False)
+            order_ids = self._search([
+                ('order_line.invoice_lines.move_id.type', 'in', ('out_invoice', 'out_refund'))
+            ])
+            return [('id', 'not in', order_ids)]
         return ['&', ('order_line.invoice_lines.move_id.type', 'in', ('out_invoice', 'out_refund')), ('order_line.invoice_lines.move_id', operator, value)]
 
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
@@ -288,6 +304,7 @@ class SaleOrder(models.Model):
         """ For service and consumable, we only take the min dates. This method is extended in sale_stock to
             take the picking_policy of SO into account.
         """
+        self.mapped("order_line")  # Prefetch indication
         for order in self:
             dates_list = []
             for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery() and not x.display_type):
@@ -664,6 +681,7 @@ class SaleOrder(models.Model):
         if not grouped:
             new_invoice_vals_list = []
             invoice_grouping_keys = self._get_invoice_grouping_keys()
+            invoice_vals_list = sorted(invoice_vals_list, key=lambda x: [x.get(grouping_key) for grouping_key in invoice_grouping_keys])
             for grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: [x.get(grouping_key) for grouping_key in invoice_grouping_keys]):
                 origins = set()
                 payment_refs = set()

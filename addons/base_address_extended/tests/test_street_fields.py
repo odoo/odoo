@@ -40,7 +40,8 @@ class TestStreetFields(TransactionCase):
         self.create_and_assert('Test00', self.env.ref('base.us').id, '40/2b Chaussee de Namur', 'Chaussee de Namur', '40', '2b')
         self.create_and_assert('Test01', self.env.ref('base.us').id, '40 Chaussee de Namur', 'Chaussee de Namur', '40', '')
         self.create_and_assert('Test02', self.env.ref('base.us').id, 'Chaussee de Namur', 'de Namur', 'Chaussee', '')
-        self.create_and_assert('Test03', self.env.ref('base.mx').id, 'Av. Miguel Hidalgo y Costilla 601', 'Av.', 'Miguel Hidalgo y Costilla 601', '')
+        self.create_and_assert('Test03', self.env.ref('base.mx').id, 'Av. Miguel Hidalgo y Costilla 601', 'Av. Miguel Hidalgo y Costilla', '601', '')
+        self.create_and_assert('Test04', self.env.ref('base.mx').id, 'Av. Miguel Hidalgo y Costilla 601/40', 'Av. Miguel Hidalgo y Costilla', '601', '40')
 
     def test_01_header_trailer(self):
         self.create_and_assert('Test10', self.env.ref('base.ch').id, 'header Chaussee de Namur, 40 - 2b trailer', 'Chaussee de Namur', '40', '2b')

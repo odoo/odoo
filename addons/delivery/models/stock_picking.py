@@ -126,6 +126,7 @@ class StockPicking(models.Model):
             if pick.carrier_id:
                 if pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming':
                     pick.send_to_shipper()
+            pick._check_carrier_details_compliance()
         return super(StockPicking, self)._send_confirmation_email()
 
     def _pre_put_in_pack_hook(self, move_line_ids):
@@ -176,6 +177,11 @@ class StockPicking(models.Model):
         msg = _("Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: %.2f %s") % (self.carrier_id.name, self.carrier_tracking_ref, self.carrier_price, order_currency.name)
         self.message_post(body=msg)
         self._add_delivery_cost_to_so()
+
+    def _check_carrier_details_compliance(self):
+        """Hook to check if a delivery is compliant in regard of the carrier.
+        """
+        pass
 
     def print_return_label(self):
         self.ensure_one()

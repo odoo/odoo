@@ -211,6 +211,14 @@ msgstr ""
 "wspomnieć o ludziach - to tak, jakby wysłać DW e-mail.</p>"
 
 #. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Meetings</span>\n"
@@ -709,6 +717,7 @@ msgstr "Utwórz szansę"
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
 msgid "Create a lead mining request directly from the opportunity pipeline."
 msgstr ""
+"Utwórz żądanie wyszukiwania sygnałów bezpośrednio z potoku możliwości."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__create
@@ -723,7 +732,7 @@ msgstr "Utwórz nowego klienta"
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 #, python-format
 msgid "Create a new lead"
-msgstr ""
+msgstr "Utwórz nową szansę"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -1421,7 +1430,7 @@ msgstr "Tagi sygnałów"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Lead or Opportunity"
-msgstr ""
+msgstr "Sygnał czy szansa"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
@@ -1734,7 +1743,7 @@ msgstr "Nowa"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created
 msgid "New Leads/Opportunities"
-msgstr ""
+msgstr "Nowe sygnały/szanse"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -1909,6 +1918,12 @@ msgstr ""
 "potoku sprzedaży."
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr ""
@@ -2001,18 +2016,19 @@ msgstr "Inne"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "Zaległe Szanse"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__overdue_opportunities_amount
 msgid "Overdue Opportunities Revenues"
-msgstr ""
+msgstr "Przychody z zaległych szans"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Overdue Opportunity"
-msgstr ""
+msgstr "Zaległa szansa"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_user_id
@@ -2129,7 +2145,7 @@ msgstr "Propozycja"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__expected_revenue
 msgid "Prorated Revenue"
-msgstr ""
+msgstr "Przychody proporcjonalne"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
@@ -2216,7 +2232,7 @@ msgstr "Zespół sprzedaży"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Sales Team Settings"
-msgstr ""
+msgstr "Ustawienia zespołu sprzedaży"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_config
@@ -2464,6 +2480,12 @@ msgid "Team Pipelines"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
@@ -2572,6 +2594,14 @@ msgstr "Ten cel nie istnieje."
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Title"
 msgstr "Tytuł"
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"To prevent data loss, Leads and Opportunities can only be merged by groups "
+"of 5."
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2689,6 +2719,12 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
+"Skorzystaj z sygnałów, jeśli potrzebujesz etapu kwalifikacji przed "
+"utworzeniem szansy sprzedaży lub klienta. Może to być otrzymana wizytówka, "
+"formularz kontaktowy wypełniony w Twojej witrynie lub importowany plik "
+"niewykwalifikowanych potencjalnych klientów itp. Po zakwalifikowaniu sygnał "
+"można przekształcić w możliwość biznesową i / lub nowego klienta w książce "
+"adresowej."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2801,7 +2837,7 @@ msgstr "Sukces"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__won_count
 msgid "Won Count"
-msgstr ""
+msgstr "Ilość wygranych"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users__target_sales_won

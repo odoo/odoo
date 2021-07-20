@@ -881,7 +881,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         if lines2:
                             # merge first line with record's main line
                             for j, val in enumerate(lines2[0]):
-                                if val or isinstance(val, bool):
+                                if val or isinstance(val, (int, float)):
                                     current[j] = val
                             # append the other lines at the end
                             lines += lines2[1:]
@@ -1166,7 +1166,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             exc_vals = dict(base, record=record, field=field_names[field])
             record = dict(base, type=type, record=record, field=field,
                           message=str(exception.args[0]) % exc_vals)
-            if len(exception.args) > 1 and exception.args[1]:
+            if len(exception.args) > 1 and isinstance(exception.args[1], dict):
                 record.update(exception.args[1])
             log(record)
 
@@ -2219,9 +2219,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         self._apply_ir_rules(query, 'read')
         for gb in groupby_fields:
-            assert gb in self._fields, "Unknown field %r in 'groupby'" % gb
+            if gb not in self._fields:
+                raise UserError(_("Unknown field %r in 'groupby'") % gb)
             gb_field = self._fields[gb].base_field
-            assert gb_field.store and gb_field.column_type, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
+            if not (gb_field.store and gb_field.column_type):
+                raise UserError(_("Fields in 'groupby' must be database-persisted fields (no computed fields)"))
 
         aggregated_fields = []
         select_terms = []
@@ -5359,6 +5361,9 @@ Fields:
                 result.append(self.browse())
             else:
                 (key, comparator, value) = d
+                if comparator in ('child_of', 'parent_of'):
+                    result.append(self.search([('id', 'in', self.ids), d]))
+                    continue
                 if key.endswith('.id'):
                     key = key[:-3]
                 if key == 'id':
@@ -5375,9 +5380,6 @@ Fields:
                 records_ids = OrderedSet()
                 for rec in self:
                     data = rec.mapped(key)
-                    if comparator in ('child_of', 'parent_of'):
-                        value = data.search([(data._parent_name, comparator, value)]).ids
-                        comparator = 'in'
                     if isinstance(data, BaseModel):
                         v = value
                         if (isinstance(value, list) or isinstance(value, tuple)) and len(value):

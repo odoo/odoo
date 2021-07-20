@@ -437,6 +437,38 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('pager, ungrouped, deleting all records from last page should move to previous page', async function (assert) {
+        assert.expect(3);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" limit="3">' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<div><a role="menuitem" type="delete" class="dropdown-item">Delete</a></div>' +
+                            '<field name="foo"/>' +
+                        '</div>' +
+                    '</t></templates></kanban>',
+        });
+
+        assert.strictEqual(kanban.pager.$('.o_pager_counter').text().trim(), '1-3 / 4',
+            "should have 2 pages and current page should be first page");
+        // move to next page
+        await testUtils.dom.click(kanban.pager.$('.o_pager_next'));
+        assert.strictEqual(kanban.pager.$('.o_pager_counter').text().trim(), '4-4 / 4',
+            "should be on second page");
+
+        // delete a record
+        await testUtils.dom.click(kanban.$('.o_kanban_record:first a:first'));
+        await testUtils.dom.click($('.modal-footer button:first'));
+        assert.strictEqual(kanban.pager.$('.o_pager_counter').text().trim(), '1-3 / 3',
+            "should have 1 page only");
+
+        kanban.destroy();
+    });
+
     QUnit.test('create in grouped on m2o', async function (assert) {
         assert.expect(5);
 
@@ -895,7 +927,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create record: cancel and validate without using the buttons', async function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         var nbRecords = 4;
         var kanban = await createView({
@@ -930,6 +962,14 @@ QUnit.module('Views', {
         await testUtils.dom.click(kanban.$('.o_kanban_group .o_kanban_record:first'));
         assert.containsNone(kanban, '.o_kanban_quick_create',
             "the quick create should be destroyed when the user clicks outside");
+
+        // click to input and drag the mouse outside, should not cancel the quick creation
+        await testUtils.dom.click(kanban.$('.o_kanban_header .o_kanban_quick_add i').first());
+        $quickCreate = kanban.$('.o_kanban_quick_create');
+        await testUtils.dom.triggerMouseEvent($quickCreate.find('input'), 'mousedown');
+        await testUtils.dom.click(kanban.$('.o_kanban_group .o_kanban_record:first').first());
+        assert.containsOnce(kanban, '.o_kanban_quick_create',
+            "the quick create should not have been destroyed after clicking outside");
 
         // click to really add an element
         await testUtils.dom.click(kanban.$('.o_kanban_header .o_kanban_quick_add i').first());

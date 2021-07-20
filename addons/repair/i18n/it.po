@@ -13,8 +13,7 @@
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2019
 # Paolo Valier, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
-# Iacopo Simonelli <lsi@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,7 +95,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<i>(Add)</i>"
-msgstr ""
+msgstr "<i>(Aggiunta)</i>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
@@ -300,6 +299,8 @@ msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"Impossibile trovare un listino prezzi che corrisponda al prodotto e alla quantità.\n"
+"È necessario cambiare il prodotto, la quantità o il listino prezzi."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
@@ -479,7 +480,7 @@ msgstr "Icona"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare un'attività di eccezione."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction
@@ -500,12 +501,15 @@ msgid ""
 "                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
+"In un ordine di riparazione è possibile descrivere i componenti rimossi,\n"
+"                aggiunti o sostituiti e registrare il tempo dedicato alle diverse\n"
+"                operazioni."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Insufficient Quantity"
-msgstr "Quantità insufficiente"
+msgstr "Quantità non sufficiente"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__internal_notes
@@ -655,7 +659,7 @@ msgstr "Movimento"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__move_id
 msgid "Move created by the repair order"
-msgstr ""
+msgstr "Movimento creato dall'ordine di riparazione"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_date_deadline
@@ -864,12 +868,12 @@ msgstr "Riparazione"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
 msgid "Repair Fee"
-msgstr ""
+msgstr "Tariffa di riparazione"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
 msgid "Repair Fees"
-msgstr ""
+msgstr "Tariffe di riparazione"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_line_ids
@@ -932,7 +936,7 @@ msgstr "Servizi di riparazione"
 #: model:ir.model,name:repair.model_repair_tags
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_form
 msgid "Repair Tags"
-msgstr ""
+msgstr "Etichette riparazione"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -950,13 +954,13 @@ msgstr "Prima di avviare una riparazione questa deve essere confermata."
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
-msgstr ""
+msgstr "Per creare i movimenti prodotto, la riparazione deve essere riparata."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
-msgstr ""
+msgstr "Per essere terminata, la riparazione deve essere in riparazione."
 
 #. module: repair
 #: code:addons/repair/wizard/repair_cancel.py:0
@@ -1147,6 +1151,8 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
+"Lo stato di una riga riparazione è impostato automaticamente a quello "
+"dell'ordine di riparazione collegato."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
@@ -1191,7 +1197,7 @@ msgstr "Tipologia"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di attività di eccezione sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__under_repair
@@ -1245,7 +1251,7 @@ msgstr "UdM"
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
 msgid "Warn Insufficient Repair Quantity"
-msgstr ""
+msgstr "Avviso quantità non sufficiente per riparazione"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0

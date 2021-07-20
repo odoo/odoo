@@ -12,7 +12,7 @@
 # Pedro Castro Silva <pedrocs@exo.pt>, 2019
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2019
 # Martin Trigaux, 2019
-# Manuela Silva <manuelarodsilva@gmail.com>, 2020
+# Manuela Silva <mmsrs@sky.com>, 2020
 # Nuno Silva <nuno.silva@arxi.pt>, 2020
 # João Carvalho <jpldcarvalho+github@gmail.com>, 2020
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
@@ -176,6 +176,14 @@ msgstr ""
 "<p><b>Envie mensagens</b> aos seus possíveis parceiros e receba respostas "
 "automáticas referentes a esta oportunidade.</p><p class=\"mb0\">Digite "
 "<i>'@'</i> para mencionar pessoas - tal como CC nas mensagens.</p>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1863,6 +1871,12 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr ""
@@ -1955,6 +1969,7 @@ msgstr "Outro"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr ""
 
@@ -2412,6 +2427,12 @@ msgid "Team Pipelines"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
@@ -2514,6 +2535,14 @@ msgstr "Este alvo não existe."
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Title"
 msgstr "Título"
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"To prevent data loss, Leads and Opportunities can only be merged by groups "
+"of 5."
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter

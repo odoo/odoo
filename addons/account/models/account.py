@@ -137,9 +137,8 @@ class AccountTaxReportLine(models.Model):
                 plus_child_tags.write({'name': '+' + vals['tag_name']})
 
             else:
-                # tag_name was set empty, so we remove the tags
-                self._delete_tags_from_taxes(self.mapped('tag_ids.id'))
-                self.write({'tag_ids': [(2, tag.id, 0) for tag in self.mapped('tag_ids')]})
+                # tag_name was set empty, so we remove the tags that are not shared
+                self._remove_tax_used_only_by_self()
 
         if 'country_id' in vals and self.tag_ids:
             # Writing the country of a tax report line should overwrite the country of its tags
@@ -148,16 +147,26 @@ class AccountTaxReportLine(models.Model):
         return rslt
 
     def unlink(self):
-        self._delete_tags_from_taxes(self.mapped('tag_ids.id'))
+        self._remove_tax_used_only_by_self()
         children = self.mapped('children_line_ids')
         if children:
             children.unlink()
         return super(AccountTaxReportLine, self).unlink()
 
+    def _remove_tax_used_only_by_self(self):
+        """ Deletes and removes from taxes and move lines all the
+        tags from the provided tax report lines that are not linked
+        to any other tax report lines.
+        """
+        all_tags = self.mapped('tag_ids')
+        tags_to_unlink = all_tags.filtered(lambda x: not (x.tax_report_line_ids - self))
+        self.write({'tag_ids': [(3, tag.id, 0) for tag in tags_to_unlink]})
+        self._delete_tags_from_taxes(tags_to_unlink.ids)
+
     def _delete_tags_from_taxes(self, tag_ids_to_delete):
         """ Based on a list of tag ids, removes them first from the
         repartition lines they are linked to, then deletes them
-        from the account move lines.
+        from the account move lines, and finally unlink them.
         """
         if not tag_ids_to_delete:
             # Nothing to do, then!
@@ -172,6 +181,8 @@ class AccountTaxReportLine(models.Model):
 
         self.env['account.move.line'].invalidate_cache(fnames=['tag_ids'])
         self.env['account.tax.repartition.line'].invalidate_cache(fnames=['tag_ids'])
+
+        self.env['account.account.tag'].browse(tag_ids_to_delete).unlink()
 
     @api.constrains('formula', 'tag_name')
     def _validate_formula(self):
@@ -1713,7 +1724,7 @@ class AccountTax(models.Model):
                         incl_fixed_amount += quantity * tax.amount * sum_repartition_factor
                     else:
                         # tax.amount_type == other (python)
-                        tax_amount = tax._compute_amount(base, sign * price_unit, quantity, product, partner) * sum_repartition_factor
+                        tax_amount = tax._compute_amount(base, sign * price_unit, abs(quantity), product, partner) * sum_repartition_factor
                         incl_fixed_amount += tax_amount
                         # Avoid unecessary re-computation
                         cached_tax_amounts[i] = tax_amount

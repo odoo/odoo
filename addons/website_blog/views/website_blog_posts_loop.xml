@@ -205,6 +205,7 @@ according to the enabled options.
         <t t-foreach="blog_post.tag_ids" t-as="one_tag">
             <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, one_tag.id))}"
                t-attf-class="badge mb-2 mr-1 text-truncate #{one_tag.id in active_tag_ids and 'badge-primary' or 'border'}"
+               t-att-rel="len(active_tag_ids) and 'nofollow'"
                t-esc="one_tag.name"/>
         </t>
     </div>

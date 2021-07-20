@@ -29,9 +29,9 @@
 # Martin Trigaux, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Luana Andronico <andronicoluana@gmail.com>, 2019
-# Iacopo Simonelli <lsi@odoo.com>, 2020
 # Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2020
 # Mauro Sacchini <sacchini.sf@gmail.com>, 2020
+# Vortex Storm <vortexstorm@protonmail.com>, 2021
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
@@ -2817,7 +2817,7 @@ msgstr "Imposte con criterio di cassa"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
-msgstr ""
+msgstr "Conto di transizione criterio di cassa"
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
@@ -3209,7 +3209,7 @@ msgstr "Indice colore"
 #: model:ir.model.fields,field_description:account.field_account_move__commercial_partner_id
 #: model:ir.model.fields,help:account.field_account_invoice_report__commercial_partner_id
 msgid "Commercial Entity"
-msgstr "Ente commerciale"
+msgstr "Entità commerciale"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
@@ -3340,6 +3340,8 @@ msgid ""
 "Computed field, listing the tax grids impacted by this line, and the amount "
 "it applies to each of them."
 msgstr ""
+"Campo calcolato, elenca le griglie imposta coinvolte dalla riga e l'importo "
+"applicato su ciascuna."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -3904,7 +3906,7 @@ msgstr "Passività correnti"
 #. module: account
 #: model:account.account.type,name:account.data_unaffected_earnings
 msgid "Current Year Earnings"
-msgstr "Ricavi anno corrente"
+msgstr "Utili di esercizio"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__partner_type__customer
@@ -4340,7 +4342,7 @@ msgid ""
 "Determines where the tax is selectable. Note : 'None' means a tax can't be "
 "used by itself, however it can still be used in a group."
 msgstr ""
-"Determina dove l'imposta è selezionabile. Nota: \"Nessuna\" indica "
+"Determina dove è selezionabile l'imposta. Nota: \"Nessuna\" indica "
 "un'imposta che non può essere usata da sola, ma può essere utilizzata in un "
 "gruppo."
 
@@ -4796,7 +4798,7 @@ msgstr "Errore."
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__euro
 msgid "European"
-msgstr ""
+msgstr "Europeo"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__decimal_separator
@@ -4826,7 +4828,7 @@ msgstr "Movimento di cambio"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__exclude_from_invoice_tab
 msgid "Exclude From Invoice Tab"
-msgstr ""
+msgstr "Escludi dalla scheda della fattura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
@@ -4870,7 +4872,7 @@ msgstr "Conto ratei passivi"
 #: model:account.account.type,name:account.data_account_type_expenses
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Expenses"
-msgstr "Spese"
+msgstr "Costi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__reference
@@ -5550,7 +5552,7 @@ msgstr "Icona"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare un'attività di eccezione."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -6971,6 +6973,7 @@ msgstr "Le righe dei conti \"fuori bilancio\" non possono essere riconciliate"
 #: model:ir.model.fields,help:account.field_account_tax_report_line__children_line_ids
 msgid "Lines that should be rendered as children of this one"
 msgstr ""
+"Righe che devono essere rappresentate come secondarie rispetto a questa"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__type__liquidity
@@ -7803,7 +7806,7 @@ msgstr "Possono essere stampate solo fatture."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_register__group_payment
 msgid "Only one payment will be created by partner (bank)/ currency."
-msgstr ""
+msgstr "Viene creato un solo pagamento per partner (banca) / valuta."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -7964,7 +7967,7 @@ msgstr "Fatture fornitore originali"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Original Currency"
-msgstr ""
+msgstr "Valuta di origine"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -8050,7 +8053,7 @@ msgstr "Panoramica"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Package"
-msgstr "Collo"
+msgstr "Pacchetto"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__paid
@@ -8088,7 +8091,7 @@ msgstr "Modello di piano padre"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__parent_id
 msgid "Parent Line"
-msgstr ""
+msgstr "Riga principale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__parent_id
@@ -8644,7 +8647,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Posting"
-msgstr ""
+msgstr "In pubblicazione"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__bank_account_code_prefix
@@ -9269,6 +9272,8 @@ msgstr "Limita partner a"
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
 msgstr ""
+"Limitare le proposte che hanno la stessa valuta della casella di "
+"dichiarazione."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
@@ -9516,7 +9521,7 @@ msgstr "Fattura campione inviata."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__sanitized_acc_number
 msgid "Sanitized Account Number"
-msgstr ""
+msgstr "Numero conto pulito"
 
 #. module: account
 #. openerp-web
@@ -10203,7 +10208,7 @@ msgstr "Passaggio completato."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__string_to_hash
 msgid "String To Hash"
-msgstr ""
+msgstr "Da stringa a hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__subject
@@ -10707,7 +10712,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__bank_partner_id
 msgid "Technical field to get the domain on the bank"
-msgstr ""
+msgstr "Campo tecnico per ottenere il dominio della banca"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__journal_type
@@ -10771,6 +10776,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__user_id
 msgid "Technical field used to fit the generic behavior in mail templates."
 msgstr ""
+"Campo tecnico usato per adattare il comportamento generico nei modelli "
+"e-mail."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__invoice_filter_type_domain
@@ -10960,6 +10967,8 @@ msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
+"Conto già in uso in un registro \"Vendita\" o \"Acquisto\", la sua tipologia"
+" non può essere \"Credito\" o \"Debito\"."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -11857,7 +11866,7 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
-msgstr ""
+msgstr "Il registro non è in modalità limitata."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
@@ -12176,7 +12185,7 @@ msgstr "Nome tipologia"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di attività di eccezione sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
@@ -12720,6 +12729,8 @@ msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
 msgstr ""
+"È possibile scegliere modelli diversi per ciascun tipo di riferimento. Il "
+"predefinito è il riferimento Odoo."
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -12802,6 +12813,8 @@ msgid ""
 "You can only set an account having the payable type on payment terms lines "
 "for vendor bill."
 msgstr ""
+"Può essere impostato solo un conto che abbia, per la fattura fornitore, la "
+"tipologia debito nelle righe dei termini di pagamento."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12810,6 +12823,8 @@ msgid ""
 "You can only set an account having the receivable type on payment terms "
 "lines for customer invoice."
 msgstr ""
+"Può essere impostato solo un conto che abbia, per la fattura cliente, la "
+"tipologia credito nelle righe dei termini di pagamento."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -12998,7 +13013,7 @@ msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
 msgstr ""
-"Impossibile avere più di un conto di tipo \"Ricavi anno corrente\". (conti: "
+"Impossibile avere più di un conto di tipo \"Utili di esercizio\". (conti: "
 "%s)"
 
 #. module: account
@@ -13439,7 +13454,7 @@ msgstr "righe estratto conto"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
 msgid "technical field for widget tax-group-custom-field"
-msgstr ""
+msgstr "Campo tecnico per il widget tax-group-custom-field"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -13459,6 +13474,9 @@ msgid ""
 " Sales operations should go to 'sale' journals, and purchase operations to "
 "'purchase' ones."
 msgstr ""
+"La tipologia del registro scelto non è compatibile con quella della fattura."
+" Le operazioni di vendita devono andare nei registri \"vendite\", quelle di "
+"acquisto in nei registri \"acquisti\"."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

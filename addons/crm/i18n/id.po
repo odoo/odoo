@@ -16,7 +16,7 @@
 # Ryanto The <ry.the77@gmail.com>, 2019
 # PAS IRVANUS <ipankbiz@gmail.com>, 2019
 # Gradien Foundation <gradien.co@gmail.com>, 2020
-# whenweresober <gulmugurzu@yevme.com>, 2020
+# whenwesober, 2020
 # Bonny Useful <bonny.useful@gmail.com>, 2020
 # 
 msgid ""
@@ -173,6 +173,14 @@ msgstr ""
 "<p><b>Kirim pesan</b> kepada prospek Anda dan dapatkan jawaban otomatis "
 "terlampir pada peluang ini.</p><p class=\"mb0\">Ketik <i>'@'</i> untuk "
 "menyebut orang, seperti memasukkan cc pada email.</p>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1871,6 +1879,12 @@ msgstr ""
 "penjualan."
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr ""
@@ -1963,6 +1977,7 @@ msgstr "Lainnya"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "Peluang yang Terlambat"
 
@@ -2428,6 +2443,12 @@ msgid "Team Pipelines"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
@@ -2533,6 +2554,14 @@ msgstr "Target tidak ada."
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Title"
 msgstr "Gelar"
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"To prevent data loss, Leads and Opportunities can only be merged by groups "
+"of 5."
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter

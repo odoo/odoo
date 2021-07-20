@@ -16,8 +16,7 @@
 # David Minneci <david@numeko.it>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
-# Iacopo Simonelli <lsi@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,6 +62,11 @@ msgid ""
 "                                Calendar Mismatch : The employee's calendar does not match its current contract calendar. This could lead to unexpected behaviors.\n"
 "                            </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('calendar_mismatch', '=', False)]}\" class=\"fa fa-exclamation-triangle text-danger o_calendar_warning pl-3\">\n"
+"                            </span>\n"
+"                            <span class=\"o_calendar_warning_tooltip text-danger\">\n"
+"                                Calendario incompatibile: il calendario del dipendente non corrisponde a quello dell'attuale contratto. Ciò potrebbe causare comportamenti imprevisti.\n"
+"                            </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -144,7 +148,7 @@ msgstr "Numero conto bancario"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__calendar_mismatch
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__calendar_mismatch
 msgid "Calendar Mismatch"
-msgstr ""
+msgstr "Incompatibilità calendario"
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__cancel
@@ -398,7 +402,7 @@ msgstr "Icona"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare un'attività di eccezione."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction
@@ -623,7 +627,7 @@ msgstr "Attività odierne"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di attività di eccezione sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_unread

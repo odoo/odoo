@@ -184,6 +184,14 @@ msgstr ""
 "class=\"mb0\">輸入<i>'@'</i>以提起某人－類似信件的抄送功能。</p>"
 
 #. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Meetings</span>\n"
@@ -1858,6 +1866,12 @@ msgstr ""
 "機會分析讓您立即有機會獲取預計收入、計劃成本、錯過的期限或每次機會的交流次數等信息。此報告主要由銷售經理使用，以便對銷售漏斗的渠道進行週期性評估。"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr "商機數量"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr "商機收入"
@@ -1950,6 +1964,7 @@ msgstr "其他"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "逾期的機會"
 
@@ -2412,6 +2427,12 @@ msgid "Team Pipelines"
 msgstr "團隊商機"
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
@@ -2507,6 +2528,14 @@ msgstr "這個目標不存在。"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Title"
 msgstr "稱謂"
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"To prevent data loss, Leads and Opportunities can only be merged by groups "
+"of 5."
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter

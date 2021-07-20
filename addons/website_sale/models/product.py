@@ -361,12 +361,12 @@ class ProductTemplate(models.Model):
             return 10000
         return max_sequence + 5
 
-    def set_sequence_top(self):
-        min_sequence = self.sudo().search([], order='website_sequence ASC', limit=1)
+    def set_sequence_top(self, to_remove=[]):
+        min_sequence = self.sudo().search([('id', 'not in', to_remove)], order='website_sequence ASC', limit=1)
         self.website_sequence = min_sequence.website_sequence - 5
 
-    def set_sequence_bottom(self):
-        max_sequence = self.sudo().search([], order='website_sequence DESC', limit=1)
+    def set_sequence_bottom(self, to_remove=[]):
+        max_sequence = self.sudo().search([('id', 'not in', to_remove)], order='website_sequence DESC', limit=1)
         self.website_sequence = max_sequence.website_sequence + 5
 
     def set_sequence_up(self):

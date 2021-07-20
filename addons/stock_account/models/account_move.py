@@ -34,7 +34,7 @@ class AccountMove(models.Model):
             for copy_vals in res:
                 if 'line_ids' in copy_vals:
                     copy_vals['line_ids'] = [line_vals for line_vals in copy_vals['line_ids']
-                                             if line_vals[0] != 0 or not line_vals[2]['is_anglo_saxon_line']]
+                                             if line_vals[0] != 0 or not line_vals[2].get('is_anglo_saxon_line')]
 
         return res
 
@@ -225,6 +225,7 @@ class AccountMoveLine(models.Model):
         # OVERRIDE to use the stock input account by default on vendor bills when dealing
         # with anglo-saxon accounting.
         self.ensure_one()
+        self = self.with_context(force_company=self.move_id.journal_id.company_id.id)
         if self.product_id.type == 'product' \
             and self.move_id.company_id.anglo_saxon_accounting \
             and self.move_id.is_purchase_document():

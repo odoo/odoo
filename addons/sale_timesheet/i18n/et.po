@@ -9,10 +9,10 @@
 # Helen Sulaoja <helen@avalah.ee>, 2020
 # Martin Trigaux, 2020
 # Arma Gedonsky <armagedonsky@hot.ee>, 2020
-# Algo Kärp <algokarp@gmail.com>, 2020
-# Piia Paurson <piia@avalah.ee>, 2020
 # Eneli Õigus <enelioigus@gmail.com>, 2020
-# atriine <triine@avalah.ee>, 2020
+# Triine Aavik <triine@avalah.ee>, 2020
+# Piia Paurson <piia@avalah.ee>, 2021
+# Algo Kärp <algokarp@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: atriine <triine@avalah.ee>, 2020\n"
+"Last-Translator: Algo Kärp <algokarp@gmail.com>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,6 +89,8 @@ msgid ""
 "A billable project should be linked to a Sales Order Item having a Service "
 "product."
 msgstr ""
+"Arveldatav projekt peaks olema seotud teenustoodet sisaldava "
+"müügitellimusega."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -97,6 +99,8 @@ msgid ""
 "A billable project should be linked to a Sales Order Item that does not come"
 " from an expense or a vendor bill."
 msgstr ""
+"Arveldatav projekt peaks olema seotud müügitellimuse üksusega, mis ei tulene"
+" kuludest ega müügiarvelt."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -107,11 +111,16 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Vastavalt toote konfiguratsioonile saab tarnitud koguse automaatselt arvutada mehhanismi abil:\n"
+"  - Käsitsi: kogus määratakse reale käsitsi\n"
+"  - Analüütiline kulude alusel: kogus on summa postitatud kuludest\n"
+"  - Ajaarvestus: kogus on müügireaga seotud ülesannetele logitud tundide alusel.\n"
+"  - Laoliikumised: kogus tuleb kinnitatud korjetest\n"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
 msgid "Amount to invoice"
-msgstr ""
+msgstr "Arve summa"
 
 #. module: sale_timesheet
 #: model:ir.model.constraint,message:sale_timesheet.constraint_project_create_sale_order_line_unique_employee_per_wizard
@@ -120,6 +129,8 @@ msgid ""
 "An employee cannot be selected more than once in the mapping. Please remove "
 "duplicate(s) and try again."
 msgstr ""
+"Töötajat ei saa kaardistamisel valida rohkem kui üks kord. Eemaldage "
+"duplikaadid ja proovige uuesti."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__analytic_account_id
@@ -158,7 +169,7 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "At least one line should be filled."
-msgstr ""
+msgstr "Vähemalt üks rida tuleks täita."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__billable_type
@@ -234,7 +245,7 @@ msgstr "Tühistatud"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__sale_order_id
 msgid "Choose the Sales Order to invoice"
-msgstr ""
+msgstr "Valige arveldamiseks müügitellimus"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__company_id
@@ -264,17 +275,17 @@ msgstr "Loo arve"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_invoice
 msgid "Create Invoice from project"
-msgstr ""
+msgstr "Valige arveldamiseks müügitellimus"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
 msgid "Create SO Line from project"
-msgstr ""
+msgstr "Looge projektist müügitellimuse rida"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order
 msgid "Create SO from project"
-msgstr ""
+msgstr "Looge projektist müügitellimus"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -282,12 +293,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 #, python-format
 msgid "Create Sales Order"
-msgstr ""
+msgstr "Looge müügitellimus"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 msgid "Create Sales Order from Project"
-msgstr ""
+msgstr "Looge projektist müügitellimus"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -295,7 +306,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
 #, python-format
 msgid "Create a Sales Order"
-msgstr ""
+msgstr "Looge müügitellimus"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_tracking__project_only
@@ -346,7 +357,7 @@ msgstr "Klient"
 #: model:product.product,name:sale_timesheet.product_service_order_timesheet
 #: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
 msgid "Customer Care (Prepaid Hours)"
-msgstr ""
+msgstr "Klienditeenindus (ettemakstud tunnid)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
@@ -389,7 +400,7 @@ msgstr "Töötaja"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
 msgid "Employee that has timesheets on the project."
-msgstr ""
+msgstr "Töötaja, kellel on projektis ajalogimise read."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -397,6 +408,8 @@ msgid ""
 "Employee/Sale Order Item Mapping:\n"
 " Defines to which sales order item an employee's timesheet entry will be linked.By extension, it defines the rate at which an employee's time on the project is billed."
 msgstr ""
+"Töötaja / müügitellimuse üksuse kaardistamine:\n"
+" Määratleb, millise müügitellimuse üksusega töötaja ajagraafiku kirje lingitakse. Sellega määratletakse töötaja projektis arveldamise määr."
 
 #. module: sale_timesheet
 #: model:project.task.type,name:sale_timesheet.project_stage_fixed
@@ -468,6 +481,8 @@ msgid ""
 "Includes the time logged from the Timesheet module that is linked to a "
 "project, but not to a task."
 msgstr ""
+"Sisaldab ajalogimise moodulist logitud aega, mis on seotud projektiga, kuid "
+"mitte ülesandega."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -475,6 +490,8 @@ msgid ""
 "Includes the time logged into a task which is linked to a cancelled Sales "
 "Order."
 msgstr ""
+"Sisaldab ülesandesse logitud aega, mis on seotud tühistatud "
+"müügitellimusega."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -482,6 +499,8 @@ msgid ""
 "Includes the time logged into tasks for which you invoice based on ordered "
 "quantities or on milestones."
 msgstr ""
+"Sisaldab aega, mis on logitud ülesannetesse, mille eest esitate arve "
+"tellitud koguste või verstapostide põhjal."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -489,6 +508,8 @@ msgid ""
 "Includes the time logged into tasks for which you invoice based on "
 "timesheets on tasks."
 msgstr ""
+"Sisaldab ülesannetesse logitud aega, mille eest arve koostate ülesannete "
+"ajagraafikute alusel."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -519,7 +540,7 @@ msgstr "Raamatupidamine"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
 msgid "Is Project map empty"
-msgstr ""
+msgstr "Kas projekti kaart on tühi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__is_service
@@ -619,7 +640,7 @@ msgstr "Nimi"
 #. module: sale_timesheet
 #: model:project.task.type,legend_blocked:sale_timesheet.project_stage_fixed
 msgid "Need functional or technical help"
-msgstr ""
+msgstr "Vajad funktsionaalset või tehnilist abi"
 
 #. module: sale_timesheet
 #: model:project.task,legend_blocked:sale_timesheet.project_task_1
@@ -760,7 +781,7 @@ msgstr "Kasumlikkus"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_pivot
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
 msgid "Profitability Analysis"
-msgstr ""
+msgstr "Kasumlikkuse analüüs"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -807,7 +828,7 @@ msgstr "Projekti ülevaade"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_profitability_report
 msgid "Project Profitability Report"
-msgstr ""
+msgstr "Projekti tasuvuse aruanne"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
@@ -818,12 +839,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__project_template_id
 msgid "Project Template"
-msgstr ""
+msgstr "Projekti mall"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__project_id
 msgid "Project for which we are creating a sales order"
-msgstr ""
+msgstr "Projekt, mille jaoks koostame müügitellimust"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__project_id
@@ -833,7 +854,7 @@ msgstr "Projekt on loodud müügitellimusest"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__project_id
 msgid "Project to make billable"
-msgstr ""
+msgstr "Projekt arveldamiseks"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:0
@@ -850,7 +871,7 @@ msgstr "Müügitellimuses kasutatud projekt"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Re-invoiced costs"
-msgstr ""
+msgstr "Korduvarveldatavad kulud"
 
 #. module: sale_timesheet
 #: model:project.task,legend_done:sale_timesheet.project_task_internal
@@ -878,7 +899,7 @@ msgstr "Müügitellimus"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
 msgid "Sale Order Item"
-msgstr ""
+msgstr "Müügitellimus"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_line_id
@@ -888,7 +909,7 @@ msgstr "Müügikorralduse rida"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_employee_ids
 msgid "Sale line/Employee map"
-msgstr ""
+msgstr "Müügirida / töötaja kaart"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
@@ -901,7 +922,7 @@ msgstr "Müügitellimus"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__order_confirmation_date
 msgid "Sales Order Confirmation Date"
-msgstr ""
+msgstr "Müügitellimuse kinnitamise kuupäev"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_id
@@ -957,7 +978,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "Müügitellimus, millega ülesanne on seotud."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
@@ -1103,7 +1124,7 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "The project is already linked to a sales order item."
-msgstr ""
+msgstr "Projekt on juba seotud müügitellimuse artikliga."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1117,12 +1138,12 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #, python-format
 msgid "The selected Sales Order should contain something to invoice."
-msgstr ""
+msgstr "Valitud müügitellimus peaks sisaldama midagi arveldamiseks."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "There are no timesheets for now."
-msgstr ""
+msgstr "Praegu pole tööajaridu."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1300,7 +1321,7 @@ msgstr "Ühiku hind"
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__price_unit
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__price_unit
 msgid "Unit price of the sales order item."
-msgstr ""
+msgstr "Müügitellimuse üksuse hind."
 
 #. module: sale_timesheet
 #: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual
@@ -1362,14 +1383,14 @@ msgstr ""
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You can not modify timesheets from different employees"
-msgstr ""
+msgstr "Erinevate töötajate töögraafikuid ei saa muuta"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "You can only apply this action from a project."
-msgstr ""
+msgstr "Seda toimingut saate rakendada ainult projektist."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0

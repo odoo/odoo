@@ -26,6 +26,10 @@ class Http(models.AbstractModel):
         version_info = odoo.service.common.exp_version()
 
         user_context = request.session.get_context() if request.session.uid else {}
+        max_file_upload_size = int(self.env['ir.config_parameter'].sudo().get_param(
+            'web.max_file_upload_size',
+            default=128 * 1024 * 1024,  # 128MiB
+        ))
 
         session_info = {
             "uid": request.session.uid,
@@ -41,6 +45,7 @@ class Http(models.AbstractModel):
             "company_id": user.company_id.id if request.session.uid else None,  # YTI TODO: Remove this from the user context
             "partner_id": user.partner_id.id if request.session.uid and user.partner_id else None,
             "web.base.url": self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
+            "max_file_upload_size": max_file_upload_size,
         }
         if self.env.user.has_group('base.group_user'):
             # the following is only useful in the context of a webclient bootstrapping

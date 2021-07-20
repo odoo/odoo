@@ -723,7 +723,7 @@ class MailThread(models.AbstractModel):
             for model in [bl_model for bl_model in bl_models if bl_model.model in self.env]:  # transient test mode
                 rec_bounce_w_email = self.env[model.model].sudo().search([('email_normalized', '=', bounced_email)])
                 rec_bounce_w_email._message_receive_bounce(bounced_email, bounced_partner)
-                bounced_record_done = bool(bounced_record and model.model == bounced_model and bounced_record in rec_bounce_w_email)
+                bounced_record_done = bounced_record_done or (bounced_record and model.model == bounced_model and bounced_record in rec_bounce_w_email)
 
             # set record as bounced unless already done due to blacklist mixin
             if bounced_record and not bounced_record_done and issubclass(type(bounced_record), self.pool['mail.thread']):
@@ -902,6 +902,7 @@ class MailThread(models.AbstractModel):
             raise TypeError('message must be an email.message.Message at this point')
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
+        bounce_alias_static = tools.str2bool(self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias.static", "False"))
         fallback_model = model
 
         # get email.message.Message variables for future processing
@@ -949,6 +950,9 @@ class MailThread(models.AbstractModel):
             if bounce_match:
                 self._routing_handle_bounce(message, message_dict)
                 return []
+        if bounce_alias and bounce_alias_static and any(email == bounce_alias for email in email_to_localparts):
+            self._routing_handle_bounce(message, message_dict)
+            return []
         if message.get_content_type() == 'multipart/report' or email_from_localpart == 'mailer-daemon':
             self._routing_handle_bounce(message, message_dict)
             return []
@@ -2379,7 +2383,10 @@ class MailThread(models.AbstractModel):
             if add_sign:
                 signature = "<p>-- <br/>%s</p>" % author.name
 
-        company = self.company_id.sudo() if self and 'company_id' in self else user.company_id
+        # company value should fall back on env.company if:
+        # - no company_id field on record
+        # - company_id field available but not set
+        company = self.company_id.sudo() if self and 'company_id' in self and self.company_id else self.env.company
         if company.website:
             website_url = 'http://%s' % company.website if not company.website.lower().startswith(('http:', 'https:')) else company.website
         else:

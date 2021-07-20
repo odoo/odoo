@@ -13,7 +13,6 @@
 # Elise Carton <eca@odoo.com>, 2019
 # Olivier ANDRE <frsw194@gmail.com>, 2019
 # Lucas Deliege <lud@odoo.com>, 2019
-# Eloïse Stilmant <est@odoo.com>, 2019
 # Laura Piraux <lap@odoo.com>, 2019
 # Nils Goossens Bara <ngb@odoo.com>, 2019
 # Celia Tydgat <cty@odoo.com>, 2019
@@ -22,14 +21,17 @@
 # Inès Gérardy <ige@odoo.com>, 2019
 # Alexandre Fellner <afe@openerp.com>, 2019
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2019
-# Cyrille de Lambert <cdelambert@auguria.net>, 2019
+# Cyrille de Lambert <cyrille.delambert@auguria.fr>, 2019
 # f477e7ae9c75a2428d6113663a8354fe_bcd021c <0ff4ce060a36f446722508a48e99c22a_347081>, 2019
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # Vincent Luba <vincent@biz-4-africa.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
-# Priscilla Sanchez <prs@odoo.com>, 2020
+# Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Martin Trigaux, 2020
+# Eloïse Stilmant <est@odoo.com>, 2021
+# Luc N, 2021
+# Gwladys Jouble <g.jouble@vieconnect.io>, 2021
 # 
 msgid ""
 msgstr ""
@@ -37,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Gwladys Jouble <g.jouble@vieconnect.io>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -210,6 +212,16 @@ msgstr ""
 "<p><b>Envoyer des messages</b>à vos pistes et recever des réponses "
 "automatiques liées à cette opportunité</p><p class=\"mb0\">Type<i>@</i>Pour "
 "notifier des personnes - faites comme pour un mail et mettez cc</p> "
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
+"<p>Etant donné que vous ne faites partie d'aucune équipe commerciale, Odoo "
+"ouvre la première par défaut.</p>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1945,6 +1957,12 @@ msgstr ""
 "passer en revue le pipeline avec l'équipe commerciale."
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr "Nombre d'opportunités"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr "Revenus d'opportunités"
@@ -2037,6 +2055,7 @@ msgstr "Autre"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "Opportunités en retard"
 
@@ -2509,6 +2528,12 @@ msgid "Team Pipelines"
 msgstr "Pipelines des équipes"
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr "Champ technique utilisé à des fins statistiques"
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
@@ -2627,6 +2652,16 @@ msgstr "Cet objectif n'existe pas."
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Title"
 msgstr "Titre"
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"To prevent data loss, Leads and Opportunities can only be merged by groups "
+"of 5."
+msgstr ""
+"Afin d'éviter des pertes de données, les Pistes et Opportunités ne peuvent "
+"être fusionnées que par groupes de 5."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter

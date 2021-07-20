@@ -108,8 +108,10 @@ class WebsiteBlog(http.Controller):
             page=page,
             step=self._blog_post_per_page,
         )
-
-        all_tags = blog and blogs.all_tags()[blog.id] or blogs.all_tags(join=True)
+        if not blogs:
+            all_tags = request.env['blog.tag']
+        else:
+            all_tags = blog and blogs.all_tags()[blog.id] or blogs.all_tags(join=True)
         tag_category = sorted(all_tags.mapped('category_id'), key=lambda category: category.name.upper())
         other_tags = sorted(all_tags.filtered(lambda x: not x.category_id), key=lambda tag: tag.name.upper())
 

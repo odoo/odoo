@@ -3,6 +3,7 @@ odoo.define('web.search_view_tests', function (require) {
 
 var FormView = require('web.FormView');
 var GraphView = require('web.GraphView');
+const ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
 
 var createActionManager = testUtils.createActionManager;
@@ -1118,6 +1119,47 @@ QUnit.module('Search View', {
             'Label of Filter is correct');
 
         actionManager.destroy();
+    });
+
+    QUnit.test('Custom Filter search on datetime field without value', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.date_time_field = { string: "DateTime", type: "datetime", store: true, searchable: true };
+
+        let searchReadCount = 0;
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: `<list string="Partners">
+                    <field name="bar"/>
+                    <field name="date_time_field"/>
+                </list>`,
+            res_id: 1,
+            mockRPC: async function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReadCount === 1) {
+                        assert.deepEqual(args.domain, [['date_time_field', '=', false]],
+                            'domain is correct');
+                    }
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.dom.click(list.$('button:contains(Filters)'));
+        await testUtils.dom.click(list.$('.o_dropdown_menu .o_add_custom_filter'));
+        assert.strictEqual(list.$('.o_dropdown_menu select.o_searchview_extended_prop_field').val(), 'date_time_field',
+            'the date_time_field should be selected in the custom filter');
+        assert.strictEqual(list.$('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), 'between',
+            'The between operator is selected');
+
+        await testUtils.fields.editSelect(list.$('.o_dropdown_menu select.o_searchview_extended_prop_op'), '=');
+        await testUtils.fields.editAndTrigger(list.$('.o_searchview_extended_prop_value input:first'), '', ['change']);
+        searchReadCount = 1;
+        await testUtils.dom.click(list.$('.o_dropdown_menu .o_apply_filter'));
+
+        list.destroy();
     });
 
     QUnit.module('Favorites Menu');

@@ -95,6 +95,18 @@ class AccountMove(models.Model):
         :param tree: The tree of the Factur-x xml file.
         :return: A dictionary containing account.invoice values to create/update it.
         '''
+        def find_partner(partner_type):
+            elements = tree.xpath('//ram:%s/ram:SpecifiedTaxRegistration/ram:ID' % partner_type, namespaces=tree.nsmap)
+            partner = elements and self.env['res.partner'].search([('vat', '=', elements[0].text)], limit=1)
+            if not partner:
+                elements = tree.xpath('//ram:%s/ram:Name' % partner_type, namespaces=tree.nsmap)
+                partner_name = elements and elements[0].text
+                partner = elements and self.env['res.partner'].search([('name', 'ilike', partner_name)], limit=1)
+            if not partner:
+                elements = tree.xpath('//ram:%s//ram:URIID[@schemeID=\'SMTP\']' % partner_type, namespaces=tree.nsmap)
+                partner = elements and self.env['res.partner'].search([('email', '=', elements[0].text)], limit=1)
+            return partner
+
         amount_total_import = None
 
         default_type = False
@@ -142,17 +154,11 @@ class AccountMove(models.Model):
         with Form(self.with_context(default_type=default_type)) as invoice_form:
             # Partner (first step to avoid warning 'Warning! You must first select a partner.').
             partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
-            elements = tree.xpath('//ram:'+partner_type+'/ram:SpecifiedTaxRegistration/ram:ID', namespaces=tree.nsmap)
-            partner = elements and self.env['res.partner'].search([('vat', '=', elements[0].text)], limit=1)
-            if not partner:
-                elements = tree.xpath('//ram:'+partner_type+'/ram:Name', namespaces=tree.nsmap)
-                partner_name = elements and elements[0].text
-                partner = elements and self.env['res.partner'].search([('name', 'ilike', partner_name)], limit=1)
-            if not partner:
-                elements = tree.xpath('//ram:'+partner_type+'//ram:URIID[@schemeID=\'SMTP\']', namespaces=tree.nsmap)
-                partner = elements and self.env['res.partner'].search([('email', '=', elements[0].text)], limit=1)
-            if partner:
-                invoice_form.partner_id = partner
+            invoice_form.partner_id = find_partner(partner_type)
+
+            # Delivery Partner
+            if 'partner_shipping_id' in self._fields:
+                invoice_form.partner_shipping_id = find_partner('ShipToTradeParty')
 
             # Reference.
             elements = tree.xpath('//rsm:ExchangedDocument/ram:ID', namespaces=tree.nsmap)

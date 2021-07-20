@@ -357,7 +357,7 @@ class Project(models.Model):
 
     def open_tasks(self):
         ctx = dict(self._context)
-        ctx.update({'search_default_project_id': self.id})
+        ctx.update({'search_default_project_id': self.id, 'default_project_id': self.id})
         action = self.env['ir.actions.act_window'].for_xml_id('project', 'act_project_project_2_project_task_all')
         return dict(action, context=ctx)
 

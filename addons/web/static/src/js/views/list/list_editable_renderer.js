@@ -266,7 +266,7 @@ ListRenderer.include({
                     currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
                     if (currentWidget) {
                         focusedElement = currentWidget.getFocusableElement().get(0);
-                        if (currentWidget.formatType !== 'boolean') {
+                        if (currentWidget.formatType !== 'boolean' && focusedElement) {
                             selectionRange = dom.getSelectionRange(focusedElement);
                         }
                     }

@@ -9,12 +9,12 @@
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
 # Kristoffer Grundström <lovaren@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2019
 # 03992e16f8df6e39b9d1cc0ff635887e, 2019
 # Frida E, 2019
 # Kim Asplund <kim.asplund@gmail.com>, 2020
 # Anto Nilsson <anton.nilsson@vertel.se>, 2020
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Anto Nilsson <anton.nilsson@vertel.se>, 2020\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +33,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "${object.event_id.name}: ${object.get_date_range_str()}"
-msgstr ""
+msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
 
 #. module: event
 #: code:addons/event/models/event.py:0
@@ -45,13 +45,13 @@ msgstr "%s (kopia)"
 #: model:ir.actions.report,print_report_name:event.report_event_registration_badge
 msgid ""
 "'Registration Event - %s' % (object.name or 'Attendee').replace('/','')"
-msgstr ""
+msgstr "'Anmälan - %s' % (object.name or 'Deltagare').replace('/','')"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr ""
+msgstr "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -66,6 +66,8 @@ msgid ""
 "<b>Business Room</b> - To discuss implementation methodologies, best sales "
 "practices, etc."
 msgstr ""
+"<b>Affärsrummet</b> - För diskussioner om implementationsmetoder, bra "
+"försäljningsstrategier, etc."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -73,6 +75,8 @@ msgid ""
 "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
 "new developers."
 msgstr ""
+"<b>Teknikrummet</b> - Rum för avancerade Odoo-utvecklare och rum för nya "
+"utvecklare"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -102,7 +106,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "<b>Workshop Room</b> - Mainly for developers."
-msgstr ""
+msgstr "<b>Workshop-rummet</b> - I huvudsak för utvecklare."
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -126,6 +130,8 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
+"title=\"Confirm Registration\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -147,6 +153,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -175,6 +183,8 @@ msgid ""
 "<span class=\"badge badge-secondary o_wevent_badge float-"
 "right\">SPEAKER</span>"
 msgstr ""
+"<span class=\"badge badge-secondary o_wevent_badge float-"
+"right\">TALARE</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -182,6 +192,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
@@ -614,7 +626,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Add a new event"
-msgstr ""
+msgstr "Lägg till ett nytt evenemang"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -636,7 +648,7 @@ msgstr "Efter evenemanget"
 #. module: event
 #: model:event.event,name:event.event_6
 msgid "An unpublished event"
-msgstr ""
+msgstr "Ett opublicerat evenemang"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1024,7 +1036,7 @@ msgstr "Slutdatum"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end_located
 msgid "End Date Located"
-msgstr ""
+msgstr "Slutdatum lokaliserat"
 
 #. module: event
 #: model:event.event,subtitle:event.event_2
@@ -1045,7 +1057,7 @@ msgstr "Evenemang"
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr ""
+msgstr "Automatisk e-post evenemang"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_event_badge
@@ -1152,7 +1164,7 @@ msgstr "Evenemangstyp"
 #: model:ir.cron,cron_name:event.event_mail_scheduler
 #: model:ir.cron,name:event.event_mail_scheduler
 msgid "Event: Mail Scheduler"
-msgstr ""
+msgstr "Evenemang: e-post-planering"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1177,7 +1189,7 @@ msgstr "Evenemangsanalys"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
-msgstr ""
+msgstr "Evenemang-epost-planering"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -1409,7 +1421,7 @@ msgstr "Är följare"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
 msgid "Is One Day"
-msgstr ""
+msgstr "Är en dag"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__default_registration_max
@@ -1508,12 +1520,12 @@ msgstr "Logotyp"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__notification_type__mail
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__notification_type__mail
 msgid "Mail"
-msgstr ""
+msgstr "Epost"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_registration_ids
 msgid "Mail Registration"
-msgstr ""
+msgstr "Anmälan per post"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_mail_ids
@@ -1534,17 +1546,17 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "E-postplanering för evenemangskategorin"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
 msgid "Mail Sent"
-msgstr ""
+msgstr "E-post skickad"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_sent
 msgid "Mail Sent on Event"
-msgstr ""
+msgstr "E-post skickad för evenemanget"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_main_attachment_id
@@ -1555,7 +1567,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage &amp; publish a schedule with tracks"
-msgstr ""
+msgstr "Administrera och publicera planer med spår"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_availability
@@ -1621,19 +1633,19 @@ msgstr "Mina evenemang"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_date_deadline
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Nästa slutdatum för aktivitet"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_summary
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Nästa aktivitetssummering"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_type_id
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Nästa aktivitetstyp"
 
 #. module: event
 #: code:addons/event/models/event.py:0
@@ -1667,13 +1679,13 @@ msgstr "Antal deltagare"
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Antal fel"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_partner__event_count
 #: model:ir.model.fields,help:event.field_res_users__event_count
 msgid "Number of events the partner has participated."
-msgstr ""
+msgstr "Antal evenemang kontakten deltagit i."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
@@ -1780,7 +1792,7 @@ msgstr ""
 #: model_terms:event.event,description:event.event_0
 #: model_terms:event.event,description:event.event_2
 msgid "Program"
-msgstr ""
+msgstr "Program"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1832,22 +1844,22 @@ msgstr "Registrerings ID"
 #. module: event
 #: model:ir.model,name:event.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr ""
+msgstr "Planerare för anmälningsbrev"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration Mails"
-msgstr ""
+msgstr "Anmälningsbrev"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_questions
 msgid "Registration Survey"
-msgstr ""
+msgstr "Anmälningsundersökning"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration mail"
-msgstr ""
+msgstr "Anmälningsbrev"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -1875,7 +1887,7 @@ msgstr "Ansvarig användare"
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_sms_error
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS leveransfel"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1885,7 +1897,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
-msgstr ""
+msgstr "Planering och spår"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -1897,7 +1909,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
 msgid "Scheduled Sent Mail"
-msgstr ""
+msgstr "Mejlutskick planerat"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__scheduled_date
@@ -1912,7 +1924,7 @@ msgstr "Sälj biljetter på din Webbplats"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with sales orders"
-msgstr ""
+msgstr "Sälj biljetter på kundordrar"
 
 #. module: event
 #: model:event.type,name:event.event_type_0
@@ -2067,7 +2079,7 @@ msgstr "Totalt"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
 msgid "Tracks and Agenda"
-msgstr ""
+msgstr "Spår och program"
 
 #. module: event
 #: model:event.type,name:event.event_type_4
@@ -2082,7 +2094,7 @@ msgstr "Trigger"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_type
 msgid "Trigger "
-msgstr ""
+msgstr "Utlösare"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__twitter_hashtag
@@ -2201,7 +2213,7 @@ msgstr "Veckor"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "What's new?"
-msgstr ""
+msgstr "Vad är nytt?"
 
 #. module: event
 #: code:addons/event/models/event.py:0
@@ -2218,7 +2230,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for ${object.event_id.name}"
-msgstr ""
+msgstr "Din namnbricka för ${object.event_id.name}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
@@ -2233,30 +2245,30 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "events@odoo.com"
-msgstr ""
+msgstr "events@odoo.com"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "events@yourcompany.com"
-msgstr ""
+msgstr "events@yourcompany.com"
 
 #. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "in %d days"
-msgstr ""
+msgstr "om %d dagar"
 
 #. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "next month"
-msgstr ""
+msgstr "nästa månad"
 
 #. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "next week"
-msgstr ""
+msgstr "nästa vecka"
 
 #. module: event
 #: code:addons/event/models/event.py:0
@@ -2268,10 +2280,10 @@ msgstr ""
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "today"
-msgstr ""
+msgstr "idag"
 
 #. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "tomorrow"
-msgstr ""
+msgstr "imorgon"

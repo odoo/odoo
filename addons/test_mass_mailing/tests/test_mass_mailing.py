@@ -282,17 +282,28 @@ class TestOnResPartner(TransactionCase):
             'name': 'test email 2',
             'email': 'test2@email.com',
         })
+        partner_c = partners.create({
+            'name': 'test email 3',
+            'email': 'test3@email.com',
+        })
 
         # Set Blacklist
         self.blacklist_contact_entry = self.env['mail.blacklist'].create({
             'email': 'Test2@email.com',
         })
+        self.env['mail.blacklist'].create({
+            'email': 'test3@email.com',
+        })
+
+        # Unblacklist
+        self.env['mail.blacklist']._remove('Test3@email.com')
+        self.env['mail.blacklist'].flush(['active'])
 
         # create mass mailing record
         self.mass_mailing = mass_mailing.create({
             'name': 'One',
             'subject': 'One',
-            'mailing_domain': [('id', 'in', [partner_a.id, partner_b.id])],
+            'mailing_domain': [('id', 'in', [partner_a.id, partner_b.id, partner_c.id])],
             'body_html': 'This is mass mail marketing demo'})
         self.mass_mailing.mailing_model_real = 'res.partner'
         self.mass_mailing.action_put_in_queue()

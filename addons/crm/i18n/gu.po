@@ -2,12 +2,21 @@
 # This file contains the translation of the following modules:
 # 	* crm
 # 
+# Translators:
+# Divya Pandya <dia@odoo.com>, 2021
+# Gaurav Marsoniya <marsoniyagaurav@gmail.com>, 2021
+# Turkesh Patel <turkesh4friends@gmail.com>, 2021
+# D J <dja@openerp.com>, 2021
+# Martin Trigaux, 2021
+# Spellbound Soft Solutions <jeel.spellbound@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Spellbound Soft Solutions <jeel.spellbound@gmail.com>, 2021\n"
 "Language-Team: Gujarati (https://www.transifex.com/odoo/teams/41243/gu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +29,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_res_partner__meeting_count
 #: model:ir.model.fields,field_description:crm.field_res_users__meeting_count
 msgid "# Meetings"
-msgstr ""
+msgstr "બેઠકો"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -150,6 +159,14 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Meetings</span>\n"
@@ -169,21 +186,21 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "ક્રિયા આવશ્યક છે"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__active
 #: model:ir.model.fields,field_description:crm.field_crm_lead__active
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__active
 msgid "Active"
-msgstr ""
+msgstr "સક્રિય"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_ids
 #: model:ir.ui.menu,name:crm.crm_activity_report_menu
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Activities"
-msgstr ""
+msgstr "પ્રવૃત્તિઓ"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_graph
@@ -200,7 +217,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Activity"
-msgstr ""
+msgstr "પ્રવૃત્તિ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__body
@@ -241,7 +258,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Address"
-msgstr ""
+msgstr "સરનામું"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_id
@@ -369,7 +386,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Cancel"
-msgstr ""
+msgstr "રદ કરો"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_team_act_tree
@@ -471,12 +488,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Company"
-msgstr ""
+msgstr "કંપની"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_name
 msgid "Company Name"
-msgstr ""
+msgstr "કંપનીનું નામ"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -497,7 +514,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_config
 msgid "Configuration"
-msgstr ""
+msgstr "રુપરેખાંકન"
 
 #. module: crm
 #. openerp-web
@@ -525,12 +542,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "સંપર્ક"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Contact Information"
-msgstr ""
+msgstr "સંપર્ક જાણકારી"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__contact_name
@@ -624,7 +641,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Country"
-msgstr ""
+msgstr "દેશ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_lead_website
@@ -697,7 +714,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding__create_uid
 #: model:ir.model.fields,field_description:crm.field_crm_stage__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "બનાવનાર"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__create_date
@@ -721,7 +738,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Creation Date"
-msgstr ""
+msgstr "સર્જન તારીખ"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
@@ -731,7 +748,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__company_currency
 msgid "Currency"
-msgstr ""
+msgstr "ચલણ"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -746,7 +763,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #, python-format
 msgid "Customer"
-msgstr ""
+msgstr "ભાગીદાર"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -758,7 +775,7 @@ msgstr ""
 #: model:ir.ui.menu,name:crm.res_partner_menu_customer
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Customers"
-msgstr ""
+msgstr "ગ્રાહકો"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -788,12 +805,12 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Delete"
-msgstr ""
+msgstr "કાઢી નાંખો"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__name
 msgid "Description"
-msgstr ""
+msgstr "વર્ણન"
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor5
@@ -819,7 +836,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "પ્રદર્શન નામ"
 
 #. module: crm
 #: code:addons/crm/models/digest.py:0 code:addons/crm/models/digest.py:0
@@ -842,13 +859,13 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Edit"
-msgstr ""
+msgstr "ફેરફાર કરો"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_from
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Email"
-msgstr ""
+msgstr "ઈ-મેઈલ"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -995,7 +1012,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "અનુયાયીઓ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_channel_ids
@@ -1069,7 +1086,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__priority__2
 msgid "High"
-msgstr ""
+msgstr "વધારે"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__id
@@ -1085,7 +1102,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding__id
 #: model:ir.model.fields,field_description:crm.field_crm_stage__id
 msgid "ID"
-msgstr ""
+msgstr "ઓળખ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_exception_icon
@@ -1101,13 +1118,13 @@ msgstr ""
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
 #: model:ir.model.fields,help:crm.field_crm_lead__message_unread
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "જો ચેક કરેલું હોય, તો નવા સંદેશા માટે તમારું ધ્યાન આવશ્યક છે."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "જો ચેક કરેલું હોય, તો કેટલાક મેસેજીસમાં ડિલિવરીની ભૂલ છે."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_partner__team_id
@@ -1160,7 +1177,7 @@ msgstr ""
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor4
 msgid "Information"
-msgstr ""
+msgstr "માહિતી"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1185,7 +1202,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
 msgid "Job Position"
-msgstr ""
+msgstr "સ્થાન"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__kanban_state
@@ -1283,7 +1300,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Lead"
-msgstr ""
+msgstr "લીડ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__lead_count
@@ -1366,7 +1383,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_kanban
 msgid "Leads"
-msgstr ""
+msgstr "લીડ"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -1486,7 +1503,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__priority__0
 msgid "Low"
-msgstr ""
+msgstr "નીચુ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_main_attachment_id
@@ -1526,7 +1543,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Marketing"
-msgstr ""
+msgstr "પ્રચાર"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__medium_id
@@ -1609,7 +1626,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "સંદેશાઓ"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1619,7 +1636,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__mobile
 msgid "Mobile"
-msgstr ""
+msgstr "મોબાઇલ"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -1640,12 +1657,12 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Name"
-msgstr ""
+msgstr "નામ"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead1
 msgid "New"
-msgstr ""
+msgstr "નવું"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created
@@ -1676,7 +1693,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "આગલું પ્રવૃત્તિ સારાંશ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_type_id
@@ -1697,7 +1714,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "કોઈ વિષય નથી"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__grey
@@ -1722,7 +1739,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__description
 msgid "Notes"
-msgstr ""
+msgstr "નોંધ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction_counter
@@ -1737,12 +1754,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "સંદેશાઓની સંખ્યા જે ક્રિયા માટે જરૂરી છે"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "વિતરણ ભૂલ સાથે સંદેશાઓની સંખ્યા"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_count
@@ -1757,7 +1774,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "ન વાંચેલા સંદેશાની સંખ્યા"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -1800,7 +1817,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model_terms:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Opportunities"
-msgstr ""
+msgstr "તકો"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1815,6 +1832,12 @@ msgid ""
 "deadlines or the number of interactions per opportunity. This report is "
 "mainly used by the sales manager in order to do the periodic review with the"
 " channels of the sales pipeline."
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
 msgstr ""
 
 #. module: crm
@@ -1905,11 +1928,12 @@ msgstr ""
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor8
 msgid "Other"
-msgstr ""
+msgstr "અન્ય"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr ""
 
@@ -1926,7 +1950,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_user_id
 msgid "Owner"
-msgstr ""
+msgstr "માલિક"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_address_email
@@ -1957,7 +1981,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Phone"
-msgstr ""
+msgstr "ફોન"
 
 #. module: crm
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_phone_state
@@ -2018,7 +2042,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
 msgid "Priority"
-msgstr ""
+msgstr "પ્રાથમિકતા"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__probability
@@ -2028,7 +2052,7 @@ msgstr ""
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor1
 msgid "Product"
-msgstr ""
+msgstr "ઉત્પાદન"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead3
@@ -2070,18 +2094,18 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_report
 msgid "Reporting"
-msgstr ""
+msgstr "અહેવાલીકરણ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__requirements
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Requirements"
-msgstr ""
+msgstr "જરૂરીયાતો"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "જવાબદાર વપરાશકર્તા"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2096,7 +2120,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_sales
 msgid "Sales"
-msgstr ""
+msgstr "વેચાણ"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
@@ -2174,7 +2198,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "ક્રમ"
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor3
@@ -2190,7 +2214,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.crm_config_settings_action
 #: model:ir.ui.menu,name:crm.crm_config_settings_menu
 msgid "Settings"
-msgstr ""
+msgstr "સુયોજનો"
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
@@ -2291,7 +2315,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead__state_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "State"
-msgstr ""
+msgstr "અવસ્થા"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_state
@@ -2358,6 +2382,12 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
 msgid "Team Pipelines"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
 msgstr ""
 
 #. module: crm
@@ -2454,6 +2484,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead__title
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Title"
+msgstr "શીર્ષક"
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"To prevent data loss, Leads and Opportunities can only be merged by groups "
+"of 5."
 msgstr ""
 
 #. module: crm
@@ -2487,7 +2525,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead__type
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Type"
-msgstr ""
+msgstr "પ્રકાર"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_report__lead_type
@@ -2611,12 +2649,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "વપરાશકર્તાઓ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__value
 msgid "Value"
-msgstr ""
+msgstr "મૂલ્ય"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__variable
@@ -2759,4 +2797,4 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "unknown"
-msgstr ""
+msgstr "અજ્ઞાત"

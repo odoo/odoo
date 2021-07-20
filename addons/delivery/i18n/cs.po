@@ -109,7 +109,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "Akce při ověřování dodacích objednávek"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
@@ -1060,6 +1060,16 @@ msgstr "Šířka musí být kladné číslo"
 msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
 msgstr ""
 
 #. module: delivery

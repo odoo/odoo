@@ -140,7 +140,8 @@ class Website(models.Model):
                 if menu.parent_id and menu.parent_id in menus:
                     menu.parent_id._cache['child_id'] += (menu.id,)
 
-            website.menu_id = menus and menus.filtered(lambda m: not m.parent_id)[0].id or False
+            top_menus = menus.filtered(lambda m: not m.parent_id)
+            website.menu_id = top_menus and top_menus[0].id or False
 
     # self.env.uid for ir.rule groups on menu
     @tools.ormcache('self.env.uid', 'self.id')
@@ -909,6 +910,9 @@ class Website(models.Model):
         # and canonical url is always quoted, so it is never possible to tell
         # if the current URL is indeed canonical or not.
         return current_url == canonical_url
+
+    def _get_relative_url(self, url):
+        return urls.url_parse(url).replace(scheme='', netloc='').to_url()
 
 
 class BaseModel(models.AbstractModel):

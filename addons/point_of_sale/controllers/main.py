@@ -53,7 +53,9 @@ class PosController(http.Controller):
             'session_info': session_info,
             'login_number': pos_session.login(),
         }
-        return request.render('point_of_sale.index', qcontext=context)
+        response = request.render('point_of_sale.index', qcontext=context)
+        response.headers['Cache-Control'] = 'no-store'
+        return response
 
     @http.route('/pos/sale_details_report', type='http', auth='user')
     def print_sale_details(self, date_start=False, date_stop=False, **kw):

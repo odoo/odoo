@@ -11376,7 +11376,7 @@ msgstr "Commenti"
 #: model:ir.model.fields,field_description:base.field_res_partner__commercial_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__commercial_partner_id
 msgid "Commercial Entity"
-msgstr "Ente commerciale"
+msgstr "Entità commerciale"
 
 #. module: base
 #: model:res.country,name:base.km
@@ -14340,6 +14340,12 @@ msgid ""
 "Technical Details:\n"
 "%s"
 msgstr ""
+"File %r non importato, non è valido.\n"
+"\n"
+"Il problema può essere causato da voci duplicate che si riferiscono allo stesso campo. Controllare il contenuto del file che si sta tentando di importare.\n"
+"\n"
+"Dettagli tecnici:\n"
+"%s"
 
 #. module: base
 #: code:addons/base/wizard/base_import_language.py:0
@@ -14388,6 +14394,8 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
+"File dal quale ha origine la vista.\n"
+"                                                          Utile per il ripristino (forte) delle viste danneggiate o per leggere, nella modalità dev-xml, l'architettura dal file."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -14629,6 +14637,8 @@ msgid ""
 "Found more than 10 errors and more than one error per 10 records, "
 "interrupted to avoid showing too many errors."
 msgstr ""
+"Trovati più di 10 errori e più di uno ogni 10 record, è stato interrotto per"
+" evitare di mostrarne troppi."
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -16083,6 +16093,8 @@ msgid ""
 "Image size excessive, uploaded images must be smaller than %s million "
 "pixels."
 msgstr ""
+"L'immagine ha una dimensione eccessiva. Le immagini caricate devono essere "
+"inferiori a %s milioni di pixel. "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -16602,6 +16614,8 @@ msgid ""
 "Invalid inheritance mode: if the mode is 'extension', the view must extend "
 "an other view"
 msgstr ""
+"Modo di ereditarietà non valido: se è una \"estensione\", la vista deve "
+"estendere un'altra vista"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_ui_view_qweb_required_key
@@ -19254,7 +19268,7 @@ msgstr "Diritti di accesso non sufficienti per l'ID esterno:"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Note: this might be a multi-company issue."
-msgstr ""
+msgstr "Nota: potrebbe essere un problema multi azienda."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
@@ -20998,6 +21012,10 @@ msgid ""
 "\n"
 "Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
 msgstr ""
+"Odoo non è in grado di unire i PDF allegati ai seguenti record:\n"
+"%s\n"
+"\n"
+"Per proseguire, escluderli dalla selezione. È ancora possibile recuperare tali PDF, evitando l'unione, selezionando singolarmente i record interessati."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
@@ -21164,6 +21182,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Viene impiegato solo se la vista eredita da un'altra vista (inherit_id non è falso/nullo).\n"
+"\n"
+"* Se estensione (predefinito), ed è richiesta la vista, viene cercata la\n"
+"primaria più vicina (via inherit_id). Quindi vengono applicate, con il\n"
+"suo modello, tutte quelle che ereditano dalla vista stessa\n"
+"* Se primario, viene pienamente risolta la vista primaria più vicina (anche\n"
+"se usa un modello diverso), quindi vengono applicate le specifiche\n"
+"di ereditarietà della vista stessa (<xpath/>) usando il risultato come fosse\n"
+"l'attuale architettura.\n"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_unique_name_per_day
@@ -23092,7 +23119,7 @@ msgstr "Errore di ricorsione delle dipendenze dei moduli !"
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "Recursion found in child server actions"
-msgstr ""
+msgstr "Trovata ricorsività nelle azioni server secondarie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__reference
@@ -23144,7 +23171,7 @@ msgstr "Campo collegato"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Related field '%s' does not have comodel '%s'"
-msgstr ""
+msgstr "Il campo correlato \"%s\" non possiede il comodello \"%s\""
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -23265,7 +23292,7 @@ msgstr "Rendiconto"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
 msgid "Report Action"
-msgstr "Azione resoconto"
+msgstr "Azione report"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_file
@@ -23282,28 +23309,28 @@ msgstr "Piè di pagina documento"
 #: model:ir.model,name:base.model_report_layout
 #: model:ir.model.fields,field_description:base.field_base_document_layout__report_layout_id
 msgid "Report Layout"
-msgstr "Struttura resoconto"
+msgstr "Struttura report"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Model"
-msgstr "Modello resoconto"
+msgstr "Modello report"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_type
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Type"
-msgstr "Tipo resoconto"
+msgstr "Tipo report"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Xml"
-msgstr "Resoconto XML"
+msgstr "XML del report"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view_tree
 msgid "Report xml"
-msgstr "Resoconto XML"
+msgstr "XML del report"
 
 #. module: base
 #: model:ir.ui.menu,name:base.reporting_menuitem
@@ -23784,7 +23811,7 @@ msgstr "San Marino"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__sanitized_acc_number
 msgid "Sanitized Account Number"
-msgstr ""
+msgstr "Numero conto pulito"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__6
@@ -24482,7 +24509,7 @@ msgstr "Social network LinkedIn"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social
 msgid "Social Marketing"
-msgstr ""
+msgstr "Marketing social"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_media
@@ -24727,7 +24754,7 @@ msgstr "Stato di Palestina"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__base_onboarding_company_state
 msgid "State of the onboarding company step"
-msgstr ""
+msgstr "Stato della fase di configurazione azienda"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_ids
@@ -25954,6 +25981,8 @@ msgid ""
 "This field will save the current `arch_db` before writing on it.\n"
 "                                                                         Useful to (soft) reset a broken view."
 msgstr ""
+"Campo che salva l'attuale `arch_db` prima di effettuare la scrittura.\n"
+"                                                                         Utile per il ripristino (leggero) di una vista danneggiata."
 
 #. module: base
 #: code:addons/image.py:0
@@ -27740,7 +27769,7 @@ msgid ""
 "sequence. Low number means high priority."
 msgstr ""
 "Per le azioni multiple, l'ordine di esecuzione è basato sulla sequenza. Un "
-"numero piccolo indica la massima priorità."
+"numero basso indica alta priorità."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__sequence
@@ -27993,8 +28022,10 @@ msgstr "Impossibile attivare il superutente."
 #. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
-msgstr "Impossibile archiviare un contatto collegato a un utente interno."
+msgid "You cannot archive a contact linked to a portal or internal user."
+msgstr ""
+"Impossibile archiviare un contatto collegato a un portale o a un utente "
+"interno."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0

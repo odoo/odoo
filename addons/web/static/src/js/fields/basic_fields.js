@@ -625,6 +625,31 @@ var FieldDateRange = InputField.extend({
         }
         this._super.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Field widget is valid if value entered can convered to date/dateime value
+     * while parsing input value to date/datetime throws error then widget considered
+     * invalid
+     *
+     * @override
+     */
+    isValid: function () {
+        const value = this.mode === "readonly" ? this.value : this.$input.val();
+        try {
+            return field_utils.parse[this.formatType](value, this.field, { timezone: true }) || true;
+        } catch (error) {
+            return false;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * Return the date written in the input, in UTC.
      *
@@ -632,7 +657,14 @@ var FieldDateRange = InputField.extend({
      * @returns {Moment|false}
      */
     _getValue: function () {
-        return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
+        try {
+            // user may enter manual value in input and it may not be parsed as date/datetime value
+            this.removeInvalidClass();
+            return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
+        } catch (error) {
+            this.setInvalidClass();
+            return false;
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1699,7 +1731,7 @@ var AbstractFieldBinary = AbstractField.extend({
         this._super.apply(this, arguments);
         this.fields = record.fields;
         this.useFileAPI = !!window.FileReader;
-        this.max_upload_size = 25 * 1024 * 1024; // 25Mo
+        this.max_upload_size = session.max_file_upload_size || 128 * 1024 * 1024;
         if (!this.useFileAPI) {
             var self = this;
             this.fileupload_id = _.uniqueId('o_fileupload');

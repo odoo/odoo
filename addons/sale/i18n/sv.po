@@ -21,7 +21,7 @@
 # Martin Trigaux, 2019
 # Kim Asplund <kim.asplund@gmail.com>, 2020
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2020
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2020
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2020\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +45,7 @@ msgstr "# antal Rader"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr ""
+msgstr "# kundorder"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
@@ -545,6 +545,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Kundorder #</span>\n"
+"                            <span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -563,6 +565,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -580,6 +584,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                                <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Kund</span>\n"
+"                                <span class=\"o_stat_text\">Förhandsvisa</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -593,6 +599,8 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Belopp</span>\n"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Totalt pris</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -603,11 +611,13 @@ msgstr "<span>Acceptera på uppdrag av:</span>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By paying this proposal, I agree to the following terms:</span>"
 msgstr ""
+"<span>Genom att betala denna offert, godkänner jag förljande villkor:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By signing this proposal, I agree to the following terms:</span>"
 msgstr ""
+"<span>Genom att signera offerten, accepterar jag följande villkor:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -618,7 +628,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>For an amount of:</span>"
-msgstr ""
+msgstr "<span>För en totalsumma av:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -633,7 +643,7 @@ msgstr "<span>Skatt</span> "
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>With payment terms:</span>"
-msgstr ""
+msgstr "<span>Med betalvillkoren:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -654,7 +664,7 @@ msgstr "<strong class=\"mr16\">Delsumma</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong class=\"text-muted\">Salesperson</strong>"
-msgstr ""
+msgstr "<strong class=\"text-muted\">Säljare</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -664,7 +674,7 @@ msgstr "<strong>Förfallodatum: </strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration:</strong>"
-msgstr ""
+msgstr "<strong>Förfaller:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -697,7 +707,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Signature</strong>"
-msgstr ""
+msgstr "<strong>Signatur</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -709,7 +719,7 @@ msgstr "<strong>Delsumma</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>Thank You!</strong><br/>"
-msgstr ""
+msgstr "<strong>Tack!</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -800,17 +810,17 @@ msgstr "Acceptera och betala"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Pay Quotation"
-msgstr ""
+msgstr "Acceptera och betala offerten"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Sign"
-msgstr ""
+msgstr "Acceptera och signera"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Sign Quotation"
-msgstr ""
+msgstr "Acceptera och signera offerten"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -835,7 +845,7 @@ msgstr "Kontonummer"
 #. module: sale
 #: model:ir.model,name:sale.model_account_reconciliation_widget
 msgid "Account Reconciliation widget"
-msgstr "Transaktionsavstämnings widget"
+msgstr "Transaktionsavstämningsverktyg"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_account_id
@@ -1375,7 +1385,7 @@ msgstr "Kundreferens"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Customer Signature"
-msgstr ""
+msgstr "Kundsignering"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_taxes_id
@@ -1422,7 +1432,7 @@ msgstr "Orderdatum"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signed_on
 msgid "Date of the signature."
-msgstr ""
+msgstr "Datum för signatur"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__create_date
@@ -1694,7 +1704,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
 msgid "Expiration"
-msgstr ""
+msgstr "Förfaller"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2075,7 +2085,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address:"
-msgstr ""
+msgstr "Faktura och leveransadress:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
@@ -2359,17 +2369,17 @@ msgstr "Ny offert"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Nästa slutdatum för aktivitet"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Nästa aktivitetssummering"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Nästa aktivitetstyp"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__no
@@ -2438,7 +2448,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Antal fel"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
@@ -2502,14 +2512,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_pay
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_payment
 msgid "Online Payment"
-msgstr ""
+msgstr "Onlinebetalning"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
 msgid "Online Signature"
-msgstr ""
+msgstr "Online signatur"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__digital_signature
@@ -2760,7 +2770,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Payment terms"
-msgstr ""
+msgstr "Betalningsvillkor"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_user_type
@@ -2796,7 +2806,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__price_subtotal
 msgid "Price Subtotal"
-msgstr ""
+msgstr "Pris deltotal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__pricelist_id
@@ -3113,24 +3123,24 @@ msgstr "Rapportering"
 msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
-msgstr ""
+msgstr "Begär en elektronisk signatur för att bekräfta ordern"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online payment to confirm orders"
-msgstr ""
+msgstr "Begär en onlinebetalning för bekräftelse av ordern"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
 msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
-msgstr ""
+msgstr "Begär en onlinebetalning av kunden för automatisk orderbekräftelse."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online signature to confirm orders"
-msgstr ""
+msgstr "Begär en online signatur för att bekräfta ordern"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -3163,7 +3173,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS leveransfel"
 
 #. module: sale
 #. openerp-web
@@ -3569,12 +3579,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
-msgstr ""
+msgstr "Signera och betala"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Sign &amp; Pay Quotation"
-msgstr ""
+msgstr "Signera och betala offerten"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
@@ -3591,7 +3601,7 @@ msgstr "Signatur"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Signature is missing."
-msgstr ""
+msgstr "Signatur saknas"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signature
@@ -3601,12 +3611,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_by
 msgid "Signed By"
-msgstr ""
+msgstr "Signerad av"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_on
 msgid "Signed On"
-msgstr ""
+msgstr "Signeringsdatum"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
@@ -3822,7 +3832,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
-msgstr ""
+msgstr "Ordern är inte i ett läge som kräver kundsignatur."
 
 #. module: sale
 #: code:addons/sale/models/payment.py:0
@@ -3893,7 +3903,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
-msgstr ""
+msgstr "Just nu saknas det offerter för ditt konto."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0 code:addons/sale/models/sale.py:0

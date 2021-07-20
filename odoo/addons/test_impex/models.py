@@ -163,3 +163,14 @@ class OnlyOne(models.Model):
         ('value_unique', 'unique (value)', "The value must be unique"),
         ('pair_unique', 'unique (value2, value3)', "The values must be unique"),
     ]
+
+
+class Many2String(models.Model):
+    _name = _description = 'export.m2o.str'
+
+    child_id = fields.Many2one('export.m2o.str.child')
+
+class ChidToString(models.Model):
+    _name = _description = 'export.m2o.str.child'
+
+    name = fields.Char()

@@ -266,7 +266,7 @@ class account_journal(models.Model):
                     company_id
                 FROM account_move move
                 WHERE journal_id = %s
-                AND date <= %s
+                AND invoice_date_due <= %s
                 AND state = 'posted'
                 AND invoice_payment_state = 'not_paid'
                 AND type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');

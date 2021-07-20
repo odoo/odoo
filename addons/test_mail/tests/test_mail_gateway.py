@@ -583,6 +583,46 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         self.assertEqual(len(self._mails), 0, 'message_process: incoming bounce produces no mails')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_route_bounce_if_static_but_still_has_plus_addressing(self):
+        """Incoming email: bounce using bounce alias without plus addressing: keep old behavior."""
+        self.env['ir.config_parameter'].set_param('mail.bounce.alias.static', True)
+        new_recs = self.format_and_process(
+            MAIL_TEMPLATE, self.partner_1.email_formatted,
+            '%s+%s-%s-%s@%s' % (
+                self.alias_bounce, self.fake_email.id,
+                self.fake_email.model, self.fake_email.res_id,
+                self.alias_domain
+            ),
+            subject='Should bounce',
+        )
+        self.assertFalse(new_recs)
+        self.assertEqual(len(self._mails), 0, 'message_process: incoming bounce produces no mails')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_route_bounce_if_static_without_plus_addressing(self):
+        """Incoming email: bounce using bounce alias without plus addressing: bounce it."""
+        self.env['ir.config_parameter'].set_param('mail.bounce.alias.static', True)
+        new_recs = self.format_and_process(
+            MAIL_TEMPLATE, self.partner_1.email_formatted,
+            '%s@%s' % (self.alias_bounce, self.alias_domain),
+            subject='Should bounce',
+        )
+        self.assertFalse(new_recs)
+        self.assertEqual(len(self._mails), 0, 'message_process: incoming bounce produces no mails')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_route_no_bounce_if_not_static_without_plus_addressing(self):
+        """Incoming email: bounce using bounce alias without plus addressing: raise as
+        considering as a direct write to bounce alias -> invalid """
+        self.env['ir.config_parameter'].set_param('mail.bounce.alias.static', False)
+        with self.assertRaises(ValueError):
+            self.format_and_process(
+                MAIL_TEMPLATE, self.partner_1.email_formatted,
+                '%s@%s' % (self.alias_bounce, self.alias_domain),
+                subject="Should fail because it is not a bounce and there's no alias",
+            )
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_route_bounce_other_recipients(self):
         """Incoming email: bounce processing: bounce should be computed even if not first recipient """
         new_recs = self.format_and_process(
@@ -722,24 +762,24 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_bounce_records_channel(self):
         """ Test blacklist allow to multi-bounce and auto update of mail.channel """
-        self.other_record = self.env['mail.test.gateway'].create({
+        other_record = self.env['mail.test.gateway'].create({
             'email_from': 'Another name <%s>' % self.partner_1.email
         })
-        self.yet_other_record = self.env['mail.test.gateway'].create({
+        yet_other_record = self.env['mail.test.gateway'].create({
             'email_from': 'Yet Another name <%s>' % self.partner_1.email.upper()
         })
-        self.test_channel = self.env['mail.channel'].create({
+        test_channel = self.env['mail.channel'].create({
             'name': 'Test',
             'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.partner_1.id})],
         })
         self.fake_email.write({
             'model': 'mail.channel',
-            'res_id': self.test_channel.id,
+            'res_id': test_channel.id,
         })
-        self.assertIn(self.partner_1, self.test_channel.channel_partner_ids)
+        self.assertIn(self.partner_1, test_channel.channel_partner_ids)
         self.assertEqual(self.partner_1.message_bounce, 0)
-        self.assertEqual(self.other_record.message_bounce, 0)
-        self.assertEqual(self.yet_other_record.message_bounce, 0)
+        self.assertEqual(other_record.message_bounce, 0)
+        self.assertEqual(yet_other_record.message_bounce, 0)
 
         extra = self.fake_email.message_id
         for i in range(10):
@@ -747,9 +787,24 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
             self.assertFalse(record)
         self.assertEqual(self.partner_1.message_bounce, 10)
         self.assertEqual(self.test_record.message_bounce, 0)
-        self.assertEqual(self.other_record.message_bounce, 10)
-        self.assertEqual(self.yet_other_record.message_bounce, 10)
-        self.assertNotIn(self.partner_1, self.test_channel.channel_partner_ids)
+        self.assertEqual(other_record.message_bounce, 10)
+        self.assertEqual(yet_other_record.message_bounce, 10)
+        self.assertNotIn(self.partner_1, test_channel.channel_partner_ids)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_bounce_records_partner(self):
+        """ Test blacklist + bounce on ``res.partner`` model """
+        self.assertEqual(self.partner_1.message_bounce, 0)
+        self.fake_email.write({
+            'model': 'res.partner',
+            'res_id': self.partner_1.id,
+        })
+
+        extra = self.fake_email.message_id
+        record = self.format_and_process(test_mail_data.MAIL_BOUNCE, self.partner_1.email_formatted, 'groups@test.com', subject='Undelivered Mail Returned to Sender', extra=extra)
+        self.assertFalse(record)
+        self.assertEqual(self.partner_1.message_bounce, 1)
+        self.assertEqual(self.test_record.message_bounce, 0)
 
     # --------------------------------------------------
     # Thread formation

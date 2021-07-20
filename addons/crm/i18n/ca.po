@@ -12,7 +12,7 @@
 # Arnau Ros, 2020
 # Martin Trigaux, 2020
 # Susanna Pujol, 2020
-# jabelchi, 2021
+# Josep Anton Belchi Riera, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: jabelchi, 2021\n"
+"Last-Translator: Josep Anton Belchi Riera, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -172,6 +172,14 @@ msgstr ""
 "<p><b>Enviï missatges</b> al seu client potencial i les respostes que rebi "
 "s'adjuntaran directament a aquesta oportunitat.</p><p class=\"mb0\">Escrigui"
 " <i>'@'</i> per mencionar gent - és com CC als correus electrònics.</p>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1869,6 +1877,12 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr "Oportunitats d'ingressos"
@@ -1961,6 +1975,7 @@ msgstr "Altres"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "Oportunitats endarrerides"
 
@@ -2426,6 +2441,12 @@ msgid "Team Pipelines"
 msgstr "Equip flux de vendes"
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
@@ -2530,6 +2551,14 @@ msgstr "Aquest objectiu no existeix."
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Title"
 msgstr "Títol"
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"To prevent data loss, Leads and Opportunities can only be merged by groups "
+"of 5."
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
