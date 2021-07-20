@@ -79,6 +79,20 @@ class AccountMove(models.Model):
     l10n_ec_auth_type = fields.Selection(related="l10n_latam_document_type_id.l10n_ec_authorization")
     l10n_ec_is_electronic = fields.Boolean(default=False, compute="_l10n_ec_is_electronic")
 
+    def _get_l10n_latam_documents_domain(self):
+        #Filter document types according to ecuadorian move_type
+        domain = super(AccountMove, self)._get_l10n_latam_documents_domain()
+        if self.country_code == 'EC':
+            if self.move_type in ['out_invoice']:
+                domain.extend([('l10n_ec_type', '=', 'out_invoice')])
+            if self.move_type in ['out_refund']:
+                domain.extend([('l10n_ec_type', '=', 'out_refund')])
+            if self.move_type in ['in_invoice']:
+                domain.extend([('l10n_ec_type', '=', 'in_invoice')])
+            if self.move_type in ['in_refund']:
+                domain.extend([('l10n_ec_type', '=', 'in_refund')])
+        return domain
+
     @api.depends('journal_id', 'partner_id')
     def _l10n_ec_is_electronic(self):
         self.ensure_one()
