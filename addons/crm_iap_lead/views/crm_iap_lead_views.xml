@@ -86,7 +86,7 @@
 
                     <group name="contacts" attrs="{'invisible': [('search_type', '!=', 'people')]}">
                         <div>
-                            <field name="contact_number" attrs="{'readonly': [('state', '!=', 'draft')], 'required': [('search_type', '=', 'people')]}" nolabel="1" class="col-md-1"/>
+                            <field name="contact_number" attrs="{'readonly': [('state', '=', 'done')], 'required': [('search_type', '=', 'people')]}" nolabel="1" class="col-md-1"/>
                              <span class="col-md-6">Extra contacts per Company</span>
                         </div>
                     </group>
