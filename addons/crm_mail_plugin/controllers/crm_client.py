@@ -46,7 +46,7 @@ class CrmClient(http.Controller):
         record = request.env['crm.lead'].create({
             'name': html2plaintext(email_subject),
             'partner_id': partner_id,
-            'description': html2plaintext(email_body),
+            'description': email_body,
         })
 
         return {'lead_id': record.id}
