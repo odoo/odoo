@@ -269,21 +269,35 @@
         </div>
     </t>
 
-    <t t-name="wysiwyg.widgets.upload.progressbar">
-        <div t-attf-class="o_we_progressbar js_progressbar_#{fileId}">
-            <div class="d-flex text-info">
-                <span><i class="fa fa-spinner fa-pulse"/></span>
-                <span class="font-italic font-weight-bold text-truncate flex-grow-1 mx-2" t-esc="fileName"/>
-                <span class="text-nowrap" t-esc="fileSize"/>
+    <t t-name="wysiwyg.widgets.upload.progress_toast">
+        <div class="o_notification_manager">
+            <div t-attf-class="o_notification bg-info fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="o_notification_body">
+                    <button type="button" class="close o_notification_close"
+                    aria-label="Close">
+                        <span class="d-inline" aria-hidden="true">×</span>
+                    </button>
+                    <div class="mr-auto o_notification_content">
+                        <div>
+                            <div t-foreach="widget.files" t-as="file" t-attf-class="o_we_progressbar js_progressbar_#{file.id}">
+                                <div class="d-flex text-info">
+                                    <span><i class="fa fa-spinner fa-pulse"/></span>
+                                    <span class="font-italic font-weight-bold text-truncate flex-grow-1 mx-2" t-esc="file.name"/>
+                                    <span class="text-nowrap" t-esc="file.displaySize"/>
+                                </div>
+                                <div class='js_progressbar_txt'>
+                                    <span class="text-success d-none"><i class='fa fa-check'/> File has been uploaded</span>
+                                    <span class="text-danger d-none"><i class='fa fa-times float-left m-1'/><span class="o_we_error_text">File could not be saved</span></span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;">0%</div>
+                                </div>
+                                <hr/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class='js_progressbar_txt'>
-                <span class="text-success d-none"><i class='fa fa-check'/> File has been uploaded</span>
-                <span class="text-danger d-none"><i class='fa fa-times float-left m-1'/> <span class="o_we_error_text">File could not be saved</span></span>
-            </div>
-            <div class="progress">
-                <div class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;">0%</div>
-            </div>
-            <hr/>
         </div>
     </t>
 

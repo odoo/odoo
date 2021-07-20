@@ -143,7 +143,10 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
         let rejection;
         const prom = new Promise((resolve, reject) => {
             const [route, params, settings = {}] = args;
-            const jsonrpc = wowlEnv.services.rpc(route, params, { silent: settings.shadow });
+            const jsonrpc = wowlEnv.services.rpc(route, params, {
+                silent: settings.shadow,
+                xhr: settings.xhr,
+            });
             rejection = () => {
                 jsonrpc.abort();
             };
