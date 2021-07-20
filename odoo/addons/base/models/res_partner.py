@@ -762,9 +762,9 @@ class Partner(models.Model):
         self = self.with_user(name_get_uid) if name_get_uid else self
         # as the implementation is in SQL, we force the recompute of fields if necessary
         self.recompute(['display_name'])
-        self.flush()
         if args is None:
             args = []
+        self._flush_search(args, fields=['display_name', 'email', 'ref', 'vat'])
         order_by_rank = self.env.context.get('res_partner_search_mode') 
         if (name or order_by_rank) and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
             self.check_access_rights('read')
