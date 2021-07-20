@@ -476,7 +476,7 @@ class Survey(http.Controller):
             if not errors.get(question.id):
                 answer_sudo.save_lines(question, answer, comment)
 
-        if errors and not (answer_sudo.survey_time_limit_reached or answer_sudo.question_time_limit_reached):
+        if errors and 'previous_page_id' not in post and not (answer_sudo.survey_time_limit_reached or answer_sudo.question_time_limit_reached):
             return {'error': 'validation', 'fields': errors}
 
         if not answer_sudo.is_session_answer:

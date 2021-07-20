@@ -263,6 +263,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var $target = $(event.currentTarget);
         if ($target.val() === 'previous') {
             options.previousPageId = $target.data('previousPageId');
+            options.skipValidation = true;
         } else if ($target.val() === 'finish') {
             options.isFinish = true;
         }
