@@ -42,6 +42,10 @@ $o-cw-filter-avatar-size: 20px;
             margin: 4px 4px 3px;
         }
 
+        &.fc-day-grid-event {
+            min-height: 19px;
+        }
+
         .fc-bg {
             background-color: mix(theme-color('primary'), white); // Used for placeholder events only (on creation)
             @include size(101%); // Compensate border
@@ -340,6 +344,7 @@ $o-cw-filter-avatar-size: 20px;
 
                 .o_event_title {                    
                     @include text-truncate();
+                    padding: 2px 4px 2px 2px;
                 }
 
                 &.o_cw_nobg {
@@ -393,6 +398,7 @@ $o-cw-filter-avatar-size: 20px;
                     margin-top: 2px;
                     background: $color;
                     color: black;
+                    @include o-text-overflow;
 
                     &.o_attendee_status_tentative {
                         color: color-yiq($color);
