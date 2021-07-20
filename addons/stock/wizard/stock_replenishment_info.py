@@ -6,7 +6,7 @@ from datetime import datetime, time
 
 from odoo import api, fields, models, SUPERUSER_ID
 from odoo.osv.expression import AND
-from odoo.tools.date_utils import get_month, subtract
+from odoo.tools import get_month, subtract, format_date
 
 
 class StockReplenishmentInfo(models.TransientModel):
@@ -31,14 +31,14 @@ class StockReplenishmentInfo(models.TransientModel):
                 orderpoint.product_id, **orderpoints_values)
             replenishment_report.json_lead_days = dumps({
                 'template': 'stock.leadDaysPopOver',
-                'lead_days_date': fields.Date.to_string(replenishment_report.orderpoint_id.lead_days_date),
+                'lead_days_date': format_date(replenishment_report.orderpoint_id.lead_days_date),
                 'lead_days_description': lead_days_description,
-                'today': fields.Date.to_string(fields.Date.today()),
+                'today': format_date(fields.Date.today()),
                 'trigger': orderpoint.trigger,
-                'qty_forecast': orderpoint.qty_forecast,
-                'qty_to_order': orderpoint.qty_to_order,
-                'product_min_qty': orderpoint.product_min_qty,
-                'product_max_qty': orderpoint.product_max_qty,
+                'qty_forecast': self.env['ir.qweb.field.float'].value_to_html(orderpoint.qty_forecast, {'decimal_precision': 'Product Unit of Measure'}),
+                'qty_to_order': self.env['ir.qweb.field.float'].value_to_html(orderpoint.qty_to_order, {'decimal_precision': 'Product Unit of Measure'}),
+                'product_min_qty': self.env['ir.qweb.field.float'].value_to_html(orderpoint.product_min_qty, {'decimal_precision': 'Product Unit of Measure'}),
+                'product_max_qty': self.env['ir.qweb.field.float'].value_to_html(orderpoint.product_max_qty, {'decimal_precision': 'Product Unit of Measure'}),
                 'product_uom_name': orderpoint.product_uom_name,
                 'virtual': orderpoint.trigger == 'manual' and orderpoint.create_uid.id == SUPERUSER_ID,
             })
