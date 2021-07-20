@@ -15,7 +15,7 @@ $o-colors-secondary: #aa4b6b, #30C381, #97743a, #F7CD1F, #4285F4, #8E24AA,
 
 // UI custom colors, complete list
 $o-colors-complete: join(
-    set-nth(set-nth($o-colors, 1, #134E5E), 6, #3daec3),
+    set-nth($o-colors, 1, #134E5E),
     $o-colors-secondary
 )!default;
 
