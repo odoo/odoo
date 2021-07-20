@@ -68,6 +68,7 @@ class Company(models.Model):
                                 'type_tax_use': 'sale',
                                 'description': "%s%%" % tax_amount,
                                 'tax_group_id': self.env.ref('l10n_eu_service.oss_tax_group_%s' % str(tax_amount).replace('.','_')).id,
+                                'country_id': company.country_id.id,
                                 'sequence': 1000,
                                 'company_id': company.id,
                             })
