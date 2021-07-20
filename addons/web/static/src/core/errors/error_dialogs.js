@@ -51,12 +51,6 @@ export class ClientErrorDialog extends ErrorDialog {}
 ClientErrorDialog.title = _lt("Odoo Client Error");
 
 // -----------------------------------------------------------------------------
-// Server Error Dialog
-// -----------------------------------------------------------------------------
-export class ServerErrorDialog extends ErrorDialog {}
-ServerErrorDialog.title = _lt("Odoo Server Error");
-
-// -----------------------------------------------------------------------------
 // Network Error Dialog
 // -----------------------------------------------------------------------------
 export class NetworkErrorDialog extends ErrorDialog {}
@@ -141,9 +135,11 @@ export class RedirectWarningDialog extends Dialog {
         this.additionalContext = additional_context;
     }
     async onClick() {
-        await this.actionService.doAction(this.actionId, {
-            additionalContext: this.additionalContext
-        });
+        const options = {};
+        if (this.additionalContext) {
+            options.additionalContext = this.additionalContext;
+        }
+        await this.actionService.doAction(this.actionId, options);
         this.close();
     }
     onCancel() {
