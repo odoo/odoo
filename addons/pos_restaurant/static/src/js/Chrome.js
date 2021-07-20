@@ -60,7 +60,7 @@ odoo.define('pos_restaurant.chrome', function (require) {
                 if (this._shouldResetIdleTimer()) {
                     clearTimeout(this.idleTimer);
                     this.idleTimer = setTimeout(() => {
-                        this._actionAfterIdle();
+                    //    this._actionAfterIdle();
                     }, 60000);
                 }
             }
