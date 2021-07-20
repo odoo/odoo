@@ -294,6 +294,14 @@ class CRMRevealRule(models.Model):
         company_country = self.env.company.country_id
         rule_payload = {}
         for rule in self:
+            # accumulate all reveal_ids (separated by ',') into one list
+            # eg: 3 records with values: "175,176", "177" and "190,191"
+            # will become ['175','176','177','190','191']
+            reveal_ids = [
+                reveal_id.strip()
+                for reveal_ids in rule.mapped('industry_tag_ids.reveal_ids')
+                for reveal_id in reveal_ids.split(',')
+            ]
             data = {
                 'rule_id': rule.id,
                 'lead_for': rule.lead_for,
@@ -301,7 +309,7 @@ class CRMRevealRule(models.Model):
                 'filter_on_size': rule.filter_on_size,
                 'company_size_min': rule.company_size_min,
                 'company_size_max': rule.company_size_max,
-                'industry_tags': rule.industry_tag_ids.mapped('reveal_id'),
+                'industry_tags': reveal_ids,
                 'user_country': company_country and company_country.code or False
             }
             if rule.lead_for == 'people':
