@@ -1611,7 +1611,12 @@ class StockMove(models.Model):
         # TDE CLEANME: remove context key + add as parameter
         if self.env.context.get('source_location_id'):
             defaults['location_id'] = self.env.context['source_location_id']
+<<<<<<< HEAD
         new_move_vals = self.with_context(rounding_method='HALF-UP').copy_data(defaults)
+=======
+        new_move = self.with_context(rounding_method='HALF-UP').copy(defaults)
+        new_move.write({'reference': self.reference})
+>>>>>>> 79b77cf829a... temp
 
         # Update the original `product_qty` of the move. Use the general product's decimal
         # precision and not the move's UOM to handle case where the `quantity_done` is not
