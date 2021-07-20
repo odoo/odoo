@@ -73,11 +73,12 @@ QUnit.module('LunchListView', {
                 position: "after"
             },
             user_location: [2, "Office 2"],
+            alerts: [{id: 42, message: '<b>Warning! Neurotoxin pressure has reached dangerously unlethal levels.</b>'}]
         };
     },
 }, function () {
     QUnit.test('basic rendering', async function (assert) {
-        assert.expect(6);
+        assert.expect(9);
 
         const list = await createLunchView({
             View: LunchListView,
@@ -107,6 +108,11 @@ QUnit.module('LunchListView', {
             "should have classname 'o_lunch_list_view'");
         assert.containsOnce(list, '.o_lunch_content > span > .o_lunch_banner',
             "should have a 'lunch' banner");
+
+        const $alertMessage = list.$('.alert > *');
+        assert.equal($alertMessage.length, 1);
+        assert.equal($alertMessage.prop('tagName'), 'B');
+        assert.equal($alertMessage.text(), "Warning! Neurotoxin pressure has reached dangerously unlethal levels.")
 
         list.destroy();
     });

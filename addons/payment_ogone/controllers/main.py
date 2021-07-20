@@ -5,6 +5,7 @@ import logging
 import pprint
 import re
 
+import markupsafe
 import werkzeug
 
 from odoo import _, http
@@ -88,7 +89,7 @@ class OgoneController(http.Controller):
             # The content of the HTML is not sanitized to preserve the redirection in the script.
             # After redirection, the customer comes back to the directlink return URL and we proceed
             # with the (now authenticated) payment request.
-            redirect_html = ustr(base64.b64decode(redirect_html_element.text))
+            redirect_html = markupsafe.Markup(ustr(base64.b64decode(redirect_html_element.text)))
             return request.render(
                 'payment_ogone.directlink_feedback', {'redirect_html': redirect_html}
             )

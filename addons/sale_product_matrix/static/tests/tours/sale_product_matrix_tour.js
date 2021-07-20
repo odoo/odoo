@@ -2,6 +2,20 @@ odoo.define('sale_product_matrix.sale_matrix_tour', function (require) {
 "use strict";
 
 var tour = require('web_tour.tour');
+let EXPECTED = [
+    "Matrix", "PAV11", "PAV12 + $ 50.00",
+]
+for (let no of ['PAV41', 'PAV42']) {
+    for (let dyn of ['PAV31', 'PAV32']) {
+        for (let al of ['PAV21', 'PAV22']) {
+            let row_label = [al, dyn, no].join(' • ');
+            if (dyn === 'PAV31') {
+                row_label += ' - $ 25.00';
+            }
+            EXPECTED.push(row_label, "", "");
+        }
+    }
+}
 
 tour.register('sale_matrix_tour', {
     url: "/web",
@@ -45,6 +59,18 @@ tour.register('sale_matrix_tour', {
 }, {
     trigger: '.o_product_variant_matrix',
     run: function () {
+        // whitespace normalization: removes newlines around text from markup
+        // content, then collapse & convert internal whitespace to regular
+        // spaces.
+        const texts = $('.o_matrix_input_table').find('th, td')
+            .map((_, el) => el.innerText.trim().replace(/\s+/g, ' '))
+            .get();
+
+        for (let i=0; i<EXPECTED.length; ++i) {
+            if (EXPECTED[i] !== texts[i]) {
+                throw new Error(`${EXPECTED[i]} != ${texts[i]}`)
+            }
+        }
         // set all qties to 3
         $('.o_matrix_input').val(3);
     }

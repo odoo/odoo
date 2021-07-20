@@ -2,6 +2,7 @@ odoo.define('crm_iap_lead.generate_leads_steps', function (require) {
 "use strict";
 
 var tour = require('web_tour.tour');
+const {Markup} = require('web.utils');
 var core = require('web.core');
 
 require('crm.tour');
@@ -20,7 +21,7 @@ tour.tours.crm_tour.steps.splice(DragOppToWonStepIndex + 1, 0, {
      *
      */
     trigger: ".o_button_generate_leads",
-    content: _t("Looking for more opportunities ?<br>Try the <b>Lead Generation</b> tool."),
+    content: Markup(_t("Looking for more opportunities ?<br>Try the <b>Lead Generation</b> tool.")),
     position: "bottom",
     run: function (actions) {
         actions.auto('.o_button_generate_leads');

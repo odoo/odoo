@@ -1041,7 +1041,7 @@
     <t t-foreach="states" t-as="rec">
         <a role="menuitem" href="#" class="dropdown-item pl-4" t-att-data-value="rec.name">
             <span t-att-class="'o_status rounded-circle d-inline-block align-middle ' + (rec.state_class &amp;&amp; rec.state_class || '')"/>
-            <t t-raw="rec.state_name"/>
+            <t t-out="rec.state_name"/>
         </a>
     </t>
 </t>
@@ -1321,11 +1321,11 @@
             </t>
             <t t-if="hasDropdown">
                 <a role="button" href="#" class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false">
-                    <span t-raw="_badge_text"/>
+                    <span t-out="_badge_text"/>
                 </a>
             </t>
             <t t-else="">
-                <span t-raw="_badge_text"/>
+                <span t-out="_badge_text"/>
             </t>
             <a t-if="!readonly" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
         </div>
@@ -1475,7 +1475,7 @@
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
             <input type="file" class="o_input_file" name="ufile"
                 t-att="{'multiple': multi_upload ? 'multiple' : null, 'accept': widget.accepted_file_extensions || '*'}"/>
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </form>
         <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
     </div>

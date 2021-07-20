@@ -71,31 +71,25 @@ var LivechatButton = Widget.extend({
         this._messages = [];
         this._serverURL = serverURL;
     },
-    willStart: function () {
-        var self = this;
+    async willStart() {
         var cookie = utils.get_cookie('im_livechat_session');
-        var ready;
-        if (!cookie) {
-            ready = session.rpc('/im_livechat/init', { channel_id: this.options.channel_id })
-                .then(function (result) {
-                    if (!result.available_for_me) {
-                        return Promise.reject();
-                    }
-                    self._rule = result.rule;
-                });
-        } else {
+        if (cookie) {
             var channel = JSON.parse(cookie);
-            ready = session.rpc('/mail/chat_history', { uuid: channel.uuid, limit: 100 })
-                .then(function (history) {
-                    self._history = history;
-                });
+            this._history = await session.rpc('/mail/chat_history', {uuid: channel.uuid, limit: 100});
+            this._history.reverse().forEach(message => { message.body = utils.Markup(message.body); });
+        } else {
+            const result = await session.rpc('/im_livechat/init', {channel_id: this.options.channel_id});
+            if (!result.available_for_me) {
+                return Promise.reject();
+            }
+            this._rule = result.rule;
         }
-        return ready.then(this._loadQWebTemplate.bind(this));
+        return this._loadQWebTemplate();
     },
     start: function () {
         this.$el.text(this.options.button_text);
         if (this._history) {
-            _.each(this._history.reverse(), this._addMessage.bind(this));
+            this._history.forEach(m => this._addMessage(m));
             this._openChat();
         } else if (!config.device.isMobile && this._rule.action === 'auto_popup') {
             var autoPopupCookie = utils.get_cookie('im_livechat_auto_popup');
@@ -204,6 +198,7 @@ var LivechatButton = Widget.extend({
                 if (this._messages.some(message => message.getID() === notificationData.id)) {
                     return;
                 }
+                notificationData.body = utils.Markup(notificationData.body);
                 this._addMessage(notificationData);
                 if (this._chatWindow.isFolded() || !this._chatWindow.isAtBottom()) {
                     this._livechat.incrementUnreadCounter();

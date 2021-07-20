@@ -4,6 +4,7 @@ odoo.define('website.s_dynamic_snippet', function (require) {
 const core = require('web.core');
 const config = require('web.config');
 const publicWidget = require('web.public.widget');
+const {Markup} = require('web.utils');
 
 const DynamicSnippet = publicWidget.Widget.extend({
     selector: '.s_dynamic_snippet',
@@ -110,29 +111,22 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * Fetches the data.
      * @private
      */
-    _fetchData: function () {
+    async _fetchData() {
         if (this._isConfigComplete()) {
-            return this._rpc(
-                {
-                    'route': '/website/snippet/filters',
-                    'params': Object.assign({
-                        'filter_id': parseInt(this.$el.get(0).dataset.filterId),
-                        'template_key': this.$el.get(0).dataset.templateKey,
-                        'limit': parseInt(this.$el.get(0).dataset.numberOfRecords),
-                        'search_domain': this._getSearchDomain(),
-                        'with_sample': this.editableMode,
-                    }, this._getRpcParameters()),
-                })
-                .then(
-                    (data) => {
-                        this.data = data;
-                    }
-                );
-        } else {
-            return new Promise((resolve) => {
-                this.data = [];
-                resolve();
+            const nodeData = this.el.dataset;
+            const filterFragments = await this._rpc({
+                'route': '/website/snippet/filters',
+                'params': Object.assign({
+                    'filter_id': parseInt(nodeData.filterId),
+                    'template_key': nodeData.templateKey,
+                    'limit': parseInt(nodeData.numberOfRecords),
+                    'search_domain': this._getSearchDomain(),
+                    'with_sample': this.editableMode,
+                }, this._getRpcParameters()),
             });
+            this.data = filterFragments.map(Markup);
+        } else {
+            this.data = [];
         }
     },
     /**

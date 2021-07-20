@@ -4,6 +4,7 @@ odoo.define('web.ajax', function (require) {
 var config = require('web.config');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
+const {Markup} = require('web.utils');
 var time = require('web.time');
 var download = require('web.download');
 var contentdisposition = require('web.contentdisposition');
@@ -460,13 +461,13 @@ var loadAsset = (function () {
                     return $(this).attr('href');
                 }).get(),
                 cssContents: $xml.filter('style').map(function () {
-                    return $(this).html();
+                    return Markup($(this).html());
                 }).get(),
                 jsLibs: $xml.filter('script[src]').map(function () {
                     return $(this).attr('src');
                 }).get(),
                 jsContents: $xml.filter('script:not([src])').map(function () {
-                    return $(this).html();
+                    return Markup($(this).html());
                 }).get(),
             };
         }).guardedCatch(reason => {

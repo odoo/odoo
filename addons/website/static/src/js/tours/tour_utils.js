@@ -1,15 +1,14 @@
 odoo.define("website.tour_utils", function (require) {
 "use strict";
 
-const core = require("web.core");
-const _t = core._t;
-
+const {_t} = require("web.core");
+const {Markup} = require('web.utils');
 var tour = require("web_tour.tour");
 
 function addMedia(position = "right") {
     return {
         trigger: `.modal-content footer .btn-primary`,
-        content: _t("<b>Add</b> the selected image."),
+        content: Markup(_t("<b>Add</b> the selected image.")),
         position: position,
         run: "click",
     };
@@ -18,7 +17,7 @@ function addMedia(position = "right") {
 function changeBackground(snippet, position = "bottom") {
     return {
         trigger: ".o_we_customize_panel .o_we_bg_success",
-        content: _t("<b>Customize</b> any block through this menu. Try to change the background image of this block."),
+        content: Markup(_t("<b>Customize</b> any block through this menu. Try to change the background image of this block.")),
         position: position,
         run: "click",
     };
@@ -27,7 +26,7 @@ function changeBackground(snippet, position = "bottom") {
 function changeBackgroundColor(position = "bottom") {
     return {
         trigger: ".o_we_customize_panel .o_we_color_preview",
-        content: _t("<b>Customize</b> any block through this menu. Try to change the background color of this block."),
+        content: Markup(_t("<b>Customize</b> any block through this menu. Try to change the background color of this block.")),
         position: position,
         run: "click",
     };
@@ -37,7 +36,7 @@ function selectColorPalette(position = "left") {
     return {
         trigger: ".o_we_customize_panel .o_we_so_color_palette we-selection-items",
         alt_trigger: ".o_we_customize_panel .o_we_color_preview",
-        content: _t(`<b>Select</b> a Color Palette.`),
+        content: Markup(_t(`<b>Select</b> a Color Palette.`)),
         position: position,
         run: 'click',
         location: position === 'left' ? '#oe_snippets' : undefined,
@@ -47,7 +46,7 @@ function selectColorPalette(position = "left") {
 function changeColumnSize(position = "right") {
     return {
         trigger: `.oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.e`,
-        content: _t("<b>Slide</b> this button to change the column size."),
+        content: Markup(_t("<b>Slide</b> this button to change the column size.")),
         position: position,
     };
 }
@@ -56,7 +55,7 @@ function changeIcon(snippet, index = 0, position = "bottom") {
     return {
         trigger: `#wrapwrap .${snippet.id} i:eq(${index})`,
         extra_trigger: "body.editor_enable",
-        content: _t("<b>Double click on an icon</b> to change it with one of your choice."),
+        content: Markup(_t("<b>Double click on an icon</b> to change it with one of your choice.")),
         position: position,
         run: "dblclick",
     };
@@ -66,7 +65,7 @@ function changeImage(snippet, position = "bottom") {
     return {
         trigger: snippet.id ? `#wrapwrap .${snippet.id} img` : snippet,
         extra_trigger: "body.editor_enable",
-        content: _t("<b>Double click on an image</b> to change it with one of your choice."),
+        content: Markup(_t("<b>Double click on an image</b> to change it with one of your choice.")),
         position: position,
         run: "dblclick",
     };
@@ -79,7 +78,7 @@ function changeOption(optionName, weName = '', optionTooltipLabel = '', position
     const option_block = `we-customizeblock-option[class='snippet-option-${optionName}']`
     return {
         trigger: `${option_block} ${weName}, ${option_block} [title='${weName}']`,
-        content: _.str.sprintf(_t("<b>Click</b> on this option to change the %s of the block."), optionTooltipLabel),
+        content: Markup(_.str.sprintf(_t("<b>Click</b> on this option to change the %s of the block."), optionTooltipLabel)),
         position: position,
         run: "click",
     };
@@ -89,7 +88,7 @@ function selectNested(trigger, optionName, alt_trigger = null, optionTooltipLabe
     const option_block = `we-customizeblock-option[class='snippet-option-${optionName}']`;
     return {
         trigger: trigger,
-        content: _.str.sprintf(_t("<b>Select</b> a %s."), optionTooltipLabel),
+        content: Markup(_.str.sprintf(_t("<b>Select</b> a %s."), optionTooltipLabel)),
         alt_trigger: alt_trigger == null ? undefined : `${option_block} ${alt_trigger}`,
         position: position,
         run: 'click',
@@ -106,7 +105,7 @@ function changePaddingSize(direction) {
     }
     return {
         trigger: `.oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
-        content: _.str.sprintf(_t("<b>Slide</b> this button to change the %s padding"), direction),
+        content: Markup(_.str.sprintf(_t("<b>Slide</b> this button to change the %s padding"), direction)),
         position: position,
     };
 }
@@ -118,7 +117,7 @@ function changePaddingSize(direction) {
 function clickOnEdit(position = "bottom") {
     return {
         trigger: "a[data-action=edit]",
-        content: _t("<b>Click Edit</b> to start designing your homepage."),
+        content: Markup(_t("<b>Click Edit</b> to start designing your homepage.")),
         extra_trigger: ".homepage",
         position: position,
     };
@@ -133,7 +132,7 @@ function clickOnSnippet(snippet, position = "bottom") {
     return {
         trigger: snippet.id ? `#wrapwrap .${snippet.id}` : snippet,
         extra_trigger: "body.editor_enable",
-        content: _t("<b>Click on a snippet</b> to access its options menu."),
+        content: Markup(_t("<b>Click on a snippet</b> to access its options menu.")),
         position: position,
         run: "click",
     };
@@ -143,7 +142,7 @@ function clickOnSave(position = "bottom") {
     return [{
         trigger: "button[data-action=save]",
         in_modal: false,
-        content: _t("Good job! It's time to <b>Save</b> your work."),
+        content: Markup(_t("Good job! It's time to <b>Save</b> your work.")),
         position: position,
     }, {
         trigger: 'body:not(.editor_enable)',
@@ -162,7 +161,7 @@ function clickOnText(snippet, element, position = "bottom") {
     return {
         trigger: snippet.id ? `#wrapwrap .${snippet.id} ${element}` : snippet,
         extra_trigger: "body.editor_enable",
-        content: _t("<b>Click on a text</b> to start editing it."),
+        content: Markup(_t("<b>Click on a text</b> to start editing it.")),
         position: position,
         run: "text",
         consumeEvent: "input",
@@ -179,7 +178,7 @@ function dragNDrop(snippet, position = "bottom") {
         trigger: `#oe_snippets .oe_snippet[name="${snippet.name}"] .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
         extra_trigger: "body.editor_enable.editor_has_snippets",
         moveTrigger: '.oe_drop_zone',
-        content: _.str.sprintf(_t("Drag the <b>%s</b> building block and drop it at the bottom of the page."), snippet.name),
+        content: Markup(_.str.sprintf(_t("Drag the <b>%s</b> building block and drop it at the bottom of the page."), snippet.name)),
         position: position,
         // Normally no main snippet can be dropped in the default footer but
         // targeting it allows to force "dropping at the end of the page".
@@ -208,7 +207,7 @@ function goToTheme(position = "bottom") {
 function selectHeader(position = "bottom") {
     return {
         trigger: `header#top`,
-        content: _t(`<b>Click</b> on this header to configure it.`),
+        content: Markup(_t(`<b>Click</b> on this header to configure it.`)),
         position: position,
         run: "click",
     };
@@ -217,7 +216,7 @@ function selectHeader(position = "bottom") {
 function selectSnippetColumn(snippet, index = 0, position = "bottom") {
      return {
         trigger: `#wrapwrap .${snippet.id} .row div[class*="col-lg-"]:eq(${index})`,
-        content: _t("<b>Click</b> on this column to access its options."),
+        content: Markup(_t("<b>Click</b> on this column to access its options.")),
          position: position,
         run: "click",
      };
