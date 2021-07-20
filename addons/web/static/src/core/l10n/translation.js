@@ -34,10 +34,11 @@ class LazyTranslatedString extends String {
  * translations are loaded, as class attributes or at the top-level of
  * an Odoo Web module
  *
- * @returns {{toString: () => string}}
+ * @param {string} term
+ * @returns {LazyTranslatedString}
  */
-export function _lt(str) {
-    return new LazyTranslatedString(str);
+export function _lt(term) {
+    return new LazyTranslatedString(term);
 }
 
 /*

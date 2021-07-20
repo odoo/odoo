@@ -15,7 +15,7 @@ import { session } from "@web/session";
  *    the number of digits that should be used, instead of the default digits precision in the field.
  *    Note: if the currency defines a precision, the currency's one is used.
  *    The first number is always ignored (legacy constraint)
- * @returns The formatted currency
+ * @returns {string} The formatted currency
  */
 export function formatCurrency(value, cid, options = {}) {
     if (value === false) {
