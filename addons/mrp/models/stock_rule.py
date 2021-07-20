@@ -124,11 +124,11 @@ class StockRule(models.Model):
         manufacture_delay = product.produce_delay
         delay += manufacture_delay
         if not bypass_delay_description:
-            delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacturing Lead Time'), manufacture_delay, _('day(s)'))
+            delay_description.append((_('Manufacturing Lead Time'), _('+ %d day(s)', manufacture_delay)))
         security_delay = manufacture_rule.picking_type_id.company_id.manufacturing_lead
         delay += security_delay
         if not bypass_delay_description:
-            delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacture Security Lead Time'), security_delay, _('day(s)'))
+            delay_description.append((_('Manufacture Security Lead Time'), _('+ %d day(s)', security_delay)))
         return delay, delay_description
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):

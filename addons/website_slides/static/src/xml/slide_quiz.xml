@@ -144,8 +144,12 @@
                         </div>
                     </div>
                     <div class="pb-3 o_wslides_quiz_modal_rank_motivational">
-                        <t t-set="showLastRankDescription" t-value="widget.quiz.rankProgress.last_rank &amp;&amp; !widget.quiz.rankProgress.level_up" />
-                        <t t-raw="showLastRankDescription ? widget.quiz.rankProgress.description : widget.quiz.rankProgress.previous_rank.motivational" />
+                        <t t-if="widget.quiz.rankProgress.last_rank and !widget.quiz.rankProgress.level_up">
+                            <t t-out="widget.quiz.rankProgress.description"/>
+                        </t>
+                        <t t-else="">
+                            <t t-out="widget.quiz.rankProgress.previous_rank.motivational"/>
+                        </t>
                     </div>
                 </div>
                 <div class="o_wslides_quiz_modal_dismiss align-self-end d-none">

@@ -14,10 +14,7 @@ odoo.define('web.kanban_examples_registry', function (require) {
  * following keys:
  *   - name (string)
  *   - columns (Array[string])
- *   - description (string, optional) BE CAREFUL [*]
- *
- * [*] The description is added with a t-raw so the translated texts must be
- *     properly escaped.
+ *   - description (string, optional)
  */
 
 var Registry = require('web.Registry');

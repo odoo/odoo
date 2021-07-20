@@ -7,7 +7,7 @@
             The forecasted stock on the <b><t t-esc="lead_days_date"/></b>
             is <t t-if="qty_to_order &lt;= 0"><b><t t-esc="qty_forecast"/> <t t-esc="product_uom_name"/></b></t><t t-else="">
             below the inventory <b>minimum of <t t-esc="product_min_qty"/> <t t-esc="product_uom_name"/>
-            : <t t-esc="qty_to_order"/> <t t-esc="product_uom_name"/> should be replenished</b> to reach the maximum of 
+            : <t t-esc="qty_to_order"/> <t t-esc="product_uom_name"/> should be replenished</b> to reach the maximum of
             <t t-esc="product_max_qty"/> <t t-esc="product_uom_name"/>.</t>
         </p>
         <table t-if="lead_days_description" class="table table-borderless table-sm">
@@ -17,16 +17,19 @@
                         Today
                     </td>
                     <td class="text-right">
-                        <t t-esc="today"/>
+                        <t t-out="today"/>
                     </td>
                 </tr>
-                <t t-raw="lead_days_description"/>
+                <tr t-foreach="lead_days_description" t-as="descr">
+                    <td><t t-out="descr[0]"/></td>
+                    <td class="text-right"><t t-out="descr[1]"/></td>
+                </tr>
                 <tr class="table-info">
                     <td>
                         Forecasted Date
                     </td>
                     <td class="text-right text-nowrap">
-                        = <t t-esc="lead_days_date"/>
+                        = <t t-out="lead_days_date"/>
                     </td>
                 </tr>
             </tbody>

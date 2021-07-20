@@ -1,10 +1,9 @@
 odoo.define('sale.tour', function(require) {
 "use strict";
 
-var core = require('web.core');
+const {_t} = require('web.core');
+const {Markup} = require('web.utils');
 var tour = require('web_tour.tour');
-
-var _t = core._t;
 
 tour.register("sale_tour", {
     url: "/web",
@@ -108,11 +107,11 @@ tour.register("sale_quote_tour", {
     }, {
         trigger: ".o_field_widget[name='price_unit'] ",
         extra_trigger: ".o_sale_order",
-        content: _t("<b>Set a price</b>."),
+        content: Markup(_t("<b>Set a price</b>.")),
         position: "right",
         run: "text 10.0"
     },
-    ...tour.stepUtils.statusbarButtonsSteps("Send by Email", _t("<b>Send the quote</b> to yourself and check what the customer will receive."), ".o_statusbar_buttons button[name='action_quotation_send']"),
+    ...tour.stepUtils.statusbarButtonsSteps("Send by Email", Markup(_t("<b>Send the quote</b> to yourself and check what the customer will receive.")), ".o_statusbar_buttons button[name='action_quotation_send']"),
     {
         trigger: ".modal-footer button.btn-primary",
         auto: true,

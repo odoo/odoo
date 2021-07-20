@@ -10,7 +10,7 @@
                 <t t-foreach="colIndexGenerator" t-as="colIndex">
                     <t t-if="(rowIndex * chunkSize + colIndex) &lt; data.length">
                         <div t-attf-class="#{colClass}">
-                            <t t-raw="data[rowIndex * chunkSize + colIndex]"/>
+                            <t t-out="data[rowIndex * chunkSize + colIndex]"/>
                         </div>
                     </t>
                 </t>

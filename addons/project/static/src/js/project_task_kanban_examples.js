@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
 import { _lt } from 'web.core';
+import {Markup} from 'web.utils';
 import kanbanExamplesRegistry from 'web.kanban_examples_registry';
 
-const greenBullet = '<span class="o_status o_status_green"></span>';
-const redBullet = '<span class="o_status o_status_red"></span>';
-const star = '<a style="color: gold;" class="fa fa-star"/>';
-const clock = '<a class="fa fa-clock-o" />';
+const greenBullet = Markup`<span class="o_status o_status_green"></span>`;
+const redBullet = Markup`<span class="o_status o_status_red"></span>`;
+const star = Markup`<a style="color: gold;" class="fa fa-star"/>`;
+const clock = Markup`<a class="fa fa-clock-o" />`;
 
 const descriptionActivities = escFormat(_lt('%s Use the %s icon to organize your daily activities.'), '<br/>', clock);
 const description = escFormat(_lt('Prioritize Tasks by using the %s icon.' +
@@ -15,21 +16,23 @@ const description = escFormat(_lt('Prioritize Tasks by using the %s icon.' +
             '%s'), star, '<br/>', greenBullet, '<br/>', redBullet, descriptionActivities);
 
 /**
- * Helper function to escape a text before formatting it.
+ * Helper function to escape the format string, but not the values formatted in,
+ * rougly equivalent to `_.str.sprintf(_.escape(fmt), ...)`.
  *
- * First argument is the string to format and the other arguments are the values
- * to inject into the string.
+ * Performs the escaping lazily (at point of use) as it's designed to be used
+ * with `_lt` as the source of the format string.
  *
- * Sort of 'lazy escaping' as it is used alongside _lt.
- *
- * @returns {string} the formatted and escaped string
+ * @param fmt format string, to escape
+ * @param args objects to format into `fmt`, unescaped
+ * @returns {Object} a stringifiable object returning the escaped then formatted string
  */
-function escFormat() {
-    const args = arguments;
+function escFormat(fmt, ...args) {
     return {
-        toString: function () {
-            args[0] = _.escape(args[0]);
-            return _.str.sprintf.apply(_.str, args);
+        [_.escapeMethod]() {
+            return this;
+        },
+        toString() {
+            return _.str.sprintf(_.escape(fmt), ...args);
         },
     };
 }

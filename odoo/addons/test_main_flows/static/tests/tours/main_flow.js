@@ -2,13 +2,14 @@ odoo.define('test_main_flows.tour', function (require) {
 "use strict";
 
 const {_t} = require('web.core');
+const {Markup} = require('web.utils');
 const tour = require('web_tour.tour');
 
 tour.register('main_flow_tour', {
     test: true,
     url: "/web",
 }, [
-...tour.stepUtils.goToAppSteps('sale.sale_menu_root', _t('Organize your sales activities with the <b>Sales app</b>.')),
+...tour.stepUtils.goToAppSteps('sale.sale_menu_root', Markup(_t('Organize your sales activities with the <b>Sales app</b>.'))),
 tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Quotations')"),
 {
 // Add Stockable product
@@ -335,11 +336,11 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
 }, {
     mobile: false,
     trigger: ".breadcrumb-item:first",
-    content: _t("Use the breadcrumbs to <b>go back to products</b>."),
+    content: Markup(_t("Use the breadcrumbs to <b>go back to products</b>.")),
     position: "bottom"
 },
 ...tour.stepUtils.goBackBreadcrumbsMobile(
-        _t("Use the breadcrumbs to <b>go back to products</b>."),
+        Markup(_t("Use the breadcrumbs to <b>go back to products</b>.")),
         undefined,
         ".breadcrumb-item.active:contains('Bill of Materials')",
         ".breadcrumb-item.active:contains('the_flow.product')"
@@ -432,15 +433,15 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     content: _t('Go back to the home menu'),
     position: 'bottom',
 },
-...tour.stepUtils.goToAppSteps('crm.crm_menu_root', _t('Organize your sales activities with the <b>CRM app</b>.')),
+...tour.stepUtils.goToAppSteps('crm.crm_menu_root', Markup(_t('Organize your sales activities with the <b>CRM app</b>.'))),
 {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_opportunity_kanban',
-    content: _t("Click here to <b>create your first opportunity</b> and add it to your pipeline."),
+    content: Markup(_t("Click here to <b>create your first opportunity</b> and add it to your pipeline.")),
     position: "bottom"
 }, {
     trigger: ".o_kanban_quick_create input[name='name']",
-    content: _t("<b>Choose a name</b> for your opportunity."),
+    content: Markup(_t("<b>Choose a name</b> for your opportunity.")),
     position: "right",
     run: "text the_flow.opportunity",
 }, {
@@ -480,12 +481,12 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
 }, {
     trigger: ".o_kanban_quick_create .o_kanban_add",
     extra_trigger: ".o_kanban_quick_create .o_field_widget[name=partner_id] .o_external_button", // Wait name_create
-    content: _t("Click here to <b>add your opportunity</b>."),
+    content: Markup(_t("Click here to <b>add your opportunity</b>.")),
     position: "right",
 }, {
     mobile: false,
     trigger: ".o_kanban_group:first .o_kanban_record:has(span:contains('the_flow.opportunity'))",
-    content: _t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle."),
+    content: Markup(_t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle.")),
     position: "right",
     run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
@@ -510,7 +511,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: "bottom",
 },
 // Create a quotation
-...tour.stepUtils.statusbarButtonsSteps('New Quotation', _t('<p><b>Create a quotation</p>')),
+...tour.stepUtils.statusbarButtonsSteps('New Quotation', Markup(_t('<p><b>Create a quotation</p>'))),
 {
     mobile: false,
     trigger: ".o_field_widget[name=order_line] .o_field_x2many_list_row_add > a",
@@ -637,11 +638,11 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     content: _t("Try to send it to email"),
     position: "bottom",
 },
-...tour.stepUtils.statusbarButtonsSteps('Confirm', _t("<p>Confirm this quotation</p>")),
+...tour.stepUtils.statusbarButtonsSteps('Confirm', Markup(_t("<p>Confirm this quotation</p>"))),
 {
     trigger: ".o_form_button_save",
     extra_trigger: ".o_statusbar_status .btn-primary:contains('Sales Order')",
-    content: _t("<p>Save this quotation</p>"),
+    content: Markup(_t("<p>Save this quotation</p>")),
     position: "bottom"
 // Reordering rule
 }, {
@@ -719,12 +720,12 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Inventory Ove
 }, {
     mobile: false,
     trigger: ".o_list_button_save",
-    content: _t("<p>Save this reordering rule</p>"),
+    content: Markup(_t("<p>Save this reordering rule</p>")),
     position: "bottom"
 }, {
     mobile: true,
     trigger: ".o_form_button_save",
-    content: _t("<p>Save this reordering rule</p>"),
+    content: Markup(_t("<p>Save this reordering rule</p>")),
     position: "bottom"
 },
 tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('OP/')"),
@@ -848,7 +849,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Manufacturing
     content: _t('Go back to the home menu'),
     position: 'bottom',
 },
-...tour.stepUtils.goToAppSteps('sale.sale_menu_root', _t('Organize your sales activities with the <b>Sales app</b>.')),
+...tour.stepUtils.goToAppSteps('sale.sale_menu_root', Markup(_t('Organize your sales activities with the <b>Sales app</b>.'))),
 tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Quotations')"),
 {
     trigger: ".o_menu_sections button[data-menu-xmlid='sale.sale_order_menu']",
@@ -1031,12 +1032,12 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
 {
     edition: "enterprise",
     trigger: "button.o_reconcile, button.o_validate",
-    content: _t('<p><b>Click on Reconcile</p>'),
+    content: Markup(_t('<p><b>Click on Reconcile</p>')),
     position: "right",
 }, {
     edition: "enterprise",
     trigger: ".button_back_to_statement",
-    content: _t('<p><b>Close this statement.</p>'),
+    content: Markup(_t('<p><b>Close this statement.</p>')),
     position: "bottom",
 }]);
 });

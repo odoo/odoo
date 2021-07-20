@@ -3,7 +3,7 @@
     <span t-name="LunchWidget">
         <t t-foreach="widget.alerts" t-as="alert">
             <div class="alert alert-warning mb-0" role="alert">
-                <t t-raw="alert.message"/> <!-- alert.message is coming from a fields.Html so it should be safe -->
+                <t t-out="alert.message"/>
             </div>
         </t>
         <div class="o_lunch_banner container-fluid">

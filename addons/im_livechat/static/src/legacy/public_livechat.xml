@@ -400,7 +400,7 @@
                     </span>
                 </p>
                 <div class="o_thread_message_content">
-                    <t t-raw="message.getBody()"/>
+                    <t t-out="message.getBody()"/>
                     <t t-if="message.hasTrackingValues()">
                         <t t-if="message.hasSubtypeDescription()">
                             <p><t t-esc="message.getSubtypeDescription()"/></p>

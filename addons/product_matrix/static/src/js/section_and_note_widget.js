@@ -4,7 +4,9 @@ var Dialog = require('web.Dialog');
 var core = require('web.core');
 var _t = core._t;
 var qweb = core.qweb;
+const {Markup} = require('web.utils');
 var fieldRegistry = require('web.field_registry');
+var {format} = require('web.field_utils');
 require('account.section_and_note_backend');
 
 var SectionAndNoteFieldOne2Many = fieldRegistry.get('section_and_note_one2many');
@@ -98,6 +100,12 @@ SectionAndNoteFieldOne2Many.include({
                 'product_matrix.matrix', {
                     header: infos.header,
                     rows: infos.matrix,
+                    format({price, currency_id}) {
+                        if (!price) { return ""; }
+                        const sign =  price < 0 ? '-' : '+';
+                        const formatted = format.monetary(Math.abs(price), null, {currency_id});
+                        return Markup`${sign}&nbsp;${formatted}`;
+                    }
                 }
             )),
             buttons: [

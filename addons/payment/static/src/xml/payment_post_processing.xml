@@ -54,7 +54,7 @@
                                 <t t-if="tx['display_message']">
                                     <!-- display_message is the content of the HTML field associated
                                     with the current transaction state, set on the acquirer. -->
-                                    <t t-raw="tx['display_message']"/>
+                                    <t t-out="tx['display_message']"/>
                                 </t>
                                 <t t-else="">
                                     Your payment is in pending state.<br/>
@@ -75,7 +75,7 @@
                                 <t t-if="tx['display_message']">
                                     <!-- display_message is the content of the HTML field associated
                                     with the current transaction state, set on the acquirer. -->
-                                    <t t-raw="tx['display_message']"/>
+                                    <t t-out="tx['display_message']"/>
                                 </t>
                                 <t t-else="">
                                     Your payment has been received but need to be confirmed manually.<br/>
@@ -100,7 +100,7 @@
                                 <t t-if="tx['display_message']">
                                     <!-- display_message is the content of the HTML field associated
                                     with the current transaction state, set on the acquirer. -->
-                                    <t t-raw="tx['display_message']"/>
+                                    <t t-out="tx['display_message']"/>
                                 </t>
                                 <t t-else="">
                                     We are waiting for the payment acquirer to confirm the payment.

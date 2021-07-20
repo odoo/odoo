@@ -1,8 +1,8 @@
 odoo.define("website_sale.tour_shop", function (require) {
     "use strict";
 
-    var core = require("web.core");
-    var _t = core._t;
+    const {_t} = require("web.core");
+    const {Markup} = require('web.utils');
 
     // return the steps, used for backend and frontend
 
@@ -13,7 +13,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         position: "bottom",
     }, {
         trigger: "a[data-action=new_product]",
-        content: _t("Select <b>New Product</b> to create it and manage its properties to boost your sales."),
+        content: Markup(_t("Select <b>New Product</b> to create it and manage its properties to boost your sales.")),
         position: "bottom",
     }, {
         trigger: ".modal-dialog #editor_new_product input[type=text]",
@@ -21,7 +21,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         position: "right",
     }, {
         trigger: ".modal-footer button.btn-primary.btn-continue",
-        content: _t("Click on <em>Continue</em> to create the product."),
+        content: Markup(_t("Click on <em>Continue</em> to create the product.")),
         position: "right",
     }, {
         trigger: ".product_price .oe_currency_value:visible",
@@ -55,7 +55,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         run: "drag_and_drop",
     }, {
         trigger: "button[data-action=save]",
-        content: _t("Once you click on <b>Save</b>, your product is updated."),
+        content: Markup(_t("Once you click on <b>Save</b>, your product is updated.")),
         position: "bottom",
     }, {
         trigger: ".js_publish_management .js_publish_btn .css_publish",

@@ -332,7 +332,7 @@ function formatX2Many(value) {
  * @param {boolean} [options.forceString=false]
  *        if false, returns a string encoding the html formatted value (with
  *        whitespace encoded as '&nbsp;')
- * @returns {string}
+ * @returns {string | _Markup}
  */
 function formatMonetary(value, field, options) {
     if (value === false) {
@@ -361,12 +361,13 @@ function formatMonetary(value, field, options) {
     if (!currency || options.noSymbol) {
         return formatted_value;
     }
-    const ws = options.forceString ? ' ' : '&nbsp;';
-    if (currency.position === "after") {
-        return formatted_value + ws + currency.symbol;
-    } else {
-        return currency.symbol + ws + formatted_value;
+    const val = currency.position === 'after'
+        ? [formatted_value, currency.symbol]
+        : [currency.symbol, formatted_value];
+    if (options.forceString) {
+        return val.join(' ');
     }
+    return utils.Markup(val.map((v) => _.escape(v)).join('&nbsp;'));
 }
 /**
  * Returns a string representing the given value (multiplied by 100)

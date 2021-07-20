@@ -7,6 +7,7 @@ import time from 'web.time';
 import weWidgets from 'wysiwyg.widgets';
 import websiteNavbarData from 'website.navbar';
 import Widget from 'web.Widget';
+import { Markup } from 'web.utils';
 
 import { registry } from "@web/core/registry";
 
@@ -1054,35 +1055,24 @@ var PageManagement = Widget.extend({
  *                  It will affect redirect after page deletion: reload or '/'
  */
 // TODO: This function should be integrated in a widget in the future
-function _deletePage(pageId, fromPageManagement) {
-    var self = this;
-    new Promise(function (resolve, reject) {
-        // Search the page dependencies
-        self._getPageDependencies(pageId)
-        .then(function (dependencies) {
-            // Inform the user about those dependencies and ask him confirmation
-            return new Promise(function (confirmResolve, confirmReject) {
-                Dialog.safeConfirm(self, "", {
-                    title: _t("Delete Page"),
-                    $content: $(qweb.render('website.delete_page', {dependencies: dependencies})),
-                    confirm_callback: confirmResolve,
-                    cancel_callback: resolve,
-                });
-            });
-        }).then(function () {
-            // Delete the page if the user confirmed
-            return self._rpc({
-                model: 'website.page',
-                method: 'unlink',
-                args: [pageId],
-            });
-        }).then(function () {
+async function _deletePage(pageId, fromPageManagement) {
+    const dependencies = await this._getPageDependencies(pageId);
+    for (const locs of Object.values(dependencies)) {
+        for (const loc of locs) {
+            loc.text = Markup(loc.text);
+        }
+    }
+    Dialog.safeConfirm(this, "", {
+        title: _t("Delete Page"),
+        $content: $(qweb.render('website.delete_page', {dependencies: dependencies})),
+        async confirm_callback() {
+            await this._rpc({model: 'website.page', method: 'unlink', args: [pageId]});
             if (fromPageManagement) {
                 window.location.reload(true);
             } else {
                 window.location.href = '/';
             }
-        }, reject);
+        }
     });
 }
 /**

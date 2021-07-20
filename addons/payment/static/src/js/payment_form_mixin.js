@@ -75,7 +75,7 @@ odoo.define('payment.payment_form_mixin', require => {
             const $checkedRadios = this.$('input[name="o_payment_radio"]:checked');
             if ($checkedRadios.length !== 1) { // Cannot find selected payment option, show dialog
                 return new Dialog(null, {
-                    title: _.str.sprintf(_t("Error: %s"), _.str.escapeHTML(title)),
+                    title: _.str.sprintf(_t("Error: %s"), title),
                     size: 'medium',
                     $content: `<p>${_.str.escapeHTML(description) || ''}</p>`,
                     buttons: [{text: _t("Ok"), close: true}]

@@ -13,7 +13,7 @@
                             <t t-foreach="itemIndexGenerator" t-as="itemIndex">
                                 <t t-if="(slideIndex * chunkSize + itemIndex) &lt; data.length">
                                     <div t-attf-class="#{colClass}">
-                                        <t t-raw="data[slideIndex * chunkSize + itemIndex]"/>
+                                        <t t-out="data[slideIndex * chunkSize + itemIndex]"/>
                                     </div>
                                 </t>
                             </t>

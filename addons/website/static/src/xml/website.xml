@@ -44,10 +44,10 @@
                     <ul>
                         <li t-foreach="type_value" t-as="error">
                             <a t-if="!_.contains(['', '#', false], error.link)" t-att-href="error.link">
-                                <t t-raw="error.text"/>
+                                <t t-out="error.text"/>
                             </a>
                             <t t-else="">
-                                <t t-raw="error.text"/>
+                                <t t-out="error.text"/>
                             </t>
                         </li>
                     </ul>
