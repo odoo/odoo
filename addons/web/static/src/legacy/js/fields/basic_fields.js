@@ -2633,6 +2633,10 @@ var PriorityWidget = AbstractField.extend({
 
 var AttachmentImage = AbstractField.extend({
     className: 'o_attachment_image',
+    // Remove event handlers on this widget to ensure that the kanban 'global
+    // click' opens the clicked record, click on abstractField is useful in
+    // Form and List view only.
+    events: _.omit(AbstractField.prototype.events, 'click'),
 
     //--------------------------------------------------------------------------
     // Private
