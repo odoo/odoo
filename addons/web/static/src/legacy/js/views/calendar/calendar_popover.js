@@ -167,6 +167,12 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
                     name: 'display_name',
                     type: 'char',
                 }];
+                if (displayFieldInfo.attrs.options.color_field) {
+                    field.fields.push({
+                        name: displayFieldInfo.attrs.options.color_field,
+                        type: 'integer'
+                    });
+                }
             }
             fieldsToGenerate.push(field);
         };

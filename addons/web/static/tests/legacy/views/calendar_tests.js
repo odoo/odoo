@@ -1019,6 +1019,61 @@ QUnit.module('Views', {
         await testUtils.mock.unpatch(BasicModel);
     });
 
+    QUnit.test('rendering popover with many2many_tags with color option', async function (assert) {
+        assert.expect(8);
+
+        this.data.event.fields.partner_ids.type = 'many2many';
+        this.data.event.records[0].partner_ids = [1, 2, 3, 4, 5];
+        this.data.partner.records.push({ id: 5, display_name: "partner 5", image: 'EEE' });
+
+        this.data.partner.fields.color = { string: "ID", type: "integer" };
+        this.data.partner.records[0].color = 1;
+        this.data.partner.records[1].color = 2;
+        this.data.partner.records[2].color = 3;
+        this.data.partner.records[3].color = 4;
+
+        const calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+                `<calendar
+                    class="o_calendar_test"
+                    event_open_popup="true"
+                    date_start="start"
+                    date_stop="stop"
+                    all_day="allday"
+                    mode="month">
+                    <field name="partner_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                </calendar>`,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        // Event 1
+        await testUtils.dom.click(calendar.$('.fc-event:contains("event 1")'));
+        assert.ok(calendar.$('.o_cw_popover').length,
+            "should open a popover clicking on event");
+        assert.containsOnce(calendar, '.o_cw_popover .o_field_many2manytags',
+            "should have many2many field");
+        assert.containsN(calendar, '.o_cw_popover .o_field_many2manytags .badge', 5,
+            "should have 5 many2many tags");
+        assert.containsOnce(calendar, '.o_cw_popover .o_field_many2manytags .badge.o_tag_color_1',
+            "should have many2many tag with color");
+        assert.containsOnce(calendar, '.o_cw_popover .o_field_many2manytags .badge.o_tag_color_2',
+            "should have many2many tag with color");
+        assert.containsOnce(calendar, '.o_cw_popover .o_field_many2manytags .badge.o_tag_color_3',
+            "should have many2many tag with color");
+        assert.containsOnce(calendar, '.o_cw_popover .o_field_many2manytags .badge.o_tag_color_4',
+            "should have many2many tag with color");
+        assert.containsOnce(calendar, '.o_cw_popover .o_field_many2manytags .badge.o_tag_color_0',
+            "should have many2many tag with color");
+
+        calendar.destroy();
+    });
+
     QUnit.test('attributes hide_date and hide_time', async function (assert) {
         assert.expect(1);
 

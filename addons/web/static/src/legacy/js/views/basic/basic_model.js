@@ -898,8 +898,13 @@ var BasicModel = AbstractModel.extend({
                 _.each(field.fields, function (field) {
                     relatedFieldsInfo.default[field.name] = {};
                 });
+                const fields = {};
+                field.fields.forEach((fieldInfo) => {
+                    fields[fieldInfo.name] = _.pick(fieldInfo, 'type', 'relation', 'domain', 'selection');
+                });
                 var dpParams = {
                     fieldsInfo: relatedFieldsInfo,
+                    fields: fields,
                     modelName: field.relation,
                     parentID: record.id,
                     static: true,
