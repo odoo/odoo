@@ -7527,7 +7527,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('set cover image', async function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         var kanban = await createView({
             View: KanbanView,
@@ -7536,7 +7536,7 @@ QUnit.module('Views', {
             arch: '<kanban class="o_kanban_test">' +
                     '<templates>' +
                         '<t t-name="kanban-box">' +
-                            '<div>' +
+                            '<div class="oe_kanban_global_click">' +
                                 '<field name="name"/>' +
                                 '<div class="o_dropdown_kanban dropdown">' +
                                     '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
@@ -7560,6 +7560,16 @@ QUnit.module('Views', {
                 }
                 return this._super(route, args);
             },
+            intercepts: {
+                switch_view: function (event) {
+                    assert.deepEqual(_.pick(event.data, 'mode', 'model', 'res_id', 'view_type'), {
+                        mode: 'readonly',
+                        model: 'partner',
+                        res_id: 1,
+                        view_type: 'form',
+                    }, "should trigger an event to open the clicked record in a form view");
+                },
+            },
         });
 
         var $firstRecord = kanban.$('.o_kanban_record:first');
@@ -7577,6 +7587,7 @@ QUnit.module('Views', {
         $('.modal').find("img[data-id='2']").dblclick();
         await testUtils.nextTick();
         assert.containsOnce(kanban, 'img[data-src*="/web/image/2"]');
+        await testUtils.dom.click(kanban.$('.o_kanban_record:first .o_attachment_image'));
         assert.verifySteps(["1", "2"], "should writes on both kanban records");
 
         kanban.destroy();
