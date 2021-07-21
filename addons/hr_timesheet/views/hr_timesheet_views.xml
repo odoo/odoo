@@ -12,6 +12,7 @@
         <menuitem id="menu_hr_time_tracking"
             name="Timesheets"
             parent="timesheet_menu_root"
+            groups = "group_hr_timesheet_approver"
             sequence="5"/>
 
         <!--
@@ -304,7 +305,14 @@
 
         <menuitem id="timesheet_menu_activity_mine"
             name="My Timesheets"
+            groups="group_hr_timesheet_approver"
             parent="menu_hr_time_tracking"
+            action="act_hr_timesheet_line"/>
+
+        <menuitem id="timesheet_menu_activity_user"
+            name="My Timesheets"
+            groups="group_hr_timesheet_user"
+            parent="timesheet_menu_root"
             action="act_hr_timesheet_line"/>
 
         <record id="timesheet_action_task" model="ir.actions.act_window">
