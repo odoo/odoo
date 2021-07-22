@@ -6,9 +6,7 @@
         <field name="inherit_id" ref="account.view_account_payment_form" />
         <field name="arch" type="xml">
             <form>
-                aa
-                <field name="third_check_from_state" invisible="0"/>
-                bb
+                <field name="third_check_from_state" invisible="1"/>
             </form>
             <div class="oe_button_box" name="button_box">
                 <button name="button_open_check_operations" type="object" class="oe_stat_button" icon="fa-bars" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('payment_method_code', '!=', 'new_third_checks')]}">
