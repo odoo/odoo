@@ -2,6 +2,7 @@
 from odoo import fields
 from odoo.tests.common import Form
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests.common import SingleTransactionCase
 from dateutil.relativedelta import relativedelta
 import random
 import logging
@@ -10,7 +11,7 @@ import time
 _logger = logging.getLogger(__name__)
 
 
-class TestAr(AccountTestInvoicingCommon):
+class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
 
     @classmethod
     def setUpClass(self, chart_template_ref='l10n_ar.l10nar_ri_chart_template'):
@@ -22,7 +23,7 @@ class TestAr(AccountTestInvoicingCommon):
             'parent_id': self.env.ref('base.main_company').id,
             'currency_id': self.env.ref('base.ARS').id,
             'name': '(AR) Responsable Inscripto (Unit Tests)',
-            "l10n_ar_afip_start_date":  time.strftime('%Y-01-01'),
+            "l10n_ar_afip_start_date": time.strftime('%Y-01-01'),
             'l10n_ar_gross_income_type': 'local',
             'l10n_ar_gross_income_number': '901-21885123',
             'l10n_ar_afip_ws_environment': 'testing',
@@ -69,7 +70,7 @@ class TestAr(AccountTestInvoicingCommon):
             "website": "http://www.adhoc.com.ar",
             'l10n_latam_identification_type_id': self.env.ref("l10n_ar.it_cuit").id,
             'vat': "30714295698",
-            'l10n_ar_afip_responsibility_type_id':  self.env.ref("l10n_ar.res_IVARI").id,
+            'l10n_ar_afip_responsibility_type_id': self.env.ref("l10n_ar.res_IVARI").id,
         })
         self.partner_cf = self.env['res.partner'].create({
             "name": "Consumidor Final Anónimo",
@@ -89,7 +90,7 @@ class TestAr(AccountTestInvoicingCommon):
             "website": "http://www.grittiagrimensura.com",
             'l10n_latam_identification_type_id': self.env.ref("l10n_ar.it_cuit").id,
             'vat': "27320732811",
-            'l10n_ar_afip_responsibility_type_id':  self.env.ref("l10n_ar.res_RM").id,
+            'l10n_ar_afip_responsibility_type_id': self.env.ref("l10n_ar.res_RM").id,
         })
         self.res_partner_cerrocastor = self.env['res.partner'].create({
             "name": "Cerro Castor (Tierra del Fuego)",
@@ -103,7 +104,7 @@ class TestAr(AccountTestInvoicingCommon):
             "website": "http://www.cerrocastor.com",
             'l10n_latam_identification_type_id': self.env.ref("l10n_ar.it_cuit").id,
             'vat': "27333333339",
-            'l10n_ar_afip_responsibility_type_id':  self.env.ref("l10n_ar.res_IVA_LIB").id,
+            'l10n_ar_afip_responsibility_type_id': self.env.ref("l10n_ar.res_IVA_LIB").id,
         })
         self.res_partner_cmr = self.env['res.partner'].create({
             "name": "Concejo Municipal de Rosario (IVA Sujeto Exento)",
@@ -118,7 +119,7 @@ class TestAr(AccountTestInvoicingCommon):
             "website": "http://www.concejorosario.gov.ar/",
             'l10n_latam_identification_type_id': self.env.ref("l10n_ar.it_cuit").id,
             'vat': "30684679372",
-            'l10n_ar_afip_responsibility_type_id':  self.env.ref("l10n_ar.res_IVAE").id,
+            'l10n_ar_afip_responsibility_type_id': self.env.ref("l10n_ar.res_IVAE").id,
         })
         self.res_partner_expresso = self.env['res.partner'].create({
             "name": "Expresso",
@@ -147,7 +148,7 @@ class TestAr(AccountTestInvoicingCommon):
             "website": "http://www.mypime-inc.com",
             'l10n_latam_identification_type_id': self.env.ref("l10n_ar.it_cuit").id,
             'vat': "30714101443",
-            'l10n_ar_afip_responsibility_type_id':  self.env.ref("l10n_ar.res_IVARI").id,
+            'l10n_ar_afip_responsibility_type_id': self.env.ref("l10n_ar.res_IVARI").id,
         })
         self.partner_mipyme_ex = self.partner_mipyme.copy({'name': 'MiPyme Exento', 'l10n_ar_afip_responsibility_type_id': self.env.ref('l10n_ar.res_IVAE').id})
 
@@ -304,7 +305,7 @@ class TestAr(AccountTestInvoicingCommon):
 
         invoices_to_create = [{
             "ref": "demo_invoice_1: Invoice to gritti support service, vat 21",
-            "partner_id":  self.res_partner_gritti_mono.id,
+            "partner_id": self.res_partner_gritti_mono.id,
             "invoice_user_id": invoice_user_id.id,
             "invoice_payment_term_id": payment_term_id.id,
             "move_type": "out_invoice",
@@ -314,7 +315,7 @@ class TestAr(AccountTestInvoicingCommon):
                 'product_id': self.service_iva_21.id,
                 # 'price_unit': 642.0,
                 # 'quantity': 1
-                })],
+            })],
         }, {
             "ref": "demo_invoice_2: Invoice to CMR with vat 21, 27 and 10,5",
             "partner_id": self.res_partner_cmr,
@@ -510,7 +511,6 @@ class TestAr(AccountTestInvoicingCommon):
             "invoice_payment_term_id": payment_term_id.id,
             "move_type": 'out_invoice',
             "invoice_date": today + relativedelta(day=22),
-            "invoice_date": fields.Date.start_of(today),
             "company_id": self.company_ri,
             "invoice_incoterm_id": incoterm.id,
             "invoice_line_ids": [
@@ -587,7 +587,7 @@ class TestAr(AccountTestInvoicingCommon):
         #     <value eval="True"/>
         # </function>
 
-        for vaues in invoices_to_create:
+        for values in invoices_to_create:
             temp = demo_invoices.create(values)
             temp.action_post()
             demo_invoices += temp
