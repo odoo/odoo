@@ -573,7 +573,15 @@ var Activity = BasicActivity.extend({
      * @param {Object} fieldsToReload
      */
     _reload: function (fieldsToReload) {
-        this.trigger_up('reload_mail_fields', fieldsToReload);
+        const thread = owl.Component.env.models['mail.thread'].findFromIdentifyingData({
+            id: this.state.res_id,
+            model: this.state.model,
+        });
+        if (thread) {
+            thread.refresh();
+            thread.refreshActivities();
+            thread.refreshFollowers();
+        }
     },
     /**
      * @override
