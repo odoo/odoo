@@ -195,6 +195,9 @@ var Dialog = Widget.extend({
 
         var self = this;
         this.appendTo($('<div/>')).then(function () {
+            if (self.isDestroyed()) {
+                return;
+            }
             self.$modal.find(".modal-body").replaceWith(self.$el);
             self.$modal.attr('open', true);
             self.$modal.removeAttr("aria-hidden");
