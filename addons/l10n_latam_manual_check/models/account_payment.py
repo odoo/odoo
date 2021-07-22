@@ -72,3 +72,10 @@ class AccountPayment(models.Model):
                 raise ValidationError(_(
                     'Check Number (%s) must be unique per Checkbook!\n'
                     '* Check ids: %s') % (rec.check_number, same_checks.ids))
+
+    def _prepare_move_line_default_vals(self, write_off_line_vals=None):
+        """ Add check maturity date """
+        res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
+        if self.payment_method_id.code == 'check_printing' and self.check_payment_date:
+            res[0].update({'date_maturity': self.check_payment_date})
+        return res
