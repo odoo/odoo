@@ -331,6 +331,16 @@ class ProductProduct(models.Model):
         if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
             self.uom_po_id = self.uom_id
 
+
+    @api.onchange('default_code')
+    def _onchange_default_code(self):
+        from pudb import set_trace; set_trace()
+        if self.default_code and self.env['product.template'].search_count([('default_code', '=', self.default_code)]):
+            return {'warning': {
+                'title': _("Note:"),
+                'message': _("The Internal Reference '%s' for this product already exists.", self.default_code),
+            }}
+
     @api.model_create_multi
     def create(self, vals_list):
         products = super(ProductProduct, self.with_context(create_product_product=True)).create(vals_list)
