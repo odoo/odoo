@@ -36,7 +36,6 @@ return {
                 // stylesheets.
                 rules = sheets[i].rules || sheets[i].cssRules;
             } catch (e) {
-                console.warn("Can't read the css rules of: " + sheets[i].href, e);
                 continue;
             }
             if (!rules) {
