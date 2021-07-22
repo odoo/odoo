@@ -6,7 +6,9 @@
         <field name="inherit_id" ref="account.view_account_payment_form" />
         <field name="arch" type="xml">
             <form>
-                <field name="available_check_ids" invisible="1"/>
+                aa
+                <field name="third_check_from_state" invisible="0"/>
+                bb
             </form>
             <div class="oe_button_box" name="button_box">
                 <button name="button_open_check_operations" type="object" class="oe_stat_button" icon="fa-bars" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('payment_method_code', '!=', 'new_third_checks')]}">
@@ -22,7 +24,7 @@
                 <field
                     name="check_id"
                     attrs="{'invisible': [('payment_method_code', 'not in', ['in_third_checks', 'out_third_checks'])], 'required': [('payment_method_code', 'in', ['in_third_checks', 'out_third_checks'])]}"
-                    domain="[('id', 'in', available_check_ids)]"
+                    domain="[('payment_method_code', '=', 'new_third_checks'), ('third_check_state', '=', third_check_from_state)] if payment_method_code == 'in_third_checks' else [('payment_method_code', '=', 'new_third_checks'), ('third_check_state', '=', third_check_from_state), ('third_check_last_journal_id', '=', journal_id)]"
                     options="{'no_create': True}"
                     context="{'show_check_number': True}"
                 />
