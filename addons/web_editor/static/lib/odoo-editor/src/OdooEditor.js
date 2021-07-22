@@ -776,7 +776,7 @@ export class OdooEditor extends EventTarget {
         caret.className = className;
         // Unrelated to the comedian.
         const caretTop = this.document.createElement('div');
-        const baseCaretTopStyle = `min-height: 5px; min-width: 5px; color: #fff; text-shadow: 0 0 5px #000; background-color: ${color}; position: absolute; bottom: 100%; left: -4px;`;
+        const baseCaretTopStyle = `min-height: 5px; min-width: 5px; color: #fff; text-shadow: 0 0 5px #000; background-color: ${color}; position: absolute; bottom: 100%; left: -4px; white-space: nowrap;`
         caretTop.style = baseCaretTopStyle;
         caretTop.addEventListener('mouseenter', () => {
             caretTop.innerText = name;
