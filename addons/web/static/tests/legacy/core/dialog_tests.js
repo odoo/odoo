@@ -158,6 +158,16 @@ QUnit.module('core', {}, function () {
 
         parent.destroy();
     });
+
+    QUnit.test("Should not be displayed if parent is destroyed while dialog is being opened", async function (assert) {
+        assert.expect(1);
+        const parent = await createEmptyParent();
+        const dialog = new Dialog(parent);
+        dialog.open();
+        parent.destroy();
+        await testUtils.nextTick();
+        assert.containsNone(document.body, ".modal[role='dialog']");
+    });
 });
 
 });
