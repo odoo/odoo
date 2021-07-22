@@ -9,6 +9,9 @@
             <xpath expr="//button[@name='%(project.action_project_task_burndown_chart_report)d']" position="after">
                 <button string="Costs / Revenues" class="oe_stat_button" type="object" name="action_view_timesheet" icon="fa-puzzle-piece" attrs="{'invisible': [('allow_billable', '=', False)]}" groups="project.group_project_manager"/>
             </xpath>
+            <xpath expr="//button[@name='action_view_so']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('allow_billable', '=', False), ('sale_order_id', '=', False)]}</attribute>
+            </xpath>
             <xpath expr="//header" position="inside">
                 <button name="action_make_billable" string="Create Sales Order" type="object" attrs="{'invisible': [('display_create_order', '=', False)]}" groups="sales_team.group_sale_salesman"/>
             </xpath>
