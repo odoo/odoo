@@ -6,17 +6,23 @@
         <field name="inherit_id" ref="utm.utm_campaign_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                    <button name="%(action_create_mass_mailings_from_campaign)d" type="action" class="oe_highlight" groups="mass_mailing.group_mass_mailing_campaign" string="Send new Mailing"/>
+                <field name="is_mailing_campaign_activated" invisible="1"/>
+                <button name="%(action_create_mass_mailings_from_campaign)d"
+                    type="action" class="oe_highlight" attrs="{'invisible': [('is_mailing_campaign_activated', '=', False)]}"
+                    groups="mass_mailing.group_mass_mailing_user" string="Send new Mailing"/>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="%(action_view_mass_mailings_from_campaign)d"
                     type="action" class="oe_stat_button order-9" icon="fa-envelope-o"
-                    attrs="{'invisible': [('mailing_mail_count', '=', 0)]}" groups="mass_mailing.group_mass_mailing_campaign">
+                    attrs="{'invisible': ['|', ('mailing_mail_count', '=', 0), ('is_mailing_campaign_activated', '=', False)]}"
+                    groups="mass_mailing.group_mass_mailing_user">
                     <field name="mailing_mail_count" widget="statinfo" string="Mailings"/>
                 </button>
             </xpath>
             <xpath expr="//notebook" position="inside">
-                <page string="Mailings" name="mailings" attrs="{'invisible': [('mailing_mail_count', '=', 0)]}">
+                <page string="Mailings" name="mailings"
+                    attrs="{'invisible': ['|', ('mailing_mail_count', '=', 0), ('is_mailing_campaign_activated', '=', False)]}"
+                    groups="mass_mailing.group_mass_mailing_user">
                     <field name="mailing_mail_ids" readonly="1" nolabel="1">
                         <tree>
                             <field name="subject"/>
@@ -78,12 +84,14 @@
         <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='user_id']" position="after">
-                <field name="mailing_mail_ids"/>
+                <field name="mailing_mail_ids" groups="mass_mailing.group_mass_mailing_user"/>
+                <field name="is_mailing_campaign_activated"/>
             </xpath>
             <xpath expr="//ul[@id='o_utm_actions']">
                 <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
                     t-attf-class="oe_mailings #{record.mailing_mail_ids.raw_value.length === 0 ? 'text-muted' : ''}"
-                    groups="mass_mailing.group_mass_mailing_campaign">
+                    t-if="record.is_mailing_campaign_activated.raw_value"
+                    groups="mass_mailing.group_mass_mailing_user">
                     <t t-out="record.mailing_mail_ids.raw_value.length"/> Mailings
                 </a>
             </xpath>
