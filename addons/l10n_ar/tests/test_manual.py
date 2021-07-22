@@ -4,7 +4,7 @@ from odoo.tests import tagged
 
 
 @tagged('-at_install', 'post_install')
-class TestManual(common.TestAR):
+class TestManual(common.TestAr):
 
     @classmethod
     def setUpClass(cls):

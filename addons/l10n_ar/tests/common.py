@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import fields
 from odoo.tests.common import Form
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from dateutil.relativedelta import relativedelta
@@ -155,11 +156,21 @@ class TestAr(AccountTestInvoicingCommon):
         self.tax_27 = self._search_tax(self, 'iva_27')
         self.tax_0 = self._search_tax(self, 'iva_0')
         self.tax_10_5 = self._search_tax(self, 'iva_105')
+        self.tax_no_gravado = self._search_tax(self, 'iva_no_gravado')
+        self.tax_perc_iibb = self._search_tax(self, 'percepcion_iibb_ba')
+        self.tax_iva_exento = self._search_tax(self, 'iva_exento')
 
         # ==== Products ====
+        # TODO review not sure if we need to define the next values
+        #   <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_hour = self.env.ref('uom.product_uom_hour')
+
         self.product_iva_21 = self.env['product.product'].create({
             'name': 'Large Cabinet (VAT 21)',
-            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
             'lst_price': 320.0,
             'standard_price': 800.0,
             'type': "consu",
@@ -169,7 +180,8 @@ class TestAr(AccountTestInvoicingCommon):
         })
         self.service_iva_27 = self.env['product.product'].create({
             'name': 'Telephone service (VAT 27)',
-            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
             'lst_price': 130.0,
             'standard_price': 250.0,
             'type': 'service',
@@ -186,7 +198,8 @@ class TestAr(AccountTestInvoicingCommon):
         self.product_iva_cero = self.env['product.product'].create({
             # demo 'product_product_cero'
             'name': 'Non-industrialized animals and vegetables (VAT Zero)',
-            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
             'list_price': 160.0,
             'standard_price': 200.0,
             'type': 'consu',
@@ -199,11 +212,11 @@ class TestAr(AccountTestInvoicingCommon):
             # 'property_account_income_id': self.copy_account(self.company_data['default_account_revenue']).id,
             # 'property_account_expense_id': self.copy_account(self.company_data['default_account_expense']).id,
         })
-
         self.product_iva_105 = self.env['product.product'].create({
             # demo 'product.product_product_27'
             'name': 'Laptop Customized (VAT 10,5)',
-            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
             'standard_price': 4500.0,
             'type': 'consu',
             'default_code': '10,5',
@@ -213,6 +226,47 @@ class TestAr(AccountTestInvoicingCommon):
             # <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT 10.5%')]"/>
             # 'property_account_income_id': self.copy_account(self.company_data['default_account_revenue']).id,
             # 'property_account_expense_id': self.copy_account(self.company_data['default_account_expense']).id,
+        })
+        self.service_iva_21 = self.env['product.product'].create({
+            # demo data product.product_product_2
+            'name': 'Virtual Home Staging (VAT 21)',
+            'uom_id': uom_hour.id,
+            'uom_po_id': uom_hour.id,
+            'list_price': 38.25,
+            'standard_price': 45.5,
+            'type': 'service',
+            'default_code': 'VAT 21',
+            'taxes_id': [(6, 0, (self.tax_21).ids)],
+        })
+        self.product_no_gravado = self.env['product.product'].create({
+            # demo data product_product_no_gravado
+            'name': 'Untaxed concepts (VAT NT)',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+            'list_price': 40.00,
+            'standard_price': 50.0,
+            'type': 'consu',
+            'default_code': 'NOGRAVADO',
+            'taxes_id': [(6, 0, (self.tax_no_gravado).ids)],
+        })
+        self.product_iva_105_perc = self.product_iva_105.copy({
+            # product.product_product_25
+            "name": "Laptop E5023 (VAT 10,5)",
+            "standard_price": 3280.0,
+            # agregamos percecipn aplicada y sufrida tambien
+            'taxes_id': [(6, 0, [self.tax_10_5.id, self.tax_perc_iibb.id])],
+            # <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', 'in', ['VAT 10.5%', 'Percepción IIBB', 'Percepción Ganancias', 'Percepción IVA'])]"/>
+        })
+        self.product_iva_exento = self.env['product.product'].create({
+            # demo product_product_exento
+            'name': 'Book: Development in Odoo (VAT Exempt)',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+            'standard_price': 100.0,
+            "list_price": 80.0,
+            'type': 'consu',
+            'default_code': 'EXENTO',
+            'taxes_id': [(6, 0, (self.tax_iva_exento).ids)],
         })
 
         # # Document Types
@@ -257,7 +311,7 @@ class TestAr(AccountTestInvoicingCommon):
             "invoice_date": fields.Date.start_of(today),
             "company_id":  self.company_ri,
             "invoice_line_ids":  [(0, 0, {
-                'product_id': ref('product.product_product_2'),
+                'product_id': self.service_iva_21.id,
                 # 'price_unit': 642.0,
                 # 'quantity': 1
                 })],
@@ -272,7 +326,7 @@ class TestAr(AccountTestInvoicingCommon):
             "invoice_line_ids": [
                 (0, 0, {'product_id': self.product_iva_105.id, 'price_unit': 642.0, 'quantity': 5}),
                 (0, 0, {'product_id': self.service_iva_27.id, 'price_unit': 250.0, 'quantity': 1}),
-                (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
+                (0, 0, {'product_id': self.product_iva_105_perc.id, 'price_unit': 3245.0, 'quantity': 2}),
             ],
         }, {
             "ref": "demo_invoice_3: Invoice to ADHOC with vat cero and 21",
@@ -288,7 +342,7 @@ class TestAr(AccountTestInvoicingCommon):
                 (0, 0, {'product_id': self.product_iva_cero.id, 'price_unit': 200.0, 'quantity': 1}),
             ],
         }, {
-            'ref': 'demo_invoice_4: Invoice to ADHOC with vat exempt and 21'
+            'ref': 'demo_invoice_4: Invoice to ADHOC with vat exempt and 21',
             "partner_id": self.res_partner_adhoc.id,
             "invoice_user_id": invoice_user_id.id,
             "invoice_payment_term_id": payment_term_id.id,
@@ -297,11 +351,11 @@ class TestAr(AccountTestInvoicingCommon):
             "company_id": self.company_ri,
             "invoice_line_ids": [
                 (0, 0, {'product_id': self.product_iva_105.id, 'price_unit': 642.0, 'quantity': 5}),
-                (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
+                (0, 0, {'product_id': self.product_iva_exento.id, 'price_unit': 100.0, 'quantity': 1}),
             ],
 
         }, {
-            'ref': 'demo_invoice_5: Invoice to ADHOC with all type of taxes'
+            'ref': 'demo_invoice_5: Invoice to ADHOC with all type of taxes',
             "partner_id": self.res_partner_adhoc.id,
             "invoice_user_id": invoice_user_id.id,
             "invoice_payment_term_id": payment_term_id.id,
@@ -311,13 +365,13 @@ class TestAr(AccountTestInvoicingCommon):
             "invoice_line_ids": [
                 (0, 0, {'product_id': self.product_iva_105.id, 'price_unit': 642.0, 'quantity': 5}),
                 (0, 0, {'product_id': self.service_iva_27.id, 'price_unit': 250.0, 'quantity': 1}),
-                (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
-                (0, 0, {'product_id': ref('product_product_no_gravado'), 'price_unit': 50.0, 'quantity': 10}),
+                (0, 0, {'product_id': self.product_iva_105_perc.id, 'price_unit': 3245.0, 'quantity': 2}),
+                (0, 0, {'product_id': self.product_no_gravado.id, 'price_unit': 50.0, 'quantity': 10}),
                 (0, 0, {'product_id': self.product_iva_cero.id, 'price_unit': 200.0, 'quantity': 1}),
-                (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
+                (0, 0, {'product_id': self.product_iva_exento.id, 'price_unit': 100.0, 'quantity': 1}),
             ],
         }, {
-            'ref': 'demo_invoice_6: Invoice to cerro castor, fiscal position changes taxes to exempt'
+            'ref': 'demo_invoice_6: Invoice to cerro castor, fiscal position changes taxes to exempt',
             "partner_id": self.res_partner_cerrocastor.id,
             "journal_id": self.sale_expo_journal_ri.id,
             "invoice_user_id": invoice_user_id.id,
@@ -329,13 +383,13 @@ class TestAr(AccountTestInvoicingCommon):
             "invoice_line_ids": [
                 (0, 0, {'product_id': self.product_iva_105.id, 'price_unit': 642.0, 'quantity': 5}),
                 (0, 0, {'product_id': self.service_iva_27.id, 'price_unit': 250.0, 'quantity': 1}),
-                (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
-                (0, 0, {'product_id': ref('product_product_no_gravado'), 'price_unit': 50.0, 'quantity': 10}),
+                (0, 0, {'product_id': self.product_iva_105_perc.id, 'price_unit': 3245.0, 'quantity': 2}),
+                (0, 0, {'product_id': self.product_no_gravado.id, 'price_unit': 50.0, 'quantity': 10}),
                 (0, 0, {'product_id': self.product_iva_cero.id, 'price_unit': 200.0, 'quantity': 1}),
-                (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
+                (0, 0, {'product_id': self.product_iva_exento.id, 'price_unit': 100.0, 'quantity': 1}),
             ],
         }, {
-            'ref': 'demo_invoice_7: Export invoice to expresso, fiscal position changes tax to exempt (type 4 because it have services)'
+            'ref': 'demo_invoice_7: Export invoice to expresso, fiscal position changes tax to exempt (type 4 because it have services)',
             "partner_id": self.res_partner_expresso,
             "journal_id": self.sale_expo_journal_ri.id,
             "invoice_user_id": invoice_user_id.id,
@@ -347,13 +401,13 @@ class TestAr(AccountTestInvoicingCommon):
             "invoice_line_ids": [
                 (0, 0, {'product_id': self.product_iva_105.id, 'price_unit': 642.0, 'quantity': 5}),
                 (0, 0, {'product_id': self.service_iva_27.id, 'price_unit': 250.0, 'quantity': 1}),
-                (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
-                (0, 0, {'product_id': ref('product_product_no_gravado'), 'price_unit': 50.0, 'quantity': 10}),
+                (0, 0, {'product_id': self.product_iva_105_perc.id, 'price_unit': 3245.0, 'quantity': 2}),
+                (0, 0, {'product_id': self.product_no_gravado.id, 'price_unit': 50.0, 'quantity': 10}),
                 (0, 0, {'product_id': self.product_iva_cero.id, 'price_unit': 200.0, 'quantity': 1}),
-                (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
+                (0, 0, {'product_id': self.product_iva_exento.id, 'price_unit': 100.0, 'quantity': 1}),
             ],
         }, {
-            'ref': 'demo_invoice_8: Invoice to consumidor final'
+            'ref': 'demo_invoice_8: Invoice to consumidor final',
             "partner_id": self.partner_cf.id,
             "invoice_user_id": invoice_user_id.id,
             "invoice_payment_term_id": payment_term_id.id,
@@ -361,10 +415,10 @@ class TestAr(AccountTestInvoicingCommon):
             "invoice_date": today + relativedelta(day=13),
             "company_id": self.company_ri,
             "invoice_line_ids": [
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 642.0, 'quantity': 1}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 642.0, 'quantity': 1}),
             ],
         }, {
-            'ref': 'demo_invoice_10; Invoice to ADHOC in USD and vat 21'
+            'ref': 'demo_invoice_10; Invoice to ADHOC in USD and vat 21',
             "partner_id": self.res_partner_adhoc.id,
             "invoice_user_id": invoice_user_id.id,
             "invoice_payment_term_id": payment_term_id.id,
@@ -376,7 +430,7 @@ class TestAr(AccountTestInvoicingCommon):
             ],
             "currency_id": self.env.ref("base.USD"),
         }, {
-            'ref': 'demo_invoice_11: Invoice to ADHOC with many lines in order to prove rounding error, with 4 decimals of precision for the currency and 2 decimals for the product the error apperar'
+            'ref': 'demo_invoice_11: Invoice to ADHOC with many lines in order to prove rounding error, with 4 decimals of precision for the currency and 2 decimals for the product the error apperar',
             "partner_id": self.res_partner_adhoc.id,
             "invoice_user_id": invoice_user_id.id,
             "invoice_payment_term_id": payment_term_id.id,
@@ -384,13 +438,13 @@ class TestAr(AccountTestInvoicingCommon):
             "invoice_date": today + relativedelta(day=13),
             "company_id": self.company_ri,
             "invoice_line_ids": [
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 1'}),
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 2'}),
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 3'}),
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 4'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 1'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 2'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 3'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 4'}),
             ],
         }, {
-            'ref': 'demo_invoice_12: Invoice to ADHOC with many lines in order to test rounding error, it is required to use a 4 decimal precision in prodct in order to the error occur'
+            'ref': 'demo_invoice_12: Invoice to ADHOC with many lines in order to test rounding error, it is required to use a 4 decimal precision in prodct in order to the error occur',
             "partner_id": self.res_partner_adhoc.id,
             "invoice_user_id": invoice_user_id.id,
             "invoice_payment_term_id": payment_term_id.id,
@@ -398,13 +452,13 @@ class TestAr(AccountTestInvoicingCommon):
             "invoice_date": today + relativedelta(day=13),
             "company_id": self.company_ri,
             "invoice_line_ids": [
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 15.7076, 'quantity': 1, 'name': 'Support Services 1'}),
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 5.3076, 'quantity': 2, 'name': 'Support Services 2'}),
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 3.5384, 'quantity': 2, 'name': 'Support Services 3'}),
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 1.6376, 'quantity': 2, 'name': 'Support Services 4'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 15.7076, 'quantity': 1, 'name': 'Support Services 1'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 5.3076, 'quantity': 2, 'name': 'Support Services 2'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 3.5384, 'quantity': 2, 'name': 'Support Services 3'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 1.6376, 'quantity': 2, 'name': 'Support Services 4'}),
             ],
         }, {
-            'ref': 'demo_invoice_13: Invoice to ADHOC with many lines in order to test zero amount invoices y rounding error. it is required to set the product decimal precision to 4 and change 260.59 for 260.60 in order to reproduce the error'
+            'ref': 'demo_invoice_13: Invoice to ADHOC with many lines in order to test zero amount invoices y rounding error. it is required to set the product decimal precision to 4 and change 260.59 for 260.60 in order to reproduce the error',
             "partner_id": self.res_partner_adhoc.id,
             "invoice_user_id": invoice_user_id.id,
             "invoice_payment_term_id": payment_term_id.id,
@@ -412,17 +466,17 @@ class TestAr(AccountTestInvoicingCommon):
             "invoice_date": today + relativedelta(day=13),
             "company_id": self.company_ri,
             "invoice_line_ids": [
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 1'}),
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 260.59, 'quantity': -1, 'name': 'Support Services 2'}),
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 48.72, 'quantity': 1, 'name': 'Support Services 3'}),
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 13.666, 'quantity': 1, 'name': 'Support Services 4'}),
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 11.329, 'quantity': 2, 'name': 'Support Services 5'}),
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 68.9408, 'quantity': 1, 'name': 'Support Services 6'}),
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 4.7881, 'quantity': 2, 'name': 'Support Services 7'}),
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 12.0625, 'quantity': 2, 'name': 'Support Services 8'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 1'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 260.59, 'quantity': -1, 'name': 'Support Services 2'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 48.72, 'quantity': 1, 'name': 'Support Services 3'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 13.666, 'quantity': 1, 'name': 'Support Services 4'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 11.329, 'quantity': 2, 'name': 'Support Services 5'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 68.9408, 'quantity': 1, 'name': 'Support Services 6'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 4.7881, 'quantity': 2, 'name': 'Support Services 7'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 12.0625, 'quantity': 2, 'name': 'Support Services 8'}),
             ],
         }, {
-            'ref': 'demo_invoice_14: Export invoice to expresso, fiscal position changes tax to exempt (type 1 because only products)'
+            'ref': 'demo_invoice_14: Export invoice to expresso, fiscal position changes tax to exempt (type 1 because only products)',
             "partner_id": self.res_partner_expresso,
             "journal_id": self.sale_expo_journal_ri.id,
             "invoice_user_id": invoice_user_id.id,
@@ -436,7 +490,7 @@ class TestAr(AccountTestInvoicingCommon):
             ],
 
         }, {
-            'ref': 'demo_invoice_15: Export invoice to expresso, fiscal position changes tax to exempt (type 2 because only service)'
+            'ref': 'demo_invoice_15: Export invoice to expresso, fiscal position changes tax to exempt (type 2 because only service)',
             "partner_id": self.res_partner_expresso,
             "journal_id": self.sale_expo_journal_ri.id,
             "invoice_user_id": invoice_user_id.id,
@@ -449,7 +503,7 @@ class TestAr(AccountTestInvoicingCommon):
                 (0, 0, {'product_id': self.service_iva_27.id, 'price_unit': 250.0, 'quantity': 1}),
             ],
         }, {
-            'ref': 'demo_invoice_16: Export invoice to expresso, fiscal position changes tax to exempt (type 1 because it have products only, used to test refund of expo)'
+            'ref': 'demo_invoice_16: Export invoice to expresso, fiscal position changes tax to exempt (type 1 because it have products only, used to test refund of expo)',
             "partner_id": self.res_partner_expresso,
             "journal_id": self.sale_expo_journal_ri.id,
             "invoice_user_id": invoice_user_id.id,
@@ -463,7 +517,7 @@ class TestAr(AccountTestInvoicingCommon):
                 (0, 0, {'product_id': self.product_iva_105.id, 'price_unit': 642.0, 'quantity': 5}),
             ],
         }, {
-            'ref': 'demo_invoice_17: Invoice to ADHOC with 100% of discount'
+            'ref': 'demo_invoice_17: Invoice to ADHOC with 100% of discount',
             "partner_id": self.res_partner_adhoc.id,
             "invoice_user_id": invoice_user_id.id,
             "invoice_payment_term_id": payment_term_id.id,
@@ -471,10 +525,10 @@ class TestAr(AccountTestInvoicingCommon):
             "invoice_date": today + relativedelta(day=13),
             "company_id": self.company_ri,
             "invoice_line_ids": [
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8', 'discount': 100}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8', 'discount': 100}),
             ],
         }, {
-            'ref': 'demo_invoice_18: Invoice to ADHOC with 100% of discount and with different VAT aliquots'
+            'ref': 'demo_invoice_18: Invoice to ADHOC with 100% of discount and with different VAT aliquots',
             "partner_id": self.res_partner_adhoc.id,
             "invoice_user_id": invoice_user_id.id,
             "invoice_payment_term_id": payment_term_id.id,
@@ -482,12 +536,12 @@ class TestAr(AccountTestInvoicingCommon):
             "invoice_date": today + relativedelta(day=13),
             "company_id": self.company_ri,
             "invoice_line_ids": [
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8', 'discount': 100}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8', 'discount': 100}),
                 (0, 0, {'product_id': self.service_iva_27.id, 'price_unit': 250.0, 'quantity': 1, 'discount': 100}),
-                (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 1}),
+                (0, 0, {'product_id': self.product_iva_105_perc.id, 'price_unit': 3245.0, 'quantity': 1}),
             ],
         }, {
-            'ref': 'demo_invoice_19: Invoice to ADHOC with multiple taxes and perceptions'
+            'ref': 'demo_invoice_19: Invoice to ADHOC with multiple taxes and perceptions',
             "partner_id": self.res_partner_adhoc.id,
             "invoice_user_id": invoice_user_id.id,
             "invoice_payment_term_id": payment_term_id.id,
@@ -495,9 +549,9 @@ class TestAr(AccountTestInvoicingCommon):
             "invoice_date": today + relativedelta(day=13),
             "company_id": self.company_ri,
             "invoice_line_ids": [
-                (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8'}),
+                (0, 0, {'product_id': self.service_iva_21.id, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8'}),
                 (0, 0, {'product_id': self.service_iva_27.id, 'price_unit': 250.0, 'quantity': 1}),
-                (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 1}),
+                (0, 0, {'product_id': self.product_iva_105_perc.id, 'price_unit': 3245.0, 'quantity': 1}),
             ],
         }]
 
@@ -514,7 +568,7 @@ class TestAr(AccountTestInvoicingCommon):
         # </function>
 
         # <function model="account.move.line" name="write" context="{'check_move_validity': False, 'active_test': False}">
-        #     <value model="account.move.line" search="[('move_id', '=', ref('demo_invoice_19')), ('product_id', '=', ref('product.product_product_2'))],
+        #     <value model="account.move.line" search="[('move_id', '=', ref('demo_invoice_19')), ('product_id', '=', self.service_iva_21.id)],
         #     <value model="account.tax" eval="{'tax_ids': [(4, obj().search([('company_id', '=', ref('company_ri')), ('type_tax_use', '=', 'sale'), ('tax_group_id.l10n_ar_tribute_afip_code', '=', '06')], limit=1).id)]}"/>
         # </function>
 
@@ -524,7 +578,7 @@ class TestAr(AccountTestInvoicingCommon):
         # </function>
 
         # <function model="account.move.line" name="write" context="{'check_move_validity': False, 'active_test': False}">
-        #     <value model="account.move.line" search="[('move_id', '=', ref('demo_invoice_19')), ('product_id', '=', ref('product.product_product_25'))],
+        #     <value model="account.move.line" search="[('move_id', '=', ref('demo_invoice_19')), ('product_id', '=', self.product_iva_105_perc.id)],
         #     <value model="account.tax" eval="{'tax_ids': [(4, obj().search([('company_id', '=', ref('company_ri')), ('type_tax_use', '=', 'sale'), ('tax_group_id.l10n_ar_tribute_afip_code', '=', '99')], limit=1).id)]}"/>
         # </function>
 
