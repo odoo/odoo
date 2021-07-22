@@ -23,10 +23,10 @@ export const popoverService = {
          * @param {Object}                  props
          * @param {Object}                  [options]
          * @param {boolean}                 [options.closeOnClickAway=true]
-         * @param {function()}              [options.onClose]
+         * @param {function(): void}        [options.onClose]
          * @param {string}                  [options.popoverClass]
          * @param {string}                  [options.position]
-         * @returns {function()}
+         * @returns {function(): void}
          */
         function add(target, Component, props, options = {}) {
             const id = ++nextId;
