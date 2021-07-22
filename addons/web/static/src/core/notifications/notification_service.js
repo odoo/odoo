@@ -13,14 +13,14 @@ const AUTOCLOSE_DELAY = 4000;
  * @property {string} name
  * @property {string} [icon]
  * @property {boolean} [primary=false]
- * @property {function()} onClick
+ * @property {function(): void} onClick
  *
  * @typedef {Object} NotificationOptions
  * @property {string} [title]
  * @property {"warning" | "danger" | "success" | "info"} [type]
  * @property {boolean} [sticky=false]
  * @property {string} [className]
- * @property {function()} [onClose]
+ * @property {function(): void} [onClose]
  * @property {NotificationButton[]} [buttons]
  */
 
