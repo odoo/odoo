@@ -115,6 +115,39 @@
                ])]"/>
     </record>
 
+    <record id="payment_acquirer_mollie" model="payment.acquirer">
+        <field name="name">Mollie</field>
+        <field name="image_128" type="base64" file="payment_mollie/static/src/img/mollie_icon.png"/>
+        <field name="module_id" ref="base.module_payment_mollie"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway from Mollie to accept online payments.
+            </p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+            </ul>
+        </field>
+
+        <!-- https://www.mollie.com/en/payments -->
+        <field name="payment_icon_ids" eval="[(6, 0, [
+                ref('payment.payment_icon_cc_visa'),
+                ref('payment.payment_icon_cc_american_express'),
+                ref('payment.payment_icon_cc_maestro'),
+                ref('payment.payment_icon_cc_mastercard'),
+                ref('payment.payment_icon_cc_bancontact'),
+                ref('payment.payment_icon_cc_eps'),
+                ref('payment.payment_icon_cc_giropay'),
+                ref('payment.payment_icon_cc_p24'),
+                ref('payment.payment_icon_cc_ideal'),
+                ref('payment.payment_icon_paypal'),
+                ref('payment.payment_icon_apple_pay'),
+                ref('payment.payment_icon_sepa'),
+                ref('payment.payment_icon_kbc')
+            ])]"/>
+
+    </record>
+
     <record id="payment_acquirer_odoo" model="payment.acquirer">
         <field name="name">Odoo Payments</field>
         <field name="sequence">10</field>
