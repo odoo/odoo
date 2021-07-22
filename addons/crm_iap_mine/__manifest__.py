@@ -19,7 +19,6 @@
         'views/crm_lead_views.xml',
         'views/crm_iap_lead_mining_request_views.xml',
         'views/res_config_settings_views.xml',
-        'views/mail_templates.xml',
         'views/crm_menus.xml',
     ],
     'auto_install': True,
