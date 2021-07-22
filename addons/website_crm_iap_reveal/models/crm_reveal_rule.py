@@ -340,7 +340,8 @@ class CRMRevealRule(models.Model):
             credit_error, response_data = response['credit_error'], response['reveal_data']
 
         if credit_error:
-            self.env['crm.iap.lead.helpers'].notify_no_more_credit('reveal', self._name, 'reveal.already_notified')
+            rule_records = self.browse(list(set([rule_id for rule_ids in ip_to_rules.values() for rule_id in rule_ids])))
+            self.env['iap.account'].notify_no_more_credit('reveal', 'reveal.already_notified', notify_records=rule_records)
         else:
             # reset notified parameter to re-send credit notice if appears again
             self.env['ir.config_parameter'].sudo().set_param('reveal.already_notified', False)

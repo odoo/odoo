@@ -5,7 +5,7 @@ import logging
 import uuid
 import werkzeug.urls
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
@@ -118,6 +118,20 @@ class IapAccount(models.Model):
                 credit = -1
 
         return credit
+
+    def get_name_for_customer(self):
+        if self.service_name == 'reveal':
+            return _('IAP Lead Generation')
+        if self.serice_name == 'invoice_ocr':
+            return _('IAP Invoice OCR')
+        return _('IAP Service')
+
+    def get_app_for_customer(self):
+        if self.service_name == 'reveal':
+            return 'CRM'
+        if self.service_name == 'invoice_ocr':
+            return 'Accounting'
+        return 'IAP'
 
     def _neutralize(self):
         super()._neutralize()
