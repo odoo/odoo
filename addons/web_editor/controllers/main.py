@@ -636,3 +636,27 @@ class Web_Editor(http.Controller):
             attachments.append(attachment._get_media_info())
 
         return attachments
+
+    @http.route("/web_editor/collaboration/join", type="json", auth="user")
+    def join_collaboration(self, model, document_id, user_id):
+        collab_document_identifier = make_collab_document_identifier(
+            model, document_id
+        )
+        request.env['bus.bus'].sendone(
+            collab_document_identifier,
+            {'type': 'join', 'userId': user_id}
+        )
+
+    @http.route('/web_editor/collaboration/message', type="json", auth="user")
+    def on_webrtc_message(self, model, document_id, message):
+        collab_document_identifier = make_collab_document_identifier(
+            model, document_id
+        )
+        request.env['bus.bus'].sendone(
+            collab_document_identifier,
+            {'type': 'message', 'message': message}
+        )
+
+
+def make_collab_document_identifier(model, document_id):
+    return model + '_' + str(document_id)
