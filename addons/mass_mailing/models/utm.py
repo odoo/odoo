@@ -13,8 +13,12 @@ class UtmCampaign(models.Model):
     mailing_mail_ids = fields.One2many(
         'mailing.mailing', 'campaign_id',
         domain=[('mailing_type', '=', 'mail')],
-        string='Mass Mailings')
-    mailing_mail_count = fields.Integer('Number of Mass Mailing', compute="_compute_mailing_mail_count")
+        string='Mass Mailings',
+        groups="mass_mailing.group_mass_mailing_user")
+    mailing_mail_count = fields.Integer('Number of Mass Mailing',
+        compute="_compute_mailing_mail_count",
+        groups="mass_mailing.group_mass_mailing_user")
+    is_mailing_campaign_activated = fields.Boolean(compute="_compute_is_mailing_campaign_activated")
 
     # A/B Testing
     ab_testing_mailings_count = fields.Integer("A/B Test Mailings #", compute="_compute_mailing_mail_count")
@@ -124,6 +128,9 @@ class UtmCampaign(models.Model):
                 }
 
             campaign.update(vals)
+
+    def _compute_is_mailing_campaign_activated(self):
+        self.is_mailing_campaign_activated = self.env.user.has_group('mass_mailing.group_mass_mailing_campaign')
 
     def _get_mailing_recipients(self, model=None):
         """Return the recipients of a mailing campaign. This is based on the statistics
