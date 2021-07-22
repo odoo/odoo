@@ -18,12 +18,10 @@ class TestMailPluginControllerCommon(HttpCase):
             groups="base.group_user,base.group_partner_manager",
         )
 
-    def mock_plugin_partner_get(self, name, email, patched_iap_enrich):
+    def mock_plugin_partner_get(self, name, email):
         """Simulate a HTTP call to /partner/get with the given email and name.
 
         The authentication process is patched to allow all queries.
-        The third argument "patched_iap_enrich" allow you to mock the IAP request and
-        to return the response you want.
         """
         def patched_auth_method_outlook(*args, **kwargs):
             request.update_env(user=self.user_test.id)
@@ -35,15 +33,9 @@ class TestMailPluginControllerCommon(HttpCase):
             "params": {"email": email, "name": name},
         }
 
-        with patch(
-            "odoo.addons.mail_plugin.models.ir_http.IrHttp"
-            "._auth_method_outlook",
-            new=patched_auth_method_outlook,
-        ), patch(
-            "odoo.addons.mail_plugin.controllers.mail_plugin.MailPluginController"
-            "._iap_enrich",
-            new=patched_iap_enrich,
-        ):
+        with patch("odoo.addons.mail_plugin.models.ir_http.IrHttp"
+                   "._auth_method_outlook",
+                   new=patched_auth_method_outlook):
             result = self.url_open(
                 "/mail_plugin/partner/get",
                 data=json.dumps(data).encode(),
@@ -55,12 +47,8 @@ class TestMailPluginControllerCommon(HttpCase):
 
         return result.json().get("result", {})
 
-    def mock_enrich_and_create_company(self, partner_id, patched_iap_enrich):
-        """Simulate a HTTP call to /partner/enrich_and_create_company on the given partner.
-
-        The third argument "patched_iap_enrich" allow you to mock the IAP request and
-        to return the response you want.
-        """
+    def mock_enrich_and_create_company(self, partner_id):
+        """Simulate a HTTP call to /partner/enrich_and_create_company on the given partner. """
         def patched_auth_method_outlook(*args, **kwargs):
             request.update_env(user=self.user_test.id)
 
@@ -71,15 +59,9 @@ class TestMailPluginControllerCommon(HttpCase):
             "params": {"partner_id": partner_id},
         }
 
-        with patch(
-            "odoo.addons.mail_plugin.models.ir_http.IrHttp"
-            "._auth_method_outlook",
-            new=patched_auth_method_outlook,
-        ), patch(
-            "odoo.addons.mail_plugin.controllers.mail_plugin.MailPluginController"
-            "._iap_enrich",
-            new=patched_iap_enrich,
-        ):
+        with patch("odoo.addons.mail_plugin.models.ir_http.IrHttp"
+                   "._auth_method_outlook",
+                   new=patched_auth_method_outlook):
             result = self.url_open(
                 "/mail_plugin/partner/enrich_and_create_company",
                 data=json.dumps(data).encode(),

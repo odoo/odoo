@@ -32,12 +32,9 @@ class MailPluginController(http.Controller):
         it will try to find a company using IAP, if a company is found
         the enriched company will then be created in the database
         """
-
         partner = request.env['res.partner'].browse(partner_id).exists()
-
         if not partner:
             return {'error': _("This partner does not exist")}
-
         if partner.parent_id:
             return {'error': _("The partner already has a company related to him")}
 
@@ -45,8 +42,7 @@ class MailPluginController(http.Controller):
         if not normalized_email:
             return {'error': _('Contact has no valid email')}
 
-        company, enrichment_info = self._create_company_from_iap(normalized_email)
-
+        company, enrichment_info = request.env['res.partner']._create_from_iap_enrich(normalized_email)
         if company:
             partner.write({'parent_id': company})
 
@@ -72,63 +68,17 @@ class MailPluginController(http.Controller):
         if not normalized_email:
             return {'error': 'Contact has no valid email'}
 
-        domain = tools.email_domain_extract(normalized_email)
-        iap_data = self._iap_enrich(domain)
-
-        if 'enrichment_info' in iap_data:  # means that an issue happened with the enrichment request
-            return {
-                'enrichment_info': iap_data['enrichment_info'],
-                'company': self._get_company_data(partner),
-            }
-
-        phone_numbers = iap_data.get('phone_numbers')
-
-        partner_values = {}
-
-        if not partner.phone and phone_numbers:
-            partner_values.update({'phone': phone_numbers[0]})
-
-        if not partner.iap_enrich_info:
-            partner_values.update({'iap_enrich_info': json.dumps(iap_data)})
-
-        if not partner.image_128:
-            logo_url = iap_data.get('logo')
-            if logo_url:
-                try:
-                    response = requests.get(logo_url, timeout=2)
-                    if response.ok:
-                        partner_values.update({'image_1920': base64.b64encode(response.content)})
-                except Exception:
-                    pass
-
-        model_fields_to_iap_mapping = {
-            'street': 'street_name',
-            'city': 'city',
-            'zip': 'postal_code',
-            'website': 'domain',
-        }
-
-        # only update keys for which we dont have values yet
-        partner_values.update({
-            model_field: iap_data.get(iap_key)
-            for model_field, iap_key in model_fields_to_iap_mapping.items() if not partner[model_field]
-        })
-
-        partner.write(partner_values)
-
-        partner.message_post_with_view(
-            'iap_mail.enrich_company',
-            values=iap_data,
-            subtype_id=request.env.ref('mail.mt_note').id,
-        )
+        enrichment_info = partner._update_from_iap_enrich()
+        if enrichment_info:
+            return None, enrichment_info
 
         return {
             'enrichment_info': {'type': 'company_updated'},
             'company': self._get_company_data(partner),
         }
 
-    @http.route(['/mail_client_extension/partner/get', '/mail_plugin/partner/get']
-        , type="json", auth="outlook", cors="*")
+    @http.route(['/mail_client_extension/partner/get', '/mail_plugin/partner/get'],
+                type="json", auth="outlook", cors="*")
     def res_partner_get(self, email=None, name=None, partner_id=None, **kwargs):
         """
         returns a partner given it's id or an email and a name.
@@ -139,7 +89,6 @@ class MailPluginController(http.Controller):
         versions of the mail plugin but necessary for supporting older versions, only the route name is deprecated not
         the entire method.
         """
-
         if not (partner_id or (name and email)):
             return {'error': _('You need to specify at least the partner_id or the name and the email')}
 
@@ -167,9 +116,8 @@ class MailPluginController(http.Controller):
                 'name': name,
                 'enrichment_info': None,
             }
-            company = self._find_existing_company(normalized_email)
-            if not company:  # create and enrich company
-                company, enrichment_info = self._create_company_from_iap(normalized_email)
+            company, enrichment_info = request.env['res.partner']._fetch_from_iap_enrich(normalized_email)
+            if enrichment_info:  # create and enrich company
                 response['partner']['enrichment_info'] = enrichment_info
             response['partner']['company'] = self._get_company_data(company)
 
@@ -254,39 +202,6 @@ class MailPluginController(http.Controller):
     def get_translations(self):
         return self._prepare_translations()
 
-    def _iap_enrich(self, domain):
-        """
-        Returns enrichment data for a given domain, in case an error happens the response will
-        contain an enrichment_info key explaining what went wrong
-        """
-        enriched_data = {}
-        try:
-            response = request.env['iap.enrich.api']._request_enrich({domain: domain})  # The key doesn't matter
-        except iap_tools.InsufficientCreditError:
-            enriched_data['enrichment_info'] = {'type': 'insufficient_credit', 'info': request.env['iap.account'].get_credits_url('reveal')}
-        except Exception:
-            enriched_data["enrichment_info"] = {'type': 'other', 'info': 'Unknown reason'}
-        else:
-            enriched_data = response.get(domain)
-            if not enriched_data:
-                enriched_data = {'enrichment_info': {'type': 'no_data', 'info': 'The enrichment API found no data for the email provided.'}}
-        return enriched_data
-
-    def _find_existing_company(self, email):
-        """Find the company corresponding to the given domain and its IAP cache.
-
-        :param email: Email of the company we search
-        :return: The partner corresponding to the company
-        """
-        search = self._get_iap_search_term(email)
-
-        partner_iap = request.env["res.partner.iap"].sudo().search([("iap_search_domain", "=", search)], limit=1)
-
-        if partner_iap:
-            return partner_iap.partner_id
-
-        return request.env["res.partner"].search([("is_company", "=", True), ("email_normalized", "=ilike", "%" + search)], limit=1)
-
     def _get_company_data(self, company):
         if not company:
             return {'id': -1}
@@ -303,63 +218,7 @@ class MailPluginController(http.Controller):
 
         return company_values
 
-    def _create_company_from_iap(self, email):
-        domain = tools.email_domain_extract(email)
-        iap_data = self._iap_enrich(domain)
-        if 'enrichment_info' in iap_data:
-            return None, iap_data['enrichment_info']
-
-        phone_numbers = iap_data.get('phone_numbers')
-        emails = iap_data.get('email')
-        new_company_info = {
-            'is_company': True,
-            'name': iap_data.get("name") or domain,
-            'street': iap_data.get("street_name"),
-            'city': iap_data.get("city"),
-            'zip': iap_data.get("postal_code"),
-            'phone': phone_numbers[0] if phone_numbers else None,
-            'website': iap_data.get("domain"),
-            'email': emails[0] if emails else None
-        }
-
-        logo_url = iap_data.get('logo')
-        if logo_url:
-            try:
-                response = requests.get(logo_url, timeout=2)
-                if response.ok:
-                    new_company_info['image_1920'] = base64.b64encode(response.content)
-            except Exception as e:
-                _logger.warning('Download of image for new company %s failed, error %s', new_company_info.name, e)
-
-        if iap_data.get('country_code'):
-            country = request.env['res.country'].search([('code', '=', iap_data['country_code'].upper())])
-            if country:
-                new_company_info['country_id'] = country.id
-                if iap_data.get('state_code'):
-                    state = request.env['res.country.state'].search([
-                        ('code', '=', iap_data['state_code']),
-                        ('country_id', '=', country.id)
-                    ])
-                    if state:
-                        new_company_info['state_id'] = state.id
-
-        new_company_info.update({
-            'iap_search_domain': self._get_iap_search_term(email),
-            'iap_enrich_info': json.dumps(iap_data),
-        })
-
-        new_company = request.env['res.partner'].create(new_company_info)
-
-        new_company.message_post_with_view(
-            'iap_mail.enrich_company',
-            values=iap_data,
-            subtype_id=request.env.ref('mail.mt_note').id,
-        )
-
-        return new_company, {'type': 'company_created'}
-
     def _get_partner_data(self, partner):
-
         fields_list = ['id', 'name', 'email', 'phone', 'mobile', 'is_company']
 
         partner_values = dict((fname, partner[fname]) for fname in fields_list)
@@ -368,7 +227,6 @@ class MailPluginController(http.Controller):
         partner_values['enrichment_info'] = None
 
         return partner_values
-
 
     def _get_contact_data(self, partner):
         """
@@ -397,16 +255,6 @@ class MailPluginController(http.Controller):
         it can be overridden by sub modules in order to whitelist more models
         """
         return ['res.partner']
-
-    def _get_iap_search_term(self, email):
-        """Return the domain or the email depending if the domain is blacklisted or not.
-
-        So if the domain is blacklisted, we search based on the entire email address
-        (e.g. asbl@gmail.com). But if the domain is not blacklisted, we search based on
-        the domain (e.g. bob@sncb.be -> sncb.be)
-        """
-        domain = tools.email_domain_extract(email)
-        return ("@" + domain) if domain not in iap_tools._MAIL_DOMAIN_BLACKLIST else email
 
     def _translation_modules_whitelist(self):
         """

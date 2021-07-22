@@ -17,6 +17,8 @@
     'auto_install': True,
     'data': [
         'data/mail_templates.xml',
+        'security/ir.model.access.csv',
+        'views/res_partner_iap_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

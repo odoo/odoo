@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
@@ -15,7 +15,6 @@ class ResPartnerIap(models.Model):
     we will always retrieve the already enriched <res.partner> and the corresponding
     IAP information.
     """
-
     _name = 'res.partner.iap'
     _description = 'Partner IAP'
 

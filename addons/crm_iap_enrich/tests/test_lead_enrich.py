@@ -30,23 +30,37 @@ class TestLeadEnrich(TestCrmCommon, MockIAPEnrich):
         leads = self.env['crm.lead'].browse(self.leads.ids)
         leads[0].write({'partner_name': 'Already set', 'email_from': 'test@test1'})
         leads.flush()
+
+        # initial conditions
+        for lead in leads:
+            self.assertFalse(lead.iap_enrich_done)
+
         with self.mockIAPEnrichGateway(email_data={'test1': {'country_code': 'AU', 'state_code': 'NSW'}}):
             leads.iap_enrich()
 
         leads.flush()
+
         self.assertEqual(leads[0].partner_name, 'Already set')
         self.assertEqual(leads[0].country_id, self.env.ref('base.au'))
         self.assertEqual(leads[0].state_id, self.env.ref('base.state_au_2'))
-        for lead in leads[1:]:
-            self.assertEqual(lead.partner_name, 'Simulator INC')
-        for lead in leads:
-            self.assertEqual(lead.street, 'Simulator Street')
 
-    # @users('sales_manager')
-    # def test_enrich_error_credit(self):
-    #     leads = self.env['crm.lead'].browse(self.leads.ids)
-    #     with self.mockIAPEnrichGateway(sim_error='credit'):
-    #         leads.iap_enrich()
+        for counter, lead in enumerate(leads[1:]):
+            self.assertEqual(lead.partner_name, 'heinrich_%s GmbH' % (counter + 1))
+
+        for lead in leads:
+            self.assertTrue(lead.iap_enrich_done)
+            self.assertEqual(lead.street, 'Mennrather Str. 123456')
+
+    @users('user_sales_manager')
+    def test_enrich_error_credit(self):
+        leads = self.env['crm.lead'].browse(self.leads.ids)
+        with self.mockIAPEnrichGateway(sim_error='credit'):
+            leads.iap_enrich()
+
+        # initial conditions
+        for lead in leads:
+            self.assertFalse(lead.iap_enrich_done)
+            self.assertEqual(lead.street, False)
 
     @users('user_sales_manager')
     def test_enrich_error_jsonrpc_exception(self):
@@ -55,4 +69,5 @@ class TestLeadEnrich(TestCrmCommon, MockIAPEnrich):
             leads.iap_enrich()
 
         for lead in leads:
+            self.assertFalse(lead.iap_enrich_done)
             self.assertEqual(lead.street, False)

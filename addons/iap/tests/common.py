@@ -18,42 +18,39 @@ class MockIAPEnrich(common.TransactionCase):
         cls._init_iap_mock()
 
     @contextmanager
-    def mockIAPEnrichGateway(self, default_data=None, email_data=None, sim_error=None, failing_emails=None):
+    def mockIAPEnrichGateway(self, name_list=None, default_data=None, email_data=None, sim_error=None):
 
         def _contact_iap(local_endpoint, params):
-            sim_result = {
-                'name': 'Simulator INC',
-                'location': 'Simulator Street',
-                'city': 'SimCity',
-                'postal_code': '9876',
-                'country_code': 'BE',
-                'clearbit_id': 'idontknow',
-                'phone_numbers': ['+3269001122', '+32456001122'],
-                'twitter': 'testtwitter',
-                'facebook': 'testfacebook',
-            }
-            if default_data:
-                sim_result.update(default_data)
-            # mock single sms sending
-            if local_endpoint == '/iap/clearbit/1/lead_enrichment_email':
-                result = {}
-                for lead_id, email in params['domains'].items():
-                    if sim_error and sim_error == 'credit':
-                        raise iap_tools.InsufficientCreditError('InsufficientCreditError')
-                    elif sim_error and sim_error == 'jsonrpc_exception':
-                        raise exceptions.AccessError(
-                            'The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was ' + local_endpoint
-                        )
-                    result[str(lead_id)] = dict(sim_result)
-                    if email_data and email_data.get(email):
-                        result[str(lead_id)].update(email_data[email])
-                return result
+            self.assertEqual(local_endpoint, '/iap/clearbit/1/lead_enrichment_email')
 
-        try:
-            with patch.object(IapEnrichAPI, '_contact_iap', side_effect=_contact_iap) as contact_iap_mock:
-                yield
-        finally:
-            pass
+            response = {}
+            for counter, (lead_id, email) in enumerate(params['domains'].items()):
+                if sim_error and sim_error == 'credit':
+                    raise iap_tools.InsufficientCreditError('InsufficientCreditError')
+                if sim_error and sim_error == 'jsonrpc_exception':
+                    raise exceptions.AccessError(
+                        'The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was ' + local_endpoint
+                    )
+
+                if name_list:
+                    base_name = name_list[counter % len(name_list)]
+                else:
+                    base_name = 'heinrich_%d' % counter
+                iap_payload = self._get_iap_company_data(base_name, service='enrich')
+                if default_data:
+                    iap_payload.update(default_data)
+                if email_data and email in email_data:
+                    if email_data[email] is False:
+                        iap_payload = False
+                    else:
+                        iap_payload.update(email_data[email])
+                response[str(lead_id)] = dict(iap_payload)
+
+            return response
+
+        with patch.object(IapEnrichAPI, '_contact_iap', side_effect=_contact_iap) as _contact_iap_mock:
+            self._contact_iap_mock = _contact_iap_mock
+            yield
 
     @classmethod
     def _init_iap_mock(cls):
