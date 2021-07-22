@@ -171,12 +171,12 @@
                         </group><group>
                             <label for="balance_start"/>
                             <div>
-                                <field name="balance_start" class="oe_inline" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                                <field name="balance_start" class="oe_inline" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
                                 <button name="open_cashbox_id" attrs="{'invisible': ['|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'start'}"/>
                             </div>
                             <label for="balance_end_real"/>
                             <div>
-                                <field name="balance_end_real" class="oe_inline" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                                <field name="balance_end_real" class="oe_inline" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
                                 <button name="open_cashbox_id" attrs="{'invisible': ['|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'close'}"/>
                             </div>
                         </group>
