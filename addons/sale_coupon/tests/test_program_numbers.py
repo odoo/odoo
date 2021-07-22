@@ -772,10 +772,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         }).process_coupon()
         self.assertEqual(order.amount_total, 0.0, "The promotion program should not make the order total go below 0")
         order.recompute_coupon_lines()
-        #TODO fix numbers
-        self.assertEqual(order.amount_total, 9.09, "The promotion program should not be altered after recomputation")
-        self.assertEqual(order.amount_tax, 8.18)
-        self.assertEqual(order.amount_untaxed, 0.91)
+        self.assertEqual(order.amount_total, 0.0, "The promotion program should not be altered after recomputation")
 
         order.order_line[3:].unlink() #remove all coupon
 
@@ -790,10 +787,35 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
                 'coupon_code': 'test_10pc'
             }).process_coupon()
         order.recompute_coupon_lines()
-        #TODO fix numbers
-        self.assertEqual(order.amount_tax, 9.01)
-        self.assertEqual(order.amount_untaxed, 0.08)
-        self.assertEqual(order.amount_total, 9.09, "The promotion program should not be altered after recomputation")
+        self.assertEqual(order.amount_total, 0.0, "The promotion program should not be altered after recomputation")
+
+    def test_program_discount_percentage_100(self):
+        # test 100% percentage discount (tax included)
+
+        self.env['sale.coupon.program'].create({
+            'name': '100% discount',
+            'promo_code_usage': 'no_code_needed',
+            'program_type': 'promotion_program',
+            'discount_type': 'percentage',
+            'discount_percentage': 100.0,
+            'rule_minimum_amount': 0.0,
+            'rule_minimum_amount_tax_inclusion': 'tax_included',
+        })
+        self.tax_10pc_incl.price_include = True
+        drawerBlack = self.env['product.product'].create({
+            'name': 'Drawer Black',
+            'list_price': 320.0,
+        })
+        order = self.empty_order
+        order_line = self.env['sale.order.line'].create({
+            'product_id': drawerBlack.id,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+            'tax_id': [(6, 0, (self.tax_10pc_incl.id,))],
+        })
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 2, "discount should be applied")
+        self.assertEqual(order.amount_total, 0.0, "100% discount should be applied")
 
     def test_program_discount_on_multiple_specific_products(self):
         """ Ensure a discount on multiple specific products is correctly computed.

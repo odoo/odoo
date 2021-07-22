@@ -155,7 +155,11 @@ class SaleOrder(models.Model):
             }]
         reward_dict = {}
         lines = self._get_paid_order_lines()
-        amount_total = sum(self._get_base_order_lines(program).mapped('price_subtotal'))
+        base_lines = self._get_base_order_lines(program)
+        if any(base_lines.mapped('tax_id.price_include')):
+            amount_total = sum(base_lines.mapped('price_total'))
+        else:
+            amount_total = sum(base_lines.mapped('price_subtotal'))
         if program.discount_apply_on == 'cheapest_product':
             line = self._get_cheapest_line()
             if line:
