@@ -24,7 +24,7 @@ models which only purpose is to run tests.""",
     'application': False,
     'assets': {
         'web.assets_frontend': [
-            'test_website/static/src/**/*',
+            'test_website/static/src/js/test_error.js',
         ],
         'web.assets_tests': [
             'test_website/static/tests/**/*',
