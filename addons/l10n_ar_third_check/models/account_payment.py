@@ -11,10 +11,10 @@ class AccountPayment(models.Model):
     _order = "date desc, id desc, name desc"
 
     check_id = fields.Many2one('account.payment', string='Check', readonly=True, states={'draft': [('readonly', False)]}, copy=False,)
-    available_check_ids = fields.Many2many('account.payment', compute='_compute_available_checks')
     amount = fields.Monetary(compute='_compute_amount', store=True)
     third_check_last_journal_id = fields.Many2one('account.journal', compute='_compute_third_check_last_journal', store=True)
     third_check_operation_ids = fields.One2many('account.payment', 'check_id', readonly=True)
+    third_check_from_state = fields.Char(compute='_compute_third_check_from_state')
     third_check_state = fields.Selection([
         ('draft', 'Draft'),
         ('holding', 'In Wallet'),
@@ -80,16 +80,13 @@ class AccountPayment(models.Model):
             rec.third_check_issuer_name = rec.third_check_issuer_vat and self.search(
                 [('third_check_issuer_vat', '=', rec.third_check_issuer_vat)], limit=1).third_check_issuer_name or rec.partner_id.name
 
-    @api.depends('payment_method_id.code', 'partner_id', 'is_internal_transfer', 'journal_id')
-    def _compute_available_checks(self):
+    @api.depends('payment_method_id.code', 'is_internal_transfer', 'destination_journal_id')
+    def _compute_third_check_from_state(self):
         moved_third_checks = self.filtered(lambda x: x.payment_method_id.code in ['in_third_checks', 'out_third_checks'])
-        (self - moved_third_checks).available_check_ids = self.env['account.payment']
+        (self - moved_third_checks).third_check_from_state = False
         for rec in moved_third_checks:
-            available_checks = rec.env['account.payment']
-            from_operation, to_operation, domain = rec._get_checks_operations()
-            if domain:
-                available_checks = available_checks.search(domain)
-            rec.available_check_ids = available_checks
+            from_state, to_state = rec._get_checks_states()
+            rec.third_check_from_state = from_state
 
     @api.constrains('third_check_issue_date', 'check_payment_date')
     @api.onchange('third_check_issue_date', 'check_payment_date')
@@ -113,57 +110,46 @@ class AccountPayment(models.Model):
                     'Check Number (%s) must be unique per Owner and Bank!'
                     '\n* Check ids: %s') % (rec.check_number, same_checks.ids))
 
-    def _get_checks_operations(self):
-        return self._get_checks_operations_model(
-            self.payment_method_code, self.payment_type, self.is_internal_transfer, self.journal_id, self.destination_journal_id)
+    def _get_checks_states(self):
+        return self._get_checks_states_model(
+            self.payment_method_code, self.payment_type, self.is_internal_transfer, self.destination_journal_id)
 
     @api.model
-    def _get_checks_operations_model(self, payment_method_code, payment_type, is_internal_transfer, journal, destination_journal=None):
+    def _get_checks_states_model(self, payment_method_code, payment_type, is_internal_transfer, destination_journal=None):
         """
-        This method is called from:
-        * cancellation of payment to execute delete the right operation and unlink check if needed
-        * from post to add check operation and, if needded, change payment vals and/or create check and
+        Regarding the payment data (transfer, inbound, outbound, payment mode, etc), this method returns a tuple with:
+        * expected from state for a check
+        * new state of the check after payment is posted
         """
-        domain = [('payment_method_code', '=', 'new_third_checks')]
         if is_internal_transfer:
             # if it's a transfer we don't know domain till destination journal is choosen
             if not destination_journal:
-                return False, False, False
+                return False, False
             if payment_type == 'outbound':
                 if destination_journal and any(x.code == 'in_third_checks' for x in destination_journal.inbound_payment_method_ids):
                     # transferencia a otro diario de terceros
                     # TODO implementar el movimiento entre diarios de cheques de terceros con dos operations?
-                    return (
-                        'holding', 'holding',
-                        domain + [('third_check_last_journal_id', '=', journal.id), ('third_check_state', '=', 'holding')])
+                    return 'holding', 'holding'
                 else:
                     # deposito o venta
-                    return (
-                        'holding', 'deposited',
-                        domain + [('third_check_last_journal_id', '=', journal.id), ('third_check_state', '=', 'holding')])
+                    return 'holding', 'deposited'
             elif payment_type == 'inbound':
                 if destination_journal and any(x.code == 'out_third_checks' for x in destination_journal.inbound_payment_method_ids):
                     # transferencia a otro diario de terceros
                     # TODO implementar el movimiento entre diarios de cheques de terceros con dos operations?
-                    return (
-                        'holding', 'holding',
-                        domain + [('third_check_last_journal_id', '=', destination_journal.id), ('third_check_state', '=', 'holding')])
+                    return 'holding', 'holding'
                 else:
                     # Deposit rejection
-                    return (
-                        'deposited', 'holding',
-                        # we can get the rejected check in a diferent journal
-                        # ('third_check_last_journal_id', '=', journal.id),
-                        domain + [('third_check_state', '=', 'deposited')])
+                    return 'deposited', 'holding'
         elif payment_method_code == 'new_third_checks':
-            return False, 'holding', []
+            return False, 'holding'
             # return 'holding', domain + [('third_check_last_journal_id', '=', journal.id), ('third_check_state', '=', 'draft')]
         elif payment_method_code == 'out_third_checks':
-            return 'holding', 'delivered', domain + [('third_check_last_journal_id', '=', journal.id), ('third_check_state', '=', 'holding')]
+            return 'holding', 'delivered'
         elif payment_method_code == 'in_third_checks':
-            return 'delivered', 'holding', domain + [('third_check_state', '=', 'delivered')]
+            return 'delivered', 'holding'
 
-    @api.onchange('available_check_ids')
+    @api.onchange('payment_method_id', 'is_internal_transfer', 'journal_id', 'destination_journal_id')
     def reset_check_ids(self):
         self.check_id = False
 
@@ -213,27 +199,27 @@ class AccountPayment(models.Model):
         """
         self.ensure_one()
         check = self.check_id
-        from_operation, to_operation, domain = self._get_checks_operations()
+        from_state, to_state = self._get_checks_states()
         operations = check.third_check_operation_ids.sorted()
         if operations and operations[0] != self:
             raise ValidationError(_(
                 'You can not cancel this operation because this is not '
                 'the last operation over the check.\nCheck (id): %s (%s)'
             ) % (check.check_number, check.id))
-        msg = 'Check %s cancelled by %s' % (to_operation, self)
+        msg = 'Check %s cancelled by %s' % (to_state, self)
         check.message_post(body=msg)
-        check.third_check_state = from_operation
+        check.third_check_state = from_state
 
     def _add_third_check_operation(self):
         self.ensure_one()
         # check = self if self.payment_method_id.code == 'new_third_checks' else self.check_id
         check = self.check_id
-        from_operation, to_operation, domain = self._get_checks_operations()
-        if from_operation != check.third_check_state:
+        from_state, to_state = self._get_checks_states()
+        if from_state != check.third_check_state:
             raise ValidationError(_(
                 "You can't set a check as '%s' from state '%s'!\n"
                 "Check nbr (id): %s (%s)") % (
-                    self._fields['third_check_state'].convert_to_export(to_operation, self),
+                    self._fields['third_check_state'].convert_to_export(to_state, self),
                     self._fields['third_check_state'].convert_to_export(check.third_check_state, self),
                     check.check_number,
                     check.id))
@@ -249,11 +235,11 @@ class AccountPayment(models.Model):
                 '* Check Number: %s\n'
                 '* Operation: %s\n'
                 '* Operation Date: %s\n'
-                '* Last Operation Date: %s') % (check.id, check.check_number, to_operation, date, operations[0].date))
+                '* Last Operation Date: %s') % (check.id, check.check_number, to_state, date, operations[0].date))
 
-        msg = 'Check %s by %s' % (to_operation, self)
+        msg = 'Check %s by %s' % (to_state, self)
         check.message_post(body=msg)
-        check.third_check_state = to_operation
+        check.third_check_state = to_state
 
     @api.model
     def _get_trigger_fields_to_sincronize(self):
@@ -265,8 +251,8 @@ class AccountPayment(models.Model):
         res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
         check = self if self.payment_method_id.code == 'new_third_checks' else self.check_id
         if check:
-            from_operation, to_operation, domain = self._get_checks_operations()
-            document_name = _('Check %s %s') % (check.check_number, to_operation)
+            from_state, to_state = self._get_checks_states()
+            document_name = _('Check %s %s') % (check.check_number, to_state)
             res[0].update({
                 'name': self.env['account.move.line']._get_default_line_name(
                     document_name, self.amount, self.currency_id, self.date, partner=self.partner_id),
