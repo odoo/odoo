@@ -2185,6 +2185,7 @@ var SnippetsMenu = Widget.extend({
                 greedy: true,
                 scroll: false,
             }, options.jQueryDraggableOptions),
+            disableHorizontalScroll: true,
         });
     },
     /**
