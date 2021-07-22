@@ -14,15 +14,20 @@ const { qweb, _t } = core;
  */
 function loadAnchors(url) {
     return new Promise(function (resolve, reject) {
-        if (url !== window.location.pathname && url[0] !== '#') {
-            $.get(window.location.origin + url).then(resolve, reject);
-        } else {
+        if (url === window.location.pathname || url[0] === '#') {
             resolve(document.body.outerHTML);
+        } else if (url.length && !url.startsWith("http")) {
+            $.get(window.location.origin + url).then(resolve, reject);
+        } else { // avoid useless query
+            resolve();
         }
     }).then(function (response) {
         return _.map($(response).find('[id][data-anchor=true]'), function (el) {
             return '#' + el.id;
         });
+    }).catch(error => {
+        console.debug(error);
+        return [];
     });
 }
 
