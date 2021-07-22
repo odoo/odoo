@@ -10,8 +10,11 @@ class UtmCampaign(models.Model):
     mailing_sms_ids = fields.One2many(
         'mailing.mailing', 'campaign_id',
         domain=[('mailing_type', '=', 'sms')],
-        string='Mass SMS')
-    mailing_sms_count = fields.Integer('Number of Mass SMS', compute="_compute_mailing_sms_count")
+        string='Mass SMS',
+        groups="mass_mailing.group_mass_mailing_user")
+    mailing_sms_count = fields.Integer('Number of Mass SMS',
+        compute="_compute_mailing_sms_count",
+        groups="mass_mailing.group_mass_mailing_user")
 
     # A/B Testing
     ab_testing_sms_winner_selection = fields.Selection([
