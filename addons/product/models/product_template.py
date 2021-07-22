@@ -347,6 +347,14 @@ class ProductTemplate(models.Model):
         for template in self:
             template.product_variant_count = len(template.product_variant_ids)
 
+    @api.onchange('default_code')
+    def _onchange_default_code(self):
+        if self.default_code and self.env['product.template'].search_count([('default_code', '=', self.default_code)]):
+            return {'warning': {
+                'title': _("Note:"),
+                'message': _("The Internal Reference '%s' for this product already exists.", self.default_code),
+            }}
+
     @api.depends('product_variant_ids', 'product_variant_ids.default_code')
     def _compute_default_code(self):
         unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)

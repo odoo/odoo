@@ -1203,6 +1203,10 @@ class MrpProduction(models.Model):
             'date_planned_start': False,
             'date_planned_finished': False,
         })
+    
+    def button_reset_to_draft(self):
+        if self.state == "cancel":
+            self.state = "draft"
 
     def _get_consumption_issues(self):
         """Compare the quantity consumed of the components, the expected quantity

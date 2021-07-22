@@ -3,7 +3,7 @@
 
 
 from collections import defaultdict
-from datetime import timedelta
+from datetime import timedelta, datetime
 from itertools import groupby
 from operator import itemgetter
 from re import findall as regex_findall
@@ -64,7 +64,7 @@ class StockMove(models.Model):
              "be moved. Lowering this quantity does not generate a "
              "backorder. Changing this quantity on assigned moves affects "
              "the product reservation, and should be done with care.")
-    product_uom = fields.Many2one('uom.uom', 'Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom = fields.Many2one('uom.uom', 'UoM', required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     # TDE FIXME: make it stored, otherwise group will not work
     product_tmpl_id = fields.Many2one(
@@ -411,7 +411,6 @@ class StockMove(models.Model):
 
         product_moves = (self - not_product_moves)
         warehouse_by_location = {loc: loc.warehouse_id for loc in product_moves.location_id}
-
         outgoing_unreserved_moves_per_warehouse = defaultdict(lambda: self.env['stock.move'])
         for move in product_moves:
             is_unreserved = move.state in ('waiting', 'confirmed', 'partially_available')
@@ -419,6 +418,10 @@ class StockMove(models.Model):
                 outgoing_unreserved_moves_per_warehouse[warehouse_by_location[move.location_id]] |= move
             elif move.picking_type_id.code in self._consuming_picking_types():
                 move.forecast_availability = move.reserved_availability
+                if move.state == 'draft':
+                    warehouse = move.location_id.warehouse_id
+                    next_date = max(move.date, datetime.now())
+                    move.forecast_availability = min(move.product_id.with_context(warehouse=warehouse.id, to_date=next_date).virtual_available, move.product_uom_qty)
             elif move.picking_type_id.code == 'incoming':
                 move._get_forecast_availability_incoming()
 
