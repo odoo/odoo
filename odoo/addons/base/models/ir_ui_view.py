@@ -1742,7 +1742,7 @@ actual arch.
         if not e.get('data-oe-model'):
             return
 
-        if {'t-esc', 't-raw'}.intersection(e.attrib):
+        if {'t-esc', 't-raw', 't-out'}.intersection(e.attrib):
             # nodes which fully generate their content and have no reason to
             # be branded because they can not sensibly be edited
             self._pop_view_branding(e)
