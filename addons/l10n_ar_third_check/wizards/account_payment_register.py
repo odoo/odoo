@@ -8,9 +8,9 @@ class AccountPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
 
     check_id = fields.Many2one('account.payment', string='Check')
-    available_check_ids = fields.Many2many('account.payment', compute='_compute_available_checks')
     amount = fields.Monetary(compute='_compute_amount', readonly=False, store=True)
     third_check_issue_date = fields.Date()
+    third_check_from_state = fields.Char(compute='_compute_third_check_from_state')
     third_check_bank_id = fields.Many2one('res.bank', compute='_compute_third_check_data', store=True, readonly=False)
     third_check_issuer_vat = fields.Char(store=True, compute='_compute_third_check_data', readonly=False)
     third_check_issuer_name = fields.Char(compute='_compute_third_check_issuer_name', store=True, readonly=False)
@@ -35,17 +35,15 @@ class AccountPaymentRegister(models.TransientModel):
             rec.third_check_issuer_name = self.search(
                 [('third_check_issuer_vat', '=', self.third_check_issuer_vat)], limit=1).third_check_issuer_name or self.partner_id.name
 
-    @api.depends('payment_method_code', 'partner_id', 'journal_id')
-    def _compute_available_checks(self):
+
+    @api.depends('payment_method_code', 'payment_type')
+    def _compute_third_check_from_state(self):
         moved_third_checks = self.filtered(lambda x: x.payment_method_id.code in ['in_third_checks', 'out_third_checks'])
-        (self - moved_third_checks).available_check_ids = self.env['account.payment']
+        (self - moved_third_checks).third_check_from_state = False
         for rec in moved_third_checks:
-            available_checks = rec.env['account.payment']
-            operation, domain = self.env['account.payment']._get_checks_operations_model(
-                self.payment_method_code, self.payment_type, False, self.journal_id)
-            if domain:
-                available_checks = available_checks.search(domain)
-            rec.available_check_ids = available_checks
+            from_state, to_state  = self.env['account.payment']._get_checks_states_model(
+                self.payment_method_code, self.payment_type, False)
+            rec.third_check_from_state = from_state
 
     @api.depends('check_id.amount')
     def _compute_amount(self):
