@@ -298,6 +298,16 @@ const Wysiwyg = Widget.extend({
             getContextFromParentRect: options.getContextFromParentRect,
             noScrollSelector: 'body, .note-editable, .o_content, #wrapwrap',
             commands: commands,
+            collaborative: {
+              send: (step) => {
+                broadcast({type: 'step', step});
+              },
+              sendSelection: (selection) => {
+                broadcast({type: 'selection', selection: {...selection, name}});
+              },
+              userId,
+              color: `hsl(${(userId * 60) % 360}, 75%, 50%)`,
+            },
         });
         let isInitialised = false;
         newConnectionEmitter.addEventListener(
