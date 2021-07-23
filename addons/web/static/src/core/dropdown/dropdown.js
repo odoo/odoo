@@ -48,12 +48,6 @@ export class Dropdown extends Component {
 
         // Set up UI active element related behavior ---------------------------
         this.ui = useService("ui");
-        useBus(this.ui.bus, "active-element-changed", (activeElement) => {
-            if (activeElement !== this.myActiveEl && this.state.open) {
-                // Close when UI active element changes to something different
-                this.close();
-            }
-        });
         useEffect(
             () => {
                 Promise.resolve().then(() => {
