@@ -7,6 +7,20 @@ from odoo.addons.hr.tests.common import TestHrCommon
 
 class TestHrEmployee(TestHrCommon):
 
+    def setUp(self):
+        super().setUp()
+        self.user_without_image = self.env['res.users'].create({
+            'name': 'Marc Demo',
+            'email': 'mark.brown23@example.com',
+            'image_1920': False,
+            'login': 'demo_1',
+            'password': 'demo_123'
+        })
+        self.employee_without_image = self.env['hr.employee'].create({
+            'user_id': self.user_without_image.id,
+            'image_1920': False
+        })
+
     def test_employee_resource(self):
         _tz = 'Pacific/Apia'
         self.res_users_hr_officer.company_id.resource_calendar_id.tz = _tz
@@ -45,3 +59,13 @@ class TestHrEmployee(TestHrCommon):
         self.assertEqual(employee.name, 'Raoul Grosbedon')
         self.assertEqual(employee.work_email, self.res_users_hr_officer.email)
         self.assertEqual(employee.tz, _tz)
+
+    def test_employee_has_avatar_even_if_it_has_no_image(self):
+        self.assertTrue(self.employee_without_image.avatar_128)
+        self.assertTrue(self.employee_without_image.avatar_256)
+        self.assertTrue(self.employee_without_image.avatar_512)
+        self.assertTrue(self.employee_without_image.avatar_1024)
+        self.assertTrue(self.employee_without_image.avatar_1920)
+
+    def test_employee_has_same_avatar_as_corresponding_user(self):
+        self.assertEqual(self.employee_without_image.avatar_1920, self.user_without_image.avatar_1920)
