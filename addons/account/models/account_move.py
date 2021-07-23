@@ -2779,7 +2779,8 @@ class AccountMove(models.Model):
             mark_invoice_as_sent=True,
             custom_layout="mail.mail_notification_paynow",
             model_description=self.with_context(lang=lang).type_name,
-            force_email=True
+            force_email=True,
+            wizard_opened=True
         )
         return {
             'name': _('Send Invoice'),
