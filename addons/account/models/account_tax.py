@@ -26,6 +26,11 @@ class AccountTaxGroup(models.Model):
     property_tax_receivable_account_id = fields.Many2one('account.account', company_dependent=True, string='Tax current account (receivable)')
     property_advance_tax_payment_account_id = fields.Many2one('account.account', company_dependent=True, string='Advance Tax payment account')
     country_id = fields.Many2one(string="Country", comodel_name='res.country', help="The country for which this tax group is applicable.")
+    preceding_subtotal = fields.Char(
+        string="Preceding Subtotal",
+        help="If set, this value will be used on documents as the label of a subtotal excluding this tax group before displaying it. " \
+             "If not set, the tax group will be displayed after the 'Untaxed amount' subtotal.",
+    )
 
     @api.model
     def _check_misconfigured_tax_groups(self, company, countries):
@@ -570,10 +575,12 @@ class AccountTax(models.Model):
             if tax.include_base_amount:
                 subsequent_taxes = taxes[i+1:].filtered('is_base_affected')
 
-                if not include_caba_tags:
-                    subsequent_taxes = subsequent_taxes.filtered(lambda x: x.tax_exigibility != 'on_payment')
+                taxes_for_subsequent_tags = subsequent_taxes
 
-                subsequent_tags = subsequent_taxes.get_tax_tags(is_refund, 'base')
+                if not include_caba_tags:
+                    taxes_for_subsequent_tags = subsequent_taxes.filtered(lambda x: x.tax_exigibility != 'on_payment')
+
+                subsequent_tags = taxes_for_subsequent_tags.get_tax_tags(is_refund, 'base')
 
             # Compute the tax line amounts by multiplying each factor with the tax amount.
             # Then, spread the tax rounding to ensure the consistency of each line independently with the factorized

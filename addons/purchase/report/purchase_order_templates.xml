@@ -111,27 +111,8 @@
             <div id="total" class="row justify-content-end">
                 <div class="col-4">
                     <table class="table table-sm">
-                        <tr class="border-black">
-                            <td name="td_subtotal_label"><strong>Subtotal</strong></td>
-                            <td class="text-right">
-                                <span t-field="o.amount_untaxed"
-                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td name="td_taxes_label">Taxes</td>
-                            <td class="text-right">
-                                <span t-field="o.amount_tax"
-                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                            </td>
-                        </tr>
-                        <tr class="border-black o_total">
-                            <td name="td_amount_total_label"><strong>Total</strong></td>
-                            <td class="text-right">
-                                <span t-field="o.amount_total"
-                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                            </td>
-                        </tr>
+                        <t t-set="tax_totals" t-value="json.loads(o.tax_totals_json)"/>
+                        <t t-call="account.document_tax_totals"/>
                     </table>
                 </div>
             </div>

@@ -86,7 +86,7 @@ tour.stepUtils.showAppsMenuItem(),
     run: 'click'
 }, {
     content: "verify SO final price excluded",
-    trigger: 'span[name="amount_untaxed"]:contains("1,257.00")',
+    trigger: 'span[name="Untaxed Amount"]:contains("1,257.00")',
 }, {
     content: "verify SO final price included",
     trigger: 'span[name="amount_total"]:contains("1,437.00")',

@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+import json
 import re
 from odoo.tools.misc import formatLang
 from odoo.tools.sql import column_exists, create_column
@@ -225,53 +226,19 @@ class AccountMove(models.Model):
                 document_types = document_types.filtered(lambda x: x.internal_type == 'debit_note')
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
 
-    def _compute_invoice_taxes_by_group(self):
-        report_or_portal_view = 'commit_assetsbundle' in self.env.context or \
-            not self.env.context.get('params', {}).get('view_type') == 'form'
-        if not report_or_portal_view:
-            return super()._compute_invoice_taxes_by_group()
+    def _prepare_tax_lines_data_for_totals(self, tax_line_id_filter=None, tax_ids_filter=None):
+        # Overridden from account in order to exclude some taxes from the totals' computation.
+        # TODO CLEANME: we'd better get rid of those l10n_latam_tax_ids fields.
+        report_or_portal_view = 'commit_assetsbundle' in self.env.context \
+                                or not self.env.context.get('params', {}).get('view_type') == 'form'
 
-        move_with_doc_type = self.filtered('l10n_latam_document_type_id')
-        for move in move_with_doc_type:
-            lang_env = move.with_context(lang=move.partner_id.lang).env
-            tax_lines = move.l10n_latam_tax_ids
-            tax_balance_multiplicator = -1 if move.is_inbound(True) else 1
-            res = {}
-            # There are as many tax line as there are repartition lines
-            done_taxes = set()
-            for line in tax_lines:
-                res.setdefault(line.tax_line_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                res[line.tax_line_id.tax_group_id]['amount'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
-                tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
-                if tax_key_add_base not in done_taxes:
-                    if line.currency_id and line.company_currency_id and line.currency_id != line.company_currency_id:
-                        amount = line.company_currency_id._convert(line.tax_base_amount, line.currency_id, line.company_id, line.date or fields.Date.today())
-                    else:
-                        amount = line.tax_base_amount
-                    res[line.tax_line_id.tax_group_id]['base'] += amount
-                    # The base should be added ONCE
-                    done_taxes.add(tax_key_add_base)
+        if report_or_portal_view and self.l10n_latam_document_type_id:
+            # Under such circumstances, we want to hide some taxes, and only
+            # display the ones in l10n_latam_tax_ids fields
+            tax_line_id_filter = lambda aml, tax: tax in aml.move_id.l10n_latam_tax_ids.tax_line_id
+            tax_ids_filter = lambda aml, tax: tax in aml.l10n_latam_tax_ids
 
-            # At this point we only want to keep the taxes with a zero amount since they do not
-            # generate a tax line.
-            zero_taxes = set()
-            for line in move.line_ids:
-                for tax in line.l10n_latam_tax_ids.flatten_taxes_hierarchy():
-                    if tax.tax_group_id not in res or tax.id in zero_taxes:
-                        res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                        res[tax.tax_group_id]['base'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
-                        zero_taxes.add(tax.id)
-
-            res = sorted(res.items(), key=lambda l: l[0].sequence)
-            move.amount_by_group = [(
-                group.name, amounts['amount'],
-                amounts['base'],
-                formatLang(lang_env, amounts['amount'], currency_obj=move.currency_id),
-                formatLang(lang_env, amounts['base'], currency_obj=move.currency_id),
-                len(res),
-                group.id
-            ) for group, amounts in res]
-        super(AccountMove, self - move_with_doc_type)._compute_invoice_taxes_by_group()
+        return super()._prepare_tax_lines_data_for_totals(tax_line_id_filter, tax_ids_filter)
 
     @api.constrains('name', 'partner_id', 'company_id', 'posted_before')
     def _check_unique_vendor_number(self):
@@ -292,3 +259,9 @@ class AccountMove(models.Model):
             ]
             if rec.search(domain):
                 raise ValidationError(_('Vendor bill number must be unique per vendor and company.'))
+
+    def _get_tax_totals_for_latam_invoice_report(self):
+        self.ensure_one()
+        tax_totals = json.loads(self.tax_totals_json)
+        tax_totals['amount_untaxed'] = self.l10n_latam_amount_untaxed
+        return tax_totals
