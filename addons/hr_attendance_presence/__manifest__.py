@@ -16,4 +16,5 @@
         'views/res_config_settings_views.xml',
         'views/hr_employee.xml',
     ],
+    'license': 'LGPL-3',
 }

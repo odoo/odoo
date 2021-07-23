@@ -19,5 +19,6 @@
     ],
     'demo': [
         'demo/res_company_demo.xml',
-    ]
+    ],
+    'license': 'LGPL-3',
 }

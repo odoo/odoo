@@ -60,4 +60,5 @@ Wizards provided by this module:
         'demo/l10n_be_demo.xml',
     ],
     'post_init_hook': 'load_translations',
+    'license': 'LGPL-3',
 }

@@ -46,4 +46,5 @@ This module also uses analytic accounting and is compatible with the invoice on 
     'demo': ['data/hr_expense_demo.xml'],
     'installable': True,
     'application': True,
+    'license': 'LGPL-3',
 }

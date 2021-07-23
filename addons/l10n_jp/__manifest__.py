@@ -40,4 +40,5 @@ need to use these at all under normal circumstances.
         'data/account.fiscal.position.tax.template.csv',
         'data/account_chart_template_configure_data.xml',
     ],
+    'license': 'LGPL-3',
 }

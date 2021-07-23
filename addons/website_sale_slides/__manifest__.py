@@ -18,4 +18,5 @@
     'demo': [
         'data/website_sale_slides_demo.xml',
     ],
+    'license': 'LGPL-3',
 }

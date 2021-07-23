@@ -54,4 +54,5 @@ come with any additional paid permission for online use of 'private modules'.
         'data/account_tax_template_data.xml',
         'views/account_view.xml',
     ],
+    'license': 'LGPL-3',
 }

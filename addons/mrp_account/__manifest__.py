@@ -16,4 +16,5 @@ Analytic Accounting in MRP
     'depends': ['mrp', 'stock_account'],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

@@ -23,4 +23,5 @@
     'qweb': [
         'views/discuss.xml',
     ],
+    'license': 'LGPL-3',
 }

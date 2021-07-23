@@ -23,4 +23,5 @@
     'demo': [
         'data/sale_demo.xml',
     ],
+    'license': 'LGPL-3',
 }

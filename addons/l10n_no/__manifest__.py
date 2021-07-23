@@ -23,4 +23,5 @@ Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>
              ],
     "active": False,
     'post_init_hook': '_preserve_tag_on_taxes',
+    'license': 'LGPL-3',
 }

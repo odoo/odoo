@@ -17,4 +17,5 @@ This module adds a Twitter roller building block to the website builder, so that
         'views/website_twitter_snippet_templates.xml'
     ],
     'installable': True,
+    'license': 'LGPL-3',
 }

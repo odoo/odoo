@@ -6,4 +6,5 @@
         'ir.model.access.csv',
         'data.xml',
     ],
+    'license': 'LGPL-3',
 }

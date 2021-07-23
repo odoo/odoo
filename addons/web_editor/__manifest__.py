@@ -18,5 +18,6 @@ Odoo Web Editor widget.
     'qweb': [
         'static/src/xml/*.xml',
     ],
-    'auto_install': True
+    'auto_install': True,
+    'license': 'LGPL-3',
 }

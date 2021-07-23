@@ -23,4 +23,5 @@ This module provides standard tools (account model, context manager and helpers)
         'static/src/xml/iap_templates.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

@@ -26,4 +26,5 @@
         'data/survey_demo.xml',
         'data/slide_slide_demo.xml',
     ],
+    'license': 'LGPL-3',
 }

@@ -15,5 +15,6 @@
     'data': [
         'views/assets.xml',
     ],
-    'auto_install': True
+    'auto_install': True,
+    'license': 'LGPL-3',
 }

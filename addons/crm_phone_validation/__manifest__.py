@@ -18,4 +18,5 @@ This module allows for validate and format phone numbers for leads and contacts.
         'phone_validation',
         'crm',
     ],
+    'license': 'LGPL-3',
 }
