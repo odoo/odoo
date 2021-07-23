@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { registry } from "../../core/registry";
+import { registry } from "../registry";
 import { EffectContainer } from "./effect_container";
 
 const { EventBus } = owl.core;
