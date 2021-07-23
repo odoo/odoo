@@ -22,4 +22,5 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
         'static/src/xml/*.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

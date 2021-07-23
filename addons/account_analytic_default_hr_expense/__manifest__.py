@@ -13,4 +13,5 @@ Allows to automatically select analytic accounts based on Product
     """,
     'depends': ['account_analytic_default', 'hr_expense'],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

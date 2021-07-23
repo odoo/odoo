@@ -20,5 +20,9 @@ with the street name, the house number, and room number.
         'data/base_address_extended_data.xml',
     ],
     'depends': ['base'],
+<<<<<<< HEAD
     'post_init_hook': '_update_street_format',
+=======
+    'license': 'LGPL-3',
+>>>>>>> 2daf1153937... temp
 }

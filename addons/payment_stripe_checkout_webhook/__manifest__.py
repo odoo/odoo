@@ -26,4 +26,5 @@ useless notifications.""",
     ],
     'images': ['static/description/icon.png'],
     'installable': True,
+    'license': 'LGPL-3',
 }

@@ -118,7 +118,11 @@ Master Data:
         # restore
         'demo/res_users_demo.xml',
     ],
+<<<<<<< HEAD
     'installable': True,
     'auto_install': False,
     'application': False,
+=======
+    'license': 'LGPL-3',
+>>>>>>> 2daf1153937... temp
 }

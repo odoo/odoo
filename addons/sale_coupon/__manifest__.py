@@ -22,4 +22,5 @@
     'demo': [
         'data/sale_coupon_demo.xml',
     ],
+    'license': 'LGPL-3',
 }

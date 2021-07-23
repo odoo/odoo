@@ -17,5 +17,10 @@
         'views/website_form_templates.xml',
     ],
     'installable': True,
+<<<<<<< HEAD
     'auto_install': True,
+=======
+    'auto_install': False,
+    'license': 'LGPL-3',
+>>>>>>> 2daf1153937... temp
 }

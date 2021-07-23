@@ -28,6 +28,10 @@ Council Implementing Regulation (EU) 2019/2026
         'data/l10n_eu_service.service_tax_rate.csv',
         'views/res_config_settings_views.xml',
     ],
+<<<<<<< HEAD
     'post_init_hook': 'l10n_eu_service_post_init',
     'uninstall_hook': 'l10n_eu_service_uninstall',
+=======
+    'license': 'LGPL-3',
+>>>>>>> 2daf1153937... temp
 }

@@ -48,5 +48,9 @@
     'application': True,
     'pre_init_hook': '_pre_init_mrp',
     'post_init_hook': '_create_warehouse_data',
+<<<<<<< HEAD
     'uninstall_hook': 'uninstall_hook',
+=======
+    'license': 'LGPL-3',
+>>>>>>> 2daf1153937... temp
 }

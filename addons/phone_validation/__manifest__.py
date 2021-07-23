@@ -31,5 +31,10 @@ It adds two mixins :
         'base',
         'mail',
     ],
+<<<<<<< HEAD
     'auto_install': True,
+=======
+    'depends': ['base'],
+    'license': 'LGPL-3',
+>>>>>>> 2daf1153937... temp
 }

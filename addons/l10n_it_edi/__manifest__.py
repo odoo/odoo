@@ -19,5 +19,9 @@ E-invoice implementation
     'demo': [
         'data/account_invoice_demo.xml',
     ],
+<<<<<<< HEAD
     'auto_install': True,
+=======
+    'license': 'LGPL-3',
+>>>>>>> 2daf1153937... temp
 }

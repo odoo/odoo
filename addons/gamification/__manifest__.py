@@ -38,4 +38,5 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
     'demo': [
         'data/gamification_karma_rank_demo.xml'
     ],
+    'license': 'LGPL-3',
 }
