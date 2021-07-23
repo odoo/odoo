@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { browser } from "../../core/browser/browser";
-import { useEffect } from "../../core/effect_hook";
+import { browser } from "../browser/browser";
+import { useEffect } from "../effect_hook";
 
 const { Component, hooks } = owl;
 

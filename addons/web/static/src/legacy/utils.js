@@ -301,3 +301,14 @@ export function wrapSuccessOrFail(promise, { on_success, on_fail } = {}) {
         }
     });
 }
+
+export function makeLegacyRainbowManService(legacyEnv) {
+    return {
+        dependencies: ["effect"],
+        start(env, { effect }) {
+            legacyEnv.bus.on("show-effect", null, (payload) => {
+                effect.add(payload.type, payload);
+            });
+        },
+    };
+}

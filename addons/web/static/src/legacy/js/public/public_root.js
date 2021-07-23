@@ -18,6 +18,7 @@ import {
     makeLegacySessionService,
     makeLegacyDialogMappingService,
     mapLegacyEnvToWowlEnv,
+    makeLegacyRainbowManService,
 } from "../../utils";
 import { ComponentAdapter } from "web.OwlCompatibility";
 
@@ -372,6 +373,7 @@ export async function createPublicRoot(RootWidget) {
     serviceRegistry.add("legacy_session", makeLegacySessionService(legacyEnv, session));
     serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
     serviceRegistry.add("legacy_dialog_mapping", makeLegacyDialogMappingService(legacyEnv));
+    serviceRegistry.add("legacy_rainbowman_service", makeLegacyRainbowManService(legacyEnv));
     await Promise.all([owl.utils.whenReady(), session.is_bound]);
 
     const wowlEnv = makeEnv();
