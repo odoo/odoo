@@ -14,161 +14,161 @@ _logger = logging.getLogger(__name__)
 class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
 
     @classmethod
-    def setUpClass(self, chart_template_ref='l10n_ar.l10nar_ri_chart_template'):
-        super(TestAr, self).setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls, chart_template_ref='l10n_ar.l10nar_ri_chart_template'):
+        super(TestAr, cls).setUpClass(chart_template_ref=chart_template_ref)
 
         print(" ------ Common.TestAr setUpClass()")
         # ==== Company ====
-        self.company_data['company'].write({
-            'parent_id': self.env.ref('base.main_company').id,
-            'currency_id': self.env.ref('base.ARS').id,
+        cls.company_data['company'].write({
+            'parent_id': cls.env.ref('base.main_company').id,
+            'currency_id': cls.env.ref('base.ARS').id,
             'name': '(AR) Responsable Inscripto (Unit Tests)',
             "l10n_ar_afip_start_date": time.strftime('%Y-01-01'),
             'l10n_ar_gross_income_type': 'local',
             'l10n_ar_gross_income_number': '901-21885123',
             'l10n_ar_afip_ws_environment': 'testing',
         })
-        self.company_ri = self.company_data['company']
+        cls.company_ri = cls.company_data['company']
 
-        self.company_ri.partner_id.write({
+        cls.company_ri.partner_id.write({
             'name': '(AR) Responsable Inscripto (Unit Tests)',
-            'l10n_ar_afip_responsibility_type_id': self.env.ref("l10n_ar.res_IVARI").id,
-            'l10n_latam_identification_type_id': self.env.ref("l10n_ar.it_cuit").id,
+            'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVARI").id,
+            'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': '30111111118',
             "street": 'Calle Falsa 123',
             "city": 'Rosario',
-            "country_id": self.env.ref("base.ar").id,
-            "state_id": self.env.ref("base.state_ar_s").id,
+            "country_id": cls.env.ref("base.ar").id,
+            "state_id": cls.env.ref("base.state_ar_s").id,
             "zip": '2000',
             "phone": '+1 555 123 8069',
             "email": 'info@example.com',
             "website": 'www.example.com',
         })
-        self.partner_ri = self.company_ri.partner_id
+        cls.partner_ri = cls.company_ri.partner_id
 
         # ==== Bank Account ====
-        self.bank_account_ri = self.env['res.partner.bank'].create({
+        cls.bank_account_ri = cls.env['res.partner.bank'].create({
             'acc_number': '7982898111100056688080',
-            'partner_id': self.company_ri.partner_id.id,
-            'company_id': self.company_ri.id,
+            'partner_id': cls.company_ri.partner_id.id,
+            'company_id': cls.company_ri.id,
         })
 
         # Set context to do not make cr.commit() for unit tests
-        self.env = self.env(context={'l10n_ar_invoice_skip_commit': True})
+        cls.env = cls.env(context={'l10n_ar_invoice_skip_commit': True})
 
         # ==== Partners / Customers ====
-        self.res_partner_adhoc = self.env['res.partner'].create({
+        cls.res_partner_adhoc = cls.env['res.partner'].create({
             "name": "ADHOC SA",
             "is_company": 1,
             "city": "Rosario",
             "zip": "2000",
-            "state_id": self.env.ref("base.state_ar_s").id,
-            "country_id": self.env.ref("base.ar").id,
+            "state_id": cls.env.ref("base.state_ar_s").id,
+            "country_id": cls.env.ref("base.ar").id,
             "street": "Ovidio Lagos 41 bis",
             "email": "info@adhoc.com.ar",
             "phone": "(+54) (341) 208 0203",
             "website": "http://www.adhoc.com.ar",
-            'l10n_latam_identification_type_id': self.env.ref("l10n_ar.it_cuit").id,
+            'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': "30714295698",
-            'l10n_ar_afip_responsibility_type_id': self.env.ref("l10n_ar.res_IVARI").id,
+            'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVARI").id,
         })
-        self.partner_cf = self.env['res.partner'].create({
+        cls.partner_cf = cls.env['res.partner'].create({
             "name": "Consumidor Final Anónimo",
-            "l10n_latam_identification_type_id": self.env.ref('l10n_ar.it_Sigd').id,
-            "l10n_ar_afip_responsibility_type_id": self.env.ref("l10n_ar.res_CF").id,
+            "l10n_latam_identification_type_id": cls.env.ref('l10n_ar.it_Sigd').id,
+            "l10n_ar_afip_responsibility_type_id": cls.env.ref("l10n_ar.res_CF").id,
         })
-        self.res_partner_gritti_mono = self.env['res.partner'].create({
+        cls.res_partner_gritti_mono = cls.env['res.partner'].create({
             "name": "Gritti Agrimensura (Monotributo)",
             "is_company": 1,
             "city": "Rosario",
             "zip": "2000",
-            "state_id": self.env.ref("base.state_ar_s").id,
-            "country_id": self.env.ref("base.ar").id,
+            "state_id": cls.env.ref("base.state_ar_s").id,
+            "country_id": cls.env.ref("base.ar").id,
             "street": "Calle Falsa 123",
             "email": "info@example.com.ar",
             "phone": "(+54) (341) 111 2222",
             "website": "http://www.grittiagrimensura.com",
-            'l10n_latam_identification_type_id': self.env.ref("l10n_ar.it_cuit").id,
+            'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': "27320732811",
-            'l10n_ar_afip_responsibility_type_id': self.env.ref("l10n_ar.res_RM").id,
+            'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_RM").id,
         })
-        self.res_partner_cerrocastor = self.env['res.partner'].create({
+        cls.res_partner_cerrocastor = cls.env['res.partner'].create({
             "name": "Cerro Castor (Tierra del Fuego)",
             "is_company": 1,
             "city": "Ushuaia",
-            "state_id": self.env.ref("base.state_ar_v").id,
-            "country_id": self.env.ref("base.ar").id,
+            "state_id": cls.env.ref("base.state_ar_v").id,
+            "country_id": cls.env.ref("base.ar").id,
             "street": "Ruta 3 km 26",
             "email": "info@cerrocastor.com",
             "phone": "(+00) (11) 4444 5556",
             "website": "http://www.cerrocastor.com",
-            'l10n_latam_identification_type_id': self.env.ref("l10n_ar.it_cuit").id,
+            'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': "27333333339",
-            'l10n_ar_afip_responsibility_type_id': self.env.ref("l10n_ar.res_IVA_LIB").id,
+            'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVA_LIB").id,
         })
-        self.res_partner_cmr = self.env['res.partner'].create({
+        cls.res_partner_cmr = cls.env['res.partner'].create({
             "name": "Concejo Municipal de Rosario (IVA Sujeto Exento)",
             "is_company": 1,
             "city": "Rosario",
             "zip": "2000",
-            "state_id": self.env.ref("base.state_ar_s").id,
-            "country_id": self.env.ref("base.ar").id,
+            "state_id": cls.env.ref("base.state_ar_s").id,
+            "country_id": cls.env.ref("base.ar").id,
             "street": "Cordoba 501",
             "email": "info@example.com.ar",
             "phone": "(+54) (341) 222 3333",
             "website": "http://www.concejorosario.gov.ar/",
-            'l10n_latam_identification_type_id': self.env.ref("l10n_ar.it_cuit").id,
+            'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': "30684679372",
-            'l10n_ar_afip_responsibility_type_id': self.env.ref("l10n_ar.res_IVAE").id,
+            'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVAE").id,
         })
-        self.res_partner_expresso = self.env['res.partner'].create({
+        cls.res_partner_expresso = cls.env['res.partner'].create({
             "name": "Expresso",
             "is_company": 1,
             "city": "Barcelona",
             "zip": "11002",
-            "country_id": self.env.ref("base.es").id,
+            "country_id": cls.env.ref("base.es").id,
             "street": "La gran avenida 123",
             "email": "info@expresso.com",
             "phone": "(+00) (11) 222 3333",
             "website": "http://www.expresso.com/",
-            'l10n_latam_identification_type_id': self.env.ref("l10n_latam_base.it_fid").id,
+            'l10n_latam_identification_type_id': cls.env.ref("l10n_latam_base.it_fid").id,
             'vat': "2222333344445555",
-            'l10n_ar_afip_responsibility_type_id': self.env.ref("l10n_ar.res_EXT").id,
+            'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_EXT").id,
         })
-        self.partner_mipyme = self.env['res.partner'].create({
+        cls.partner_mipyme = cls.env['res.partner'].create({
             "name": "Belgrano Cargas Y Logistica S (Mipyme)",
             "is_company": 1,
             "city": "Buenos Aires",
             "zip": "1425",
-            "state_id": self.env.ref("base.state_ar_c").id,
-            "country_id": self.env.ref("base.ar").id,
+            "state_id": cls.env.ref("base.state_ar_c").id,
+            "country_id": cls.env.ref("base.ar").id,
             "street": "Av. Santa Fe 4636",
             "email": "mipyme@example.com",
             "phone": "(123)-456-7890",
             "website": "http://www.mypime-inc.com",
-            'l10n_latam_identification_type_id': self.env.ref("l10n_ar.it_cuit").id,
+            'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': "30714101443",
-            'l10n_ar_afip_responsibility_type_id': self.env.ref("l10n_ar.res_IVARI").id,
+            'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVARI").id,
         })
-        self.partner_mipyme_ex = self.partner_mipyme.copy({'name': 'MiPyme Exento', 'l10n_ar_afip_responsibility_type_id': self.env.ref('l10n_ar.res_IVAE').id})
+        cls.partner_mipyme_ex = cls.partner_mipyme.copy({'name': 'MiPyme Exento', 'l10n_ar_afip_responsibility_type_id': cls.env.ref('l10n_ar.res_IVAE').id})
 
         # ==== Taxes ====
-        self.tax_21 = self._search_tax(self, 'iva_21')
-        self.tax_27 = self._search_tax(self, 'iva_27')
-        self.tax_0 = self._search_tax(self, 'iva_0')
-        self.tax_10_5 = self._search_tax(self, 'iva_105')
-        self.tax_no_gravado = self._search_tax(self, 'iva_no_gravado')
-        self.tax_perc_iibb = self._search_tax(self, 'percepcion_iibb_ba')
-        self.tax_iva_exento = self._search_tax(self, 'iva_exento')
+        cls.tax_21 = cls._search_tax(cls, 'iva_21')
+        cls.tax_27 = cls._search_tax(cls, 'iva_27')
+        cls.tax_0 = cls._search_tax(cls, 'iva_0')
+        cls.tax_10_5 = cls._search_tax(cls, 'iva_105')
+        cls.tax_no_gravado = cls._search_tax(cls, 'iva_no_gravado')
+        cls.tax_perc_iibb = cls._search_tax(cls, 'percepcion_iibb_ba')
+        cls.tax_iva_exento = cls._search_tax(cls, 'iva_exento')
 
         # ==== Products ====
         # TODO review not sure if we need to define the next values
         #   <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
 
-        uom_unit = self.env.ref('uom.product_uom_unit')
-        uom_hour = self.env.ref('uom.product_uom_hour')
+        uom_unit = cls.env.ref('uom.product_uom_unit')
+        uom_hour = cls.env.ref('uom.product_uom_hour')
 
-        self.product_iva_21 = self.env['product.product'].create({
+        cls.product_iva_21 = cls.env['product.product'].create({
             'name': 'Large Cabinet (VAT 21)',
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
@@ -176,10 +176,10 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
             'standard_price': 800.0,
             'type': "consu",
             'default_code': 'E-COM07',
-            # 'property_account_income_id': self.company_data['default_account_revenue'].id,
-            # 'property_account_expense_id': self.company_data['default_account_expense'].id,
+            # 'property_account_income_id': cls.company_data['default_account_revenue'].id,
+            # 'property_account_expense_id': cls.company_data['default_account_expense'].id,
         })
-        self.service_iva_27 = self.env['product.product'].create({
+        cls.service_iva_27 = cls.env['product.product'].create({
             'name': 'Telephone service (VAT 27)',
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
@@ -187,16 +187,16 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
             'standard_price': 250.0,
             'type': 'service',
             'default_code': 'TELEFONIA',
-            'taxes_id': [(6, 0, (self.tax_27).ids)],
+            'taxes_id': [(6, 0, (cls.tax_27).ids)],
 
             # TODO maybe we need to extend _search_tax for vendor tax_27
             # <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT 27%')]"/>
-            # 'supplier_taxes_id': [(6, 0, (self.tax_purchase_a + self.tax_purchase_b).ids)],
+            # 'supplier_taxes_id': [(6, 0, (cls.tax_purchase_a + cls.tax_purchase_b).ids)],
 
-            # 'property_account_income_id': self.copy_account(self.company_data['default_account_revenue']).id,
-            # 'property_account_expense_id': self.copy_account(self.company_data['default_account_expense']).id,
+            # 'property_account_income_id': cls.copy_account(cls.company_data['default_account_revenue']).id,
+            # 'property_account_expense_id': cls.copy_account(cls.company_data['default_account_expense']).id,
         })
-        self.product_iva_cero = self.env['product.product'].create({
+        cls.product_iva_cero = cls.env['product.product'].create({
             # demo 'product_product_cero'
             'name': 'Non-industrialized animals and vegetables (VAT Zero)',
             'uom_id': uom_unit.id,
@@ -205,15 +205,15 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
             'standard_price': 200.0,
             'type': 'consu',
             'default_code': 'CERO',
-            'taxes_id': [(6, 0, (self.tax_0).ids)],
+            'taxes_id': [(6, 0, (cls.tax_0).ids)],
 
             # TODO maybe we need to extend _search_tax for vendor tax_27
             # <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT 0%')]"/>
-            # 'supplier_taxes_id': [(6, 0, (self.tax_purchase_a + self.tax_purchase_b).ids)],
-            # 'property_account_income_id': self.copy_account(self.company_data['default_account_revenue']).id,
-            # 'property_account_expense_id': self.copy_account(self.company_data['default_account_expense']).id,
+            # 'supplier_taxes_id': [(6, 0, (cls.tax_purchase_a + cls.tax_purchase_b).ids)],
+            # 'property_account_income_id': cls.copy_account(cls.company_data['default_account_revenue']).id,
+            # 'property_account_expense_id': cls.copy_account(cls.company_data['default_account_expense']).id,
         })
-        self.product_iva_105 = self.env['product.product'].create({
+        cls.product_iva_105 = cls.env['product.product'].create({
             # demo 'product.product_product_27'
             'name': 'Laptop Customized (VAT 10,5)',
             'uom_id': uom_unit.id,
@@ -221,14 +221,14 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
             'standard_price': 4500.0,
             'type': 'consu',
             'default_code': '10,5',
-            'taxes_id': [(6, 0, (self.tax_10_5).ids)],
+            'taxes_id': [(6, 0, (cls.tax_10_5).ids)],
             # TODO maybe we need to extend _search_tax for vendor tax_27
             # <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 10.5%')]"/>
             # <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT 10.5%')]"/>
-            # 'property_account_income_id': self.copy_account(self.company_data['default_account_revenue']).id,
-            # 'property_account_expense_id': self.copy_account(self.company_data['default_account_expense']).id,
+            # 'property_account_income_id': cls.copy_account(cls.company_data['default_account_revenue']).id,
+            # 'property_account_expense_id': cls.copy_account(cls.company_data['default_account_expense']).id,
         })
-        self.service_iva_21 = self.env['product.product'].create({
+        cls.service_iva_21 = cls.env['product.product'].create({
             # demo data product.product_product_2
             'name': 'Virtual Home Staging (VAT 21)',
             'uom_id': uom_hour.id,
@@ -237,9 +237,9 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
             'standard_price': 45.5,
             'type': 'service',
             'default_code': 'VAT 21',
-            'taxes_id': [(6, 0, (self.tax_21).ids)],
+            'taxes_id': [(6, 0, (cls.tax_21).ids)],
         })
-        self.product_no_gravado = self.env['product.product'].create({
+        cls.product_no_gravado = cls.env['product.product'].create({
             # demo data product_product_no_gravado
             'name': 'Untaxed concepts (VAT NT)',
             'uom_id': uom_unit.id,
@@ -248,17 +248,17 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
             'standard_price': 50.0,
             'type': 'consu',
             'default_code': 'NOGRAVADO',
-            'taxes_id': [(6, 0, (self.tax_no_gravado).ids)],
+            'taxes_id': [(6, 0, (cls.tax_no_gravado).ids)],
         })
-        self.product_iva_105_perc = self.product_iva_105.copy({
+        cls.product_iva_105_perc = cls.product_iva_105.copy({
             # product.product_product_25
             "name": "Laptop E5023 (VAT 10,5)",
             "standard_price": 3280.0,
             # agregamos percecipn aplicada y sufrida tambien
-            'taxes_id': [(6, 0, [self.tax_10_5.id, self.tax_perc_iibb.id])],
+            'taxes_id': [(6, 0, [cls.tax_10_5.id, cls.tax_perc_iibb.id])],
             # <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', 'in', ['VAT 10.5%', 'Percepción IIBB', 'Percepción Ganancias', 'Percepción IVA'])]"/>
         })
-        self.product_iva_exento = self.env['product.product'].create({
+        cls.product_iva_exento = cls.env['product.product'].create({
             # demo product_product_exento
             'name': 'Book: Development in Odoo (VAT Exempt)',
             'uom_id': uom_unit.id,
@@ -267,29 +267,29 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
             "list_price": 80.0,
             'type': 'consu',
             'default_code': 'EXENTO',
-            'taxes_id': [(6, 0, (self.tax_iva_exento).ids)],
+            'taxes_id': [(6, 0, (cls.tax_iva_exento).ids)],
         })
 
         # # Document Types
-        self.document_type = {
-            'invoice_a': self.env.ref('l10n_ar.dc_a_f'),
-            'credit_note_a': self.env.ref('l10n_ar.dc_a_nc'),
-            'invoice_b': self.env.ref('l10n_ar.dc_b_f'),
-            'credit_note_b': self.env.ref('l10n_ar.dc_b_nc'),
-            'invoice_e': self.env.ref('l10n_ar.dc_e_f'),
-            'invoice_mipyme_a': self.env.ref('l10n_ar.dc_fce_a_f'),
-            'invoice_mipyme_b': self.env.ref('l10n_ar.dc_fce_b_f'),
+        cls.document_type = {
+            'invoice_a': cls.env.ref('l10n_ar.dc_a_f'),
+            'credit_note_a': cls.env.ref('l10n_ar.dc_a_nc'),
+            'invoice_b': cls.env.ref('l10n_ar.dc_b_f'),
+            'credit_note_b': cls.env.ref('l10n_ar.dc_b_nc'),
+            'invoice_e': cls.env.ref('l10n_ar.dc_e_f'),
+            'invoice_mipyme_a': cls.env.ref('l10n_ar.dc_fce_a_f'),
+            'invoice_mipyme_b': cls.env.ref('l10n_ar.dc_fce_b_f'),
         }
 
         # ==== Journals ====
-        self.sale_expo_journal_ri = self.env["account.journal"].create({
+        cls.sale_expo_journal_ri = cls.env["account.journal"].create({
             'name': "Expo Sales Journal",
-            'company_id': self.company_ri.id,
+            'company_id': cls.company_ri.id,
             'type': "sale",
             'code': "S0002",
             'l10n_latam_use_documents': "True",
             'l10n_ar_afip_pos_number': 2,
-            'l10n_ar_afip_pos_partner_id': self.partner_ri.id,
+            'l10n_ar_afip_pos_partner_id': cls.partner_ri.id,
             'l10n_ar_afip_pos_system': "FEERCEL",
             'refund_sequence': False,
         })
