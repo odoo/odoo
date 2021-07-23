@@ -501,7 +501,7 @@ QWeb2.Engine = (function() {
                     if (jquery) {
                         target = jQuery(jquery, template_dest);
                         if (!target.length && window.console) {
-                            console.debug('Can\'t find "'+jquery+'" when extending template '+template);
+                            console.error("Can't find '" + jquery + "' when extending template " + template);
                         }
                     } else {
                         this.tools.exception(error_msg + "No expression given");
