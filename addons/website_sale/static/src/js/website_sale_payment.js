@@ -94,6 +94,16 @@ odoo.define('website_sale.payment', require => {
                 'change #checkbox_tc': '_onClickTCCheckbox',
             },
 
+            /**
+             * @override
+             */
+            start: function () {
+                this.$checkbox = this.$('#checkbox_tc');
+                this.$submitButton = this.$('button[name="o_payment_submit_button"]');
+                this._onClickTCCheckbox();
+                return this._super(...arguments);
+            },
+
             //--------------------------------------------------------------------------
             // Handlers
             //--------------------------------------------------------------------------
