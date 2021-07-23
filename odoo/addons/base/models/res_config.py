@@ -385,7 +385,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         )
 
     def copy(self, values):
-        raise UserError(_("Cannot duplicate configuration!"), "")
+        raise UserError(_("Cannot duplicate configuration!"))
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form',
