@@ -459,8 +459,6 @@ class AccountChartTemplate(models.Model):
             ('property_account_payable_id', 'res.partner', 'account.account'),
             ('property_account_expense_categ_id', 'product.category', 'account.account'),
             ('property_account_income_categ_id', 'product.category', 'account.account'),
-            ('property_account_expense_id', 'product.template', 'account.account'),
-            ('property_account_income_id', 'product.template', 'account.account'),
         ]
         for record in todo_list:
             account = getattr(self, record[0])
