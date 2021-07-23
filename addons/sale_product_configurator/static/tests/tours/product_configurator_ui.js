@@ -84,7 +84,7 @@ tour.register('sale_product_configurator_tour', {
     in_modal: false,
     run: function (){}
 }, {
-    trigger: '.o_readonly_modifier[name=amount_total]:contains("0.00")',
+    trigger: 'span[name=amount_total]:contains("0.00")',
     in_modal: false,
     run: function (){}
 }

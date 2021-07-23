@@ -4,6 +4,7 @@
 from datetime import datetime, timedelta
 from functools import partial
 from itertools import groupby
+import json
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -230,7 +231,7 @@ class SaleOrder(models.Model):
     terms_type = fields.Selection(related='company_id.terms_type')
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, compute='_amount_all', tracking=5)
-    amount_by_group = fields.Binary(string="Tax amount by group", compute='_amount_by_group', help="type: [(name, amount, base, formated amount, formated base)]")
+    tax_totals_json = fields.Char(compute='_compute_tax_totals_json')
     amount_tax = fields.Monetary(string='Taxes', store=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, compute='_amount_all', tracking=4)
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', store=True, digits=(12, 6), help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
@@ -327,6 +328,19 @@ class SaleOrder(models.Model):
                 order.expected_date = fields.Datetime.to_string(min(dates_list))
             else:
                 order.expected_date = False
+
+    @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed')
+    def _compute_tax_totals_json(self):
+        def compute_taxes(order_line):
+            price = order_line.price_unit * (1 - (order_line.discount or 0.0) / 100.0)
+            order = order_line.order_id
+            return order_line.tax_id._origin.compute_all(price, order.currency_id, order_line.product_uom_qty, product=order_line.product_id, partner=order.partner_shipping_id)
+
+        account_move = self.env['account.move']
+        for order in self:
+            tax_lines_data = account_move._prepare_tax_lines_data_for_totals_from_object(order.order_line, compute_taxes)
+            tax_totals = account_move._get_tax_totals(order.partner_id, tax_lines_data, order.amount_total, order.amount_untaxed, order.currency_id)
+            order.tax_totals_json = json.dumps(tax_totals)
 
     @api.onchange('expected_date')
     def _onchange_expected_date(self):
@@ -985,28 +999,6 @@ class SaleOrder(models.Model):
         for order in self:
             analytic = self.env['account.analytic.account'].create(order._prepare_analytic_account_data(prefix))
             order.analytic_account_id = analytic
-
-    def _amount_by_group(self):
-        for order in self:
-            currency = order.currency_id or order.company_id.currency_id
-            fmt = partial(formatLang, self.with_context(lang=order.partner_id.lang).env, currency_obj=currency)
-            res = {}
-            for line in order.order_line:
-                price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
-                taxes = line.tax_id.compute_all(price_reduce, quantity=line.product_uom_qty, product=line.product_id, partner=order.partner_shipping_id)['taxes']
-                for tax in line.tax_id:
-                    group = tax.tax_group_id
-                    res.setdefault(group, {'amount': 0.0, 'base': 0.0})
-                    for t in taxes:
-                        if t['id'] == tax.id or t['id'] in tax.children_tax_ids.ids:
-                            res[group]['amount'] += t['amount']
-                            res[group]['base'] += t['base']
-            res = sorted(res.items(), key=lambda l: l[0].sequence)
-            order.amount_by_group = [(
-                l[0].name, l[1]['amount'], l[1]['base'],
-                fmt(l[1]['amount']), fmt(l[1]['base']),
-                len(res),
-            ) for l in res]
 
     def has_to_be_signed(self, include_draft=False):
         return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_signature and not self.signature

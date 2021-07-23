@@ -238,8 +238,10 @@ class AccountMove(models.Model):
         compute='_compute_amount', currency_field='currency_id')
     amount_residual_signed = fields.Monetary(string='Amount Due Signed', store=True,
         compute='_compute_amount', currency_field='company_currency_id')
-    amount_by_group = fields.Char(string="Tax amount by group",
-        compute='_compute_invoice_taxes_by_group',
+    tax_totals_json = fields.Char(
+        string="Invoice Totals JSON",
+        compute='_compute_tax_totals_json',
+        readonly=False,
         help='Edit Tax amounts if you encounter rounding issues.')
     payment_state = fields.Selection(PAYMENT_STATE_SELECTION, string="Payment Status", store=True,
         readonly=True, copy=False, tracking=True, compute='_compute_amount')
@@ -557,26 +559,32 @@ class AccountMove(models.Model):
     def _onchange_recompute_dynamic_lines(self):
         self._recompute_dynamic_lines()
 
-    @api.onchange('amount_by_group')
-    def _onchange_amount_by_group(self):
-        """ This method is triggered by the tax group widget. It allows us to edit the right
-            line_ids according to the edited tax group.
+    @api.onchange('tax_totals_json')
+    def _onchange_tax_totals_json(self):
+        """ This method is triggered by the tax group widget. It allows modifying the right
+            move lines depending on the tax group whose amount got edited.
         """
         for move in self:
-            amount_by_groups = json.loads(move.amount_by_group)
-            for amount_by_group in amount_by_groups:
-                tax_lines = move.line_ids.filtered(lambda line: line.tax_group_id and line.tax_group_id.id == amount_by_group['tax_group_id'])
-                if len(tax_lines):
-                    first_tax_line = tax_lines[0]
-                    tax_group_old_amount = sum(tax_lines.mapped('amount_currency'))
-                    delta_amount = tax_group_old_amount - amount_by_group['tax_group_amount']
-                    delta_amount *= move.move_type == 'in_invoice' and -1 or 1
+            if not move.is_invoice(include_receipts=True):
+                continue
 
-                    if delta_amount != 0:
-                        first_tax_line.amount_currency = first_tax_line.amount_currency + delta_amount
-                        # We have to trigger the on change manually because we don"t change the value of
-                        # amount_currency in the view.
-                        first_tax_line._onchange_amount_currency()
+            invoice_totals = json.loads(move.tax_totals_json)
+            for amount_by_group_list in invoice_totals['groups_by_subtotal'].values():
+                for amount_by_group in amount_by_group_list:
+                    tax_lines = move.line_ids.filtered(lambda line: line.tax_group_id.id == amount_by_group['tax_group_id'])
+
+                    if tax_lines:
+                        first_tax_line = tax_lines[0]
+                        tax_group_old_amount = sum(tax_lines.mapped('amount_currency'))
+                        sign = -1 if move.is_inbound() else 1
+                        delta_amount = tax_group_old_amount * sign - amount_by_group['tax_group_amount']
+
+                        if not move.currency_id.is_zero(delta_amount):
+                            first_tax_line.amount_currency = first_tax_line.amount_currency - delta_amount * sign
+                            # We have to trigger the on change manually because we don"t change the value of
+                            # amount_currency in the view.
+                            first_tax_line._onchange_amount_currency()
+
             move._recompute_dynamic_lines()
 
     @api.model
@@ -1611,71 +1619,245 @@ class AccountMove(models.Model):
             else:
                 move.invoice_payments_widget = json.dumps(False)
 
-    @api.depends('line_ids.amount_currency', 'line_ids.tax_base_amount', 'line_ids.tax_line_id', 'partner_id', 'currency_id')
-    def _compute_invoice_taxes_by_group(self):
+    @api.depends('line_ids.amount_currency', 'line_ids.tax_base_amount', 'line_ids.tax_line_id', 'partner_id', 'currency_id', 'amount_total', 'amount_untaxed')
+    def _compute_tax_totals_json(self):
+        """ Computed field used for custom widget's rendering.
+            Only set on invoices.
+        """
         for move in self:
-
-            # Not working on something else than invoices.
             if not move.is_invoice(include_receipts=True):
-                move.amount_by_group = []
+                # Non-invoice moves don't support that field (because of multicurrency: all lines of the invoice share the same currency)
+                move.tax_totals_json = None
                 continue
 
-            lang_env = move.with_context(lang=move.partner_id.lang).env
-            balance_multiplicator = -1 if move.is_inbound() else 1
+            tax_lines_data = move._prepare_tax_lines_data_for_totals_from_invoice()
 
-            tax_lines = move.line_ids.filtered('tax_line_id')
-            base_lines = move.line_ids.filtered('tax_ids')
-
-            tax_group_mapping = defaultdict(lambda: {
-                'base_lines': set(),
-                'base_amount': 0.0,
-                'tax_amount': 0.0,
+            move.tax_totals_json = json.dumps({
+                **self._get_tax_totals(move.partner_id, tax_lines_data, move.amount_total, move.amount_untaxed, move.currency_id),
+                'allow_tax_edition': move.is_purchase_document(include_receipts=False) and move.state == 'draft',
             })
 
-            # Compute base amounts.
-            for base_line in base_lines:
-                base_amount = balance_multiplicator * (base_line.amount_currency if base_line.currency_id else base_line.balance)
+    def _prepare_tax_lines_data_for_totals_from_invoice(self, tax_line_id_filter=None, tax_ids_filter=None):
+        """ Prepares data to be passed as tax_lines_data parameter of _get_tax_totals() from an invoice.
 
-                for tax in base_line.tax_ids.flatten_taxes_hierarchy():
+            NOTE: tax_line_id_filter and tax_ids_filter are used in l10n_latam to restrict the taxes with consider
+                  in the totals.
 
-                    if base_line.tax_line_id.tax_group_id == tax.tax_group_id:
-                        continue
+            :param tax_line_id_filter: a function(aml, tax) returning true if tax should be considered on tax move line aml.
+            :param tax_ids_filter: a function(aml, taxes) returning true if taxes should be considered on base move line aml.
 
-                    tax_group_vals = tax_group_mapping[tax.tax_group_id]
-                    if base_line not in tax_group_vals['base_lines']:
-                        tax_group_vals['base_amount'] += base_amount
-                        tax_group_vals['base_lines'].add(base_line)
+            :return: A list of dict in the format described in _get_tax_totals's tax_lines_data's docstring.
+        """
+        self.ensure_one()
 
-            # Compute tax amounts.
-            for tax_line in tax_lines:
-                tax_amount = balance_multiplicator * (tax_line.amount_currency if tax_line.currency_id else tax_line.balance)
-                tax_group_vals = tax_group_mapping[tax_line.tax_line_id.tax_group_id]
-                tax_group_vals['tax_amount'] += tax_amount
+        tax_line_id_filter = tax_line_id_filter or (lambda aml, tax: True)
+        tax_ids_filter = tax_ids_filter or (lambda aml, tax: True)
 
-            tax_groups = sorted(tax_group_mapping.keys(), key=lambda x: x.sequence)
-            amount_by_group = []
-            for tax_group in tax_groups:
-                tax_group_vals = tax_group_mapping[tax_group]
-                amount_by_group.append((
-                    tax_group.name,
-                    tax_group_vals['tax_amount'],
-                    tax_group_vals['base_amount'],
-                    formatLang(lang_env, tax_group_vals['tax_amount'], currency_obj=move.currency_id),
-                    formatLang(lang_env, tax_group_vals['base_amount'], currency_obj=move.currency_id),
-                    len(tax_group_mapping),
-                    tax_group.id
-                ))
-            move.amount_by_group = amount_by_group
+        balance_multiplicator = -1 if self.is_inbound() else 1
+        tax_lines_data = []
+
+        for line in self.line_ids:
+            if line.tax_line_id and tax_line_id_filter(line, line.tax_line_id):
+                tax_lines_data.append({
+                    'line_key': 'tax_line_%s' % line.id,
+                    'tax_amount': line.amount_currency * balance_multiplicator,
+                    'tax': line.tax_line_id,
+                })
+
+            if line.tax_ids:
+                for base_tax in line.tax_ids.flatten_taxes_hierarchy():
+                    if tax_ids_filter(line, base_tax):
+                        tax_lines_data.append({
+                            'line_key': 'base_line_%s' % line.id,
+                            'base_amount': line.amount_currency * balance_multiplicator,
+                            'tax': base_tax,
+                            'tax_affecting_base': line.tax_line_id,
+                        })
+
+        return tax_lines_data
 
     @api.model
-    def _get_tax_key_for_group_add_base(self, line):
+    def _prepare_tax_lines_data_for_totals_from_object(self, object_lines, tax_results_function):
+        """ Prepares data to be passed as tax_lines_data parameter of _get_tax_totals() from any
+            object using taxes. This helper is intended for purchase.order and sale.order, as a common
+            function centralizing their behavior.
+
+            :param object_lines: A list of records corresponding to the sub-objects generating the tax totals
+                                 (sale.order.line or purchase.order.line, for example)
+
+            :param tax_results_function: A function to be called to get the results of the tax computation for a
+                                         line in object_lines. It takes the object line as its only parameter
+                                         and returns a dict in the same format as account.tax's compute_all
+                                         (most probably after calling it with the right parameters).
+
+            :return: A list of dict in the format described in _get_tax_totals's tax_lines_data's docstring.
         """
-        Useful for _compute_invoice_taxes_by_group
-        must be consistent with _get_tax_grouping_key_from_tax_line
-         @return list
+        tax_lines_data = []
+
+        for line in object_lines:
+            tax_results = tax_results_function(line)
+
+            for tax_result in tax_results['taxes']:
+                current_tax = self.env['account.tax'].browse(tax_result['id'])
+
+                # Tax line
+                tax_lines_data.append({
+                    'line_key': f"tax_line_{line.id}_{tax_result['id']}",
+                    'tax_amount': tax_result['amount'],
+                    'tax': current_tax,
+                })
+
+                # Base for this tax line
+                tax_lines_data.append({
+                    'line_key': 'base_line_%s' % line.id,
+                    'base_amount': tax_results['total_excluded'],
+                    'tax': current_tax,
+                })
+
+                # Base for the taxes whose base is affected by this tax line
+                if tax_result['tax_ids']:
+                    affected_taxes = self.env['account.tax'].browse(tax_result['tax_ids'])
+                    for affected_tax in affected_taxes:
+                        tax_lines_data.append({
+                            'line_key': 'affecting_base_line_%s_%s' % (line.id, tax_result['id']),
+                            'base_amount': tax_result['amount'],
+                            'tax': affected_tax,
+                            'tax_affecting_base': current_tax,
+                        })
+
+        return tax_lines_data
+
+    @api.model
+    def _get_tax_totals(self, partner, tax_lines_data, amount_total, amount_untaxed, currency):
+        """ Compute the tax totals for the provided data.
+
+        :param partner:        The partner to compute totals for
+        :param tax_lines_data: All the data about the base and tax lines as a list of dictionaries.
+                               Each dictionary represents an amount that needs to be added to either a tax base or amount.
+                               A tax amount looks like:
+                                   {
+                                       'line_key':             unique identifier,
+                                       'tax_amount':           the amount computed for this tax
+                                       'tax':                  the account.tax object this tax line was made from
+                                   }
+                               For base amounts:
+                                   {
+                                       'line_key':             unique identifier,
+                                       'base_amount':          the amount to add to the base of the tax
+                                       'tax':                  the tax basing itself on this amount
+                                       'tax_affecting_base':   (optional key) the tax whose tax line is having the impact
+                                                               denoted by 'base_amount' on the base of the tax, in case of taxes
+                                                               affecting the base of subsequent ones.
+                                   }
+        :param amount_total:   Total amount, with taxes.
+        :param amount_untaxed: Total amount without taxes.
+        :param currency:       The currency in which the amounts are computed.
+
+        :return: A dictionary in the following form:
+            {
+                'amount_total':                              The total amount to be displayed on the document, including every total types.
+                'amount_untaxed':                            The untaxed amount to be displayed on the document.
+                'formatted_amount_total':                    Same as amount_total, but as a string formatted accordingly with partner's locale.
+                'formatted_amount_untaxed':                  Same as amount_untaxed, but as a string formatted accordingly with partner's locale.
+                'allow_tax_edition':                         True if the user should have the ability to manually edit the tax amounts by group
+                                                             to fix rounding errors.
+                'groups_by_total_type':                      A dictionary formed liked {'total_type': groups_data}
+                                                             Where total_type is either:
+                                                                - 'main_total':  meaning all the amounts in groups_data are part of amount_total
+                                                                - 'after_total': meaning the amounts in groups_data are not part of amount_total
+                                                                                 and should be displayed as modificators applied to it.
+                                                             And groups_data is a list of dict in the following form:
+                                                                {
+                                                                    'tax_group_name':                  The name of the tax groups this total is made for.
+                                                                    'tax_group_amount':                The total tax amount in this tax group.
+                                                                    'tax_group_base_amount':           The base amount for this tax group.
+                                                                    'formatted_tax_group_amount':      Same as tax_group_amount, but as a string
+                                                                                                       formatted accordingly with partner's locale.
+                                                                    'formatted_tax_group_base_amount': Same as tax_group_base_amount, but as a string
+                                                                                                       formatted accordingly with partner's locale.
+                                                                    'tax_group_id':                    The id of the tax group corresponding to this dict.
+                                                                    'group_key':                       A unique key identifying this total dict,
+                                                                }
+            }
         """
-        # DEPRECATED: TO BE REMOVED IN MASTER
-        return [line.tax_line_id.id]
+        lang_env = self.with_context(lang=partner.lang).env
+        account_tax = self.env['account.tax']
+
+        grouped_taxes = defaultdict(lambda: defaultdict(lambda: {'base_amount': 0.0, 'tax_amount': 0.0, 'base_line_keys': set()}))
+        subtotal_priorities = {}
+        for line_data in tax_lines_data:
+            tax_group = line_data['tax'].tax_group_id
+
+            # Update subtotals priorities
+            if tax_group.preceding_subtotal:
+                subtotal_title = tax_group.preceding_subtotal
+                new_priority = tax_group.sequence
+            else:
+                # When needed, the default subtotal is always the most prioritary
+                subtotal_title = _("Untaxed Amount")
+                new_priority = 0
+
+            if subtotal_title not in subtotal_priorities or new_priority < subtotal_priorities[subtotal_title]:
+                subtotal_priorities[subtotal_title] = new_priority
+
+            # Update tax data
+            tax_group_vals = grouped_taxes[subtotal_title][tax_group]
+
+            if 'base_amount' in line_data:
+                # Base line
+                if tax_group == line_data.get('tax_affecting_base', account_tax).tax_group_id:
+                    # In case the base has a tax_line_id belonging to the same group as the base tax,
+                    # the base for the group will be computed by the base tax's original line (the one with tax_ids and no tax_line_id)
+                    continue
+
+                if line_data['line_key'] not in tax_group_vals['base_line_keys']:
+                    # If the base line hasn't been taken into account yet, at its amount to the base total.
+                    tax_group_vals['base_line_keys'].add(line_data['line_key'])
+                    tax_group_vals['base_amount'] += line_data['base_amount']
+
+            else:
+                # Tax line
+                tax_group_vals['tax_amount'] += line_data['tax_amount']
+
+        # Compute groups_by_subtotal
+        groups_by_subtotal = {}
+        for subtotal_title, groups in grouped_taxes.items():
+            groups_vals = [{
+                'tax_group_name': group.name,
+                'tax_group_amount': amounts['tax_amount'],
+                'tax_group_base_amount': amounts['base_amount'],
+                'formatted_tax_group_amount': formatLang(lang_env, amounts['tax_amount'], currency_obj=currency),
+                'formatted_tax_group_base_amount': formatLang(lang_env, amounts['base_amount'], currency_obj=currency),
+                'tax_group_id': group.id,
+                'group_key': '%s-%s' %(subtotal_title, group.id),
+            } for group, amounts in sorted(groups.items(), key=lambda l: l[0].sequence)]
+
+            groups_by_subtotal[subtotal_title] = groups_vals
+
+        # Compute subtotals
+        subtotals_list = [] # List, so that we preserve their order
+        previous_subtotals_tax_amount = 0
+        for subtotal_title in sorted((sub for sub in subtotal_priorities), key=lambda x: subtotal_priorities[x]):
+            subtotal_value = amount_untaxed + previous_subtotals_tax_amount
+            subtotals_list.append({
+                'name': subtotal_title,
+                'amount': subtotal_value,
+                'formatted_amount': formatLang(lang_env, subtotal_value, currency_obj=currency),
+            })
+
+            subtotal_tax_amount = sum(group_val['tax_group_amount'] for group_val in groups_by_subtotal[subtotal_title])
+            previous_subtotals_tax_amount += subtotal_tax_amount
+
+        # Assign json-formatted result to the field
+        return {
+            'amount_total': amount_total,
+            'amount_untaxed': amount_untaxed,
+            'formatted_amount_total': formatLang(lang_env, amount_total, currency_obj=currency),
+            'formatted_amount_untaxed': formatLang(lang_env, amount_untaxed, currency_obj=currency),
+            'groups_by_subtotal': groups_by_subtotal,
+            'subtotals': subtotals_list,
+            'allow_tax_edition': False,
+        }
 
     @api.depends('date', 'line_ids.debit', 'line_ids.credit', 'line_ids.tax_line_id', 'line_ids.tax_ids', 'line_ids.tax_tag_ids')
     def _compute_tax_lock_date_message(self):

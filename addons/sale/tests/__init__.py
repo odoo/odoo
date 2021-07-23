@@ -13,3 +13,4 @@ from . import test_sale_refund
 from . import test_sale_signature
 from . import test_sale_flow
 from . import test_accrued_sale_orders
+from . import test_sale_tax_totals
