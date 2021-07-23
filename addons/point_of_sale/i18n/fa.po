@@ -3,26 +3,24 @@
 # * point_of_sale
 #
 # Translators:
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2020
-# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020
-# Sahar Daraye <sahar.daraye.1369@gmail.com>, 2020
-# Zahed Alfak <tamass4116@gmail.com>, 2020
-# Maziar Niaki <maziarmn@gmail.com>, 2020
-# Arash Sardari <arashss77@gmail.com>, 2020
-# Hamid Darabi, 2020
-# Sepehr Khoshnood <sepehr.kho@gmail.com>, 2020
-# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
-# Martin Trigaux, 2021
-# Far Har <fhari1234@gmail.com>, 2021
-# Hamed Mohammadi <hamed@dehongi.com>, 2021
-# 
+# Arash Sardari <arashss77@gmail.com>, 2018
+# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2018
+# Sahar Daraye <sahar.daraye.1369@gmail.com>, 2018
+# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2018
+# mehdi samadi <mehsamadi@gmail.com>, 2018
+# Zahed Alfak <tamass4116@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Hamid Darabi, 2018
+# Sepehr Khoshnood <sepehr.kho@gmail.com>, 2018
+# Hamed Mohammadi <hamed@dehongi.com>, 2018
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-16 12:59+0000\n"
-"PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2021\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
@@ -287,10 +285,29 @@ msgstr "? کلیک بر روی \"تایید\" پرداخت را تایید اع�
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientDetailsEdit.js:0
+#: code:addons/point_of_sale/static/src/js/screens.js:1275
 #, python-format
 msgid "A Customer Name Is Required"
-msgstr "یک نام برای مشتری الزامی است"
+msgstr "گزینش یک نام برای مشتری الزامی است"
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_res_users__pos_security_pin
+msgid ""
+"A Security PIN used to protect sensible functionality in the Point of Sale"
+msgstr "یک شماره رمز شناسایی جهت محافظت عملکرد‌های حساس در پایانه فروش."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1275
+#, python-format
+msgid "A Customer Name Is Required"
+msgstr "گزینش یک نام برای مشتری الزامی است"
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_res_users__pos_security_pin
+msgid ""
+"A Security PIN used to protect sensible functionality in the Point of Sale"
+msgstr "یک شماره رمز شناسایی جهت محافظت عملکرد‌های حساس در پایانه فروش."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
@@ -1237,14 +1254,19 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1436
+#, python-format
+msgid "Delete order"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1223
 #, python-format
 msgid "Deselect Customer"
 msgstr ""
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.desk_organizer
-#: model:product.template,name:point_of_sale.desk_organizer_product_template
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 #: model:product.product,name:point_of_sale.desk_organizer
@@ -1374,7 +1396,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/digest.py:16
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "به دلیل عدم دسترسی، این آیتم از ایمیل خلاصه کاربر حذف شد."
+msgstr "به دلیل عدم دسترسی، این آیتم از ایمیل گزارش چکیده کاربر حذف شد."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
@@ -1461,21 +1483,7 @@ msgstr "ایمیل"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
-#, python-format
-msgid "Email Receipt"
-msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format
-msgid "Email sent."
-msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
+#: code:addons/point_of_sale/static/src/js/screens.js:1998
 #, python-format
 msgid "Empty Order"
 msgstr ""
@@ -1588,34 +1596,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Positions"
-msgstr "موقعیت های سال مالی"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
-#, python-format
-msgid "Fiscal data module error"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_follower_ids
-msgid "Followers"
-msgstr "دنبال‌کنندگان"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "دنبال کنندگان (کانال ها)"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_partner_ids
-msgid "Followers (Partners)"
-msgstr "دنبال کنندگان (همکاران)"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "آیکون فونت عالی به عبارتی fa-tasks"
+msgstr "موقعیت‌های مالی"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1818,22 +1799,7 @@ msgstr "یادداشت‌های داخلی"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
-#, python-format
-msgid "Invalid action"
-msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format
-msgid "Invalid email."
-msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/Orderline.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/Orderline.xml:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1273
 #, python-format
 msgid "Invalid product lot"
 msgstr ""
@@ -2137,14 +2103,19 @@ msgid "Monitor Stand"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
-msgid "My Activity Deadline"
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_sales_price
+msgid "Multiple Product Prices"
 msgstr ""
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
-msgid "My Sessions"
-msgstr "شیفت‌های من"
+#: selection:res.config.settings,pos_pricelist_setting:0
+msgid "Multiple prices per product (e.g. customer segments, currencies)"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+msgid "My Sales"
+msgstr "فروش‌های من"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2404,15 +2375,8 @@ msgstr "سفارش"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:0
-#: code:addons/point_of_sale/static/src/js/models.js:0
-#, python-format
-msgid "Order %s"
-msgstr "سفارش %s"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:0
-#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/static/src/js/models.js:1958
+#: code:addons/point_of_sale/static/src/js/models.js:1998
 #, python-format
 msgid "Order "
 msgstr ""
@@ -3179,7 +3143,7 @@ msgstr "تعداد"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1376
 #, python-format
 msgid "Read Weighing Scale"
 msgstr ""
@@ -3283,74 +3247,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_return
 msgid "Returned"
-msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
-#, python-format
-msgid "Reversal request sent to terminal"
-msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
-#, python-format
-msgid "Reverse"
-msgstr "معکوس"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
-#, python-format
-msgid "Reverse Payment"
-msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Misc/MobileOrderWidget.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
-#, python-format
-msgid "Review"
-msgstr "مرور"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
-#, python-format
-msgid "Rounding"
-msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "Rounding Method"
-msgstr "روش گردکردن"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
-#, python-format
-msgid "Rounding error in payment lines"
-msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/debug_manager.xml:0
-#, python-format
-msgid "Run Point of Sale JS Tests"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "خطای تحویل پیامک"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/Orderline.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
-#, python-format
-msgid "SN"
 msgstr ""
 
 #. module: point_of_sale
@@ -3518,13 +3414,6 @@ msgid "Send by email"
 msgstr "ارسال با ایمیل"
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format
-msgid "Sending email failed. Please try again."
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
 msgid "Sequence"
 msgstr "ترتیب"
@@ -3601,15 +3490,8 @@ msgid "Set Customer"
 msgstr ""
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
-#, python-format
-msgid "Set Customer"
-msgstr "تعیین مشتری"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_bnk_stmt_cashbox_footer
-msgid "Set Default Cash Opening"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__start_category
+msgid "Set Start Category"
 msgstr ""
 
 #. module: point_of_sale
@@ -3970,26 +3852,9 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
-#, python-format
-msgid ""
-"The amount of your payment lines must be rounded to validate the "
-"transaction."
-msgstr ""
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:0
+#: code:addons/point_of_sale/models/pos_config.py:242
 #, python-format
 msgid "The default pricelist must be included in the available pricelists."
-msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
-#, python-format
-msgid ""
-"The fiscal data module encountered an error while receiving your order."
 msgstr ""
 
 #. module: point_of_sale
@@ -4342,14 +4207,6 @@ msgid "To Close"
 msgstr ""
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
-#, python-format
-msgid "To Pay"
-msgstr "قابل پرداخت"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_product_product__to_weight
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__to_weight
 msgid "To Weigh With Scale"
 msgstr "با ترازو  اندازه‌گیری شود"
@@ -4652,20 +4509,9 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:34
 #, python-format
 msgid ""
-"You can't validate a bank statement that is used in an opened Session of a "
-"Point of Sale."
-msgstr ""
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "You cannot close the POS when orders are still in draft"
-msgstr ""
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "You cannot create a session before the accounting lock date."
+"You cannot confirm all orders of this session, because they have not the "
+"'paid' status.\n"
+"{reference} is in state {state}, total amount: {total}, paid: {paid}"
 msgstr ""
 
 #. module: point_of_sale

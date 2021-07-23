@@ -1,74 +1,74 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* coupon
-# 
-# Translators:
-# Martin Trigaux, 2020
-# Hamid Darabi, 2020
-# Sahar Daraye <sahar.daraye.1369@gmail.com>, 2020
-# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2020
-# Hamed Mohammadi <hamed@dehongi.com>, 2020
-# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
-# 
+#
+# Amir <a.soleimani@kenevist.ir>, 2021.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 11:24+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021\n"
-"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
+"POT-Creation-Date: 2021-07-18 08:04+0000\n"
+"PO-Revision-Date: 2021-07-18 15:58+0430\n"
+"Last-Translator: Amir <a.soleimani@kenevist.ir>\n"
+"Language-Team: English <a.soleimani@kenevist.ir>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: \n"
+"Language: en_GB\n"
+"X-Generator: Lokalize 19.12.3\n"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%(amount)s %(currency)s discount on total amount"
-msgstr ""
+msgstr "%(amount)s %(currency)s تخفیف برروی کل "
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%(percentage)s%% discount on %(product_name)s"
-msgstr ""
+msgstr "%(percentage)s%٪ تخفیف برروی %(product_name)s"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on cheapest product"
-msgstr ""
+msgstr "%s%٪ تخفیف برروی ارزان‌ترین کالا"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on products"
-msgstr ""
+msgstr "%s%٪ تخفیف برروی کالاها"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on total amount"
-msgstr ""
+msgstr "%s%٪ تخفیف برروی کل"
+
+#. module: coupon
+#: code:addons/coupon/wizard/coupon_generate.py:0
+#, python-format
+msgid "%s, a coupon has been generated for you"
+msgstr "%s، کوپن تخفیف برای شما ایجاد شد"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "*Valid for following products:"
-msgstr ""
+msgstr "*مجاز برای کالاهای زیر:"
 
 #. module: coupon
 #: model:coupon.program,name:coupon.10_percent_coupon
 msgid "10% Discount"
-msgstr "10% تخفیف"
+msgstr "10٪ تخفیف"
 
 #. module: coupon
 #: model:product.product,name:coupon.product_product_10_percent_discount
 #: model:product.template,name:coupon.product_product_10_percent_discount_product_template
 msgid "10.0% discount on total amount"
-msgstr ""
+msgstr "10.0٪ تخفیف برروی کل"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
@@ -76,11 +76,13 @@ msgid ""
 "<span class=\"o_form_label oe_inline\"> Days</span> <span "
 "class=\"oe_grey\">if 0, infinite use</span>"
 msgstr ""
+"<span class=\"o_form_label oe_inline\"> روز</span> <span "
+"class=\"oe_grey\">در صورت ۰ بودن روز، بدون محدودیت</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "<span class=\"oe_grey\">if 0, no limit</span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\">در صورت ۰ بودن روز، بدون محدودیت</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -88,42 +90,47 @@ msgid ""
 "<span> Orders</span>\n"
 "                    <span class=\"oe_grey\"> if 0, infinite use</span>"
 msgstr ""
+"<span> سفارش‌ها</span>\n"
+"                    <span class=\"oe_grey\">در صورت ۰ بودن روز، بدون محدودیت<"
+"/span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>Minimum purchase of</span>"
-msgstr ""
+msgstr "<span>حداقل خریده</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>Valid for purchase above</span>"
-msgstr ""
+msgstr "<span>مجاز برای خریدهای بالای</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>products</span>"
-msgstr ""
+msgstr "<span>کالاها</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid ""
 "<strong style=\"font-size: 55px; color: #875A7B\">get free shipping</strong>"
 msgstr ""
+"<strong style=\"font-size: 55px; color: #875A7B\"> تحویل رایگان کالا</strong>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
 msgid "<strong>Active</strong>"
-msgstr ""
+msgstr "<strong>فعال</strong>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
 msgid "<strong>Coupons</strong>"
-msgstr ""
+msgstr "<strong>کوپن‌ها</strong>"
 
 #. module: coupon
 #: model:mail.template,body_html:coupon.mail_template_sale_coupon
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%;"
+" margin:0px auto;\"><tbody>\n"
 "    <tr><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
 "        % if object.partner_id.name:\n"
 "        Congratulations ${object.partner_id.name},<br/>\n"
@@ -133,27 +140,34 @@ msgid ""
 "\n"
 "        % if object.program_id.reward_type == 'discount':\n"
 "            % if object.program_id.discount_type == 'fixed_amount':\n"
-"            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
-"                ${'%s' % format_amount(object.program_id.discount_fixed_amount, object.program_id.currency_id)}\n"
+"            <span style=\"font-size: 50px; color: #875A7B; font-weight:"
+" bold;\">\n"
+"                ${'%s' % format_amount(object.program_id.discount_fixed_amount"
+", object.program_id.currency_id)}\n"
 "            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">off on your next order</strong><br/>\n"
+"            <strong style=\"font-size: 24px;\">off on your next order</strong"
+"><br/>\n"
 "            %else\n"
-"            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
+"            <span style=\"font-size: 50px; color: #875A7B; font-weight:"
+" bold;\">\n"
 "                ${object.program_id.discount_percentage} %\n"
 "            </span>\n"
 "            % if object.program_id.discount_apply_on == 'specific_products'\n"
 "                <br/>\n"
-"                % if len(object.program_id.discount_specific_product_ids) != 1\n"
+"                % if len(object.program_id.discount_specific_product_ids) !="
+" 1\n"
 "                % set display_specific_products = True\n"
 "                <strong style=\"font-size: 24px;\">\n"
 "                    on some products*\n"
 "                </strong>\n"
 "                % else\n"
 "                <strong style=\"font-size: 24px;\">\n"
-"                    ${'on %s' % object.program_id.discount_specific_product_ids.name}\n"
+"                    ${'on %s' % object.program_id.discount_specific_product_id"
+"s.name}\n"
 "                </strong>\n"
 "                % endif\n"
-"            % elif object.program_id.discount_apply_on == 'cheapest_product':\n"
+"            % elif object.program_id.discount_apply_on =="
+" 'cheapest_product':\n"
 "            <br/><strong style=\"font-size: 24px;\">\n"
 "                off on the cheapest product\n"
 "            </strong>\n"
@@ -165,40 +179,50 @@ msgid ""
 "            <br/>\n"
 "            % endif\n"
 "        % elif object.program_id.reward_type == 'product':\n"
-"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
-"                ${'get %s free %s' % (object.program_id.reward_product_quantity, object.program_id.reward_product_id.name)}\n"
+"            <span style=\"font-size: 36px; color: #875A7B; font-weight:"
+" bold;\">\n"
+"                ${'get %s free %s' % (object.program_id.reward_product_quantit"
+"y, object.program_id.reward_product_id.name)}\n"
 "            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">on your next order</strong><br/>\n"
+"            <strong style=\"font-size: 24px;\">on your next order</strong><"
+"br/>\n"
 "        % elif object.program_id.reward_type == 'free_shipping':\n"
-"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
+"            <span style=\"font-size: 36px; color: #875A7B; font-weight:"
+" bold;\">\n"
 "                get free shipping\n"
 "            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">on your next order</strong><br/>\n"
+"            <strong style=\"font-size: 24px;\">on your next order</strong><"
+"br/>\n"
 "        % endif\n"
 "    </td></tr>\n"
-"    <tr style=\"margin-top: 16px\"><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"    <tr style=\"margin-top: 16px\"><td valign=\"top\" style=\"text-align:"
+" center; font-size: 14px;\">\n"
 "        Use this promo code\n"
 "        % if object.expiration_date:\n"
 "            before ${object.expiration_date}\n"
 "        % endif\n"
 "        <p style=\"margin-top: 16px;\">\n"
-"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;\">\n"
+"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px;"
+" background-color: #F1F1F1;\">\n"
 "                ${object.code}\n"
 "            </strong>\n"
 "        </p>\n"
 "        % if object.program_id.rule_min_quantity not in [0, 1]\n"
 "        <span style=\"font-size: 14px;\">\n"
-"            Minimum purchase of ${object.program_id.rule_min_quantity} products\n"
+"            Minimum purchase of ${object.program_id.rule_min_quantity}"
+" products\n"
 "        </span><br/>\n"
 "        % endif\n"
 "        % if object.program_id.rule_minimum_amount != 0.00\n"
 "        <span style=\"font-size: 14px;\">\n"
-"            Valid for purchase above ${object.program_id.company_id.currency_id.symbol}${'%0.2f' % object.program_id.rule_minimum_amount |float}\n"
+"            Valid for purchase above ${object.program_id.company_id.currency_i"
+"d.symbol}${'%0.2f' % object.program_id.rule_minimum_amount |float}\n"
 "        </span><br/>\n"
 "        % endif\n"
 "        % if display_specific_products\n"
 "        <span>\n"
-"            *Valid for following products: ${', '.join(object.program_id.discount_specific_product_ids.mapped('name'))}\n"
+"            *Valid for following products: ${',"
+" '.join(object.program_id.discount_specific_product_ids.mapped('name'))}\n"
 "        </span><br/>\n"
 "        % endif\n"
 "        <br/>\n"
@@ -211,11 +235,116 @@ msgid ""
 "</tbody></table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%;"
+" margin:0px auto;\"><tbody>\n"
+"    <tr><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        % if object.partner_id.name:\n"
+"        ${object.partner_id.name} با تبرییک به شما<br/>\n"
+"        % endif\n"
+"\n"
+"        این جایزه شما برای ${object.program_id.company_id.name} می‌باشد.<br/"
+">\n"
+"\n"
+"        % if object.program_id.reward_type == 'discount':\n"
+"            % if object.program_id.discount_type == 'fixed_amount':\n"
+"            <span style=\"font-size: 50px; color: #875A7B; font-weight:"
+" bold;\">\n"
+"                ${'%s' % format_amount(object.program_id.discount_fixed_amount"
+", object.program_id.currency_id)}\n"
+"            </span><br/>\n"
+"            <strong style=\"font-size: 24px;\">برای سفارش بعدی شما</strong><"
+"br/>\n"
+"            %else\n"
+"            <span style=\"font-size: 50px; color: #875A7B; font-weight:"
+" bold;\">\n"
+"                ${object.program_id.discount_percentage} %\n"
+"            </span>\n"
+"            % if object.program_id.discount_apply_on == 'specific_products'\n"
+"                <br/>\n"
+"                % if len(object.program_id.discount_specific_product_ids) !="
+" 1\n"
+"                % set display_specific_products = True\n"
+"                <strong style=\"font-size: 24px;\">\n"
+"                   برروی برخی از کالاها*\n"
+"                </strong>\n"
+"                % else\n"
+"                <strong style=\"font-size: 24px;\">\n"
+"                    ${'برروی %s' % object.program_id.discount_specific_product"
+"_ids.name}\n"
+"                </strong>\n"
+"                % endif\n"
+"            % elif object.program_id.discount_apply_on =="
+" 'cheapest_product':\n"
+"            <br/><strong style=\"font-size: 24px;\">\n"
+"                تخفیف برروی ارزانترین کالا\n"
+"            </strong>\n"
+"            % else\n"
+"            <br/><strong style=\"font-size: 24px;\">\n"
+"                تخفیف برروی سفارش بعدی شما\n"
+"            </strong>\n"
+"            % endif\n"
+"            <br/>\n"
+"            % endif\n"
+"        % elif object.program_id.reward_type == 'product':\n"
+"            <span style=\"font-size: 36px; color: #875A7B; font-weight:"
+" bold;\">\n"
+"                ${'get %s free %s' % (object.program_id.reward_product_quantit"
+"y, object.program_id.reward_product_id.name)}\n"
+"            </span><br/>\n"
+"            <strong style=\"font-size: 24px;\">on your next order</strong><"
+"br/>\n"
+"        % elif object.program_id.reward_type == 'free_shipping':\n"
+"            <span style=\"font-size: 36px; color: #875A7B; font-weight:"
+" bold;\">\n"
+"                دریافت با تحویل رایگان\n"
+"            </span><br/>\n"
+"            <strong style=\"font-size: 24px;\">در سفارش بعدی شما</strong><br/"
+">\n"
+"        % endif\n"
+"    </td></tr>\n"
+"    <tr style=\"margin-top: 16px\"><td valign=\"top\" style=\"text-align:"
+" center; font-size: 14px;\">\n"
+"        از این کد تخفیف استفاده کنید.\n"
+"        % if object.expiration_date:\n"
+"            اعتبار تا: ${object.expiration_date}\n"
+"        % endif\n"
+"        <p style=\"margin-top: 16px;\">\n"
+"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px;"
+" background-color: #F1F1F1;\">\n"
+"                ${object.code}\n"
+"            </strong>\n"
+"        </p>\n"
+"        % if object.program_id.rule_min_quantity not in [0, 1]\n"
+"        <span style=\"font-size: 14px;\">\n"
+"            حداقل سفارش کالاهای ${object.program_id.rule_min_quantity} \n"
+"        </span><br/>\n"
+"        % endif\n"
+"        % if object.program_id.rule_minimum_amount != 0.00\n"
+"        <span style=\"font-size: 14px;\">\n"
+"            معتبر برای سفارش بالا ${object.program_id.company_id.currency_id.s"
+"ymbol}${'%0.2f' % object.program_id.rule_minimum_amount |float}\n"
+"        </span><br/>\n"
+"        % endif\n"
+"        % if display_specific_products\n"
+"        <span>\n"
+"            *مجاز برای کالاهای زیر ${', '.join(object.program_id.discount_spec"
+"ific_product_ids.mapped('name'))}\n"
+"        </span><br/>\n"
+"        % endif\n"
+"        <br/>\n"
+"        با تشکر از شما،\n"
+"        % if object.order_id.user_id.signature:\n"
+"            <br/>\n"
+"            ${object.order_id.user_id.signature | safe}\n"
+"        % endif\n"
+"    </td></tr>\n"
+"</tbody></table>\n"
+"            "
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__active
 msgid "A program is available for the customers when active"
-msgstr ""
+msgstr "برنامه هنگامی برای مشتری در دسترس می‌باشد که فعال شده باشد"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__promo_code
@@ -224,17 +353,32 @@ msgid ""
 " example, a retailer might tell frequent customers to enter the promotion "
 "code 'THX001' to receive a 10%% discount on their whole order."
 msgstr ""
+"کد تخفیف کدی است که با تخفیف بازاریابی همراه است. به عنوان مثال، یک خرده فروش"
+" ممکن است به مشتریان همیشگی خود بگوید که، کد تخفیف \"THX001\" را وارد کنید تا"
+" 10٪ تخفیف در کل سفارش خود دریافت کند."
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__program_type
 msgid ""
-"A promotional program can be either a limited promotional offer without code (applied automatically)\n"
-"                or with a code (displayed on a magazine for example) that may generate a discount on the current\n"
+"A promotional program can be either a limited promotional offer without code"
+" (applied automatically)\n"
+"                or with a code (displayed on a magazine for example) that may"
+" generate a discount on the current\n"
 "                order or create a coupon for a next order.\n"
 "\n"
-"                A coupon program generates coupons with a code that can be used to generate a discount on the current\n"
+"                A coupon program generates coupons with a code that can be"
+" used to generate a discount on the current\n"
 "                order or create a coupon for a next order."
 msgstr ""
+"یک برنامه تبلیغاتی می‌تواند یک پیشنهاد تبلیغاتی محدود و بدون کد باشد (به صورت"
+" خودکار اعمال می‌شود) یا\n"
+" با کد (به عنوان مثال در یک مجله نمایش داده می‌شود) که می‌تواند در سفارش فعلی"
+" تخفیف اعمال کند یا برای\n"
+" سفارش بعدی کوپن ایجاد کند. \n"
+"\ n"
+"                 برنامه کوپن، کوپن‌هایی با کد تولید می‌کند که می‌تواند برای"
+" hulhg تخفیف در سفارش فعلی یا ایجاد کوپن\n"
+"                 برای سفارش بعدی استفاده شود."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__active
@@ -249,17 +393,17 @@ msgstr "قابلیت کاربرد"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Apply Discount"
-msgstr ""
+msgstr "اعمال تخفیف"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_current_order
 msgid "Apply On Current Order"
-msgstr ""
+msgstr "اعمال برروی سفارش کنونی"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Apply on First"
-msgstr ""
+msgstr "اعمال برروی اولین"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -271,14 +415,22 @@ msgstr "بایگانی شده"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__no_code_needed
 msgid "Automatically Applied"
-msgstr ""
+msgstr "به صورت خودکار اعمال شده است"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__promo_code_usage
 msgid ""
-"Automatically Applied - No code is required, if the program rules are met, the reward is applied (Except the global discount or the free shipping rewards which are not cumulative)\n"
-"Use a code - If the program rules are met, a valid code is mandatory for the reward to be applied\n"
+"Automatically Applied - No code is required, if the program rules are met,"
+" the reward is applied (Except the global discount or the free shipping"
+" rewards which are not cumulative)\n"
+"Use a code - If the program rules are met, a valid code is mandatory for the"
+" reward to be applied\n"
 msgstr ""
+"به صورت خودکار اعمال شده است -  هیچ کدی لازم نیست، در صورت مطابقت با قواعد"
+" برنامه، جایزه به صورت خودکار اعمال می‌شود (به استثنای تخفیف سراسری یا حمل و"
+" نقل رایگان که تجمعی نیستند) \n"
+"از کد استفاده کنید - در صورت مطابقت با قواعد برنامه، کد معتبری برای اعمال"
+" جایزه اجباری است \n"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -289,25 +441,31 @@ msgstr "بارکد"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_partners_domain
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_partners_domain
 msgid "Based on Customers"
-msgstr ""
+msgstr "برمبنای مشتری‌ها"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_products_domain
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_products_domain
 msgid "Based on Products"
-msgstr ""
+msgstr "برمبنای کالاها"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
 msgid ""
-"Build up promotion programs to attract more customers with discounts, free products, free delivery, etc.\n"
-"                You can share promotion codes or grant the promotions automatically if some conditions are met."
+"Build up promotion programs to attract more customers with discounts, free"
+" products, free delivery, etc.\n"
+"                You can share promotion codes or grant the promotions"
+" automatically if some conditions are met."
 msgstr ""
+"با ساخت برنامه‌های تبلیغاتی، می‌توان با استفاده از  تخفیف  کالاهای رایگان،"
+" تحویل رایگان و غیره، مشتری‌های بیشتری جذب کرد. \n"
+"                 در صورت تحقق برخی از شرایط، می‌توانید کدهای تبلیغات را به"
+" اشتراک بگذارید یا به صورت خودکار تخفیف اعمال کنید."
 
 #. module: coupon
 #: model:coupon.program,name:coupon.3_cabinets_plus_1_free
 msgid "Buy 3 large cabinets, get one for free"
-msgstr ""
+msgstr "سه کابینت بزرگ خریداری کنید، یک عدد رایگان بگیرید"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
@@ -328,7 +486,7 @@ msgstr "کد"
 #. module: coupon
 #: model:coupon.program,name:coupon.10_percent_auto_applied
 msgid "Code for 10% on orders"
-msgstr ""
+msgstr "کد برای 10٪ برروی سفارش‌ها"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__company_id
@@ -339,7 +497,7 @@ msgstr "شرکت"
 #: code:addons/coupon/models/coupon.py:0
 #, python-format
 msgid "Compose Email"
-msgstr "نگارش ایمیل"
+msgstr "ارسال ایمیل"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -349,7 +507,7 @@ msgstr "شروط"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Congratulations"
-msgstr ""
+msgstr "تبریک"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_coupon
@@ -359,57 +517,57 @@ msgstr "کوپن"
 #. module: coupon
 #: model:ir.actions.report,name:coupon.report_coupon_code
 msgid "Coupon Code"
-msgstr ""
+msgstr "کد کوپن"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_count
 msgid "Coupon Count"
-msgstr ""
+msgstr "شمارش کوپن"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_program
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__coupon_program
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Coupon Program"
-msgstr ""
+msgstr "برنامه کوپن"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid "Coupon Program Name"
-msgstr ""
+msgstr "نام برنامه کوپن"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid "Coupon Program Name..."
-msgstr ""
+msgstr "نام برنامه کوپن..."
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_coupon_program
 msgid "Coupon Programs"
-msgstr ""
+msgstr "برنامه‌های کوپن"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_reward
 msgid "Coupon Reward"
-msgstr ""
+msgstr "جوایز کوپن"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_rule
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_id
 msgid "Coupon Rule"
-msgstr ""
+msgstr "قواعد کوپن"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_to
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_date_to
 msgid "Coupon program end date"
-msgstr ""
+msgstr "تاریخ اتمام برنامه کوپن"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_from
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_date_from
 msgid "Coupon program start date"
-msgstr ""
+msgstr "تاریخ آغاز برنامه کوپن"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__sequence
@@ -417,19 +575,21 @@ msgid ""
 "Coupon program will be applied based on given sequence if multiple programs "
 "are defined on same condition(For minimum amount)"
 msgstr ""
+"اگر چندین برنامه با یک شرط تعریف شوند، برنامه کوپن بر مبنای توالی داده شده"
+" اعمال می‌شود (برای حداقل مقدار)"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_partners_domain
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_partners_domain
 msgid "Coupon program will work for selected customers only"
-msgstr ""
+msgstr "برنامه کوپن فقط برای مشتریان انتخاب شده کار خواهد کرد"
 
 #. module: coupon
 #: model:ir.actions.server,name:coupon.expire_coupon_cron_ir_actions_server
 #: model:ir.cron,cron_name:coupon.expire_coupon_cron
 #: model:ir.cron,name:coupon.expire_coupon_cron
 msgid "Coupon: expire coupon based on date"
-msgstr ""
+msgstr "کوپن: انقضای کوپن برمبنای تاریخ"
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_action
@@ -438,17 +598,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
 msgid "Coupons"
-msgstr ""
+msgstr "کوپن‌ها"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
 msgid "Create a new coupon program"
-msgstr ""
+msgstr "ایجاد برنامه جدید کوپن"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
 msgid "Create a new promotion program"
-msgstr ""
+msgstr "ایجاد برنامه تبلیغاتی جدید"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__create_uid
@@ -457,7 +617,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__create_uid
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__create_uid
 msgid "Created by"
-msgstr "ایجاد توسط"
+msgstr "ایجاد شده توسط"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__create_date
@@ -483,6 +643,7 @@ msgstr "مشتری"
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_uom_id
 msgid "Default unit of measure used for all stock operations."
 msgstr ""
+"واحد اندازه‌گیری پیش‌فرض که برای تمامی عملیات‌های انبارگردانی  استفاده می‌شود."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_percentage
@@ -497,32 +658,37 @@ msgstr "تخفیف"
 msgid ""
 "Discount - Reward will be provided as discount.\n"
 "Free Product - Free product will be provide as reward \n"
-"Free Shipping - Free shipping will be provided as reward (Need delivery module)"
+"Free Shipping - Free shipping will be provided as reward (Need delivery"
+" module)"
 msgstr ""
+"تخفیف - جایزه به عنوان تخفیف ارائه می‌شود. \n"
+"کالای رایگان - کالای رایگان به عنوان جایزه ارائه می‌شود \n"
+"ارسال رایگان - حمل و نقل رایگان به عنوان جایزه ارائه می‌شود (نیاز به ماژول"
+" تحویل)"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_apply_on
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_apply_on
 msgid "Discount Apply On"
-msgstr ""
+msgstr "اعمال تخفیف برروی "
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_max_amount
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_max_amount
 msgid "Discount Max Amount"
-msgstr ""
+msgstr "حداکثر مقدار تخفیف"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_type
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_type
 msgid "Discount Type"
-msgstr ""
+msgstr "نوع تخفیف"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "Discount percentage should be between 1-100"
-msgstr ""
+msgstr "درصد تخفیف باید بین ۰ تا ۱۰۰ باشد"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__display_name
@@ -538,7 +704,7 @@ msgstr "نام نمایشی"
 #. module: coupon
 #: model:ir.model,name:coupon.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "ویزارد ایجاد ایمیل"
+msgstr "پنجره ایجاد ایمیل"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_to
@@ -560,7 +726,7 @@ msgstr "منقضی شده"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_search
 msgid "Expired Programs"
-msgstr ""
+msgstr "برنامه‌های منقضی شده"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_fixed_amount
@@ -573,42 +739,42 @@ msgstr "مبلغ ثابت"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__partner_id
 msgid "For Customer"
-msgstr ""
+msgstr "برای مشتری"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_id
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__reward_type__product
 msgid "Free Product"
-msgstr ""
+msgstr "کالای رایگان"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "Free Product - %s"
-msgstr ""
+msgstr "کالای رایگان - %s"
 
 #. module: coupon
 #: model:product.product,name:coupon.product_product_free_large_cabinet
 #: model:product.template,name:coupon.product_product_free_large_cabinet_product_template
 msgid "Free Product - Large Cabinet"
-msgstr ""
+msgstr "کالای رایگان - کابینت بزرگ"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 msgid "Generate"
-msgstr ""
+msgstr "ایجاد "
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_generate_wizard
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid "Generate Coupon"
-msgstr ""
+msgstr "ایجاد کوپن"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 msgid "Generate Coupons"
-msgstr ""
+msgstr "ایجاد کوپن‌ها"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
@@ -616,26 +782,28 @@ msgid ""
 "Generate and share coupon codes with your customers to get discounts or free"
 " products."
 msgstr ""
+"برای دریافت تخفیف یا کالای رایگان، کدهای کوپن را ایجاد کرده و با مشتریان خود"
+" به اشتراک بگذارید."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_ids
 msgid "Generated Coupons"
-msgstr ""
+msgstr "کوپن‌های ایجاد شده"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__generation_type
 msgid "Generation Type"
-msgstr ""
+msgstr "نوع ایجاد"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__has_partner_email
 msgid "Has Partner Email"
-msgstr ""
+msgstr "دارای ایمیل مخاطب"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Here is your reward from"
-msgstr ""
+msgstr "این جایزه شما برای "
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__id
@@ -685,58 +853,58 @@ msgstr "لوگو"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Max Discount Amount"
-msgstr ""
+msgstr "حداکثر میزان تخفیف"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__maximum_use_number
 msgid "Maximum Use Number"
-msgstr ""
+msgstr "حداکثر دفعات استفاده"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_max_amount
 #: model:ir.model.fields,help:coupon.field_coupon_reward__discount_max_amount
 msgid "Maximum amount of discount that can be provided"
-msgstr ""
+msgstr "حداکثر مقدار تخفیف قابل اعمال"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__maximum_use_number
 msgid "Maximum number of sales orders in which reward can be provided"
-msgstr ""
+msgstr "حداکثر مقدار سفارش فروش که در آن جایزه قابل اعمال است"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Minimum Purchase Of"
-msgstr ""
+msgstr "حداقل خرید "
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_min_quantity
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_min_quantity
 msgid "Minimum Quantity"
-msgstr "تعداد کمینه"
+msgstr "حداقل تعداد"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_rules.py:0
 #, python-format
 msgid "Minimum purchased amount should be greater than 0"
-msgstr ""
+msgstr "حداقل مقدار خریداری شده باید بیش از ۰ باشد"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_rules.py:0
 #, python-format
 msgid "Minimum quantity should be greater than 0"
-msgstr ""
+msgstr "حداقل تعداد باید بیشتر از ۰ باشد"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_minimum_amount
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_minimum_amount
 msgid "Minimum required amount to get the reward"
-msgstr ""
+msgstr "حداقل مقدار مورد نیاز برای دریافت جایزه"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_min_quantity
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_min_quantity
 msgid "Minimum required product quantity to get the reward"
-msgstr ""
+msgstr "حداقل تعداد کالای مورد نیاز برای دریافت جایزه"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__name
@@ -747,32 +915,32 @@ msgstr "نام"
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__nbr_coupons
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_generate_wizard__generation_type__nbr_coupon
 msgid "Number of Coupons"
-msgstr ""
+msgstr "تعداد کوپن‌ها"
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_generate_action
 msgid "Number of Coupons To Generate"
-msgstr ""
+msgstr "تعداد کوپن‌ها برای ایجاد"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_generate_wizard__generation_type__nbr_customer
 msgid "Number of Selected Customers"
-msgstr ""
+msgstr "تعداد مشتری‌های انتخاب شده"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_generate_wizard__nbr_coupons
 msgid "Number of coupons"
-msgstr ""
+msgstr "تعداد کوپن‌ها"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__cheapest_product
 msgid "On Cheapest Product"
-msgstr ""
+msgstr "برروی ارزان‌ترین کالا"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__on_order
 msgid "On Order"
-msgstr ""
+msgstr "برروی سفارش"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_apply_on
@@ -782,22 +950,25 @@ msgid ""
 "Cheapest product - Discount on cheapest product of the order\n"
 "Specific products - Discount on selected specific products"
 msgstr ""
+"برروی سفارش - اعمال تخفیف در کل سفارش \n"
+"برروی ارزان‌ترین کالا - اعمال تخفیف در ارزان‌ترین کالای سفارش داده شده \n"
+"برروی کالای معین - اعمال تخفیف برروی کالای انتخاب شده"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_products_domain
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_products_domain
 msgid "On Purchase of selected product, reward will be given"
-msgstr ""
+msgstr "در خرید کالای انتخاب شده، جایزه داده می‌شود"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__specific_products
 msgid "On Specific Products"
-msgstr ""
+msgstr "برروی کالای معین"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__reserved
 msgid "Pending"
-msgstr "معلق"
+msgstr "در انتظار"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_type__percentage
@@ -811,11 +982,13 @@ msgid ""
 "Percentage - Entered percentage discount will be provided\n"
 "Amount - Entered fixed amount discount will be provided"
 msgstr ""
+"درصد - درصد وارد شده به عنوان تخفیف اعمال خواهد شد \n"
+"مبلغ - مبلغ وارد شده به عنوان تخفیف اعمال خواهد شد"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_coupon__discount_line_product_id
 msgid "Product used in the sales order to apply the discount."
-msgstr ""
+msgstr "کالای مورد استفاده در سفارش فروش برای اعمال تخفیف."
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_line_product_id
@@ -824,6 +997,8 @@ msgid ""
 "Product used in the sales order to apply the discount. Each coupon program "
 "has its own reward product for reporting purpose"
 msgstr ""
+"کالای مورد استفاده در سفارش فروش برای اعمال تخفیف. هر برنامه کوپن کالای"
+" جایزه‌ای خاص خود را برای گزارش دادن دارا می‌باشد"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_specific_product_ids
@@ -837,47 +1012,47 @@ msgstr "کالاها"
 msgid ""
 "Products that will be discounted if the discount is applied on specific "
 "products"
-msgstr ""
+msgstr "کالاهایی که در صورت اعمال تخفیف روی کالای معین شده، شامل تخفیف می‌شود"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__program_id
 msgid "Program"
-msgstr ""
+msgstr "برنامه"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__program_type
 msgid "Program Type"
-msgstr ""
+msgstr "نوع برنامه"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code_usage
 msgid "Promo Code Usage"
-msgstr ""
+msgstr "موارد استفاده از کد تخفیف"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code
 msgid "Promotion Code"
-msgstr ""
+msgstr "کد تخفیف"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Promotion Program Name"
-msgstr ""
+msgstr "نام برنامه تخفیفی"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Promotion Program Name..."
-msgstr ""
+msgstr "نام برنامه تخفیفی..."
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_promo_program
 msgid "Promotion Programs"
-msgstr ""
+msgstr "برنامه‌های تخفیف"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__promotion_program
 msgid "Promotional Program"
-msgstr ""
+msgstr "برنامه تخفیف"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_quantity
@@ -890,90 +1065,90 @@ msgstr "تعداد"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_id
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Reward"
-msgstr "پاداش"
+msgstr "جایزه"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_description
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_description
 msgid "Reward Description"
-msgstr ""
+msgstr "توضیحات جایزه"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__discount_line_product_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_line_product_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_line_product_id
 msgid "Reward Line Product"
-msgstr ""
+msgstr "ردیف کالای جایزه"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_id
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_id
 msgid "Reward Product"
-msgstr ""
+msgstr "کالای جایزه"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_type
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_type
 msgid "Reward Type"
-msgstr ""
+msgstr "نوع جایزه"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_quantity
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_quantity
 msgid "Reward product quantity"
-msgstr ""
+msgstr "تعداد کالای جایزه"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Rewards"
-msgstr ""
+msgstr "جوایز"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_minimum_amount
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_minimum_amount
 msgid "Rule Minimum Amount"
-msgstr ""
+msgstr "قاعده حداقل مقدار"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_minimum_amount_tax_inclusion
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_minimum_amount_tax_inclusion
 msgid "Rule Minimum Amount Tax Inclusion"
-msgstr ""
+msgstr "قاعده حداقل مقدار با احتساب مالیات"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_report_coupon_report_coupon
 msgid "Sales Coupon Report"
-msgstr ""
+msgstr "گزارش کوپن فروش"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select company"
-msgstr ""
+msgstr "انتخاب شرکت"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Select customer"
-msgstr ""
+msgstr "انتخاب مشتری"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select product"
-msgstr ""
+msgstr "انتخاب کالا"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select products"
-msgstr ""
+msgstr "انتخاب کالاها"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select reward product"
-msgstr ""
+msgstr "انتخاب کالای جایزه"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
 msgid "Send a Coupon"
-msgstr ""
+msgstr "ارسال کوپن"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
@@ -996,6 +1171,7 @@ msgid ""
 "Some selected customers do not have an email address and will not receive "
 "the coupon."
 msgstr ""
+"برخی از مشتریان انتخاب شده آدرس ایمیل ندارند و کوپن را دریافت نخواهند کرد."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_from
@@ -1006,57 +1182,57 @@ msgstr "تاریخ آغاز"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__state
 msgid "State"
-msgstr "مرحله"
+msgstr "وضعیت"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_excluded
 msgid "Tax Excluded"
-msgstr "با مالیات"
+msgstr "بدون احتساب مالیات"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_included
 msgid "Tax Included"
-msgstr ""
+msgstr "با احتساب مالیات"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Thank you,"
-msgstr ""
+msgstr "با تشکر از شما،"
 
 #. module: coupon
 #: model:ir.model.constraint,message:coupon.constraint_coupon_coupon_unique_coupon_code
 msgid "The coupon code must be unique!"
-msgstr ""
+msgstr "کد کوپن باید یکتا باشد!"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_fixed_amount
 #: model:ir.model.fields,help:coupon.field_coupon_reward__discount_fixed_amount
 msgid "The discount in fixed amount"
-msgstr ""
+msgstr "اعمال تخفیف با مقدار ثابت"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_percentage
 #: model:ir.model.fields,help:coupon.field_coupon_reward__discount_percentage
 msgid "The discount in percentage, between 1 and 100"
-msgstr ""
+msgstr "درصد تخفیف بین ۱ تا ۱۰۰"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_program.py:0
 #, python-format
 msgid "The program code must be unique!"
-msgstr ""
+msgstr "کد برنامه باید یکتا باشد!"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_rules.py:0
 #, python-format
 msgid "The start date must be before the end date"
-msgstr ""
+msgstr "تاریخ آغاز باید قبل از تاریخ پایان باشد"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_uom_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_uom_id
 msgid "Unit of Measure"
-msgstr "واحد  اندازه‌گیری"
+msgstr "واحد اندازه‌گیری"
 
 #. module: coupon
 #: model:product.product,uom_name:coupon.product_product_10_percent_discount
@@ -1069,12 +1245,12 @@ msgstr "واحد‌ها"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__code_needed
 msgid "Use a code"
-msgstr ""
+msgstr "استفاده از کد"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Use this promo code before"
-msgstr ""
+msgstr "اعتبار کد تخفیف تا"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__used
@@ -1084,61 +1260,61 @@ msgstr "استفاده شده"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__new
 msgid "Valid"
-msgstr ""
+msgstr "معتبر"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Validity"
-msgstr "معتبر بودن"
+msgstr "اعتبار"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__validity_duration
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid "Validity Duration"
-msgstr ""
+msgstr "مدت زمان اعتبار"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__validity_duration
 msgid "Validity duration for a coupon after its generation"
-msgstr ""
+msgstr "مدت زمان اعتبار کوپن بعد از ایجاد آن"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_program.py:0
 #, python-format
 msgid "You can not delete a program in active state"
-msgstr ""
+msgstr "شما نمی‌تواند برنامه‌ای را که در وضعیت فعال می‌باشد را پاک کنید"
 
 #. module: coupon
 #: model:mail.template,report_name:coupon.mail_template_sale_coupon
 msgid "Your Coupon Code"
-msgstr ""
+msgstr "کد کوپن شما"
 
 #. module: coupon
 #: model:mail.template,subject:coupon.mail_template_sale_coupon
 msgid "Your reward coupon from ${object.program_id.company_id.name} "
-msgstr ""
+msgstr "کوپن تخفیف شما از ${object.program_id.company_id.name} "
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "off %s"
-msgstr ""
+msgstr "تخفیف %s"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "off on %s"
-msgstr ""
+msgstr "تخفیف برروی %s"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "off on some products*"
-msgstr ""
+msgstr "تخفیف برروی برخی از کالاها"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "off on the cheapest product"
-msgstr ""
+msgstr "تخفیف بر"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "on your next order"
-msgstr ""
+msgstr "برروی سفارش بعدی شما اعما خواهد شد"
