@@ -612,7 +612,8 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
 
     # Helpers
 
-    def _get_afip_pos_system_real_name(self):
+    @classmethod
+    def _get_afip_pos_system_real_name(cls):
         return {'PREPRINTED': 'II_IM'}
 
     def _create_journal(self, afip_ws, data=None):
