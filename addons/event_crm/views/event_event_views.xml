@@ -4,6 +4,7 @@
         <field name="name">event.event.form.inherit.event.crm</field>
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="priority" eval="30"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='%(event.act_event_registration_from_event)d']" position="after">
                 <button name="%(crm_lead_action_from_event)d" class="oe_stat_button" type="action" icon="fa-star"
