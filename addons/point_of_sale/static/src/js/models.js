@@ -67,6 +67,7 @@ exports.PosModel = Backbone.Model.extend({
         this.config = null;
         this.units = [];
         this.units_by_id = {};
+        this.uom_unit_id = null;
         this.default_pricelist = null;
         this.order_sequence = 1;
         window.posmodel = this;
@@ -208,6 +209,13 @@ exports.PosModel = Backbone.Model.extend({
             _.each(units, function(unit){
                 self.units_by_id[unit.id] = unit;
             });
+        }
+    },{
+        model:  'ir.model.data',
+        fields: ['res_id'],
+        domain: function(){ return [['name', '=', 'product_uom_unit']]; },
+        loaded: function(self,unit){
+            self.uom_unit_id = unit[0].res_id;
         }
     },{
         model:  'res.partner',
@@ -1929,6 +1937,7 @@ exports.Orderline = Backbone.Model.extend({
             id: this.id,
             quantity:           this.get_quantity(),
             unit_name:          this.get_unit().name,
+            is_in_unit:         this.get_unit().id == this.pos.uom_unit_id,
             price:              this.get_unit_display_price(),
             discount:           this.get_discount(),
             product_name:       this.get_product().display_name,

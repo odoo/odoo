@@ -513,7 +513,7 @@ class IrAttachment(models.Model):
         # remove computed field depending of datas
         for field in ('file_size', 'checksum'):
             vals.pop(field, False)
-        if 'mimetype' in vals or 'datas' in vals:
+        if 'mimetype' in vals or 'datas' in vals or 'raw' in vals:
             vals = self._check_contents(vals)
         return super(IrAttachment, self).write(vals)
 
@@ -545,9 +545,16 @@ class IrAttachment(models.Model):
             for field in ('file_size', 'checksum'):
                 values.pop(field, False)
             values = self._check_contents(values)
-            if 'datas' in values:
-                data = values.pop('datas')
-                values.update(self._get_datas_related_values(base64.b64decode(data or b''), values['mimetype']))
+            raw, datas = values.pop('raw', None), values.pop('datas', None)
+            if raw or datas:
+                if isinstance(raw, str):
+                    # b64decode handles str input but raw needs explicit encoding
+                    raw = raw.encode()
+                values.update(self._get_datas_related_values(
+                    raw or base64.b64decode(datas or b''),
+                    values['mimetype']
+                ))
+
             # 'check()' only uses res_model and res_id from values, and make an exists.
             # We can group the values by model, res_id to make only one query when 
             # creating multiple attachments on a single record.
