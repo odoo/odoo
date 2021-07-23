@@ -485,6 +485,90 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('prevent the dialog in not editable x2many tree view with option no_open True', async function (assert) {
+        assert.expect(5);
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="turtles">
+                            <tree no_open="True">
+                                <field name="turtle_foo"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            `,
+            res_id: 1,
+            mockRPC(route) {
+                assert.step(route);
+                return this._super(...arguments);
+            },
+        });
+        assert.containsOnce(
+            form,
+            '.o_data_row:contains("blip")',
+            "There should be one record in x2many list view"
+        );
+        await testUtils.dom.click(form.$('.o_data_row:first'));
+        assert.verifySteps([
+            "/web/dataset/call_kw/partner/read",
+            "/web/dataset/call_kw/turtle/read",
+            // if there is a third rpc then it means that we ask to open a dialog.
+        ]);
+        assert.strictEqual(
+            $('.modal-dialog').length,
+            0,
+            "There is should be no dialog open on click of readonly list row"
+        );
+        form.destroy();
+    });
+
+    QUnit.test('prevent the dialog in x2many tree view in readonly form with option no_open True', async function (assert) {
+        assert.expect(5);
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form edit="0">
+                    <sheet>
+                        <field name="turtles">
+                            <tree no_open="True">
+                                <field name="turtle_foo"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            `,
+            res_id: 1,
+            mockRPC(route) {
+                assert.step(route);
+                return this._super(...arguments);
+            },
+        });
+        assert.containsOnce(
+            form,
+            '.o_data_row:contains("blip")',
+            "There should be one record in x2many list view"
+        );
+        await testUtils.dom.click(form.$('.o_data_row:first'));
+        assert.verifySteps([
+            "/web/dataset/call_kw/partner/read",
+            "/web/dataset/call_kw/turtle/read",
+            // if there is a third rpc then it means that we ask to open a dialog.
+        ]);
+        assert.strictEqual(
+            $('.modal-dialog').length,
+            0,
+            "There is should be no dialog open on click of readonly list row"
+        );
+        form.destroy();
+    });
+
     QUnit.test('delete a record while adding another one in a multipage', async function (assert) {
         // in a many2one with at least 2 pages, add a new line. Delete the line above it.
         // (the onchange makes it so that the virtualID is inserted in the middle of the currentResIDs.)

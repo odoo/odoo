@@ -1461,7 +1461,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                 addCreateLine: this._hasCreateLine(),
                 addTrashIcon: this._hasTrashIcon(),
                 isMany2Many: this.isMany2Many,
-                no_open: (this.isReadonly && !this.hasReadonlyModifier) &&
+                no_open: (this.isReadonly && !this.hasReadonlyModifier) ||
                     (this._canQuickEdit || toBoolElse(arch.attrs.no_open || '', false)),
                 columnInvisibleFields: this.currentColInvisibleFields,
             });
