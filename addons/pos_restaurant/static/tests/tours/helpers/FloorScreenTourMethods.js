@@ -24,7 +24,7 @@ odoo.define('pos_restaurant.tour.FloorScreenTourMethods', function (require) {
             return [
                 {
                     content: `click edit button`,
-                    trigger: `.floor-map .edit-button`,
+                    trigger: `.buttons .edit-button`,
                 },
             ];
         }
@@ -32,7 +32,7 @@ odoo.define('pos_restaurant.tour.FloorScreenTourMethods', function (require) {
             return [
                 {
                     content: 'add table',
-                    trigger: `.floor-map .edit-button i[aria-label=Add]`,
+                    trigger: `.buttons .edit-button i[aria-label=Add]`,
                 },
             ];
         }
@@ -40,7 +40,7 @@ odoo.define('pos_restaurant.tour.FloorScreenTourMethods', function (require) {
             return [
                 {
                     content: 'duplicate table',
-                    trigger: `.floor-map .edit-button i[aria-label=Duplicate]`,
+                    trigger: `.buttons .edit-button i[aria-label=Duplicate]`,
                 },
             ];
         }
@@ -48,7 +48,7 @@ odoo.define('pos_restaurant.tour.FloorScreenTourMethods', function (require) {
             return [
                 {
                     content: 'rename table',
-                    trigger: `.floor-map .edit-button i[aria-label=Rename]`,
+                    trigger: `.buttons .edit-button i[aria-label=Rename]`,
                 },
             ];
         }
@@ -56,7 +56,7 @@ odoo.define('pos_restaurant.tour.FloorScreenTourMethods', function (require) {
             return [
                 {
                     content: 'change number of seats',
-                    trigger: `.floor-map .edit-button i[aria-label=Seats]`,
+                    trigger: `.buttons .edit-button i[aria-label=Seats]`,
                 },
             ];
         }
@@ -64,7 +64,7 @@ odoo.define('pos_restaurant.tour.FloorScreenTourMethods', function (require) {
             return [
                 {
                     content: 'trash table',
-                    trigger: `.floor-map .edit-button.trash`,
+                    trigger: `.buttons .edit-button.trash`,
                 },
             ];
         }
@@ -110,7 +110,7 @@ odoo.define('pos_restaurant.tour.FloorScreenTourMethods', function (require) {
             return [
                 {
                     content: `check if edit mode is ${flag ? 'active' : 'inactive'}`,
-                    trigger: `.floor-map .edit-button${flag ? '.active' : ':not(:has(.active))'}`,
+                    trigger: `.buttons .edit-button${flag ? '.active' : ':not(:has(.active))'}`,
                     run: () => {},
                 },
             ];

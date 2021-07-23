@@ -31,25 +31,17 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             this.state = useState({
                 selectedFloorId: floor.id,
                 selectedTableId: null,
-                isEditMode: false,
+                isEditMode: floor.tables.length === 0,
                 floorBackground: floor.background_color,
-                floorMapScrollTop: 0,
                 isDisplaySearch: false,
                 searchQuery: '',
                 view: 'floor-map'
             });
-            this.floorMapRef = useRef('floor-map-ref');
-        }
-        patched() {
-            this.floorMapRef.el.style.background = this.state.floorBackground;
-            this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
         }
         mounted() {
             if (this.env.pos.table) {
                 this.env.pos.set_table(null);
             }
-            this.floorMapRef.el.style.background = this.state.floorBackground;
-            this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
             // call _tableLongpolling once then set interval of 5sec.
             this._tableLongpolling();
             this.tableLongpolling = setInterval(this._tableLongpolling.bind(this), 5000);
@@ -120,7 +112,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
         selectFloor(floor) {
             this.state.selectedFloorId = floor.id;
             this.state.floorBackground = this.activeFloor.background_color;
-            this.state.isEditMode = false;
+            this.state.isEditMode = floor.tables.length === 0;
             this.state.selectedTableId = null;
             this.state.isDisplaySearch = false;
             this.state.searchQuery = '';

@@ -13,7 +13,7 @@
                         </t>
                     </div>
                 </t>
-                <div t-if="env.isMobile and !isFloorEmpty" class="buttons" t-attf-style="background: {{state.floorBackground}};">
+                <div class="buttons" t-att-class="{'o-floor-map': state.view === 'floor-map', 'o-floor-list': state.view === 'list' }" t-attf-style="background: {{state.isDisplaySearch || state.isEditMode ? '#fff' : state.floorBackground}};">
                     <t t-if="state.isDisplaySearch">
                         <span class="button close-search-icon" t-on-click="_onCloseSearch">
                             <i class="fa fa-arrow-left" role="img" aria-label="Back" title="Back" />
@@ -21,25 +21,40 @@
                         <input class="search button" type="text" autofocus="autofocus" placeholder="Search..." name="searchTable" t-model="state.searchQuery" />
                     </t>
                     <t t-else="">
-                        <t t-if="state.view === 'floor-map' and !('ontouchstart' in window)">
-                            <span class="button" t-on-click="scaleIn">
-                                <i class="fa fa-minus" role="img" aria-label="Zoom in" title="Zoom in" />
-                            </span>
-                            <span class="button" t-on-click="scaleOut">
-                                <i class="fa fa-plus" role="img" aria-label="Zoom out" title="Zoom out" />
+                        <t t-if="!isFloorEmpty">
+                            <t t-if="state.view === 'floor-map'">
+                                <t t-if="!('ontouchstart' in window) and !state.isEditMode">
+                                    <span class="button" t-on-click="scaleIn">
+                                        <i class="fa fa-minus" role="img" aria-label="Zoom in" title="Zoom in" />
+                                    </span>
+                                    <span class="button" t-on-click="scaleOut">
+                                        <i class="fa fa-plus" role="img" aria-label="Zoom out" title="Zoom out" />
+                                    </span>
+                                </t>
+                                <span t-if="env.pos.user.role === 'manager'" class="button edit-button editing" t-att-class="{ active: state.isEditMode }" t-on-click.stop="toggleEditMode">
+                                    <i t-if="state.isEditMode" class="fa fa-arrow-left" role="img" aria-label="Back" title="Back" />
+                                    <i t-else="" class="fa fa-pencil" role="img" aria-label="Edit" title="Edit"/>
+                                </span>
+                            </t>
+                            <span t-if="!state.isEditMode and env.isMobile" class="search button">
+                                <span class="search-icon" t-on-click="state.isDisplaySearch=!state.isDisplaySearch">
+                                    <i class="fa fa-search" role="img" aria-label="Search" title="Search" />
+                                </span>
                             </span>
                         </t>
-                        <span class="search button" t-attf-style="background: {{state.floorBackground }};">
-                            <span class="search-icon" t-on-click="state.isDisplaySearch=!state.isDisplaySearch">
-                                <i class="fa fa-search" role="img" aria-label="Search" title="Search" />
-                            </span>
-                        </span>
-                        <span class="button" t-on-click="state.view='list'">
-                            <i class="fa fa-list-ul" role="img" aria-label="Floor list" title="Floor list" />
-                        </span>
-                        <span class="button" t-on-click="state.view='floor-map'">
-                            <i class="fa fa-map" role="img" aria-label="Floor map" title="Floor map" />
-                        </span>
+                        <t t-if="state.isEditMode">
+                            <EditBar selectedTable="selectedTable" />
+                        </t>
+                        <t t-else="">
+                            <t t-if="env.isMobile">
+                                <span class="button" t-on-click="state.view='list'">
+                                    <i class="fa fa-list-ul" role="img" aria-label="Floor list" title="Floor list" />
+                                </span>
+                                <span class="button" t-on-click="state.view='floor-map'">
+                                    <i class="fa fa-map" role="img" aria-label="Floor map" title="Floor map" />
+                                </span>
+                            </t>
+                        </t>
                     </t>
                 </div>
                 <div t-if="state.view === 'list'" class="floor-list" t-attf-style="background: {{state.floorBackground}};">
@@ -66,8 +81,7 @@
                      t-on-touchmove="_onPinchMove"
                      t-on-touchend="_onPinchEnd"
                      t-on-click="trigger('deselect-table')"
-                     t-ref="floor-map-ref"
-                     >
+                     t-attf-style="background: {{state.floorBackground}};">
                     <div t-if="isFloorEmpty" class="empty-floor">
                         <span>This floor has no tables yet, use the </span>
                         <i class="fa fa-plus" role="img" aria-label="Add button" title="Add button"></i>
@@ -79,11 +93,6 @@
                             <EditableTable t-else="" table="table" />
                         </t>
                     </div>
-                    <span t-if="env.pos.user.role == 'manager'" class="edit-button editing" t-att-class="{ active: state.isEditMode }" t-on-click.stop="toggleEditMode"
-                          t-attf-style="top:{{state.floorMapScrollTop}}px;">
-                        <i class="fa fa-pencil" role="img" aria-label="Edit" title="Edit"></i>
-                    </span>
-                    <EditBar t-if="state.isEditMode" selectedTable="selectedTable" floorMapScrollTop="state.floorMapScrollTop"/>
                 </div>
             </div>
         </div>

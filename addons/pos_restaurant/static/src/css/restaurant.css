@@ -122,62 +122,50 @@
 .floor-map .table.selected .table-seats {
     margin-left: -12px;
 }
-.floor-map .edit-button.editing {
-    position: fixed;
-    top: 0;
-    right: 0;
+.floor-map .buttons {
+    background: white;
+}
+.buttons .edit-button.editing {
     font-size: 20px;
-    margin: 8px;
     line-height: 32px;
     width: 32px;
     text-align: center;
     border-radius: 5px;
     cursor: pointer;
-    border: solid 1px rgba(0,0,0,0.2);
+    margin-left: auto;
 }
-.floor-map .edit-button.editing.active {
+.buttons .edit-button.editing.active {
     background: #444;
     border-color: transparent;
     color: white;
+    margin-left: initial;
 }
-.floor-map .edit-bar {
-    position: fixed;
-    top: 0;
-    right: 40px;
-    margin: 8px;
-    line-height: 34px;
+.buttons .edit-bar {
     text-align: center;
-    border-radius: 5px;
     cursor: pointer;
-    font-size: 20px;
-    background: rgba(255,255,255,0.5);
-    z-index: 100;
 }
-.floor-map .edit-bar .edit-button {
+.buttons .edit-bar .edit-button {
     position: relative;
     width: 32px;
     display: inline-block;
     cursor: pointer;
     margin-right: -4px;
-    border-right: solid 1px rgba(0,0,0,0.2);
     transition: all 150ms linear;
 }
-.floor-map .edit-bar .edit-button.disabled {
+.buttons .edit-bar .edit-button.disabled {
     cursor: default;
 }
-.floor-map .edit-bar .edit-button.disabled > * {
+.buttons .edit-bar .edit-button.disabled > * {
     opacity: 0.5;
 }
-.floor-map .edit-bar .color-picker {
+.buttons .edit-bar .color-picker {
     position: absolute;
-    left: 36px;
-    top: 40px;
     width: 180px;
     height: 180px;
     border-radius: 3px;
     z-index: 100;
 }
-.floor-map .edit-bar .color-picker .color {
+.buttons .edit-bar .color-picker .color {
     display: block;
     float: left;
     cursor: pointer;
@@ -185,12 +173,12 @@
     height: 60px;
     background-color: gray;
 }
-.floor-map .edit-bar .color-picker .color.tl {  border-top-left-radius: 3px; }
-.floor-map .edit-bar .color-picker .color.tr {  border-top-right-radius: 3px; }
-.floor-map .edit-bar .color-picker .color.bl {  border-bottom-left-radius: 3px; }
-.floor-map .edit-bar .color-picker .color.br {  border-bottom-right-radius: 3px; }
+.buttons .edit-bar .color-picker .color.tl {  border-top-left-radius: 3px; }
+.buttons .edit-bar .color-picker .color.tr {  border-top-right-radius: 3px; }
+.buttons .edit-bar .color-picker .color.bl {  border-bottom-left-radius: 3px; }
+.buttons .edit-bar .color-picker .color.br {  border-bottom-right-radius: 3px; }
 
-.floor-map .edit-bar .close-picker {
+.buttons .edit-bar .close-picker {
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -207,7 +195,7 @@
     cursor: pointer;
 }
 
-.floor-map .edit-bar .edit-button:last-child {
+.buttons .edit-bar .edit-button:last-child {
     margin-right: 0;
     border-right: none;
 }
@@ -624,12 +612,11 @@
     background: white;
     text-align: center;
 }
-.buttons .search {
+.buttons input.search {
     width: 100%;
-    background: white;
-}
-.buttons .search input {
-    width: 85%;
     color: #63717f;
-    border: solid 1px white;
+    border: solid 1px #63717f;
+}
+.o-floor-list .button.search {
+    margin-left: auto;
 }
