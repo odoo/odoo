@@ -296,7 +296,6 @@
             'mail/static/src/components/composer_suggestion/composer_suggestion_command_tests.js',
             'mail/static/src/components/composer_suggestion/composer_suggestion_partner_tests.js',
             'mail/static/src/components/dialog_manager/dialog_manager_tests.js',
-            'mail/static/src/components/discuss/tests/discuss_domain_tests.js',
             'mail/static/src/components/discuss/tests/discuss_inbox_tests.js',
             'mail/static/src/components/discuss/tests/discuss_pinned_tests.js',
             'mail/static/src/components/discuss/tests/discuss_sidebar_tests.js',

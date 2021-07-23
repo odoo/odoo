@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
-import { create, insert, link, unlink } from '@mail/model/model_field_command';
+import { create, unlink } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -62,20 +62,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {mail.thread_cache|undefined}
-         */
-        _computeThreadCache() {
-            if (!this.thread) {
-                return unlink();
-            }
-            return insert({
-                stringifiedDomain: this.stringifiedDomain,
-                thread: link(this.thread),
-            });
-        }
-
-        /**
-         * @private
          * @returns {mail.thread_viewer|undefined}
          */
         _computeThreadView() {
@@ -102,12 +88,6 @@ function factory(dependencies) {
          */
         selectedMessage: many2one('mail.message'),
         /**
-         * Determines the domain to apply when fetching messages for `this.thread`.
-         */
-        stringifiedDomain: attr({
-            default: '[]',
-        }),
-        /**
          * Determines the `mail.thread` that should be displayed by `this`.
          */
         thread: many2one('mail.thread'),
@@ -115,11 +95,7 @@ function factory(dependencies) {
          * States the `mail.thread_cache` that should be displayed by `this`.
          */
         threadCache: many2one('mail.thread_cache', {
-            compute: '_computeThreadCache',
-            dependencies: [
-                'stringifiedDomain',
-                'thread',
-            ],
+            related: 'thread.cache',
         }),
         /**
          * Determines the initial scroll height of thread caches, which is the

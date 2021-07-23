@@ -35,7 +35,6 @@ export class MessageList extends Component {
                 threadCacheLastMessage: threadCache && threadCache.lastMessage,
                 threadCacheOrderedMessages: threadCache ? threadCache.orderedMessages : [],
                 threadIsTemporary: thread && thread.isTemporary,
-                threadMainCache: thread && thread.mainCache,
                 threadMessageAfterNewMessageSeparator: thread && thread.messageAfterNewMessageSeparator,
                 threadViewComponentHintList: threadView ? threadView.componentHintList : [],
                 threadViewNonEmptyMessagesLength: threadView && threadView.nonEmptyMessages.length,
@@ -77,7 +76,6 @@ export class MessageList extends Component {
                 componentHintList: threadView ? [...threadView.componentHintList] : [],
                 hasAutoScrollOnMessageReceived: threadView && threadView.hasAutoScrollOnMessageReceived,
                 hasScrollAdjust: this.props.hasScrollAdjust,
-                mainCache: thread && thread.mainCache,
                 order: this.props.order,
                 orderedMessages: threadCache ? [...threadCache.orderedMessages] : [],
                 thread,
@@ -417,18 +415,12 @@ export class MessageList extends Component {
      * @private
      */
     _checkMostRecentMessageIsVisible() {
-        const {
-            mainCache,
-            threadCache,
-            threadView,
-        } = this._lastRenderedValues();
+        const { threadView } = this._lastRenderedValues();
         if (!threadView || !threadView.exists()) {
             return;
         }
         const lastMessageIsVisible =
-            threadCache &&
             this.mostRecentMessageRef &&
-            threadCache === mainCache &&
             this.mostRecentMessageRef.isPartiallyVisible();
         if (lastMessageIsVisible) {
             threadView.handleVisibleMessage(this.mostRecentMessageRef.message);

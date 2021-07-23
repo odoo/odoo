@@ -488,7 +488,7 @@ function factory(dependencies) {
         _handleNotificationPartnerMarkAsRead({ message_ids = [], needaction_inbox_counter }) {
             for (const message_id of message_ids) {
                 // We need to ignore all not yet known messages because we don't want them
-                // to be shown partially as they would be linked directly to mainCache
+                // to be shown partially as they would be linked directly to cache.
                 // Furthermore, server should not send back all message_ids marked as read
                 // but something like last read message_id or something like that.
                 // (just imagine you mark 1000 messages as read ... )
@@ -514,11 +514,11 @@ function factory(dependencies) {
                 // kept for compatibility in stable
                 inbox.update({ counter: decrement(message_ids.length) });
             }
-            if (inbox.counter > inbox.mainCache.fetchedMessages.length) {
+            if (inbox.counter > inbox.cache.fetchedMessages.length) {
                 // Force refresh Inbox because depending on what was marked as
                 // read the cache might become empty even though there are more
                 // messages on the server.
-                inbox.mainCache.update({ hasToLoadMessages: true });
+                inbox.cache.update({ hasToLoadMessages: true });
             }
         }
 
