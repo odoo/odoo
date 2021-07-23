@@ -15,4 +15,5 @@ Accounting Data for Belgian Payroll Rules.
         'data/l10n_be_hr_payroll_account_data.xml',
     ],
     'post_init_hook': '_set_accounts',
+    'license': 'LGPL-3',
 }

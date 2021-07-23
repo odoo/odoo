@@ -32,4 +32,5 @@ Share and Publish Videos, Presentations and Documents'
     ],
     'installable': True,
     'application': True,
+    'license': 'LGPL-3',
 }

@@ -30,4 +30,5 @@ The module adds following features:
         'views/account_views.xml',
     ],
     'post_init_hook': '_setup_inalterability',
+    'license': 'LGPL-3',
 }

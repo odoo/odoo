@@ -38,4 +38,5 @@ Indian Payroll Salary Rules.
          'views/report_payroll_advice_template.xml',
      ],
     'demo': ['demo/l10n_in_hr_payroll_demo.xml'],
+    'license': 'LGPL-3',
 }

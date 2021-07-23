@@ -8,4 +8,5 @@
     'version': '1.0',
     'depends': ['partner_autocomplete', 'base_address_extended'],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

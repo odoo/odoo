@@ -27,4 +27,5 @@ You can assign several contracts per employee.
     'demo': [],
     'installable': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }

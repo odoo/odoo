@@ -33,4 +33,5 @@ with Chart of account under Circular No. 200/2014/TT-BTC
          'data/account_chart_template_data.xml',
     ],
     'post_init_hook': '_preserve_tag_on_taxes',
+    'license': 'LGPL-3',
 }

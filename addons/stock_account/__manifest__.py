@@ -37,4 +37,5 @@ Dashboard / Reports for Warehouse Management includes:
     'installable': True,
     'auto_install': True,
     'post_init_hook': '_configure_journals',
+    'license': 'LGPL-3',
 }
