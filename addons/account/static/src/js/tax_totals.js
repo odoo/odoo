@@ -8,11 +8,16 @@ import AbstractFieldOwl from 'web.AbstractFieldOwl';
 import fieldUtils from 'web.field_utils';
 import field_registry from 'web.field_registry_owl';
 
+/**
+    A line of some TaxTotalsComponent, giving the values of a tax group.
+**/
 class TaxGroupComponent extends Component {
+
     constructor(parent, props) {
         super(parent, props);
         this.inputTax = useRef('taxValueInput');
         this.state = useState({value: 'readonly'});
+        this.allowTaxEdition = this.__owl__.parent.mode === 'edit' ? props.allowTaxEdition : false;
     }
 
     //--------------------------------------------------------------------------
@@ -67,7 +72,7 @@ class TaxGroupComponent extends Component {
     _onChangeTaxValue() {
         this.setState('disable'); // Disable the input
         let newValue = this.inputTax.el.value; // Get the new value
-        let currency = session.get_currency(this.props.record.data.currency_id.data.id);
+        let currency = session.get_currency(this.props.record.data.currency_id.data.id); // The records using this widget must have a currency_id field.
         try {
             newValue = fieldUtils.parse.float(newValue); // Need a float for format the value
             newValue = fieldUtils.format.float(newValue, null, {digits: currency.digits}); // Return a string rounded to currency precision
@@ -82,6 +87,7 @@ class TaxGroupComponent extends Component {
             this.setState('readonly');
             return;
         }
+        this.props.taxGroup.tax_group_amount = newValue;
         this.trigger('change-tax-group', {
             oldValue: this.props.taxGroup.tax_group_amount,
             newValue: newValue,
@@ -89,30 +95,27 @@ class TaxGroupComponent extends Component {
         });
     }
 }
-TaxGroupComponent.props = ['taxGroup', 'displayEditWidget', 'record'];
+TaxGroupComponent.props = ['taxGroup', 'allowTaxEdition', 'record'];
 TaxGroupComponent.template = 'account.TaxGroupComponent';
 
-class TaxGroupListComponent extends AbstractFieldOwl {
+/**
+    Widget used to display tax totals by tax groups for invoices, PO and SO,
+    and possibly allowing editing them.
+
+    Note that this widget requires the object it is used on to have a
+    currency_id field.
+**/
+class TaxTotalsComponent extends AbstractFieldOwl {
     constructor(...args) {
         super(...args);
-        this.taxGroups = useState({value: JSON.parse(this.value)});
-        this.displayEditWidget = this._displayEditWidget();
+        this.totals = useState({value: this.value ? JSON.parse(this.value) : null});
+        this.allowTaxEdition = this.nodeOptions['allowTaxEdition'];
     }
-
-    //--------------------------------------------------------------------------
-    // Life cycle method
-    //--------------------------------------------------------------------------
 
     willUpdateProps(nextProps) {
         // We only reformat tax groups if there are changed
-        if (nextProps.fieldName === 'amount_by_group') {
-            this.taxGroups.value = JSON.parse(this.value);
-        }
+        this.totals.value = JSON.parse(nextProps.record.data[this.props.fieldName]);
     }
-
-    //--------------------------------------------------------------------------
-    // Events
-    //--------------------------------------------------------------------------
 
     _onKeydown(ev) {
         switch (ev.which) {
@@ -124,39 +127,6 @@ class TaxGroupListComponent extends AbstractFieldOwl {
         }
     }
 
-    //--------------------------------------------------------------------------
-    // Private methods
-    //--------------------------------------------------------------------------
-
-    /**
-     * Tricky method to get the parentWidget. It necessary to do that because
-     * we need to know the view mode. (If we are in readonly or edit).
-     */
-    _getParentWidget() {
-        return this.__owl__.parent.parentWidget;
-    }
-
-    /**
-     * This method checks that the document where the widget
-     * is located is of the "in_invoice" or "in_refund" type.
-     * This makes it possible to know if it is a purchase
-     * document.
-     *
-     * @returns boolean (true if the invoice is a purchase document)
-     */
-    _isPurchaseDocument() {
-        let purchaseMoveTypes = ['in_invoice', 'in_refund'];
-        return purchaseMoveTypes.includes(this.record.data.move_type)
-    }
-
-    /**
-     * This method verifies that the account move is a purchase document, that the document is in draft and
-     * that the edit mode is enabled.
-     */
-    _displayEditWidget() {
-        return this._isPurchaseDocument() && this.record.data.state === 'draft' && this._getParentWidget().mode === 'edit';
-    }
-
     /**
      * This method is the main function of the tax group widget.
      * It is called by an event trigger (from the TaxGroupComponent) and receives
@@ -164,27 +134,19 @@ class TaxGroupListComponent extends AbstractFieldOwl {
      *
      * It is responsible for calculating taxes based on tax groups and triggering
      * an event to notify the ORM of a change.
-     *
-     * @param {*} ev
-     * @param {*} ev.details A payload with the tax group id, the old value of the
-     * tax group and the new value.
      */
     _onChangeTaxValueByTaxGroup(ev) {
-        let detail = ev.detail;
-        this.taxGroups.value.forEach(taxGroup => {
-           if (taxGroup.tax_group_id === detail.taxGroupId) {
-               taxGroup.tax_group_amount = detail.newValue;
-           }
-        });
         this.trigger('field-changed', {
             dataPointID: this.record.id,
-            changes: { amount_by_group: JSON.stringify(this.taxGroups.value) }
+            changes: { tax_totals_json: JSON.stringify(this.totals.value) }
         })
     }
 }
-TaxGroupListComponent.template = 'account.TaxGroupCustomField';
-TaxGroupListComponent.components = { TaxGroupComponent };
 
-field_registry.add('tax-group-custom-field', TaxGroupListComponent);
+TaxTotalsComponent.template = 'account.TaxTotalsField';
+TaxTotalsComponent.components = { TaxGroupComponent };
 
-export default TaxGroupListComponent
+
+field_registry.add('account-tax-totals-field', TaxTotalsComponent);
+
+export default TaxTotalsComponent

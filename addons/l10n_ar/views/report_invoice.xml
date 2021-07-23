@@ -138,9 +138,10 @@
         <span t-field="line.price_total" position="attributes">
             <attribute name="t-field">line.l10n_latam_price_subtotal</attribute>
         </span>
-        <span t-field="o.amount_untaxed" position="attributes">
-            <attribute name="t-field">o.l10n_latam_amount_untaxed</attribute>
-        </span>
+
+        <t t-set="tax_totals" position="attributes">
+            <attribute name="t-value">o._get_tax_totals_for_latam_invoice_report()</attribute>
+        </t>
 
         <!-- use column vat instead of taxes and only if vat discriminated -->
         <xpath expr="//th[@name='th_taxes']/span" position="replace">
@@ -148,12 +149,12 @@
         </xpath>
 
         <xpath expr="//th[@name='th_taxes']" position="attributes">
-            <attribute name="t-if">o.amount_by_group</attribute>
+            <attribute name="t-if">o.tax_totals_json</attribute>
         </xpath>
 
         <!-- use column vat instead of taxes and only list vat taxes-->
         <xpath expr="//span[@id='line_tax_ids']/.." position="attributes">
-            <attribute name="t-if">o.amount_by_group</attribute>
+            <attribute name="t-if">o.tax_totals_json</attribute>
         </xpath>
         <span id="line_tax_ids" position="attributes">
             <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), line.l10n_latam_tax_ids.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)))</attribute>

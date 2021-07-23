@@ -92,7 +92,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'web.assets_backend': [
             'account/static/src/css/account_bank_and_cash.css',
             'account/static/src/css/account.css',
-            'account/static/src/css/tax_group.css',
+            'account/static/src/css/tax_totals.css',
             'account/static/src/scss/account_reconciliation.scss',
             'account/static/src/scss/account_journal_dashboard.scss',
             'account/static/src/scss/account_dashboard.scss',
@@ -103,7 +103,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/js/account_resequence_field.js',
             'account/static/src/js/grouped_view_widget.js',
             'account/static/src/js/mail_activity.js',
-            'account/static/src/js/tax_group.js',
+            'account/static/src/js/tax_totals.js',
             'account/static/src/js/section_and_note_fields_backend.js',
             'account/static/src/js/tours/account.js',
             'account/static/src/js/bills_upload.js',
