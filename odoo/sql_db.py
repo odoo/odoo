@@ -654,6 +654,13 @@ class PsycoConnection(psycopg2.extensions.connection):
     def lobject(*args, **kwargs):
         pass
 
+def locked(fun):
+    @wraps(fun)
+    def _locked(self, *args, **kwargs):
+        with self._lock:
+            return fun(self, *args, **kwargs)
+    return _locked
+
 class ConnectionPool(object):
     """ The pool of connections to database(s)
 
@@ -663,17 +670,6 @@ class ConnectionPool(object):
         The connections are *not* automatically closed. Only a close_db()
         can trigger that.
     """
-
-    def locked(fun):
-        @wraps(fun)
-        def _locked(self, *args, **kwargs):
-            self._lock.acquire()
-            try:
-                return fun(self, *args, **kwargs)
-            finally:
-                self._lock.release()
-        return _locked
-
     def __init__(self, maxconn=64):
         self._connections = []
         self._maxconn = max(maxconn, 1)
