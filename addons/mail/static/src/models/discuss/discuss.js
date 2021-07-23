@@ -361,7 +361,6 @@ function factory(dependencies) {
             const threadViewerData = {
                 hasThreadView: this.hasThreadView,
                 selectedMessage: this.replyingToMessage ? link(this.replyingToMessage) : unlink(),
-                stringifiedDomain: this.stringifiedDomain,
                 thread: this.thread ? link(this.thread) : unlink(),
             };
             if (!this.threadViewer) {
@@ -519,13 +518,6 @@ function factory(dependencies) {
             default: "",
         }),
         /**
-         * Determines the domain to apply when fetching messages for `this.thread`.
-         * This value should only be written by the control panel.
-         */
-        stringifiedDomain: attr({
-            default: '[]',
-        }),
-        /**
          * Determines the `mail.thread` that should be displayed by `this`.
          */
         thread: many2one('mail.thread', {
@@ -560,7 +552,6 @@ function factory(dependencies) {
             dependencies: [
                 'hasThreadView',
                 'replyingToMessage',
-                'stringifiedDomain',
                 'thread',
             ],
             isCausal: true,

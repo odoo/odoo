@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
+import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
@@ -75,17 +75,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * @override
-         */
-        static _createRecordLocalId(data) {
-            const {
-                stringifiedDomain = '[]',
-                thread: { value: thread },
-            } = data;
-            return `${this.modelName}_[${thread.localId}]_<${stringifiedDomain}>`;
-        }
-
-        /**
          * @private
          * @returns {mail.message[]}
          */
@@ -140,11 +129,6 @@ function factory(dependencies) {
             if (!this.thread) {
                 return unlinkAll();
             }
-            let messages = this.fetchedMessages;
-            if (this.stringifiedDomain !== '[]') {
-                return replace(messages);
-            }
-            // main cache: adjust with newer messages
             let newerMessages;
             if (!this.lastFetchedMessage) {
                 newerMessages = this.thread.messages;
@@ -153,8 +137,7 @@ function factory(dependencies) {
                     message.id > this.lastFetchedMessage.id
                 );
             }
-            messages = messages.concat(newerMessages);
-            return replace(messages);
+            return replace(this.fetchedMessages.concat(newerMessages));
         }
 
         /**
@@ -216,12 +199,10 @@ function factory(dependencies) {
                 // avoid duplicate RPC
                 return res;
             }
-            const isMainCache = this.thread.mainCache === this;
-            if (isMainCache && this.isLoaded) {
-                // Ignore request on the main cache if it is already loaded or
-                // loading. Indeed the main cache is automatically sync with
-                // server updates already, so there is never a need to refresh
-                // it past the first time.
+            if (this.isLoaded) {
+                // Ignore request if it is already loaded or loading. Indeed
+                // messages are automatically sync with server updates already,
+                // so there is never a need to refresh it past the first time.
                 return res;
             }
             res.hasToLoadMessages = true;
@@ -264,8 +245,7 @@ function factory(dependencies) {
          */
         async _loadMessages({ extraDomain, limit = 30 } = {}) {
             this.update({ isLoading: true });
-            const searchDomain = JSON.parse(this.stringifiedDomain);
-            let domain = searchDomain.length ? searchDomain : [];
+            let domain = [];
             domain = this._extendMessageDomain(domain);
             if (extraDomain) {
                 domain = extraDomain.concat(domain);
@@ -328,7 +308,6 @@ function factory(dependencies) {
             if (
                 !this.isMarkAllAsReadRequested ||
                 !this.thread ||
-                !this.thread.mainCache ||
                 !this.isLoaded ||
                 this.isLoading
             ) {
@@ -339,7 +318,6 @@ function factory(dependencies) {
             if (
                 this.thread.isTemporary ||
                 this.thread.model === 'mail.box' ||
-                this.thread.mainCache !== this ||
                 this.threadViews.length === 0
             ) {
                 // ignore the request
@@ -385,9 +363,6 @@ function factory(dependencies) {
          */
         _onMessagesChanged() {
             if (!this.thread) {
-                return;
-            }
-            if (this.thread.mainCache !== this) {
                 return;
             }
             for (const threadView of this.thread.threadViews) {
@@ -518,7 +493,6 @@ function factory(dependencies) {
                 'isLoading',
                 'thread',
                 'threadIsTemporary',
-                'threadMainCache',
                 'threadViews',
             ],
             isOnChange: true,
@@ -535,7 +509,6 @@ function factory(dependencies) {
                 'isMarkAllAsReadRequested',
                 'thread',
                 'threadIsTemporary',
-                'threadMainCache',
                 'threadModel',
                 'threadViews',
             ],
@@ -562,7 +535,6 @@ function factory(dependencies) {
             dependencies: [
                 'messages',
                 'thread',
-                'threadMainCache',
             ],
             isOnChange: true,
         }),
@@ -584,23 +556,14 @@ function factory(dependencies) {
             compute: '_computeOrderedMessages',
             dependencies: ['messages'],
         }),
-        stringifiedDomain: attr({
-            default: '[]',
-        }),
-        thread: many2one('mail.thread', {
-            inverse: 'caches',
+        thread: one2one('mail.thread', {
+            inverse: 'cache',
         }),
         /**
          * Serves as compute dependency.
          */
         threadIsTemporary: attr({
             related: 'thread.isTemporary',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        threadMainCache: many2one('mail.thread_cache', {
-            related: 'thread.mainCache',
         }),
         threadMessages: many2many('mail.message', {
             related: 'thread.messages',

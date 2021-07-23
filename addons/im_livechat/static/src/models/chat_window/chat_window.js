@@ -12,7 +12,7 @@ registerInstancePatchModel('mail.chat_window', 'im_livechat/static/src/models/ch
             this.thread &&
             this.thread.model === 'mail.channel' &&
             this.thread.channel_type === 'livechat' &&
-            this.thread.mainCache.isLoaded &&
+            this.thread.cache.isLoaded &&
             this.thread.messages.length === 0
         ) {
             notifyServer = true;
