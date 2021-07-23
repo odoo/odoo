@@ -14,8 +14,7 @@ const DiscussWidget = AbstractAction.extend({
     template: 'mail.widgets.Discuss',
     hasControlPanel: true,
     loadControlPanel: true,
-    withSearchBar: true,
-    searchMenuTypes: ['filter', 'favorite'],
+    withSearchBar: false,
     /**
      * @override {web.AbstractAction}
      * @param {web.ActionManager} parent
@@ -43,7 +42,7 @@ const DiscussWidget = AbstractAction.extend({
         // control panel attributes
         this.action = action;
         this.actionManager = parent;
-        this.searchModelConfig.modelName = 'mail.message';
+        this.searchModelConfig.modelName = 'mail.message'; // needed to prevent crash even though search is disabled
         this.discuss = undefined;
         this.options = options;
 
@@ -295,15 +294,6 @@ const DiscussWidget = AbstractAction.extend({
     },
     _onClickUnstarAll() {
         this.env.models['mail.message'].unstarAll();
-    },
-    /**
-     * @private
-     * @param {Object} searchQuery
-     */
-    _onSearch: function (searchQuery) {
-        this.discuss.update({
-            stringifiedDomain: JSON.stringify(searchQuery.domain),
-        });
     },
 });
 

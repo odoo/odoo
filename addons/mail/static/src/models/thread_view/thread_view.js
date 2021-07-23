@@ -324,12 +324,6 @@ function factory(dependencies) {
             isOnChange: true,
         }),
         /**
-         * Determines the domain to apply when fetching messages for `this.thread`.
-         */
-        stringifiedDomain: attr({
-            related: 'threadViewer.stringifiedDomain',
-        }),
-        /**
          * Determines the keyboard shortcuts that are available to send a message
          * from the composer of this thread viewer.
          */

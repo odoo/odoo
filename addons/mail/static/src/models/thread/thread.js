@@ -642,17 +642,6 @@ function factory(dependencies) {
         }
 
         /**
-         * @param {string} [stringifiedDomain='[]']
-         * @returns {mail.thread_cache}
-         */
-        cache(stringifiedDomain = '[]') {
-            return this.env.models['mail.thread_cache'].insert({
-                stringifiedDomain,
-                thread: link(this),
-            });
-        }
-
-        /**
          * Fetch attachments linked to a record. Useful for populating the store
          * with these attachments, which are used by attachment box in the chatter.
          */
@@ -717,7 +706,7 @@ function factory(dependencies) {
          * Load new messages on the main cache of this thread.
          */
         loadNewMessages() {
-            this.mainCache.loadNewMessages();
+            this.cache.loadNewMessages();
         }
 
         /**
@@ -1318,17 +1307,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {mail.thread_cache}
-         */
-        _computeMainCache() {
-            return insert({
-                stringifiedDomain: '[]',
-                thread: link(this),
-            });
-        }
-
-        /**
-         * @private
          * @returns {integer}
          */
         _computeLocalMessageUnreadCounter() {
@@ -1710,9 +1688,12 @@ function factory(dependencies) {
         attachments: many2many('mail.attachment', {
             inverse: 'threads',
         }),
-        caches: one2many('mail.thread_cache', {
+        cache: one2one('mail.thread_cache', {
+            default: create(),
             inverse: 'thread',
             isCausal: true,
+            readonly: true,
+            required: true,
         }),
         channel_type: attr(),
         /**
@@ -1924,9 +1905,6 @@ function factory(dependencies) {
                 'serverLastMessage',
                 'serverMessageUnreadCounter',
             ],
-        }),
-        mainCache: one2one('mail.thread_cache', {
-            compute: '_computeMainCache',
         }),
         members: many2many('mail.partner', {
             inverse: 'memberThreads',
