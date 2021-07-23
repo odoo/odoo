@@ -226,7 +226,7 @@ export class OdooEditor extends EventTarget {
             (this.options.collaborative && this.options.collaborative.color) ||
             `hsl(${(Math.random() * 360).toFixed(0)},75%,50%)`;
         this._collaboratorIndicatorContainer = this.document.createElement('div');
-        this._collaboratorIndicatorContainer.style = 'height: 0; width: 0;';
+        this._collaboratorIndicatorContainer.style = 'height: 0; width: 0; z-index: 1;';
         this.editable.before(this._collaboratorIndicatorContainer);
         this._sendSelection = throttle(selection => {
             if (this.options.collaborative && this.options.collaborative.sendSelection) {
