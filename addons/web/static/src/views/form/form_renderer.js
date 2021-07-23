@@ -21,9 +21,12 @@ export class FormRenderer extends Component {
         let templateId = templateIds[this.props.info.arch];
         if (!templateId) {
             const formCompiler = new FormCompiler(this.env.qweb, this.props.info.fields);
-            const tmpl = formCompiler.compile(this.props.info.xmlDoc).outerHTML;
+            const xmldoc = formCompiler.compile(this.props.info.xmlDoc);
+            console.group("Compiled template:");
+            console.dirxml(xmldoc);
+            console.groupEnd();
             templateId = `__form__${nextId++}`;
-            this.env.qweb.addTemplate(templateId, tmpl);
+            this.env.qweb.addTemplate(templateId, xmldoc.outerHTML);
             templateIds[this.props.info.arch] = templateId;
         }
         this.owlifiedArch = templateId;
@@ -61,7 +64,7 @@ export class FormRenderer extends Component {
             resIds,
             context: envContext,
             buttonContext,
-            onclose: () => this.props.model.load(),
+            onclose: () => this.props.model.load()
         });
 
         // LPE TODO: disable all buttons
