@@ -229,8 +229,7 @@ def dump_db(db_name, stream, backup_format='zip'):
 
     _logger.info('DUMP DB: %s format %s', db_name, backup_format)
 
-    cmd = ['pg_dump', '--no-owner']
-    cmd.append(db_name)
+    cmd = ['pg_dump', '--no-owner', db_name]
 
     if backup_format == 'zip':
         with tempfile.TemporaryDirectory() as dump_dir:
@@ -302,8 +301,7 @@ def restore_db(db, dump_file, copy=False):
             pg_cmd = 'pg_restore'
             pg_args = ['--no-owner', dump_file]
 
-        args = []
-        args.append('--dbname=' + db)
+        args = ['--dbname=' + db]
         pg_args = args + pg_args
 
         if odoo.tools.exec_pg_command(pg_cmd, *pg_args):
