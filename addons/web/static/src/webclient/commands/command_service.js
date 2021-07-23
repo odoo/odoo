@@ -39,7 +39,9 @@ export const commandService = {
             }
 
             const overlayModifier = registry.category("services").get("hotkey").overlayModifier;
-            const commands = [...registeredCommands.values()];
+            const commands = [...registeredCommands.values()].filter(
+                (command) => command.activeElement === ui.activeElement
+            );
 
             // Also retrieve all hotkeyables elements
             for (const el of ui.getVisibleElements("[data-hotkey]:not(:disabled)")) {

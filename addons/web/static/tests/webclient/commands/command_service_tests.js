@@ -3,7 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
-import { uiService } from "@web/core/ui/ui_service";
+import { uiService, useActiveElement } from "@web/core/ui/ui_service";
 import { useCommand } from "@web/webclient/commands/command_hook";
 import { commandService } from "@web/webclient/commands/command_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
@@ -111,6 +111,32 @@ QUnit.test("useCommand hook", async (assert) => {
     triggerHotkey("control+k");
     await nextTick();
     assert.containsNone(target, ".o_command");
+});
+
+QUnit.test("useCommand hook when the activeElement change", async (assert) => {
+    assert.expect(2);
+
+    class MyComponent extends TestComponent {
+        setup() {
+            useCommand("Take the throne", () => {});
+        }
+    }
+
+    class OtherComponent extends Component {
+        setup() {
+            useActiveElement();
+            useCommand("I'm taking the throne", () => {});
+        }
+    }
+    OtherComponent.template = xml`<div></div>`;
+
+    await mount(MyComponent, { env, target });
+    await mount(OtherComponent, { env, target });
+
+    triggerHotkey("control+k");
+    await nextTick();
+    assert.containsOnce(target, ".o_command");
+    assert.deepEqual(target.querySelector(".o_command").textContent, "I'm taking the throne");
 });
 
 QUnit.test("command with hotkey", async (assert) => {
@@ -255,6 +281,7 @@ QUnit.test("can be searched", async (assert) => {
     for (const name of names) {
         env.services.command.add(name, action);
     }
+    await nextTick();
 
     // Open palette
     triggerHotkey("control+k");
@@ -307,6 +334,7 @@ QUnit.test("navigate in the command palette with the arrows", async (assert) => 
     for (const name of names) {
         env.services.command.add(name, action);
     }
+    await nextTick();
 
     // Open palette
     triggerHotkey("control+k");
@@ -350,6 +378,7 @@ QUnit.test("command categories", async (assert) => {
     env.services.command.add("b", action, { category: "custom" });
     env.services.command.add("c", action);
     env.services.command.add("d", action, { category: "invalid-category" });
+    await nextTick();
 
     // Open palette
     triggerHotkey("control+k");
@@ -428,6 +457,7 @@ QUnit.test("display shortcuts correctly for non-MacOS ", async (assert) => {
     env.services.command.add("e", action, {
         hotkey: "alt+control+e",
     });
+    await nextTick();
 
     // Open palette
     triggerHotkey("control+k");
@@ -468,6 +498,7 @@ QUnit.test("display shortcuts correctly for MacOS ", async (assert) => {
     env.services.command.add("e", action, {
         hotkey: "alt+control+e",
     });
+    await nextTick();
 
     // Open palette
     triggerHotkey("control+k");
