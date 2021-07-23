@@ -48,4 +48,5 @@ sent mails with personal token for the invitation of the survey.
     'auto_install': False,
     'application': True,
     'sequence': 105,
+    'license': 'LGPL-3',
 }

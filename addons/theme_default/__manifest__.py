@@ -16,4 +16,5 @@
         'static/description/theme_default_screenshot.jpg',
     ],
     'application': False,
+    'license': 'LGPL-3',
 }

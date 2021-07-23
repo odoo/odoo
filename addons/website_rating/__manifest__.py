@@ -14,4 +14,5 @@ Bridge module for rating on website stuff.
     ],
     'qweb': ['static/src/xml/*.xml'],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

@@ -22,4 +22,5 @@ Odoo dashboard
     'depends': ['web'],
     'qweb': ['static/src/xml/dashboard.xml'],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

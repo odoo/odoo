@@ -35,4 +35,5 @@ Romanian accounting chart and localization.
              'data/res.country.state.csv',
              'data/res.bank.csv',
              ],
+    'license': 'LGPL-3',
 }

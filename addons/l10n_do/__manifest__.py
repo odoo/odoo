@@ -104,4 +104,5 @@ en Odoo):
         # configuration wizard, views, reports...
         'data/account_chart_template_configure_data.xml',
     ],
+    'license': 'LGPL-3',
 }

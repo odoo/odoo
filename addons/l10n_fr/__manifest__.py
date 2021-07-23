@@ -48,4 +48,5 @@ configuration of their taxes and fiscal positions manually.
         'data/account_chart_template_configure_data.xml',
     ],
     'post_init_hook': '_preserve_tag_on_taxes',
+    'license': 'LGPL-3',
 }

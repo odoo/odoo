@@ -26,4 +26,5 @@ Allows to contact directly the employee in case of unjustified absence.
     'demo': [],
     'installable': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }

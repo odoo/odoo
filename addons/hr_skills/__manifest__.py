@@ -32,4 +32,5 @@ This module introduces skills and resumé management for employees.
     ],
     'installable': True,
     'application': True,
+    'license': 'LGPL-3',
 }

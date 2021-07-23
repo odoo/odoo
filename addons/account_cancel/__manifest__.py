@@ -26,4 +26,5 @@ Be careful with this module as it has audit implications. Cancelling accounting 
     'demo': [],
     'installable': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }

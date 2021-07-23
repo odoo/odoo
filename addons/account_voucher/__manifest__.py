@@ -20,4 +20,5 @@ This module allows you recording sales and purchases receipts. Receipts are usef
     ],
     'auto_install': False,
     'installable': True,
+    'license': 'LGPL-3',
 }

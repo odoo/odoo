@@ -23,4 +23,5 @@
         'data/res.country.state.csv',
         'data/account_chart_template_configuration_data.xml',
     ],
+    'license': 'LGPL-3',
 }

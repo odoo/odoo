@@ -49,4 +49,5 @@ position.
         'data/res_company_data.xml',
     ],
     'post_init_hook': 'load_translations',
+    'license': 'LGPL-3',
 }

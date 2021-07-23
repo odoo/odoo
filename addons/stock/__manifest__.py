@@ -84,4 +84,5 @@
     'auto_install': False,
     'pre_init_hook': 'pre_init_hook',
     'uninstall_hook': 'uninstall_hook',
+    'license': 'LGPL-3',
 }
