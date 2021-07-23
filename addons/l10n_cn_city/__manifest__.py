@@ -18,4 +18,5 @@ City Data/城市数据
     'data': [
         'data/res_city_data.xml',
     ],
+    'license': 'LGPL-3',
 }

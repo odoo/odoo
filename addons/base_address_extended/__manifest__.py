@@ -20,4 +20,5 @@ with the street name, the house number, and room number.
         'data/base_address_extended_data.xml',
     ],
     'depends': ['base'],
+    'license': 'LGPL-3',
 }

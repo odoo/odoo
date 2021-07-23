@@ -22,4 +22,5 @@ In future this module will include some payroll rules for ME .
         'data/account_chart_template_configure_data.xml',
     ],
     'post_init_hook': 'load_translations',
+    'license': 'LGPL-3',
 }

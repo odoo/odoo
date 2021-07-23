@@ -25,4 +25,5 @@
         'report/product_packaging.xml',
         'report/stock_reports.xml',
     ],
+    'license': 'LGPL-3',
 }

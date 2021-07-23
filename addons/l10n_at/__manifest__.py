@@ -19,4 +19,5 @@ Please keep in mind that you should review and adapt it with your Accountant, be
              'data/account_data.xml',
              'data/account_tax_data.xml',
              'data/account_chart_template_data.xml'],
+    'license': 'LGPL-3',
 }

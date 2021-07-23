@@ -21,4 +21,5 @@ Data Module but will not modify the behaviour of the Point of Sale.
     'depends': ['hw_proxy'],
     'external_dependencies': {'python': ['serial']},
     'installable': False,
+    'license': 'LGPL-3',
 }

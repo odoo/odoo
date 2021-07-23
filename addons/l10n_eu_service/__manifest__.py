@@ -53,4 +53,5 @@ References
         'data/l10n_eu_service.service_tax_rate.csv',
         'views/res_config_settings_views.xml'
     ],
+    'license': 'LGPL-3',
 }
