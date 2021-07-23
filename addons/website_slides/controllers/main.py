@@ -24,7 +24,7 @@ _logger = logging.getLogger(__name__)
 class WebsiteSlides(WebsiteProfile):
     _slides_per_page = 12
     _slides_per_aside = 20
-    _slides_per_category = 4
+    _slides_per_category = 3
     _channel_order_by_criterion = {
         'vote': 'total_votes desc',
         'view': 'total_views desc',
@@ -39,6 +39,15 @@ class WebsiteSlides(WebsiteProfile):
             loc = '/slides/%s' % slug(channel)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
+
+    def _slide_render_context_base(self):
+        return {
+            # current user info
+            'user': request.env.user,
+            'is_public_user': request.website.is_public_user(),
+            # tools
+            '_slugify_tags': self._slugify_tags,
+        }
 
     # SLIDE UTILITIES
     # --------------------------------------------------
@@ -93,7 +102,8 @@ class WebsiteSlides(WebsiteProfile):
         previous_slide = slide.channel_id.slide_content_ids[slide_index-1] if slide_index > 0 else None
         next_slide = slide.channel_id.slide_content_ids[slide_index+1] if slide_index < len(channel_slides_ids) - 1 else None
 
-        values = {
+        render_values = self._slide_render_context_base()
+        render_values.update({
             # slide
             'slide': slide,
             'main_object': slide,
@@ -102,20 +112,17 @@ class WebsiteSlides(WebsiteProfile):
             'previous_slide': previous_slide,
             'next_slide': next_slide,
             'category_data': category_data,
-            # user
-            'user': request.env.user,
-            'is_public_user': request.website.is_public_user(),
             # rating and comments
             'comments': slide.website_message_ids or [],
-        }
+        })
 
         # allow rating and comments
         if slide.channel_id.allow_comment:
-            values.update({
+            render_values.update({
                 'message_post_pid': request.env.user.partner_id.id,
             })
 
-        return values
+        return render_values
 
     def _get_slide_quiz_partner_info(self, slide, quiz_done=False):
         return slide._compute_quiz_info(request.env.user.partner_id, quiz_done=quiz_done)[slide.id]
@@ -312,8 +319,9 @@ class WebsiteSlides(WebsiteProfile):
             ('karma', '>', 0),
             ('website_published', '=', True)], limit=5, order='karma desc')
 
-        values = self._prepare_user_values(**post)
-        values.update({
+        render_values = self._slide_render_context_base()
+        render_values.update(self._prepare_user_values(**post))
+        render_values.update({
             'channels_my': channels_my,
             'channels_popular': channels_popular,
             'channels_newest': channels_newest,
@@ -327,7 +335,7 @@ class WebsiteSlides(WebsiteProfile):
             'slugify_tags': self._slugify_tags,
         })
 
-        return request.render('website_slides.courses_home', values)
+        return request.render('website_slides.courses_home', render_values)
 
     @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=True)
     def slides_channel_all(self, slide_category=None, slug_tags=None, my=False, **post):
@@ -387,8 +395,9 @@ class WebsiteSlides(WebsiteProfile):
         else:
             search_tags = request.env['slide.channel.tag']
 
-        values = self._prepare_user_values(**post)
-        values.update({
+        render_values = self._slide_render_context_base()
+        render_values.update(self._prepare_user_values(**post))
+        render_values.update({
             'channels': channels,
             'tag_groups': tag_groups,
             'search_term': fuzzy_search_term or search,
@@ -401,7 +410,7 @@ class WebsiteSlides(WebsiteProfile):
             'slide_query_url': QueryURL('/slides/all', ['tag']),
         })
 
-        return request.render('website_slides.courses_all', values)
+        return request.render('website_slides.courses_all', render_values)
 
     def _prepare_additional_channel_values(self, values, **kwargs):
         return values
@@ -480,7 +489,8 @@ class WebsiteSlides(WebsiteProfile):
         elif uncategorized:
             query_string = "?search_uncategorized=1"
 
-        values = {
+        render_values = self._slide_render_context_base()
+        render_values.update({
             'channel': channel,
             'main_object': channel,
             'active_tab': kw.get('active_tab', 'home'),
@@ -494,22 +504,20 @@ class WebsiteSlides(WebsiteProfile):
             'sorting': actual_sorting,
             'search': search,
             # display data
-            'user': request.env.user,
             'pager': pager,
-            'is_public_user': request.website.is_public_user(),
             # display upload modal
             'enable_slide_upload': 'enable_slide_upload' in kw,
             ** self._slide_channel_prepare_review_values(channel),
-        }
+        })
 
         # fetch slides and handle uncategorized slides; done as sudo because we want to display all
         # of them but unreachable ones won't be clickable (+ slide controller will crash anyway)
         # documentation mode may display less slides than content by category but overhead of
         # computation is reasonable
         if channel.promote_strategy == 'specific':
-            values['slide_promoted'] = channel.sudo().promoted_slide_id
+            render_values['slide_promoted'] = channel.sudo().promoted_slide_id
         else:
-            values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
+            render_values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
 
         limit_category_data = False
         if channel.channel_type == 'documentation':
@@ -518,26 +526,26 @@ class WebsiteSlides(WebsiteProfile):
             else:
                 limit_category_data = self._slides_per_category
 
-        values['category_data'] = channel._get_categorized_slides(
+        render_values['category_data'] = channel._get_categorized_slides(
             domain, order,
             force_void=not category,
             limit=limit_category_data,
             offset=pager['offset'])
-        values['channel_progress'] = self._get_channel_progress(channel, include_quiz=True)
+        render_values['channel_progress'] = self._get_channel_progress(channel, include_quiz=True)
 
         # for sys admins: prepare data to install directly modules from eLearning when
         # uploading slides. Currently supporting only survey, because why not.
         if request.env.user.has_group('base.group_system'):
             module = request.env.ref('base.module_survey')
             if module.state != 'installed':
-                values['modules_to_install'] = [{
+                render_values['modules_to_install'] = [{
                     'id': module.id,
                     'name': module.shortdesc,
                     'motivational': _('Evaluate and certify your students.'),
                 }]
 
-        values = self._prepare_additional_channel_values(values, **kw)
-        return request.render('website_slides.course_main', values)
+        render_values = self._prepare_additional_channel_values(render_values, **kw)
+        return request.render('website_slides.course_main', render_values)
 
     # SLIDE.CHANNEL UTILS
     # --------------------------------------------------
@@ -714,7 +722,7 @@ class WebsiteSlides(WebsiteProfile):
             'search_tag': request.env['slide.tag'].browse(int(kwargs.get('search_tag'))) if kwargs.get('search_tag') else None,
             'slide_categories': dict(request.env['slide.slide']._fields['slide_category']._description_selection(request.env)) if kwargs.get('search_slide_category') else None,
             'search_slide_category': kwargs.get('search_slide_category'),
-            'search_uncategorized': kwargs.get('search_uncategorized')
+            'search_uncategorized': kwargs.get('search_uncategorized'),
         })
 
         values['channel'] = slide.channel_id
@@ -802,12 +810,6 @@ class WebsiteSlides(WebsiteProfile):
     def slide_like(self, slide_id, upvote):
         if request.website.is_public_user():
             return {'error': 'public_user', 'error_signup_allowed': request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'}
-        slide_partners = request.env['slide.slide.partner'].sudo().search([
-            ('slide_id', '=', slide_id),
-            ('partner_id', '=', request.env.user.partner_id.id)
-        ])
-        if (upvote and slide_partners.vote == 1) or (not upvote and slide_partners.vote == -1):
-            return {'error': 'vote_done'}
         # check slide access
         fetch_res = self._fetch_slide(slide_id)
         if fetch_res.get('error'):
@@ -824,8 +826,14 @@ class WebsiteSlides(WebsiteProfile):
             slide.action_like()
         else:
             slide.action_dislike()
-        slide.invalidate_cache()
-        return slide.read(['likes', 'dislikes', 'user_vote'])[0]
+        # for large number of likes/dislikes, format them so they don't break the UI
+        # first display is done using a widget but this route updated the UI directly
+        # hence calling format_decimalized_number
+        return {
+            'user_vote': slide.user_vote,
+            'likes': tools.format_decimalized_number(slide.likes),
+            'dislikes': tools.format_decimalized_number(slide.dislikes),
+        }
 
     @http.route('/slides/slide/archive', type='json', auth='user', website=True)
     def slide_archive(self, slide_id):
