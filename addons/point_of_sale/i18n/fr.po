@@ -44,12 +44,12 @@
 # Arnaud Willem <contact@arnaud-willem.eu>, 2020
 # Moka Tourisme <hello@mokatourisme.fr>, 2020
 # LuceEasyPme <luce@easypme.com>, 2020
-# qdelcourte <delcourte.quentin@hotmail.com>, 2021
 # Jérôme JEK <jek@odoo.com>, 2021
 # 6534c450c77b2549e41c52e2051f5839, 2021
 # Martin Trigaux, 2021
 # Pauline Thiry <pth@odoo.com>, 2021
 # Yann Papouin <y.papouin@dec-industrie.com>, 2021
+# qdelcourte <delcourte.quentin@hotmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -57,7 +57,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-16 12:59+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Yann Papouin <y.papouin@dec-industrie.com>, 2021\n"
+"Last-Translator: qdelcourte <delcourte.quentin@hotmail.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -578,6 +578,8 @@ msgid ""
 "Allow invoicing of paid orders by activating 'Invoicing' in the 'Bills &amp;"
 " Receipts' section."
 msgstr ""
+"Autorisez la facturation des commandes payées en activant \"Facturation\" "
+"dans la section \"Factures &amp;  Reçus\"."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__allowed_pricelist_ids
@@ -1854,7 +1856,7 @@ msgstr "Réception d'un courriel"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Email sent."
-msgstr ""
+msgstr "Email envoyé"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2000,7 +2002,7 @@ msgstr "Positions fiscales"
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Fiscal data module error"
-msgstr ""
+msgstr "Erreur module de données fiscales"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_follower_ids
@@ -2322,7 +2324,7 @@ msgstr "Action invalide"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Invalid email."
-msgstr ""
+msgstr "Email invalide."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2744,7 +2746,7 @@ msgstr "Support d'écran"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Échéance de mon activité"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -4240,7 +4242,7 @@ msgstr "Méthode d'arrondi"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Rounding error in payment lines"
-msgstr ""
+msgstr "Erreur d'arrondi dans les lignes de paiement"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4355,7 +4357,7 @@ msgstr "Recherche de commandes de ventes"
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #, python-format
 msgid "Search Tickets..."
-msgstr ""
+msgstr "Recherche de tickets..."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4431,7 +4433,7 @@ msgstr "Envoyer par email"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Sending email failed. Please try again."
-msgstr ""
+msgstr "L'envoie de l'email a échoué. Veuillez réessayer."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -4656,6 +4658,8 @@ msgid ""
 "Some Cash Registers are already posted. Please reset them to new in order to close the session.\n"
 "Cash Registers: %r"
 msgstr ""
+"Certaines caisses enregistreuses sont déjà affichées. Veuillez les remettre à zéro afin de clôturer la session.\n"
+"Caisses enregistreuses : %r "
 
 #. module: point_of_sale
 #. openerp-web
@@ -4942,6 +4946,8 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
 msgstr ""
+"Le montant de vos lignes de paiement doit être arrondi pour valider la "
+"transaction"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4958,6 +4964,8 @@ msgstr ""
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
 msgstr ""
+"Le module de données fiscales a rencontré une erreur lors de la réception de"
+" votre commande"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -5905,6 +5913,8 @@ msgstr ""
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
 msgstr ""
+"Vous ne pouvez pas clôturer le Pdv lorsque des commandes sont encore en "
+"cours de traitement"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
