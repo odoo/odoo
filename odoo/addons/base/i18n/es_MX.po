@@ -1726,9 +1726,9 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"* Agrega un libro de reporte de IVA, que es un requisito legal en Argentina. El libro contiene información detallada del IVA de ventas y compras que se hicieron durante un periodo de tiempo. \n"
-"* Agrega un informe de resumen del IVA que se utiliza para analizar la facturación.\n"
-"* Agrega la funcionalidad de un libro digital de IVA que nos permite generar archivos TXT para importarlos a AFIP, estos son los que implementamos:\n"
+"* Agrega un libro de reporte de RFC, que es un requisito legal en Argentina. El libro contiene información detallada del IVA de ventas y compras que se hicieron durante un periodo de tiempo. \n"
+"* Agrega un informe de resumen del RFC que se utiliza para analizar la facturación.\n"
+"* Agrega la funcionalidad de un libro digital de RFC que nos permite generar archivos TXT para importarlos a AFIP, estos son los que implementamos:\n"
 "\n"
 "    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
 "    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
@@ -2264,29 +2264,29 @@ msgid ""
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
 "\n"
-"Agregue un nuevo modelo denominado \"Tipo de identificación\" que amplíe la funcionalidad del campo de número de identificación fiscal (NIF) del contacto y permita que el usuario identifique (eventualmente una factura) a los contactos no solo con su número identificación fiscal fiscal (NIF) sino con otros tipos de identificaciones como documento nacional , pasaporte, identificación extranjera, etc. Con este módulo instalado, verá ahora en la vista de formulario de contactos dos campos:\n"
+"Agregue un nuevo modelo denominado \"Tipo de identificación\" que amplíe la funcionalidad del campo de número de identificación fiscal (RFC) del contacto y permita que el usuario identifique (eventualmente una factura) a los contactos no solo con su número identificación fiscal fiscal (RFC) sino con otros tipos de identificaciones como documento nacional , pasaporte, identificación extranjera, etc. Con este módulo instalado, verá ahora en la vista de formulario de contactos dos campos:\n"
 "\n"
 "* Tipo de identificación\n"
 "* Número de identificación\n"
 "\n"
 "Este comportamiento es un requisito común para algunos países latinoamericanos como Argentina y Chile. Si su localización tiene estos requisitos, entonces debe depender de este módulo y definir en su módulo de localización los tipos de identificación que se utilizan en su país. En general, este tipo de identificaciones son definidas por las autoridades gubernamentales que regulan las operaciones fiscales, por ejemplo:\n"
 "\n"
-"* AFIP en Argentina define el DNI, CUIT (número de identificación fiscal(NIF) para entidades legales), CUIL (número de identificación fiscal(NIF) para personas naturales), y otros 80 tipos de identificación válidos.\n"
+"* AFIP en Argentina define el DNI, CUIT (número de identificación fiscal(RFC) para entidades legales), CUIL (número de identificación fiscal(RFC) para personas naturales), y otros 80 tipos de identificación válidos.\n"
 "\n"
 "Cada identificación contiene esta información:\n"
 "\n"
 "* nombre: nombre corto de la identificación\n"
 "* descripción: podría ser el mismo nombre corto o un nombre largo\n"
 "* id_pais(country_id): el país al que pertenece esta identificación\n"
-"* es_identificacionFiscal(is_vat): identifica este registro como el número de identificación fiscal(NIF) correspondiente para el país específico.\n"
+"* es_identificacionFiscal(is_vat): identifica este registro como el número de identificación fiscal(RFC) correspondiente para el país específico.\n"
 "* secuencia: permítanos ordenar los tipos de identificación según los más utilizados.\n"
 "* activo: podemos activar / desactivar identificaciones para que sea más fácil para nuestros clientes\n"
 "\n"
-"Con el fin de hacer que este módulo sea compatible con entornos de empresas múltiples donde tenemos compañías que no necesitan / no admiten este requisito, hemos agregado tipos de identificación genéricos y reglas genéricas para administrar la información de contacto y hacerla transparente para el usuario cuando solo use el número de identificación fiscal(NIF) como lo conocíamos anteriormente.\n"
+"Con el fin de hacer que este módulo sea compatible con entornos de empresas múltiples donde tenemos compañías que no necesitan / no admiten este requisito, hemos agregado tipos de identificación genéricos y reglas genéricas para administrar la información de contacto y hacerla transparente para el usuario cuando solo use el número de identificación fiscal(RFC) como lo conocíamos anteriormente.\n"
 "\n"
 "Identificaciones genéricas:\n"
 "\n"
-"* identificación Fiscal: la identificación fiscal o el número de identificación fiscal(NIF), de forma predeterminada, se seleccionará como tipo de identificación, por lo que el usuario solo tendrá que agregar el número de identificación fiscal relacionado.\n"
+"* identificación Fiscal: la identificación fiscal o el número de identificación fiscal(RFC), de forma predeterminada, se seleccionará como tipo de identificación, por lo que el usuario solo tendrá que agregar el número de identificación fiscal relacionado.\n"
 "* Pasaporte\n"
 "* Identificación extranjera (Documento nacional extranjero)\n"
 "\n"
@@ -2300,7 +2300,7 @@ msgstr ""
 "\n"
 "Todos los tipos de identificación definidos se pueden revisar y activar / desactivar en el menú \"Contactos / Configuración / Tipo de identificación\".\n"
 "\n"
-"Este módulo es compatible con el módulo base_vat para poder validar los números de identificación fiscal(NIF) para cada país que tenga o no la posibilidad de administrar múltiples tipos de identificación.\n"
+"Este módulo es compatible con el módulo base_vat para poder validar los números de identificación fiscal(RFC) para cada país que tenga o no la posibilidad de administrar múltiples tipos de identificación.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -8814,23 +8814,23 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Validación del número de identificación fiscal (NIF) de los contactos.\n"
+"Validación del número de identificación fiscal (RFC) de los contactos.\n"
 "=========================================\n"
 "\n"
-"Tras instalar este módulo, se validarán los valores introducidos en el campo de número de identificación fiscal(NIF) de los\n"
+"Tras instalar este módulo, se validarán los valores introducidos en el campo de número de identificación fiscal(RFC) de los\n"
 "contactos para todos los países admitidos. Se deduce el país por las 2 letras del código que\n"
-"preceden al número de número de identificación fiscal (NIF). Por ejemplo, \"BE0477472701\" se validará usando la normativa\n"
+"preceden al número de número de identificación fiscal (RFC). Por ejemplo, \"BE0477472701\" se validará usando la normativa\n"
 "de Bélgica.\n"
 "\n"
-"Hay dos niveles diferentes para validar el número de identificación fiscal (NIF):\n"
+"Hay dos niveles diferentes para validar el número de identificación fiscal (RFC):\n"
 "--------------------------------------------------------\n"
 "* Por defecto, se realiza una simple comprobación sin conexión usando las reglas de\n"
 "validación conocidas de un país, normalmente mediante una sencilla comprobación de\n"
 "dígitos. Es rápido y se puede hacer en cualquier momento, pero admite números que quizá\n"
 "no estén realmente asociados o que ya no sean válidos.\n"
 "\n"
-"* Cuando se habilita la opción de \"Comprobación del número de identificación fiscal (NIF) en VIES\" (en la configuración de la\n"
-"empresa del usuario), los números del número de identificación fiscal (NIF) se enviarán en su lugar a la base electrónica de\n"
+"* Cuando se habilita la opción de \"Comprobación del número de identificación fiscal (RFC) en VIES\" (en la configuración de la\n"
+"empresa del usuario), los números del número de identificación fiscal (RFC) se enviarán en su lugar a la base electrónica de\n"
 "datos VIES de la Unión Europea, que verificará realmente si el número es válido y si\n"
 "actualmente está asociado a una empresa. Esto es un poco más lento que una simple\n"
 "comprobación sin conexión, pues requiere tener conexión a internet y puede que no esté\n"
@@ -10154,7 +10154,7 @@ msgid ""
 "ID</span></span> already exists ("
 msgstr ""
 "Ya existe un contacto con el mismo <span><span class=\"o_vat_label\">número "
-"de identificación fiscal (NIF)</span></span> ("
+"de identificación fiscal (RFC)</span></span> ("
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
@@ -28577,7 +28577,7 @@ msgstr "Registros de tareas"
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr "NIF"
+msgstr "RFC"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
@@ -30727,7 +30727,7 @@ msgstr "Use el formato \"%s\""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__vat_label
 msgid "Use this field if you want to change vat label."
-msgstr "Utilice este campo si quiere cambiar la etiqueta del IVA."
+msgstr "Utilice este campo si quiere cambiar la etiqueta del RFC."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__address_view_id
@@ -30914,12 +30914,12 @@ msgstr "Uzbekistán"
 #: model:res.country,vat_label:base.uk
 #, python-format
 msgid "VAT"
-msgstr "IVA"
+msgstr "RFC"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
 msgid "VAT Number Validation"
-msgstr "Validación de número de IVA"
+msgstr "Validación de número de RFC"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_voip
@@ -31030,7 +31030,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__vat_label
 msgid "Vat Label"
-msgstr "Etiqueta IVA"
+msgstr "Etiqueta RFC"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_0
