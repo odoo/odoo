@@ -914,8 +914,7 @@ class Field(MetaField('DummyField', (object,), {})):
         indexname = '%s_%s_index' % (model._table, self.name)
         if self.index:
             try:
-                with model._cr.savepoint():
-                    sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
+                sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
             except psycopg2.OperationalError:
                 _schema.error("Unable to add index for %s", self)
         else:

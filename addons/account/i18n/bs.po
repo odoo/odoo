@@ -9,6 +9,7 @@
 # Boško Stojaković <bluesoft83@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Husremovic Ernad <hernad@bring.out.ba>, 2020
+# Ervin Cerović, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Husremovic Ernad <hernad@bring.out.ba>, 2020\n"
+"Last-Translator: Ervin Cerović, 2021\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -977,6 +978,11 @@ msgid ""
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
 msgstr ""
+"Blagajnička kasa mogućava upravljanje stavkama gotovine u vašem dnevniku\n"
+"                gotovine. Ova mogućnost daje vam laki način praćenja gotovinskih\n"
+"                uplata na dnevnoj bazi. Možete unijeti iznos gotovine koji se nalazi u\n"
+"                vašoj kasi, te zatim unijeti stavke kada novac se uplaćuje ili\n"
+"                isplaćuje iz kase."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:383
@@ -1009,6 +1015,9 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
+"Bankovni izvod je sumarni pregled svih finansijskih transakcija\n"
+"                koje su načinjene u određenom vremenskom periodu na nekom bankovnom računu. Vi\n"
+"                biste ga trebali redovno dobijati od svoje banke."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
@@ -1021,6 +1030,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
+"Stavka dnevnika sastoji se iz nekoliko pojedinačnih stavki, a svaka od\n"
+"                njih je bilo dugovna bilo potražna transakcija."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -1028,6 +1039,8 @@ msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
+"Dnevnik knjiženja koristi se za zapis transakcija svih računovodstvenih podataka\n"
+"                vezanih za svakodnevno poslovanje."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1059,6 +1072,8 @@ msgid ""
 "A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
+"Zaokruživanje svake stavke se preporučuje ako vaše cijene sadrže porez. Na "
+"taj način, suma svih stavki u podzbiru jednaka je ukupnoj sumi sa porezima."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:881
@@ -1071,7 +1086,7 @@ msgstr "Odabrana stavka knjiženja je već zatvorena."
 #: code:addons/account/models/account_bank_statement.py:892
 #, python-format
 msgid "A selected statement line was already reconciled with an account move."
-msgstr ""
+msgstr "Odabrane stavke na izvodu su već sravnjene sa prometom računa"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -1090,7 +1105,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr ""
+msgstr "Može se postaviti upozorenje na partnera (Račun)"
 
 #. module: account
 #. openerp-web
@@ -1313,7 +1328,7 @@ msgstr "Predložak poreznog računa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr ""
+msgstr "Račun poreznog oblaka"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -1422,6 +1437,8 @@ msgid ""
 "Account that will be set on invoice tax lines for credit notes. Leave empty "
 "to use the expense account."
 msgstr ""
+"Račun koji bi trebao biti postavljen na stavke poreza u fakturi za knjižna "
+"odobrenja. Ostavite prazno kako bi koristili za račune troškova."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_account_id
@@ -1430,6 +1447,8 @@ msgid ""
 "Account that will be set on invoice tax lines for invoices. Leave empty to "
 "use the expense account."
 msgstr ""
+"Račun koji bi se trebao postaviti na stavke poreza u redovnim fakturama. "
+"Ostavite prazno kako bi koristili za račune troškova."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_template_refund_account_id
@@ -1437,6 +1456,8 @@ msgid ""
 "Account that will be set on invoice tax lines for refunds. Leave empty to "
 "use the expense account."
 msgstr ""
+"Račun koji bi se trebao postaviti na stavke fakture za refundiranje. "
+"Ostavite prazno kako bi se koristio za račune troškova."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_dest_id
@@ -1450,6 +1471,8 @@ msgid ""
 "Account used as counterpart for the journal entry, for taxes eligible based "
 "on payments."
 msgstr ""
+"Račun koji se koristi kao protustavke za stavke dnevnika, za poreze koji su "
+"zasnovani na plaćanjima."
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_account_menu
@@ -1459,7 +1482,7 @@ msgstr "Računovodstvo"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Accounting App Options"
-msgstr ""
+msgstr "Opcije aplikacije računovodstva"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
@@ -4797,7 +4820,7 @@ msgstr "Slobodna vezna oznaka"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Payable accounts"
-msgstr ""
+msgstr "Sa plativih računa"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5147,6 +5170,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "terms without removing it."
 msgstr ""
+"Ako je aktivno polje postavljeno na onemogućeno, dopustiće vam da sakrijete "
+"uslove plaćanja bez da ih uklanjate."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_group_invoice_lines
@@ -5163,12 +5188,14 @@ msgid ""
 "If you check this box, you will be able to collect payments using SEPA "
 "Direct Debit mandates."
 msgstr ""
+"Ako označite ovo, moći ćete preuzeti svoju uplatu pomoću SEPA direktnog "
+"plaćanja."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "If you check this box, you will be able to register your payment using SEPA."
-msgstr ""
+msgstr "Ako ovo označite, moći ćete registrovati svoju uplatu koristeći SEPA."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7476,7 +7503,7 @@ msgstr "Limit potražnog saldo-konta"
 #: model:ir.ui.view,arch_db:account.product_template_form_view
 #: model:ir.ui.view,arch_db:account.view_account_bank_journal_form
 msgid "Payables"
-msgstr ""
+msgstr "Plative"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_amount

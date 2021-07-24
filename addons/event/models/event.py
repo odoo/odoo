@@ -380,6 +380,14 @@ class EventRegistration(models.Model):
         return registration
 
     @api.model
+    def check_access_rights(self, operation, raise_exception=True):
+        if not self.env.user._is_admin() and not self.user_has_groups('event.group_event_user'):
+            if raise_exception:
+                raise AccessError(_('Only event users or managers are allowed to create or update registrations.'))
+            return False
+        return super(EventRegistration, self).check_access_rights(operation, raise_exception=raise_exception)
+
+    @api.model
     def _prepare_attendee_values(self, registration):
         """ Method preparing the values to create new attendees based on a
         sales order line. It takes some registration data (dict-based) that are
@@ -394,7 +402,11 @@ class EventRegistration(models.Model):
             'partner_id': partner_id.id,
             'event_id': event_id and event_id.id or False,
         }
-        data.update({key: value for key, value in registration.items() if key in self._fields})
+        data.update({
+            key: value for key, value in registration.items()
+            if key in self._fields and key not in data and not self._fields[key].default
+        })
+
         return data
 
     @api.one

@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2018
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# Kevin Li, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
 "PO-Revision-Date: 2017-09-20 10:21+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"Last-Translator: Kevin Li, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,16 +50,16 @@ msgid ""
 msgstr ""
 "\n"
 "<p>\n"
-"    尊敬的 ${object.user_id.name or ''}：\n"
+"    ${object.user_id.name or ''}，您好：\n"
 "</p>\n"
 "<p>\n"
-"    您已獲得訪問 ${user.company_id.name} ${object.wizard_id.portal_id.name} 的權限。\n"
+"    您已獲得造訪 ${user.company_id.name} ${object.wizard_id.portal_id.name} 的權限。\n"
 "</p>\n"
 "<p>\n"
-"    您的登錄帳戶信息：\n"
+"    您的登入帳戶資訊：\n"
 "</p>\n"
 "<ul>\n"
-"    <li>使用者名：${object.user_id.login or ''}</li>\n"
+"    <li>使用者名稱：${object.user_id.login or ''}</li>\n"
 "    <li>門戶：<a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
 "    <li>資料庫：${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
 "</ul>\n"
@@ -74,7 +75,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_show_sign_in
 msgid "<b>Sign in</b>"
-msgstr "<b>登錄</b>"
+msgstr "<b>登入</b>"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.frontend_layout
@@ -100,12 +101,12 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
-msgstr "應用"
+msgstr "套用"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_archive_groups
 msgid "Archives"
-msgstr "歸檔"
+msgstr "封存"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -115,7 +116,7 @@ msgstr "取消"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_layout
 msgid "Change"
-msgstr "更新"
+msgstr "變更"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -134,7 +135,7 @@ msgstr "清除"
 #: code:addons/portal/static/src/xml/portal_signature.xml:27
 #, python-format
 msgid "Click here to see your document."
-msgstr "點選此處查看您的文檔。"
+msgstr "點選此處查看您的文件。"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -153,12 +154,12 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
 msgid "Contact"
-msgstr "聯繫人"
+msgstr "聯絡人"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
-msgstr "聯繫人"
+msgstr "聯絡人"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -174,13 +175,13 @@ msgstr "國家..."
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_create_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_uid
 msgid "Created by"
-msgstr "創建人"
+msgstr "建立者"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_create_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_date
 msgid "Created on"
-msgstr "創建時間"
+msgstr "建立時間"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_invoice_portal_url
@@ -243,12 +244,12 @@ msgstr "在門戶中"
 #: code:addons/portal/controllers/portal.py:200
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr "無效電郵！請輸入有效的電子信件地址。"
+msgstr "電子郵件地址無效！請輸入有效的電子郵件地址。"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
 msgid "Invitation Message"
-msgstr "邀請消息"
+msgstr "邀請訊息"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin___last_update
@@ -279,7 +280,7 @@ msgstr "留下評論"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
 msgid "Login User"
-msgstr "登陸使用者"
+msgstr "登入使用者"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.frontend_layout
@@ -579,14 +580,14 @@ msgstr "網站溝通記錄"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_wizard_id
 msgid "Wizard"
-msgstr "嚮導"
+msgstr "精靈"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:32
 #, python-format
 msgid "Write a message..."
-msgstr "寫信息..."
+msgstr "寫訊息..."
 
 #. module: portal
 #. openerp-web
@@ -616,7 +617,7 @@ msgstr "您的詳細信息"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Your Documents"
-msgstr "您的文檔"
+msgstr "您的文件"
 
 #. module: portal
 #. openerp-web
@@ -634,7 +635,7 @@ msgstr "您在 ${user.company_id.name} 的Odoo帳號"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Zip / Postal Code"
-msgstr "郵政代碼"
+msgstr "郵遞區號"
 
 #. module: portal
 #. openerp-web

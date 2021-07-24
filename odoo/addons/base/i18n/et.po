@@ -15,8 +15,10 @@
 # Martin Trigaux, 2019
 # Wanradt Koell <wanradt@gmail.com>, 2019
 # Eneli Õigus <enelioigus@gmail.com>, 2020
-# atriine <triine@avalah.ee>, 2020
+# Triine Aavik <triine@avalah.ee>, 2020
 # Piia Paurson <piia@avalah.ee>, 2020
+# Andre Roomet <andreroomet@gmail.com>, 2021
+# Martin Talts <martin.t@avalah.ee>, 2021
 # 
 msgid ""
 msgstr ""
@@ -24,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:05+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Piia Paurson <piia@avalah.ee>, 2020\n"
+"Last-Translator: Martin Talts <martin.t@avalah.ee>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2933,6 +2935,18 @@ msgid ""
 "Sheet, now only Vertical format has been permitted Which is Supported By Odoo.\n"
 "  "
 msgstr ""
+"\n"
+"India raamatupidamine: kontoplaan.\n"
+"====================================\n"
+"\n"
+"Indian accounting chart and localization.\n"
+"\n"
+"Odoo allows to manage Indian Accounting by providing Two Formats Of Chart of Accounts i.e Indian Chart Of Accounts - Standard and Indian Chart Of Accounts - Schedule VI.\n"
+"\n"
+"Note: The Schedule VI has been revised by MCA and is applicable for all Balance Sheet made after\n"
+"31st March, 2011. The Format has done away with earlier two options of format of Balance\n"
+"Sheet, now only Vertical format has been permitted Which is Supported By Odoo.\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_schedule6
@@ -2971,6 +2985,22 @@ msgid ""
 "    - Yearly Salary by Head and Yearly Salary by Employee Report\n"
 "    "
 msgstr ""
+"\n"
+"Indian palgareeglid.\n"
+"============================\n"
+"\n"
+"    -Configuration of hr_payroll for India localization\n"
+"    -All main contributions rules for India payslip.\n"
+"    * New payslip report\n"
+"    * Employee Contracts\n"
+"    * Allow to configure Basic / Gross / Net Salary\n"
+"    * Employee PaySlip\n"
+"    * Allowance / Deduction\n"
+"    * Integrated with Leaves Management\n"
+"    * Medical Allowance, Travel Allowance, Child Allowance, ...\n"
+"    - Payroll Advice and Report\n"
+"    - Yearly Salary by Head and Yearly Salary by Employee Report\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_github
@@ -3015,6 +3045,11 @@ msgid ""
 "This module allows you to easily add extra costs on pickings and decide the split of these costs among their stock moves in order to take them into account in your stock valuation.\n"
 "    "
 msgstr ""
+"\n"
+"Lisakulude juhtimine\n"
+"=======================\n"
+"See moodul võimaldab teil hõlpsasti lisada lisakulusid noppelehtedele ja otsustada nende kulude jaotus arvesse võttes nende laoväärtust.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_score
@@ -10903,7 +10938,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_fr_fec
 msgid "Fichier d'Échange Informatisé (FEC) for France"
-msgstr ""
+msgstr "Fichier d'Échange Informatisé (FEC) for France"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_fec
@@ -10949,6 +10984,46 @@ msgid ""
 "* Alexis de Lattre <alexis.delattre@akretion.com>\n"
 "\n"
 msgstr ""
+"Fichier d'Échange Informatisé (FEC) pour la France\n"
+"==================================================\n"
+"\n"
+"Ce module permet de générer le fichier FEC tel que définit par `l'arrêté du 29\n"
+"Juillet 2013 <http://legifrance.gouv.fr/eli/arrete/2013/7/29/BUDE1315492A/jo/texte>`\n"
+"portant modification des dispositions de l'article A. 47 A-1 du\n"
+"livre des procédures fiscales.\n"
+"\n"
+"Cet arrêté prévoit l'obligation pour les sociétés ayant une comptabilité\n"
+"informatisée de pouvoir fournir à l'administration fiscale un fichier\n"
+"regroupant l'ensemble des écritures comptables de l'exercice. Le format de ce\n"
+"fichier, appelé *FEC*, est définit dans l'arrêté.\n"
+"\n"
+"Le détail du format du FEC est spécifié dans le bulletin officiel des finances publiques `BOI-CF-IOR-60-40-20-20131213 <http://bofip.impots.gouv.fr/bofip/ext/pdf/createPdfWithAnnexePermalien/BOI-CF-IOR-60-40-20-20131213.pdf?doc=9028-PGP&identifiant=BOI-CF-IOR-60-40-20-20131213>` du 13 Décembre 2013. Ce module implémente le fichier\n"
+"FEC au format texte et non au format XML, car le format texte sera facilement\n"
+"lisible et vérifiable par le comptable en utilisant un tableur.\n"
+"\n"
+"La structure du fichier FEC généré par ce module a été vérifiée avec le logiciel\n"
+"*Test Compta Demat* version 1_00_05 disponible sur\n"
+"`le site de la direction générale des finances publiques <http://www.economie.gouv.fr/dgfip/outil-test-des-fichiers-des-ecritures-comptables-fec>`\n"
+"en utilisant une base de donnée Odoo réelle.\n"
+"\n"
+"Configuration\n"
+"=============\n"
+"\n"
+"Aucune configuration n'est nécessaire.\n"
+"\n"
+"Utilisation\n"
+"===========\n"
+"\n"
+"Pour générer le *FEC*, allez dans le menu *Accounting > Reporting > French Statements > FEC* qui va démarrer l'assistant de génération du FEC.\n"
+"\n"
+"Credits\n"
+"=======\n"
+"\n"
+"Contributors\n"
+"------------\n"
+"\n"
+"* Alexis de Lattre <alexis.delattre@akretion.com>\n"
+"\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_default_field_id
@@ -11945,7 +12020,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_management
 msgid "Helps you handle your quotations, sale orders and invoicing."
-msgstr ""
+msgstr "Aitab teil hallata oma pakkumisi, müügitellimusi ja arveldamist."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_lead_automation
@@ -11955,7 +12030,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_attendance
 msgid "Helps you manage the attendances."
-msgstr ""
+msgstr "Aitab teil osavõtjaid hallata."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_gamification
@@ -11965,27 +12040,27 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_timesheet
 msgid "Helps you manage the timesheets."
-msgstr ""
+msgstr "Aitab hallata ajatabeleid"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_event_management
 msgid "Helps you manage your Events."
-msgstr ""
+msgstr "Aitab sündmusi hallata."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_appraisal
 msgid "Helps you manage your appraisals."
-msgstr ""
+msgstr "Aitab hindamisi hallata."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources
 msgid "Helps you manage your employees."
-msgstr ""
+msgstr "Aitab töötajaid hallata."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_expense
 msgid "Helps you manage your expenses."
-msgstr ""
+msgstr "Aitab kulusid hallata."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_warehouse_management
@@ -11993,6 +12068,7 @@ msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
 "receptions, etc."
 msgstr ""
+"Aitab teil hallata oma ladu ja laotoiminguid: tellimusi, saatelehti jne."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_holidays
@@ -12005,6 +12081,8 @@ msgid ""
 "Helps you manage your manufacturing processes and generate reports on those "
 "processes."
 msgstr ""
+"Aitab teil hallata tootmisprotsesse ja koostada nende protsesside kohta "
+"aruandeid."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_mass_mailing
@@ -12016,7 +12094,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_payroll
 msgid "Helps you manage your payrolls."
-msgstr ""
+msgstr "Aitab teil palgaarvestust hallata."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_project_management
@@ -12024,6 +12102,8 @@ msgid ""
 "Helps you manage your projects and tasks by tracking them, generating "
 "plannings, etc..."
 msgstr ""
+"Aitab teil hallata projekte ja ülesandeid, jälgides neid, luues plaane "
+"jne..."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_purchase_management
@@ -12031,11 +12111,12 @@ msgid ""
 "Helps you manage your purchase-related processes such as requests for "
 "quotations, supplier bills, etc..."
 msgstr ""
+"Aitab hallata ostuga seotud protsesse, nagu pakkumised, tarnijaarved jne..."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_recruitment
 msgid "Helps you manage your recruitments."
-msgstr ""
+msgstr "Aitab värbamisi hallata"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_survey
@@ -14353,13 +14434,13 @@ msgstr "Mudel"
 #: code:addons/base/ir/ir_model.py:471
 #, python-format
 msgid "Model %s does not exist"
-msgstr ""
+msgstr "Mudelit %s pole olemas."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:631
 #, python-format
 msgid "Model %s does not exist!"
-msgstr ""
+msgstr "Mudelit %s pole olemas!"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:179
@@ -16215,7 +16296,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.currency.rate:0
 msgid "Only one currency rate per day allowed!"
-msgstr ""
+msgstr "Ainult üks valuutakurss päevas on lubatud!"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:1189
@@ -16557,7 +16638,7 @@ msgstr "Muu"
 #: model:ir.module.category,name:base.module_category_extra
 #: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Other Extra Rights"
-msgstr ""
+msgstr "Teised eriõigused"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -16572,7 +16653,7 @@ msgstr "Teised partnerid"
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "Other Proprietary"
-msgstr ""
+msgstr "Muu varaline"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_S
@@ -17569,7 +17650,7 @@ msgstr "Kvaliteedikontroll"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_mrp
 msgid "Quality Management with MRP"
-msgstr ""
+msgstr "Kvaliteedijuhtimine koos MRP-ga"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_questions
@@ -17606,17 +17687,17 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_R
 msgid "R ARTS, ENTERTAINMENT AND RECREATION"
-msgstr ""
+msgstr "R KUNST, MEELELAHUTUS JA VABA AEG"
 
 #. module: base
 #: model:res.country,vat_label:base.mx
 msgid "RFC"
-msgstr ""
+msgstr "RFC"
 
 #. module: base
 #: model:res.country,vat_label:base.do
 msgid "RNC"
-msgstr ""
+msgstr "RNC"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate_rate
@@ -18070,7 +18151,7 @@ msgstr "Ruanda"
 #. module: base
 #: model:res.country,name:base.re
 msgid "Réunion"
-msgstr ""
+msgstr "Réunion"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_S
@@ -18130,17 +18211,17 @@ msgstr "SSL/TLS"
 #. module: base
 #: model:res.country,name:base.bl
 msgid "Saint Barthélémy"
-msgstr ""
+msgstr "Saint Barthélémy"
 
 #. module: base
 #: model:res.country,name:base.sh
 msgid "Saint Helena, Ascension and Tristan da Cunha"
-msgstr ""
+msgstr "Saint Helena, Ascension and Tristan da Cunha"
 
 #. module: base
 #: model:res.country,name:base.kn
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "Saint Kitts and Nevis"
 
 #. module: base
 #: model:res.country,name:base.lc
@@ -18150,7 +18231,7 @@ msgstr "Saint Lucia"
 #. module: base
 #: model:res.country,name:base.mf
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "Saint Martin (French part)"
 
 #. module: base
 #: model:res.country,name:base.pm
@@ -18160,7 +18241,7 @@ msgstr "Saint-Pierre ja Miquelon"
 #. module: base
 #: model:res.country,name:base.vc
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "Saint Vincent and the Grenadines"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_contract_salary
@@ -18185,7 +18266,7 @@ msgstr "Müügikupong"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon_delivery
 msgid "Sale Coupon Delivery"
-msgstr ""
+msgstr "Kohaletoimetamise kupong (Müük)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_service_rating
@@ -18195,7 +18276,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_dashboard
 msgid "Sale Subscription Dashboard"
-msgstr ""
+msgstr "Müügi kordustellimuste töölaud"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales
@@ -18219,7 +18300,7 @@ msgstr "Müügikanal"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_expense
 msgid "Sales Expense"
-msgstr ""
+msgstr "Müügi Kulu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_management
@@ -18229,7 +18310,7 @@ msgstr "Müügihaldus"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
 msgid "Sales Timesheet"
-msgstr ""
+msgstr "Müügi ajaarvestus"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid_sale
@@ -18271,7 +18352,7 @@ msgstr "San Marino"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank_sanitized_acc_number
 msgid "Sanitized Account Number"
-msgstr ""
+msgstr "Puhastatud Konto Number"
 
 #. module: base
 #: model:res.country,name:base.sa
@@ -18838,7 +18919,7 @@ msgstr "Somaalia"
 #: model:ir.model.fields,help:base.field_res_bank_bic
 #: model:ir.model.fields,help:base.field_res_partner_bank_bank_bic
 msgid "Sometimes called BIC or Swift."
-msgstr ""
+msgstr "Tihti kutsutakse BIC või Swift."
 
 #. module: base
 #: code:addons/base/ir/ir_attachment.py:342
@@ -18909,7 +18990,7 @@ msgstr "Lõuna-Ameerika"
 #. module: base
 #: model:res.country,name:base.gs
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "South Georgia and the South Sandwich Islands"
 
 #. module: base
 #: model:res.country,name:base.kr
@@ -18929,12 +19010,12 @@ msgstr "Hispaania"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es
 msgid "Spain - Accounting (PGCE 2008)"
-msgstr ""
+msgstr "Spain - Accounting (PGCE 2008)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports
 msgid "Spain - Accounting (PGCE 2008) Reports"
-msgstr ""
+msgstr "Spain - Accounting (PGCE 2008) Reports"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_sparse_field
@@ -20127,17 +20208,17 @@ msgstr "Valitud ettevõte ei ole sellele kasutajale lubatud ettevõtete all"
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The code of the country must be unique !"
-msgstr ""
+msgstr "Riigi kood peab olema unikaalne!"
 
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The code of the language must be unique !"
-msgstr ""
+msgstr "Keele kood peab olema unikaalne!"
 
 #. module: base
 #: sql_constraint:res.country.state:0
 msgid "The code of the state must be unique by country !"
-msgstr ""
+msgstr "Osariigi kood peab olema unikaalne!"
 
 #. module: base
 #: sql_constraint:res.company:0
@@ -20232,7 +20313,7 @@ msgstr "Järgnevad dokumendid kustutakse jäädavalt"
 #: code:addons/base/module/wizard/base_module_upgrade.py:69
 #, python-format
 msgid "The following modules are not installed or unknown: %s"
-msgstr ""
+msgstr "Need moodulid on istalleerimata või tundmatud: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_name
@@ -20431,7 +20512,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_state_code
 msgid "The state code."
-msgstr ""
+msgstr "Osariigi kood."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:498

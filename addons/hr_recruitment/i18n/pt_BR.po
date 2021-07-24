@@ -3,26 +3,28 @@
 # * hr_recruitment
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Mateus Lopes <mateus1@gmail.com>, 2017
-# grazziano <gra.negocia@gmail.com>, 2017
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
-# Clemilton Clementino <clemylton@hotmail.com>, 2017
-# falexandresilva <falexandresilva@gmail.com>, 2017
 # Adriel Kotviski <kotviski@gmail.com>, 2017
-# danimaribeiro <danimaribeiro@gmail.com>, 2017
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2017
+# falexandresilva <falexandresilva@gmail.com>, 2017
 # Cezar José Sant Anna Junior <cezar.santanna@gmail.com>, 2017
+# danimaribeiro <danimaribeiro@gmail.com>, 2017
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2017
+# Clemilton Clementino <clemylton@hotmail.com>, 2017
+# grazziano <gra.negocia@gmail.com>, 2017
+# Mateus Lopes <mateus1@gmail.com>, 2017
+# Martin Trigaux, 2017
 # Yannick Belot <yannickbh@gmail.com>, 2017
 # Silmar <pinheirosilmar@gmail.com>, 2017
-# Thiago Alves Cavalcante <tkramer.tk@gmail.com>, 2018
+# Thiago Alves Cavalcante <thiagoalcav@gmail.com>, 2018
+# Éder Brito <britoederr@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Thiago Alves Cavalcante <tkramer.tk@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:18+0000\n"
+"Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -571,6 +573,9 @@ msgid ""
 "            If you install the document management modules, all resumes are indexed automatically,\n"
 "            so that you can easily search through their content."
 msgstr ""
+"Os candidatos e seus currículos em anexo são criados automaticamente quando um e-mail é enviado.\n"
+"            Se você instalar os módulos de gerenciamento de documentos, todos os currículos serão indexados automaticamente,\n"
+"            para que você possa pesquisar facilmente seu conteúdo."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -1288,7 +1293,7 @@ msgstr "Minhas Atividades"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "My Applications"
-msgstr ""
+msgstr "Minhas Candidaturas"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_activity
@@ -1382,7 +1387,7 @@ msgstr "Número de anexos"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_delay_close
 msgid "Number of days to close"
-msgstr ""
+msgstr "Número de dias para encerrar"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -1430,13 +1435,13 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Ongoing"
-msgstr ""
+msgstr "Em Andamento"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings_module_website_hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Online Posting"
-msgstr ""
+msgstr "Postagem Online"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_force_thread_id
@@ -1478,7 +1483,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_hr_responsible_id
 msgid "Person responsible of validating the employee's contracts."
-msgstr ""
+msgstr "Pessoa responsável pela validação dos contratos do trabalhador."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_phone
@@ -1516,7 +1521,7 @@ msgstr "Salário Extra Proposto"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish available jobs on your website"
-msgstr ""
+msgstr "Publique cargos disponíveis em seu site"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_force_thread_id
@@ -1898,7 +1903,7 @@ msgstr "Data de Atualização"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use interview forms during recruitment process"
-msgstr ""
+msgstr "Use formulários de entrevista durante o processo de recrutamento"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -1967,7 +1972,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: ${object.job_id.name | safe}"
-msgstr ""
+msgstr "Sua Candidatura de Emprego: ${object.job_id.name | safe}"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form

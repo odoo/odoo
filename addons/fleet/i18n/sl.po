@@ -7,8 +7,8 @@
 # Martin Trigaux, 2018
 # Vida Potočnik <vida.potocnik@mentis.si>, 2018
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2019
-# Jasmina Macur <jasmina@hbs.si>, 2019
 # Tadej Lupšina <tadej@hbs.si>, 2019
+# Jasmina Macur <jasmina@hbs.si>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 09:08+0000\n"
 "PO-Revision-Date: 2017-09-20 10:17+0000\n"
-"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2019\n"
+"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -203,7 +203,7 @@ msgstr "Pranje vozila"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_car_value
 msgid "Catalog Value (VAT Incl.)"
-msgstr ""
+msgstr "Kataloška vrednost (z DDV)"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_15
@@ -307,7 +307,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Close Contract"
-msgstr ""
+msgstr "Zapri pogodbo"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,state:0
@@ -644,11 +644,15 @@ msgid ""
 "Each contract (e.g.: leasing) may include several services\n"
 "            (reparation, insurances, periodic maintenance)."
 msgstr ""
+"Vsaka pogodba (npr. lizing) lahko vključuje več storitev\n"
+"            (odškodnina, zavarovanja, redno vzdrževanje)."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Each service can used in contracts, as a standalone service or both."
 msgstr ""
+"Vsaka storitev se lahko uporablja v pogodbah kot samostojna storitev ali "
+"oboje."
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
@@ -1124,6 +1128,9 @@ msgid ""
 "            their related services, costs. Odoo will automatically warn\n"
 "            you when some contracts have to be renewed."
 msgstr ""
+"Upravljajte vse svoje pogodbe (zakup, zavarovanja itd.)\n"
+"            in z njimi povezane storitve, stroški. Odoo bo samodejno opozoril,\n"
+"            ko je potrebno nekatere pogodbe podaljšati."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
@@ -1179,7 +1186,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_year
 msgid "Model Year"
-msgstr ""
+msgstr "Leto modela"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
@@ -1923,7 +1930,7 @@ msgstr "Status vozila"
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_tag_menu
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_tag_view_view_form
 msgid "Vehicle Tags"
-msgstr ""
+msgstr "Oznake vozil"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_vehicle_id
@@ -2057,7 +2064,7 @@ msgstr "Leto"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_year
 msgid "Year of the model"
-msgstr ""
+msgstr "Leto modela"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0

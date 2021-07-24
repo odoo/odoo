@@ -8,7 +8,7 @@
 # Aleksander, 2018
 # Martin Trigaux, 2018
 # Jorunn D. Newth, 2019
-# Marius Stedjan <marius@stedjan.com>, 2019
+# Marius Stedjan <marius@stedjan.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 09:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:21+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2021\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1115,7 +1115,7 @@ msgstr "Standard debetkonto"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_default_fiscal_position_id
 msgid "Default Fiscal Position"
-msgstr ""
+msgstr "Standard avgiftsregel"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1491,7 +1491,7 @@ msgstr "Regnskapsstatus"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position per Order"
-msgstr ""
+msgstr "Avgiftsregel pr ordre"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_fiscal_position_ids
@@ -1596,7 +1596,7 @@ msgstr "Grupper journalregistreringer"
 #: code:addons/point_of_sale/static/src/js/models.js:135
 #, python-format
 msgid "HTTPS connection to IoT Box failed"
-msgstr ""
+msgstr "Sikker tilkobling (https) til IoT Box feilet"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_uom_categ_is_pos_groupable
@@ -1670,6 +1670,10 @@ msgid ""
 "can also decide to not put lots in this operation type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
 msgstr ""
+"Ved å huke av denne, vil du kunne velge parti/serienummer. Du kan også velge"
+" å ikke bruke partier i denne operasjonstypen. Dette betyr at systemet vil "
+"opprette lagerbevegelser uten parti, eller ikke sette restriksjoner på "
+"hvilke parti det blir tatt av."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -1976,6 +1980,8 @@ msgid ""
 "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
 "the certificate of your IoT Box."
 msgstr ""
+"Forsikre deg om at du bruker IoT Box v18.12 eller høyere. Naviger til %s for"
+" å akseptere sertifikatet til IoT-boksen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_available_pricelist_ids
@@ -3586,12 +3592,12 @@ msgstr "MVA-nummer"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tax_regime
 msgid "Tax Regime"
-msgstr ""
+msgstr "Avgiftsregel"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tax_regime_selection
 msgid "Tax Regime Selection value"
-msgstr ""
+msgstr "Avgiftsregel Valg Verdi"
 
 #. module: point_of_sale
 #: selection:pos.config,iface_tax_included:0
@@ -4093,12 +4099,12 @@ msgstr "Total for alle betalte ordrer"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_balance_end_real
 msgid "Total of closing cash control lines."
-msgstr ""
+msgstr "Kontantbeholdning ved avslutning."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_balance_start
 msgid "Total of opening cash control lines."
-msgstr ""
+msgstr "Kontantbeholdning ved åpning."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
@@ -4169,7 +4175,7 @@ msgstr "Bruk eksisterende parti-/serienummere"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Use a default specific tax regime"
-msgstr ""
+msgstr "Bruk en standard avgiftsregel"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_use_pricelist
