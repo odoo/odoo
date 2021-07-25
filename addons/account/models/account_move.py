@@ -646,7 +646,8 @@ class AccountMove(models.Model):
         # ==== Process taxes_map ====
         for taxes_map_entry in taxes_map.values():
             # Don't create tax lines with zero balance.
-            if self.currency_id.is_zero(taxes_map_entry['balance']) and self.currency_id.is_zero(taxes_map_entry['amount_currency']):
+            currency = self.currency_id or self._get_default_currency() or self.env.company.currency
+            if currency.is_zero(taxes_map_entry['balance']) and currency.is_zero(taxes_map_entry['amount_currency']):
                 taxes_map_entry['grouping_dict'] = False
 
             tax_line = taxes_map_entry['tax_line']
@@ -3080,6 +3081,7 @@ class AccountMoveLine(models.Model):
         # However, when triggering the inverse, 2180.09 + (2180.09 * 0.055) = 2180.09 + 119.90 = 2299.99 is computed.
         # To avoid that, set the price_subtotal at the balance if the difference between them looks like a rounding
         # issue.
+        currency = currency or self.move_id._get_default_currency() or self.env.company.currency
         if not force_computation and currency.is_zero(balance - price_subtotal):
             return {}
 
