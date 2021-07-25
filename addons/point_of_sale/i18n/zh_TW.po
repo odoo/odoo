@@ -6,17 +6,17 @@
 # Bill Hsu <hcm86@icloud.com>, 2018
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
 # Michael Yeung, 2019
+# Martin Trigaux, 2019
 # Ying <acc.tou@gmail.com>, 2019
 # gogobook <O968041428@gmail.com>, 2020
 # Mandy Choy <mnc@odoo.com>, 2021
-# Martin Trigaux, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-07-19 08:54+0000\n"
 "PO-Revision-Date: 2016-08-05 13:07+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -37,7 +37,7 @@ msgstr "退貨"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "%(pos_name)s (not used)"
-msgstr ""
+msgstr "%(pos_name)s (未使用)"
 
 #. module: point_of_sale
 #: model:ir.actions.report,print_report_name:point_of_sale.pos_invoice_report
@@ -108,12 +108,12 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Authorized Employees</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">可登入之員工</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Barcodes</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">條碼</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -223,7 +223,7 @@ msgstr "POS前台是一段時間, 通常是某一天, 在這期間, 您通過POS
 msgid ""
 "A session is currently opened for this PoS. Some settings can only be "
 "changed after the session is closed."
-msgstr ""
+msgstr "目前該POS正處於開啟狀態，部分設置必須於重新開始POS時才可使用"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__sequence_number
@@ -382,7 +382,7 @@ msgstr "管理員"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__cash_control
 msgid "Advanced Cash Control"
-msgstr ""
+msgstr "進階現金管理"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -411,7 +411,7 @@ msgstr "全部"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "All Tickets"
-msgstr ""
+msgstr "所有交易"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -438,7 +438,7 @@ msgstr "所有銷售行"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Allow discounts per line"
-msgstr ""
+msgstr "允許可於每項產品進行折扣"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -677,7 +677,7 @@ msgstr "基數金額"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
 msgid "Before Closing Difference"
-msgstr ""
+msgstr "關閉前差異金額"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -811,7 +811,7 @@ msgstr "現金流量表"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__rounding_method
 msgid "Cash rounding"
-msgstr ""
+msgstr "現金捨入"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.account_cashbox_line_view_tree
@@ -991,7 +991,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Close Session & Post Entries"
-msgstr ""
+msgstr "關閉前台並完成日結帳"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_close_session_wizard
@@ -1071,7 +1071,7 @@ msgstr "確認"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices to your PoS directly without an IoT Box"
-msgstr ""
+msgstr "不使用IOT BOX直接連結硬體"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
@@ -1435,21 +1435,6 @@ msgid "Delete Unpaid Orders ?"
 msgstr "刪除未付款訂單？"
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
-#, python-format
-msgid "Deselect Customer"
-msgstr "取消選擇客戶"
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.desk_organizer
-#: model:product.template,name:point_of_sale.desk_organizer_product_template
-#: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
-#: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
-msgid "Desk Organizer"
-msgstr "辦公桌召集人"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_id
 msgid "Destination account"
 msgstr ""
@@ -1485,7 +1470,7 @@ msgstr "摘要"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Direct Devices"
-msgstr ""
+msgstr "直接連結硬體"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1643,7 +1628,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientLine.xml:0
 #, python-format
 msgid "EDIT"
-msgstr ""
+msgstr "編輯"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1667,6 +1652,13 @@ msgstr "電子郵箱"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #, python-format
 msgid "Email Receipt"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Email sent."
 msgstr ""
 
 #. module: point_of_sale
@@ -1854,7 +1846,7 @@ msgstr "強制完成"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__full_product_name
 msgid "Full Product Name"
-msgstr ""
+msgstr "產品名稱"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1955,7 +1947,7 @@ msgstr "首頁"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #, python-format
 msgid "How would you like to receive your receipt?"
-msgstr ""
+msgstr "請選擇寄送收據之方式"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__id
@@ -2122,6 +2114,13 @@ msgstr "內部備註"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Invalid action"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Invalid email."
 msgstr ""
 
 #. module: point_of_sale
@@ -2453,7 +2452,7 @@ msgstr "確保您使用的是IoT Box v18.12或更高版本。導航到 %s接受I
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__manage_orders
 msgid "Manage Orders"
-msgstr ""
+msgstr "訂單管理"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2468,7 +2467,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__manual_discount
 msgid "Manual Discounts"
-msgstr ""
+msgstr "手動折扣"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
@@ -2532,11 +2531,6 @@ msgstr "新的訂單"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "New Session"
 msgstr "新會話"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -2754,7 +2748,7 @@ msgstr "打開會話"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Opened By"
-msgstr ""
+msgstr "啟動者"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3881,7 +3875,7 @@ msgstr "限制管理器進行價格修改"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limit_categories
 msgid "Restrict Product Categories"
-msgstr ""
+msgstr "限制產品類別"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4154,6 +4148,13 @@ msgid "Send by email"
 msgstr "以信件形式發送"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Sending email failed. Please try again."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
 msgid "Sequence"
 msgstr "序列"
@@ -4238,19 +4239,12 @@ msgstr "POS系統視窗"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Set Closing Cash"
-msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
-#, python-format
-msgid "Set Customer"
-msgstr "設定客戶"
+msgstr "設置現金盤點金額"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_bnk_stmt_cashbox_footer
 msgid "Set Default Cash Opening"
-msgstr ""
+msgstr "設置預設開店現金"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4417,7 +4411,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
 msgid "Split Transactions"
-msgstr ""
+msgstr "交易明細拆分"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5095,7 +5089,7 @@ msgstr "提示"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__tip_amount
 msgid "Tip Amount"
-msgstr ""
+msgstr "小費金額"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tip_product_id
@@ -5400,7 +5394,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid ""
 "Use employee credentials to log in to the PoS session and switch cashier"
-msgstr ""
+msgstr "使用員工進行POS登入，以及更換收銀人員"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__user_id

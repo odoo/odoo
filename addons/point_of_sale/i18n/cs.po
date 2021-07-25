@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-07-19 08:54+0000\n"
 "PO-Revision-Date: 2016-08-05 13:07+0000\n"
 "Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
@@ -702,7 +702,7 @@ msgstr "Základní částka"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
 msgid "Before Closing Difference"
-msgstr ""
+msgstr "Before Closing Difference"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1472,21 +1472,6 @@ msgid "Delete Unpaid Orders ?"
 msgstr "Smazat neplacené objednávky?"
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
-#, python-format
-msgid "Deselect Customer"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.desk_organizer
-#: model:product.template,name:point_of_sale.desk_organizer_product_template
-#: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
-#: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
-msgid "Desk Organizer"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_id
 msgid "Destination account"
 msgstr ""
@@ -1706,6 +1691,13 @@ msgstr "E-mail"
 #, python-format
 msgid "Email Receipt"
 msgstr "Účtenka e-mailem"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Email sent."
+msgstr "Odeslán e-mail."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2141,6 +2133,8 @@ msgid ""
 "                Invocing/Accounting app will create Bank and Cash payment\n"
 "                methods automatically."
 msgstr ""
+"Instalací účtové osnovy z Obecných nastavení aplikace Fakturace/Účtování se "
+"automaticky vytvoří bankovní a hotovostní platební metody."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_mercury
@@ -2168,6 +2162,13 @@ msgstr "Interní poznámky"
 #, python-format
 msgid "Invalid action"
 msgstr "Neplatná akce"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Invalid email."
+msgstr "Neplatný e-mail."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2313,7 +2314,7 @@ msgstr "Položky deníku"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
 msgid "Kpi Pos Total Value"
-msgstr ""
+msgstr "Kpi Pos Hodnota celkem"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
@@ -2357,12 +2358,12 @@ msgstr "Závěrečná hotovost poslední relace"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cashbox
 msgid "Last Session Closing Cashbox"
-msgstr ""
+msgstr "Závěrečná pokladna poslední relace"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_date
 msgid "Last Session Closing Date"
-msgstr ""
+msgstr "Datum ukončení poslední relace"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__write_uid
@@ -2586,11 +2587,6 @@ msgid "New Session"
 msgstr "Nové sezení"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Další událost z kalendáře aktivit"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Termín další aktivity"
@@ -2670,7 +2666,7 @@ msgstr "V deníku není definována žádná sekvence"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
 msgid "No sessions found"
-msgstr ""
+msgstr "Nenalezeny žádné relace"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2812,12 +2808,12 @@ msgstr "Otevřít sezení"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Opened By"
-msgstr ""
+msgstr "Otevřeno"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Opened by"
-msgstr ""
+msgstr "Otevřeno"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__opening_control
@@ -2834,7 +2830,7 @@ msgstr "Datum otevření"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.account_cashbox_line_action
 msgid "Opening/Closing Values"
-msgstr ""
+msgstr "Počáteční/uzavírací hodnoty"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_type_id
@@ -2853,7 +2849,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Operation types show up in the Inventory dashboard."
-msgstr ""
+msgstr "Typy operací se zobrazují na ovládacím panelu inventáře."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3631,7 +3627,7 @@ msgstr "Tisk účtenky"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/SaleDetailsButton.xml:0
 #, python-format
 msgid "Print a report with all the sales of the current PoS Session"
-msgstr ""
+msgstr "Tisk sestavy se všemi prodeji aktuální relace PoS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3641,7 +3637,7 @@ msgstr "Tisknout faktury na žádost zákazníka"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Print receipts automatically once the payment is registered"
-msgstr ""
+msgstr "Automatický tisk účtenek po zaregistrování platby"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -3947,7 +3943,7 @@ msgstr "Omezit kategorie produktů"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Restrict price modification to managers"
-msgstr ""
+msgstr "Omezení úpravy cen na manažery"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -4215,6 +4211,13 @@ msgid "Send by email"
 msgstr "Odeslat e-mailem"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Sending email failed. Please try again."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
 msgid "Sequence"
 msgstr "Číselná řada"
@@ -4299,13 +4302,6 @@ msgstr "Sezení"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Set Closing Cash"
-msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
-#, python-format
-msgid "Set Customer"
 msgstr ""
 
 #. module: point_of_sale

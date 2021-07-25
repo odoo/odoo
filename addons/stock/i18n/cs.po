@@ -279,6 +279,8 @@ msgid ""
 "<br/>\n"
 "                    <strong>Current Inventory: </strong>"
 msgstr ""
+"<br/>\n"
+"                    <strong>Aktuální zásoby: </strong>"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -393,6 +395,8 @@ msgid ""
 "<span class=\"o_stat_text\">In:</span>\n"
 "                                <span class=\"o_stat_text\">Out:</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Příjem:</span>\n"
+"                                <span class=\"o_stat_text\">Výdej:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -463,7 +467,7 @@ msgstr "<span>Přiřadit sériová čísla</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "<span>Clear All</span>"
-msgstr ""
+msgstr "<span>Vymazat vše</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
@@ -502,6 +506,9 @@ msgid ""
 "                The done move line has been corrected.\n"
 "            </strong>"
 msgstr ""
+"<strong>\n"
+"               Řádek provedeného přesunu byl opraven.\n"
+"            </strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -520,6 +527,9 @@ msgid ""
 "quantity and now, the difference of quantity is not consistent "
 "anymore.</strong>"
 msgstr ""
+"<strong>Kvůli některým skladovým pohybům, které byly provedeny mezi vaší "
+"původní aktualizací množství a nyní, již rozdíl v množství není "
+"konzistentní.</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -868,7 +878,7 @@ msgstr "Použitelný na"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__packaging_selectable
 msgid "Applicable on Packaging"
-msgstr ""
+msgstr "Platí pro obaly"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__product_selectable
@@ -1555,7 +1565,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Counted Quantity"
-msgstr ""
+msgstr "Započítané množství"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -1855,7 +1865,7 @@ msgstr "Datum posledního inventáře na tomto místě."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__reservation_date
 msgid "Date to Reserve"
-msgstr ""
+msgstr "Datum rezervace"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2102,6 +2112,8 @@ msgid ""
 "of the product in this packaging: whether it will be bought, manufactured, "
 "replenished on order, etc."
 msgstr ""
+"V závislosti na nainstalovaných modulech umožňuje definovat cestu výrobku v "
+"tomto balení: zda se bude nakupovat, vyrábět, doplňovat na objednávku atd."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -2254,7 +2266,7 @@ msgstr "Zrušit"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Discard and manually resolve the conflict"
-msgstr ""
+msgstr "Zahodit a ručně vyřešit konflikt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_assign_serial
@@ -2483,6 +2495,7 @@ msgstr "Výjimka(y):"
 msgid ""
 "Existing Serial Numbers (%s). Please correct the serial numbers encoded."
 msgstr ""
+"Stávající sériová čísla (%s). Opravte prosím zakódovaná sériová čísla."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -2638,7 +2651,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
 msgid "Forecasted"
-msgstr ""
+msgstr "Předpokládané"
 
 #. module: stock
 #. openerp-web
@@ -2656,7 +2669,7 @@ msgstr "Předpokládané dodávky"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__forecast_expected_date
 msgid "Forecasted Expected date"
-msgstr ""
+msgstr "Předpokládané Očekávané datum"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.report_stock_quantity_action
@@ -3503,6 +3516,8 @@ msgid ""
 "Keep the <strong>Difference</strong> (the Counted Quantity will be updated "
 "to reflect the same difference as when you counted)"
 msgstr ""
+"Ponechat <strong>rozdíl</strong> (spočítané množství bude aktualizováno tak,"
+" aby odráželo stejný rozdíl jako při počítání)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search

@@ -10,8 +10,8 @@
 # Martin Trigaux, 2021
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2021
 # Michal Veselý <michal@veselyberanek.net>, 2021
-# trendspotter, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 08:05+0000\n"
 "PO-Revision-Date: 2016-08-05 12:54+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -704,6 +704,9 @@ msgid ""
 "        Allows users to easily export accounting data that can be imported to a 3rd party that does 1099 e-filing.\n"
 "    "
 msgstr ""
+"\n"
+" Umožňuje uživatelům snadno exportovat účetní data, která lze importovat do 3. strany, která provádí elektronické podání 1099.\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents
@@ -858,6 +861,9 @@ msgid ""
 "        UNSPSC code for their products and uoms.\n"
 "    "
 msgstr ""
+"\n"
+" Země jako Kolumbie, Peru a Mexiko potřebují mít možnost využívat UNSPSC pro své výrobky a zboží.\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form
@@ -935,6 +941,9 @@ msgid ""
 "        Display related products of a blogpost on your website.\n"
 "    "
 msgstr ""
+"\n"
+" Zobrazení souvisejících produktů blogpostu na vašich webových stránkách.\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm_report
@@ -1093,6 +1102,23 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+" Modul pro import standardních souborů FEC, užitečný pro import historie účetnictví.\n"
+"\n"
+"Soubory FEC (fichier des écritures comptables) jsou standardní účetní výkazy, které musí francouzské podniky předkládat daňovým úřadům.\n"
+"Tento modul umožňuje import účtů, deníků, partnerů a pohybů z těchto souborů.\n"
+"\n"
+"Implementován je pouze formát CSV souborů FEC.\n"
+"Jediná povolená kódování jsou \"utf-8\", \"utf-8-sig\" a \"iso8859_15\".\n"
+"Je povoleno několik oddělovačů: \";\" nebo \"|\" nebo \",\" nebo \"\t\".\n"
+"\n"
+"Oficiální technická specifikace (fr)\n"
+"https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000027804775/\n"
+"\n"
+"Nástroj pro testování FEC od daňových úřadů\n"
+"https://github.com/DGFiP/Test-Compta-Demat\n"
+"\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports_2021
@@ -1579,6 +1605,9 @@ msgid ""
 "    Support for Export/Import in UBL format (BIS3).\n"
 "    "
 msgstr ""
+"\n"
+" Podpora exportu/importu ve formátu UBL (BIS3).\n"
+"   "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_edi_facturx
@@ -1606,6 +1635,13 @@ msgid ""
 "    the SII.  \n"
 "    "
 msgstr ""
+"\n"
+"Dodací průvodka (guia de despacho) slouží jako doklad o tom, že posíláte zboží mezi místem A a místem B. \n"
+"\n"
+"U partnera lze nastavit, zda jsou na dodací průvodce potřeba ceny a zda musí pocházet z prodejní objednávky nebo ze samotného výrobku. \n"
+"\n"
+"Dodací průvodku můžete vytvořit teprve tehdy, když je objednávka na dodání potvrzena. Pak bude následovat stejný průběh jako u faktur, tedy odeslání do SII. \n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
@@ -2075,6 +2111,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Účetní výkazy pro Norsko\n"
+"================================\n"
+"\n"
+"     "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg_reports
@@ -2421,6 +2462,10 @@ msgid ""
 "-----------------------------------------------------------------------\n"
 "\n"
 msgstr ""
+"\n"
+"Umožňuje generovat potenciální zákazníky z naplánovaných schůzek prostřednictvím vašich webových stránek\n"
+"-----------------------------------------------------------------------\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_oauth
@@ -2892,6 +2937,15 @@ msgid ""
 "When you reconcile, simply select the corresponding batch payment to reconcile all the payments in the batch.\n"
 "    "
 msgstr ""
+"\n"
+"Dávkové platby\n"
+"=======================================\n"
+"Dávkové platby umožňují seskupování plateb.\n"
+"\n"
+"Používají se zejména, ale nejen, k seskupení několika šeků před jejich uložením v jedné dávce v bance.\n"
+"Celková vložená částka se pak na vašem bankovním výpisu zobrazí jako jedna transakce.\n"
+"Při vzájemném vyrovnání stačí vybrat příslušnou dávkovou platbu, aby se vyrovnaly všechny platby v dané dávce.\n"
+"   "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -3561,6 +3615,17 @@ msgid ""
 "- Základní fiskální pozice pro českou legislativu\n"
 "    "
 msgstr ""
+"\n"
+"Česká účetní osnova a lokalizace. S účtovou osnovou s daněmi a základními daňovými položkami.\n"
+"\n"
+"Tento modul definuje:\n"
+"\n"
+"- Českou účtovou osnovu pro rok 2020\n"
+"\n"
+"- Základní sazby DPH pro prodej a nákup\n"
+"\n"
+"- Základní fiskální pozice pro českou legislativu\n"
+"   "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_themes
@@ -3637,6 +3702,17 @@ msgid ""
 "invoice line to export in the FatturaPA XML.   \n"
 "    "
 msgstr ""
+"\n"
+"Dokument o přepravě (DDT)\n"
+"\n"
+"Při každém převozu zboží mezi místem A a místem B slouží DDT jako legitimace, např. když vás zastaví policie. \n"
+"\n"
+"Když chcete v italské firmě vytisknout odchozí výběr, vytiskne vám místo něj DDT. Je to jako dodací list, ale obsahuje také hodnotu výrobku, důvod přepravy, dopravce, ..., což z něj dělá DDT. \n"
+"\n"
+"Pro DDT používáme také samostatnou sekvenci, protože číslo by nemělo mít žádné mezery a mělo by být použito až v okamžiku odeslání zboží. \n"
+"\n"
+"Pokud jsou faktury navázány na jejich prodejní objednávku a prodejní objednávku s dodávkou, systém automaticky vypočítá navázané DDT pro každý řádek faktury pro export do XML FatturaPA. \n"
+"   "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi
@@ -3656,6 +3732,9 @@ msgid ""
 "and then fetched by this module.\n"
 "    "
 msgstr ""
+"\n"
+"Implementace elektronické faktury pro Itálii pomocí webové služby. Možnost odesílat a přijímat doklady ze systému SdiCoop. Soubory odeslané ze SdiCoop jsou nejprve uloženy na proxy serveru a poté načteny tímto modulem.\n"
+"   "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_slides
