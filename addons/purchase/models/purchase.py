@@ -31,9 +31,10 @@ class PurchaseOrder(models.Model):
                 line._compute_amount()
                 amount_untaxed += line.price_subtotal
                 amount_tax += line.price_tax
+            currency = order.currency_id or order.partner_id.property_purchase_currency_id or self.env.company.currency_id
             order.update({
-                'amount_untaxed': order.currency_id.round(amount_untaxed),
-                'amount_tax': order.currency_id.round(amount_tax),
+                'amount_untaxed': currency.round(amount_untaxed),
+                'amount_tax': currency.round(amount_tax),
                 'amount_total': amount_untaxed + amount_tax,
             })
 
