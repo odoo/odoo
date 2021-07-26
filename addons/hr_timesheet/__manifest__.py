@@ -61,5 +61,6 @@ up a management by affair.
         'web.assets_qweb': [
             'hr_timesheet/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

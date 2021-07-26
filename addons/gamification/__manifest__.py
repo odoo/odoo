@@ -44,5 +44,6 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
         'web.assets_backend': [
             'gamification/static/src/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

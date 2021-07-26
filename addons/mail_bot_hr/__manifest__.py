@@ -13,4 +13,5 @@
     'data': [
         'views/res_users_views.xml',
     ],
+    'license': 'LGPL-3',
 }

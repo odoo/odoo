@@ -8,4 +8,5 @@
     'depends': ['stock_account', 'sale_margin'],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

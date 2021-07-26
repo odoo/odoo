@@ -207,5 +207,6 @@
         'web.assets_qweb': [
             'point_of_sale/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

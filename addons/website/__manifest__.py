@@ -232,5 +232,6 @@
             '/website/static/src/scss/website.theme_install.scss',
             '/website/static/src/scss/website.wysiwyg.scss'
         ]
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -135,5 +135,6 @@
             'stock/static/src/xml/stock_orderpoint.xml',
             'stock/static/src/xml/stock_traceability_report_backend.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

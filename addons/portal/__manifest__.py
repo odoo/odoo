@@ -47,5 +47,6 @@ a dependency towards website editing and customization capabilities.""",
             'portal/static/src/xml/portal_chatter.xml',
             'portal/static/src/xml/portal_signature.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

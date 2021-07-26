@@ -20,4 +20,5 @@
             'website_mail_group/static/src/snippets/s_group/000.js',
         ],
     },
+    'license': 'LGPL-3',
 }

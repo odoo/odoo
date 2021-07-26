@@ -22,5 +22,6 @@ Allow users to login through OAuth2 Provider.
         'web.assets_frontend': [
             'auth_oauth/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

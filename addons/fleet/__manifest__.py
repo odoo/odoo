@@ -52,5 +52,6 @@ Main Features
         'web.assets_backend': [
             'fleet/static/src/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

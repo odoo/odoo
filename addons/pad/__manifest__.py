@@ -29,5 +29,6 @@ pads (by default, http://etherpad.com/).
         'web.assets_qweb': [
             'pad/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

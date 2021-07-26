@@ -12,7 +12,7 @@
         ],
     'depends': ['point_of_sale'],
     'installable': True,
-    'license': 'OEEL-1',
+    'license': 'LGPL-3',
     'assets': {
         'point_of_sale.assets': [
             'pos_six/static/lib/six_timapi/timapi.js',

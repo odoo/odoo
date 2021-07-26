@@ -32,5 +32,6 @@ Finally, the module comes with an option to display an attribute summary table i
         'web.assets_tests': [
             'website_sale_comparison/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

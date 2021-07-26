@@ -19,4 +19,5 @@ PayUmoney payment gateway supports only INR currency.
     ],
     'application': True,
     'uninstall_hook': 'uninstall_hook',
+    'license': 'LGPL-3',
 }

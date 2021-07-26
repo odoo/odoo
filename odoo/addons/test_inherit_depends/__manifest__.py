@@ -8,4 +8,5 @@
     'depends': ['test_inherit', 'test_new_api'],
     'installable': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }

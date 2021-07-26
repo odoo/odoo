@@ -17,5 +17,6 @@
         'point_of_sale.assets': [
             'pos_restaurant_adyen/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

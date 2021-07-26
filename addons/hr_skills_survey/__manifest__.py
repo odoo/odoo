@@ -23,5 +23,6 @@ This module adds certification to resumé for employees.
         'web.assets_qweb': [
             'hr_skills_survey/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

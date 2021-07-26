@@ -22,5 +22,6 @@
         'web.assets_qweb': [
             'l10n_co_pos/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }
