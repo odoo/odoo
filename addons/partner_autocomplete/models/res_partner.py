@@ -7,6 +7,7 @@ import logging
 import requests
 
 from odoo import api, fields, models, tools, _
+from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
 
@@ -97,6 +98,39 @@ class ResPartner(models.Model):
         else:
             return []
 
+    def _iap_perform_autocomplete(self, include_logo=True):
+        self.ensure_one()
+        company_domain = self._get_company_domain()
+        if not company_domain:
+            return False
+
+        iap_payload, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('enrich', {
+            'domain': company_domain,
+            'partner_gid': False,  # TDE: checkme
+            'vat': self.vat,
+        })
+        if not iap_payload or error:
+            return False
+
+        contact_vals = self.env['iap.autocomplete.api']._get_contact_vals_from_response(iap_payload['company_data'], include_logo=include_logo)
+        update_vals = dict(
+            (fname, contact_vals[fname])
+            for fname in contact_vals.keys()
+            if not self[fname]
+        )
+        additional_data = update_vals.pop('additional_info', False)
+
+        self.write(update_vals)
+        if additional_data:
+            template_values = json.loads(additional_data)
+            template_values['flavor_text'] = _("Company auto-completed by Odoo Partner Autocomplete Service")
+            self.message_post_with_view(
+                'iap_mail.enrich_company',
+                values=template_values,
+                subtype_id=self.env.ref('mail.mt_note').id,
+            )
+        return True
+
     @api.model
     def enrich_company(self, company_domain, partner_gid, vat, timeout=15):
         response, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('enrich', {
@@ -157,6 +191,24 @@ class ResPartner(models.Model):
         self.ensure_one()
         if vat and self._is_synchable() and self._is_vat_syncable(vat):
             self.env['res.partner.autocomplete.sync'].sudo().add_to_queue(self.id)
+
+    def _get_company_domain(self):
+        """ Extract the company domain to be used by IAP services.
+        The domain is extracted from the website or the email information.
+        e.g:
+            - www.info.proximus.be -> proximus.be
+            - info@proximus.be -> proximus.be """
+        self.ensure_one()
+
+        company_domain = tools.email_domain_extract(self.email) if self.email else False
+        if company_domain and company_domain not in iap_tools._MAIL_DOMAIN_BLACKLIST:
+            return company_domain
+
+        company_domain = tools.url_domain_extract(self.website) if self.website else False
+        if not company_domain or company_domain in ['localhost', 'example.com']:
+            return False
+
+        return company_domain
 
     @api.model_create_multi
     def create(self, vals_list):
