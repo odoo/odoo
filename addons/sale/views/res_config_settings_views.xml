@@ -209,8 +209,8 @@
                                     Automatic email sent after the customer has signed or paid online
                                 </div>
                                 <div class="row mt16">
-                                    <label for="confirmation_template_id" string="Email Template" class="col-lg-4 o_light_label"/>
-                                    <field name="confirmation_template_id" class="oe_inline"/>
+                                    <label for="confirmation_mail_template_id" class="col-lg-4 o_light_label"/>
+                                    <field name="confirmation_mail_template_id" class="oe_inline"/>
                                 </div>
                             </div>
                         </div>
@@ -405,8 +405,8 @@
                                     Generate the invoice automatically when the online payment is confirmed
                                 </div>
                                 <div  attrs="{'invisible': [('automatic_invoice','=',False)]}" groups="base.group_no_one">
-                                    <label for="template_id" class="o_light_label"/>
-                                    <field name="template_id" class="oe_inline" options="{'no_create': True}"/>
+                                    <label for="invoice_mail_template_id" class="o_light_label"/>
+                                    <field name="invoice_mail_template_id" class="oe_inline" options="{'no_create': True}"/>
                                 </div>
                             </div>
                         </div>
