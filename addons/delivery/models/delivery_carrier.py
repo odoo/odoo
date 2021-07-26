@@ -129,7 +129,7 @@ class DeliveryCarrier(models.Model):
 
     @api.onchange('country_ids')
     def onchange_countries(self):
-        self.state_ids = [(6, 0, self.state_ids.filtered(lambda state: state.id in self.country_ids.mapped('state_ids').ids).ids)]
+        self.state_ids = [(6, 0, self.state_ids._origin.filtered(lambda state: state.id in self.country_ids.mapped('state_ids').ids).ids)]
 
     # -------------------------- #
     # API for external providers #
