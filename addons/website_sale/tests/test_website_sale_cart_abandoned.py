@@ -7,7 +7,8 @@ from dateutil.relativedelta import relativedelta
 from odoo.tests import tagged
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 
-@tagged('post_install', '-at_install', 'bso')
+
+@tagged('post_install', '-at_install')
 class TestWebsiteSaleCartAbandoned(HttpCaseWithUserPortal):
     def setUp(self):
         res = super(TestWebsiteSaleCartAbandoned, self).setUp()
