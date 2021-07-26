@@ -21,5 +21,6 @@ This module adds a PAD in all project form views.
         'web.assets_frontend': [
             'pad_project/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -60,5 +60,6 @@ The Dashboard for the Sales Manager will include
         'web.assets_frontend': [
             'sale_management/static/src/js/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

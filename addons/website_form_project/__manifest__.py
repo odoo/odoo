@@ -19,5 +19,6 @@ Generate tasks in Project app from a form published on your website. This module
         'website.assets_editor': [
             'website_form_project/static/src/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

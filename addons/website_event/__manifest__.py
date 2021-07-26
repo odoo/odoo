@@ -63,5 +63,6 @@
         'website.assets_editor': [
             'website_event/static/src/js/website_event.editor.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

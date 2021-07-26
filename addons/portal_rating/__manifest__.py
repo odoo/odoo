@@ -26,5 +26,6 @@ inclusion of rating directly within the customer portal discuss widget.
             'portal_rating/static/src/js/portal_composer.js',
             'portal_rating/static/src/js/portal_rating_composer.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

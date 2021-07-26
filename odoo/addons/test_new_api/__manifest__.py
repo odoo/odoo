@@ -24,5 +24,6 @@
             # inside .
             'test_new_api/static/tests/tours/x2many.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

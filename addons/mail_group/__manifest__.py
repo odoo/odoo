@@ -35,4 +35,5 @@
             'mail_group/static/src/*/*',
         ],
     },
+    'license': 'LGPL-3',
 }

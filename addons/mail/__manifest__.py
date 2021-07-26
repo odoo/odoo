@@ -408,5 +408,6 @@
             'mail/static/src/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog.xml',
             'mail/static/src/widgets/messaging_menu/messaging_menu.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

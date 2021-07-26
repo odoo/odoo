@@ -57,4 +57,5 @@ come with any additional paid permission for online use of 'private modules'.
     'demo': [
         'demo/demo_company.xml',
     ],
+    'license': 'LGPL-3',
 }

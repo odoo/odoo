@@ -9,5 +9,6 @@
             # inside .
             'test_apikeys/static/tests/apikey_flow.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

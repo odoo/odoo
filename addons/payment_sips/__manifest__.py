@@ -20,4 +20,5 @@ not guaranteed.""",
     ],
     'application': True,
     'uninstall_hook': 'uninstall_hook',
+    'license': 'LGPL-3',
 }

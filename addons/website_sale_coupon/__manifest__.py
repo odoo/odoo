@@ -21,5 +21,6 @@ Coupon & promotion programs can be edited in the Catalog menu of the Website app
         'web.assets_tests': [
             'website_sale_coupon/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

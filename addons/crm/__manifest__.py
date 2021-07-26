@@ -92,5 +92,6 @@
             'crm/static/tests/forecast_kanban_tests.js',
             'crm/static/tests/crm_rainbowman_tests.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

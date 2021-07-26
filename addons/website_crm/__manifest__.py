@@ -29,5 +29,6 @@ This module includes contact phone and mobile numbers validation.""",
         'web.assets_tests': [
             'website_crm/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

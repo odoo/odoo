@@ -46,5 +46,6 @@ this event.
         'web.qunit_suite_tests': [
             'event_sale/static/tests/event_configurator.test.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }
