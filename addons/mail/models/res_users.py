@@ -48,13 +48,42 @@ class Users(models.Model):
                 raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
         users = super(Users, self).create(vals_list)
+
+        # log a portal status change (manual tracking)
+        if not self._context.get('mail_create_nolog') and not self._context.get('mail_notrack'):
+            for user in users:
+                if user.has_group('base.group_portal'):
+                    body = user._get_portal_access_update(True)
+                    user.partner_id.message_post(
+                        body=body,
+                        message_type='notification',
+                        subtype_xmlid='mail.mt_note'
+                    )
         # Auto-subscribe to channels unless skip explicitly requested
         if not self.env.context.get('mail_channel_nosubscribe'):
             self.env['mail.channel'].search([('group_ids', 'in', users.groups_id.ids)])._subscribe_users_automatically()
         return users
 
     def write(self, vals):
+        user_portal_access_dict = {
+            user.id: user.has_group('base.group_portal')
+            for user in self
+        }
         write_res = super(Users, self).write(vals)
+
+        # log a portal status change (manual tracking)
+        if not self._context.get('mail_create_nolog') and not self._context.get('mail_notrack'):
+            for user in self:
+                user_has_group = user.has_group('base.group_portal')
+                portal_access_changed = user_has_group != user_portal_access_dict[user.id]
+                if portal_access_changed:
+                    body = user._get_portal_access_update(user_has_group)
+                    user.partner_id.message_post(
+                        body=body,
+                        message_type='notification',
+                        subtype_xmlid='mail.mt_note'
+                    )
+
         if 'active' in vals and not vals['active']:
             self._unsubscribe_from_non_public_channels()
         sel_groups = [vals[k] for k in vals if is_selection_groups(k) and vals[k]]
@@ -84,6 +113,12 @@ class Users(models.Model):
         current_cp.filtered(
             lambda cp: cp.channel_id.public != 'public' and cp.channel_id.channel_type == 'channel'
         ).unlink()
+
+    def _get_portal_access_update(self, access_granted):
+        body = _('Portal Access Granted') if access_granted else _('Portal Access Revoked')
+        if self.partner_id.email:
+            return '%s (%s)' % (body, self.partner_id.email)
+        return body
 
     # ------------------------------------------------------------
     # DISCUSS
