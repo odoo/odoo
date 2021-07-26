@@ -151,6 +151,7 @@ export class OdooEditor extends EventTarget {
                         return closestElement(selection.anchorNode, 'P, DIV');
                     }
                 },
+                isHintBlacklisted: () => false,
                 _t: string => string,
             },
             options,
@@ -1838,7 +1839,9 @@ export class OdooEditor extends EventTarget {
 
         for (const [selector, text] of Object.entries(selectors)) {
             for (const el of this.editable.querySelectorAll(selector)) {
-                this._makeHint(el, text);
+                if (!this.options.isHintBlacklisted(el)) {
+                    this._makeHint(el, text);
+                }
             }
         }
 
