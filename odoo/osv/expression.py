@@ -787,7 +787,11 @@ class expression(object):
                     if inverse_field.store and not (inverse_is_int and domain):
                         # rewrite condition to match records with/without lines
                         op1 = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
-                        subquery = f'SELECT "{inverse_field.name}" FROM "{comodel._table}" WHERE "{inverse_field.name}" IS NOT NULL'
+                        if comodel._active_name:
+                            active = field.context.get("active_test", True)
+                            subquery = f'SELECT "{inverse_field.name}" FROM "{comodel._table}" WHERE "{inverse_field.name}" IS NOT NULL AND "{comodel._active_name}" = {active}'
+                        else:
+                            subquery = f'SELECT "{inverse_field.name}" FROM "{comodel._table}" WHERE "{inverse_field.name}" IS NOT NULL'
                         push(('id', op1, (subquery, [])), model, alias, internal=True)
                     else:
                         comodel_domain = [(inverse_field.name, '!=', False)]
