@@ -192,7 +192,9 @@ class SaleOrderLine(models.Model):
         """Generate project values"""
         account = self.order_id.analytic_account_id
         if not account:
-            self.order_id._create_analytic_account(prefix=self.product_id.default_code or None)
+            service_products = self.order_id.order_line.product_id.filtered(lambda p: p.type == 'service' and p.default_code)
+            default_code = service_products.default_code if len(service_products) == 1 else None
+            self.order_id._create_analytic_account(prefix=default_code)
             account = self.order_id.analytic_account_id
 
         # create the project or duplicate one

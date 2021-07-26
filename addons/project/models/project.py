@@ -310,6 +310,7 @@ class Project(models.Model):
     last_update_color = fields.Integer(compute='_compute_last_update_color')
     milestone_ids = fields.One2many('project.milestone', 'project_id', copy=True)
     milestone_count = fields.Integer(compute='_compute_milestone_count')
+    is_milestone_exceeded = fields.Boolean(compute="_compute_is_milestone_exceeded", search='_search_is_milestone_exceeded')
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! Project start date must be before project end date.')
@@ -379,6 +380,37 @@ class Project(models.Model):
         mapped_count = {group['project_id'][0]: group['project_id_count'] for group in read_group}
         for project in self:
             project.milestone_count = mapped_count.get(project.id, 0)
+
+    @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline')
+    def _compute_is_milestone_exceeded(self):
+        today = fields.Date.context_today(self)
+        read_group = self.env['project.milestone'].read_group([
+            ('project_id', 'in', self.ids),
+            ('is_reached', '=', False),
+            ('deadline', '<', today)], ['project_id'], ['project_id'])
+        mapped_count = {group['project_id'][0]: group['project_id_count'] for group in read_group}
+        for project in self:
+            project.is_milestone_exceeded = bool(mapped_count.get(project.id, 0))
+
+    @api.model
+    def _search_is_milestone_exceeded(self, operator, value):
+        if not isinstance(value, bool):
+            raise ValueError(_('Invalid value: %s') % value)
+        if operator not in ['=', '!=']:
+            raise ValueError(_('Invalid operator: %s') % operator)
+
+        query = """
+            SELECT P.id
+              FROM project_project P
+         LEFT JOIN project_milestone M ON P.id = M.project_id
+             WHERE M.is_reached IS false
+               AND M.deadline < CAST(now() AS date)
+        """
+        if (operator == '=' and value is True) or (operator == '!=' and value is False):
+            operator_new = 'inselect'
+        else:
+            operator_new = 'not inselect'
+        return [('id', operator_new, (query, ()))]
 
     @api.depends('alias_name', 'alias_domain')
     def _compute_alias_value(self):
@@ -876,7 +908,7 @@ class Task(models.Model):
         return stages.search(['|', ('id', 'in', stages.ids), ('user_id', '=', self.env.user.id)])
 
     active = fields.Boolean(default=True)
-    name = fields.Char(string='Title', tracking=True, required=True, index=True)
+    name = fields.Char(string='Title', tracking=True, required=True, index=True, translate=True)
     description = fields.Html(string='Description')
     priority = fields.Selection([
         ('0', 'Normal'),

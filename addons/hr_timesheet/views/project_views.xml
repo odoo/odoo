@@ -212,7 +212,7 @@
                             </span>
                             <field name="effective_hours" widget="timesheet_uom" nolabel="1"/>
 
-                            <button name="action_view_subtask_timesheet" type="object" class="o_form_subtask_button oe_inline oe_link" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}">
+                            <button name="action_view_subtask_timesheet" type="object" class="o_form_subtask_button oe_inline oe_link mb-2" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}">
                                 <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', True)]}">Hours Spent on Sub-tasks:</span>
                                 <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', False)]}">Days Spent on Sub-tasks:</span>
                             </button>
@@ -337,6 +337,20 @@
                 <xpath expr="//filter[@name='late']" position='after'>
                     <filter string="Tasks in Overtime" name="overtime" domain="[('overtime', '&gt;', 0)]"/>
                 </xpath>
+            </field>
+        </record>
+
+        <record id="view_project_project_filter_inherit_timesheet" model="ir.ui.view">
+            <field name="name">project.project.view.inherit.timesheet</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_project_filter"/>
+            <field name="arch" type="xml">
+                <filter name="followed_by_me" position='before'>
+                    <filter string="My Team's Projects" name="my_team_projects"  domain="[('user_id.employee_parent_id.user_id', '=', uid)]"/>
+                </filter>
+                <filter name="late_milestones" position="before">
+                    <filter string="Projects in Overtime" name="projects_in_overtime" domain="[('is_project_overtime', '=', True)]"/>
+                </filter>
             </field>
         </record>
 
