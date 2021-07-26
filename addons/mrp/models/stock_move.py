@@ -343,7 +343,8 @@ class StockMove(models.Model):
         # Do not update extra product quantities
         if float_is_zero(self.product_uom_qty, precision_rounding=self.product_uom.rounding):
             return True
-        if self.has_tracking != 'none' or self.state == 'done':
+        if self.has_tracking != 'none' and not float_is_zero(self.quantity_done, precision_rounding=self.product_uom.rounding):
+            # If some serial/lot has been selected to be consumed we don't change the selection.
             return True
         return False
 
