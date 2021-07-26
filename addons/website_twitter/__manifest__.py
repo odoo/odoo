@@ -25,5 +25,6 @@ This module adds a Twitter scroller building block to the website builder, so th
         'website.assets_editor': [
             'website_twitter/static/src/js/website.twitter.editor.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -30,5 +30,6 @@ to support In-App purchases inside Odoo. """,
         'web.assets_qweb': [
             'iap/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

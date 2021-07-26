@@ -26,4 +26,5 @@ E-invoice implementation
         'data/account_invoice_demo.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

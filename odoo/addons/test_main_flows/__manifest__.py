@@ -16,5 +16,6 @@ It will install some main apps and will try to execute the most important action
             # inside .
             'test_main_flows/static/tests/tours/main_flow.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

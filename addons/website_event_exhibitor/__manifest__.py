@@ -39,5 +39,6 @@
             'website_event_exhibitor/static/src/js/event_exhibitor_connect.js',
             'website_event_exhibitor/static/src/js/event_sponsor_search.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

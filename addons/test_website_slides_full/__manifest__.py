@@ -24,5 +24,6 @@ certification flow including purchase, certification, failure and success.
         'web.assets_tests': [
             'test_website_slides_full/tests/tours/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

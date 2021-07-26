@@ -12,5 +12,6 @@
         'web.assets_frontend': [
             'website_sale_coupon_delivery/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

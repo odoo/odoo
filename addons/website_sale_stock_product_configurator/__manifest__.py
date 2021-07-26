@@ -13,4 +13,5 @@
     'data': [
         'views/product_configurator_templates.xml',
     ],
+    'license': 'LGPL-3',
 }

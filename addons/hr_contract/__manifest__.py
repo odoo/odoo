@@ -38,5 +38,6 @@ You can assign several contracts per employee.
         'web.assets_backend': [
             'hr_contract/static/src/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

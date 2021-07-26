@@ -81,5 +81,6 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
             'hr_holidays/static/src/components/thread_view/thread_view.xml',
             'hr_holidays/static/src/xml/*.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

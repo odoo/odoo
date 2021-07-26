@@ -30,4 +30,5 @@ It also includes the invoice OCR payment reference handling.
     'demo': [
         'demo/demo_company.xml',
     ],
+    'license': 'LGPL-3',
  }

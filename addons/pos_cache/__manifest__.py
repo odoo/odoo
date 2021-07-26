@@ -22,5 +22,6 @@ time it takes to load a POS session with a lot of products.
         'point_of_sale.assets': [
             'pos_cache/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

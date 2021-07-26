@@ -55,5 +55,6 @@
             'website_event_track/static/src/js/website_event_pwa_widget.js',
             'website_event_track/static/lib/idb-keyval/idb-keyval.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

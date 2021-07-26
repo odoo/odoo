@@ -28,5 +28,6 @@ Allow users to sign up and reset their password
         'web.assets_frontend': [
             'auth_signup/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

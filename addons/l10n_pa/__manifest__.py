@@ -23,4 +23,5 @@ Con la Colaboración de
         "data/account_tax_data.xml",
         "data/account_chart_template_data.xml",
     ],
+    'license': 'LGPL-3',
 }

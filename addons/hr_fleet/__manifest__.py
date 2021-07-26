@@ -22,4 +22,5 @@
         'data/hr_fleet_demo.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

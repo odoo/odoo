@@ -19,5 +19,6 @@
         'web.assets_frontend': [
             'payment_stripe/static/src/js/payment_form.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -19,5 +19,6 @@
         'web.assets_frontend': [
             'web_unsplash/static/src/js/unsplash_beacon.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

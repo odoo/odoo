@@ -20,5 +20,6 @@ Display orders to invoice in website dashboard.
         'web.assets_qweb': [
             'website_sale_management/static/src/xml/*.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

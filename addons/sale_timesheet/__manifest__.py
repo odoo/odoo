@@ -53,5 +53,6 @@ have real delivered quantities in sales orders.
         'web.assets_qweb': [
             'sale_timesheet/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -20,4 +20,5 @@ Install some generic chart of accounts.
         'data/l10n_generic_coa_post.xml',
     ],
     'uninstall_hook': 'uninstall_hook',
+    'license': 'LGPL-3',
 }

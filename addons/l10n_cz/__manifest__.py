@@ -33,4 +33,5 @@ Tento modul definuje:
           'data/account_chart_template_data.xml'
     ],
     'demo': ['data/demo_company.xml'],
+    'license': 'LGPL-3',
 }

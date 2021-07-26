@@ -24,5 +24,6 @@ with a single statement.
         'web.qunit_suite_tests': [
             'base_iban/static/src/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

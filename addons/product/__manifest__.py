@@ -57,5 +57,6 @@ Print product labels with barcode.
         'web.assets_qweb': [
             'product/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

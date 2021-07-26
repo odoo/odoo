@@ -39,5 +39,6 @@ This module introduces skills and resumé management for employees.
         'web.assets_qweb': [
             'hr_skills/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

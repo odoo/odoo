@@ -29,5 +29,6 @@ German accounting chart and localization.
         'web.report_assets_common': [
             'l10n_de/static/src/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -58,5 +58,6 @@
             ('include', 'test_assetsbundle.manifest4'),
         ],
         'test_assetsbundle.manifest_multi_module1': [],
-    }
+    },
+    'license': 'LGPL-3',
 }

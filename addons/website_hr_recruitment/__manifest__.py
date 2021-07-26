@@ -33,5 +33,6 @@
         'web.assets_tests': [
             'website_hr_recruitment/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

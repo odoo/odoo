@@ -36,5 +36,6 @@ The actual till still requires one user but an unlimited number of employees can
         'web.assets_qweb': [
             'pos_hr/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

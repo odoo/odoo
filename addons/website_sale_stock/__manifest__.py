@@ -29,5 +29,6 @@ Then it can be made specific at the product level.
         'web.assets_frontend': [
             'website_sale_stock/static/src/js/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -20,4 +20,5 @@
     ],
     'post_init_hook': '_synchronize_cron',
     'auto_install': True,
+    'license': 'LGPL-3',
 }

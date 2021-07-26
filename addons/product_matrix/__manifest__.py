@@ -26,5 +26,6 @@ Please refer to Sale Matrix or Purchase Matrix for the use of this module.
         'web.assets_qweb': [
             'product_matrix/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

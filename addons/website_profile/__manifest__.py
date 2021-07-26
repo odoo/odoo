@@ -23,5 +23,6 @@
             'website_profile/static/src/scss/website_profile.scss',
             'website_profile/static/src/js/website_profile.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

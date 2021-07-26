@@ -18,4 +18,5 @@ Publish your members/association directory publicly.
     ],
     'demo': ['data/membership_demo.xml'],
     'installable': True,
+    'license': 'LGPL-3',
 }

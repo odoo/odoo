@@ -30,5 +30,6 @@ automatic lead generation, full Online support, ...
         'web.assets_tests': [
             'test_event_full/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

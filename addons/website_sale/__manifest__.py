@@ -83,5 +83,6 @@
         'web.assets_qweb': [
             'website_sale/static/src/xml/*.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

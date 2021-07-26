@@ -19,5 +19,6 @@ It should never be used in production environment. Make sure to disable it befor
         'web.assets_frontend': [
             'payment_test/static/src/js/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

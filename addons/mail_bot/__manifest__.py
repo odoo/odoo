@@ -30,5 +30,6 @@
         'web.qunit_suite_tests': [
             'mail_bot/static/src/models/messaging_initializer/messaging_initializer_tests.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

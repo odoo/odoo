@@ -173,5 +173,6 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/scss/im_livechat_bootstrap.scss',
             'im_livechat/static/src/legacy/public_livechat.scss',
         ]
-    }
+    },
+    'license': 'LGPL-3',
 }

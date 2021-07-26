@@ -20,5 +20,6 @@
             'payment_authorize/static/src/scss/payment_authorize.scss',
             'payment_authorize/static/src/js/payment_form.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

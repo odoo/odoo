@@ -26,5 +26,6 @@ This module add completed courses to resumé for employees.
         'web.assets_qweb': [
             'hr_skills_slides/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

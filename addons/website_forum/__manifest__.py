@@ -54,5 +54,6 @@ Ask questions, get answers, no distractions
         'web.assets_qweb': [
             'website_forum/static/src/xml/*.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

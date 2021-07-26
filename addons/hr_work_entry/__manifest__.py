@@ -23,5 +23,6 @@
         'web.assets_qweb': [
             'hr_work_entry/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

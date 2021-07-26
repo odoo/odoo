@@ -10,5 +10,6 @@
         'web.assets_frontend': [
             'auth_password_policy_signup/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

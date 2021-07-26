@@ -31,5 +31,6 @@ trigger an automatic reminder email.
         'web.qunit_suite_tests': [
             'base_automation/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

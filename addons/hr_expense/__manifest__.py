@@ -63,5 +63,6 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'web.assets_qweb': [
             'hr_expense/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

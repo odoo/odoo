@@ -56,5 +56,6 @@ The service is provided by the In App Purchase Odoo platform.
             'sms/static/src/components/notification_group/notification_group.xml',
             'sms/static/src/components/message/message.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -21,5 +21,6 @@ This module allows a customer to give rating.
         'web.assets_frontend': [
             'rating/static/src/scss/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

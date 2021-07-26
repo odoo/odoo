@@ -52,5 +52,6 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/src/components/discuss/discuss.xml',
             'website_livechat/static/src/components/visitor_banner/visitor_banner.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

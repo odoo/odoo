@@ -28,5 +28,6 @@
         'web.assets_frontend': [
             'website_slides_forum/static/src/js/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

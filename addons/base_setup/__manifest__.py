@@ -31,5 +31,6 @@ Shows you a list of applications features to install from.
         'web.assets_qweb': [
             'base_setup/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

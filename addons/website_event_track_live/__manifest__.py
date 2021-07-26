@@ -33,5 +33,6 @@
         'web.assets_qweb': [
             'website_event_track_live/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -23,5 +23,6 @@ Enable management of UTM trackers: campaign, medium, source.
         'web.assets_backend': [
             'utm/static/src/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

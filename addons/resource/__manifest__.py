@@ -26,5 +26,6 @@ associated to every resource. It also manages the leaves of every resource.
         'web.assets_backend': [
             'resource/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

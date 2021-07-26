@@ -18,5 +18,6 @@ Allows users to send invoices by post
         'web.assets_backend': [
             'snailmail_account/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

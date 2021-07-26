@@ -74,5 +74,6 @@ This module adds several features to the Point of Sale that are specific to rest
         'web.assets_qweb': [
             'pos_restaurant/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

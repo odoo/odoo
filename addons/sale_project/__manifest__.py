@@ -19,4 +19,5 @@ This module allows to generate a project/task from sales orders.
         'views/sale_order_views.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

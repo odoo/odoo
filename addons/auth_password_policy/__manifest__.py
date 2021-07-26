@@ -17,5 +17,6 @@
             'auth_password_policy/static/src/js/password_gauge.js',
             'auth_password_policy/static/src/css/password_field.css',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

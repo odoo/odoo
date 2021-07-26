@@ -22,4 +22,5 @@ and then fetched by this module.
         'views/res_config_settings_views.xml',
     ],
     'post_init_hook': '_disable_pec_mail_post_init',
+    'license': 'LGPL-3',
 }

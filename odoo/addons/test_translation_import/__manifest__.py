@@ -15,5 +15,6 @@
         'web.assets_qweb': [
             'test_translation_import/static/src/xml/js_templates.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

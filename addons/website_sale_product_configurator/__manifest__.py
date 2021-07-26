@@ -27,5 +27,6 @@
         'web.assets_tests': [
             'website_sale_product_configurator/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

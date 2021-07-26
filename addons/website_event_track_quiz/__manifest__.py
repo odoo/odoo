@@ -38,5 +38,6 @@
             'website_event_track_quiz/static/src/js/event_quiz.js',
             'website_event_track_quiz/static/src/js/event_quiz_leaderboard.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

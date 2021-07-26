@@ -21,5 +21,6 @@
         'point_of_sale.assets': [
             'pos_adyen/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

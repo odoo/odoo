@@ -27,5 +27,6 @@
         'web.assets_tests': [
             'purchase_product_matrix/static/tests/tours/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }
