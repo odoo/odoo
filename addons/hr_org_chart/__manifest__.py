@@ -21,5 +21,6 @@ This module extend the employee form with a organizational chart.
     ],
     'qweb': [
         'static/src/xml/hr_org_chart.xml',
-    ]
+    ],
+    'license': 'LGPL-3',
 }

@@ -30,4 +30,5 @@
         'data/slide_slide_demo.xml',
         'data/survey.user_input.line.csv',
     ],
+    'license': 'LGPL-3',
 }

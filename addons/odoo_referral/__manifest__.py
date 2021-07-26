@@ -13,4 +13,5 @@
         "static/src/xml/systray.xml",
     ],
     'auto_install': False,
+    'license': 'LGPL-3',
 }

@@ -14,4 +14,5 @@
         'views/point_of_sale_assets.xml',
     ],
     'auto-install': True,
+    'license': 'LGPL-3',
 }
