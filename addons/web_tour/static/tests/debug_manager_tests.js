@@ -2,8 +2,6 @@
 
 import { disableTours } from "@web_tour/debug/debug_manager";
 
-import { DebugMenu } from "@web/core/debug/debug_menu";
-import { debugService } from "@web/core/debug/debug_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { ormService } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
@@ -13,6 +11,7 @@ import { click, getFixture } from "@web/../tests/helpers/utils";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
+import { DebugMenuParent } from "@web/../tests/core/debug/debug_manager_tests";
 
 const { mount } = owl;
 
@@ -30,12 +29,11 @@ QUnit.module("Tours", (hooks) => {
             .add("hotkey", hotkeyService)
             .add("ui", uiService)
             .add("orm", ormService)
-            .add("debug", debugService)
             .add("localization", makeFakeLocalizationService());
     });
 
     QUnit.test("can disable tours", async (assert) => {
-        debugRegistry.add("disableTours", disableTours);
+        debugRegistry.category("default").add("disableTours", disableTours);
 
         const fakeTourService = {
             start(env) {
@@ -60,7 +58,7 @@ QUnit.module("Tours", (hooks) => {
         };
         const env = await makeTestEnv({ mockRPC });
 
-        const debugManager = await mount(DebugMenu, { env, target });
+        const debugManager = await mount(DebugMenuParent, { env, target });
         registerCleanup(() => debugManager.destroy());
 
         await click(debugManager.el.querySelector("button.o_dropdown_toggler"));

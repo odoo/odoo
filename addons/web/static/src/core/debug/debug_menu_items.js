@@ -126,14 +126,14 @@ export function regenerateAssets({ env }) {
 }
 
 function becomeSuperuser({ env }) {
-    const becomeSuperuserULR = browser.location.origin + "/web/become";
+    const becomeSuperuserURL = browser.location.origin + "/web/become";
     return {
         type: "item",
         description: env._t("Become Superuser"),
         hide: !env.services.user.isAdmin,
-        href: becomeSuperuserULR,
+        href: becomeSuperuserURL,
         callback: () => {
-            browser.open(becomeSuperuserULR, "_self");
+            browser.open(becomeSuperuserURL, "_self");
         },
         sequence: 440,
     };
@@ -154,6 +154,7 @@ function leaveDebugMode({ env }) {
 
 registry
     .category("debug")
+    .category("default")
     // Backend
     .add("runJSTestsItem", runJSTestsItem)
     .add("runJSTestsMobileItem", runJSTestsMobileItem)
