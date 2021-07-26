@@ -133,7 +133,11 @@ export class Powerbox {
         const selection = document.getSelection();
         if (!selection.isCollapsed || !selection.rangeCount) return;
 
-        if (event.key === '/' && !this._active) {
+        if (
+            event.key === '/' &&
+            !this._active &&
+            (!this.options.shouldActivate || this.options.shouldActivate())
+        ) {
             this.options.onActivate && this.options.onActivate();
 
             const showOnceOnKeyup = () => {
