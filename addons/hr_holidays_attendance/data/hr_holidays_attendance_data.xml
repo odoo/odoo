@@ -10,5 +10,8 @@
             <field name="active" eval="False"/>
             <field name="company_id" eval="False"/>
         </record>
+
+        <!-- The record above should be archived if no company has overtime counting enabled, otherwise enabled -->
+        <function model="res.company" name="_check_extra_hours_time_off"/>
     </data>
 </odoo>
