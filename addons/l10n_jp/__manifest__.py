@@ -43,4 +43,5 @@ circumstances, you might not need to use those at all.
     'demo': [
         'demo/demo_company.xml',
     ],
+    'license': 'LGPL-3',
 }

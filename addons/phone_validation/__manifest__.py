@@ -33,4 +33,5 @@ It adds two mixins :
         'mail',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

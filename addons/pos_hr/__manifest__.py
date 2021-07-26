@@ -27,4 +27,5 @@ The actual till still requires one user but an unlimited number of employees can
         'static/src/xml/CashierName.xml',
         'static/src/xml/LoginScreen.xml',
     ],
+    'license': 'LGPL-3',
 }

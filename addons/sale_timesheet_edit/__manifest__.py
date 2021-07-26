@@ -22,4 +22,5 @@ timesheet in task form view when it is needed.
     ],
     'demo': [],
     'auto_install': True,
+    'license': 'LGPL-3',
 }
