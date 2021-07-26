@@ -146,7 +146,11 @@ export class Powerbox {
             ev => {
                 const selection = this.options.document.getSelection();
                 if (!selection.isCollapsed || !selection.rangeCount) return;
-                if (ev.key === triggerKey && !this._active) {
+                if (
+                    ev.key === triggerKey &&
+                    !this._active &&
+                    (!this.options.shouldActivate || this.options.shouldActivate())
+                ) {
                     this.open({ ...options, openOnKeyupTarget: ev.target });
                 }
             },
