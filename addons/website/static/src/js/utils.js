@@ -73,6 +73,9 @@ function autocompleteWithPages(self, $input, options) {
                 loadAnchors(request.term).then(function (anchors) {
                     response(anchors);
                 });
+            } else if (request.term.startsWith('http') || request.term.length === 0) {
+                // avoid useless call to /website/get_suggested_links
+                response();
             } else {
                 return self._rpc({
                     route: '/website/get_suggested_links',
@@ -95,6 +98,8 @@ function autocompleteWithPages(self, $input, options) {
             }
         },
         select: function (ev, ui) {
+            // choose url in dropdown with arrow change ev.target.value without trigger_up
+            // so cannot check here if value has been updated
             ev.target.value = ui.item.value;
             self.trigger_up('website_url_chosen');
             ev.preventDefault();
