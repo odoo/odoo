@@ -21,5 +21,6 @@
             'https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/3.9.4/adyen.js',
             'payment_adyen/static/src/js/payment_form.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

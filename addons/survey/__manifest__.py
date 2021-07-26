@@ -92,5 +92,6 @@ sent mails with personal token for the invitation of the survey.
         'web.assets_tests': [
             'survey/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

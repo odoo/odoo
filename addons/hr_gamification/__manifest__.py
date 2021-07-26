@@ -23,5 +23,6 @@ Badge received are displayed on the user profile.
         'web.assets_backend': [
             'hr_gamification/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

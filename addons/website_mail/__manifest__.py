@@ -20,5 +20,6 @@ Module holding mail improvements for website. It holds the follow widget.
             'website_mail/static/src/js/follow.js',
             'website_mail/static/src/css/website_mail.scss',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

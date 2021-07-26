@@ -86,5 +86,6 @@
             'crm/static/tests/mock_server.js',
             'crm/static/tests/crm_rainbowman_tests.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

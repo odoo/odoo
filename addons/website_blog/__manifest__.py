@@ -46,5 +46,6 @@
             'website_blog/static/src/js/contentshare.js',
             'website_blog/static/src/js/website_blog.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

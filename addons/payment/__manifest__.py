@@ -45,5 +45,6 @@
         'web.assets_backend': [
             'payment/static/src/scss/payment_acquirer.scss',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

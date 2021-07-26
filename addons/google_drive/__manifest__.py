@@ -35,5 +35,6 @@ You can configure your google Authorization Code from Settings > Configuration >
         'web.assets_qweb': [
             'google_drive/static/src/xml/*.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }
