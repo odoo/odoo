@@ -5,7 +5,7 @@ import base64
 import logging
 import requests
 
-from odoo import models, api
+from odoo import api, exceptions, models, _
 from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
@@ -18,6 +18,9 @@ class IapEnrichAPI(models.AbstractModel):
 
     @api.model
     def _contact_iap(self, local_endpoint, params):
+        if self.env.registry.in_test_mode():
+            raise exceptions.ValidationError(_('Test mode'))
+
         account = self.env['iap.account'].get('reveal')
         params['account_token'] = account.account_token
         params['dbuuid'] = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
