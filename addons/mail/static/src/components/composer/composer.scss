@@ -21,6 +21,11 @@
 
         &:not(.o-has-header) {
             padding-top: map-get($spacers, 4);
+
+            &.o-is-in-thread-view {
+                padding-top: map-get($spacers, 1);
+                padding-bottom: map-get($spacers, 1);
+            }
         }
     }
 }
@@ -176,6 +181,10 @@
 .o_Composer {
     &:not(.o-messaging-in-editing) {
         background-color: gray('100');
+    }
+
+    &.o-is-in-thread-view {
+        background-color: $white;
     }
 }
 
