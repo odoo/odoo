@@ -88,6 +88,10 @@ const Wysiwyg = Widget.extend({
                     return !(node.hasAttribute && node.hasAttribute('data-oe-model')) && node;
                 }
             },
+            isHintBlacklisted: node => {
+                return node.hasAttribute &&
+                    (node.hasAttribute('data-target') || node.hasAttribute('data-oe-model'));
+            },
             noScrollSelector: 'body, .note-editable, .o_content, #wrapwrap',
             commands: commands,
         });
