@@ -43,7 +43,7 @@ class AccountJournal(models.Model):
 
     def _default_alias_domain(self):
         return self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
-    
+
     def _default_invoice_reference_model(self):
         """Get the invoice reference model according to the company's country."""
         country_code = self.env.company.country_id.code
@@ -371,16 +371,18 @@ class AccountJournal(models.Model):
     def _update_mail_alias(self, vals):
         self.ensure_one()
         alias_values = self._get_alias_values(type=vals.get('type') or self.type, alias_name=vals.get('alias_name'))
+        vals.pop('alias_name', None)  # remove alias_name to avoid useless write on alias
+        try:
+            self.env['mail.alias']._clean_and_check_unique(alias_values['alias_name'])
+        except UserError:
+            return
+
         if self.alias_id:
             self.alias_id.sudo().write(alias_values)
         else:
             alias_values['alias_model_id'] = self.env['ir.model']._get('account.move').id
             alias_values['alias_parent_model_id'] = self.env['ir.model']._get('account.journal').id
             self.alias_id = self.env['mail.alias'].sudo().create(alias_values)
-
-        if vals.get('alias_name'):
-            # remove alias_name to avoid useless write on alias
-            del(vals['alias_name'])
 
     def write(self, vals):
         for journal in self:
@@ -523,7 +525,7 @@ class AccountJournal(models.Model):
 
         journal = super(AccountJournal, self.with_context(mail_create_nolog=True)).create(vals)
 
-        if 'alias_name' in vals:
+        if journal.type in ('sale', 'purchase') and not journal.alias_id:
             journal._update_mail_alias(vals)
 
         # Create the bank_account_id if necessary
