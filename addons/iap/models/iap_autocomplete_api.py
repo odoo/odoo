@@ -23,6 +23,7 @@ class IapAutocompleteEnrichAPI(models.AbstractModel):
     def _contact_iap(self, local_endpoint, action, params, timeout=15):
         if self.env.registry.in_test_mode():
             raise exceptions.ValidationError(_('Test mode'))
+
         account = self.env['iap.account'].get('partner_autocomplete')
         if not account.account_token:
             raise ValueError(_('No account token'))
