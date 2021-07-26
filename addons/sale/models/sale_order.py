@@ -813,16 +813,20 @@ class SaleOrder(models.Model):
         return {'done', 'cancel'}
 
     def _send_order_confirmation_mail(self):
+        if not self:
+            return
+
         if self.env.su:
             # sending mail in sudo was meant for it being sent from superuser
             self = self.with_user(SUPERUSER_ID)
+
         mail_template = self._find_mail_template(force_confirmation_template=True)
         if mail_template:
-            for order in self:
-                order.with_context(force_send=True).message_post_with_template(
-                    mail_template.id, composition_mode='comment',
-                    email_layout_xmlid="mail.mail_notification_paynow"
-                )
+            self.with_context(force_send=True).message_post_with_template(
+                mail_template.id,
+                composition_mode='comment',
+                email_layout_xmlid='mail.mail_notification_paynow',
+            )
 
     def action_done(self):
         for order in self:
@@ -1070,7 +1074,7 @@ class SaleOrder(models.Model):
             invoice_vals['invoice_line_ids'] += invoice_line_vals
             invoice_vals_list.append(invoice_vals)
 
-        if not invoice_vals_list:
+        if not invoice_vals_list and self._context.get('raise_if_nothing_to_invoice', True):
             raise UserError(order._nothing_to_invoice_error_message())
 
         # 2) Manage 'grouped' parameter: group by (partner_id, currency_id).
