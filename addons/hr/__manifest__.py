@@ -67,5 +67,6 @@
         'web.assets_qweb': [
             'hr/static/src/xml/hr_templates.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

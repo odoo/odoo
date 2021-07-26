@@ -29,5 +29,6 @@ models which only purpose is to run tests.""",
         'web.assets_tests': [
             'test_website/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

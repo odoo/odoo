@@ -33,5 +33,6 @@
             'website_event_meet/static/src/js/website_event_meeting_room.js',
             'website_event_meet/static/src/js/website_event_create_meeting_room_button.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

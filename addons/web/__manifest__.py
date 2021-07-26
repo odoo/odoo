@@ -525,5 +525,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/components/dropdown_menu_mobile_tests.js',
         ],
     },
-    'bootstrap': True,  # load translations for login screen
+    'bootstrap': True,  # load translations for login screen,
+    'license': 'LGPL-3',
 }

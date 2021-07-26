@@ -38,5 +38,6 @@ It also enables the "optional products" feature.
         'web.qunit_suite_tests': [
             'sale_product_configurator/static/tests/product_configurator.test.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

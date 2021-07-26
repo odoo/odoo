@@ -47,5 +47,6 @@ actions(Check in/Check out) performed by them.
         'web.assets_qweb': [
             'hr_attendance/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }
