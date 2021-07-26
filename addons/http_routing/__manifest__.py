@@ -13,4 +13,5 @@ base modules simple.
     'data': [
     ],
     'depends': ['web'],
+    'license': 'LGPL-3',
 }

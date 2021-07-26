@@ -36,4 +36,5 @@ actions(Check in/Check out) performed by them.
         "static/src/xml/attendance.xml",
     ],
     'application': True,
+    'license': 'LGPL-3',
 }

@@ -25,4 +25,5 @@ This wizard will activate the CRON job and the Scheduler and will start the auto
     'test': [],
     'installable': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }

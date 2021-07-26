@@ -18,4 +18,5 @@ Link module to map leads to tasks
         'views/crm_lead_views.xml'
     ],
     'depends': ['crm', 'project'],
+    'license': 'LGPL-3',
 }

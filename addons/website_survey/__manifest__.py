@@ -17,5 +17,6 @@ Use the styling and layout of your website for your surveys.
         'views/website_survey_templates.xml',
     ],
     'installable': True,
-    'auto_install': True
+    'auto_install': True,
+    'license': 'LGPL-3',
 }

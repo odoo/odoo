@@ -23,4 +23,5 @@ This is the latest basic South African localisation necessary to run Odoo in ZA:
         'data/account_chart_template_post_data.xml',
         'data/account_chart_template_configure_data.xml',
     ],
+    'license': 'LGPL-3',
 }

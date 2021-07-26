@@ -27,4 +27,5 @@
         'data/account_chart_template_configure_data.xml',
         'views/res_partner.xml',
     ],
+    'license': 'LGPL-3',
 }

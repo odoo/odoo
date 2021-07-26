@@ -15,4 +15,5 @@ Generate tasks in Project app from a form published on your website. This module
     ],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

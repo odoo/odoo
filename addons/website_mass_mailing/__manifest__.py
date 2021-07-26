@@ -19,4 +19,5 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
         'views/res_config_settings_views.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

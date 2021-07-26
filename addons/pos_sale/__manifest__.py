@@ -22,4 +22,5 @@ This module adds a custom Sales Team for the point of sale to be able to view an
     ],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

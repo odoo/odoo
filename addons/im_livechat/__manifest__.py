@@ -38,4 +38,5 @@ Help your customers with this chat, and analyse their feedback.
     'installable': True,
     'auto_install': False,
     'application': True,
+    'license': 'LGPL-3',
 }
