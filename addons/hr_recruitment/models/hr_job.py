@@ -116,6 +116,7 @@ class Job(models.Model):
                 'job_id': self.id,
                 'department_id': self.department_id.id,
                 'company_id': self.department_id.company_id.id if self.department_id else self.company_id.id,
+                'user_id': self.user_id.id,
             })
         return values
 
@@ -131,6 +132,18 @@ class Job(models.Model):
             }
             self.env['hr.recruitment.source'].create(source_vals)
         return new_job
+
+    def write(self, vals):
+        res = super().write(vals)
+        # Since the alias is created upon record creation, the default values do not reflect the current values unless
+        # specifically rewritten
+        # List of fields to keep synched with the alias
+        alias_fields = {'department_id', 'user_id'}
+        if any(field for field in alias_fields if field in vals):
+            for job in self:
+                alias_default_vals = job._alias_get_creation_values().get('alias_defaults', '{}')
+                job.alias_defaults = alias_default_vals
+        return res
 
     def _creation_subtype(self):
         return self.env.ref('hr_recruitment.mt_job_new')
