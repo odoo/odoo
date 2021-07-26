@@ -245,7 +245,8 @@
                         </group>
                         <group name="answers" string="Answers" attrs="{'invisible':[('parent_id','!=',False)]}">
                             <field name="child_ids" nolabel="1">
-                                <tree>
+                                <tree decoration-muted="active == False">
+                                    <field name="active" invisible="1"/>
                                     <field name="create_uid" string="Answered by"/>
                                     <field name="vote_count"/>
                                     <field name="state"/>

@@ -300,7 +300,7 @@ class Post(models.Model):
     is_correct = fields.Boolean('Correct', help='Correct answer or answer accepted')
     parent_id = fields.Many2one('forum.post', string='Question', ondelete='cascade', readonly=True, index=True)
     self_reply = fields.Boolean('Reply to own question', compute='_is_self_reply', store=True)
-    child_ids = fields.One2many('forum.post', 'parent_id', string='Post Answers', domain=lambda self: [('forum_id', '=', self.forum_id.id)])
+    child_ids = fields.One2many('forum.post', 'parent_id', string='Post Answers', domain=lambda self: [('forum_id', '=', self.forum_id.id)], context={'active_test': False})
     child_count = fields.Integer('Answers', compute='_get_child_count', store=True)
     uid_has_answered = fields.Boolean('Has Answered', compute='_get_uid_has_answered')
     has_validated_answer = fields.Boolean('Is answered', compute='_get_has_validated_answer', store=True)
@@ -569,9 +569,7 @@ class Post(models.Model):
                     obj_id = post
                 obj_id.message_post(body=body, subtype_xmlid=subtype_xmlid)
         if 'active' in vals:
-            answers = self.env['forum.post'].with_context(active_test=False).search([('parent_id', 'in', self.ids)])
-            if answers:
-                answers.write({'active': vals['active']})
+            self.child_ids and self.child_ids.write({'active': vals['active']})
         return res
 
     def post_notification(self):
