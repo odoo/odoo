@@ -2157,7 +2157,8 @@ class Many2one(_Relational):
     :param comodel_name: name of the target model (string)
 
     :param domain: an optional domain to set on candidate values on the
-        client side (domain or string)
+        client side (function, domain or string) or on reading value on the
+        server side (function or domain)
 
     :param context: an optional context to use on the client side when
         handling that field (dictionary)
@@ -2456,7 +2457,8 @@ class One2many(_RelationalMulti):
             ``comodel_name`` (string)
 
         :param domain: an optional domain to set on candidate values on the
-            client side (domain or string)
+            client side (function, domain or string) or on reading value on the
+            server side (function or domain)
 
         :param context: an optional context to use on the client side when
             handling that field (dictionary)
@@ -2652,7 +2654,8 @@ class Many2many(_RelationalMulti):
         ``model_name`` and ``comodel_name`` are different!
 
         :param domain: an optional domain to set on candidate values on the
-            client side (domain or string)
+            client side (function, domain or string) or on reading value on the
+            server side (function or domain)
 
         :param context: an optional context to use on the client side when
             handling that field (dictionary)
