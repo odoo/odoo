@@ -26,5 +26,6 @@
         'web.assets_tests': [
             'website_form/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

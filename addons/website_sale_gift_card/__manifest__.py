@@ -21,5 +21,6 @@
         'web.assets_frontend': [
             'website_sale_gift_card/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

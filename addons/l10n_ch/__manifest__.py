@@ -61,5 +61,6 @@ Here is how it works:
         'web.report_assets_common': [
             'l10n_ch/static/src/scss/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

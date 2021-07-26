@@ -33,5 +33,6 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
         'web.assets_qweb': [
             'website_mass_mailing/static/src/xml/*.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

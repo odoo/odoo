@@ -24,5 +24,6 @@
         'web.assets_tests': [
             'bus/static/tests/bus_tests_tour.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

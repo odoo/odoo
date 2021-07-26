@@ -17,4 +17,5 @@ This is a bridge module that adds multi-website support for payment acquirers.
         'views/payment_acquirer.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

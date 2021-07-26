@@ -31,5 +31,6 @@ Those trackers can be used in Google Analytics to track clicks and visitors, or 
         'web.assets_qweb': [
             'website_links/static/src/xml/*.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -24,5 +24,6 @@ Allow shoppers of your eCommerce store to create personalized collections of pro
         'web.assets_tests': [
             'website_sale_wishlist/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

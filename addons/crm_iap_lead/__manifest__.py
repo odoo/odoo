@@ -31,5 +31,6 @@
         'web.assets_qweb': [
             'crm_iap_lead/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

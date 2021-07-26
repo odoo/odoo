@@ -23,5 +23,6 @@
         'web.assets_qweb': [
             'adyen_platforms/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

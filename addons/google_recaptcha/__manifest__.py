@@ -18,5 +18,6 @@
             'google_recaptcha/static/src/scss/recaptcha.scss',
             'google_recaptcha/static/src/js/recaptcha.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -22,5 +22,6 @@ Visitors can join public mail channels managed in the Discuss app in order to ge
         'website.assets_wysiwyg': [
             'website_mail_channel/static/src/snippets/s_channel/options.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

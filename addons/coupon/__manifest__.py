@@ -25,5 +25,6 @@
         'web.assets_backend': [
             'coupon/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

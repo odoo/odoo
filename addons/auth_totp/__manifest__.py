@@ -27,4 +27,5 @@ can setup API keys to replace their main password.
             'auth_totp/static/**/*',
         ],
     },
+    'license': 'LGPL-3',
 }

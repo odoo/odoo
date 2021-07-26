@@ -80,5 +80,6 @@
         'web.assets_qweb': [
             'mrp/static/src/xml/*.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }
