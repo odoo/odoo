@@ -71,5 +71,6 @@
             'hr/static/src/bugfix/bugfix.xml',
             'hr/static/src/xml/hr_templates.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

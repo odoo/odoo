@@ -22,5 +22,6 @@ Sell event tickets through eCommerce app.
         'web.assets_tests': [
             'website_event_sale/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

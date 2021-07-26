@@ -114,5 +114,6 @@ Featuring
         'web.assets_qweb': [
             'website_slides/static/src/components/activity/activity.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -53,5 +53,6 @@ If you need to manage your meetings, you should install the CRM module.
         'web.assets_qweb': [
             'calendar/static/src/xml/base_calendar.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

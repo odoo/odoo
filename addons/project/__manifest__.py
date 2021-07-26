@@ -66,5 +66,6 @@
         'web.assets_qweb': [
             'project/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

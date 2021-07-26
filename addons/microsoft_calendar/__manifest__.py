@@ -28,5 +28,6 @@
         'web.assets_qweb': [
             'microsoft_calendar/static/src/xml/*.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

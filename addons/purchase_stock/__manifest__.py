@@ -36,5 +36,6 @@
         'web.assets_backend': [
             'purchase_stock/static/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

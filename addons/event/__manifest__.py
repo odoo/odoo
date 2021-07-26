@@ -55,5 +55,6 @@ Key Features
         'web.assets_qweb': [
             'event/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

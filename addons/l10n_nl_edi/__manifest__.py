@@ -14,4 +14,5 @@ NLCIUS is the Dutch implementation of EN 16931 norm. Both for UBL and UN / CEFAC
     ],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

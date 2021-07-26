@@ -26,5 +26,6 @@ Configure your own methods with a pricing grid or integrate with carriers for a 
         'web.assets_tests': [
             'website_sale_delivery/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

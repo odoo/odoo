@@ -36,5 +36,6 @@
         'web.assets_qweb': [
             'mail_bot/static/src/bugfix/bugfix.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

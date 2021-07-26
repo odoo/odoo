@@ -77,5 +77,6 @@
         'web.assets_qweb': [
             'mass_mailing/static/src/xml/*.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

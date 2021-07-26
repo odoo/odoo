@@ -15,4 +15,5 @@ Add relation information between Sale Orders and Purchase Orders if Make to Orde
     'qweb': [],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }
