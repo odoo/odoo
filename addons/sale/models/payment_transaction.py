@@ -1,14 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-import re
 
 from datetime import datetime
 from dateutil import relativedelta
 
-from odoo import api, fields, models, _, SUPERUSER_ID
-from odoo.tools import float_compare
-
+from odoo import _, api, Command, fields, models, SUPERUSER_ID
+from odoo.tools import format_amount
 
 _logger = logging.getLogger(__name__)
 
@@ -49,34 +46,46 @@ class PaymentTransaction(models.Model):
             sales_orders._send_order_confirmation_mail()
 
     def _check_amount_and_confirm_order(self):
-        self.ensure_one()
-        for order in self.sale_order_ids.filtered(lambda so: so.state in ('draft', 'sent')):
-            if order.currency_id.compare_amounts(self.amount, order.amount_total) == 0:
-                order.with_context(send_email=True).action_confirm()
-            else:
-                _logger.warning(
-                    '<%s> transaction AMOUNT MISMATCH for order %s (ID %s): expected %r, got %r',
-                    self.acquirer_id.provider,order.name, order.id,
-                    order.amount_total, self.amount,
-                )
-                order.message_post(
-                    subject=_("Amount Mismatch (%s)", self.acquirer_id.provider),
-                    body=_("The order was not confirmed despite response from the acquirer (%s): order total is %r but acquirer replied with %r.") % (
-                        self.acquirer_id.provider,
-                        order.amount_total,
-                        self.amount,
-                    )
-                )
+        """ Confirm the sales order based on the amount of a transaction.
+
+        Confirm the sales orders only if the transaction amount is equal to the total amount of the
+        sales orders. Neither partial payments nor grouped payments (paying multiple sales orders in
+        one transaction) are not supported.
+
+        :return: The confirmed sales orders.
+        :rtype: a `sale.order` recordset
+        """
+        confirmed_orders = self.env['sale.order']
+        for tx in self:
+            # We only support the flow where exactly one quotation is linked to a transaction and
+            # vice versa.
+            if len(tx.sale_order_ids) == 1:
+                quotation = tx.sale_order_ids.filtered(lambda so: so.state in ('draft', 'sent'))
+                if quotation and len(quotation.transaction_ids) == 1:
+                    # Check if the SO is fully paid
+                    if quotation.currency_id.compare_amounts(tx.amount, quotation.amount_total) == 0:
+                        quotation.with_context(send_email=True).action_confirm()
+                        confirmed_orders |= quotation
+                    else:
+                        _logger.warning(
+                            '<%(provider)s> transaction AMOUNT MISMATCH for order %(so_name)s '
+                            '(ID %(so_id)s): expected %(so_amount)s, got %(tx_amount)s', {
+                                'provider': tx.provider,
+                                'so_name': quotation.name,
+                                'so_id': quotation.id,
+                                'so_amount': format_amount(
+                                    quotation.env, quotation.amount_total, quotation.currency_id
+                                ),
+                                'tx_amount': format_amount(tx.env, tx.amount, tx.currency_id),
+                            },
+                        )
+        return confirmed_orders
 
     def _set_authorized(self, state_message=None):
         """ Override of payment to confirm the quotations automatically. """
         super()._set_authorized(state_message=state_message)
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
-        for tx in self:
-            tx._check_amount_and_confirm_order()
-
-        # send order confirmation mail
-        sales_orders._send_order_confirmation_mail()
+        confirmed_orders = self._check_amount_and_confirm_order()
+        confirmed_orders._send_order_confirmation_mail()
 
     def _log_message_on_linked_documents(self, message):
         """ Override of payment to log a message on the sales orders linked to the transaction.
@@ -92,33 +101,37 @@ class PaymentTransaction(models.Model):
 
     def _reconcile_after_done(self):
         """ Override of payment to automatically confirm quotations and generate invoices. """
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
-        for tx in self:
-            tx._check_amount_and_confirm_order()
-        # send order confirmation mail
-        sales_orders._send_order_confirmation_mail()
-        # invoice the sale orders if needed
-        self._invoice_sale_orders()
-        res = super()._reconcile_after_done()
-        if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice') and any(so.state in ('sale', 'done') for so in self.sale_order_ids):
-            self.filtered(lambda t: t.sale_order_ids.filtered(lambda so: so.state in ('sale', 'done')))._send_invoice()
-        return res
+        confirmed_orders = self._check_amount_and_confirm_order()
+        confirmed_orders._send_order_confirmation_mail()
+
+        # invoice the sale orders if needed and send it
+        if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
+            # Invoice the sale orders in self instead of in confirmed_orders to create the invoice
+            # even if only a partial payment was made.
+            self._invoice_sale_orders()
+            self._send_invoice()
+        return super()._reconcile_after_done()
 
     def _send_invoice(self):
-        default_template = self.env['ir.config_parameter'].sudo().get_param('sale.default_invoice_email_template')
-        if not default_template:
+        template_id = self.env['ir.config_parameter'].sudo().get_param(
+            'sale.default_invoice_email_template'
+        )
+        if not template_id:
             return
 
-        for trans in self:
-            trans = trans.with_company(trans.acquirer_id.company_id).with_context(
-                company_id=trans.acquirer_id.company_id.id,
+        for tx in self:
+            tx = tx.with_company(tx.company_id).with_context(
+                company_id=tx.company_id.id,
             )
-            invoice_to_send = trans.invoice_ids.filtered(
+            invoice_to_send = tx.invoice_ids.filtered(
                 lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
             )
             invoice_to_send.is_move_sent = True # Mark invoice as sent
             for invoice in invoice_to_send.with_user(SUPERUSER_ID):
-                invoice.message_post_with_template(int(default_template), email_layout_xmlid="mail.mail_notification_paynow")
+                invoice.message_post_with_template(
+                    int(template_id),
+                    email_layout_xmlid='mail.mail_notification_paynow',
+                )
 
     def _cron_send_invoice(self):
         """
@@ -142,19 +155,20 @@ class PaymentTransaction(models.Model):
         ])._send_invoice()
 
     def _invoice_sale_orders(self):
-        if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
-            for trans in self.filtered(lambda t: t.sale_order_ids):
-                trans = trans.with_company(trans.acquirer_id.company_id)\
-                    .with_context(company_id=trans.acquirer_id.company_id.id)
-                confirmed_orders = trans.sale_order_ids.filtered(lambda so: so.state in ('sale', 'done'))
-                if confirmed_orders:
-                    confirmed_orders._force_lines_to_invoice_policy_order()
-                    invoices = confirmed_orders._create_invoices()
-                    # Setup access token in advance to avoid serialization failure between
-                    # edi postprocessing of invoice and displaying the sale order on the portal
-                    for invoice in invoices:
-                        invoice._portal_ensure_token()
-                    trans.invoice_ids = [(6, 0, invoices.ids)]
+        for tx in self.filtered(lambda tx: tx.sale_order_ids):
+            # Create invoices
+            tx = tx.with_company(tx.company_id).with_context(company_id=tx.company_id.id)
+            confirmed_orders = tx.sale_order_ids.filtered(lambda so: so.state in ('sale', 'done'))
+            if confirmed_orders:
+                confirmed_orders._force_lines_to_invoice_policy_order()
+                invoices = confirmed_orders.with_context(
+                    raise_if_nothing_to_invoice=False
+                )._create_invoices()
+                # Setup access token in advance to avoid serialization failure between
+                # edi postprocessing of invoice and displaying the sale order on the portal
+                for invoice in invoices:
+                    invoice._portal_ensure_token()
+                tx.invoice_ids = [Command.set(invoices.ids)]
 
     @api.model
     def _compute_reference_prefix(self, provider, separator, **values):

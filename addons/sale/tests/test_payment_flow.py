@@ -81,6 +81,7 @@ class TestSalePayment(PaymentHttpCommon):
 
         # Check validation of transaction correctly confirms the SO
         self.assertEqual(self.order.state, 'draft')
+        self.assertEqual(tx_sudo.sale_order_ids.transaction_ids, tx_sudo)
         tx_sudo._set_done()
         tx_sudo._finalize_post_processing()
         self.assertEqual(self.order.state, 'sale')
@@ -120,6 +121,7 @@ class TestSalePayment(PaymentHttpCommon):
         self.assertEqual(tx_sudo.company_id, self.order.company_id)
         self.assertEqual(tx_sudo.currency_id, self.order.currency_id)
         self.assertEqual(tx_sudo.reference, self.reference)
+        self.assertEqual(tx_sudo.sale_order_ids.transaction_ids, tx_sudo)
 
         tx_sudo._set_done()
         with mute_logger('odoo.addons.sale.models.payment_transaction'):
@@ -194,3 +196,62 @@ class TestSalePayment(PaymentHttpCommon):
             tx_sudo._finalize_post_processing()
 
         self.assertEqual(self.order.state, 'draft', 'a partial transaction with automatic invoice and invoice_policy = delivery should not validate a quote')
+
+    def test_auto_confirm_and_auto_invoice(self):
+        # Set automatic invoice
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+
+        # Create the payment
+        self.amount = self.order.amount_total
+        tx = self._create_transaction(flow='redirect', sale_order_ids=[self.order.id], state='done')
+        with mute_logger('odoo.addons.sale.models.payment_transaction'):
+            tx._reconcile_after_done()
+
+        self.assertEqual(self.order.state, 'sale')
+        self.assertTrue(tx.invoice_ids)
+        self.assertTrue(self.order.invoice_ids)
+
+    def test_auto_done_and_auto_invoice(self):
+        # Set automatic invoice
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+        # Lock the sale orders when confirmed
+        self.env.user.groups_id += self.env.ref('sale.group_auto_done_setting')
+
+        # Create the payment
+        self.amount = self.order.amount_total
+        tx = self._create_transaction(flow='redirect', sale_order_ids=[self.order.id], state='done')
+        with mute_logger('odoo.addons.sale.models.payment_transaction'):
+            tx._reconcile_after_done()
+
+        self.assertEqual(self.order.state, 'done')
+        self.assertTrue(tx.invoice_ids)
+        self.assertTrue(self.order.invoice_ids)
+
+    def test_so_partial_payment_no_invoice(self):
+        # Set automatic invoice
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+
+        # Create the payment
+        self.amount = self.order.amount_total / 10.
+        tx = self._create_transaction(flow='redirect', sale_order_ids=[self.order.id], state='done')
+        with mute_logger('odoo.addons.sale.models.payment_transaction'):
+            tx._reconcile_after_done()
+
+        self.assertEqual(self.order.state, 'draft')
+        self.assertFalse(tx.invoice_ids)
+        self.assertFalse(self.order.invoice_ids)
+
+    def test_already_confirmed_so_payment(self):
+        # Set automatic invoice
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+
+        # Confirm order before payment
+        self.order.action_confirm()
+
+        # Create the payment
+        self.amount = self.order.amount_total
+        tx = self._create_transaction(flow='redirect', sale_order_ids=[self.order.id], state='done')
+        tx._reconcile_after_done()
+
+        self.assertTrue(tx.invoice_ids)
+        self.assertTrue(self.order.invoice_ids)
