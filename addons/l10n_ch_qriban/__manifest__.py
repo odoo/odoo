@@ -19,4 +19,5 @@ on the bank statements, the old IBAN code is still used.
         'views/swissqr_report.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

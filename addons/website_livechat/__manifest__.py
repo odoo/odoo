@@ -23,4 +23,5 @@ Allow website visitors to chat with the collaborators. This module also brings a
     'qweb': [
         'static/src/xml/thread.xml',
     ],
+    'license': 'LGPL-3',
 }

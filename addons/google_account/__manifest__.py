@@ -12,4 +12,5 @@ The module adds google user in res user.
     'data': [
         'data/google_account_data.xml',
     ],
+    'license': 'LGPL-3',
 }

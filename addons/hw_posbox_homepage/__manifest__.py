@@ -21,4 +21,5 @@ regular Odoo interface anymore.
 """,
     'depends': ['hw_proxy'],
     'installable': False,
+    'license': 'LGPL-3',
 }

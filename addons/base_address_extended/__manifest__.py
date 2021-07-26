@@ -21,4 +21,5 @@ with the street name, the house number, and room number.
     ],
     'depends': ['base'],
     'post_init_hook': '_update_street_format',
+    'license': 'LGPL-3',
 }
