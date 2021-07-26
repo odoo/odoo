@@ -48,6 +48,7 @@ class Project(models.Model):
     remaining_hours = fields.Float(compute='_compute_remaining_hours', string='Remaining Invoiced Time', compute_sudo=True)
     has_planned_hours_tasks = fields.Boolean(compute='_compute_remaining_hours', compute_sudo=True,
         help="True if any of the project's task has a set planned hours")
+    is_project_overtime = fields.Boolean('Project in Overtime', compute='_compute_remaining_hours', search='_search_is_project_overtime', compute_sudo=True)
 
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
@@ -88,13 +89,31 @@ class Project(models.Model):
             fields=['planned_hours:sum', 'remaining_hours:sum'], groupby='project_id')
         group_per_project_id = {group['project_id'][0]: group for group in group_read}
         for project in self:
-            group = group_per_project_id.get(project.id)
-            if group:
-                project.remaining_hours = group.get('remaining_hours')
-                project.has_planned_hours_tasks = bool(group.get('planned_hours'))
-            else:
-                project.remaining_hours = 0
-                project.has_planned_hours_tasks = False
+            group = group_per_project_id.get(project.id, {})
+            project.remaining_hours = group.get('remaining_hours', 0)
+            project.has_planned_hours_tasks = bool(group.get('planned_hours', False))
+            project.is_project_overtime = group.get('remaining_hours', 0) < 0
+
+    @api.model
+    def _search_is_project_overtime(self, operator, value):
+        if not isinstance(value, bool):
+            raise ValueError(_('Invalid value: %s') % value)
+        if operator not in ['=', '!=']:
+            raise ValueError(_('Invalid operator: %s') % operator)
+
+        query = """
+            SELECT P.id
+              FROM project_project P
+         LEFT JOIN project_task T ON P.id = T.project_id
+             WHERE T.planned_hours IS NOT NULL
+          GROUP BY P.id
+            HAVING SUM(T.remaining_hours) < 0
+        """
+        if (operator == '=' and value is True) or (operator == '!=' and value is False):
+            operator_new = 'inselect'
+        else:
+            operator_new = 'not inselect'
+        return [('id', operator_new, (query, ()))]
 
     @api.constrains('allow_timesheets', 'analytic_account_id')
     def _check_allow_timesheet(self):
