@@ -4,7 +4,7 @@ import Context from "web.Context";
 import core from "web.core";
 import { ComponentAdapter } from "web.OwlCompatibility";
 import { objectToQuery } from "../core/browser/router_service";
-import { useDebugMenu } from "../core/debug/debug_menu";
+import { useDebugCategory } from "../core/debug/debug_context";
 import { Dialog } from "../core/dialog/dialog";
 import { useEffect } from "../core/effect_hook";
 import { useService } from "../core/service_hook";
@@ -163,7 +163,7 @@ class ActionAdapter extends ComponentAdapter {
 export class ClientActionAdapter extends ActionAdapter {
     setup() {
         super.setup();
-        useDebugMenu("action", { action: this.props.widgetArgs[0] });
+        useDebugCategory("action", { action: this.props.widgetArgs[0] });
         owl.hooks.onMounted(() => {
             const action = this.props.widgetArgs[0];
             if ("params" in action) {
@@ -258,13 +258,14 @@ export class ViewAdapter extends ActionAdapter {
         this.vm = useService("view");
         this.shouldUpdateWidget = true;
         this.magicReload = useMagicLegacyReload();
-        useDebugMenu("action", {
+        const debugContext = {
             action: this.props.viewParams.action,
             component: this,
-        });
-        useDebugMenu("view");
+        };
+        useDebugCategory("action", debugContext);
+        useDebugCategory("view", debugContext);
         if (this.props.viewInfo.type === "form") {
-            useDebugMenu("form");
+            useDebugCategory("form", debugContext);
         }
         this.env = Component.env;
     }

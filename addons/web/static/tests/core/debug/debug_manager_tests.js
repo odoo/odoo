@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { DebugMenu, useDebugMenu } from "@web/core/debug/debug_menu";
+import { DebugMenu } from "@web/core/debug/debug_menu";
 import { regenerateAssets } from "@web/core/debug/debug_menu_items";
 import { registry } from "@web/core/registry";
-import { debugService } from "@web/core/debug/debug_service";
+import { useDebugCategory, useOwnDebugContext } from "@web/core/debug/debug_context";
 import { ormService } from "@web/core/orm_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { ActionDialog } from "@web/webclient/actions/action_dialog";
@@ -17,8 +17,16 @@ import { createWebClient, doAction, getActionManagerServerData } from "../../web
 import { openViewItem } from "@web/core/debug/debug_menu_items";
 import { editView, editSearchView } from "@web/legacy/debug_manager";
 
-const { Component, hooks, mount, tags } = owl;
-const { useSubEnv } = hooks;
+const { Component, mount, tags } = owl;
+const { xml } = tags;
+
+export class DebugMenuParent extends Component {
+    setup() {
+        useOwnDebugContext({ categories: ["default"] });
+    }
+}
+DebugMenuParent.template = xml`<DebugMenu/>`;
+DebugMenuParent.components = { DebugMenu };
 
 const debugRegistry = registry.category("debug");
 let target;
@@ -32,7 +40,6 @@ QUnit.module("DebugMenu", (hooks) => {
             .add("hotkey", hotkeyService)
             .add("ui", uiService)
             .add("orm", ormService)
-            .add("debug", debugService)
             .add("dialog", makeFakeDialogService());
         const mockRPC = async (route, args) => {
             if (args.method === "check_access_rights") {
@@ -43,6 +50,7 @@ QUnit.module("DebugMenu", (hooks) => {
     });
     QUnit.test("can be rendered", async (assert) => {
         debugRegistry
+            .category("default")
             .add("item_1", () => {
                 return {
                     type: "item",
@@ -79,25 +87,13 @@ QUnit.module("DebugMenu", (hooks) => {
                 };
             })
             .add("separator_2", () => {
-                return {
-                    type: "separator",
-                    sequence: 7,
-                    hide: true,
-                };
+                return null;
             })
             .add("item_4", () => {
-                return {
-                    type: "item",
-                    description: "Item 4",
-                    callback: () => {
-                        assert.step("callback item_4");
-                    },
-                    hide: true,
-                    sequence: 10,
-                };
+                return null;
             });
         const env = await makeTestEnv(testConfig);
-        const debugManager = await mount(DebugMenu, { env, target });
+        const debugManager = await mount(DebugMenuParent, { env, target });
         registerCleanup(() => debugManager.destroy());
         let debugManagerEl = debugManager.el;
         await click(debugManager.el.querySelector("button.o_dropdown_toggler"));
@@ -140,7 +136,7 @@ QUnit.module("DebugMenu", (hooks) => {
         "Display the DebugMenu correctly in a ActionDialog if debug mode is enabled",
         async (assert) => {
             assert.expect(8);
-            debugRegistry.add("global", () => {
+            debugRegistry.category("default").add("global", () => {
                 return {
                     type: "item",
                     description: "Global 1",
@@ -173,18 +169,19 @@ QUnit.module("DebugMenu", (hooks) => {
                         sequence: 20,
                     };
                 });
-            class Parent extends Component {
+            class WithCustom extends ActionDialog {
                 setup() {
-                    useSubEnv({ inDialog: true });
-                    useDebugMenu("custom", { customKey: "abc" });
+                    super.setup(...arguments);
+                    useDebugCategory("custom", { customKey: "abc" });
                 }
-                close() {}
             }
-            Parent.components = { ActionDialog };
-            Parent.template = tags.xml`<ActionDialog close="close"/>`;
             patchWithCleanup(odoo, { debug: "1" });
             const env = await makeTestEnv(testConfig);
-            const actionDialog = await mount(Parent, { env, target });
+            const actionDialog = await mount(WithCustom, {
+                env,
+                target,
+                props: { close: () => {} },
+            });
             registerCleanup(() => {
                 actionDialog.destroy();
             });
@@ -232,9 +229,9 @@ QUnit.module("DebugMenu", (hooks) => {
             },
         });
         registry.category("services").add("localization", makeFakeLocalizationService());
-        debugRegistry.add("regenerateAssets", regenerateAssets);
+        debugRegistry.category("default").add("regenerateAssets", regenerateAssets);
         const env = await makeTestEnv(testConfig);
-        const debugManager = await mount(DebugMenu, { env, target });
+        const debugManager = await mount(DebugMenuParent, { env, target });
         registerCleanup(() => debugManager.destroy());
         await click(debugManager.el.querySelector("button.o_dropdown_toggler"));
         assert.containsOnce(debugManager.el, "ul.o_dropdown_menu li.o_dropdown_item");
@@ -258,8 +255,7 @@ QUnit.module("DebugMenu", (hooks) => {
             debug: true,
         });
 
-        registry.category("debug").add("openViewItem", openViewItem);
-        registry.category("services").add("debug", debugService);
+        registry.category("debug").category("default").add("openViewItem", openViewItem);
 
         const serverData = getActionManagerServerData();
         Object.assign(serverData.models, {
@@ -310,8 +306,7 @@ QUnit.module("DebugMenu", (hooks) => {
             debug: true,
         });
 
-        registry.category("debug").add("editViewItem", editView);
-        registry.category("services").add("debug", debugService);
+        registry.category("debug").category("view").add("editViewItem", editView);
 
         const serverData = getActionManagerServerData();
         serverData.actions[1234] = {
@@ -353,8 +348,7 @@ QUnit.module("DebugMenu", (hooks) => {
             debug: true,
         });
 
-        registry.category("debug").add("editSearchViewItem", editSearchView);
-        registry.category("services").add("debug", debugService);
+        registry.category("debug").category("view").add("editSearchViewItem", editSearchView);
 
         const serverData = getActionManagerServerData();
 

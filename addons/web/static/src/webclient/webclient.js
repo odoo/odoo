@@ -7,6 +7,9 @@ import { NavBar } from "./navbar/navbar";
 import { useEffect } from "@web/core/effect_hook";
 import { NotUpdatable } from "../core/utils/components";
 import { MainComponentsContainer } from "../core/main_components_container";
+import { useOwnDebugContext } from "../core/debug/debug_context";
+import { registry } from "@web/core/registry";
+import { DebugMenu } from "@web/core/debug/debug_menu";
 
 const { Component, hooks } = owl;
 const { useExternalListener } = hooks;
@@ -19,6 +22,16 @@ export class WebClient extends Component {
         this.router = useService("router");
         this.user = useService("user");
         useService("legacy_service_provider");
+        useOwnDebugContext({ categories: ["default"] });
+        if (this.env.debug) {
+            registry.category("systray").add(
+                "web.debug_mode_menu",
+                {
+                    Component: DebugMenu,
+                },
+                { sequence: 100 }
+            );
+        }
         this.title.setParts({ zopenerp: "Odoo" }); // zopenerp is easy to grep
         useBus(this.env.bus, "ROUTE_CHANGE", this.loadRouterState);
         useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", (mode) => {

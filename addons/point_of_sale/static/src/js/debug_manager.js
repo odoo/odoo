@@ -18,4 +18,4 @@ function runPoSJSTests({ env }) {
     };
 }
 
-registry.category("debug").add("point_of_sale.runPoSJSTests", runPoSJSTests);
+registry.category("debug").category("default").add("point_of_sale.runPoSJSTests", runPoSJSTests);

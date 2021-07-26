@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { debugService } from "@web/core/debug/debug_service";
 import { registry } from "@web/core/registry";
 import { editView } from "@web/legacy/debug_manager";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
@@ -2276,7 +2275,6 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("debugManager is active for (legacy) views", async function (assert) {
         assert.expect(2);
 
-        serviceRegistry.add("debug", debugService);
         registry.category("debug").category("view").add("editView", editView);
         patchWithCleanup(odoo, { debug: "1" });
         const mockRPC = async (route) => {

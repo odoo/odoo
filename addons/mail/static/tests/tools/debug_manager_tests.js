@@ -3,7 +3,6 @@
 import { manageMessages } from "@mail/js/tools/debug_manager";
 import { click, legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
-import { debugService } from "@web/core/debug/debug_service";
 import { registry } from "@web/core/registry";
 
 QUnit.module("DebugMenu");
@@ -25,8 +24,6 @@ QUnit.test("Manage Messages", async function (assert) {
         "mail.message,false,search": `<search/>`,
     });
 
-    // Activate debug service with "Manage Message" item
-    registry.category("services").add("debug", debugService);
     registry.category("debug").category("form").add("manageMessages", manageMessages);
 
     async function mockRPC(route, args) {

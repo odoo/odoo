@@ -12,8 +12,7 @@ import makeTestEnvironment from "web.test_env";
 
 import { ClientActionAdapter } from "@web/legacy/action_adapters";
 import { makeLegacyCrashManagerService } from "@web/legacy/utils";
-import { useDebugMenu } from "@web/core/debug/debug_menu";
-import { debugService } from "@web/core/debug/debug_service";
+import { useDebugCategory } from "@web/core/debug/debug_context";
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
 
 import ControlPanel from "web.ControlPanel";
@@ -125,7 +124,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         patchWithCleanup(ClientActionAdapter.prototype, {
             setup() {
-                useDebugMenu("custom", { widget: this });
+                useDebugCategory("custom", { widget: this });
                 this._super();
             },
         });
@@ -138,7 +137,6 @@ QUnit.module("ActionManager", (hooks) => {
                 assert.ok(widget);
                 return {};
             });
-        registry.category("services").add("debug", debugService);
         patchWithCleanup(odoo, { debug: true });
 
         const mockRPC = (route) => {

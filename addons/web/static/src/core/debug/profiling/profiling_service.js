@@ -71,6 +71,7 @@ const profilingService = {
 
         registry
             .category("debug")
+            .category("default")
             .add("profilingSeparator", profilingSeparator)
             .add("profilingItem", profilingItem);
 
