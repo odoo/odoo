@@ -218,6 +218,10 @@ export const hotkeyService = {
             if (ev.code && ev.code.indexOf("Digit") === 0) {
                 key = ev.code.slice(-1);
             }
+            // Prefer physical keys for non-latin keyboard layout.
+            if (!AUTHORIZED_KEYS.has(key) && ev.code && ev.code.indexOf("Key") === 0) {
+                key = ev.code.slice(-1).toLowerCase();
+            }
             // Make sure we do not duplicate a modifier key
             if (!MODIFIERS.has(key)) {
                 hotkey.push(key);
