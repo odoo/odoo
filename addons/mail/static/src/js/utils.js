@@ -71,7 +71,7 @@ function linkify(text, attrs) {
 
 function addLink(node, transformChildren) {
     if (node.nodeType === 3) {  // text node
-        const linkified = linkify(node.data);
+        const linkified = linkify(_.escape(node.data));
         if (linkified !== node.data) {
             const div = document.createElement('div');
             div.innerHTML = linkified;

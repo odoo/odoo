@@ -824,8 +824,11 @@ function factory(dependencies) {
                     const escapedSource = String(source).replace(
                         /([.*+?=^!:${}()|[\]/\\])/g,
                         '\\$1');
+                    const escapedEntitiesSource = String(_.escape(source)).replace(
+                        /([.*+?=^!:${}()|[\]/\\])/g,
+                        '\\$1');
                     const regexp = new RegExp(
-                        '(\\s|^)(' + escapedSource + ')(?=\\s|$)',
+                        '(\\s|^)(' + escapedSource + '|' + escapedEntitiesSource + ')(?=\\s|$)',
                         'g');
                     htmlString = htmlString.replace(regexp, '$1' + emoji.unicode);
                 }

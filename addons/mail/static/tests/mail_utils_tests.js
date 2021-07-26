@@ -35,6 +35,13 @@ QUnit.test('add_link utility function', function (assert) {
     });
 });
 
+QUnit.test('add_link utility function and icons', function (assert) {
+    assert.expect(1);
+    // 'https://test.example.com/test?&currency_id' without escaping, the innerHTML from the browser convert into 'https://test.example.com/test?¤cy_id'
+    var output = utils.parseAndTransform('<p>https://test.example.com/test?&amp;currency_id</p>', utils.addLink);
+    assert.strictEqual(output, '<p><a target="_blank" rel="noreferrer noopener" href="https://test.example.com/test?&amp;currency_id">https://test.example.com/test?&amp;currency_id</a></p>');
+});
+
 QUnit.test('addLink: linkify inside text node (1 occurrence)', function (assert) {
     assert.expect(5);
 
