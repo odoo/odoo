@@ -2343,7 +2343,6 @@ var SnippetsMenu = Widget.extend({
                         await self._scrollToSnippet($target);
 
                         _.defer(async function () {
-                            self.trigger_up('snippet_dropped', {$target: $target});
                             self._disableUndroppableSnippets();
 
                             dragAndDropResolve();
@@ -2351,6 +2350,7 @@ var SnippetsMenu = Widget.extend({
                             await self._callForEachChildSnippet($target, function (editor, $snippet) {
                                 return editor.buildSnippet();
                             });
+                            self.trigger_up('snippet_dropped', {$target: $target});
                             $target.trigger('content_changed');
                             await self._updateInvisibleDOM();
 
