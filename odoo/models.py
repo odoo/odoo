@@ -1798,6 +1798,10 @@ class BaseModel(metaclass=MetaModel):
 
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
         """
+        #if tools.config['dev_mode'] and self:
+        if self:
+            _logger.warning(_('Method `search` ignores ids in a recordset. If you mean you filter those recordset by domain, use either `records.filtered_domain` (recommended when `len(records) < 1000`) or `search([("id", "in", records.ids)] + domain)`'))
+
         res = self._search(args, offset=offset, limit=limit, order=order, count=count)
         return res if count else self.browse(res)
 
