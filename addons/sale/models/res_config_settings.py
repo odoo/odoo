@@ -47,21 +47,29 @@ class ResConfigSettings(models.TransientModel):
     module_sale_coupon = fields.Boolean("Coupons & Promotions")
     module_sale_amazon = fields.Boolean("Amazon Sync")
 
-    automatic_invoice = fields.Boolean("Automatic Invoice",
-                                       help="The invoice is generated automatically and available in the customer portal "
-                                            "when the transaction is confirmed by the payment acquirer.\n"
-                                            "The invoice is marked as paid and the payment is registered in the payment journal "
-                                            "defined in the configuration of the payment acquirer.\n"
-                                            "This mode is advised if you issue the final invoice at the order and not after the delivery.",
-                                       config_parameter='sale.automatic_invoice')
-    template_id = fields.Many2one('mail.template', 'Email Template',
-                                  domain="[('model', '=', 'account.move')]",
-                                  config_parameter='sale.default_email_template',
-                                  default=lambda self: self.env.ref('account.email_template_edi_invoice', False))
-    confirmation_template_id = fields.Many2one('mail.template', string='Confirmation Email',
-                                               domain="[('model', '=', 'sale.order')]",
-                                               config_parameter='sale.default_confirmation_template',
-                                               help="Email sent to the customer once the order is paid.")
+    automatic_invoice = fields.Boolean(
+        string="Automatic Invoice",
+        help="The invoice is generated automatically and available in the customer portal when the "
+             "transaction is confirmed by the payment acquirer.\nThe invoice is marked as paid and "
+             "the payment is registered in the payment journal defined in the configuration of the "
+             "payment acquirer.\nThis mode is advised if you issue the final invoice at the order "
+             "and not after the delivery.",
+        config_parameter='sale.automatic_invoice',
+    )
+    invoice_mail_template_id = fields.Many2one(
+        comodel_name='mail.template',
+        string='Invoice Email Template',
+        domain="[('model', '=', 'account.move')]",
+        config_parameter='sale.default_invoice_email_template',
+        default=lambda self: self.env.ref('account.email_template_edi_invoice', False)
+    )
+    confirmation_mail_template_id = fields.Many2one(
+        comodel_name='mail.template',
+        string='Confirmation Email Template',
+        domain="[('model', '=', 'sale.order')]",
+        config_parameter='sale.default_confirmation_template',
+        help="Email sent to the customer once the order is paid."
+    )
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
