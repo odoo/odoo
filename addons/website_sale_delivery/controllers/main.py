@@ -3,8 +3,17 @@
 
 from odoo import http, _
 from odoo.http import request
-from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.exceptions import UserError
+from odoo.addons.website_sale.controllers.main import PaymentPortal, WebsiteSale
+from odoo.exceptions import UserError, ValidationError
+
+
+class PaymentPortalDelivery(PaymentPortal):
+    @http.route()
+    def shop_payment_transaction(self, order_id, access_token, **kwargs):
+        order = request.website.sale_get_order()
+        if not order.is_all_service and not order.delivery_set:
+            raise ValidationError(_('There is an issue with your delivery method. Please refresh the page and try again.'))
+        return super().shop_payment_transaction(order_id, access_token, **kwargs)
 
 
 class WebsiteSaleDelivery(WebsiteSale):
