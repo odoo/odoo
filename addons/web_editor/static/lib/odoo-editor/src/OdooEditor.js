@@ -145,6 +145,12 @@ export class OdooEditor extends EventTarget {
                 isRootEditable: true,
                 defaultLinkAttributes: {},
                 getContentEditableAreas: () => [],
+                getPowerboxElement: () => {
+                    const selection = document.getSelection();
+                    if (selection.isCollapsed && selection.rangeCount) {
+                        return closestElement(selection.anchorNode, 'P, DIV');
+                    }
+                },
                 _t: string => string,
             },
             options,
@@ -1312,6 +1318,7 @@ export class OdooEditor extends EventTarget {
             onShow: () => {
                 this.commandbarTablePicker.hide();
             },
+            shouldActivate: () => !!this.options.getPowerboxElement(),
             onActivate: () => {
                 this._beforeCommandbarStepIndex = this._historySteps.length - 1;
                 this.observerUnactive();
@@ -1835,11 +1842,10 @@ export class OdooEditor extends EventTarget {
             }
         }
 
-        const selection = document.getSelection();
-        if (!selection.isCollapsed || !selection.rangeCount) return;
-
-        const block = closestElement(selection.anchorNode, 'P, DIV');
-        this._makeHint(block, 'Type "/" for commands', true);
+        const block = this.options.getPowerboxElement();
+        if (block) {
+            this._makeHint(block, 'Type "/" for commands', true);
+        }
     }
     _makeHint(block, text, temporary = false) {
         const content = block && block.innerHTML.trim();
