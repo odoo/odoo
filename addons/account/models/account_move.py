@@ -2749,6 +2749,7 @@ class AccountMove(models.Model):
                 # ir.actions.act_window works
                 'active_id': self.ids[0],
                 'active_ids': self.ids,
+                'custom_layout': 'mail.mail_notification_paynow',
             },
             'target': 'new',
             'type': 'ir.actions.act_window',
