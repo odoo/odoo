@@ -16,4 +16,5 @@ with a single statement.
         'views/partner_view.xml'
     ],
     'demo': ['data/res_partner_bank_demo.xml'],
+    'license': 'LGPL-3',
 }

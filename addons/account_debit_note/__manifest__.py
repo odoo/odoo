@@ -19,4 +19,5 @@ The wizard used is similar as the one for the credit note.
     ],
     'installable': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }

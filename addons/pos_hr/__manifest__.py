@@ -22,4 +22,5 @@ The actual till still requires one user but an unlimited number of employees can
     'installable': True,
     'auto_install': True,
     'qweb': ['static/src/xml/pos.xml'],
+    'license': 'LGPL-3',
 }
