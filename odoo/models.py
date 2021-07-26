@@ -2334,7 +2334,7 @@ class BaseModel(metaclass=MetaModel):
             # full domain for this groupby spec
             d = None
             if value:
-                if ftype == 'many2one':
+                if ftype in ['many2one', 'many2many']:
                     value = value[0]
                 elif ftype in ('date', 'datetime'):
                     locale = get_lang(self.env).code
@@ -2570,7 +2570,7 @@ class BaseModel(metaclass=MetaModel):
         if not groupby_fields:
             return fetched_data
 
-        self._read_group_resolve_many2one_fields(fetched_data, annotated_groupbys)
+        self._read_group_resolve_many2x_fields(fetched_data, annotated_groupbys)
 
         data = [{k: self._read_group_prepare_data(k, v, groupby_dict) for k, v in r.items()} for r in fetched_data]
 
@@ -2597,12 +2597,12 @@ class BaseModel(metaclass=MetaModel):
             )
         return result
 
-    def _read_group_resolve_many2one_fields(self, data, fields):
-        many2onefields = {field['field'] for field in fields if field['type'] == 'many2one'}
-        for field in many2onefields:
+    def _read_group_resolve_many2x_fields(self, data, fields):
+        many2xfields = {field['field'] for field in fields if field['type'] in ['many2one', 'many2many']}
+        for field in many2xfields:
             ids_set = {d[field] for d in data if d[field]}
-            m2o_records = self.env[self._fields[field].comodel_name].browse(ids_set)
-            data_dict = dict(lazy_name_get(m2o_records.sudo()))
+            m2x_records = self.env[self._fields[field].comodel_name].browse(ids_set)
+            data_dict = dict(lazy_name_get(m2x_records.sudo()))
             for d in data:
                 d[field] = (d[field], data_dict[d[field]]) if d[field] else False
 

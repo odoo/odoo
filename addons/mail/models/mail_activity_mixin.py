@@ -310,7 +310,7 @@ class MailActivityMixin(models.AbstractModel):
         )
         self.env.cr.execute(select_query, [tz] * 3 + where_params)
         fetched_data = self.env.cr.dictfetchall()
-        self._read_group_resolve_many2one_fields(fetched_data, annotated_groupbys)
+        self._read_group_resolve_many2x_fields(fetched_data, annotated_groupbys)
         data = [
             {key: self._read_group_prepare_data(key, val, groupby_dict)
              for key, val in row.items()}

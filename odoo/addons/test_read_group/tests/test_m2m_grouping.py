@@ -43,19 +43,19 @@ class TestM2MGrouping(common.TransactionCase):
         )
         self.assertEqual(user_by_tasks, [
             {   # first task: both users
-                'task_ids': self.tasks[0].id,
+                'task_ids': (self.tasks[0].id, "Super Mario Bros."),
                 'task_ids_count': 2,
                 'name': ['Mario', 'Luigi'],
                 '__domain': [('task_ids', '=', self.tasks[0].id)],
             },
             {   # second task: Mario only
-                'task_ids': self.tasks[1].id,
+                'task_ids': (self.tasks[1].id, "Paper Mario"),
                 'task_ids_count': 1,
                 'name': ['Mario'],
                 '__domain': [('task_ids', '=', self.tasks[1].id)],
             },
             {   # third task: Luigi only
-                'task_ids': self.tasks[2].id,
+                'task_ids': (self.tasks[2].id, "Luigi's Mansion"),
                 'task_ids_count': 1,
                 'name': ['Luigi'],
                 '__domain': [('task_ids', '=', self.tasks[2].id)],
@@ -71,13 +71,13 @@ class TestM2MGrouping(common.TransactionCase):
         )
         self.assertEqual(task_by_users, [
             {   # task of Mario
-                'user_ids': self.users[0].id,
+                'user_ids': (self.users[0].id, "Mario"),
                 'user_ids_count': 1,
                 'name': ["Super Mario Bros."],
                 '__domain': ['&', ('user_ids', '=', self.users[0].id), ('id', '=', self.tasks[0].id)],
             },
             {   # task of Luigi
-                'user_ids': self.users[1].id,
+                'user_ids': (self.users[1].id, "Luigi"),
                 'user_ids_count': 1,
                 'name': ["Super Mario Bros."],
                 '__domain': ['&', ('user_ids', '=', self.users[1].id), ('id', '=', self.tasks[0].id)],
@@ -92,13 +92,13 @@ class TestM2MGrouping(common.TransactionCase):
         )
         self.assertEqual(task_by_users, [
             {   # tasks of Mario
-                'user_ids': self.users[0].id,
+                'user_ids': (self.users[0].id, "Mario"),
                 'user_ids_count': 2,
                 'name': unordered(["Super Mario Bros.", "Paper Mario"]),
                 '__domain': [('user_ids', '=', self.users[0].id)],
             },
             {   # tasks of Luigi
-                'user_ids': self.users[1].id,
+                'user_ids': (self.users[1].id, "Luigi"),
                 'user_ids_count': 2,
                 'name': unordered(["Super Mario Bros.", "Luigi's Mansion"]),
                 '__domain': [('user_ids', '=', self.users[1].id)],
@@ -151,13 +151,13 @@ class TestM2MGrouping(common.TransactionCase):
             )
         self.assertEqual(as_admin, [
             {   # tasks of Mario
-                'user_ids': self.users[0].id,
+                'user_ids': (self.users[0].id, "Mario"),
                 'user_ids_count': 2,
                 'name': unordered(["Super Mario Bros.", "Paper Mario"]),
                 '__domain': [('user_ids', '=', self.users[0].id)],
             },
             {   # tasks of Luigi
-                'user_ids': self.users[1].id,
+                'user_ids': (self.users[1].id, "Luigi"),
                 'user_ids_count': 2,
                 'name': unordered(["Super Mario Bros.", "Luigi's Mansion"]),
                 '__domain': [('user_ids', '=', self.users[1].id)],
@@ -203,7 +203,7 @@ class TestM2MGrouping(common.TransactionCase):
             )
         self.assertEqual(as_demo, [
             {   # tasks of Mario
-                'user_ids': self.users[0].id,
+                'user_ids': (self.users[0].id, "Mario"),
                 'user_ids_count': 2,
                 'name': unordered(['Super Mario Bros.', 'Paper Mario']),
                 '__domain': [('user_ids', '=', self.users[0].id)],
