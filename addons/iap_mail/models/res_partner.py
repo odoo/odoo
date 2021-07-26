@@ -10,10 +10,13 @@ from odoo.addons.iap.tools import iap_tools
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    # enrich
     iap_enrich_info = fields.Text('IAP Enrich Info', help='IAP response stored as a JSON string',
                                   compute='_compute_partner_iap_info')
     iap_search_domain = fields.Char('Search Domain / Email',
                                 compute='_compute_partner_iap_info')
+    # autocomplete
+    partner_gid = fields.Integer('Company database ID')
 
     def _compute_partner_iap_info(self):
         partner_iaps = self.env['res.partner.iap'].sudo().search([('partner_id', 'in', self.ids)])
@@ -188,3 +191,58 @@ class ResPartner(models.Model):
         """
         domain = tools.email_domain_extract(email)
         return ("@" + domain) if domain not in iap_tools._MAIL_DOMAIN_BLACKLIST else email
+
+    # ------------------------------------------------------------
+    # AUTOCOMPLETE
+    # ------------------------------------------------------------
+
+    def _iap_perform_autocomplete(self, include_logo=True):
+        self.ensure_one()
+        company_domain = self._get_company_domain()
+        if not company_domain:
+            return False
+
+        iap_payload, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('enrich', {
+            'domain': company_domain,
+            'partner_gid': False,  # TDE: checkme
+            'vat': self.vat,
+        })
+        if not iap_payload or error:
+            return False
+
+        contact_vals = self.env['iap.autocomplete.api']._get_contact_vals_from_response(iap_payload['company_data'], include_logo=include_logo)
+        update_vals = dict(
+            (fname, contact_vals[fname])
+            for fname in contact_vals.keys()
+            if not self[fname]
+        )
+        additional_data = update_vals.pop('additional_info', False)
+
+        self.write(update_vals)
+        if additional_data:
+            template_values = json.loads(additional_data)
+            template_values['flavor_text'] = _("Company auto-completed by Odoo Partner Autocomplete Service")
+            self.message_post_with_view(
+                'iap_mail.enrich_company',
+                values=template_values,
+                subtype_id=self.env.ref('mail.mt_note').id,
+            )
+        return True
+
+    def _get_company_domain(self):
+        """ Extract the company domain to be used by IAP services.
+        The domain is extracted from the website or the email information.
+        e.g:
+            - www.info.proximus.be -> proximus.be
+            - info@proximus.be -> proximus.be """
+        self.ensure_one()
+
+        company_domain = tools.email_domain_extract(self.email) if self.email else False
+        if company_domain and company_domain not in iap_tools._MAIL_DOMAIN_BLACKLIST:
+            return company_domain
+
+        company_domain = tools.url_domain_extract(self.website) if self.website else False
+        if not company_domain or company_domain in ['localhost', 'example.com']:
+            return False
+
+        return company_domain
