@@ -11,7 +11,7 @@ from stdnum.util import clean
 
 import logging
 
-from odoo import api, models, tools, _
+from odoo import api, models, fields, tools, _
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
 
@@ -82,6 +82,8 @@ _region_specific_vat_codes = {
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
+
+    vat = fields.Char(string="VAT/Tax ID")
 
     def _split_vat(self, vat):
         vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')

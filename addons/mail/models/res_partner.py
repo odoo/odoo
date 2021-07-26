@@ -14,10 +14,12 @@ class Partner(models.Model):
     _inherit = ['res.partner', 'mail.activity.mixin', 'mail.thread.blacklist']
     _mail_flat_thread = False
 
-    # override to add tracking
+    # override to add and order tracking
     email = fields.Char(tracking=1)
     phone = fields.Char(tracking=2)
-    user_id = fields.Many2one(tracking=True)
+    parent_id = fields.Many2one(tracking=3)
+    user_id = fields.Many2one(tracking=4)
+    vat = fields.Char(tracking=5)
     # channels
     channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels', copy=False)
 
