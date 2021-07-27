@@ -434,8 +434,8 @@ class AccountMoveLine(models.Model):
 
             vals['tax_amount_currency'] += tax_vals['amount']
             vals['tax_amount_currency_closing'] += tax_vals['amount'] if tax_rep.use_in_tax_closing else 0
-            for tag_id in tax_rep.tag_ids:
-                vals['tag_ids'].add(tag_id)
+            for tag in tax_rep.tag_ids:
+                vals['tag_ids'].add(tag.id)
 
         res['tax_detail_vals_list'] = []
         for tax_detail_vals in tax_detail_per_tax.values():
