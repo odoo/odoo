@@ -18,14 +18,18 @@ class ResCompany(models.Model):
         delete_domain = False  # Overtime to delete
 
         overtime_enabled_companies = self.filtered('hr_attendance_overtime')
+        # Prevent any further logic if we are disabling the feature
+        is_disabling_overtime = False
         # If we disable overtime
         if 'hr_attendance_overtime' in vals and not vals['hr_attendance_overtime'] and overtime_enabled_companies:
             delete_domain = [('company_id', 'in', overtime_enabled_companies.ids)]
             vals['overtime_start_date'] = False
+            is_disabling_overtime = True
 
         start_date = vals.get('hr_attendance_overtime') and vals.get('overtime_start_date')
         # Also recompute if the threshold have changed
-        if start_date or 'overtime_company_threshold' in vals or 'overtime_employee_threshold' in vals:
+        if not is_disabling_overtime and (
+            start_date or 'overtime_company_threshold' in vals or 'overtime_employee_threshold' in vals):
             for company in self:
                 # If we modify the thresholds only
                 if start_date == company.overtime_start_date and \
@@ -38,13 +42,13 @@ class ResCompany(models.Model):
                         ('employee_id.company_id', '=', company.id),
                         ('check_in', '>=', start_date)]])
                 # If we move the start date into the past
-                elif company.overtime_start_date > start_date:
+                elif start_date and company.overtime_start_date > start_date:
                     search_domain = OR([search_domain, [
                         ('employee_id.company_id', '=', company.id),
                         ('check_in', '>=', start_date),
                         ('check_in', '<=', company.overtime_start_date)]])
                 # If we move the start date into the future
-                elif company.overtime_start_date < start_date:
+                elif start_date and company.overtime_start_date < start_date:
                     delete_domain = OR([delete_domain, [
                         ('company_id', '=', company.id),
                         ('date', '<', start_date)]])
