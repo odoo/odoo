@@ -49,6 +49,12 @@ class ProductTemplate(models.Model):
             'graph_measure': 'product_uom_qty',
         }
         return action
+    
+    def write(self, values):
+       if 'uom_id' in values:
+           for line in self.bom_line_ids:
+               line.product_uom_id = values['uom_id']
+       return super().write(values)
 
 
 class ProductProduct(models.Model):
