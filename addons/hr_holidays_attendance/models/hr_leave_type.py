@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class HRLeaveType(models.Model):
     _inherit = 'hr.leave.type'
 
-    hr_attendance_overtime = fields.Boolean(related='company_id.hr_attendance_overtime')
+    hr_attendance_overtime = fields.Boolean(compute='_compute_hr_attendance_overtime')
     overtime_deductible = fields.Boolean(
         "Deduct Extra Hours", default=False,
         help="Once a time off of this type is approved, extra hours in attendances will be deducted.")
@@ -30,3 +30,12 @@ class HRLeaveType(models.Model):
         res = super()._get_days_request()
         res[1]['overtime_deductible'] = self.overtime_deductible
         return res
+
+    @api.depends('company_id.hr_attendance_overtime')
+    def _compute_hr_attendance_overtime(self):
+        # If no company is linked to the time off type, use the current company's setting
+        for leave_type in self:
+            if leave_type.company_id:
+                leave_type.hr_attendance_overtime = leave_type.company_id.hr_attendance_overtime
+            else:
+                leave_type.hr_attendance_overtime = self.env.company.hr_attendance_overtime
