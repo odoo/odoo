@@ -753,6 +753,21 @@ blockquote {
     }
 }
 
+// Buttons with custom colors
+.btn-custom:hover, .btn-fill-custom:hover {
+    filter: invert(0.2);
+}
+.btn-outline-custom {
+    &:not(:hover) {
+        background-color: transparent !important;
+        background-image: none !important;
+    }
+    &:hover {
+        background-color: '';
+        background-image: '';
+    }
+}
+
 // Base snippet rules
 %o-we-background-layer-parent {
     &, & > * {

@@ -44,6 +44,7 @@ const Link = Widget.extend({
             {type: this.isButton ? 'link' : '', label: _t("Link"), btnPreview: 'link'},
             {type: 'primary', label: _t("Primary"), btnPreview: 'primary'},
             {type: 'secondary', label: _t("Secondary"), btnPreview: 'secondary'},
+            {type: 'custom', label: _t("Custom"), btnPreview: 'custom'},
             // Note: by compatibility the dialog should be able to remove old
             // colors that were suggested like the BS status colors or the
             // alpha -> epsilon classes. This is currently done by removing
@@ -153,6 +154,16 @@ const Link = Widget.extend({
         // And we need to keep the classes because the a.btn.btn-link have some special css rules.
         if (!data.classes.includes('btn') && this.data.iniClassName.includes("btn-link")) {
             data.classes += " btn btn-link";
+        }
+        if (!['btn-custom', 'btn-outline-custom', 'btn-fill-custom'].some(className =>
+            data.classes.includes(className)
+        )) {
+            this.$link.css('color', '');
+            this.$link.css('background-color', '');
+            this.$link.css('background-image', '');
+            this.$link.css('border-width', '');
+            this.$link.css('border-style', '');
+            this.$link.css('border-color', '');
         }
         const attrs = Object.assign({}, this.data.oldAttributes, {
             href: data.url,
@@ -313,6 +324,11 @@ const Link = Widget.extend({
         }
 
         const type = this._getLinkType();
+        const customTextColor = this._getLinkCustomTextColor();
+        const customFill = this._getLinkCustomFill();
+        const customBorder = this._getLinkCustomBorder();
+        const customBorderWidth = this._getLinkCustomBorderWidth();
+        const customBorderStyle = this._getLinkCustomBorderStyle();
         const size = this._getLinkSize();
         const shape = this._getLinkShape();
         const shapes = shape ? shape.split(',') : [];
@@ -335,6 +351,11 @@ const Link = Widget.extend({
             content: content,
             url: this._correctLink(url),
             classes: classes.replace(allWhitespace, ' ').replace(allStartAndEndSpace, ''),
+            customTextColor: customTextColor,
+            customFill: customFill,
+            customBorder: customBorder,
+            customBorderWidth: customBorderWidth,
+            customBorderStyle: customBorderStyle,
             oldAttributes: this.data.oldAttributes,
             isNewWindow: isNewWindow,
             doStripDomain: doStripDomain,
@@ -389,6 +410,46 @@ const Link = Widget.extend({
      * @returns {string}
      */
     _getLinkType: function () {},
+    /**
+     * Returns the custom text color for custom type.
+     *
+     * @abstract
+     * @private
+     * @returns {string}
+     */
+    _getLinkCustomTextColor: function () {},
+    /**
+     * Returns the custom border color for custom type.
+     *
+     * @abstract
+     * @private
+     * @returns {string}
+     */
+    _getLinkCustomBorder: function () {},
+    /**
+     * Returns the custom border width for custom type.
+     *
+     * @abstract
+     * @private
+     * @returns {string}
+     */
+    _getLinkCustomBorderWidth: function () {},
+    /**
+     * Returns the custom border style for custom type.
+     *
+     * @abstract
+     * @private
+     * @returns {string}
+     */
+    _getLinkCustomBorderStyle: function () {},
+    /**
+     * Returns the custom fill color for custom type.
+     *
+     * @abstract
+     * @private
+     * @returns {string}
+     */
+    _getLinkCustomFill: function () {},
     /**
      * Abstract method: return true if the link should open in a new window.
      *
