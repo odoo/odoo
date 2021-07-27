@@ -417,7 +417,7 @@
                     <div class="col-md-9 d-flex align-items-center">
                         <div t-attf-class="#{widget.colorCombinationClass ? ('p-2 ' + widget.colorCombinationClass) : ''}">
                             <t t-foreach="widget.colorsData" t-as="colorData">
-                                <label role="button" class="m-0 mr-2">
+                                <label role="button" class="m-0 mr-2" t-if="colorData.type !== 'custom'">
                                     <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="colorData.type"/>
                                     <span t-esc="colorData.label"
                                             t-attf-class="o_btn_preview btn btn-sm btn-#{colorData.btnPreview} #{colorData.type ? '' : 'px-0'}"/>
@@ -537,6 +537,56 @@
                     <span class="o_we_dropdown_caret"></span>
                 </div>
             </we-select>
+        </we-row>
+        <we-row class="link-custom-color link-custom-color-text">
+            <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette">
+                <we-title> ⌙ Text Color</we-title><!-- &emsp; -->
+                <div class="dropdown">
+                    <span data-toggle="dropdown" data-css-property="color" class="o_we_color_preview"></span>
+                    <we-selection-items class="dropdown-menu" name="link_text_color"/>
+                </div>
+            </we-select>
+        </we-row>
+        <we-row class="link-custom-color link-custom-color-fill">
+            <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette">
+                <we-title> ⌙ Fill Color</we-title><!-- &emsp; -->
+                <div class="dropdown">
+                    <span data-toggle="dropdown" data-css-property="background-color" class="o_we_color_preview"></span>
+                    <we-selection-items class="dropdown-menu" name="link_fill_color"/>
+                </div>
+            </we-select>
+        </we-row>
+        <we-row class="link-custom-color link-custom-color-border">
+            <we-title> ⌙ Border</we-title><!-- &emsp; -->
+            <div>
+                <we-input class="o_we_user_value_widget" title="Border Width">
+                    <div class="o_custom_border_width_input">
+                        <input name="custom_border_width" type="text" class="text-right" size="2"/>
+                        <span>px</span>
+                    </div>
+                </we-input>
+                <we-select class="o_we_user_value_widget" title="Border Style">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle"
+                            data-toggle="dropdown" title="" tabindex="-1"
+                            data-original-title="Link Border Style" aria-expanded="false">
+                            <we-toggler/>
+                        </button>
+                        <we-selection-items class="dropdown-menu" name="link_border_style">
+                            <we-button title="Solid" class="dropdown-item" data-value="solid"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></we-button>
+                            <we-button title="Dashed" class="dropdown-item" data-value="dashed"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></we-button>
+                            <we-button title="Dotted" class="dropdown-item" data-value="dotted"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></we-button>
+                            <we-button title="Double" class="dropdown-item" data-value="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></we-button>
+                        </we-selection-items>
+                    </div>
+                </we-select>
+                <we-select title="Border Color" class="o_we_user_value_widget o_we_so_color_palette">
+                    <div class="dropdown">
+                        <span data-toggle="dropdown" data-css-property="border-color" class="o_we_color_preview"></span>
+                        <we-selection-items class="dropdown-menu" name="link_border_color"/>
+                    </div>
+                </we-select>
+            </div>
         </we-row>
         <we-row class="link-size-row">
             <we-select class="o_we_user_value_widget">
