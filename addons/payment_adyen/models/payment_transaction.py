@@ -132,6 +132,10 @@ class PaymentTransaction(models.Model):
         if self.provider != 'adyen':
             return
 
+        # Handle the source acquirer reference
+        if 'originalReference' in data:
+            self.source_transaction_id.acquirer_reference = data.get('originalReference')
+
         # Handle the acquirer reference
         if 'pspReference' in data:
             self.acquirer_reference = data.get('pspReference')
@@ -194,3 +198,55 @@ class PaymentTransaction(models.Model):
         _logger.info(
             "created token with id %s for partner with id %s", token.id, self.partner_id.id
         )
+
+    def _send_refund_request(self, refund_amount=None):
+        """ Override of payment to send a refund request to Adyen.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        super()._send_refund_request(refund_amount)
+        if self.provider != 'adyen':
+            return
+
+        if not refund_amount:
+            refund_amount = self.amount
+
+        refund_tx = self._create_refund_transaction(refund_amount)
+
+        converted_amount = payment_utils.to_minor_currency_units(
+            refund_amount, refund_tx.currency_id, CURRENCY_DECIMALS.get(refund_tx.currency_id.name)
+        )
+
+        data = {
+            'merchantAccount': refund_tx.acquirer_id.adyen_merchant_account,
+            'modificationAmount': {
+                'value': converted_amount,
+                'currency': refund_tx.currency_id.name,
+            },
+            'originalReference': refund_tx.acquirer_reference,
+            'reference': refund_tx.reference,
+        }
+        response_content = refund_tx.acquirer_id._adyen_make_request(
+            url_field_name='adyen_payment_api_url',
+            endpoint='/refund',
+            payload=data,
+            method='POST'
+        )
+        _logger.info("refund request response:\n%s", pprint.pformat(response_content))
+
+        # Handle the refund request response
+        pspreference = response_content.get('pspReference')
+        response = response_content.get('response')
+        if pspreference and response == '[refund-received]':
+            # the PSP reference associated with this /refund request is different from the
+            # psp reference associated with the original payment request
+            refund_tx.acquirer_reference = pspreference
+        else:
+            raise ValidationError("Adyen: " + _("The refund request couldn't be processed."))
+
+        # log the refund in the payment and invoice's chatter
+        message = refund_tx._get_sent_message()
+        self.payment_id.message_post(body=message)
+        self._log_message_on_linked_documents(message)

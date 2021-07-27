@@ -184,14 +184,14 @@ class PaymentTransaction(models.Model):
                 "created token with id %s for partner with id %s", token.id, self.partner_id.id
             )
 
-    def _send_refund_request(self):
+    def _send_refund_request(self, refund_amount=None):
         """ Override of payment to send a refund request to Authorize.
 
         Note: self.ensure_one()
 
         :return: None
         """
-        super()._send_refund_request()
+        super()._send_refund_request(refund_amount)
         if self.provider != 'authorize':
             return
 

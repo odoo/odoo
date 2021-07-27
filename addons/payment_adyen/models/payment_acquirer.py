@@ -31,6 +31,9 @@ class PaymentAcquirer(models.Model):
     adyen_checkout_api_url = fields.Char(
         string="Checkout API URL", help="The base URL for the Checkout API endpoints",
         required_if_provider='adyen')
+    adyen_payment_api_url = fields.Char(
+        string="Payment API URL", help="The base URL for the Payment API endpoints",
+        required_if_provider='adyen')
     adyen_recurring_api_url = fields.Char(
         string="Recurring API URL", help="The base URL for the Recurring API endpoints",
         required_if_provider='adyen')
@@ -54,7 +57,8 @@ class PaymentAcquirer(models.Model):
         :param dict values: The create or write values
         :return: None
         """
-        for field_name in ('adyen_checkout_api_url', 'adyen_recurring_api_url'):
+        for field_name in ('adyen_checkout_api_url', 'adyen_recurring_api_url',
+                           'adyen_payment_api_url'):
             if values.get(field_name):  # Test the value in case we're duplicating an acquirer
                 values[field_name] = re.sub(r'[vV]\d+(/.*)?', '', values[field_name])
 

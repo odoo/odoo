@@ -11,8 +11,8 @@ from dateutil import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import consteq, ustr
-from odoo.tools.misc import formatLang, hmac as hmac_tool
+from odoo.tools import consteq, format_amount, ustr
+from odoo.tools.misc import hmac as hmac_tool
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -68,7 +68,8 @@ class PaymentTransaction(models.Model):
                    ('online_direct', "Online direct payment"),
                    ('online_token', "Online payment by token"),
                    ('validation', "Validation of the payment method"),
-                   ('offline', "Offline payment by token")],
+                   ('offline', "Offline payment by token"),
+                   ('refund', "Refund")],
         readonly=True)
     payment_id = fields.Many2one(string="Payment", comodel_name='account.payment', readonly=True)
     invoice_ids = fields.Many2many(
@@ -76,6 +77,18 @@ class PaymentTransaction(models.Model):
         column1='transaction_id', column2='invoice_id', readonly=True, copy=False,
         domain=[('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))])
     invoices_count = fields.Integer(string="Invoices Count", compute='_compute_invoices_count')
+    source_transaction_id = fields.Many2one(
+        string="Source Transaction",
+        comodel_name='payment.transaction',
+        help="The source transaction of related refund transactions",
+        readonly=True)
+    refund_transaction_ids = fields.One2many(
+        string="Refund Transactions",
+        comodel_name='payment.transaction',
+        inverse_name='source_transaction_id',
+        domain=[('operation', '=', 'refund')],
+        readonly=True)
+    refunds_count = fields.Integer(string="Refunds Count", compute='_compute_refunds_count')
 
     # Fields used for user redirection & payment post-processing
     is_post_processed = fields.Boolean(
@@ -133,6 +146,16 @@ class PaymentTransaction(models.Model):
         tx_data = dict(self.env.cr.fetchall())  # {id: count}
         for tx in self:
             tx.invoices_count = tx_data.get(tx.id, 0)
+
+    def _compute_refunds_count(self):
+        rg_data = self.env['payment.transaction'].read_group(
+            [('source_transaction_id', 'in', self.ids), ('operation', '=', 'refund')],
+            ['count:count_distinct(id)', 'source_transaction_id'],
+            ['source_transaction_id']
+        )
+        data = {x['source_transaction_id'][0]: x['source_transaction_id_count'] for x in rg_data}
+        for record in self:
+            record.refunds_count = data.get(record.id, 0)
 
     #=== CONSTRAINT METHODS ===#
 
@@ -248,6 +271,15 @@ class PaymentTransaction(models.Model):
             action['domain'] = [('id', 'in', invoice_ids)]
         return action
 
+    def action_view_refunds(self):
+        return {
+            'name': _('Refund'),
+            'view_mode': 'tree,form',
+            'res_model': 'payment.transaction',
+            'type': 'ir.actions.act_window',
+            'domain': [('source_transaction_id', '=', self.id)],
+        }
+
     def action_capture(self):
         """ Check the state of the transactions and request their capture. """
         if any(tx.state != 'authorized' for tx in self):
@@ -263,6 +295,14 @@ class PaymentTransaction(models.Model):
 
         for tx in self:
             tx._send_void_request()
+
+    def action_refund(self, refund_amount=None):
+        """ Check the state of the transaction and request their refund. """
+        if any(tx.state != 'done' for tx in self):
+            raise ValidationError(_("Only confirmed transactions can be refunded."))
+
+        for tx in self:
+            tx._send_refund_request(refund_amount)
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
@@ -378,7 +418,7 @@ class PaymentTransaction(models.Model):
                                     of the callback model
         :param str callback_method: The name of the callback method
         :return: The callback hash
-        :retype: str
+        :rtype: str
         """
         if callback_model_id and callback_res_id and callback_method:
             model_name = self.env['ir.model'].sudo().browse(callback_model_id).model
@@ -386,6 +426,28 @@ class PaymentTransaction(models.Model):
             callback_hash = hmac_tool(self.env(su=True), 'generate_callback_hash', token)
             return callback_hash
         return None
+
+    def _create_refund_transaction(self, refund_amount=None, **custom_create_values):
+        """ Create a new transaction with operation 'refund' and link it to the current transaction.
+
+        :param float refund_amount: The strictly positive amount to refund, in the same currency as
+                                    the source transaction
+        :return: The refund transaction
+        :rtype: recordset of `payment.transaction`
+        """
+        self.ensure_one
+
+        return self.create({
+            'acquirer_id': self.acquirer_id.id,
+            'reference': self._compute_reference(self.provider, prefix=f'R-{self.reference}'),
+            'acquirer_reference': self.acquirer_reference,
+            'amount': -(refund_amount or self.amount),
+            'currency_id': self.currency_id.id,
+            'operation': 'refund',
+            'source_transaction_id': self.id,
+            'partner_id': self.partner_id.id,
+            **custom_create_values,
+        })
 
     def _get_processing_values(self):
         """ Return a dict of values used to process the transaction.
@@ -479,6 +541,42 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         self._log_sent_message()
 
+    def _send_refund_request(self, refund_amount=None):
+        """ Request the provider of the acquirer handling the transaction to refund it.
+
+        For an acquirer to support tokenization, it must override this method and request a refund
+        to its provider *if the validation amount is not null*.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        self.ensure_one()
+
+    def _send_capture_request(self):
+        """ Request the provider of the acquirer handling the transaction to capture it.
+
+        For an acquirer to support authorization, it must override this method and request a capture
+        to its provider.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        self.ensure_one()
+
+    def _send_void_request(self):
+        """ Request the provider of the acquirer handling the transaction to void it.
+
+        For an acquirer to support authorization, it must override this method and request the
+        transaction to be voided to its provider.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        self.ensure_one()
+
     @api.model
     def _handle_feedback_data(self, provider, data):
         """ Match the transaction with the feedback data, update its state and return it.
@@ -491,6 +589,8 @@ class PaymentTransaction(models.Model):
         tx = self._get_tx_from_feedback_data(provider, data)
         tx._process_feedback_data(data)
         tx._execute_callback()
+        if tx.operation == 'refund':
+            tx._cron_finalize_post_processing()
         return tx
 
     @api.model
@@ -674,42 +774,6 @@ class PaymentTransaction(models.Model):
             success = getattr(record, method)(tx)  # Execute the callback
             tx.callback_is_done = success or success is None  # Missing returns are successful
 
-    def _send_refund_request(self):
-        """ Request the provider of the acquirer handling the transaction to refund it.
-
-        For an acquirer to support tokenization, it must override this method and request a refund
-        to its provider *if the validation amount is not null*.
-
-        Note: self.ensure_one()
-
-        :return: None
-        """
-        self.ensure_one()
-
-    def _send_capture_request(self):
-        """ Request the provider of the acquirer handling the transaction to capture it.
-
-        For an acquirer to support authorization, it must override this method and request a capture
-        to its provider.
-
-        Note: self.ensure_one()
-
-        :return: None
-        """
-        self.ensure_one()
-
-    def _send_void_request(self):
-        """ Request the provider of the acquirer handling the transaction to void it.
-
-        For an acquirer to support authorization, it must override this method and request the
-        transaction to be voided to its provider.
-
-        Note: self.ensure_one()
-
-        :return: None
-        """
-        self.ensure_one()
-
     #=== BUSINESS METHODS - POST-PROCESSING ===#
 
     def _get_post_processing_values(self):
@@ -827,7 +891,7 @@ class PaymentTransaction(models.Model):
         payment_method_line = self.acquirer_id.journal_id.inbound_payment_method_line_ids\
             .filtered(lambda l: l.code == self.provider)
         payment_values = {
-            'amount': self.amount,
+            'amount': abs(self.amount),  # A tx may have a negative amount, but a payment must >= 0
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.commercial_partner_id.id,
@@ -913,6 +977,12 @@ class PaymentTransaction(models.Model):
                 "A transaction with reference %(ref)s has been initiated (%(acq_name)s).",
                 ref=self.reference, acq_name=self.acquirer_id.name
             )
+        elif self.operation == 'refund':
+            formatted_amount = format_amount(self.env, -self.amount, self.currency_id)
+            message = _(
+                "A refund request of %s has been sent. The payment will be created soon. Refund "
+                "transaction reference: %s.", formatted_amount, self.reference
+            )
         else:  # 'online_token'
             message = _(
                 "A transaction with reference %(ref)s has been initiated using the payment method "
@@ -928,7 +998,7 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-        formatted_amount = formatLang(self.env, self.amount, currency_obj=self.currency_id)
+        formatted_amount = format_amount(self.env, self.amount, self.currency_id)
         if self.state == 'pending':
             message = _(
                 "The transaction with reference %(ref)s for %(amount)s is pending (%(acq_name)s).",

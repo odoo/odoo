@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_refund_wizard_view_form" model="ir.ui.view">
+        <field name="name">payment.refund.wizard.form</field>
+        <field name="model">payment.refund.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Refund">
+                <group>
+                    <field name="payment_id" invisible="1"/>
+                    <field name="transaction_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="type_refund_supported" invisible="1"/>
+                    <field name="payment_amount"/>
+                    <field name="refunded_amount"/>
+                    <field name="available_amount_for_refund"/>
+                    <field name="refund_amount"
+                           attrs="{'readonly': [('type_refund_supported', '=', 'full')]}"/>
+                </group>
+                <footer>
+                    <button type="object" name="action_refund" string="Refund" class="btn-primary"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

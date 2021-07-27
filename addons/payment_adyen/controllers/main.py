@@ -247,6 +247,7 @@ class AdyenController(http.Controller):
         :rtype: str
         """
         data = json.loads(request.httprequest.data)
+        _logger.info("Adyen webhook: %s", data)
         for notification_item in data['notificationItems']:
             notification_data = notification_item['NotificationRequestItem']
 
@@ -271,6 +272,8 @@ class AdyenController(http.Controller):
                 notification_data['resultCode'] = 'Authorised'
             elif event_code == 'CANCELLATION':
                 notification_data['resultCode'] = 'Cancelled'
+            elif event_code == 'REFUND':
+                notification_data['resultCode'] = 'Authorised'
             else:
                 continue  # Don't handle unsupported event codes
 

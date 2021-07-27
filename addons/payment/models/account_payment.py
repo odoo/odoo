@@ -15,6 +15,7 @@ class AccountPayment(models.Model):
             ('id', 'in', suitable_payment_token_ids),
         ]""",
         help="Note that only tokens from acquirers allowing to capture the amount are available.")
+    available_amount_for_refund = fields.Monetary(compute='_compute_available_amount_for_refund')
 
     # == Display purpose fields ==
     suitable_payment_token_ids = fields.Many2many(
@@ -25,6 +26,34 @@ class AccountPayment(models.Model):
         compute='_compute_use_electronic_payment_method',
         help='Technical field used to hide or show the payment_token_id if needed.'
     )
+    # == Fields used for traceability ==
+    source_payment_id = fields.Many2one(
+        string="Source Payment",
+        comodel_name='account.payment',
+        help="The source payment of related refund payments",
+        related='payment_transaction_id.source_transaction_id.payment_id',
+        readonly=True,
+        store=True)  # needed for the groupby in the `_compute_refunds_count`
+    refund_payment_ids = fields.One2many(
+        string="Refund Payments",
+        comodel_name='account.payment',
+        inverse_name='source_payment_id',
+        readonly=True)
+    refunds_count = fields.Integer(string="Refunds Count", compute='_compute_refunds_count')
+
+    def _compute_available_amount_for_refund(self):
+        for payment in self:
+            if payment.payment_transaction_id.sudo().acquirer_id.type_refund_supported:
+                refund_txs = payment.env['payment.transaction'].search([
+                    ('source_transaction_id', '=', payment.payment_transaction_id.id),
+                    ('operation', '=', 'refund'),
+                    ('state', 'in', ['draft', 'pending', 'authorized', 'done'])
+                ])
+                refunded_amount = abs(sum(refund_txs.mapped('amount')))
+                payment.available_amount_for_refund = payment.payment_transaction_id.amount - \
+                    refunded_amount
+            else:
+                payment.available_amount_for_refund = 0
 
     @api.depends('payment_method_line_id')
     def _compute_suitable_payment_token_ids(self):
@@ -52,6 +81,16 @@ class AccountPayment(models.Model):
             # These codes are comprised of 'electronic' and the providers of each payment acquirer.
             codes = [key for key in dict(self.env['payment.acquirer']._fields['provider']._description_selection(self.env))]
             payment.use_electronic_payment_method = payment.payment_method_code in codes
+
+    def _compute_refunds_count(self):
+        rg_data = self.env['account.payment'].read_group(
+            [('source_payment_id', 'in', self.ids), ('payment_transaction_id.operation', '=', 'refund')],
+            ['count:count_distinct(id)', 'source_payment_id'],
+            ['source_payment_id']
+        )
+        data = {x['source_payment_id'][0]: x['source_payment_id_count'] for x in rg_data}
+        for record in self:
+            record.refunds_count = data.get(record.id, 0)
 
     @api.onchange('partner_id', 'payment_method_line_id', 'journal_id')
     def _onchange_set_payment_token_id(self):
@@ -137,3 +176,22 @@ class AccountPayment(models.Model):
         payments_tx_not_done.action_cancel()
 
         return res
+
+    def action_view_refunds(self):
+        return {
+            'name': _('Refund'),
+            'view_mode': 'tree,form',
+            'res_model': 'account.payment',
+            'type': 'ir.actions.act_window',
+            'domain': [('source_payment_id', '=', self.id)],
+        }
+
+    def action_refund_wizard(self):
+        view = {
+            'name': _('Refund'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'payment.refund.wizard',
+            'target': 'new',
+        }
+        return view
