@@ -604,6 +604,7 @@ class MrpProduction(models.Model):
 
     @api.onchange('date_planned_start', 'product_id')
     def _onchange_date_planned_start(self):
+<<<<<<< HEAD
         if self.date_planned_start and not self.is_planned:
             date_planned_finished = self.date_planned_start + relativedelta(days=self.product_id.produce_delay)
             date_planned_finished = date_planned_finished + relativedelta(days=self.company_id.manufacturing_lead)
@@ -612,6 +613,14 @@ class MrpProduction(models.Model):
             self.date_planned_finished = date_planned_finished
             self.move_raw_ids = [(1, m.id, {'date': self.date_planned_start}) for m in self.move_raw_ids]
             self.move_finished_ids = [(1, m.id, {'date': date_planned_finished}) for m in self.move_finished_ids]
+=======
+        self.move_raw_ids.update({
+            'date': self.date_planned_start,
+            'date_expected': self.date_planned_start,
+        })
+        if self.date_planned_start and not self.routing_id:
+            self.date_planned_finished = self.date_planned_start + datetime.timedelta(hours=1)
+>>>>>>> 28cd216281d... temp
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
     def _onchange_move_raw(self):
