@@ -73,7 +73,6 @@ class IrUiMenu(models.Model):
             raise ValidationError(_('Error! You cannot create recursive menus.'))
 
     @api.model
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'debug')
     def _visible_menu_ids(self, debug=False):
         """ Return the ids of the menu items visible to the user. """
         # retrieve all menus, and determine which ones are visible
@@ -114,11 +113,21 @@ class IrUiMenu(models.Model):
         for action in action_menus.mapped('action'):
             prefetch_ids[action._name].append(action.id)
 
+        all_models = []
         for menu in action_menus:
             action = menu.action
             action = action.with_prefetch(prefetch_ids[action._name])
             model_name = action._name in MODEL_BY_TYPE and action[MODEL_BY_TYPE[action._name]]
-            if not model_name or access.check(model_name, 'read', False):
+            if model_name:
+                all_models.append(model_name)
+
+        check_multi = access.check_multi(all_models, 'read')
+
+        for menu in action_menus:
+            action = menu.action
+            action = action.with_prefetch(prefetch_ids[action._name])
+            model_name = action._name in MODEL_BY_TYPE and action[MODEL_BY_TYPE[action._name]]
+            if not model_name or access.check(model_name, 'read', False, check_multi):
                 # make menu visible, and its folder ancestors, too
                 visible += menu
                 menu = menu.parent_id
