@@ -2,15 +2,15 @@
 # This file contains the translation of the following modules:
 # 	* payment
 #
-# Amir <شسی>, 2021.
+# Amir <a.soleimani@kenevist.ir>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-13 07:19+0000\n"
-"PO-Revision-Date: 2021-01-13 11:24+0330\n"
-"Last-Translator: Amir <شسی>\n"
-"Language-Team: English <kde-i18n-doc@kde.org>\n"
+"POT-Creation-Date: 2021-07-20 05:41+0000\n"
+"PO-Revision-Date: 2021-07-20 13:15+0430\n"
+"Last-Translator: Amir <a.soleimani@kenevist.ir>\n"
+"Language-Team: English <a.soleimani@kenevist.ir>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -56,7 +56,7 @@ msgid ""
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
 "<h3>لطفا پرداخت نمایید به: </h3><ul><li>بانک: %s</li><li>شماره حساب: "
-"%s</li><li>صاحب حساب: %s</li></ul>"
+"%s</li><li>دارنده حساب: %s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -69,6 +69,8 @@ msgid ""
 "<i class=\"fa fa-check text-muted\" title=\"This payment method has not been"
 " verified by our system.\" role=\"img\" aria-label=\"Not verified\"/>"
 msgstr ""
+"<i class=\"fa fa-check text-muted\" title=\"این روش پرداخت توسط سیستم ما"
+" تایید نشده است.\" role=\"img\" aria-label=\"Not verified\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -76,12 +78,15 @@ msgid ""
 "<i class=\"fa fa-check text-success\" title=\"This payment method is "
 "verified by our system.\" role=\"img\" aria-label=\"Ok\"/>"
 msgstr ""
+"<i class=\"fa fa-check text-success\" title=\"این روش پرداخت توسط سیستم ما"
+" تایید شده است.\" role=\"img\" aria-label=\"Ok\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid ""
 "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
 msgstr ""
+"<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"خانه\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -123,7 +128,8 @@ msgid ""
 "<span class=\"fa fa-arrow-right\"> How to configure your PayPal "
 "account</span>"
 msgstr ""
-"<span class=\"fa fa-arrow-right\"> چگونه حساب PayPal خود را تنظیم کنیم </span>"
+"<span class=\"fa fa-arrow-right\"> چگونه حساب پی‌پل خود را تنظیم کنیم "
+"</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -131,13 +137,21 @@ msgid "<span class=\"o_stat_text\">Credit Cards</span>"
 msgstr "<span class=\"o_stat_text\">کارت‌های اعتباری</span>"
 
 #. module: payment
+#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
+msgid ""
+"<span><i>Pending</i>... The order will be validated after the "
+"payment.</span>"
+msgstr ""
+"<span><i>در انتظار</i>... سفارش پس از عملیات پرداخت تایید می‌گردد.</span>"
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid ""
 "<span>Start selling directly without an account; an email will be sent by "
 "Paypal to create your new account and collect your payments.</span>"
 msgstr ""
-"<span>فروش مستقیم و بدون داشتن حساب را شروع کنید؛ ایمیلی توسط Paypal برای"
-" ایجاد حساب جدید و جمع‌آوری پرداخت‌های شما ارسال می‌شود.</span>"
+"<span>فروش مستقیم و بدون داشتن حساب را شروع کنید؛ ایمیلی توسط پی‌پل برای "
+"ایجاد حساب جدید و جمع‌آوری پرداخت‌های شما ارسال می‌شود.</span>"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
@@ -161,31 +175,31 @@ msgstr "تراکنش پرداخت از قبل وجود دارد."
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr ""
+msgstr "برای ایجاد یک تراکنش جدید، نیاز به توکن می‌باشد."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "A transaction %s with %s initiated using %s credit card."
-msgstr ""
+msgstr "تراکنش %s با %s با استفاده از کارت اعتباری %s آغاز شد."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "A transaction %s with %s initiated."
-msgstr ""
+msgstr "تراکنش %s با %s آغاز شد."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A transaction can't be linked to invoices having different currencies."
-msgstr ""
+msgstr "یک تراکنش را نمی‌توان به فاکتورهایی با واحدهای مختلف پیوند داد."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A transaction can't be linked to invoices having different partners."
-msgstr ""
+msgstr "یک ترکنش را نمی‌توان به فاکتورهایی که مخاطبین مختلف دارند پیوند داد."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__access_token
@@ -204,19 +218,9 @@ msgid "Account Chart Template"
 msgstr "قالب جدول حساب‌ها"
 
 #. module: payment
-#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
-msgid "Account Holder:"
-msgstr "صاحب حساب:"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__acc_number
 msgid "Account Number"
 msgstr "شماره حساب"
-
-#. module: payment
-#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
-msgid "Account Number:"
-msgstr "شماره حساب:"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_id
@@ -228,17 +232,17 @@ msgstr "درگاه "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_id
 msgid "Acquirer Account"
-msgstr ""
+msgstr "حساب درگاه"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_ref
 msgid "Acquirer Ref."
-msgstr ""
+msgstr "مرجع درگاه"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_reference
 msgid "Acquirer Reference"
-msgstr ""
+msgstr "مرجع درگاه"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__acquirer_ids
@@ -263,7 +267,7 @@ msgstr "فعال"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_active
 msgid "Add Extra Fees"
-msgstr ""
+msgstr "افزودن هزینه‌های اضافی"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -333,12 +337,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
 msgid "Authorize Mechanism Supported"
-msgstr ""
+msgstr "تایید سازوکار پشتیبانی شده"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__auth_msg
 msgid "Authorize Message"
-msgstr ""
+msgstr "پیام اجازه دادن"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
@@ -348,14 +352,14 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__authorized
 msgid "Authorized"
-msgstr ""
+msgstr "مجاز"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_bank_statement_line__authorized_transaction_ids
 #: model:ir.model.fields,field_description:payment.field_account_move__authorized_transaction_ids
 #: model:ir.model.fields,field_description:payment.field_account_payment__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr "تراکنش‌های احراز شد"
+msgstr "تراکنش‌های مجاز"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -372,11 +376,6 @@ msgstr "بانک"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "نام بانک"
-
-#. module: payment
-#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
-msgid "Bank:"
-msgstr "بانک:"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
@@ -414,7 +413,7 @@ msgstr "لغو"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__cancel_msg
 msgid "Cancel Message"
-msgstr ""
+msgstr "پیام لغو"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__cancel
@@ -426,14 +425,14 @@ msgstr "لغو شد"
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Cancelled payments"
-msgstr "لغو پرداخت"
+msgstr "پرداخت‌های لغو شده"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Cannot setup the payment"
-msgstr "نمی‌توان پرداخت را راه اندازی کرد"
+msgstr "نمی‌توان پرداخت را راه اندازی کرد."
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -444,34 +443,34 @@ msgstr "نمی‌توان پرداخت را راه اندازی کرد."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__capture_manually
 msgid "Capture Amount Manually"
-msgstr ""
+msgstr "دریافت وجه به صورت دستی"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr "دریافت انتقال وجه"
+msgstr "دریافت تراکنش"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__capture_manually
 msgid "Capture the amount from Odoo, when the delivery is completed."
-msgstr ""
+msgstr "پس از تحویل،‌ وجه را به صورت دستی دریافت کنید"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Check here"
-msgstr ""
+msgstr "برای انتخاب روش پراخت دیگر "
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_open_payment_onboarding_payment_acquirer_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr ""
+msgstr "انتخاب روش پرداخت"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Choose your default customer payment method."
-msgstr "روش پرداخت پیش‌فرض مشتری انتخاب کنید."
+msgstr "روش پرداخت پیش‌فرض مشتری خود را انتخاب کنید."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -484,7 +483,7 @@ msgstr "شهر"
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Click here to be redirected to the confirmation page."
-msgstr ""
+msgstr "برای هدایت به صفحه‌ی تایید اینجا را کلیک کنید."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -524,7 +523,7 @@ msgstr "پیکربندی"
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Confirm Deletion"
-msgstr ""
+msgstr "تایید حذف"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -534,13 +533,13 @@ msgstr "مخاطب"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_id
 msgid "Corresponding Module"
-msgstr ""
+msgstr "ماژول مربوطه"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Count Payment Token"
-msgstr ""
+msgstr "شمارش توکن‌های پرداخت"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__country_ids
@@ -561,17 +560,17 @@ msgstr "درگاه پرداخت جدید ایجاد کنید"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "Create a new payment transaction"
-msgstr ""
+msgstr "تراکنش جدید ایجاد کنید"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
 msgid "Create a payment icon"
-msgstr ""
+msgstr "ایجاد آیکون پرداخت"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.payment_token_action
 msgid "Create a saved payment data"
-msgstr ""
+msgstr "یک داده پرداخت ذخیره شده ایجاد کنید"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__create_uid
@@ -662,12 +661,12 @@ msgstr "ارز"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__provider__manual
 msgid "Custom Payment Form"
-msgstr ""
+msgstr "فرم پرداخت دلخواه"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
-msgstr "دستورالعمل‌های پرداخت سفارشی"
+msgstr "دستورالعمل‌های پرداخت دلخواه"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
@@ -693,7 +692,7 @@ msgstr "غیرفعال شده"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Dismiss"
-msgstr ""
+msgstr "رد کردن"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_chart_template__display_name
@@ -725,7 +724,7 @@ msgstr "انجام شد"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__done_msg
 msgid "Done Message"
-msgstr ""
+msgstr "پیام انجام شد"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__draft
@@ -753,12 +752,14 @@ msgstr "ایمیل"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Enable QR Codes"
-msgstr ""
+msgstr "فعال کردن کدهای QR"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__qr_code
 msgid "Enable the use of QR-codes for payments made on this provider."
 msgstr ""
+"استفاده از کد QR را برای پرداخت‌های انجام شده برای این ارائه دهنده را فعال"
+" کنید."
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
@@ -791,17 +792,18 @@ msgstr "هزینه‌ها"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_implemented
 msgid "Fees Computation Supported"
-msgstr ""
+msgstr "محاسبه هزینه‌ها پشتیبانی می شود"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
+msgstr "مبلغ هزینه‌ها. تنظیم شده توسط سیستم زیرا به درگاه پرداخت بستگی دارد"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__state_message
 msgid "Field used to store error and/or validation messages for information"
 msgstr ""
+"فیلدی که برای ذخیره پیام‌های خطا و یا اعتبار سنجی، صرف اطلاعات استفاده می‌شود"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_fixed
@@ -821,12 +823,12 @@ msgstr "فرم"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__view_template_id
 msgid "Form Button Template"
-msgstr ""
+msgstr "قالب دکمه فرم"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__type__form_save
 msgid "Form with tokenization"
-msgstr ""
+msgstr "فرم به همراه توکن‌سازی"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -834,19 +836,15 @@ msgid "From"
 msgstr "از"
 
 #. module: payment
+#: model:ir.model,name:payment.model_payment_link_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
-msgstr ""
-
-#. module: payment
-#: model:ir.model,name:payment.model_payment_link_wizard
-msgid "Generate Sales Payment Link"
-msgstr "تولید لینک پرداخت فروش"
+msgstr "ایجاد لینک پرداخت"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_invoice_order_generate_link
 msgid "Generate a Payment Link"
-msgstr "تولید یک لینک پرداخت"
+msgstr "ایجاد یک لینک پرداخت"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_search
@@ -861,27 +859,27 @@ msgstr "مسیریابی HTTP"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_processed
 msgid "Has the payment been post processed"
-msgstr ""
+msgstr "آیا پرداخت پردازش شده است؟"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
 msgid "Help Message"
-msgstr ""
+msgstr "پیام کمکی"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__display_as
 msgid "How the acquirer is displayed to the customers."
-msgstr ""
+msgstr "چگونه درگاه پرداخت به مشتری نمایش داده می‌شود"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__paypal_user_type__new_user
 msgid "I don't have a Paypal account"
-msgstr "حساب PayPal ندارم"
+msgstr "حساب پی‌پل ندارم"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__paypal_user_type__existing_user
 msgid "I have a Paypal account"
-msgstr "حساب PayPal دارم"
+msgstr "حساب پی‌پل دارم"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_chart_template__id
@@ -902,14 +900,14 @@ msgstr "شناسه"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "If not defined, the acquirer name will be used."
-msgstr ""
+msgstr "اگر مشخص نشده باشد، نام درگاه پرداخت استفاده خواهد شد."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "If the payment hasn't been confirmed you can contact us."
-msgstr ""
+msgstr "اگر پرداخت تایید نشده است، می‌تتوانید با ما تماس بگیرید"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_128
@@ -920,7 +918,7 @@ msgstr "تصویر"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__image_payment_form
 msgid "Image displayed on the payment form"
-msgstr ""
+msgstr "نصویر نمایش داده شده در فرم پرخت"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__state
@@ -930,11 +928,15 @@ msgid ""
 "             acquirer. Watch out, test and production modes require\n"
 "             different credentials."
 msgstr ""
+"در حالت تست، پرداخت غیر واقعی از طریق رابط پرداخت\n"
+" آزمایشی پردازش می‌شود. هنگام تنظیم درگاه پرداخت این \n"
+"حالت توصیه می‌شود. مراقب باشید، حالت‌های تست و تولید\n"
+" به مدارک متفاوتی نیاز دارند."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inbound_payment_method_ids
 msgid "Inbound Payment Methods"
-msgstr ""
+msgstr "روش‌های پرداخت ورودی"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ingenico
@@ -945,7 +947,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Install"
-msgstr "نصب"
+msgstr "برپاسازی"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_state
@@ -960,7 +962,7 @@ msgstr "برپاسازی شد"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
 msgid "Internal reference of the TX"
-msgstr ""
+msgstr "مرجع داخلی TX"
 
 #. module: payment
 #. openerp-web
@@ -973,13 +975,13 @@ msgstr "خطای سرور داخلی"
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "توکن نامعتبر یافت شد! توکن درگاه پرداخت %s != %s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "توکن نامعتبر یافت شد! توکن lohxf %s != %s"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
@@ -1001,7 +1003,7 @@ msgstr "سند حسابداری"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
 msgid "Journal where the successful transactions will be posted"
-msgstr "سندی که در آن تراکنش با  موفق انجام شده است، ارسال خواهد شد"
+msgstr "تفکیک سندی که در آن تراکنش‌های موفق آمیز  ارسال خواهد شد"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_acquirer_onboarding_state__just_done
@@ -1052,12 +1054,12 @@ msgstr "آخرین به‌روزرسانی در"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__save_token__ask
 msgid "Let the customer decide"
-msgstr ""
+msgstr "مشتری انتخاب کند"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__acquirer_ids
 msgid "List of Acquirers supporting this payment icon."
-msgstr ""
+msgstr "لیست درگاه‌های پرداختی که از این آیکون پرداخت پشتیبانی می‌کند."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
@@ -1091,8 +1093,10 @@ msgid ""
 " are suggested to reconcile the transaction with the batch deposit. Enable"
 " this option from the settings."
 msgstr ""
-"دستی: دریافت نقدی یا چک یا هر وسیله دیگر خارج از سیستمالکترونیک: پرداخت "
-"آنلاین توسط مشتریمرکب: ثبت چک به صورت گروهی در بانک"
+"دستی: دریافت نقدی یا چک یا هر وسیله دیگر خارج از سیستم \n"
+"الکترونیک: با درخواست تراکنش از طریق کارت ذخیره شده توسط مشتری هنگام خرید یا"
+" اشتراک آنلاین (توکن پرداخت)، به طور خودکار از طریق یک درگاه پرداخت \n"
+"مرکب: ثبت چک به صورت گروهی در بانک"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -1108,17 +1112,17 @@ msgstr "پیام"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__auth_msg
 msgid "Message displayed if payment is authorized."
-msgstr ""
+msgstr "پیام نمایشی در صورت مجاز بودن پرداخت"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
+msgstr "پیام نمایشی برای توضیح و کمک به روند پرداخت."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
-msgstr ""
+msgstr "پیام نمایشی در صورت لغو سفارش در هنگام پردازش."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__done_msg
@@ -1126,6 +1130,7 @@ msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
 msgstr ""
+"پیام نمایشی در صورتی که سفارش پس از انجام مراحل پرداخت با موفقیت انجام شود."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
@@ -1133,6 +1138,7 @@ msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
 msgstr ""
+"پیام سفارشی در صورتی که سفارش پس از انجام مراحل پرداخت در حالت انتظار باشد."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -1148,7 +1154,7 @@ msgstr "روش"
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Missing partner reference when trying to create a new payment token"
-msgstr ""
+msgstr "عدم وجود مخاطب مرجع، هنگام تلاش برای ایجاد توکن پرداخت"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__name
@@ -1163,7 +1169,7 @@ msgstr "نام"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__name
 msgid "Name of the payment token"
-msgstr ""
+msgstr "نام توکن پرداخت"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__save_token__none
@@ -1177,6 +1183,8 @@ msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Acquirer menu."
 msgstr ""
+"هیچ روش پرداخت دستی برای این شرکت یافت نشد. لطفا یکی از منوی درگاه پرداخت"
+" ایجاد کنید."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1220,7 +1228,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_to_buy
 msgid "Odoo Enterprise Module"
-msgstr "ماژول سازمانی اودو"
+msgstr "ماژول سازمانی کنویست"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_odoo_by_adyen
@@ -1471,11 +1479,6 @@ msgid "Please configure a payment acquirer."
 msgstr ""
 
 #. module: payment
-#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
-msgid "Please make a payment to:"
-msgstr "لطفا پرداخت کنید به:"
-
-#. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
@@ -1649,7 +1652,7 @@ msgstr "سرور به سرور"
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Server error"
-msgstr "خطای سرور"
+msgstr ""
 
 #. module: payment
 #. openerp-web
@@ -1821,8 +1824,8 @@ msgid ""
 "This partner has no email, which may cause issues with some payment "
 "acquirers. Setting an email for this partner is advised."
 msgstr ""
-"این مخاطب فاقد ایمیل است که ممکن است در برخی از درگاه‌های پرداخت دچار مشکل"
-" شود. تنظیم یک ایمیل برای این مخاطب توصیه می‌شود."
+"این مخاطب فاقد ایمیل است که ممکن است در برخی از درگاه‌های پرداخت دچار مشکل "
+"شود. تنظیم یک ایمیل برای این مخاطب توصیه می‌شود."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
@@ -1944,7 +1947,7 @@ msgstr "در انتظار تایید پرداخت..."
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Warning!"
-msgstr "هشدار!"
+msgstr ""
 
 #. module: payment
 #. openerp-web
@@ -2167,4 +2170,4 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "to choose another payment method."
-msgstr ""
+msgstr "اینجا را کلیک کنید."
