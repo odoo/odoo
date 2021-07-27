@@ -51,7 +51,7 @@ class MailingTrace(models.Model):
     _rec_name = 'id'
     _order = 'create_date DESC'
 
-    trace_type = fields.Selection([('mail', 'Mail')], string='Type', default='mail', required=True)
+    trace_type = fields.Selection([('mail', 'Email')], string='Type', default='mail', required=True)
     display_name = fields.Char(compute='_compute_display_name')
     # mail data
     mail_mail_id = fields.Many2one('mail.mail', string='Mail', index=True)

@@ -442,10 +442,14 @@ class MassMailing(models.Model):
 
     def _action_view_traces_filtered(self, view_filter):
         action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_trace_action")
-        action['name'] = _('%s Traces') % (self.name)
+        action['name'] = _('Sent Mailings')
         action['context'] = {'search_default_mass_mailing_id': self.id,}
         filter_key = 'search_default_filter_%s' % (view_filter)
         action['context'][filter_key] = True
+        action['views'] = [
+            (self.env.ref('mass_mailing.mailing_trace_view_tree_mail').id, 'tree'),
+            (self.env.ref('mass_mailing.mailing_trace_view_form').id, 'form')
+        ]
         return action
 
     def action_view_clicked(self):
