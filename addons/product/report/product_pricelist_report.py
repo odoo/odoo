@@ -4,60 +4,44 @@
 from odoo import api, models
 
 
-class report_product_pricelist(models.AbstractModel):
+class ProductPricelistReport(models.AbstractModel):
     _name = 'report.product.report_pricelist'
     _description = 'Pricelist Report'
 
     def _get_report_values(self, docids, data):
-        is_visible_title = data['is_visible_title'] and bool(data['is_visible_title']) or False
-        product_ids = [int(i) for i in data['active_ids'].split(',')]
-        pricelist_id = data['pricelist_id'] and int(data['pricelist_id']) or None
-        quantities = [int(i) for i in data['quantities'].split(',')] or [1]
-        return self._get_report_data(data['active_model'], product_ids, is_visible_title, pricelist_id, quantities, 'pdf')
+        return self._get_report_data(data, 'pdf')
 
     @api.model
-    def get_html(self):
-        render_values = self._get_report_data(
-            self.env.context.get('active_model'),
-            self.env.context.get('active_ids'),
-            self.env.context.get('is_visible_title'),
-            self.env.context.get('pricelist_id'),
-            self.env.context.get('quantities') or [1]
-        )
+    def get_html(self, data):
+        render_values = self._get_report_data(data, 'html')
         return self.env.ref('product.report_pricelist_page')._render(render_values)
 
-    def _get_report_data(self, active_model, active_ids, is_visible_title, pricelist_id, quantities, report_type='html'):
-        products = []
-        is_product_tmpl = active_model == 'product.template'
+    def _get_report_data(self, data, report_type='html'):
+        quantities = data['quantities'] or [1]
 
-        ProductClass = self.env['product.template'] if is_product_tmpl else self.env['product.product']
-        ProductPricelist = self.env['product.pricelist']
-        pricelist = ProductPricelist.browse(pricelist_id)
+        pricelist_id = data['pricelist_id'] and int(data['pricelist_id']) or None
+        pricelist = self.env['product.pricelist'].browse(pricelist_id).exists()
         if not pricelist:
-            pricelist = ProductPricelist.search([], limit=1)
+            pricelist = self.env['product.pricelist'].search([], limit=1)
 
-        if is_product_tmpl:
-            records = ProductClass.browse(active_ids) if active_ids else ProductClass.search([('sale_ok', '=', True)])
-            for product in records:
-                product_data = self._get_product_data(is_product_tmpl, product, pricelist, quantities)
-                variants = []
-                if len(product.product_variant_ids) > 1:
-                    for variant in product.product_variant_ids:
-                        variants.append(self._get_product_data(False, variant, pricelist, quantities))
-                product_data['variants'] = variants
-                products.append(product_data)
-        else:
-            records = ProductClass.browse(active_ids) if active_ids else ProductClass.search([('sale_ok', '=', True)])
-            for product in records:
-                products.append(self._get_product_data(is_product_tmpl, product, pricelist, quantities))
+        active_model = data['active_model']
+        active_ids = data.get('active_ids') or []
+        is_product_tmpl = active_model == 'product.template'
+        ProductClass = self.env[active_model]
+
+        products = ProductClass.browse(active_ids) if active_ids else ProductClass.search([('sale_ok', '=', True)])
+        products_data = [
+            self._get_product_data(is_product_tmpl, product, pricelist, quantities)
+            for product in products
+        ]
 
         return {
-            'pricelist': pricelist,
-            'products': products,
-            'quantities': quantities,
-            'is_product_tmpl': is_product_tmpl,
             'is_html_type': report_type == 'html',
-            'is_visible_title': is_visible_title,
+            'is_product_tmpl': is_product_tmpl,
+            'is_visible_title': bool(data['is_visible_title']) or False,
+            'pricelist': pricelist,
+            'products': products_data,
+            'quantities': quantities,
         }
 
     def _get_product_data(self, is_product_tmpl, product, pricelist, quantities):
@@ -69,4 +53,11 @@ class report_product_pricelist(models.AbstractModel):
         }
         for qty in quantities:
             data['price'][qty] = pricelist.get_product_price(product, qty, False)
+
+        if is_product_tmpl and product.product_variant_count > 1:
+            data['variants'] = [
+                self._get_product_data(False, variant, pricelist, quantities)
+                for variant in product.product_variant_ids
+            ]
+
         return data

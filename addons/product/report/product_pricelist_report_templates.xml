@@ -53,7 +53,7 @@
                                         </td>
                                     </t>
                                 </tr>
-                                <t t-if="is_product_tmpl">
+                                <t t-if="is_product_tmpl and 'variants' in product">
                                     <tr t-foreach="product['variants']" t-as="variant">
                                         <td>
                                             <a t-if="is_html_type" href="#" class="o_action ml-4" data-model="product.product" t-att-data-res-id="variant['id']">
