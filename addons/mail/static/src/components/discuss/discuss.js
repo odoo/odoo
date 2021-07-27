@@ -9,6 +9,7 @@ import { DiscussSidebar } from '@mail/components/discuss_sidebar/discuss_sidebar
 import { MobileMessagingNavbar } from '@mail/components/mobile_messaging_navbar/mobile_messaging_navbar';
 import { NotificationList } from '@mail/components/notification_list/notification_list';
 import { ThreadView } from '@mail/components/thread_view/thread_view';
+import { link, unlink } from '@mail/model/model_field_command';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -30,7 +31,7 @@ export class Discuss extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore((...args) => this._useStoreSelector(...args), {});
+        useStore((...args) => this._useStoreSelector(...args));
         this._updateLocalStoreProps();
         /**
          * Reference of the composer. Useful to focus it.
@@ -56,7 +57,6 @@ export class Discuss extends Component {
     }
 
     patched() {
-        this.trigger('o-update-control-panel');
         if (this.discuss.thread) {
             this.trigger('o-push-state-action-manager');
         }
@@ -176,16 +176,11 @@ export class Discuss extends Component {
             isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
             isMessagingInitialized: this.env.isMessagingInitialized(),
             replyingToMessage,
-            starred: this.env.messaging.starred, // for widget
             thread,
             threadCache: threadView && threadView.threadCache,
-            threadChannelType: thread && thread.channel_type, // for widget
-            threadDisplayName: thread && thread.displayName, // for widget
             threadCounter: thread && thread.counter,
             threadModel: thread && thread.model,
-            threadPublic: thread && thread.public, // for widget
             threadView,
-            threadViewMessagesLength: threadView && threadView.messages.length, // for widget
         };
     }
 
@@ -267,14 +262,21 @@ export class Discuss extends Component {
         }
         this.discuss.clearReplyingToMessage();
         this.discuss.update({ activeMobileNavbarTabId: ev.detail.tabId });
-    }
-
-    /**
-     * @private
-     * @param {CustomEvent} ev
-     */
-    _onThreadRendered(ev) {
-        this.trigger('o-update-control-panel');
+        if (
+            this.discuss.activeMobileNavbarTabId === 'mailbox' &&
+            (!this.discuss.thread || this.discuss.thread.model !== 'mailbox')
+        ) {
+            this.discuss.update({ thread: link(this.env.messaging.inbox) });
+        }
+        if (this.discuss.activeMobileNavbarTabId !== 'mailbox') {
+            this.discuss.update({ thread: unlink() });
+        }
+        if (this.discuss.activeMobileNavbarTabId !== 'chat') {
+            this.discuss.update({ isAddingChat: false });
+        }
+        if (this.discuss.activeMobileNavbarTabId !== 'channel') {
+            this.discuss.update({ isAddingChannel: false });
+        }
     }
 
 }

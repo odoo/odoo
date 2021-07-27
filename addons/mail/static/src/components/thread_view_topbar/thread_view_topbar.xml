@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadViewTopbar" owl="1">
+        <div class="o_ThreadViewTopbar d-flex flex-shrink-0 w-100 px-3">
+            <t t-if="threadViewTopBar">
+                <t t-if="threadViewTopBar.thread">
+                    <ThreadIcon class="o_ThreadViewTopbar_threadIcon mr-2 align-self-center" threadLocalId="threadViewTopBar.thread.localId"/>
+                </t>
+                <div class="o_ThreadViewTopbar_title d-flex flex-grow-1 align-self-center align-items-baseline">
+                    <t t-if="threadViewTopBar.thread">
+                        <t t-if="!threadViewTopBar.isEditingThreadName">
+                            <div class="o_ThreadViewTopbar_threadName flex-shrink-0 mw-75 px-1 text-truncate lead font-weight-bold" t-att-title="threadViewTopBar.thread.displayName" t-on-click="threadViewTopBar.onClickTopbarThreadName" t-on-mouseenter="threadViewTopBar.onMouseEnterTopBarThreadName" t-on-mouseleave="threadViewTopBar.onMouseLeaveTopBarThreadName" t-att-class="{ 'o-isMouseOverThreadName': threadViewTopBar.isMouseOverThreadName }">
+                                <t t-esc="threadViewTopBar.thread.displayName"/>
+                            </div>
+                        </t>
+                        <t t-if="threadViewTopBar.isEditingThreadName">
+                            <input class="o_ThreadViewTopbar_threadNameInput lead font-weight-bold" type="text" t-att-value="threadViewTopBar.pendingThreadName" t-on-input="threadViewTopBar.onInputThreadNameInput" t-on-keydown="threadViewTopBar.onKeyDownThreadNameInput" t-ref="threadNameInput"/>
+                        </t>
+                    </t>
+                    <t t-if="!threadViewTopBar.thread">
+                        <div class="o_ThreadViewTopbar_threadName flex-shrink-0 mw-75 px-1 text-truncate lead font-weight-bold">
+                            Discuss
+                        </div>
+                    </t>
+                    <t t-if="threadViewTopBar.thread and threadViewTopBar.thread.description">
+                        <div class="o_ThreadViewTopbar_threadDescriptionSeparator flex-shrink-0 mx-2"/>
+                        <div class="o_ThreadViewTopbar_threadDescription text-truncate" t-att-title="threadViewTopBar.thread.description">
+                            <t t-esc="threadViewTopBar.thread.description"/>
+                        </div>
+                    </t>
+                </div>
+                <div class="o_ThreadViewTopbar_actions d-flex align-items-center">
+                    <t t-if="threadViewTopBar.thread and threadViewTopBar.thread === env.messaging.inbox">
+                        <button class="o_ThreadViewTopbar_markAllReadButton btn btn-secondary" t-att-disabled="threadViewTopBar.threadView.messages.length === 0" t-on-click="threadViewTopBar.onClickInboxMarkAllAsRead">Mark all read</button>
+                    </t>
+                    <t t-if="threadViewTopBar.thread and threadViewTopBar.thread === env.messaging.starred">
+                        <button class="o_ThreadViewTopbar_unstarAllButton btn btn-secondary" t-att-disabled="threadViewTopBar.threadView.messages.length === 0" t-on-click="threadViewTopBar.onClickUnstarAll">Unstar all</button>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

@@ -200,7 +200,7 @@ export class DiscussSidebarItem extends Component {
      */
     _onValidateEditableText(ev) {
         ev.stopPropagation();
-        this.discuss.renameThread(this.thread, ev.detail.newName);
+        this.discuss.onValidateEditableText(this.thread, ev.detail.newName);
     }
 
 }

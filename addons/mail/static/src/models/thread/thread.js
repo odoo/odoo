@@ -140,6 +140,9 @@ function factory(dependencies) {
          */
         static convertData(data) {
             const data2 = {};
+            if ('description' in data) {
+                data2.description = data.description;
+            }
             if ('model' in data) {
                 data2.model = data.model;
             }
@@ -979,22 +982,34 @@ function factory(dependencies) {
         }
 
         /**
-         * Rename the given thread with provided new name.
+         * Renames this thread to the given new name.
+         * Only makes sense for channels.
          *
          * @param {string} newName
          */
         async rename(newName) {
-            if (this.channel_type === 'chat') {
-                await this.async(() => this.env.services.rpc({
-                    model: 'mail.channel',
-                    method: 'channel_set_custom_name',
-                    args: [this.id],
-                    kwargs: {
-                        name: newName,
-                    },
-                }));
-            }
-            this.update({ custom_channel_name: newName });
+            return this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'channel_rename',
+                args: [this.id],
+                kwargs: { name: newName },
+            });
+        }
+
+        /**
+         * Sets the custom name of this thread for the current user to the given
+         * new name.
+         * Only makes sense for channels.
+         *
+         * @param {string} newName
+         */
+        async setCustomName(newName) {
+            return this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'channel_set_custom_name',
+                args: [this.id],
+                kwargs: { name: newName },
+            });
         }
 
         /**
@@ -1158,6 +1173,17 @@ function factory(dependencies) {
                 return false;
             }
             return ['chat', 'livechat'].includes(this.channel_type);
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsChannelRenamable() {
+            return (
+                this.model === 'mail.channel' &&
+                ['chat', 'channel'].includes(this.channel_type)
+            );
         }
 
         /**
@@ -1733,6 +1759,10 @@ function factory(dependencies) {
         }),
         creator: many2one('mail.user'),
         custom_channel_name: attr(),
+        /**
+         * States the description of this thread. Only applies to channels.
+         */
+        description: attr(),
         displayName: attr({
             compute: '_computeDisplayName',
             dependencies: [
@@ -1780,6 +1810,14 @@ function factory(dependencies) {
         }),
         id: attr({
             required: true,
+        }),
+        /**
+         * Determines whether this thread can be renamed.
+         * Only makes sense for channels.
+         */
+        isChannelRenamable: attr({
+            compute: '_computeIsChannelRenamable',
+            dependencies: ['channel_type', 'model'],
         }),
         /**
          * States whether this thread is a `mail.channel` qualified as chat.
