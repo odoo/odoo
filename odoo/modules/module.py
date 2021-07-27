@@ -330,7 +330,6 @@ def load_information_from_description_file(module, mod_path=None):
             'description': '',
             'icon': get_module_icon(module),
             'installable': True,
-            'license': 'LGPL-3',
             'post_load': None,
             'version': '1.0',
             'web': False,
@@ -355,6 +354,9 @@ def load_information_from_description_file(module, mod_path=None):
                 with tools.file_open(readme_path[0]) as fd:
                     info['description'] = fd.read()
 
+        if not info.get('license'):
+            info['license'] = 'LGPL-3'
+            _logger.warning("Missing `license` key in manifest for '%s', defaulting to LGPL-3", module)
 
         # auto_install is either `False` (by default) in which case the module
         # is opt-in, either a list of dependencies in which case the module is
