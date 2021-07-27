@@ -113,7 +113,7 @@ odoo.define('website.s_website_form', function (require) {
                     if (!$field.val() && _.has(dataForValues, field) && dataForValues[field]) {
                         $field.val(dataForValues[field]);
                     } else if (!$field.val() && $field.data('fill-with')) {
-                        $field.val(self.preFillValues[$field.data('fill-with')]);
+                        $field.val(self.preFillValues[$field.data('fill-with')] || '');
                     }
                     $field.data('website_form_original_default_value', $field.val());
                 });
