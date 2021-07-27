@@ -50,7 +50,7 @@
     display: flex;
     justify-content: center;
     width: map-get($sizes, 100);
-    padding: map-get($spacers, 0) map-get($spacers, 3);
+    padding: map-get($spacers, 3);
 }
 
 .o_Discuss_mobileAddItemHeaderInput {
@@ -88,6 +88,7 @@
 
 .o_Discuss_thread {
     flex: 1 1 auto;
+    min-width: 0;
 
     &.o-mobile {
         width: map-get($sizes, 100);
@@ -98,6 +99,7 @@
     width: map-get($sizes, 100);
     flex: 1 1 auto;
 }
+
 // ------------------------------------------------------------------
 // Style
 // ------------------------------------------------------------------

@@ -153,6 +153,33 @@ function factory(dependencies) {
         }
 
         /**
+         * Handles click on the mobile "new chat" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickMobileNewChatButton(ev) {
+            this.update({ isAddingChat: true });
+        }
+
+        /**
+         * Handles click on the mobile "new channel" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickMobileNewChannelButton(ev) {
+            this.update({ isAddingChannel: true });
+        }
+
+        /**
+         * @param {mail.thread} thread
+         * @param {string} newName
+         */
+        onValidateEditableText(thread, newName) {
+            this.update({ renamingThreads: unlink(thread) });
+            thread.setCustomName(newName);
+        }
+
+        /**
          * Open thread from init active id. `initActiveId` is used to refer to
          * a thread that we may not have full data yet, such as when messaging
          * is not yet initialized.
@@ -195,15 +222,6 @@ function factory(dependencies) {
                     },
                 });
             }
-        }
-
-        /**
-         * @param {mail.thread} thread
-         * @param {string} newName
-         */
-        async renameThread(thread, newName) {
-            await this.async(() => thread.rename(newName));
-            this.update({ renamingThreads: unlink(thread) });
         }
 
         /**
@@ -360,6 +378,7 @@ function factory(dependencies) {
         _computeThreadViewer() {
             const threadViewerData = {
                 hasThreadView: this.hasThreadView,
+                hasTopbar: true,
                 selectedMessage: this.replyingToMessage ? link(this.replyingToMessage) : unlink(),
                 thread: this.thread ? link(this.thread) : unlink(),
             };

@@ -2270,8 +2270,8 @@ QUnit.test('sidebar quick search', async function (assert) {
     );
 });
 
-QUnit.test('basic control panel rendering', async function (assert) {
-    assert.expect(8);
+QUnit.test('basic top bar rendering', async function (assert) {
+    assert.expect(7);
 
     // channel expected to be found in the sidebar
     // with a random unique id and name that will be referenced in the test
@@ -2279,19 +2279,19 @@ QUnit.test('basic control panel rendering', async function (assert) {
     await this.start();
     assert.strictEqual(
         document.querySelector(`
-            .o_widget_Discuss .o_control_panel .breadcrumb
+            .o_ThreadViewTopbar_threadName
         `).textContent,
         "Inbox",
-        "display inbox in the breadcrumb"
+        "display inbox in the top bar"
     );
-    const markAllReadButton = document.querySelector(`.o_widget_Discuss_controlPanelButtonMarkAllRead`);
+    const markAllReadButton = document.querySelector(`.o_ThreadViewTopbar_markAllReadButton`);
     assert.isVisible(
         markAllReadButton,
-        "should have visible button 'Mark all read' in the control panel of inbox"
+        "should have visible button 'Mark all read' in the top bar of inbox"
     );
     assert.ok(
         markAllReadButton.disabled,
-        "should have disabled button 'Mark all read' in the control panel of inbox (no messages)"
+        "should have disabled button 'Mark all read' in the top bar of inbox (no messages)"
     );
 
     await afterNextRender(() =>
@@ -2303,19 +2303,19 @@ QUnit.test('basic control panel rendering', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector(`
-            .o_widget_Discuss .o_control_panel .breadcrumb
+            .o_ThreadViewTopbar_threadName
         `).textContent,
         "Starred",
         "display starred in the breadcrumb"
     );
-    const unstarAllButton = document.querySelector(`.o_widget_Discuss_controlPanelButtonUnstarAll`);
+    const unstarAllButton = document.querySelector(`.o_ThreadViewTopbar_unstarAllButton`);
     assert.isVisible(
         unstarAllButton,
-        "should have visible button 'Unstar all' in the control panel of starred"
+        "should have visible button 'Unstar all' in the top bar of starred"
     );
     assert.ok(
         unstarAllButton.disabled,
-        "should have disabled button 'Unstar all' in the control panel of starred (no messages)"
+        "should have disabled button 'Unstar all' in the top bar of starred (no messages)"
     );
 
     await afterNextRender(() =>
@@ -2330,15 +2330,10 @@ QUnit.test('basic control panel rendering', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector(`
-            .o_widget_Discuss .o_control_panel .breadcrumb
+            .o_ThreadViewTopbar_threadName
         `).textContent,
-        "#General",
+        "General",
         "display general in the breadcrumb"
-    );
-    const inviteButton = document.querySelector(`.o_widget_Discuss_controlPanelButtonInvite`);
-    assert.isVisible(
-        inviteButton,
-        "should have visible button 'Invite' in the control panel of channel"
     );
 });
 
@@ -2411,10 +2406,10 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
         2,
         "should have 2 messages in inbox"
     );
-    let markAllReadButton = document.querySelector(`.o_widget_Discuss_controlPanelButtonMarkAllRead`);
+    let markAllReadButton = document.querySelector(`.o_ThreadViewTopbar_markAllReadButton`);
     assert.notOk(
         markAllReadButton.disabled,
-        "should have enabled button 'Mark all read' in the control panel of inbox (has messages)"
+        "should have enabled button 'Mark all read' in the top bar of inbox (has messages)"
     );
 
     await afterNextRender(() => markAllReadButton.click());
@@ -2446,10 +2441,10 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
         0,
         "should have no message in inbox"
     );
-    markAllReadButton = document.querySelector(`.o_widget_Discuss_controlPanelButtonMarkAllRead`);
+    markAllReadButton = document.querySelector(`.o_ThreadViewTopbar_markAllReadButton`);
     assert.ok(
         markAllReadButton.disabled,
-        "should have disabled button 'Mark all read' in the control panel of inbox (no messages)"
+        "should have disabled button 'Mark all read' in the top bar of inbox (no messages)"
     );
 });
 
@@ -2483,10 +2478,10 @@ QUnit.test('starred: unstar all', async function (assert) {
         2,
         "should have 2 messages in starred"
     );
-    let unstarAllButton = document.querySelector(`.o_widget_Discuss_controlPanelButtonUnstarAll`);
+    let unstarAllButton = document.querySelector(`.o_ThreadViewTopbar_unstarAllButton`);
     assert.notOk(
         unstarAllButton.disabled,
-        "should have enabled button 'Unstar all' in the control panel of starred (has messages)"
+        "should have enabled button 'Unstar all' in the top bar starred (has messages)"
     );
 
     await afterNextRender(() => unstarAllButton.click());
@@ -2505,10 +2500,10 @@ QUnit.test('starred: unstar all', async function (assert) {
         0,
         "should have no message in starred"
     );
-    unstarAllButton = document.querySelector(`.o_widget_Discuss_controlPanelButtonUnstarAll`);
+    unstarAllButton = document.querySelector(`.o_ThreadViewTopbar_unstarAllButton`);
     assert.ok(
         unstarAllButton.disabled,
-        "should have disabled button 'Unstar all' in the control panel of starred (no messages)"
+        "should have disabled button 'Unstar all' in the top bar of starred (no messages)"
     );
 });
 
@@ -3495,7 +3490,7 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
     );
 
     await afterNextRender(() =>
-        document.querySelector('.o_widget_Discuss_controlPanelButtonMarkAllRead').click()
+        document.querySelector('.o_ThreadViewTopbar_markAllReadButton').click()
     );
     assert.ok(
         document.querySelector(`
@@ -3698,7 +3693,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
     });
 
     await afterNextRender(async () => {
-        const markAllReadButton = document.querySelector('.o_widget_Discuss_controlPanelButtonMarkAllRead');
+        const markAllReadButton = document.querySelector('.o_ThreadViewTopbar_markAllReadButton');
         markAllReadButton.click();
     });
     assert.containsNone(

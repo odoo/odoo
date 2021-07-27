@@ -84,6 +84,12 @@ function factory(dependencies) {
             default: false,
         }),
         /**
+         * Determines whether this thread viewer has a top bar.
+         */
+        hasTopbar: attr({
+            default: false,
+        }),
+        /**
          * Determines the selected `mail.message`.
          */
         selectedMessage: many2one('mail.message'),

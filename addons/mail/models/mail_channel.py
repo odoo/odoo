@@ -565,6 +565,7 @@ class Channel(models.Model):
             info = {
                 'id': channel.id,
                 'name': channel.name,
+                'description': channel.description,
                 'uuid': channel.uuid,
                 'state': 'open',
                 'is_minimized': False,
@@ -809,13 +810,16 @@ class Channel(models.Model):
             }
             self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', channel.id), data]])
 
-    @api.model
-    def channel_set_custom_name(self, channel_id, name=False):
-        domain = [('partner_id', '=', self.env.user.partner_id.id), ('channel_id.id', '=', channel_id)]
-        channel_partners = self.env['mail.channel.partner'].search(domain, limit=1)
-        channel_partners.write({
-            'custom_channel_name': name,
-        })
+    def channel_set_custom_name(self, name):
+        self.ensure_one()
+        channel_partner = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id)])
+        channel_partner.write({'custom_channel_name': name})
+        self._broadcast(self.env.user.partner_id.ids)
+
+    def channel_rename(self, name):
+        self.ensure_one()
+        self.write({'name': name})
+        self._broadcast(self.channel_partner_ids.ids)
 
     def notify_typing(self, is_typing):
         """ Broadcast the typing notification to channel members

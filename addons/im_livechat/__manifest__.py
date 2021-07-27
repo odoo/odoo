@@ -57,7 +57,6 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler.js',
             'im_livechat/static/src/models/partner/partner.js',
             'im_livechat/static/src/models/thread/thread.js',
-            'im_livechat/static/src/widgets/discuss/discuss.js',
             'im_livechat/static/src/scss/im_livechat_history.scss',
             'im_livechat/static/src/scss/im_livechat_form.scss',
         ],

@@ -4,11 +4,9 @@
     <t t-name="mail.DiscussMobileMailboxSelection" owl="1">
         <div class="o_DiscussMobileMailboxSelection">
             <t t-foreach="orderedMailboxes" t-as="mailbox" t-key="mailbox.localId">
-                <button class="o_DiscussMobileMailboxSelection_button btn"
+                <button class="o_DiscussMobileMailboxSelection_button btn btn-secondary"
                     t-att-class="{
-                        'btn-primary': discuss.thread === mailbox,
-                        'btn-secondary': discuss.thread !== mailbox,
-                        'o-active': discuss.thread === mailbox,
+                        'active o-active': discuss.thread === mailbox,
                     }" t-on-click="_onClick" t-att-data-mailbox-local-id="mailbox.localId" type="button"
                 >
                     <t t-esc="mailbox.name"/>
