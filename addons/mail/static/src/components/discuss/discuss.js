@@ -173,14 +173,6 @@ export class Discuss extends Component {
      * @private
      * @param {CustomEvent} ev
      */
-    _onFocusinComposer(ev) {
-        this.discuss.update({ isDoFocus: false });
-    }
-
-    /**
-     * @private
-     * @param {CustomEvent} ev
-     */
     _onHideMobileAddItemHeader(ev) {
         ev.stopPropagation();
         this.discuss.clearIsAddingItem();
