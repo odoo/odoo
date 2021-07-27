@@ -609,6 +609,7 @@ function makeActionManager(env) {
             id: ++id,
             Component: ControllerComponent,
             componentProps: controller.props,
+            preload: options.preload,
         };
         env.bus.trigger("ACTION_MANAGER:UPDATE", controller.__info__);
         return Promise.all([currentActionProm, closingProm]).then((r) => r[0]);
@@ -697,6 +698,7 @@ function makeActionManager(env) {
             clearBreadcrumbs: options.clearBreadcrumbs,
             onClose: options.onClose,
             stackPosition: options.stackPosition,
+            preload: options.preload,
         };
 
         if (lazyView) {
@@ -965,9 +967,17 @@ function makeActionManager(env) {
      * @returns {Promise<number | undefined | void>}
      */
     async function doAction(actionRequest, options = {}) {
-        const actionProm = _loadAction(actionRequest, options.additionalContext);
-        let action = await keepLast.add(actionProm);
-        action = _preprocessAction(action, options.additionalContext);
+        const localStorage = window.localStorage;
+        const key = "load-action-" + JSON.stringify(actionRequest);
+        let action = localStorage.getItem(key);
+        if (action) {
+            action = JSON.parse(action);
+        } else {
+            const actionProm = _loadAction(actionRequest, options.additionalContext);
+            action = await keepLast.add(actionProm);
+            action = _preprocessAction(action, options.additionalContext);
+            localStorage.setItem(key, JSON.stringify(action));
+        }
         switch (action.type) {
             case "ir.actions.act_url":
                 return _executeActURLAction(action);

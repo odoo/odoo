@@ -95,11 +95,35 @@ function jsonrpc(env, rpcId, url, params, settings = {}) {
 // -----------------------------------------------------------------------------
 // RPC service
 // -----------------------------------------------------------------------------
+String.prototype.hashCode = function() {
+    var hash = 0, i, chr;
+    if (this.length === 0) return hash;
+    for (i = 0; i < this.length; i++) {
+        chr   = this.charCodeAt(i);
+        hash  = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+};
 export const rpcService = {
     async: true,
     start(env) {
         let rpcId = 0;
         return function rpc(route, params = {}, settings) {
+            if (route == "/web/dataset/search_read" && window.localStorage['fast-menu-opening-proof-of-concept']) {
+                const localStorage = window.localStorage;
+                const key = 'fast-menu-' + (route + JSON.stringify(params) + JSON.stringify(settings)).hashCode();
+                if (localStorage.getItem(key)){
+                    return new Promise((resolve, reject) => {
+                        resolve(JSON.parse(localStorage.getItem(key)));
+                    });
+                } else {
+                    return jsonrpc(env, rpcId++, route, params, settings).then(result => {
+                        localStorage.setItem(key, JSON.stringify(result));
+                        return result;
+                    });
+                }
+            }
             return jsonrpc(env, rpcId++, route, params, settings);
         };
     },

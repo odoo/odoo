@@ -48,12 +48,16 @@ function makeMenus(env, menusData, fetchLoadMenus) {
             }
             return menu;
         },
-        async selectMenu(menu) {
+        async selectMenu(menu, preload) {
             menu = typeof menu === "number" ? this.getMenu(menu) : menu;
             if (!menu.actionID) {
                 return;
             }
-            await env.services.action.doAction(menu.actionID, { clearBreadcrumbs: true });
+            const localStorage = window.localStorage;
+            const key = 'fast-menu-opening-proof-of-concept';
+            localStorage.setItem(key, '1');
+            await env.services.action.doAction(menu.actionID, { clearBreadcrumbs: true, preload: preload });
+            localStorage.removeItem(key);
             this.setCurrentMenu(menu);
         },
         setCurrentMenu(menu) {
