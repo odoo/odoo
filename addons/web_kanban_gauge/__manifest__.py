@@ -15,4 +15,5 @@ This widget allows to display gauges using d3 library.
     'qweb': [
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

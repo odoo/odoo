@@ -15,4 +15,5 @@ Allows users to send invoices by post
         'security/ir.model.access.csv',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

@@ -56,7 +56,7 @@ msgstr "$ 8.50"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "%(pos_name)s (not used)"
-msgstr ""
+msgstr "%(pos_name)s (未使用)"
 
 #. module: point_of_sale
 #: model:ir.actions.report,print_report_name:point_of_sale.pos_invoice_report
@@ -127,12 +127,12 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Authorized Employees</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">使用員工登入</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Barcodes</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">條碼</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -142,7 +142,7 @@ msgstr "<span class=\"o_form_label\">預設價格表</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Journal Entries</span>"
-msgstr "<span class=\"o_form_label\"> 日誌項目 </span>"
+msgstr "<span class=\"o_form_label\"> 日記帳 </span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -216,7 +216,7 @@ msgid ""
 "<span>There is a difference between the expected and actual closing in cash."
 " Are you sure you want to close the session and post the accounting "
 "entries?</span>"
-msgstr "<span>預期和實際現金結算之間有差額。是否確認要關閉會話並過帳會計分錄?</span>"
+msgstr "<span>預期和實際現金結算之間有差額。是否確認要關閉前台並過帳會計分錄?</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -278,7 +278,7 @@ msgstr "POS前台是一段時間, 通常是某一天, 在這期間, 您通過POS
 msgid ""
 "A session is currently opened for this PoS. Some settings can only be "
 "changed after the session is closed."
-msgstr ""
+msgstr "目前該POS正處於開啟狀態，部分設置必須先完成POS關閉後才可使用"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__sequence_number
@@ -298,7 +298,7 @@ msgstr "在列印收據中作為標題插入的短文本。"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Accept customer tips or convert their change to a tip"
-msgstr "接受客戶提示或將其更改轉換為提示"
+msgstr "接受客戶小費或將其更改轉換為小費"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -402,7 +402,7 @@ msgstr "增加"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Add Tip"
-msgstr "添加提示"
+msgstr "添加小費"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -437,7 +437,7 @@ msgstr "管理員"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__cash_control
 msgid "Advanced Cash Control"
-msgstr ""
+msgstr "現金管理"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -466,7 +466,7 @@ msgstr "所有"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "All Tickets"
-msgstr ""
+msgstr "所有交易"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -493,7 +493,7 @@ msgstr "所有銷售行"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Allow discounts per line"
-msgstr ""
+msgstr "允許可於每項產品進行折扣"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -722,7 +722,7 @@ msgstr "基本金額"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
 msgid "Before Closing Difference"
-msgstr ""
+msgstr "關閉前差異金額"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -855,7 +855,7 @@ msgstr "現金流量表"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__rounding_method
 msgid "Cash rounding"
-msgstr ""
+msgstr "現金捨入"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -922,14 +922,14 @@ msgstr "椅子"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenStatus.xml:0
 #, python-format
 msgid "Change"
-msgstr "更換"
+msgstr "找零"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Change Tip"
-msgstr "找零提示"
+msgstr "零錢小費"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1042,7 +1042,7 @@ msgstr "關閉"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Close Session & Post Entries"
-msgstr ""
+msgstr "關閉前台並完成日結帳"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closed
@@ -1117,7 +1117,7 @@ msgstr "確認"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices to your PoS directly without an IoT Box"
-msgstr ""
+msgstr "不使用IOT BOX直接連結硬體"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
@@ -1292,7 +1292,7 @@ msgstr "目前前台"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_user_id
 msgid "Current Session Responsible"
-msgstr "目前會話負責"
+msgstr "目前前台負責人"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_session_state
@@ -1530,7 +1530,7 @@ msgstr "摘要"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Direct Devices"
-msgstr ""
+msgstr "直接連結硬體"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1720,7 +1720,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientLine.xml:0
 #, python-format
 msgid "EDIT"
-msgstr ""
+msgstr "編輯"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1766,7 +1766,7 @@ msgid ""
 "Employees can scan their badge or enter a PIN to log in to a PoS session. "
 "These credentials are configurable in the *HR Settings* tab of the employee "
 "form."
-msgstr "員工可以掃瞄徽章或輸入PIN以登錄PoS會話。 這些憑據可在員工表單的* HR Settings *選項中進行配置。"
+msgstr "員工可以掃瞄徽章或輸入PIN以登錄PoS前台。 這些憑據可在員工表單的* HR Settings *選項中進行配置。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1941,7 +1941,7 @@ msgstr "強制完成"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__full_product_name
 msgid "Full Product Name"
-msgstr ""
+msgstr "產品名稱"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2037,7 +2037,7 @@ msgstr "首頁"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #, python-format
 msgid "How would you like to receive your receipt?"
-msgstr ""
+msgstr "請選擇提供收據方式"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__id
@@ -2118,7 +2118,7 @@ msgstr "勾選代表有訊息發生傳送錯誤。"
 msgid ""
 "If ticked, each payment will generate a separated journal item. Ticking that"
 " option will slow the closing of the PoS."
-msgstr "如果勾選此項，每筆付款將生成一個單獨的日記帳專案。勾選該選項將減慢PoS的關閉速度。"
+msgstr "如果勾選此項，每筆付款將生成一個單獨的日記帳。勾選該選項將減慢PoS的關閉速度。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_128
@@ -2585,12 +2585,12 @@ msgstr "確保您使用的是IoT Box v18.12或更高版本。導航到 %s接受I
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__manage_orders
 msgid "Manage Orders"
-msgstr ""
+msgstr "訂單管理"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__manual_discount
 msgid "Manual Discounts"
-msgstr ""
+msgstr "手動折扣"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
@@ -2771,7 +2771,7 @@ msgstr "備註"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/CashBoxOpening.xml:0
 #, python-format
 msgid "Notes:"
-msgstr ""
+msgstr "開店備註:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_needaction_counter
@@ -2899,7 +2899,7 @@ msgstr "打開前台"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Opened By"
-msgstr ""
+msgstr "啟動者"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2923,7 +2923,7 @@ msgstr "期初日期"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/CashBoxOpening.xml:0
 #, python-format
 msgid "Opening amount:"
-msgstr ""
+msgstr "開始金額:"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.account_cashbox_line_action
@@ -2935,7 +2935,7 @@ msgstr "未清/結算值"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_type_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Operation Type"
-msgstr "製程類型"
+msgstr "作業類型"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3617,14 +3617,14 @@ msgstr "POS前台使用者名"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Pos Sessions"
-msgstr "POS會話"
+msgstr "POS前台"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/CashBoxOpening.xml:0
 #, python-format
 msgid "Pos closed."
-msgstr ""
+msgstr "POS 啟動中"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_posbox
@@ -3843,7 +3843,7 @@ msgstr "收據上的產品價格"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tipproduct
 msgid "Product tips"
-msgstr "產品提示"
+msgstr "小費產品"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_template_action_pos_product
@@ -3914,7 +3914,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "Receipt"
-msgstr "收貨"
+msgstr "收據"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -3973,7 +3973,7 @@ msgstr "刷新顯示"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenStatus.xml:0
 #, python-format
 msgid "Remaining"
-msgstr "剩餘"
+msgstr "差額"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4032,7 +4032,7 @@ msgstr "限制管理器進行價格修改"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limit_categories
 msgid "Restrict Product Categories"
-msgstr ""
+msgstr "限制產品類別(以POS類別)"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -4377,12 +4377,12 @@ msgstr ""
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_session_all
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Sessions"
-msgstr "對話窗口對話"
+msgstr "前台啟動紀錄"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Set Closing Cash"
-msgstr ""
+msgstr "設置現金盤點金額"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4394,7 +4394,7 @@ msgstr "設定客戶"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_bnk_stmt_cashbox_footer
 msgid "Set Default Cash Opening"
-msgstr ""
+msgstr "設置預設開店現金"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4408,7 +4408,7 @@ msgstr "設定重量"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/CashBoxOpening.xml:0
 #, python-format
 msgid "Set a cash opening"
-msgstr ""
+msgstr "請輸入錢箱現金餘額"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4545,7 +4545,7 @@ msgstr "在POS訂單明細中指定產品批號/序號"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
 msgid "Split Transactions"
-msgstr ""
+msgstr "交易明細拆分"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__start_category
@@ -4572,7 +4572,7 @@ msgstr "起始餘額"
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientDetailsEdit.xml:0
 #, python-format
 msgid "State"
-msgstr "狀態"
+msgstr "縣市"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5170,25 +5170,25 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Tip"
-msgstr "提示"
+msgstr "小費"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__tip_amount
 msgid "Tip Amount"
-msgstr ""
+msgstr "小費金額"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tip_product_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Tip Product"
-msgstr "提示產品"
+msgstr "小費產品"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.product_product_tip
 #: model:product.template,name:point_of_sale.product_product_tip_product_template
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Tips"
-msgstr "提示"
+msgstr "小費"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -5250,7 +5250,7 @@ msgstr "總折扣"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenStatus.xml:0
 #, python-format
 msgid "Total Due"
-msgstr "截止合計"
+msgstr "訂單合計"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -5348,7 +5348,7 @@ msgid ""
 "Please set corresponding tax account in each repartition line of the following taxes: \n"
 "%s"
 msgstr ""
-"無法關閉和驗證會話。\n"
+"無法關閉和驗證前台。\n"
 "請在以下稅種的每個重新分區行中設置相應的稅務項目:\n"
 "%s。"
 
@@ -5497,7 +5497,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid ""
 "Use employee credentials to log in to the PoS session and switch cashier"
-msgstr ""
+msgstr "使用員工進行POS登入，以及更換收銀人員"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__user_id

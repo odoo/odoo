@@ -16,4 +16,5 @@
         'data/payment_acquirer_data.xml',
     ],
     'application': True,
+    'license': 'LGPL-3',
 }

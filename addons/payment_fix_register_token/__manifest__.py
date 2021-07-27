@@ -12,4 +12,5 @@
         'views/account_payment_register_views.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

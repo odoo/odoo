@@ -22,4 +22,5 @@ This module adds certification to resumé for employees.
         'static/src/xml/resume_templates.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

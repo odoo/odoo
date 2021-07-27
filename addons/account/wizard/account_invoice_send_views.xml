@@ -83,6 +83,7 @@
            <field name="context" eval="{
                 'default_template_id': ref('account.email_template_edi_invoice'),
                 'mark_invoice_as_sent': True,
+                'custom_layout': 'mail.mail_notification_paynow',
             }"/>
            <field name="binding_model_id" ref="model_account_move"/>
            <field name="binding_view_types">list</field>

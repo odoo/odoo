@@ -22,4 +22,5 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
     ],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

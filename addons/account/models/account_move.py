@@ -1192,6 +1192,47 @@ class AccountMove(models.Model):
         else:
             self.show_name_warning = False
 
+        origin_name = self._origin.name
+        if not origin_name or origin_name == '/':
+            origin_name = self.highest_name
+        if self.name and self.name != '/' and origin_name and origin_name != '/':
+            format, format_values = self._get_sequence_format_param(self.name)
+            origin_format, origin_format_values = self._get_sequence_format_param(origin_name)
+
+            if (
+                format != origin_format
+                or dict(format_values, seq=0) != dict(origin_format_values, seq=0)
+            ):
+                changed = _(
+                    "It was previously '%(previous)s' and it is now '%(current)s'.",
+                    previous=origin_name,
+                    current=self.name,
+                )
+                reset = self._deduce_sequence_number_reset(self.name)
+                if reset == 'month':
+                    detected = _(
+                        "The sequence will restart at 1 at the start of every month.\n"
+                        "The year detected here is '%(year)s' and the month is '%(month)s'.\n"
+                        "The incrementing number in this case is '%(formatted_seq)s'."
+                    )
+                elif reset == 'year':
+                    detected = _(
+                        "The sequence will restart at 1 at the start of every year.\n"
+                        "The year detected here is '%(year)s'.\n"
+                        "The incrementing number in this case is '%(formatted_seq)s'."
+                    )
+                else:
+                    detected = _(
+                        "The sequence will never restart.\n"
+                        "The incrementing number in this case is '%(formatted_seq)s'."
+                    )
+                format_values['formatted_seq'] = "{seq:0{seq_length}d}".format(**format_values)
+                detected = detected % format_values
+                return {'warning': {
+                    'title': _("The sequence format has changed."),
+                    'message': "%s\n\n%s" % (changed, detected)
+                }}
+
     def _get_last_sequence_domain(self, relaxed=False):
         self.ensure_one()
         if not self.date or not self.journal_id:
@@ -2320,10 +2361,15 @@ class AccountMove(models.Model):
                         base_line = self.line_ids.filtered(lambda line: tax in line.tax_ids.flatten_taxes_hierarchy())[0]
                         account_id = base_line.account_id.id
 
+                tags = refund_repartition_line.tag_ids
+                if line_vals.get('tax_ids'):
+                    subsequent_taxes = self.env['account.tax'].browse(line_vals['tax_ids'][0][2])
+                    tags += subsequent_taxes.refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'base').tag_ids
+
                 line_vals.update({
                     'tax_repartition_line_id': refund_repartition_line.id,
                     'account_id': account_id,
-                    'tax_tag_ids': [(6, 0, refund_repartition_line.tag_ids.ids)],
+                    'tax_tag_ids': [(6, 0, tags.ids)],
                 })
             elif line_vals.get('tax_ids') and line_vals['tax_ids'][0][2]:
                 # Base line.

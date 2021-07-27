@@ -739,6 +739,10 @@ msgid ""
 "product if you directly do a Request for Quotation to one vendor or if you "
 "want a Call for Tenders to compare offers from several vendors."
 msgstr ""
+"Pozivi za nadmetanje koriste se kada želite generirati zahtjeve za ponude "
+"nekoliko dobavljača za određeni skup proizvoda. Možete konfigurirati po "
+"proizvodu ako izravno pošaljite zahtjev za ponudu jednom dobavljaču ili ako "
+"želite da poziv na natječaj usporedi ponude nekoliko dobavljača."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1415,6 +1419,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
 msgstr ""
+"Upravljajte ugovorima o kupnji (poziv za dostavu ponuda, opće narudžbe)"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -1439,6 +1444,9 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Dopuštena pogreška za dobavljača. Kada sustav generira narudžbu za nabavu "
+"proizvoda, oni će biti raspoređeni toliko dana ranije da se nose s "
+"neočekivanim kašnjenjima dobavljača."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
@@ -1447,6 +1455,9 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Dopuštena pogreška za dobavljača. Kada sustav generira narudžbu za "
+"preuređivanje proizvoda, oni će biti raspoređeni toliko dana ranije da se "
+"nose s neočekivanim kašnjenjima dobavljača."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
@@ -1534,7 +1545,7 @@ msgstr "Naziv"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Name, TIN, Email, or Reference"
-msgstr ""
+msgstr "Ime, TIN, e-pošta ili referenca"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:0
@@ -1995,6 +2006,7 @@ msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
 msgstr ""
+"Izmjena narudžbe koja se koristi kada narudžbu želite urediti nakon potvrde"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
@@ -2029,7 +2041,7 @@ msgstr "Izvještaj nabave"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Representative"
-msgstr ""
+msgstr "Predstavnik nabave"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
@@ -2056,7 +2068,7 @@ msgstr "Podsjetnik za nabavu"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase variants of a product using attributes (size, color, etc.)"
-msgstr ""
+msgstr "Kupite varijante proizvoda pomoću atributa (veličina, boja itd.)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
@@ -2085,7 +2097,7 @@ msgstr "Nabavke"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_union
 msgid "Purchases & Bills Union"
-msgstr ""
+msgstr "Unija kupnji i računa"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -2383,7 +2395,7 @@ msgstr "Naziv sekcije (npr: Proizvodi, Usluge...)"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
 msgid "Security Lead Time for Purchase"
-msgstr ""
+msgstr "Vrijeme osigurano za kupnju"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_token
@@ -2542,7 +2554,7 @@ msgstr "Porezi"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Tehničko područje za UX namjenu."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__notes
@@ -2573,6 +2585,8 @@ msgid ""
 "There is no invoiceable line. If a product has a control policy based on "
 "received quantity, please make sure that a quantity has been received."
 msgstr ""
+"Ne postoji obračunata stavka. Ako proizvod ima kontrolnu politiku koja se "
+"temelji na primljenoj količini, provjerite je li primljena."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product__property_account_creditor_price_difference
@@ -2707,7 +2721,7 @@ msgstr "Ukupni iznos"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reception_confirmed
 msgid "True if PO reception is confirmed by the vendor."
-msgstr ""
+msgstr "Točno ako dobavljač potvrdi prijem PO-a."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reminder_confirmed
@@ -2980,6 +2994,7 @@ msgstr "Da"
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Dobavljača možete pronaći po imenu, TIN-u, e-pošti ili internoj referenci."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0

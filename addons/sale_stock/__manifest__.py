@@ -41,4 +41,5 @@ Preferences
     'qweb': ['static/src/xml/sale_stock.xml'],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

@@ -1109,8 +1109,9 @@ class MrpProduction(models.Model):
             production.move_raw_ids._adjust_procure_method()
             (production.move_raw_ids | production.move_finished_ids)._action_confirm()
             production.workorder_ids._action_confirm()
-            # run scheduler for moves forecasted to not have enough in stock
-            production.move_raw_ids._trigger_scheduler()
+
+        # run scheduler for moves forecasted to not have enough in stock
+        self.move_raw_ids._trigger_scheduler()
         return True
 
     def action_assign(self):

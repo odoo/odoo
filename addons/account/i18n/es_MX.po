@@ -5,6 +5,7 @@
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Lucia Pacheco <lpo@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
+"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2021\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2325,13 +2326,13 @@ msgstr "Aplicar solo si el país de entrega coincide."
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__vat_required
 msgid "Apply only if partner has a VAT number."
-msgstr "Aplicar solo si el cliente tiene un número de identificación fiscal."
+msgstr "Aplicar solo si el partner tiene RFC."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply right VAT rates for digital products sold in EU"
 msgstr ""
-"Aplicar los tipos de IVA correctos para productos digitales vendidos en la "
+"Aplicar los tasas de IVA correctos para productos digitales vendidos en la "
 "UE"
 
 #. module: account
@@ -3224,9 +3225,8 @@ msgid ""
 "Changing VAT number is not allowed once invoices have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
-"No está permitido cambiar el número de IVA una vez que se hayan emitido las "
-"facturas para su cuenta. Por favor, contáctenos directamente para esta "
-"operación."
+"No está permitido cambiar el RFC una vez que se hayan emitido las facturas "
+"para su cuenta. Por favor, contáctenos directamente para esta operación."
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -6978,12 +6978,12 @@ msgstr "Divisa del diario"
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
 #, python-format
 msgid "Journal Entries"
-msgstr "Asientos contables"
+msgstr "Asientos de diario"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Journal Entries by Date"
-msgstr "Asientos contables por fecha"
+msgstr "Asientos de diario por fecha"
 
 #. module: account
 #. openerp-web
@@ -6998,7 +6998,7 @@ msgstr "Asientos contables por fecha"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #, python-format
 msgid "Journal Entry"
-msgstr "Asiento contable"
+msgstr "Asiento de diario"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__date_mode__entry
@@ -7009,7 +7009,7 @@ msgstr "Fecha de asiento en el diario"
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Journal Entry Number"
-msgstr "Número de asiento"
+msgstr "Número de asiento de diario"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__name
@@ -7860,7 +7860,7 @@ msgstr "Memo:"
 #: model:ir.model.fields,field_description:account.field_account_move__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_error
 msgid "Message Delivery error"
-msgstr "Error de Envío de Mensaje"
+msgstr "Error en el envío del mensaje"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__record_name
@@ -14034,7 +14034,7 @@ msgstr "Campo de utilidad para expresar la divisa del importe."
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__vat_required
 msgid "VAT required"
-msgstr "Requiere IVA"
+msgstr "Requiere RFC"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
