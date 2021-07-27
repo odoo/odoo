@@ -15,6 +15,7 @@
                         <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Location" name="location" domain="[]" context="{'group_by':'location_id'}"/>
                         <filter string="Scrap Location" name="scrap_location" domain="[]" context="{'group_by':'scrap_location_id'}"/>
+                        <filter string="Transfer" name="transfer" domain="[]" context="{'group_by':'picking_id'}"/>
                     </group>
                 </search>
             </field>
@@ -136,7 +137,7 @@
             <field name="name">Scrap Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.scrap</field>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">tree,form,kanban,pivot,graph</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Scrap products

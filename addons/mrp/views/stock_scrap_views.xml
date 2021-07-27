@@ -22,4 +22,15 @@
             </field>
         </field>
     </record>
+
+    <record id="stock_scrap_search_view_inherit_mrp" model="ir.ui.view">
+        <field name="name">stock.scrap.search.inherit.mrp</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='transfer']" position="after">
+                <filter string="Manufacturing Order" name="production_id" domain="[]" context="{'group_by':'production_id'}"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
