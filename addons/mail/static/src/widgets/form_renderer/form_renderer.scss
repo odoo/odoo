@@ -11,6 +11,12 @@
     width: 100%;
 }
 
+@include media-breakpoint-up(xxl, $o-extra-grid-breakpoints) {
+    .o_FormRenderer_chatterContainer {
+        width: auto;
+    }
+}
+
 // FIX to hide chatter in dialogs when they are opened from an action returned by python code
 .modal .modal-dialog .o_form_view .o_FormRenderer_chatterContainer {
     display: none;
