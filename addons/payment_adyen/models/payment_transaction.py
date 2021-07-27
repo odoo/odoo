@@ -93,6 +93,54 @@ class PaymentTransaction(models.Model):
         _logger.info("payment request response:\n%s", pprint.pformat(response_content))
         self._handle_feedback_data('adyen', response_content)
 
+    def _send_refund_request(self, refund_amount=None, create_refund_transaction=True):
+        """ Override of payment to send a refund request to Adyen.
+
+        Note: self.ensure_one()
+
+        :param float refund_amount: The amount to refund
+        :param bool create_refund_transaction: Whether a refund transaction should be created or not
+        :return: None
+        """
+        if self.provider != 'adyen':
+            return super()._send_refund_request(
+                refund_amount=refund_amount, create_refund_transaction=create_refund_transaction
+            )
+        refund_tx = super()._send_refund_request(
+            refund_amount=refund_amount, create_refund_transaction=True
+        )
+
+        # Make the refund request to Adyen
+        converted_amount = payment_utils.to_minor_currency_units(
+            -refund_tx.amount,  # The amount is negative for refund transactions
+            refund_tx.currency_id,
+            arbitrary_decimal_number=CURRENCY_DECIMALS.get(refund_tx.currency_id.name)
+        )
+        data = {
+            'merchantAccount': self.acquirer_id.adyen_merchant_account,
+            'amount': {
+                'value': converted_amount,
+                'currency': refund_tx.currency_id.name,
+            },
+            'reference': refund_tx.reference,
+        }
+        response_content = refund_tx.acquirer_id._adyen_make_request(
+            url_field_name='adyen_checkout_api_url',
+            endpoint='/payments/{}/refunds',
+            endpoint_param=self.acquirer_reference,
+            payload=data,
+            method='POST'
+        )
+        _logger.info("refund request response:\n%s", pprint.pformat(response_content))
+
+        # Handle the refund request response
+        psp_reference = response_content.get('pspReference')
+        status = response_content.get('status')
+        if psp_reference and status == 'received':
+            # The PSP reference associated with this /refunds request is different from the psp
+            # reference associated with the original payment request.
+            refund_tx.acquirer_reference = psp_reference
+
     @api.model
     def _get_tx_from_feedback_data(self, provider, data):
         """ Override of payment to find the transaction based on Adyen data.
@@ -111,13 +159,43 @@ class PaymentTransaction(models.Model):
         reference = data.get('merchantReference')
         if not reference:
             raise ValidationError("Adyen: " + _("Received data with missing merchant reference"))
+        event_code = data.get('eventCode')
 
         tx = self.search([('reference', '=', reference), ('provider', '=', 'adyen')])
+        if event_code == 'REFUND' and tx and tx.operation != 'refund':
+            # If a refund is initiated from Adyen, the merchant reference in the feedback data is
+            # that of the source transaction. We need to manually create the refund transaction.
+            tx = self._adyen_create_refund_tx_from_feedback_data(tx, data)
+
         if not tx:
             raise ValidationError(
                 "Adyen: " + _("No transaction found matching reference %s.", reference)
             )
         return tx
+
+    def _adyen_create_refund_tx_from_feedback_data(self, source_tx, data):
+        """ Create a refund transaction based on Adyen data.
+
+        :param recordset source_tx: The source transaction for which a refund is initiated, as a
+                                    `payment.transaction` recordset
+        :param dict data: The feedback data sent by the provider
+        :return: The created refund transaction
+        :rtype: recordset of `payment.transaction`
+        :raise: ValidationError if inconsistent data were received
+        """
+        refund_acquirer_reference = data.get('pspReference')
+        refund_amount = data.get('amount', {}).get('value')
+        if not refund_acquirer_reference or not refund_amount:
+            raise ValidationError(
+                "Adyen: " + _("Received refund data with missing transaction values")
+            )
+
+        converted_amount = payment_utils.to_major_currency_units(
+            refund_amount, source_tx.currency_id
+        )
+        return source_tx._create_refund_transaction(
+            refund_amount=converted_amount, acquirer_reference=refund_acquirer_reference
+        )
 
     def _process_feedback_data(self, data):
         """ Override of payment to process the transaction based on Adyen data.
@@ -138,7 +216,7 @@ class PaymentTransaction(models.Model):
 
         # Handle the payment state
         payment_state = data.get('resultCode')
-        refusal_reason = data.get('refusalReason')
+        refusal_reason = data.get('refusalReason') or data.get('reason')
         if not payment_state:
             raise ValidationError("Adyen: " + _("Received data with missing payment state."))
 
@@ -149,6 +227,8 @@ class PaymentTransaction(models.Model):
             if self.tokenize and has_token_data:
                 self._adyen_tokenize_from_feedback_data(data)
             self._set_done()
+            if self.operation == 'refund':
+                self.env.ref('payment.cron_post_process_payment_tx')._trigger()
         elif payment_state in RESULT_CODES_MAPPING['cancel']:
             _logger.warning("The transaction with reference %s was cancelled (reason: %s)",
                             self.reference, refusal_reason)
