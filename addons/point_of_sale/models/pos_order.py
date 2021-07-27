@@ -965,19 +965,10 @@ class ReportSaleDetails(models.AbstractModel):
                     taxes.setdefault(0, {'name': _('No Taxes'), 'tax_amount':0.0, 'base_amount':0.0})
                     taxes[0]['base_amount'] += line.price_subtotal_incl
 
-        payment_ids = self.env["pos.payment"].search([('pos_order_id', 'in', orders.ids)]).ids
-        if payment_ids:
-            self.env.cr.execute("""
-                SELECT method.name, sum(amount) total
-                FROM pos_payment AS payment,
-                     pos_payment_method AS method
-                WHERE payment.payment_method_id = method.id
-                    AND payment.id IN %s
-                GROUP BY method.name
-            """, (tuple(payment_ids),))
-            payments = self.env.cr.dictfetchall()
-        else:
-            payments = []
+        payment_data = self.env['pos.payment'].read_group([('pos_order_id', 'in', orders.ids)], 
+                                                          ['payment_method_id', 'amount:sum'], ['payment_method_id'])
+        payments = [{'name': self.env['pos.payment.method'].browse(
+            d['payment_method_id'][0]).name, 'total': d['amount']} for d in payment_data]
 
         return {
             'currency_precision': user_currency.decimal_places,
