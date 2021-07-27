@@ -3,7 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
-import { clear, link, unlink } from '@mail/model/model_field_command';
+import { clear, create, link, unlink } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -158,6 +158,18 @@ function factory(dependencies) {
         /**
          * @private
          */
+        _computeTopBar() {
+            if (!this.hasTopbar) {
+                return unlink();
+            }
+            if (this.hasTopbar && !this.topbar) {
+                return create();
+            }
+        }
+
+        /**
+         * @private
+         */
         _onThreadCacheChanged() {
             // clear obsolete hints
             this.update({ componentHintList: clear() });
@@ -235,6 +247,12 @@ function factory(dependencies) {
         }),
         hasComposerFocus: attr({
             related: 'composer.hasFocus',
+        }),
+        /**
+         * Determines whether this thread view has a top bar.
+         */
+        hasTopbar: attr({
+            related: 'threadViewer.hasTopbar',
         }),
         /**
          * States whether `this.threadCache` is currently loading messages.
@@ -412,6 +430,16 @@ function factory(dependencies) {
          */
         threadViewer: one2one('mail.thread_viewer', {
             inverse: 'threadView',
+            readonly: true,
+        }),
+        /**
+         * Determines the top bar of this thread view, if any.
+         */
+        topbar: one2one('mail.thread_view_topbar', {
+            compute: '_computeTopBar',
+            dependencies: ['hasTopbar'],
+            inverse: 'threadView',
+            isCausal: true,
             readonly: true,
         }),
     };

@@ -2,14 +2,14 @@
 
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
 import { useStore } from '@mail/component_hooks/use_store/use_store';
-import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { Composer } from '@mail/components/composer/composer';
 import { MessageList } from '@mail/components/message_list/message_list';
+import { ThreadViewTopbar } from '@mail/components/thread_view_topbar/thread_view_topbar';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
-const components = { Composer, MessageList };
+const components = { Composer, MessageList, ThreadViewTopbar };
 
 export class ThreadView extends Component {
 
@@ -24,7 +24,6 @@ export class ThreadView extends Component {
                 threadTextInputSendShortcuts: 1,
             },
         });
-        useUpdate({ func: () => this._update() });
         /**
          * Reference of the composer. Useful to set focus on composer when
          * thread has the focus.
@@ -107,15 +106,6 @@ export class ThreadView extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Called when thread component is mounted or patched.
-     *
-     * @private
-     */
-    _update() {
-        this.trigger('o-rendered');
-    }
-
-    /**
      * Returns data selected from the store.
      *
      * @private
@@ -138,6 +128,7 @@ export class ThreadView extends Component {
             threadModel: thread && thread.model,
             threadTextInputSendShortcuts: thread && thread.textInputSendShortcuts || [],
             threadView,
+            threadViewTopbar: threadView && threadView.topbar,
             threadViewIsLoading: threadView && threadView.isLoading,
         };
     }

@@ -174,15 +174,20 @@ MockServer.include({
         if (args.model === 'mail.channel' && args.method === 'channel_minimize') {
             return;
         }
+        if (args.model === 'mail.channel' && args.method === 'channel_rename') {
+            const ids = args.args[0];
+            const name = args.args[1] || args.kwargs.name;
+            return this._mockMailChannelChannelRename(ids, name);
+        }
         if (args.model === 'mail.channel' && args.method === 'channel_seen') {
             const channel_ids = args.args[0];
             const last_message_id = args.args[1] || args.kwargs.last_message_id;
             return this._mockMailChannelChannelSeen(channel_ids, last_message_id);
         }
         if (args.model === 'mail.channel' && args.method === 'channel_set_custom_name') {
-            const channel_id = args.args[0] || args.kwargs.channel_id;
+            const ids = args.args[0];
             const name = args.args[1] || args.kwargs.name;
-            return this._mockMailChannelChannelSetCustomName(channel_id, name);
+            return this._mockMailChannelChannelSetCustomName(ids, name);
         }
         if (args.model === 'mail.channel' && args.method === 'execute_command') {
             return this._mockMailChannelExecuteCommand(args);
@@ -825,17 +830,32 @@ MockServer.include({
         this._widget.call('bus_service', 'trigger', 'notification', [notification]);
     },
     /**
+     * Simulates `channel_rename` on `mail.channel`.
+     *
+     * @private
+     * @param {integer[]} ids
+     */
+    _mockMailChannelChannelRename(ids, name) {
+        const channel = this._getRecords('mail.channel', [['id', 'in', ids]])[0];
+        this._mockWrite('mail.channel', [
+            [channel.id],
+            { name },
+        ]);
+        this._mockMailChannel_broadcast([channel.id], channel.members);
+    },
+    /**
      * Simulates `channel_set_custom_name` on `mail.channel`.
      *
      * @private
-     * @param {integer} channel_id
-     * @returns {string} [name]
+     * @param {integer[]} ids
      */
-    _mockMailChannelChannelSetCustomName(channel_id, name) {
+    _mockMailChannelChannelSetCustomName(ids, name) {
+        const channel = this._getRecords('mail.channel', [['id', 'in', ids]])[0];
         this._mockWrite('mail.channel', [
-            [channel_id],
+            [channel.id],
             { custom_channel_name: name },
         ]);
+        this._mockMailChannel_broadcast([channel.id], [this.currentPartnerId]);
     },
     /**
      * Simulates `execute_command` on `mail.channel`.
