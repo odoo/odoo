@@ -227,3 +227,54 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
             self.env.ref('account_edi.ir_cron_edi_network').method_direct_trigger()
             self.assertEqual(len(capt.records), 2, "Not all records have been processed in this run, the cron should "
                                                    "re-trigger itself to process some more later")
+
+    def test_prepare_edi_vals_to_export(self):
+        """
+            Test _prepare_edi_vals_to_export return values
+            in the proper format
+
+            tag_ids should be a set of id and tags a proper recordset
+        """
+        account_tag = self.env['account.account.tag'].create({
+            "applicability": "taxes",
+            "country_id": self.env.ref('base.us').id,
+            "name": "Test Tag",
+        })
+        tax = self.env['account.tax'].create({
+            "amount": 15,
+            "amount_type": "percent",
+            "description": "15%",
+            "country_id": self.env.ref('base.us').id,
+            "invoice_repartition_line_ids": [
+                Command.create({
+                    "factor_percent": 100,
+                    "repartition_type": "base",
+                    "sequence": 1,
+                }),
+                Command.create({
+                    "factor_percent": 100,
+                    "repartition_type": "tax",
+                    "sequence": 1,
+                    "tag_ids": [Command.link(account_tag.id)]
+                })
+            ],
+            "name": "Test",
+            "tax_exigibility": "on_invoice",
+            "type_tax_use": "sale"
+        })
+
+        invoices = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'tax_ids': [Command.link(tax.id)]
+            })],
+        })
+        vals = invoices._prepare_edi_vals_to_export()
+        self.assertEqual(
+            vals['invoice_line_vals_list'][0]['tax_detail_vals_list'][0]['tag_ids'], set(account_tag.ids))
+        self.assertEqual(
+            vals['invoice_line_vals_list'][0]['tax_detail_vals_list'][0]['tags'].name, "Test Tag")
