@@ -188,7 +188,7 @@ class BlogPost(models.Model):
     create_uid = fields.Many2one('res.users', 'Created by', readonly=True)
     write_date = fields.Datetime('Last Updated on', readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', readonly=True)
-    visits = fields.Integer('No of Views', copy=False, default=0)
+    visits = fields.Integer('No of Views', copy=False, default=0, readonly=True)
     website_id = fields.Many2one(related='blog_id.website_id', readonly=True, store=True)
 
     @api.depends('content', 'teaser_manual')

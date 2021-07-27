@@ -48,7 +48,6 @@
                     <field name="blog_id"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="is_published" string="Is Published" optional="hide"/>
-                    <field name="visits" readonly="1"/>
                     <field name="create_uid" invisible="1"/>
                     <field name="write_uid"/>
                     <field name="write_date"/>
@@ -77,6 +76,7 @@
                         <group name="publishing_details" string="Publishing Options">
                             <field name="author_id"/>
                             <field name="create_date" groups="base.group_no_one"/>
+                            <field name="visits"/>
                             <field name="post_date"/>
                             <field name="write_uid"/>
                             <field name="write_date"/>
