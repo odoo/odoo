@@ -411,7 +411,7 @@ class HolidaysRequest(models.Model):
     @api.depends('number_of_days')
     def _compute_number_of_hours_display(self):
         for holiday in self:
-            calendar = holiday.employee_id.resource_calendar_id or self.env.user.company_id.resource_calendar_id
+            calendar = holiday.employee_id.sudo().resource_calendar_id or self.env.user.company_id.resource_calendar_id
             if holiday.date_from and holiday.date_to:
                 number_of_hours = calendar.get_work_hours_count(holiday.date_from, holiday.date_to)
                 holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * HOURS_PER_DAY)
@@ -452,9 +452,9 @@ class HolidaysRequest(models.Model):
             else:
                 holiday.can_approve = True
 
-    @api.constrains('date_from', 'date_to')
+    @api.constrains('date_from', 'date_to', 'state', 'employee_id')
     def _check_date(self):
-        for holiday in self:
+        for holiday in self.filtered('employee_id'):
             domain = [
                 ('date_from', '<', holiday.date_to),
                 ('date_to', '>', holiday.date_from),
@@ -511,7 +511,7 @@ class HolidaysRequest(models.Model):
                 elif leave.holiday_type == 'category':
                     target = leave.category_id.name
                 else:
-                    target = leave.employee_id.name
+                    target = leave.employee_id.sudo().name
                 if leave.leave_type_request_unit == 'hour':
                     res.append(
                         (leave.id,
@@ -693,8 +693,8 @@ class HolidaysRequest(models.Model):
             'holiday_status_id': self.holiday_status_id.id,
             'date_from': self.date_from,
             'date_to': self.date_to,
-            'request_date_from': self.date_from,
-            'request_date_to': self.date_to,
+            'request_date_from': self.request_date_from,
+            'request_date_to': self.request_date_to,
             'notes': self.notes,
             'number_of_days': employee.get_work_days_data(self.date_from, self.date_to)['days'],
             'parent_id': self.id,

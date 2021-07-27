@@ -527,6 +527,8 @@ return AbstractRenderer.extend({
     _sanitizeLabel: function (datapt) {
         datapt.labels = datapt.labels.map(function(label) {
             if (label === undefined) return _t("Undefined");
+            if (label === true) return _t("True");
+            if (label === false) return _t("False");
             return label;
         });
     },

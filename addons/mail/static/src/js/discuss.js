@@ -559,12 +559,12 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         if (type === 'public') {
             $input.autocomplete({
                 source: function (request, response) {
-                    self._lastSearchVal = _.escape(request.term);
+                    self._lastSearchVal = request.term;
                     self._searchChannel(self._lastSearchVal).done(function (result){
                         result.push({
                             label:  _.str.sprintf(
                                         '<strong>' + _t("Create %s") + '</strong>',
-                                        '<em>"#' + self._lastSearchVal + '"</em>'
+                                        '<em>"#' + _.escape(self._lastSearchVal) + '"</em>'
                             ),
                             value: '_create',
                         });
@@ -587,7 +587,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             });
         } else if (type === 'private') {
             $input.on('keyup', this, function (ev) {
-                var name = _.escape($(ev.target).val());
+                var name = $(ev.target).val();
                 if (ev.which === $.ui.keyCode.ENTER && name) {
                     self.call('mail_service', 'createChannel', name, 'private');
                 }
@@ -595,7 +595,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         } else if (type === 'dm_chat') {
             $input.autocomplete({
                 source: function (request, response) {
-                    self._lastSearchVal = _.escape(request.term);
+                    self._lastSearchVal = request.term;
                     self.call('mail_service', 'searchPartner', self._lastSearchVal, 10).done(response);
                 },
                 select: function (ev, ui) {
@@ -1187,7 +1187,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      * @private
      */
     _onInviteButtonClicked: function () {
-        var title = _.str.sprintf(_t("Invite people to #%s"), this._thread.getName());
+        var title = _.str.sprintf(_t("Invite people to #%s"), _.escape(this._thread.getName()));
         new PartnerInviteDialog(this, title, this._thread.getID()).open();
     },
     /**

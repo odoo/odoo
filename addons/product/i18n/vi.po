@@ -12,6 +12,7 @@
 # Martin Trigaux, 2018
 # Dung Nguyen Thi <dungnt@trobz.com>, 2019
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
+# Roy Le <royle0710@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
+"Last-Translator: Roy Le <royle0710@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1241,7 +1242,7 @@ msgstr "Quản lý các chi tiết bảng giá"
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
-msgstr "Quản lý đóng gòi sản phẩm"
+msgstr "Quản lý đóng gói sản phẩm"
 
 #. module: product
 #: model:res.groups,name:product.group_product_variant
@@ -2325,17 +2326,19 @@ msgstr ""
 "Bảng giá này sẽ được sử dụng, thay vì mặc định, để bán cho đối tác hiện tại"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
-#: code:addons/product/models/product_uom.py:63
+#: code:addons/product/models/uom_uom.py:16
 #, python-format
 msgid ""
 "This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
-"This may cause inconsistencies in reservations.\n"
+"This may cause inconsistencies in computations.\n"
 "Please set a precision between %s and 1."
 msgstr ""
+"Độ chính xác làm tròn này cao hơn Độ chính xác thập phân (%s chữ số).\n"
+"Điều này có thể gây ra sự mâu thuẫn trong tính toán.\n"
+"Vui lòng đặt độ chính xác giữa %s và 1."
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
+#: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
@@ -2639,6 +2642,13 @@ msgid "Volume"
 msgstr "Thể tích"
 
 #. module: product
+#: code:addons/product/models/decimal_precision.py:33
+#: code:addons/product/models/uom_uom.py:15
+#, python-format
+msgid "Warning!"
+msgstr "Cảnh báo!"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
 #: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
 msgid "Website Messages"
@@ -2653,14 +2663,6 @@ msgstr "Lịch sử thông tin liên lạc website"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
 #: model:ir.model.fields,field_description:product.field_product_template__weight
-#: code:addons/product/models/product_uom.py:63
-#, python-format
-msgid "Warning!"
-msgstr "Cảnh báo!"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_weight
-#: model:ir.model.fields,field_description:product.field_product_template_weight
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
 msgstr "Khối lượng"
@@ -2705,6 +2707,20 @@ msgstr "Khối lượng"
 #: model:product.attribute.value,name:product.product_attribute_value_3
 msgid "White"
 msgstr "Trắng"
+
+#. module: product
+#: code:addons/product/models/decimal_precision.py:34
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOMs:\n"
+"%s\n"
+"This may cause inconsistencies in computations.\n"
+"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+msgstr ""
+"Bạn đang đặt Độ chính xác thập phân kém chính xác hơn Đvị tính:\n"
+"%s\n"
+"Điều này có thể gây ra sự mâu thuẫn trong tính toán.\n"
+"Vui lòng tăng làm tròn các đơn vị đo lường đó hoặc các chữ số của Độ chính xác thập phân này."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:46

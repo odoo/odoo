@@ -15,6 +15,7 @@
 # lhmflexerp <lhm@flexerp.dk>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -133,6 +134,9 @@ msgid ""
 "['|',('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
 "('confirmed','progress'))]}\">Raw materials not available!</span>"
 msgstr ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"['|',('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
+"('confirmed','progress'))]}\">Råmaterialer utilgængelig!</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
@@ -140,6 +144,8 @@ msgid ""
 "<span class=\"fa fa-dropbox\" title=\"This is a BoM of type Kit!\" "
 "role=\"img\" aria-label=\"This is a BoM of type Kit!\"/>"
 msgstr ""
+"<span class=\"fa fa-dropbox\" title=\"Dette er en Stykliste af type Sæt!\" "
+"role=\"img\" aria-label=\"Dette er en Stykliste af type Sæt!\"/> "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -187,7 +193,7 @@ msgstr "<span class=\"o_stat_text\">Tids<br/> analyse</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Work Center Load</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Arbejdscenter Belastning</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -197,7 +203,7 @@ msgstr "<span class=\"o_stat_text\">Arbejdsordrer</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.label_production_view_pdf
 msgid "<span>1.0</span>"
-msgstr ""
+msgstr "<span>1.0</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -282,7 +288,7 @@ msgstr "<strong>Operation</strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Printing date:</strong><br/>"
-msgstr ""
+msgstr "<strong>Udskriftsdato:</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -319,6 +325,14 @@ msgstr "<strong>WorkCenter</strong>"
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
 msgstr "En produktionsordre er allerede udført eller annulleret."
+
+#. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:288
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr ""
+"Et produkt med en sæt-type stykliste kan ikke have en genbestillings-regel."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -400,6 +414,8 @@ msgid ""
 "All components could not be reserved. Click on the \"Check Availability "
 "button\" to try to reserve components."
 msgstr ""
+"Alle komponenter kunne ikke reserveres. Klik på \"Tjek Tilgængelighed\" "
+"knappen for at prøve at reservere komponenter."
 
 #. module: mrp
 #: sql_constraint:mrp.bom.line:0
@@ -428,7 +444,7 @@ msgid ""
 "An unbuild order is used to break down a finished product into its "
 "components."
 msgstr ""
-"En ordre adskillelse bruges til at nedbryde det færdige produkt til dets "
+"Tilbagefør Produktion bruges til at nedbryde det færdige produkt til dets "
 "komponenter."
 
 #. module: mrp
@@ -510,7 +526,7 @@ msgstr "BOM Produkt Varianter"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__attribute_value_ids
 msgid "BOM Product Variants needed form apply this line."
-msgstr ""
+msgstr "Stykliste Produkt Varianter påkrævet for at anvende denne linje."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
@@ -614,12 +630,12 @@ msgstr "Blokkeret tid"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__blocked_time
 msgid "Blocked hour(s) over the last month"
-msgstr ""
+msgstr "Blokerede time(r) over den sidste måned"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
 msgid "Blocking Reasons"
-msgstr ""
+msgstr "Blokeringsårsag"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -854,7 +870,7 @@ msgstr "Forbrugte afmonteringsordre"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__consumed_less_than_planned
 msgid "Consumed Less Than Planned"
-msgstr ""
+msgstr "Forbrugt Mindre End Planlagt"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -921,7 +937,7 @@ msgstr "Opret et ny arbejdsordre præstation"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "Create an unbuild order"
-msgstr "Opret en ordre til adskillelse"
+msgstr "Opret Tilbageførsel af Produktion"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -996,7 +1012,7 @@ msgstr "Database data"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_finished
 msgid "Deadline End"
-msgstr ""
+msgstr "Deadline Slut"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_start
@@ -1106,12 +1122,12 @@ msgstr "Udført"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Done Last 365 Days"
-msgstr ""
+msgstr "Udført Sidste 365 Dage"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__done_wo
 msgid "Done for Work Order"
-msgstr ""
+msgstr "Udført for Arbejdsordre"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1393,7 +1409,7 @@ msgstr "Er blevet produceret"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__has_moves
 msgid "Has Moves"
-msgstr ""
+msgstr "Har Bevægelser"
 
 #. module: mrp
 #: selection:mrp.document,priority:0
@@ -1498,6 +1514,8 @@ msgid ""
 "                                    order for this product, the delivery order will contain the raw\n"
 "                                    materials, instead of the finished product."
 msgstr ""
+"Hvis produktet er et færdigt produkt: Leveringsordren vil indeholde de rå\n"
+"                                     materialer, i stedet for det færdige produkt, ved behandling af salgsordre for dette produkt."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1604,7 +1622,7 @@ msgstr "Er den nuværende arbejdende bruger"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_first_wo
 msgid "Is the first WO to produce"
-msgstr ""
+msgstr "Er den første Arbejdsordre at producere"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:163
@@ -1619,6 +1637,9 @@ msgid ""
 "Set a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
+"Lad stå tom hvis du producerer på stedet hvor du finder de rå materialer. "
+"Angiv et sted hvis du producere et fast sted. Dette kan være en partner "
+"lokation hvis du underleverer produktions operationerne."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__key
@@ -1775,7 +1796,7 @@ msgstr "Lot/serienummer"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Lot/Serial barcode"
-msgstr ""
+msgstr "Lot/Serie stregkode"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_finisehd_move_line
@@ -2047,7 +2068,7 @@ msgstr "Bevægelse fuldført"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Move forward deadline start dates by"
-msgstr ""
+msgstr "Flyt deadline start datoer frem med"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_raw_ids
@@ -2115,7 +2136,7 @@ msgstr "Næste aktivitetstype"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__batch
 msgid "Next Operation"
-msgstr ""
+msgstr "Næste Operation"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__next_work_order_id
@@ -2125,12 +2146,12 @@ msgstr "Næste arbejdsordre"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_production_lot__use_next_on_work_order_id
 msgid "Next Work Order to Use"
-msgstr ""
+msgstr "Næste Arbejdsordre at Bruge"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "No attachment"
-msgstr ""
+msgstr "Ingen Vedhæftelser"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -2272,7 +2293,7 @@ msgstr "Oee"
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
 msgid "Once a minimum number of products is processed"
-msgstr ""
+msgstr "Når et minimum af produkter er behandlet"
 
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
@@ -2590,6 +2611,8 @@ msgid ""
 "Produce : Move the raw materials to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce : Unload        the raw materials from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
+"Producer : Flyt de rå materialer til produktionsstedet direkte og påbegynd produktionsprocessen.\n"
+"Pluk / Producer : Aflæs de rå materialer fra Lager til Input stedet først, og overfør det derefter til Produktionsstedet."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -2643,7 +2666,7 @@ msgstr "Produkt bevægelser (Lagerbevægelse linje)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__product_produce_id
 msgid "Product Produce"
-msgstr ""
+msgstr "Produkt Producer"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
@@ -2673,7 +2696,7 @@ msgstr "Produkt varianter"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__produce_line_ids
 msgid "Product to Track"
-msgstr ""
+msgstr "Produkt at Spore"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -2906,7 +2929,7 @@ msgstr "Rekord produktion"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Record Production Line"
-msgstr ""
+msgstr "Optag Produktionslinje"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:185
@@ -3184,6 +3207,9 @@ msgid ""
 "to produce after the quantity set in 'Quantity To Process' has been "
 "produced."
 msgstr ""
+"Angiv til 'nej' for at planlægge den næste arbejdsordre after den "
+"foregående. Angiv til 'ja' for at producere efter kvantiteten angivet i "
+"\"Kvantitet Til Behandling\" er blevet produceret."
 
 #. module: mrp
 #: selection:mrp.routing.workcenter,time_mode:0
@@ -3238,6 +3264,8 @@ msgid ""
 "Some raw materials have been consumed for a lot/serial number that has not been produced. Unlock the MO and click on the components lines to correct it.\n"
 "List of the components:\n"
 msgstr ""
+"Visse råmaterialer er blevet forbrugt til et lot/serienummer som der ikke er blevet produceret. Lås op for Produktionsordren og klik på komponenternes linje for at rette dette.\n"
+"Liste over komponenterne:\n"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
@@ -3409,13 +3437,13 @@ msgstr "Teknisk felt til at bestille bevægelser"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__check_to_done
 msgid "Technical Field to see if we can show 'Mark as Done' button"
-msgstr ""
+msgstr "Teknisk felt til at se om vi kan vise 'Marker som Færidg' knap"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_line__done_wo
 msgid ""
 "Technical Field which is False when temporarily filled in in work order"
-msgstr ""
+msgstr "Teknisk Felt som er Falsk når midlertidig udfyldt i arbejdsordre"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__valid_product_attribute_value_ids
@@ -3452,6 +3480,8 @@ msgid ""
 "Technical field used to see if we have to display a warning or not when "
 "confirming an order."
 msgstr ""
+"Teknisk felt brugt til se om vi skal vise en advarsel eller ej når en ordre "
+"bekræftes."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_availability
@@ -3579,6 +3609,8 @@ msgid ""
 "There is no Bill of Material found for the product %s. Please define a Bill "
 "of Material for this product."
 msgstr ""
+"Der blev ikke fundet nogen Stykliste for produktet %s. Vær venlig at "
+"definere en Stykliste for dette produkt."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_move_line
@@ -3741,6 +3773,11 @@ msgid ""
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
 msgstr ""
+"For at producere og samle produkter, og bruger råmaterialer og færdige \n"
+"            produkter, skal du også håndtere produktionsoperationer.\n"
+"            Produktionsoperationer kaldes ofte Arbejdsordre. De diverse\n"
+"            operationer vil have en forskellig indflydelse på omkostningen af\n"
+"            produktionen og planlægningen, afhængig af den tilgængelig arbejdsbelastning."
 
 #. module: mrp
 #: selection:mrp.production,activity_state:0
@@ -3829,26 +3866,26 @@ msgstr "Fjern blokering"
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
-msgstr "Adskil"
+msgstr "Tilbagefør Produktion"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Order"
-msgstr "Adskil ordrer"
+msgstr "Tilbagefør Produktion"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:77
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
-msgstr "Produktmængden ved adskilte ordrer skal være større end 0."
+msgstr "Produktmængden ved Tilbageførte Produktioner skal være større end 0."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_unbuild
 #: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Orders"
-msgstr "Adskil ordrer"
+msgstr "Tilbagefør Produktion"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
@@ -3993,7 +4030,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__valid_product_attribute_value_ids
 msgid "Valid Product Attribute Values"
-msgstr ""
+msgstr "Gyldig Produkt Egenskab Værdier"
 
 #. module: mrp
 #. openerp-web
@@ -4048,7 +4085,7 @@ msgstr "Lagerstyring"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "Warn Insufficient Unbuild Quantity"
-msgstr "Advarsel utilstrækkelige adskil kvantitet"
+msgstr "Advarsel utilstrækkelige tilbageført produktions mængde"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:95 code:addons/mrp/models/mrp_bom.py:290
@@ -4221,6 +4258,10 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required raw materials."
 msgstr ""
+"Arbejdsordre operationer gør det muligt for dig at oprette og administrere "
+"produktions operationer som skal følges i dine workcentre, for at producere "
+"et produkt. De er vedhæftet til styklister som vil definere de påkrævede "
+"komponenter."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
@@ -4381,6 +4422,16 @@ msgstr ""
 "Du kan ikke forbruge, uden at fortælle fra hvilken lot du forbruger det."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:122
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr ""
+"Du kan ikke oprette et sæt-type stykliste for produkter som har mindst én "
+"genbestillings-regel."
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:117
 #, python-format
 msgid ""
@@ -4404,6 +4455,9 @@ msgid ""
 "material.             If you want to cancel this MO, please change the "
 "consumed quantities to 0."
 msgstr ""
+"Du kan ikke annullere en produktionsordre hvis du allerede har brugt "
+"materiale.            Hvis du vil annullere denne produktionsordre, bedes du"
+" venligst ændre den forbrugte mængde til 0."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_move.py:209
@@ -4425,7 +4479,8 @@ msgstr "Du kan ikke oprette en ny stykliste herfra."
 #: code:addons/mrp/models/mrp_unbuild.py:88
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr "Du kan ikke slette en adskillelse ordre hvis status er 'Færdig'."
+msgstr ""
+"Du kan ikke slette en Tilbageført Produktion hvis dens status er 'Færdig'."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:533
@@ -4444,7 +4499,7 @@ msgstr "Du kan ikke producere det samme serienummer to gange."
 #: code:addons/mrp/models/mrp_unbuild.py:99
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr "Du kan ikke afmontere en omstødt produktionsordre."
+msgstr "Du kan ikke omstøde en Tilbageført Produktion."
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:48
@@ -4458,6 +4513,8 @@ msgid ""
 "You have consumed less material than what was planned. Are you sure you want"
 " to close this MO?"
 msgstr ""
+"Du har forbrugt mindre materiale end planlagt. Er du sikker på du vil "
+"afslutte denne Produktionsordre?"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:422
@@ -4509,13 +4566,13 @@ msgstr "Du skal angive et lot nummer for det endelige produkt."
 #: code:addons/mrp/models/mrp_workorder.py:323
 #, python-format
 msgid "You should provide a lot/serial number for a component."
-msgstr ""
+msgstr "Du bør angive et lot/serienummer for en komponent."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:300
 #, python-format
 msgid "You should provide a lot/serial number for the final product."
-msgstr ""
+msgstr "Du bør angive et lot/serienummer for det endelige produkt."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
@@ -4614,14 +4671,14 @@ msgstr "bestilt i stedet for"
 #: code:addons/mrp/static/src/xml/mrp.xml:4
 #, python-format
 msgid "print"
-msgstr ""
+msgstr "print"
 
 #. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/xml/mrp.xml:5
 #, python-format
 msgid "print unfolded"
-msgstr ""
+msgstr "print ufoldet"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.production_message
@@ -4636,4 +4693,4 @@ msgstr "Arbejdsordrer"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet
 msgid "worksheet"
-msgstr ""
+msgstr "arbejdsseddel"

@@ -14,6 +14,7 @@
 # Chris Egal <sodaswed@web.de>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Martin Trigaux, 2020
+# Andreas Jonderko <a.jonderko@gastronovi.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Andreas Jonderko <a.jonderko@gastronovi.com>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2337,17 +2338,19 @@ msgstr ""
 "aktuellen Partner genutzt."
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
-#: code:addons/product/models/product_uom.py:63
+#: code:addons/product/models/uom_uom.py:16
 #, python-format
 msgid ""
 "This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
-"This may cause inconsistencies in reservations.\n"
+"This may cause inconsistencies in computations.\n"
 "Please set a precision between %s and 1."
 msgstr ""
+"Diese Rundungsgenauigkeit ist höher als die Dezimalgenauigkeit (%s Stellen).\n"
+"Dies kann zu Inkonsistenzen bei Berechnungen führen.\n"
+"Bitte stellen Sie eine Genauigkeit zwischen %s und 1 ein."
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
+#: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
@@ -2653,6 +2656,13 @@ msgid "Volume"
 msgstr "Volumen"
 
 #. module: product
+#: code:addons/product/models/decimal_precision.py:33
+#: code:addons/product/models/uom_uom.py:15
+#, python-format
+msgid "Warning!"
+msgstr "Warnung!"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
 #: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
 msgid "Website Messages"
@@ -2667,14 +2677,6 @@ msgstr "Website-Kommunikationshistorie"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
 #: model:ir.model.fields,field_description:product.field_product_template__weight
-#: code:addons/product/models/product_uom.py:63
-#, python-format
-msgid "Warning!"
-msgstr "Warnung!"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_weight
-#: model:ir.model.fields,field_description:product.field_product_template_weight
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
 msgstr "Gewicht"
@@ -2696,6 +2698,8 @@ msgid ""
 "Weight of the product, packaging not included. The unit of measure can be "
 "changed in the general settings"
 msgstr ""
+"Gewicht des Produkts, Verpackung ist nicht enthalten. Die Maßeinheit kann in"
+" den allgemeinen Einstellungen geändert werden"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
@@ -2717,6 +2721,20 @@ msgstr "Gewichte"
 #: model:product.attribute.value,name:product.product_attribute_value_3
 msgid "White"
 msgstr "Weiß"
+
+#. module: product
+#: code:addons/product/models/decimal_precision.py:34
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOMs:\n"
+"%s\n"
+"This may cause inconsistencies in computations.\n"
+"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+msgstr ""
+"Sie stellen eine Dezimalgenauigkeit ein, die weniger genau ist als die Maßeinheit:\n"
+"%s\n"
+"Dies kann zu Inkonsistenzen bei Berechnungen führen.\n"
+"Bitte erhöhen Sie die Rundung dieser Mengeneinheiten oder die Stellen dieser Dezimalgenauigkeit."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:46

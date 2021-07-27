@@ -124,7 +124,7 @@ class SaleOrder(models.Model):
         return sol
 
     @api.depends('state', 'order_line.invoice_status', 'order_line.invoice_lines',
-                 'order_line.is_delivery', 'order_line.is_downpayment', 'order_line.product_id.invoice_policy')
+                 'order_line.is_delivery', 'order_line.is_downpayment')
     def _get_invoiced(self):
         super(SaleOrder, self)._get_invoiced()
         for order in self:

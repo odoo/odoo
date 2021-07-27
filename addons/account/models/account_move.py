@@ -392,7 +392,6 @@ class AccountMove(models.Model):
                        'SET state=%s '\
                        'WHERE id IN %s', ('draft', tuple(self.ids),))
             self.invalidate_cache()
-        self._check_lock_date()
         return True
 
     @api.multi
@@ -598,7 +597,7 @@ class AccountMoveLine(models.Model):
             #computing the `reconciled` field.
             reconciled = False
             digits_rounding_precision = line.company_id.currency_id.rounding
-            if (line.matched_debit_ids or line.matched_credit_ids) and float_is_zero(amount, precision_rounding=digits_rounding_precision):
+            if float_is_zero(amount, precision_rounding=digits_rounding_precision):
                 if line.currency_id and line.amount_currency:
                     if float_is_zero(amount_residual_currency, precision_rounding=line.currency_id.rounding):
                         reconciled = True
@@ -681,7 +680,7 @@ class AccountMoveLine(models.Model):
     amount_residual_currency = fields.Monetary(compute='_amount_residual', string='Residual Amount in Currency', store=True,
         help="The residual amount on a journal item expressed in its currency (possibly not the company currency).")
     tax_base_amount = fields.Monetary(string="Base Amount", compute='_compute_tax_base_amount', currency_field='company_currency_id', store=True)
-    account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
+    account_id = fields.Many2one('account.account', string='Account', required=True, index=True, auto_join=True,
         ondelete='restrict', domain=[('deprecated', '=', False)], default=lambda self: self._context.get('account_id', False))
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade",
         help="The move of this entry line.", index=True, required=True, auto_join=True)
@@ -1731,10 +1730,10 @@ class AccountPartialReconcile(models.Model):
                 for line in move.line_ids:
                     if not line.tax_exigible:
                         #amount is the current cash_basis amount minus the one before the reconciliation
-                        if percentage_after == 1.0 and line.amount_residual:
+                        amount = line.balance * percentage_after - line.balance * percentage_before
+                        if percentage_after == 1.0 and percentage_before > 0.0 and line.amount_residual < 0 and amount < 0 and float_compare(line.amount_residual, amount, precision_rounding=line.company_id.currency_id.rounding) < 0:
+                            # when registering the final payment we use directly the amount_residual to correct rounding issues
                             amount = line.amount_residual
-                        else:
-                            amount = line.balance * percentage_after - line.balance * percentage_before
                         rounded_amt = self._get_amount_tax_cash_basis(amount, line)
                         if float_is_zero(rounded_amt, precision_rounding=line.company_id.currency_id.rounding):
                             continue

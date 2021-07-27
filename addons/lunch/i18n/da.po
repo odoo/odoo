@@ -15,6 +15,7 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -192,6 +193,111 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Frokostbestilling</span><br/>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${user.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % company.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"    <div>\n"
+"        % set lines = ctx['lines']\n"
+"        % set order = ctx['order']\n"
+"        % set supplier = user.env['res.partner'].browse(order['supplier_id'])\n"
+"        % set currency = user.env['res.currency'].browse(order['currency_id'])\n"
+"        <p>\n"
+"        Hej ${order['supplier_name']},\n"
+"        </p><p>\n"
+"        Her er dagens bestillinger for ${order['company_name']}:\n"
+"        </p>\n"
+"\n"
+"      <ul>\n"
+"        % for line in lines:\n"
+"            <li>\n"
+"                <strong>\n"
+"                    ${line['product']}\n"
+"                    (x${line['quantity']})\n"
+"                 </strong>\n"
+"                % if line['note']:\n"
+"                    <em>(${line['note']})</em>\n"
+"                % endif\n"
+"                <div style=\"display: inline-block; float:right\">\n"
+"                    ${format_amount(line['price'], currency)}\n"
+"                </div>\n"
+"            </li>\n"
+"        % endfor\n"
+"        </ul>\n"
+"\n"
+"        <p>I alt <strong>${format_amount(order['amount_total'], currency)}</strong>.</p>\n"
+"        <p>Tøv ikke med at kontakte os, hvis du har sprøgsmål.</p>\n"
+"    </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${user.company_id.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    ${user.company_id.phone}\n"
+"                    % if user.company_id.phone and (user.company_id.email or user.company_id.website)\n"
+"                    |\n"
+"                    % endif\n"
+"                    % if user.company_id.email\n"
+"                    <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${user.company_id.email}</a>\n"
+"                    % endif\n"
+"                    % if user.company_id.email and user.company_id.website\n"
+"                    |\n"
+"                    % endif\n"
+"                    % if user.company_id.website\n"
+"                    <a href=\"'%s' % ${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                    ${user.company_id.website}\n"
+"                    </a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        I kræft af <a target=\"_blank\" href=\"https://www.odoo.com\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
@@ -200,6 +306,9 @@ msgid ""
 "                An expense is automatically created at the order receipt.<br>\n"
 "                A payment represents the employee reimbursement to the company."
 msgstr ""
+"En kontant bevægelse kan enten være en udgift, eller en betaling.<br>\n"
+"            En udgift oprettes automatisk ved bestillings kvitteringe. <br>\n"
+"             En betaling repræsenterer den ansattes godtgørelse til firmaet."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
@@ -238,6 +347,8 @@ msgid ""
 "Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
 "                To create a lunch alert you have to define its recurrence, the time interval during which the alert should be executed and the message to display."
 msgstr ""
+"Advarsler bruges til at advare medarbejdere om mulige problemer i forhold til frokostbestillingen.\n"
+"                 For at oprette en frokost advarsel kan du definere dens gentagelse, tidsintervallet hvori alarmen bør afvikles, og beskeden der skal vises."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__amount
@@ -263,7 +374,7 @@ msgstr "Til rådighed"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__balance_visible
 msgid "Balance Visible"
-msgstr ""
+msgstr "Saldo Synlig"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__start_hour
@@ -273,7 +384,7 @@ msgstr "Mellem"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_alert_kanban
 msgid "Between:"
-msgstr ""
+msgstr "Mellem:"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
@@ -306,6 +417,8 @@ msgid ""
 "Can be positive (payment) or negative (order or payment if user wants to get"
 " his money back)"
 msgstr ""
+"Kan være positiv (betaling) eller negativ (ordre eller betaling hvis bruger "
+"ønsker deres penge retur)"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
@@ -323,12 +436,12 @@ msgstr "Annulleret"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line__cashmove
 msgid "Cash Move"
-msgstr ""
+msgstr "Kontant Bevægelse"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__cash_move_balance
 msgid "Cash Move Balance"
-msgstr ""
+msgstr "Kontant Bevægelse Saldo"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
@@ -337,6 +450,9 @@ msgid ""
 "                Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
 "                Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> red X to announce that the order isn't available."
 msgstr ""
+"Klik på <span class=\"fa fa-phone text-success\" title=\"Bestil knappen\"></span> for at angive, at ordren er bestilt.<br>\n"
+"               Klik på <span class=\"fa fa-check text-success\" title=\"Modtag knappen\"></span> for at angive, at ordren er modtaget.<br> \n"
+"              Klik på <span class=\"fa fa-times-circle text-danger\" title=\"Annuller knappen\"></span> røde kryds, for at angive at ordren er utilgængelig."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -345,6 +461,9 @@ msgid ""
 "                Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
 "                Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> to announce that the order isn't available."
 msgstr ""
+"Klik på <span class=\"fa fa-phone text-success\" title=\"Bestil knappen\"></span> for at angive at ordren er bestilt.<br> \n"
+"                Klik på <span class=\"fa fa-check text-success\" title=\"Modtag knappen\"></span> for at angive, at ordren er modtaget.<br> \n"
+"                Klik på <span class=\"fa fa-times-circle text-danger\" title=\"Annuller knappen\"></span> for at angive, at ordren er utilgængelig. "
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__company_id
@@ -370,12 +489,12 @@ msgstr "Kontroller forhandlere"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
 msgid "Create a new lunch alert"
-msgstr ""
+msgstr "Opret en ny frokost advarsel"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Create a new lunch category"
-msgstr ""
+msgstr "Opret en ny frokost kategori"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
@@ -467,6 +586,8 @@ msgstr "Medarbejderbetalinger"
 #: model:ir.model.fields,help:lunch.field_lunch_order_line_lucky__is_max_budget
 msgid "Enable this option to set a maximal budget for your lucky order."
 msgstr ""
+"Aktiver denne indstilling for at angive et maksimal budget for din heldige "
+"bestilling."
 
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
@@ -486,11 +607,15 @@ msgid ""
 "                Time interval: from 00h00 am to 11h59 pm,<br>\n"
 "                Message: \"You must order before 10h30 am\"."
 msgstr ""
+"Eksempel:<br>\n"
+"               Gentagelse: Hver dag,<br>\n"
+"                Tidsinterval: fra 00:00 til 23:59,<br>\n"
+"                Besked: \"Du skal bestille før 10:30\"."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Feeling Lucky"
-msgstr ""
+msgstr "Føler mig Heldig"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__friday
@@ -530,6 +655,8 @@ msgid ""
 "Here you can see your cash moves.<br>A cash move can either be an expense or a payment.\n"
 "                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
 msgstr ""
+"Her kan du se dine kontant bevægelser.<br> En kontant bevægelse kan enten være en udgift, eller en betaling.\n"
+"             En udgift oprettes automatisk når en bestilling modtages, imens en betaling er en godtgørelse til virksomheden, angivet af lederen."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
@@ -562,6 +689,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:lunch.field_lunch_alert__partner_id
 msgid "If specified, the selected vendor can be ordered only on selected days"
 msgstr ""
+"Dem valgte leverandør kan bestilles kun på udvalgte dage, hvis specificeret"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__state
@@ -636,17 +764,17 @@ msgstr "Frokost bestilling"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Lunch Order Form"
-msgstr ""
+msgstr "Frokost Bestilling Formular"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order_line
 msgid "Lunch Order Line"
-msgstr ""
+msgstr "Frokost Bestilling Linje"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order_line_lucky
 msgid "Lunch Order Line Lucky"
-msgstr ""
+msgstr "Frokost Bestilling Linje Heldig"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
@@ -661,7 +789,7 @@ msgstr "Frokost produkt kategori"
 #. module: lunch
 #: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
 msgid "Lunch: Archive/Restore products"
-msgstr ""
+msgstr "Frokost: Arkiver/Gendan produkter"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_cancel
@@ -777,7 +905,7 @@ msgstr "Det er kun din frokost manger der annullerer ordrene."
 #: code:addons/lunch/models/lunch.py:287
 #, python-format
 msgid "Only your lunch manager processes the orders."
-msgstr ""
+msgstr "Kun din frokost leder behandler bestillingerne."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:307
@@ -818,7 +946,7 @@ msgstr "Ordreformular"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Orders Tree"
-msgstr ""
+msgstr "Bestillinger Træ"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action_by_supplier
@@ -854,7 +982,7 @@ msgstr "Forrige ordre"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__previous_order_widget
 msgid "Previous Order Widget"
-msgstr ""
+msgstr "Forrige Bestilling Widget"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
@@ -934,11 +1062,13 @@ msgid ""
 "Products from this vendor can <strong>not</strong> be ordered at that "
 "moment."
 msgstr ""
+"Produkter fra denne leverandør kan <strong>ikke</strong> bestilles i "
+"øjeblikket."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Products from this vendor can be ordered at that moment."
-msgstr ""
+msgstr "Produkter fra denne leverandør kan bestilles i øjeblikket."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
@@ -1092,6 +1222,8 @@ msgid ""
 "Validate order for one company at a time to send emails (mixed orders from "
 "%s and %s)"
 msgstr ""
+"Godkend bestilling for en virksomhed ad gangen, for at sende emails "
+"(blandede bestillinger fra %s og %s)"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:239
@@ -1100,6 +1232,8 @@ msgid ""
 "Validate order for one currency at a time to send emails (mixed orders from "
 "%s and %s)"
 msgstr ""
+"Godkend bestilling for en valuta ad gangen for at sende emails (blandede "
+"bestillinger fra %s og %s)"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:229
@@ -1108,6 +1242,8 @@ msgid ""
 "Validate order for one supplier at a time to send emails (mixed orders from "
 "%s and %s)"
 msgstr ""
+"Godkend bestillinger fra en leverandør ad gangen for at sende emails "
+"(blandede bestillinger fra %s og %s)"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__partner_id
@@ -1128,7 +1264,7 @@ msgstr "Forhandler bestillinger per dato"
 #: code:addons/lunch/models/lunch.py:192
 #, python-format
 msgid "Vendor(s) '%s' is not available today"
-msgstr ""
+msgstr "Leverandør(er) '%s' er ikke tilgængelig i dag"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__wednesday
@@ -1138,7 +1274,7 @@ msgstr "Onsdag"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Write the message you want to display during the defined period..."
-msgstr ""
+msgstr "Skriv beskeden du ønsker at vise i den definerede periode..."
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_account

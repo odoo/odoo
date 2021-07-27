@@ -5,7 +5,7 @@
 # Translators:
 # Ajay Chauhan, 2018
 # Ranjit Pillai <rpi@odoo.com>, 2018
-# Dharmraj Jhala <dja@openerp.com>, 2018
+# D J <dja@openerp.com>, 2018
 # Divya Pandya <dia@odoo.com>, 2018
 # Turkesh Patel <turkesh4friends@gmail.com>, 2018
 # Martin Trigaux, 2018
@@ -301,6 +301,13 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:502
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:288
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
 
 #. module: mrp
@@ -4249,6 +4256,14 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:657
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:122
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
 msgstr ""
 
 #. module: mrp

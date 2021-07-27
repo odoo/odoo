@@ -17,12 +17,13 @@
 # 卓忆科技 <zhanghao@jointd.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # Martin Trigaux, 2018
-# 演奏王 <wangwhai@qq.com>, 2019
+# 稀饭~~ <wangwhai@qq.com>, 2019
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
 # 张宏奎 <zhanghongkui@inspur.com>, 2019
 # Jerry Pan <panjianyu@inspur.com>, 2019
 # Maie <m@maie.name>, 2019
-# liAnGjiA <liangjia@qq.com>, 2020
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
+# liAnGjiA <liangjia@qq.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2020\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -329,6 +330,13 @@ msgstr "<strong>工作中心</strong>"
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
 msgstr "生产单已经完成或者被取消."
+
+#. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:288
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr "具有套件类型物料清单的产品不能具有重新订购规则。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -4309,6 +4317,14 @@ msgid "You can not consume without telling for which lot you consumed it"
 msgstr "你不能不知道你消费了多少东西"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:122
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr "不能为至少具有一个重新订购规则的产品创建套件类型的BOM表。"
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:117
 #, python-format
 msgid ""
@@ -4343,7 +4359,7 @@ msgstr "相同的序列号不可重复使用。 请更正编码的序列号。"
 #: code:addons/mrp/models/mrp_bom.py:109
 #, python-format
 msgid "You cannot create a new Bill of Material from here."
-msgstr ""
+msgstr "您不能从此处创建新的物料清单。"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:88

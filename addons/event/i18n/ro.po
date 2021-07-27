@@ -6,8 +6,8 @@
 # Cozmin Candea <office@terrabit.ro>, 2018
 # Martin Trigaux, 2018
 # Dorin Hongu <dhongu@gmail.com>, 2019
-# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 13:44+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,6 +105,12 @@ msgid ""
 "community module, a case study, methodology feedback, technical, etc. Each "
 "presentation must be in English.</em>"
 msgstr ""
+"<em>Dacă doriți să faceți o prezentare, vă rugăm să trimiteți propunerea "
+"dvs. de subiect cât mai curând posibil pentru aprobare domnului Famke "
+"Jenssens la ngh (a) compania dvs. (punct) com. Prezentările ar trebui să "
+"fie, de exemplu, o prezentare a unui modul comunitar, un studiu de caz, "
+"feedback metodologic, tehnic etc. Fiecare prezentare trebuie să fie în limba"
+" Engleză.</em>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -759,12 +765,12 @@ msgstr "Conferință"
 #. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference for Architects"
-msgstr ""
+msgstr "Conferință pentru Arhitecți"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
-msgstr ""
+msgstr "Conferințe, ateliere și instruiri vor fi organizate în 6 săli:"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -877,7 +883,7 @@ msgstr "Descriere"
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Design Fair Los Angeles"
-msgstr ""
+msgstr "Târg de design Los Angeles"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__display_name
@@ -911,6 +917,9 @@ msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
 msgstr ""
+"În timpul acestei conferințe, echipa noastră va oferi o prezentare detaliată"
+" a aplicațiilor noastre de afaceri. Veți cunoaște toate avantajele "
+"utilizării acestuia."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__email
@@ -964,7 +973,7 @@ msgstr "Insgină Eveniment"
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Categories"
-msgstr ""
+msgstr "Categorii Eveniment"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -1135,7 +1144,7 @@ msgstr ""
 #. module: event
 #: model:event.type,name:event.event_type_1
 msgid "Exhibition"
-msgstr ""
+msgstr "Expoziţie"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -1174,7 +1183,7 @@ msgstr "Urmăritori (Parteneri)"
 #: model_terms:event.event,description:event.event_0
 #: model_terms:event.event,description:event.event_2
 msgid "For any additional information, please contact us at"
-msgstr ""
+msgstr "Pentru orice informații suplimentare, vă rugăm să ne contactați la"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -1197,7 +1206,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Functional flow of the main applications;"
-msgstr ""
+msgstr "Fluxul funcțional al principalelor aplicații;"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1209,6 +1218,8 @@ msgstr "Grupează după"
 #: model_terms:event.event,description:event.event_2
 msgid "Having attended this conference, participants should be able to:"
 msgstr ""
+"După ce au participat la această conferință, participanții ar trebui să "
+"poată:"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1269,7 +1280,7 @@ msgstr "Interval"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Introduction, CRM, Sales Management"
-msgstr ""
+msgstr "Introducere, CRM, Managementul vânzărilor"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
@@ -1560,6 +1571,13 @@ msgid ""
 msgstr ""
 
 #. module: event
+#: code:addons/event/models/event.py:386
+#, python-format
+msgid ""
+"Only event users or managers are allowed to create or update registrations."
+msgstr ""
+
+#. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "OpenElec Applications 23 Rockwell Lane, Los Angeles, CA 90001, United States"
@@ -1593,12 +1611,12 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
-msgstr ""
+msgstr "Punct de vânzare (POS), Introducere în personalizarea raportului."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Project management, Human resources, Contract management."
-msgstr ""
+msgstr "Management de proiect, Resurse umane, Management de contracte."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1880,7 +1898,7 @@ msgstr "Locuri Rezervate Neconfirmate"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Understand the various modules;"
-msgstr ""
+msgstr "Înțelegeți diversele module;"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -1989,7 +2007,7 @@ msgstr "events@odoo.com"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "events@yourcompany.com"
-msgstr ""
+msgstr "events@yourcompany.com"
 
 #. module: event
 #: code:addons/event/models/event.py:526

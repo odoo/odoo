@@ -9,7 +9,6 @@
 # Abd El-Rahman Ali <abdelrahman.ali.242@gmail.com>, 2018
 # Abdulaziz Ayed <aalayed@kacst.edu.sa>, 2018
 # ThaniAldawood <taldawood@hotmail.com>, 2018
-# Mustafa J. Kadhem <safi2266@gmail.com>, 2018
 # fares alokeeli <okffok@gmail.com>, 2018
 # amal ahmed <amalalhashemy88@hotmail.com>, 2018
 # Zuhair Hammadi <zuhair12@gmail.com>, 2018
@@ -37,6 +36,7 @@
 # Mustafa Rawi <mustafa@cubexco.com>, 2019
 # Yazeed Dandashi <lay@odoo.com>, 2019
 # MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2020
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -44,7 +44,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2020\n"
+"Last-Translator: Mustafa J. Kadhem <safi2266@gmail.com>, 2021\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5593,7 +5593,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
 msgid "Indicates that this journal item is a tax line"
-msgstr ""
+msgstr "Indicates that this journal item is a tax line"
 
 #. module: account
 #. openerp-web
@@ -8106,6 +8106,12 @@ msgid ""
 msgstr "برجاء تثبيت دليل محاسبي أو إنشاء دفتر يومية عام قبل المتابعة."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr "Please set a strictly positive rounding value."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "برجاء استخدام هذا المرجع عند السداد:"
@@ -9906,7 +9912,7 @@ msgstr "تفاصيل الضرائب"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_ids
 msgid "Taxes that apply on the base amount"
-msgstr ""
+msgstr "Taxes that apply on the base amount"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -10427,8 +10433,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "مالك يوميات الحساب البنكي يجب أن يكون المؤسسة (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__account_id
@@ -12255,12 +12264,6 @@ msgid ""
 msgstr ""
 "عليك تكوين 'حساب الخسارة في سعر الصرف' في إعدادات المحاسبة, لإدارة حجز قيود "
 "المحاسبة للفروق بين أسعار الصرف تلقائيًا."
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund

@@ -24,6 +24,11 @@ odoo.define('payment.payment_form', function (require) {
             this._super.apply(this, arguments);
             this.options = _.extend(options || {}, {
             });
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted) {
+                    window.location.reload();
+                }
+            });
         },
 
         start: function () {
@@ -165,7 +170,7 @@ odoo.define('payment.payment_form', function (require) {
                             if (result) {
                                 // if the server sent us the html form, we create a form element
                                 var newForm = document.createElement('form');
-                                newForm.setAttribute("method", "post"); // set it to post
+                                newForm.setAttribute("method", self._get_redirect_form_method());
                                 newForm.setAttribute("provider", checked_radio.dataset.provider);
                                 newForm.hidden = true; // hide it
                                 newForm.innerHTML = result; // put the html sent by the server inside the form
@@ -215,6 +220,15 @@ odoo.define('payment.payment_form', function (require) {
                 );
                 this.enableButton(button);
             }
+        },
+        /**
+         * Return the HTTP method to be used by the redirect form.
+         *
+         * @private
+         * @return {string} The HTTP method, "post" by default
+         */
+        _get_redirect_form_method: function(){
+            return "post";
         },
         // event handler when clicking on the button to add a new payment method
         addPmEvent: function (ev) {

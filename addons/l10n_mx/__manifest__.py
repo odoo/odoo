@@ -45,4 +45,5 @@ With this module you will have:
         "views/res_config_settings_views.xml",
         "views/account_views.xml",
     ],
+    'license': 'LGPL-3',
 }

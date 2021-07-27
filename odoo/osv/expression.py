@@ -116,6 +116,7 @@ start the server specifying the ``--unaccent`` flag.
 import collections
 
 import logging
+import reprlib
 import traceback
 from functools import partial
 from zlib import crc32
@@ -308,7 +309,10 @@ def distribute_not(domain):
             if negate:
                 left, operator, right = token
                 if operator in TERM_OPERATORS_NEGATION:
-                    result.append((left, TERM_OPERATORS_NEGATION[operator], right))
+                    if token in (TRUE_LEAF, FALSE_LEAF):
+                        result.append(FALSE_LEAF if token == TRUE_LEAF else TRUE_LEAF)
+                    else:
+                        result.append((left, TERM_OPERATORS_NEGATION[operator], right))
                 else:
                     result.append(NOT_OPERATOR)
                     result.append(token)
@@ -1084,7 +1088,7 @@ class expression(object):
                     push(create_substitution_leaf(leaf, ('id', inselect_operator, (subselect, params)), model, internal=True))
                 else:
                     _logger.error("Binary field '%s' stored in attachment: ignore %s %s %s",
-                                  field.string, left, operator, right)
+                                  field.string, left, operator, reprlib.repr(right))
                     leaf.leaf = TRUE_LEAF
                     push(leaf)
 

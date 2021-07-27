@@ -206,7 +206,7 @@ QUnit.module('Views', {
             "should contain a text element with product xphone on X axis");
         assert.strictEqual(graph.$('.nv-x text:contains(xpad)').length, 1,
             "should contain a text element with product xpad on X axis");
-        assert.strictEqual(graph.$('text:contains(true)').length, 1,
+        assert.strictEqual(graph.$('text:contains("True")').length, 1,
             "should have an entry for each value of field 'bar' in the legend");
 
         graph.destroy();

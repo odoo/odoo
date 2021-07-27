@@ -173,6 +173,24 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
     # Alias configuration
     # --------------------------------------------------
 
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_message_process_alias_bounce_message_to(self):
+        """ Check bounce message contains the bouncing alias, not a generic "to" """
+        self.alias.write({'alias_contact': 'partners'})
+        bounce_message_with_alias = "The following email sent to %s cannot be accepted because this is a private email address." % self.alias.display_name.lower()
+
+        # Bounce is To
+        self.format_and_process(MAIL_TEMPLATE, to='groups@example.com', cc='other@gmail.com', subject='Should Bounce')
+        self.assertIn(bounce_message_with_alias, self._mails[0].get('body'))
+
+        # Bounce is CC
+        self.format_and_process(MAIL_TEMPLATE, to='other@gmail.com', cc='groups@example.com', subject='Should Bounce')
+        self.assertIn(bounce_message_with_alias, self._mails[1].get('body'))
+
+        # Bounce is part of To
+        self.format_and_process(MAIL_TEMPLATE, to='other@gmail.com, groups@example.com', subject='Should Bounce')
+        self.assertIn(bounce_message_with_alias, self._mails[1].get('body'))
+
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_alias_user_id(self):
         """ Test alias ownership """

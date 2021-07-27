@@ -15,6 +15,7 @@
 # JonathanStein <jstein@image.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -304,6 +305,11 @@ msgid ""
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        Dokumenter er vedhæftet opgaverne og problemer på dit projekt.</p><p>\n"
+"                        Send beskeder eller log interne noter med vedhæftelser, for at forbinde\n"
+"                        dokumenter til dine projekter.\n"
+"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:149
@@ -710,6 +716,8 @@ msgid ""
 "Choosing a sub-tasks project will both enable sub-tasks and set their "
 "default project (possibly the project itself)"
 msgstr ""
+"Vælg et under-opgave projekt som både vil aktivere under-opgaver og angive "
+"deres standard projekt (muligvis projektet selv)"
 
 #. module: project
 #: constraint:project.task:0
@@ -1192,6 +1200,8 @@ msgid ""
 "Explanation text to help users using the star on tasks or issues in this "
 "stage."
 msgstr ""
+"Forklarende tekst til at hjælpe brugere til at bruge stjernen på opgaver "
+"eller problemer i dette stadie."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1287,7 +1297,7 @@ msgstr "Få Ting Gjort (FTG)"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
 msgid "Gives label to tasks on project's kanban view."
-msgstr ""
+msgstr "Giver mærkater til opgaver i projektets kanban visning."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__sequence
@@ -1383,6 +1393,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Hvordan indhentes tilbagemeldinger?\n"
+"- Bedømmelse ved stadie skift: En email vil blive afsendt når en opgave trækkes ind i et andet stadie.\n"
+"- Periodisk bedømmelse: Email vil blive afsendt automatisk.\n"
+"\n"
+"Glem ikke at oprette mail skabeloner for stadier som du gerne vil have kundens bedømmelse på."
 
 #. module: project
 #: code:addons/project/models/project.py:808
@@ -1660,7 +1675,7 @@ msgstr "Seneste bedømmelse: tilfreds"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Legend priority"
-msgstr ""
+msgstr "Forklaring prioritet"
 
 #. module: project
 #. openerp-web
@@ -1986,6 +2001,9 @@ msgid ""
 "developers know they can pull it. If you work in sprints, use %s to mark "
 "tasks of the current sprint."
 msgstr ""
+"Angiv en opgave til %s i Specifikations kolonnen når opgaven er "
+"specificeret, så at udviklere ved, at de kan hente den. Brug %s til at "
+"markere opgaver for det nuværende sprint, hvis du arbejder i sprint."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -2943,7 +2961,7 @@ msgstr "Der er ingen tilgængelige billeder at sætte som cover."
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There is no rating for this object at the moment"
-msgstr ""
+msgstr "Der er i øjeblikket ingen bedømmelse for dette objekt"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -2951,6 +2969,9 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
+"Disse mailadresser vil blive tilføjet i CC feltet på alle indkommende og "
+"udgående mails for denne post før afsendelse. Adskil flere mailadresser med "
+"et komma"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
@@ -3275,6 +3296,8 @@ msgid ""
 "You can also give a tooltip about the use of the stars available in the "
 "kanban and form views."
 msgstr ""
+"Du kan også give et værktøjstip om brugen af stjerne tilgængelig i kanban og"
+" formularvisninger."
 
 #. module: project
 #: code:addons/project/models/project.py:86
@@ -3285,6 +3308,12 @@ msgid ""
 msgstr ""
 "Du kan ikke slette et projekt der indeholder opgaver. Du kan enten arkivere "
 "den, eller først slette alle dens opgaver."
+
+#. module: project
+#: code:addons/project/models/project.py:628
+#, python-format
+msgid "Your task must be in the same company as its project."
+msgstr "Din opgave skal være i samme virksomhed som projektet."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all

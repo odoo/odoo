@@ -21,7 +21,7 @@
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2018
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2019
-# Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
+# Johanna Valkonen <johanna@vividi.fi>, 2019
 # Janne Rättyä <janne.rattya@web-veistamo.fi>, 2019
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2019
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2019
@@ -325,6 +325,13 @@ msgstr "<strong>Työpiste</strong>"
 #: code:addons/mrp/models/mrp_workorder.py:502
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:288
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
 
 #. module: mrp
@@ -4310,6 +4317,14 @@ msgstr "Et voi muuttaa valmista työtilausta."
 #: code:addons/mrp/models/mrp_production.py:657
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:122
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
 msgstr ""
 
 #. module: mrp

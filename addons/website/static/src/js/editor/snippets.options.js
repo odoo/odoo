@@ -1132,7 +1132,7 @@ options.registry.gallery = options.Class.extend({
      */
     removeAllImages: function (previewMode) {
         var $addImg = $('<div>', {
-            class: 'alert alert-info css_editable_mode_display text-center',
+            class: 'alert alert-info css_non_editable_mode_hidden text-center',
         });
         var $text = $('<span>', {
             class: 'o_add_images',

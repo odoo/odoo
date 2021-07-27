@@ -10,7 +10,8 @@
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2018
 # grazziano <gra.negocia@gmail.com>, 2018
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
-# Vanderlei Romera <vanderleiromera@gmail.com>, 2020
+# Vanderlei P. Romera <vanderleiromera@gmail.com>, 2020
+# Éder Brito <britoederr@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Vanderlei Romera <vanderleiromera@gmail.com>, 2020\n"
+"Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,12 +35,12 @@ msgstr "Ativo"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr ""
+msgstr "Adicionar uma nova unidade de medida"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr ""
+msgstr "Adicionar uma nova categoria de unidade de medida"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
@@ -104,6 +105,9 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"Quantas vezes esta unidade de medida é maior do que a unidade de medida de "
+"referência nesta categoria: 1 * (esta unidade) = razão * (unidade de "
+"referência)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
@@ -111,6 +115,9 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"Quanto maior ou menor esta unidade é comparada à Unidade de Medida de "
+"referência para esta categoria: 1 * (unidade de referência) = razão * (esta "
+"unidade)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -203,12 +210,12 @@ msgstr "A taxa de conversão para uma unid. de medida não pode ser 0!"
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The reference unit must have a conversion factor equal to 1."
-msgstr ""
+msgstr "A unidade de referência deve ter um fator de conversão igual a 1."
 
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The rounding precision must be strictly positive."
-msgstr ""
+msgstr "A precisão do arredondamento deve ser estritamente positiva."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:152
@@ -297,6 +304,10 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"As unidades de medida pertencentes à mesma categoria podem ser\n"
+"            convertidas entre si. Por exemplo, na categoria\n"
+"            <i>'Tempo'</i>, você terá as seguintes unidades de medida:\n"
+"            Horas, Dias."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:93
@@ -305,12 +316,16 @@ msgid ""
 "UoM category %s should have a reference unit of measure. If you just created"
 " a new category, please record the 'reference' unit first."
 msgstr ""
+"A categoria UdM %s deve ter uma unidade de medida de referência. Se você "
+"acabou de criar uma nova categoria, registre primeiro a unidade de "
+"'referência'."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:95
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
+"A catégoria UdM %s deve ter apenas uma unidade de medida de referência."
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -338,7 +353,7 @@ msgstr ""
 #: code:addons/uom/models/uom_uom.py:28
 #, python-format
 msgid "You cannot delete this UoM Category as it is used by the system."
-msgstr ""
+msgstr "Você não pode excluir esta categoria UdM porque é usada pelo sistema."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:115
@@ -347,6 +362,8 @@ msgid ""
 "You cannot delete this UoM as it is used by the system. You should rather "
 "archive it."
 msgstr ""
+"Você não pode excluir esta UdM porque ela é usada pelo sistema. Você deve "
+"preferir arquivá-la."
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -354,6 +371,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"Você deve definir uma taxa de conversão entre várias unidades de\n"
+"            Medida dentro de uma mesma categoria."
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm

@@ -295,13 +295,11 @@ class AccountInvoice(models.Model):
                         # '[::2]' because it's a list [fn_1, content_1, fn_2, content_2, ..., fn_n, content_2]
                         for filename_obj, content_obj in list(pycompat.izip(embedded_files, embedded_files[1:]))[::2]:
                             content = content_obj.getObject()['/EF']['/F'].getData()
-
-                            if filename_obj == 'factur-x.xml':
-                                try:
-                                    tree = etree.fromstring(content)
-                                except:
-                                    continue
-
+                            try:
+                                tree = etree.fromstring(content)
+                            except:
+                                continue
+                            if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
                                 self._import_facturx_invoice(tree)
                                 buffer.close()
                                 return res

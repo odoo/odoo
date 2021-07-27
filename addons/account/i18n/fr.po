@@ -26,14 +26,13 @@
 # Phil Anth <thep3r3x@gmail.com>, 2019
 # Pandraghon <pandraghon@outlook.com>, 2019
 # Stéphane Bidoul, 2019
-# Rémi CAZENAVE <remi@le-filament.com>, 2019
+# Rémi CAZENAVE, 2019
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2019
 # Antoine Lorence <antoine.lorence@gmail.com>, 2019
 # Damien Bouvy <dbo@odoo.com>, 2019
 # Alex T <alt@odoo.com>, 2019
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # thomas quertinmont <tqu@odoo.com>, 2019
-# Martin Trigaux, 2019
 # Herve GUERIN <herve.guerin@auguria.fr>, 2019
 # Florian Hatat, 2019
 # Moka Tourisme <hello@mokatourisme.fr>, 2019
@@ -44,11 +43,16 @@
 # Valaeys Stéphane <svalaeys@fiefmanage.ch>, 2020
 # Sylvain Dubuisson <sylvain@orderly.fr>, 2020
 # Jonathan Castillo <jcs@odoo.com>, 2020
-# Priscilla Sanchez <prs@odoo.com>, 2020
+# Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
 # Christelle Pinchart <cpi@odoo.com>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
+# Martin Trigaux, 2020
+# Arnaud Willem <contact@arnaud-willem.eu>, 2020
+# Yann Papouin <y.papouin@dec-industrie.com>, 2021
+# Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
+# Benjamin Stienon <tsb@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -56,7 +60,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2020\n"
+"Last-Translator: Benjamin Stienon <tsb@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1955,7 +1959,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_exigible
 msgid "Appears in VAT report"
-msgstr "Apparaït dans la TVA"
+msgstr "Apparaît dans la TVA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -3806,7 +3810,7 @@ msgstr "Actif circulant"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_liabilities
 msgid "Current Liabilities"
-msgstr "Passif circulant"
+msgstr "Dettes à court terme"
 
 #. module: account
 #: model:account.account.type,name:account.data_unaffected_earnings
@@ -8243,6 +8247,12 @@ msgstr ""
 "diverses avant de continuer."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr "Veuillez définir une valeur d'arrondi strictement positive."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "Merci d'utiliser la communication suivante pour votre paiement:"
@@ -8908,7 +8918,7 @@ msgstr "Compte des revenus/dépenses"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__reverse_date
 msgid "Reversal Date"
-msgstr ""
+msgstr "Date d'extourne"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
@@ -9613,7 +9623,7 @@ msgstr "État"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_dashboard_onboarding_state
 msgid "State of the account dashboard onboarding panel"
-msgstr ""
+msgstr "État du panneau d'intégration du tableau de bord du compte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_invoice_onboarding_state
@@ -9623,12 +9633,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_bank_data_state
 msgid "State of the onboarding bank data step"
-msgstr ""
+msgstr "Statu de l'étape d'intégration des données bancaires"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_coa_state
 msgid "State of the onboarding charts of account step"
-msgstr ""
+msgstr "État de l'étape d'intégration des plans de compte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_fy_data_state
@@ -10067,7 +10077,7 @@ msgstr "Correspondance des taxes"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_ids
 msgid "Taxes that apply on the base amount"
-msgstr ""
+msgstr "Taxes applicables sur le montant de base"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -10346,6 +10356,8 @@ msgid ""
 "The 'Internal Group' is used to filter accounts based on the internal group "
 "set on the account type."
 msgstr ""
+"Le \"groupe interne\" est utilisé pour filtrer les comptes en fonction du "
+"groupe interne défini sur le type de compte."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_type
@@ -10424,6 +10436,8 @@ msgid ""
 "The application scope of taxes in a group must be either the same as the "
 "group or left empty."
 msgstr ""
+"Le champ d'application des impôts dans un groupe doit être soit le même que "
+"celui du groupe, soit laissé vide."
 
 #. module: account
 #: code:addons/account/models/account.py:551
@@ -10597,8 +10611,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "Le propriétaire d'un journal bancaire doit être l'entreprise (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__account_id
@@ -10624,6 +10641,7 @@ msgstr ""
 #, python-format
 msgid "The last line of a Payment Term should have the Balance type."
 msgstr ""
+"La dernière ligne d'un Délai de Paiement doit comporter le Type de Solde."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -10886,6 +10904,8 @@ msgid ""
 "The sum of total residual amount propositions matches the statement line "
 "amount."
 msgstr ""
+"La somme des propositions de montant résiduel total correspond au montant de"
+" la ligne du relevé."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
@@ -12045,7 +12065,7 @@ msgstr "Montant radié"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:217
 #, python-format
 msgid "Writeoff Date"
-msgstr ""
+msgstr "Date d'Annulation"
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -12273,6 +12293,8 @@ msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
 msgstr ""
+"Vous ne pouvez pas avoir plusieurs comptes de type \"Résultat de l'Exercice "
+"Courant\" (Comptes : %s)"
 
 #. module: account
 #: code:addons/account/models/company.py:160
@@ -12498,12 +12520,6 @@ msgstr ""
 "Veuillez configurer le compte de 'Perte de change' dans les paramètres "
 "comptables afin de permettre un enregistrement comptable automatique de la "
 "différence de change."
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund

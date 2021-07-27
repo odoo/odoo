@@ -11,7 +11,8 @@
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
 # Martin Trigaux, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2020\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -533,7 +534,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_5
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Corner Desk Right Sit"
-msgstr ""
+msgstr "Rohový stůl, pravý sed"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history__cost
@@ -726,7 +727,7 @@ msgstr "Popis pro zákazníky"
 #: model:product.product,name:product.product_product_3
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Desk Combination"
-msgstr ""
+msgstr "Kombinace stolu"
 
 #. module: product
 #: model:product.product,name:product.product_product_22
@@ -745,7 +746,7 @@ msgstr "Kombinace stolů, černohnědá: židle + psací stůl + zásuvky."
 #: model:ir.model.fields,help:product.field_product_attribute_value__sequence
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__sequence
 msgid "Determine the display order"
-msgstr ""
+msgstr "Určete pořadí zobrazení"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_name
@@ -1051,7 +1052,7 @@ msgstr "Importovat šablonu pro produkty"
 #: code:addons/product/models/product.py:665
 #, python-format
 msgid "Import Template for Vendor Pricelists"
-msgstr ""
+msgstr "Import šablony pro ceníky prodejců"
 
 #. module: product
 #: model:product.product,name:product.product_product_24
@@ -1100,7 +1101,7 @@ msgstr "Je varianta produktu"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template__is_product_variant
 msgid "Is a product variant"
-msgstr ""
+msgstr "Je varianta produktu"
 
 #. module: product
 #: selection:res.config.settings,product_weight_in_lbs:0
@@ -2252,13 +2253,13 @@ msgstr "Neexistují žádné možné kombinace."
 #: code:addons/product/models/product_template.py:1005
 #, python-format
 msgid "There are no remaining closest combination."
-msgstr ""
+msgstr "Nejsou žádné zbývající nejbližší kombinace."
 
 #. module: product
 #: code:addons/product/models/product_template.py:963
 #, python-format
 msgid "There are no remaining possible combination."
-msgstr ""
+msgstr "Nejsou žádné zbývající možné kombinace."
 
 #. module: product
 #: sql_constraint:product.attribute.value:0
@@ -2296,7 +2297,7 @@ msgstr "Toto je součet extra ceny všech atributů"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is only for internal purposes."
-msgstr ""
+msgstr "Tato poznámka slouží pouze pro interní účely."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2314,17 +2315,16 @@ msgstr ""
 "partnerovi"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
-#: code:addons/product/models/product_uom.py:63
+#: code:addons/product/models/uom_uom.py:16
 #, python-format
 msgid ""
 "This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
-"This may cause inconsistencies in reservations.\n"
+"This may cause inconsistencies in computations.\n"
 "Please set a precision between %s and 1."
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
+#: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
@@ -2338,6 +2338,8 @@ msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"Při tisku požadavku na nabídku bude použit název produktu tohoto dodavatele."
+" Pokud chcete použít interní, ponechte prázdné."
 
 #. module: product
 #: model:product.product,name:product.consu_delivery_01
@@ -2469,7 +2471,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
-msgstr ""
+msgstr "Platné řádky atributů produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_wnva_ids
@@ -2522,17 +2524,17 @@ msgstr "Hodnoty"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_variant_count
 msgid "Variant Count"
-msgstr ""
+msgstr "Počet variant"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant
 msgid "Variant Image"
-msgstr ""
+msgstr "Obrázek varianty"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr ""
+msgstr "Informace o variantě"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__price_extra
@@ -2543,7 +2545,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__variant_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_template__variant_seller_ids
 msgid "Variant Seller"
-msgstr ""
+msgstr "Prodejce varianty"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
@@ -2578,7 +2580,7 @@ msgstr "Faktury dodavatele"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr ""
+msgstr "Informace prodejce"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
@@ -2593,12 +2595,12 @@ msgstr "Kód produktu dodavatele"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_name
 msgid "Vendor Product Name"
-msgstr ""
+msgstr "Produktový název prodejce"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__name
 msgid "Vendor of this product"
-msgstr ""
+msgstr "Prodejce tohoto produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__seller_ids
@@ -2626,6 +2628,13 @@ msgid "Volume"
 msgstr "Objem"
 
 #. module: product
+#: code:addons/product/models/decimal_precision.py:33
+#: code:addons/product/models/uom_uom.py:15
+#, python-format
+msgid "Warning!"
+msgstr "Varování!"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
 #: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
 msgid "Website Messages"
@@ -2640,14 +2649,6 @@ msgstr "Historie komunikace Webové stránky"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
 #: model:ir.model.fields,field_description:product.field_product_template__weight
-#: code:addons/product/models/product_uom.py:63
-#, python-format
-msgid "Warning!"
-msgstr "Varování!"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_weight
-#: model:ir.model.fields,field_description:product.field_product_template_weight
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
 msgstr "Hmotnost"
@@ -2675,13 +2676,13 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
 msgid "Weight unit of measure"
-msgstr ""
+msgstr "Jednotka hmotnosti"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "Štítek měrné jednotky hmotnosti"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -2692,6 +2693,20 @@ msgstr "Váhy"
 #: model:product.attribute.value,name:product.product_attribute_value_3
 msgid "White"
 msgstr ""
+
+#. module: product
+#: code:addons/product/models/decimal_precision.py:34
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOMs:\n"
+"%s\n"
+"This may cause inconsistencies in computations.\n"
+"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+msgstr ""
+"Nastavujete desetinnou přesnost menší, než přesnost MJ:\n"
+"%s\n"
+"To může způsobit nekonzistence ve výpočtech.\n"
+"Zvyšte prosím zaokrouhlování těchto měrných jednotek nebo číslic této desetinné přesnosti."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:46
@@ -2707,19 +2722,21 @@ msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
 msgstr ""
+"Svým zákazníkům můžete přiřadit ceníky nebo je můžete vybrat při vytváření "
+"nové nabídky."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:442
 #, python-format
 msgid ""
 "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr ""
+msgstr "V Ceníkové položce nemůžete hlavní ceník přiřadit jako jiný ceník"
 
 #. module: product
 #: code:addons/product/models/product.py:57
 #, python-format
 msgid "You cannot create recursive categories."
-msgstr ""
+msgstr "Nelze vytvářet rekurzivní kategorie."
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:16
@@ -2790,7 +2807,7 @@ msgstr "dnů"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "e.g. Lamps"
-msgstr ""
+msgstr "např. Lampy"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -2800,12 +2817,12 @@ msgstr "např. Odoo Enterprise Subscription"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "e.g. USD Retailers"
-msgstr ""
+msgstr "např. USD Retailers"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "from"
-msgstr ""
+msgstr "od"
 
 #. module: product
 #: model:product.product,weight_uom_name:product.consu_delivery_01

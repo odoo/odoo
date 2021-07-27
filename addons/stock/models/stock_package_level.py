@@ -145,7 +145,7 @@ class StockPackageLevel(models.Model):
         return result
 
     def unlink(self):
-        self.mapped('move_ids').unlink()
+        self.mapped('move_ids').write({'package_level_id': False})
         self.mapped('move_line_ids').write({'result_package_id': False})
         return super(StockPackageLevel, self).unlink()
 

@@ -5,5 +5,6 @@
     'data': [
         'views/assets.xml',
         'views/signup_templates.xml',
-    ]
+    ],
+    'license': 'LGPL-3',
 }

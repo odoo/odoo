@@ -15,7 +15,7 @@ class ReportBomStructure(models.AbstractModel):
         for bom_id in docids:
             bom = self.env['mrp.bom'].browse(bom_id)
             candidates = bom.product_id or bom.product_tmpl_id.product_variant_ids
-            for product_variant_id in candidates:
+            for product_variant_id in candidates.ids:
                 if data and data.get('childs'):
                     doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=float(data.get('quantity')), child_bom_ids=json.loads(data.get('childs')))
                 else:
@@ -69,7 +69,7 @@ class ReportBomStructure(models.AbstractModel):
     def _get_report_data(self, bom_id, searchQty=0, searchVariant=False):
         lines = {}
         bom = self.env['mrp.bom'].browse(bom_id)
-        bom_quantity = searchQty or bom.product_qty
+        bom_quantity = searchQty or bom.product_qty or 1
         bom_product_variants = {}
         bom_uom_name = ''
 
@@ -96,7 +96,7 @@ class ReportBomStructure(models.AbstractModel):
         bom_quantity = line_qty
         if line_id:
             current_line = self.env['mrp.bom.line'].browse(int(line_id))
-            bom_quantity = current_line.product_uom_id._compute_quantity(line_qty, bom.product_uom_id)
+            bom_quantity = current_line.product_uom_id._compute_quantity(line_qty, bom.product_uom_id) or 0
         # Display bom components for current selected product variant
         if product_id:
             product = self.env['product.product'].browse(int(product_id))
@@ -209,10 +209,10 @@ class ReportBomStructure(models.AbstractModel):
 
     def _get_pdf_line(self, bom_id, product_id=False, qty=1, child_bom_ids=[], unfolded=False):
 
-        data = self._get_bom(bom_id=bom_id, product_id=product_id.id, line_qty=qty)
+        data = self._get_bom(bom_id=bom_id, product_id=product_id, line_qty=qty)
 
         def get_sub_lines(bom, product_id, line_qty, line_id, level):
-            data = self._get_bom(bom_id=bom.id, product_id=product_id.id, line_qty=line_qty, line_id=line_id, level=level)
+            data = self._get_bom(bom_id=bom.id, product_id=product_id, line_qty=line_qty, line_id=line_id, level=level)
             bom_lines = data['components']
             lines = []
             for bom_line in bom_lines:

@@ -25,6 +25,7 @@
 # Karol Rybak <karolrybak85@gmail.com>, 2019
 # Paweł Wodyński <pw@myodoo.pl>, 2020
 # Maksym <ms@myodoo.pl>, 2020
+# Piotr Strębski <strebski@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -32,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2020\n"
+"Last-Translator: Piotr Strębski <strebski@gmail.com>, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -678,6 +679,8 @@ msgid ""
 "<span class=\"fa fa-map-marker fa-fw mt16\" role=\"img\" aria-"
 "label=\"Address\" title=\"Address\"/>"
 msgstr ""
+"<span class=\"fa fa-map-marker fa-fw mt16\" role=\"img\" aria-"
+"label=\"Address\" title=\"Address\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -913,6 +916,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Add links to social media on your website"
 msgstr ""
+"Dodaj odnośniki do mediów społecznościowych na swej stronie internetowej"
 
 #. module: website
 #. openerp-web
@@ -1416,7 +1420,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Create a New Website"
-msgstr ""
+msgstr "Utwórz nową stronę internetową"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__create_uid
@@ -1673,7 +1677,7 @@ msgstr "Czy chcesz edytować dane firmy?"
 #: code:addons/website/static/src/js/menu/new_content.js:28
 #, python-format
 msgid "Do you want to install the \"%s\" App?"
-msgstr ""
+msgstr "Czy chcesz zainstalować aplikację \"%s\"?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1909,7 +1913,7 @@ msgstr ""
 #: code:addons/website/static/src/js/menu/new_content.js:26
 #, python-format
 msgid "Failed to install \"%s\""
-msgstr ""
+msgstr "Błąd instalacji \"%s\""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2104,7 +2108,7 @@ msgstr "Google Analytics"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics_dashboard
 msgid "Google Analytics Dashboard"
-msgstr ""
+msgstr "Panel Google Analitycs"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_analytics_key
@@ -2471,14 +2475,14 @@ msgstr "Zainstalowane moduły"
 #. module: website
 #: model:ir.model.fields,help:website.field_website__theme_id
 msgid "Installed theme"
-msgstr ""
+msgstr "Zainstalowane motywy"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/menu/new_content.js:29
 #, python-format
 msgid "Installing \"%s\""
-msgstr ""
+msgstr "Instalowanie \"%s\""
 
 #. module: website
 #. openerp-web
@@ -2649,7 +2653,7 @@ msgstr "Układ"
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns
 msgid "Learn more"
-msgstr ""
+msgstr "Dowiedz się więcej"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2722,7 +2726,7 @@ msgstr "Konto w LinkedIn"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "Links to other Websites"
-msgstr ""
+msgstr "Odnośniki do innych stron"
 
 #. module: website
 #. openerp-web
@@ -3980,7 +3984,7 @@ msgstr "Pełny adres dostępu do akcji serwera przez stronę."
 #: code:addons/website/static/src/js/menu/new_content.js:27
 #, python-format
 msgid "The installation of an App is already in progress."
-msgstr ""
+msgstr "Instalacja aplikacji jest już w trakcie."
 
 #. module: website
 #. openerp-web
@@ -4297,7 +4301,7 @@ msgstr "Url"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Use Google Map on your website ("
-msgstr ""
+msgstr "Użyj Map Google na swojej stronie internetowej ("
 
 #. module: website
 #. openerp-web
@@ -4723,7 +4727,7 @@ msgstr ""
 #: code:addons/website/controllers/backend.py:47
 #, python-format
 msgid "You do not have sufficient rights to perform that action."
-msgstr ""
+msgstr "Nie posiadasz wystarczających praw do przeprowadzenia tego działania."
 
 #. module: website
 #. openerp-web
@@ -4739,6 +4743,12 @@ msgstr "Wygląda na to, że nie masz dostępu do tego konta Analytics."
 msgid ""
 "You have hidden this page from search results. It won't be indexed by search"
 " engines."
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website.py:162
+#, python-format
+msgid "You must keep at least one website."
 msgstr ""
 
 #. module: website
@@ -4828,7 +4838,7 @@ msgstr "np. O nas"
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_dashboard
 msgid "eCommerce Dashboard"
-msgstr ""
+msgstr "Konsola eCommerce"
 
 #. module: website
 #. openerp-web

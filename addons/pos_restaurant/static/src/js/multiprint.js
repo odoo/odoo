@@ -60,9 +60,9 @@ models.load_models({
             if(active_printers[printers[i].id]){
                 var url = printers[i].proxy_ip || '';
                 if(url.indexOf('//') < 0){
-                    url = 'http://'+url;
+                    url = window.location.protocol + '//' + url;
                 }
-                if(url.indexOf(':',url.indexOf('//')+2) < 0){
+                if(url.indexOf(':',url.indexOf('//')+2) < 0 && window.location.protocol === 'http:'){
                     url = url+':8069';
                 }
                 var printer = new Printer(self,{url:url});

@@ -24,6 +24,8 @@
 # Murat Durmuş <muratd@projetgrup.com>, 2020
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
+# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
+# Özlem Atalay <ozlema@eskayazilim.com.tr>, 2021
 # 
 msgid ""
 msgstr ""
@@ -31,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020\n"
+"Last-Translator: Özlem Atalay <ozlema@eskayazilim.com.tr>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -328,6 +330,14 @@ msgstr "<strong>İş Merkezi</strong>"
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
 msgstr "Üretim Emri bitmiş ya da iptal edilmiş."
+
+#. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:288
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr ""
+"Kit tipi ürün reçetesine sahip bir ürünün yeniden sıralama kuralı olamaz."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -907,7 +917,7 @@ msgstr "Ürün Ağacı Oluştur"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "Create a new manufacturing order"
-msgstr ""
+msgstr "Create a new manufacturing order"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -4394,6 +4404,16 @@ msgstr "İşlenmiş iş emrini değiştiremezsiniz."
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr "Hangi lotu tükettiğinizi söylemeden, tüketim yapamazsınız"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:122
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr ""
+"En az bir yeniden sıralama kuralı olan ürünler için kit tipi ürün reçetesi "
+"oluşturamazsınız."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:117

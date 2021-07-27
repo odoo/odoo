@@ -11,10 +11,11 @@
 # fanha99 <fanha99@hotmail.com>, 2018
 # khoibv Mr <kendev2009@gmail.com>, 2018
 # Nguyen Quang Toan <nqtoan@dqn.vn>, 2019
-# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2019
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # Dung Nguyen Thi <dungnt@trobz.com>, 2019
-# Chinh Chinh <trinhttp@trobz.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2019
+# Duy BQ <duybq86@gmail.com>, 2020
+# Trần Hà <tranthuha13590@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2019\n"
+"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,7 +121,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        % set doc_name = 'báo giá' if object.state in ('draft', 'sent') else 'đơn hàng'\n"
 "        Xin chào ${object.partner_id.name}\n"
 "        % if object.partner_id.parent_id:\n"
 "            (${object.partner_id.parent_id.name})\n"
@@ -128,7 +129,7 @@ msgstr ""
 "        <br/><br/>\n"
 "        Đây là\n"
 "        % if ctx.get('proforma')\n"
-"            đính kèm với hóa đơn chiếu tệ\n"
+"            đính kèm với hóa đơn dự toán\n"
 "        % else\n"
 "            ${doc_name} <strong>${object.name}</strong>\n"
 "        % endif\n"
@@ -138,7 +139,7 @@ msgstr ""
 "        số tiền trên <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong>\n"
 "        từ ${object.company_id.name}.\n"
 "        <br/><br/>\n"
-"        Đừng ngần ngại liên hệ chúng tôi nếu có câu hỏi nào.\n"
+"        Đừng ngần ngại liên hệ chúng tôi nếu bạn có bất kỳ câu hỏi nào.\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -3696,6 +3697,8 @@ msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
 msgstr ""
+"The order was not confirmed despite response from the acquirer (%s): order "
+"total is %r but acquirer replied with %r."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference

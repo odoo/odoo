@@ -17,7 +17,7 @@
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Lorenzo Battistini <lb@takobi.online>, 2020
 # Alberto Carollo <baba75@gmail.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 13:44+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -134,6 +134,11 @@ msgid ""
 "community module, a case study, methodology feedback, technical, etc. Each "
 "presentation must be in English.</em>"
 msgstr ""
+"<em>Se desideri fare una presentazione, invia il prima possibile la proposta"
+" di argomento al Sig. Famke Jenssens a ngh (chiocciola) yourcompany (punto) "
+"com per l'approvazione. La presentazione deve riguardare, ad esempio, un "
+"modulo della comunità, un caso di studio, un riscontro su una metodologia, "
+"un aspetto tecnico ecc. Ciascuna presentazione deve essere in inglese.</em>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -1612,7 +1617,7 @@ msgstr "Pianificatori e-mail"
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "Pianificazione e-mail  su categoria evento"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
@@ -1794,6 +1799,13 @@ msgid ""
 msgstr ""
 "Gli eventi online come i webinar non richiedono un luogo specifico e sono "
 "gestiti online."
+
+#. module: event
+#: code:addons/event/models/event.py:386
+#, python-format
+msgid ""
+"Only event users or managers are allowed to create or update registrations."
+msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0

@@ -20,7 +20,7 @@
 # Paolo Valier, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Mario Riva <mario.riva@gmail.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -245,8 +245,8 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    Spett.le ${object.partner_id.name or 'customer'},<br/>\n"
-"    La ringraziamo per la sua richiesta.<br/>\n"
-"    Per qualsiasi altra domanda, non esiti a contattarci.\n"
+"    La ringraziamo per la Sua richiesta.<br/>\n"
+"    Per qualsiasi domanda, non esiti a contattarci.\n"
 "    <br/><br/>\n"
 "    Grazie,\n"
 "    <br/>\n"
@@ -1434,7 +1434,7 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID del record principale contenente l’alias (esempio: progetto che contiene "
+"ID del record primario contenente l’alias (esempio: progetto che contiene "
 "l’alias di creazione del lavoro)"
 
 #. module: project
@@ -1488,8 +1488,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
-"Se il campo attivo è impostato a «Falso», consente di nascondere il progetto"
-" senza rimuoverlo."
+"Se il campo attivo è impostato a falso, consente di nascondere il progetto "
+"senza rimuoverlo."
 
 #. module: project
 #. openerp-web
@@ -1614,7 +1614,7 @@ msgstr "Descrizione kanban pronto"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
 msgid "Kpi Project Task Opened Value"
-msgstr ""
+msgstr "KPI - Valore lavori aperti progetto"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
@@ -2115,7 +2115,7 @@ msgstr "Idee per la pagina"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_model_id
 msgid "Parent Model"
-msgstr "Modello principale"
+msgstr "Modello primario"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
@@ -2293,7 +2293,7 @@ msgstr "Progetti e lavori"
 #. module: project
 #: selection:project.project,rating_status_period:0
 msgid "Quarterly"
-msgstr "Quadrimestrale"
+msgstr "Trimestrale"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
@@ -3327,6 +3327,12 @@ msgid ""
 msgstr ""
 "Impossibile eliminare un progetto che contiene lavori. Archiviarlo o "
 "eliminare prima tutti i suoi lavori."
+
+#. module: project
+#: code:addons/project/models/project.py:628
+#, python-format
+msgid "Your task must be in the same company as its project."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all

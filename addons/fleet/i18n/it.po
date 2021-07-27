@@ -674,7 +674,7 @@ msgstr "Nome visualizzato"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_17
 msgid "Door Window Motor/Regulator Replacement"
-msgstr ""
+msgstr "Sostituzione motore/regolatore finestrino portiera"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__doors
@@ -684,7 +684,7 @@ msgstr "Numero porte"
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_downgraded
 msgid "Downgraded"
-msgstr ""
+msgstr "Declassato"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__driver_id
@@ -725,6 +725,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Each service can used in contracts, as a standalone service or both."
 msgstr ""
+"Ciascun servizio può essere utilizzato nei contratti, in modo autonomo o "
+"entrambi."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
@@ -960,12 +962,12 @@ msgstr "Sostituzione Guarnizione(i) della Testa"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_25
 msgid "Heater Blower Motor Replacement"
-msgstr ""
+msgstr "Sostituzione motorino ventola riscaldamento"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_26
 msgid "Heater Control Valve Replacement"
-msgstr ""
+msgstr "Sostituzione valvola di controllo riscaldatore"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_27
@@ -975,7 +977,7 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_28
 msgid "Heater Hose Replacement"
-msgstr ""
+msgstr "Sostituzione tubo riscaldamento"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_action
@@ -1127,7 +1129,7 @@ msgstr "Km"
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
 msgid "LPG"
-msgstr ""
+msgstr "GPL"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type____last_update
@@ -2400,6 +2402,14 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
 msgstr "Puoi definire vari modelli (es. A3, A4) per ogni marca (es. Audi)."
+
+#. module: fleet
+#: code:addons/fleet/models/fleet_vehicle_cost.py:76
+#, python-format
+msgid ""
+"You cannot delete an activation cost linked to a contract. You should delete"
+" the contract instead."
+msgstr ""
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form

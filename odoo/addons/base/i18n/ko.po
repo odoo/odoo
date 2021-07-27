@@ -12,7 +12,7 @@
 # Link Up링크업 <linkup.way@gmail.com>, 2019
 # Linkup <link-up@naver.com>, 2019
 # Martin Trigaux, 2019
-# JH CHOI <hwangtog@gmail.com>, 2020
+# JH CHOI <hwangtog@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-10 14:44+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26884,6 +26884,12 @@ msgid "The internal user in charge of this contact."
 msgstr "연락처 담당 내부 사용자를 담당합니다."
 
 #. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr "양식에 잘못된 형식 키가 있습니다."
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "현재 모델 목록을 확장하십시오."
@@ -27325,15 +27331,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "This module will trigger the uninstallation of below modules."
 msgstr "이 모듈은 다음 모듈 제거를 트리거합니다."
-
-#. module: base
-#: code:addons/base/ir/ir_sequence.py:56
-#, python-format
-msgid ""
-"This transaction wasn't executed because another transaction is already "
-"using the same no-gap sequence. Please try again later."
-msgstr ""
-"다른 트랜잭션이 이미 동일한 no-gap 시퀀스를 사용하고 있기 때문에 이 트랜잭션이 실행되지 않았습니다. 나중에 다시 시도하세요."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -29064,8 +29061,8 @@ msgstr "수퍼 유저는 활성화할 수 없습니다."
 #. module: base
 #: code:addons/base/models/res_partner.py:509
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
-msgstr "내부 사용자에 연결된 연락처를 보관할 수 없습니다."
+msgid "You cannot archive a contact linked to a portal or internal user."
+msgstr "포털 또는 내부 사용자에 연결된 연락처는 보관할 수 없습니다."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:330

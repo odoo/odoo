@@ -20,4 +20,5 @@ Validate contact (phone,mobile) numbers and normalize them on leads and contacts
         'website_form',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

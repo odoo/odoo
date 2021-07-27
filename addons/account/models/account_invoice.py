@@ -1197,17 +1197,13 @@ class AccountInvoice(models.Model):
     def tax_line_move_line_get(self):
         res = []
         # keep track of taxes already processed
-        done_taxes = []
         # loop the invoice.tax.line in reversal sequence
         for tax_line in sorted(self.tax_line_ids, key=lambda x: -x.sequence):
             tax = tax_line.tax_id
-            if tax.amount_type == "group":
-                for child_tax in tax.children_tax_ids:
-                    done_taxes.append(child_tax.id)
 
             analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in tax_line.analytic_tag_ids]
             if tax_line.amount_total:
-                res.append({
+                tax_line_vals = {
                     'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
                     'type': 'tax',
@@ -1219,9 +1215,20 @@ class AccountInvoice(models.Model):
                     'account_analytic_id': tax_line.account_analytic_id.id,
                     'analytic_tag_ids': analytic_tag_ids,
                     'invoice_id': self.id,
-                    'tax_ids': [(6, 0, list(done_taxes))] if done_taxes and tax_line.tax_id.include_base_amount else []
-                })
-            done_taxes.append(tax.id)
+                }
+
+                if tax.include_base_amount:
+                    affected_taxes = []
+                    for invoice_line in tax_line.invoice_id.invoice_line_ids:
+                        if tax in invoice_line.invoice_line_tax_ids:
+                            following_taxes = invoice_line.invoice_line_tax_ids.filtered(lambda x: x.sequence > tax.sequence
+                                                                                                   or (x.sequence == tax.sequence and x.id > tax.id))
+                            affected_taxes += following_taxes.ids
+                            affected_taxes += following_taxes.mapped('children_tax_ids.id')
+
+                    tax_line_vals['tax_ids'] = [(6, 0, affected_taxes)]
+
+                res.append(tax_line_vals)
         return res
 
     def inv_line_characteristic_hashcode(self, invoice_line):

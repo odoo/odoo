@@ -14,14 +14,13 @@
 # Harald Panten <harald.panten@qubiq.es>, 2018
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
 # Dany Daniel Roche <ddanielroche@gmail.com>, 2019
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
 # oihane <oihanecruce@gmail.com>, 2019
 # Nelson Ramírez Sánchez <info@konos.cl>, 2020
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
-# luis abarca <AVEMAR2714@GMAIL.COM>, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # 
 msgid ""
 msgstr ""
@@ -29,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: luis abarca <AVEMAR2714@GMAIL.COM>, 2020\n"
+"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -533,9 +532,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
-"Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
-" * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
-" * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
+"Modifique automáticamente el estado Kanban cuando el cliente responda a los comentarios de esta etapa.\n"
+" * Una buena retroalimentación del cliente actualizará el estado Kanban a ' listo para la nueva etapa ' (viñeta verde).\n"
+" * Un medio o una mala retroalimentación establecerá el estado Kanban en ' bloqueado ' (bala roja).\n"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -1538,7 +1537,7 @@ msgstr "Explicación del kanban válido"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
 msgid "Kpi Project Task Opened Value"
-msgstr "Kpi Project Task Opened Value"
+msgstr "Valor abierto de la tarea del proyecto Kpi"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
@@ -3011,8 +3010,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
 msgstr ""
-"To get things done, use activities and status on tasks.<br>\n"
-"                    Chat in real time or by email to collaborate efficiently."
+"Para hacer las cosas, utilice las actividades y el estado de las tareas. <br>\n"
+"                    Comuníquese en tiempo real o por email para colaborar eficientemente."
 
 #. module: project
 #. openerp-web
@@ -3078,7 +3077,7 @@ msgstr "Use la Calificación en el Proyecto"
 #. module: project
 #: model:res.groups,name:project.group_subtask_project
 msgid "Use Subtasks"
-msgstr "Use Subtasks"
+msgstr "Usar subtareas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
@@ -3254,6 +3253,12 @@ msgid ""
 msgstr ""
 "No puede borrar un proyecto que contenga tareas. Puede archivar o primero "
 "eliminar todas sus tareas."
+
+#. module: project
+#: code:addons/project/models/project.py:628
+#, python-format
+msgid "Your task must be in the same company as its project."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all

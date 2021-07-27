@@ -34,12 +34,14 @@ class PaymentAcquirerStripeSCA(models.Model):
             "line_items[][name]": tx_values["reference"],
             "client_reference_id": tx_values["reference"],
             "success_url": urls.url_join(base_url, StripeController._success_url)
-            + "?reference=%s" % tx_values["reference"],
+            + "?reference=%s" % urls.url_quote_plus(tx_values["reference"]),
             "cancel_url": urls.url_join(base_url, StripeController._cancel_url)
-            + "?reference=%s" % tx_values["reference"],
+            + "?reference=%s" % urls.url_quote_plus(tx_values["reference"]),
             "payment_intent_data[description]": tx_values["reference"],
             "customer_email": tx_values.get("partner_email") or tx_values.get("billing_partner_email"),
         }
+        if tx_values.get('type') == 'form_save':
+            stripe_session_data["payment_intent_data[setup_future_usage]"] = "off_session"
         tx_values["session_id"] = self._create_stripe_session(stripe_session_data)
 
         return tx_values
@@ -251,7 +253,7 @@ class PaymentTransactionStripeSCA(models.Model):
     def _stripe_form_get_tx_from_data(self, data):
         """ Given a data dict coming from stripe, verify it and find the related
         transaction record. """
-        reference = data.get("reference")
+        reference = data.get('metadata', {}).get("reference") or data.get("reference")
         if not reference:
             stripe_error = data.get("error", {}).get("message", "")
             _logger.error(
@@ -319,6 +321,10 @@ class PaymentTransactionStripeSCA(models.Model):
             self.write(vals)
             self._set_transaction_pending()
             return True
+        if status == 'requires_payment_method':
+            self._set_transaction_cancel()
+            self.acquirer_id._stripe_request('payment_intents/%s/cancel' % self.stripe_payment_intent)
+            return False
         else:
             error = tree.get("failure_message") or tree.get('error', {}).get('message')
             self._set_transaction_error(error)

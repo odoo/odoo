@@ -219,7 +219,7 @@ var Followers = AbstractField.extend({
         });
     },
     _reload: function () {
-        this.trigger_up('reload', {fieldNames: [this.name]});
+        this.trigger_up('reload', { fieldNames: [this.name], keepChanges: true });
     },
     _follow: function () {
         var kwargs = {

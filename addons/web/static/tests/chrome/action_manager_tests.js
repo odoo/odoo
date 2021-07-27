@@ -1167,6 +1167,26 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('state with integer active_ids should not crash', function (assert) {
+        assert.expect(0);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            mockRPC: function (route, args) {
+                if (route === '/web/action/run') {
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        actionManager.loadState({
+            action: 2,
+            active_ids: 3,
+        });
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Concurrency management');
 
     QUnit.test('drop previous actions if possible', function (assert) {

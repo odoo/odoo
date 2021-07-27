@@ -112,7 +112,6 @@ class WebsiteMembership(http.Controller):
         if country_id:
             search_domain += [('country_id', '=', country_id)]
         free_partners = Partner.sudo().search(search_domain)
-        free_partner_ids = []
 
         memberships_data = []
         for membership_record in memberships:
@@ -130,8 +129,8 @@ class WebsiteMembership(http.Controller):
                     free_end = max(offset + limit - count_members, 0)
                     memberships_partner_ids['free'] = free_partners.ids[free_start:free_end]
                     page_partner_ids |= set(memberships_partner_ids['free'])
-                google_map_partner_ids += free_partner_ids[:2000-len(google_map_partner_ids)]
-                count_members += len(free_partner_ids)
+                google_map_partner_ids += free_partners.ids[:2000-len(google_map_partner_ids)]
+                count_members += len(free_partners)
 
         google_map_partner_ids = ",".join(str(it) for it in google_map_partner_ids)
         google_maps_api_key = request.website.google_maps_api_key

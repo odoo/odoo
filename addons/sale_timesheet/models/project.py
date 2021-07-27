@@ -236,7 +236,8 @@ class ProjectTask(models.Model):
     def _subtask_write_values(self, values):
         result = super(ProjectTask, self)._subtask_write_values(values)
         # changing the partner on a task will reset the sale line of its subtasks
-        if 'partner_id' in result:
+        # if a sale line is not beeing set
+        if 'partner_id' in result and 'sale_line_id' not in result:
             result['sale_line_id'] = False
         elif 'sale_line_id' in result:
             result.pop('sale_line_id')

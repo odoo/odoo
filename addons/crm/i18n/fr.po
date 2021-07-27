@@ -11,8 +11,8 @@
 # Marie Willemyns <mwi@odoo.com>, 2018
 # Nathan Grognet <ngr@odoo.com>, 2018
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
-# Cyrille de Lambert <cdelambert@auguria.net>, 2018
-# Leo Schmitt <inactive+lschmitt@transifex.com>, 2018
+# Cyrille de Lambert <cyrille.delambert@auguria.fr>, 2018
+# f477e7ae9c75a2428d6113663a8354fe_bcd021c <0ff4ce060a36f446722508a48e99c22a_347081>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
 # Moka Tourisme <hello@mokatourisme.fr>, 2019
 # Martin Trigaux, 2019
@@ -23,6 +23,7 @@
 # Cécile Collart <cco@odoo.com>, 2019
 # Florian Hatat, 2019
 # Jonathan Quique <jqu@odoo.com>, 2020
+# Gwladys Jouble <g.jouble@vieconnect.io>, 2021
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Jonathan Quique <jqu@odoo.com>, 2020\n"
+"Last-Translator: Gwladys Jouble <g.jouble@vieconnect.io>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -183,6 +184,16 @@ msgstr ""
 "<p><b>Envoyer des messages</b>à vos prospects et recever des réponses "
 "automatiques liées à cette opportunité</p><p class=\"mb0\">Type<i>@</i>Pour "
 "notifier des personnes - faites comme pour un mail et mettez cc</p>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:152
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
+"<p>Etant donné que vous ne faites partie d'aucune équipe commerciale, Odoo "
+"ouvre la première par défaut.</p>"
 
 #. module: crm
 #. openerp-web
@@ -1617,6 +1628,7 @@ msgstr "Mon Pipeline"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag__name
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__name
+#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Name"
 msgstr "Nom"
 

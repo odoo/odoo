@@ -1904,6 +1904,11 @@ msgid "Email support"
 msgstr "El. pašto palaikymas"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Enable billing on your Google Project"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Enter email"
@@ -4477,15 +4482,6 @@ msgid "Used when multiple websites have the same domain."
 msgstr "Naudojama, kai kelios svetainės turi tą patį domeną."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.robots
-msgid ""
-"User-agent: *\n"
-"Sitemap:"
-msgstr ""
-"User-agent: *\n"
-"Sitemap:"
-
-#. module: website
 #: model:ir.model,name:website.model_res_users
 msgid "Users"
 msgstr "Vartotojai"
@@ -4871,6 +4867,12 @@ msgid ""
 msgstr ""
 "Paslėpėte šį puslapį iš paieškos rezultatų. Jis nebus indeksuotas paieškos "
 "variklių."
+
+#. module: website
+#: code:addons/website/models/website.py:162
+#, python-format
+msgid "You must keep at least one website."
+msgstr ""
 
 #. module: website
 #. openerp-web

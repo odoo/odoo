@@ -35,4 +35,5 @@
         'views/payment_templates.xml',
     ],
     'images': ['static/description/icon.png'],
+    'license': 'LGPL-3',
 }

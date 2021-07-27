@@ -65,6 +65,14 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         self.assertEqual(refund.state, 'paid', "The refund is not marked as paid")
 
+    def compute_tax(self, product, price, qty=1, taxes=None):
+        if not taxes:
+            taxes = product.taxes_id.filtered(lambda t: t.company_id.id == self.env.user.id)
+        currency = self.pos_config.pricelist_id.currency_id
+        res = taxes.compute_all(price, currency, qty, product=product)
+        untax = res['total_excluded']
+        return untax, sum(tax.get('amount', 0.0) for tax in res['taxes'])
+
     def test_order_to_picking(self):
         """
             In order to test the Point of Sale in module, I will do three orders from the sale to the payment,
@@ -74,21 +82,13 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             check the quantity, the locations and return picking logic
         """
 
-        def compute_tax(product, price, qty=1, taxes=None):
-            if taxes is None:
-                taxes = product.taxes_id.filtered(lambda t: t.company_id.id == self.env.user.id)
-            currency = self.pos_config.pricelist_id.currency_id
-            res = taxes.compute_all(price, currency, qty, product=product)
-            untax = res['total_excluded']
-            return untax, sum(tax.get('amount', 0.0) for tax in res['taxes'])
-
         # I click on create a new session button
         self.pos_config.open_session_cb()
 
         # I create a PoS order with 2 units of PCSC234 at 450 EUR
         # and 3 units of PCSC349 at 300 EUR.
-        untax1, atax1 = compute_tax(self.product3, 450, 2)
-        untax2, atax2 = compute_tax(self.product4, 300, 3)
+        untax1, atax1 = self.compute_tax(self.product3, 450, 2)
+        untax2, atax2 = self.compute_tax(self.product4, 300, 3)
         self.pos_order_pos1 = self.PosOrder.create({
             'company_id': self.company_id,
             'pricelist_id': self.partner1.property_product_pricelist.id,
@@ -151,8 +151,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         )
 
         # I create a second order
-        untax1, atax1 = compute_tax(self.product3, 450, -2)
-        untax2, atax2 = compute_tax(self.product4, 300, -3)
+        untax1, atax1 = self.compute_tax(self.product3, 450, -2)
+        untax2, atax2 = self.compute_tax(self.product4, 300, -3)
         self.pos_order_pos2 = self.PosOrder.create({
             'company_id': self.company_id,
             'pricelist_id': self.partner1.property_product_pricelist.id,
@@ -215,8 +215,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'Move Lines should be in done state.'
         )
 
-        untax1, atax1 = compute_tax(self.product3, 450, -2)
-        untax2, atax2 = compute_tax(self.product4, 300, 3)
+        untax1, atax1 = self.compute_tax(self.product3, 450, -2)
+        untax2, atax2 = self.compute_tax(self.product4, 300, 3)
         self.pos_order_pos3 = self.PosOrder.create({
             'company_id': self.company_id,
             'pricelist_id': self.partner1.property_product_pricelist.id,
@@ -280,19 +280,75 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I close the session to generate the journal entries
         self.pos_config.current_session_id.action_pos_session_closing_control()
 
+    def test_order_to_picking02(self):
+        """ This test is similar to test_order_to_picking except that this time, the product is tracked and its
+         location is a sublocation of the main warehouse
+        """
+        product = self.env['product.product'].create({
+            'name': 'SuperProduct',
+            'type': 'product',
+            'tracking': 'lot',
+            'available_in_pos': True,
+        })
+        wh_location = self.env['ir.model.data'].xmlid_to_object('stock.warehouse0').lot_stock_id
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': wh_location.id,
+        })
+        lot = self.env['stock.production.lot'].create({
+            'name': 'SuperLot',
+            'product_id': product.id,
+        })
+        qty = 2
+        self.env['stock.quant']._update_available_quantity(product, shelf1_location, qty, lot_id=lot)
+
+        self.pos_config.open_session_cb()
+
+        untax, atax = self.compute_tax(product, 1.15, 1)
+
+        for i in range(qty):
+            pos_order = self.PosOrder.create({
+                'company_id': self.company_id,
+                'pricelist_id': self.partner1.property_product_pricelist.id,
+                'partner_id': self.partner1.id,
+                'lines': [(0, 0, {
+                    'name': "OL/0001",
+                    'product_id': product.id,
+                    'price_unit': untax + atax,
+                    'discount': 0.0,
+                    'qty': 1.0,
+                    'tax_ids': [(6, 0, product.taxes_id.ids)],
+                    'price_subtotal': untax,
+                    'price_subtotal_incl': untax + atax,
+                    'pack_lot_ids': [[0, 0, {'lot_name': lot.name}]],
+                })],
+                'amount_tax': atax,
+                'amount_total': untax + atax,
+                'amount_paid': 0,
+                'amount_return': 0,
+            })
+
+            context_make_payment = {
+                "active_ids": [pos_order.id],
+                "active_id": pos_order.id,
+            }
+            pos_make_payment = self.PosMakePayment.with_context(context_make_payment).create({
+                'amount': untax + atax,
+            })
+            context_payment = {'active_id': pos_order.id}
+            pos_make_payment.with_context(context_payment).check()
+
+            self.assertEqual(pos_order.state, 'paid')
+            self.assertEqual(pos_order.picking_id.move_line_ids.lot_id, lot)
+            self.assertEqual(pos_order.picking_id.move_line_ids.location_id, shelf1_location)
+
+        self.pos_config.current_session_id.action_pos_session_closing_control()
 
     def test_order_to_invoice(self):
 
-        def compute_tax(product, price, qty=1, taxes=None):
-            if taxes is None:
-                taxes = product.taxes_id.filtered(lambda t: t.company_id.id == self.env.user.id)
-            currency = self.pos_config.pricelist_id.currency_id
-            res = taxes.compute_all(price, currency, qty, product=product)
-            untax = res['total_excluded']
-            return untax, sum(tax.get('amount', 0.0) for tax in res['taxes'])
-
-        untax1, atax1 = compute_tax(self.product3, 450*0.95, 2)
-        untax2, atax2 = compute_tax(self.product4, 300*0.95, 3)
+        untax1, atax1 = self.compute_tax(self.product3, 450*0.95, 2)
+        untax2, atax2 = self.compute_tax(self.product4, 300*0.95, 3)
         # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
         self.pos_order_pos1 = self.PosOrder.create({
             'company_id': self.company_id,
@@ -399,21 +455,13 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         Simulation of sales coming from the interface, even after closing the session
         """
 
-        def compute_tax(product, price, qty=1, taxes=None):
-            if not taxes:
-                taxes = product.taxes_id.filtered(lambda t: t.company_id.id == self.env.user.id)
-            currency = self.pos_config.pricelist_id.currency_id
-            res = taxes.compute_all(price, currency, qty, product=product)
-            untax = res['total_excluded']
-            return untax, sum(tax.get('amount', 0.0) for tax in res['taxes'])
-
         # I click on create a new session button
         self.pos_config.open_session_cb()
 
         current_session = self.pos_config.current_session_id
         num_starting_orders = len(current_session.order_ids)
 
-        untax, atax = compute_tax(self.led_lamp, 0.9)
+        untax, atax = self.compute_tax(self.led_lamp, 0.9)
         carrot_order = {'data':
           {'amount_paid': untax + atax,
            'amount_return': 0,
@@ -449,7 +497,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
           'id': '00042-003-0014',
           'to_invoice': False}
 
-        untax, atax = compute_tax(self.whiteboard_pen, 1.2)
+        untax, atax = self.compute_tax(self.whiteboard_pen, 1.2)
         zucchini_order = {'data':
           {'amount_paid': untax + atax,
            'amount_return': 0,
@@ -485,7 +533,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
           'id': '00043-003-0014',
           'to_invoice': False}
 
-        untax, atax = compute_tax(self.newspaper_rack, 1.28)
+        untax, atax = self.compute_tax(self.newspaper_rack, 1.28)
         newspaper_rack_order = {'data':
           {'amount_paid': untax + atax,
            'amount_return': 0,
@@ -569,22 +617,14 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'currency_id': self.env.ref('base.EUR').id,
         })
 
-        def compute_tax(product, price, qty=1, taxes=None):
-            if not taxes:
-                taxes = product.taxes_id.filtered(lambda t: t.company_id.id == self.env.user.id)
-            currency = self.pos_config.pricelist_id.currency_id
-            res = taxes.compute_all(price, currency, qty, product=product)
-            untax = res['total_excluded']
-            return untax, sum(tax.get('amount', 0.0) for tax in res['taxes'])
-
         # I click on create a new session button
         self.pos_config.open_session_cb()
 
         # I create a PoS order with 2 units of PCSC234 at 450 EUR (Tax Incl)
         # and 3 units of PCSC349 at 300 EUR. (Tax Excl)
 
-        untax1, atax1 = compute_tax(self.product3, 450*0.95, 2)
-        untax2, atax2 = compute_tax(self.product4, 300*0.95, 3)
+        untax1, atax1 = self.compute_tax(self.product3, 450*0.95, 2)
+        untax2, atax2 = self.compute_tax(self.product4, 300*0.95, 3)
         self.pos_order_pos0 = self.PosOrder.create({
             'company_id': self.company_id,
             'pricelist_id': self.partner1.property_product_pricelist.copy(default={'currency_id': self.env.ref('base.EUR').id}).id,
@@ -726,3 +766,73 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         for iline in invoice.invoice_line_ids:
             self.assertFalse(iline.invoice_line_tax_ids)
+
+    def test_order_with_deleted_tax(self):
+        """ Sell a product with tax, but before closing the session, delete the tax.
+            This is possible if the tax has just recently created and it's still not
+            linked to any accounting records.
+        """
+        # create tax
+        dummy_50_perc_tax = self.env['account.tax'].create({
+            'name': 'Tax 50%',
+            'amount_type': 'percent',
+            'amount': 50.0,
+            'price_include': 0
+        })
+
+        # set tax to product
+        product5 = self.env.ref('product.product_product_5')
+        product5.write({ 'taxes_id': [(6, 0, [dummy_50_perc_tax.id])]})
+
+        # sell product thru pos
+        self.pos_config.open_session_cb()
+        pos_session = self.pos_config.current_session_id
+        untax, atax = self.compute_tax(product5, 10.0)
+        product5_order = {'data':
+          {'amount_paid': untax + atax,
+           'amount_return': 0,
+           'amount_tax': atax,
+           'amount_total': untax + atax,
+           'creation_date': fields.Datetime.to_string(fields.Datetime.now()),
+           'fiscal_position_id': False,
+           'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
+           'lines': [[0,
+             0,
+             {'discount': 0,
+              'id': 42,
+              'pack_lot_ids': [],
+              'price_unit': 10.0,
+              'product_id': product5.id,
+              'price_subtotal': 10.0,
+              'price_subtotal_incl': 15.0,
+              'qty': 1,
+              'tax_ids': [(6, 0, product5.taxes_id.ids)]}]],
+           'name': 'Order 12345-123-1234',
+           'partner_id': False,
+           'pos_session_id': pos_session.id,
+           'sequence_number': 2,
+           'statement_ids': [[0,
+             0,
+             {'account_id': self.env.user.partner_id.property_account_receivable_id.id,
+              'amount': untax + atax,
+              'journal_id': self.pos_config.journal_ids[0].id,
+              'name': fields.Datetime.now(),
+              'statement_id': pos_session.statement_ids[0].id}]],
+           'uid': '12345-123-1234',
+           'user_id': self.env.uid},
+          'id': '12345-123-1234',
+          'to_invoice': False}
+        self.PosOrder.create_from_ui([product5_order])
+
+        # delete tax
+        dummy_50_perc_tax.unlink()
+
+        # close session (should not fail here)
+        pos_session.action_pos_session_closing_control()
+
+        # check the difference line
+        pos_session_move = self.env['account.move'].search([
+            ('ref', 'like', pos_session.name), ('journal_id', '=', pos_session.config_id.journal_id.id)
+        ])
+        diff_line = pos_session_move.line_ids.filtered(lambda line: line.name == 'Difference at closing PoS session')
+        self.assertAlmostEqual(diff_line.credit, 5.0, msg="Missing amount of 5.0")

@@ -15,8 +15,9 @@
 # khoibv Mr <kendev2009@gmail.com>, 2018
 # Trang Tran <thuytrang1101@gmail.com>, 2019
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2020
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
+# Trần Hà <tranthuha13590@gmail.com>, 2021
+# Duy BQ <duybq86@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1090,6 +1091,12 @@ msgid "Call"
 msgstr "Gọi"
 
 #. module: mail
+#: code:addons/mail/models/mail_notification.py:57
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/followers.js:365
 #: code:addons/mail/static/src/xml/activity.xml:86
@@ -1830,6 +1837,13 @@ msgstr "Tên tài liệu"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:524
+#, python-format
+msgid "Document not downloadable"
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:101
 #, python-format
 msgid "Done"
@@ -2073,7 +2087,7 @@ msgstr "Emojis"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Envelope Example"
-msgstr ""
+msgstr "Ví dụ phong bì"
 
 #. module: mail
 #. openerp-web
@@ -2097,6 +2111,8 @@ msgid ""
 "Error without exception. Probably due do concurrent access update of "
 "notification records. Please see with an administrator."
 msgstr ""
+"Lỗi không có ngoại lệ. Có thể do Cập Nhật truy cập đồng thời các bản ghi "
+"thông báo. Vui lòng xem với quản trị viên."
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:329
@@ -2329,6 +2345,12 @@ msgid "Following"
 msgstr "Theo dõi"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:778
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
 #: model:ir.model.fields,help:mail.field_mail_activity_type__icon
 msgid "Font awesome icon e.g. fa-tasks"
@@ -2383,7 +2405,7 @@ msgstr "Cổng"
 #. module: mail
 #: selection:ir.actions.server,activity_user_type:0
 msgid "Generic User From Record"
-msgstr ""
+msgstr "Người dùng chung từ dữ liệu"
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:88
@@ -2650,6 +2672,9 @@ msgid ""
 "notification and review them one by one by clicking on the red envelope next"
 " to each message."
 msgstr ""
+"Nếu bạn muốn gửi lại chúng, hãy nhấp vào hủy ngay bây giờ, sau đó nhấp vào "
+"thông báo và đánh giá từng cái một bằng cách nhấp vào phong bì màu đỏ bên "
+"cạnh mỗi thư."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -2684,6 +2709,8 @@ msgstr "Hộp thư đến"
 msgid ""
 "Indicates this activity has been created automatically and not by any user."
 msgstr ""
+"Cho biết hoạt động này đã được tạo tự động chứ không phải bởi bất kỳ người "
+"dùng nào."
 
 #. module: mail
 #. openerp-web
@@ -2741,7 +2768,7 @@ msgstr ""
 #: code:addons/mail/models/mail_blacklist.py:129
 #, python-format
 msgid "Invalid primary email field on model %s"
-msgstr ""
+msgstr "Trường email chính không hợp lệ trên đối tượng %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1968
@@ -3267,6 +3294,13 @@ msgid "Mark as done"
 msgstr "Đánh dấu xong"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:300
+#, python-format
+msgid "Mark as todo"
+msgstr ""
+
+#. module: mail
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
 msgid "Mass Mail Blacklist"
 msgstr "Mass Mail Blacklist"
@@ -3364,7 +3398,7 @@ msgstr "Kiểu thông điệp"
 #: code:addons/mail/models/mail_message.py:1277
 #, python-format
 msgid "Message are pending moderation"
-msgstr ""
+msgstr "Tin nhắn của bạn đang đợi kiểm duyệt"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_to
@@ -3517,7 +3551,7 @@ msgstr "Đối tượng"
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
 #, python-format
 msgid "Moderate Messages"
-msgstr ""
+msgstr "Moderate Messages"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation
@@ -3545,7 +3579,7 @@ msgstr "Kênh kiểm duyệt"
 #: code:addons/mail/models/mail_channel.py:170
 #, python-format
 msgid "Moderated channels must have moderators."
-msgstr ""
+msgstr "Moderated channels must have moderators."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_count
@@ -3556,12 +3590,12 @@ msgstr "Đếm email được kiểm duyệt"
 #: model:ir.actions.act_window,name:mail.mail_moderation_action
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Moderation"
-msgstr ""
+msgstr "Kiểm duyệt"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_tree
 msgid "Moderation Lists"
-msgstr ""
+msgstr "Moderation Lists"
 
 #. module: mail
 #. openerp-web
@@ -3580,7 +3614,7 @@ msgstr "Trạng thái kiểm duyệt"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__moderation_counter
 msgid "Moderation count"
-msgstr ""
+msgstr "Moderation count"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_moderator
@@ -3590,19 +3624,19 @@ msgstr "Người kiểm duyệt"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderator_ids
 msgid "Moderators"
-msgstr ""
+msgstr "Người kiểm duyệt"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:154
 #, python-format
 msgid "Moderators must have an email address."
-msgstr ""
+msgstr "Người kiểm duyệt phải có địa chỉ email."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:160
 #, python-format
 msgid "Moderators should be members of the channel they moderate."
-msgstr ""
+msgstr "Người kiểm duyệt phải là thành viên của kênh mà họ kiểm duyệt."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -3610,6 +3644,8 @@ msgid ""
 "Modifying the model can have an impact on existing activities using this "
 "activity type, be careful."
 msgstr ""
+"Modifying the model can have an impact on existing activities using this "
+"activity type, be careful."
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
@@ -3758,6 +3794,8 @@ msgid ""
 "Newcomers on this moderated channel will automatically receive the "
 "guidelines."
 msgstr ""
+"Newcomers on this moderated channel will automatically receive the "
+"guidelines."
 
 #. module: mail
 #. openerp-web
@@ -3859,7 +3897,7 @@ msgstr ""
 #: code:addons/mail/wizard/mail_resend_message.py:51
 #, python-format
 msgid "No message_id found in context"
-msgstr ""
+msgstr "No message_id found in context"
 
 #. module: mail
 #. openerp-web
@@ -4053,11 +4091,24 @@ msgid "Online"
 msgstr "Trực tuyến"
 
 #. module: mail
+#: code:addons/mail/models/mail_message.py:1052
+#, python-format
+msgid "Only administrators are allowed to export mail message"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_message.py:1043
+#, python-format
+msgid "Only administrators are allowed to use grouped read on message model"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:436
 #, python-format
 msgid ""
 "Only an administrator or a moderator can send guidelines to channel members!"
 msgstr ""
+"Only an administrator or a moderator can send guidelines to channel members!"
 
 #. module: mail
 #: code:addons/mail/models/ir_model.py:53
@@ -4069,7 +4120,7 @@ msgstr "Chỉ có thể sửa đổi các mô hình tùy chỉnh."
 #: code:addons/mail/models/mail_channel.py:165
 #, python-format
 msgid "Only mailing lists can be moderated."
-msgstr ""
+msgstr "Only mailing lists can be moderated."
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -4324,6 +4375,8 @@ msgid ""
 "People receive an automatic notification about their message being waiting "
 "for moderation."
 msgstr ""
+"People receive an automatic notification about their message being waiting "
+"for moderation."
 
 #. module: mail
 #: selection:mail.moderation,status:0
@@ -4414,6 +4467,9 @@ msgid ""
 "- Handle by Emails: notifications are sent to your email address\n"
 "- Handle in Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
+"Policy on how to handle Chatter notifications:\n"
+"- Handle by Emails: notifications are sent to your email address\n"
+"- Handle in Odoo: notifications appear in your Odoo Inbox"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
@@ -4519,7 +4575,7 @@ msgstr "Kênh Công cộng"
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
 msgid "Publisher Warranty Contract"
-msgstr ""
+msgstr "Hợp đồng bảo hành nhà phát hành"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
@@ -4763,7 +4819,7 @@ msgstr "Tính năng gửi lại"
 #: code:addons/mail/static/src/xml/thread.xml:69
 #, python-format
 msgid "Reset Zoom"
-msgstr ""
+msgstr "Đặt lại thu phóng"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
@@ -4882,7 +4938,7 @@ msgstr "Tìm kiếm Nhóm"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Search Moderation List"
-msgstr ""
+msgstr "Search Moderation List"
 
 #. module: mail
 #. openerp-web
@@ -4914,6 +4970,8 @@ msgid ""
 "Select the action to do on each mail and correct the email address if "
 "needed. The modified address will be saved on the corresponding contact."
 msgstr ""
+"Select the action to do on each mail and correct the email address if "
+"needed. The modified address will be saved on the corresponding contact."
 
 #. module: mail
 #: selection:mail.channel,public:0
@@ -4964,6 +5022,13 @@ msgstr "Gửi ngay"
 #, python-format
 msgid "Send a message"
 msgstr "Gửi tin nhắn"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/discuss.xml:141
+#, python-format
+msgid "Send by mail"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -5258,7 +5323,7 @@ msgstr "Trường kỹ thuật cho mục đích UX"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__res_model_change
 msgid "Technical field for UX related behaviour"
-msgstr ""
+msgstr "Technical field for UX related behaviour"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__initial_res_model_id
@@ -5300,7 +5365,7 @@ msgstr "The"
 #: code:addons/mail/models/ir_actions.py:51
 #, python-format
 msgid "The 'Due Date In' value can't be negative."
-msgstr ""
+msgstr "The 'Due Date In' value can't be negative."
 
 #. module: mail
 #: sql_constraint:mail.moderation:0
@@ -5358,6 +5423,12 @@ msgstr ""
 "system user is found for that address."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "The partner can not join this channel"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_activity.py:243
 #: code:addons/mail/models/mail_message.py:704
 #: code:addons/mail/models/mail_message.py:874
@@ -5406,7 +5477,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
 msgid "This field is case insensitive."
-msgstr ""
+msgstr "Trường này không phân biệt chữ hoa chữ thường."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__public
@@ -5724,7 +5795,7 @@ msgstr "Tìm thấy loại báo cáo %s không được hỗ trợ."
 #: code:addons/mail/models/mail_message.py:188
 #, python-format
 msgid "Unsupported search filter on moderation status"
-msgstr ""
+msgstr "Unsupported search filter on moderation status"
 
 #. module: mail
 #: selection:ir.actions.server,state:0
@@ -5800,6 +5871,29 @@ msgstr "Tên trường"
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/discuss.xml:157
+#: code:addons/mail/static/src/xml/discuss.xml:278
+#, python-format
+msgid "User is idle"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/discuss.xml:158
+#, python-format
+msgid "User is offline"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/discuss.xml:156
+#: code:addons/mail/static/src/xml/discuss.xml:277
+#, python-format
+msgid "User is online"
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:62
 #: code:addons/mail/static/src/xml/thread_window.xml:11
 #, python-format
@@ -5860,6 +5954,8 @@ msgid ""
 "View \"mail.mail_channel_send_guidelines\" was not found. No email has been "
 "sent. Please contact an administrator to fix this issue."
 msgstr ""
+"View \"mail.mail_channel_send_guidelines\" was not found. No email has been "
+"sent. Please contact an administrator to fix this issue."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:752
@@ -6046,6 +6142,13 @@ msgstr "Bạn đang ở kênh <b>#%s</b>."
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/js/attachment_box.js:132
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "Bạn không có quyền tải lên file đính kèm ở đây."
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/js/discuss.js:338
 #, python-format
 msgid ""
@@ -6063,6 +6166,24 @@ msgid ""
 msgstr ""
 "Bạn có thể đánh dấu bất kỳ tin nhắn nào là \"được đánh dấu sao\", nó sẽ xuất"
 " hiện trong hộp thư."
+
+#. module: mail
+#: cod:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not remove this partner from this channel"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on the record of other users"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:87
@@ -6091,6 +6212,8 @@ msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
 "address."
 msgstr ""
+"Bạn không thể sử dụng bất kỳ thứ gì khác ngoài các ký tự latin không có dấu "
+"trong địa chỉ alias."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:257
@@ -6099,6 +6222,8 @@ msgid ""
 "You do not have the rights to modify fields related to moderation on one of "
 "the channels you are modifying."
 msgstr ""
+"Bạn không có quyền sửa đổi các trường liên quan đến kiểm duyệt trên một "
+"trong các kênh mà bạn đang sửa đổi."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:2365
@@ -6115,8 +6240,8 @@ msgstr "Bạn đã được phân công/gán cho"
 #. openerp-web
 #: code:addons/mail/static/src/js/services/mail_notification_manager.js:198
 #, python-format
-msgid "You have been invited to: "
-msgstr "Bạn được mời đến: "
+msgid "You have been invited to: %s"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation

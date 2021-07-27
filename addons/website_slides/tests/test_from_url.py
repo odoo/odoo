@@ -17,6 +17,7 @@ class TestFromURL(odoo.tests.TransactionCase):
             'hlhLv0GN1hA': [
                 'https://www.youtube.com/v/hlhLv0GN1hA',
                 'https://www.youtube.com/embed/hlhLv0GN1hA',
+                'https://www.youtube-nocookie.com/embed/hlhLv0GN1hA',
                 'https://m.youtube.com/watch?v=hlhLv0GN1hA'
             ],
         }

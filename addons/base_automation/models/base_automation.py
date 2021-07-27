@@ -91,6 +91,16 @@ class BaseAutomation(models.Model):
                 }
             }}
 
+        MAIL_STATES = ('email', 'followers', 'next_activity')
+        if self.trigger == 'on_unlink' and self.state in MAIL_STATES:
+            return {'warning': {
+                'title': _("Warning"),
+                'message': _(
+                    "You cannot send an email, add followers or create an activity "
+                    "for a deleted record.  It simply does not work."
+                ),
+            }}
+
     @api.model
     def create(self, vals):
         vals['usage'] = 'base_automation'
@@ -281,7 +291,12 @@ class BaseAutomation(models.Model):
             def base_automation_onchange(self):
                 action_rule = self.env['base.automation'].browse(action_rule_id)
                 result = {}
-                server_action = action_rule.action_server_id.with_context(active_model=self._name, onchange_self=self)
+                server_action = action_rule.action_server_id.with_context(
+                    active_model=self._name,
+                    active_id=None,
+                    active_ids=[],
+                    onchange_self=self,
+                )
                 res = server_action.run()
                 if res:
                     if 'value' in res:

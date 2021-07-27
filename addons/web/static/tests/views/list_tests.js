@@ -1960,6 +1960,30 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view, click on m2o dropdown do not close editable row', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree string="Phonecalls" editable="top">' +
+                    '<field name="m2o"/>' +
+                '</tree>',
+        });
+
+        list.$buttons.find('.o_list_button_add').click();
+        testUtilsDom.click(list.$('.o_selected_row .o_data_cell .o_field_many2one input'));
+        var $dropdown = list.$('.o_selected_row .o_data_cell .o_field_many2one input').autocomplete('widget');
+        testUtilsDom.click($dropdown);
+        assert.containsOnce(list, '.o_selected_row', "should still have editable row");
+
+        testUtilsDom.click($dropdown.find("li:first"));
+        assert.containsOnce(list, '.o_selected_row', "should still have editable row");
+
+        list.destroy();
+    });
+
     QUnit.test('click on a button in a list view', function (assert) {
         assert.expect(9);
 
@@ -4280,6 +4304,141 @@ QUnit.module('Views', {
 
         list.destroy();
         testUtils.unpatch(BasicModel);
+    });
+
+    QUnit.test('list view move to previous page when all records from last page deleted', function (assert) {
+        assert.expect(5);
+
+        var checkSearchRead = false;
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="3">' +
+                    '<field name="display_name"/>' +
+                '</tree>',
+            mockRPC: function (route, args) {
+                if (checkSearchRead && route === '/web/dataset/search_read') {
+                    assert.strictEqual(args.limit, 3, "limit should 3");
+                    assert.notOk(args.offset, "offset should not be passed i.e. offset 0 by default");
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                hasSidebar: true,
+            },
+        });
+
+        assert.strictEqual(list.pager.$('.o_pager_counter').text().trim(), '1-3 / 4',
+            "should have 2 pages and current page should be first page");
+
+        // move to next page
+        list.pager.$('.o_pager_next').click();
+        assert.strictEqual(list.pager.$('.o_pager_counter').text().trim(), '4-4 / 4',
+            "should be on second page");
+
+        // delete a record
+        list.$('.o_data_row:first .o_list_record_selector input').click();
+        checkSearchRead = true;
+        list.sidebar.$('a:contains(Delete)').click();
+        $('.modal-footer .btn-primary').click(); // confirm
+        assert.strictEqual(list.pager.$('.o_pager_counter').text().trim(), '1-3 / 3',
+            "should have 1 page only");
+
+        list.destroy();
+    });
+
+    QUnit.test('grouped list view move to previous page of group when all records from last page deleted', function (assert) {
+        assert.expect(7);
+
+        var checkSearchRead = false;
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="2">' +
+                '<field name="display_name"/>' +
+                '</tree>',
+            mockRPC: function (route, args) {
+                if (checkSearchRead && route === '/web/dataset/search_read') {
+                    assert.strictEqual(args.limit, 2, "limit should 2");
+                    assert.notOk(args.offset, "offset should not be passed i.e. offset 0 by default");
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                hasSidebar: true,
+            },
+            groupBy: ['m2o'],
+        });
+
+        assert.strictEqual(list.$('th:contains(Value 1 (3))').length, 1,
+            "Value 1 should contain 3 records");
+        assert.strictEqual(list.$('th:contains(Value 2 (1))').length, 1,
+            "Value 2 should contain 1 record");
+
+        list.$('th.o_group_name').get(0).click();
+        assert.strictEqual(list.$('th.o_group_name:eq(0) .o_pager_counter').text().trim(), '1-2 / 3',
+            "should have 2 pages and current page should be first page");
+
+        // move to next page
+        list.$('th.o_group_name:eq(0) .o_pager_next').click();
+        assert.strictEqual(list.$('th.o_group_name:eq(0) .o_pager_counter').text().trim(), '3-3 / 3',
+            "should be on second page");
+
+        // delete a record
+        list.$('.o_data_row:first .o_list_record_selector input').click();
+        checkSearchRead = true;
+        list.sidebar.$('a:contains(Delete)').click();
+        $('.modal-footer .btn-primary').click(); // confirm
+        assert.strictEqual(list.$('th.o_group_name:eq(0) .o_pager_counter').text().trim(), '',
+            "should be on first page now");
+
+        list.destroy();
+    });
+
+    QUnit.test('list view move to previous page when all records from last page archive/unarchived', function (assert) {
+        assert.expect(9);
+
+        // add active field on foo model and make all records active
+        this.data.foo.fields.active = { string: 'Active', type: 'boolean', default: true };
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="3"><field name="display_name"/></tree>',
+            viewOptions: {
+                hasSidebar: true,
+            },
+        });
+
+        assert.strictEqual(list.pager.$('.o_pager_counter').text().trim(), '1-3 / 4',
+            "should have 2 pages and current page should be first page");
+        assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 3,
+            "should have 3 records");
+
+        // move to next page
+        list.pager.$('.o_pager_next').click();
+        assert.strictEqual(list.pager.$('.o_pager_counter').text().trim(), '4-4 / 4',
+            "should be on second page");
+        assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 1,
+            "should have 1 records");
+        assert.ok(list.sidebar.$el.hasClass('o_hidden'), 'sidebar should be invisible');
+
+        list.$('tbody td.o_list_record_selector:first input').click();
+        assert.ok(!list.sidebar.$el.hasClass('o_hidden'), 'sidebar should be visible');
+
+        // archive all records of current page
+        list.sidebar.$('a:contains(Archive)').click();
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        $('.modal-footer .btn-primary').click(); // Click on 'Ok'
+        assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 3,
+            "should have 3 records");
+        assert.strictEqual(list.pager.$('.o_pager_counter').text().trim(), '1-3 / 3',
+            "should have 1 page only");
+
+        list.destroy();
     });
 
     QUnit.test('list should ask to scroll to top on page changes', function (assert) {

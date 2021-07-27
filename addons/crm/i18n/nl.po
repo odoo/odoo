@@ -9,7 +9,7 @@
 # Martin Trigaux, 2018
 # Eric Geens <ericgeens@yahoo.com>, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -170,6 +170,16 @@ msgstr ""
 "<p><b>Stuur berichten</b>naar uw prospect en laat antwoorden automatisch "
 "worden toegevoegd aan deze prospect.</p><p class=\"mb0\">Type <i>'@'</i> om "
 "mensen te vermelden, dit werkt hetzelfde als cc'en in e-mails</p>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:152
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
+"</p>Omdat u geen lid bent van een verkoopteam, opent Odoo standaard de "
+"eerste.</p>"
 
 #. module: crm
 #. openerp-web
@@ -1598,6 +1608,7 @@ msgstr "Mijn pijplijn"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag__name
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__name
+#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Name"
 msgstr "Naam"
 

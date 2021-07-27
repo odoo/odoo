@@ -20,7 +20,7 @@
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2019
 # Lorenzo Battistini <lb@takobi.online>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,7 +93,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Pagina iniziale\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -377,7 +377,7 @@ msgstr "Attivo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_active
 msgid "Add Extra Fees"
-msgstr ""
+msgstr "Aggiungi commissioni supplementari"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -623,7 +623,7 @@ msgstr "Modulo corrispondente"
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Count Payment Token"
-msgstr ""
+msgstr "Numero token di pagamento"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__country_ids
@@ -785,12 +785,12 @@ msgstr "Imposte"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_implemented
 msgid "Fees Computation Supported"
-msgstr ""
+msgstr "Calcolo commissioni supportato"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
+msgstr "Importo commissioni; impostato in base al sistema di pagamento"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__state_message
@@ -1383,7 +1383,7 @@ msgstr "Transazioni di pagamento"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
 msgid "Payment acquire onboarding wizard"
-msgstr "Procedura di attivazione del sistema di pagamento"
+msgstr "Procedura di attivazione sistema di pagamento"
 
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
@@ -1512,7 +1512,7 @@ msgstr "Attendere..."
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 #: model:ir.cron,name:payment.cron_post_process_payment_tx
 msgid "Post process payment transactions"
-msgstr ""
+msgstr "Post elaborazione transazioni di pagamento"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1586,7 +1586,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__registration_view_template_id
 msgid "S2S Form Template"
-msgstr ""
+msgstr "Modello scheda S2S"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__save_token
@@ -1828,10 +1828,10 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
-"Questa opzione consente ai clienti di salvare le carte di credito come token"
-" di pagamento e riutilizzarle per pagamenti successivi. Se vengono gestite "
-"sottoscrizioni (fatture ricorrenti) è necessario addebitare automaticamente "
-"il cliente dopo l'emissione della fattura."
+"L'opzione consente ai clienti di salvare le carte di credito come token, per"
+" riutilizzarli in pagamenti successivi. Se vengono gestiti abbonamenti "
+"(fatture ricorrenti) è necessario l'addebito automatico al cliente dopo "
+"l'emissione della fattura."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
@@ -1971,7 +1971,7 @@ msgstr "Impossibile, al momento, eliminare il metodo di pagamento."
 #: code:addons/payment/static/src/xml/payment_processing.xml:130
 #, python-format
 msgid "We are not able to find your payment, but don't worry."
-msgstr ""
+msgstr "Impossibile trovare il pagamento, ma non c'è da preoccuparsi."
 
 #. module: payment
 #. openerp-web
@@ -2032,7 +2032,7 @@ msgstr "È necessario impostare un registro per il sistema di pagamento %s."
 #: code:addons/payment/static/src/xml/payment_processing.xml:131
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
-msgstr ""
+msgstr "Tra pochi minuti arriverà una conferma di pagamento via e-mail."
 
 #. module: payment
 #. openerp-web
@@ -2171,7 +2171,7 @@ msgstr "importo: l'importo della transazione, un numero con la virgola"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "and more"
-msgstr ""
+msgstr "e altro ancora"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form

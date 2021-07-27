@@ -268,35 +268,35 @@ class PosOrder(models.Model):
             Analytic = self.env['account.analytic.account']
             for product_key in list(grouped_data.keys()):
                 if product_key[0] == "product":
-                    line = grouped_data[product_key][0]
-                    product = Product.browse(line['product_id'])
-                    # In the SO part, the entries will be inverted by function compute_invoice_totals
-                    price_unit = self._get_pos_anglo_saxon_price_unit(product, line['partner_id'], line['quantity'])
-                    account_analytic = Analytic.browse(line.get('analytic_account_id'))
-                    res = Product._anglo_saxon_sale_move_lines(
-                        line['name'], product, product.uom_id, line['quantity'], price_unit,
-                            fiscal_position=order.fiscal_position_id,
-                            account_analytic=account_analytic)
-                    if res:
-                        line1, line2 = res
-                        line1 = Product._convert_prepared_anglosaxon_line(line1, line['partner_id'])
-                        insert_data('counter_part', {
-                            'name': line1['name'],
-                            'account_id': line1['account_id'],
-                            'credit': line1['credit'] or 0.0,
-                            'debit': line1['debit'] or 0.0,
-                            'partner_id': line1['partner_id']
+                    for line in grouped_data[product_key]:
+                        product = Product.browse(line['product_id'])
+                        # In the SO part, the entries will be inverted by function compute_invoice_totals
+                        price_unit = self._get_pos_anglo_saxon_price_unit(product, line['partner_id'], line['quantity'])
+                        account_analytic = Analytic.browse(line.get('analytic_account_id'))
+                        res = Product._anglo_saxon_sale_move_lines(
+                            line['name'], product, product.uom_id, line['quantity'], price_unit,
+                                fiscal_position=order.fiscal_position_id,
+                                account_analytic=account_analytic)
+                        if res:
+                            line1, line2 = res
+                            line1 = Product._convert_prepared_anglosaxon_line(line1, line['partner_id'])
+                            insert_data('counter_part', {
+                                'name': line1['name'],
+                                'account_id': line1['account_id'],
+                                'credit': line1['credit'] or 0.0,
+                                'debit': line1['debit'] or 0.0,
+                                'partner_id': line1['partner_id']
 
-                        })
+                            })
 
-                        line2 = Product._convert_prepared_anglosaxon_line(line2, line['partner_id'])
-                        insert_data('counter_part', {
-                            'name': line2['name'],
-                            'account_id': line2['account_id'],
-                            'credit': line2['credit'] or 0.0,
-                            'debit': line2['debit'] or 0.0,
-                            'partner_id': line2['partner_id']
-                        })
+                            line2 = Product._convert_prepared_anglosaxon_line(line2, line['partner_id'])
+                            insert_data('counter_part', {
+                                'name': line2['name'],
+                                'account_id': line2['account_id'],
+                                'credit': line2['credit'] or 0.0,
+                                'debit': line2['debit'] or 0.0,
+                                'partner_id': line2['partner_id']
+                            })
 
         for order in self.filtered(lambda o: not o.account_move or o.state == 'paid'):
             current_company = order.sale_journal.company_id
@@ -492,13 +492,58 @@ class PosOrder(models.Model):
         move = vals['move']
 
         all_lines = []
+        # Taxes used in the orders are sometimes deleted or changed
+        # to map to other taxes, resulting to imbalanced lines.
+        # We track this imbalanced amount to create a balancing
+        # line in order to avoid failure in closing the session.
+        # Note that we don't accumulate based on `amount_currency`
+        # because `amount_currency` values can come from different
+        # dates (order1 sold in day1, order5 sold on day2) so each
+        # `amount_currency` actually has different 'value' in reference
+        # to the company currency. As a result, `imbalance_amount` is
+        # already in company currency.
+        imbalance_amount = 0 # should be credited if (+), debited otherwise
         for group_key, group_data in grouped_data.items():
             for value in group_data:
                 all_lines.append((0, 0, value),)
+                imbalance_amount += value['debit'] - value['credit']
+
+        if (session and not float_is_zero(imbalance_amount, precision_rounding=session.currency_id.rounding)):
+            balancing_vals = self._prepare_balancing_line_vals(imbalance_amount, move, session)
+            all_lines.append((0, 0, balancing_vals))
+
         if move:  # In case no order was changed
             move.sudo().write({'line_ids': all_lines})
             move.sudo().post()
         return True
+
+    @api.model
+    def _prepare_balancing_line_vals(self, imbalance_amount, move, session):
+        """
+        :param imbalance_amount: amount in company currency to be credited
+        """
+        default_account = self.env['ir.property'].get('property_account_receivable_id', 'res.partner')
+        vals = {
+            'name': _('Difference at closing PoS session'),
+            'credit': imbalance_amount if imbalance_amount > 0 else 0,
+            'debit': -imbalance_amount if imbalance_amount < 0 else 0,
+            'account_id': default_account.id,
+            'move_id': move.id,
+            'partner_id': False,
+        }
+        cur = session.config_id.pricelist_id.currency_id
+        cur_company = session.config_id.company_id.currency_id
+        if (cur != cur_company):
+            # If the session currency is different from the company currency,
+            # it makes more sense to have an equivalent `amount_currency` for
+            # the balancing amount than not having it. And it's value should
+            # be the conversion amount for the day the session is being closed.
+            imb_amount_session_currency = cur_company._convert(abs(imbalance_amount), cur, session.config_id.company_id, fields.Date.context_today(self))
+            vals.update({
+                'currency_id': cur.id,
+                'amount_currency': -imb_amount_session_currency
+            })
+        return vals
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         price_unit = product._get_anglo_saxon_price_unit()
@@ -915,7 +960,8 @@ class PosOrder(models.Model):
                             if stock_production_lot.product_id.tracking == 'lot':
                                 qty = abs(pos_pack_lot.pos_order_line_id.qty)
                             qty_done += qty
-                            pack_lots.append({'lot_id': stock_production_lot.id, 'qty': qty})
+                            quant = stock_production_lot.quant_ids.filtered(lambda q: q.quantity > 0.0 and q.location_id.parent_path.startswith(move.location_id.parent_path))[-1:]
+                            pack_lots.append({'lot_id': stock_production_lot.id, 'quant_location_id': quant.location_id.id, 'qty': qty})
                         else:
                             has_wrong_lots = True
                 elif move.product_id.tracking == 'none' or not lots_necessary:
@@ -923,14 +969,14 @@ class PosOrder(models.Model):
                 else:
                     has_wrong_lots = True
                 for pack_lot in pack_lots:
-                    lot_id, qty = pack_lot['lot_id'], pack_lot['qty']
+                    lot_id, quant_location_id, qty = pack_lot['lot_id'], pack_lot['quant_location_id'], pack_lot['qty']
                     self.env['stock.move.line'].create({
                         'picking_id': move.picking_id.id,
                         'move_id': move.id,
                         'product_id': move.product_id.id,
                         'product_uom_id': move.product_uom.id,
                         'qty_done': qty,
-                        'location_id': move.location_id.id,
+                        'location_id': quant_location_id or move.location_id.id,
                         'location_dest_id': move.location_dest_id.id,
                         'lot_id': lot_id,
                     })

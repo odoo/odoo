@@ -8,7 +8,7 @@
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
 # Martin Trigaux, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +28,7 @@ msgstr ""
 #: code:addons/barcodes/models/barcodes.py:204
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
-msgstr ""
+msgstr "„*“ není platný vzor čárového kódu Regex. Mysleli jste '.*' ?"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:202
@@ -56,6 +56,8 @@ msgid ""
 "                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
 "                                if the regular expression matches a prefix of the barcode."
 msgstr ""
+"<i>Názvy čárových kódů</i> definují, jak jsou čárové kódy rozpoznávány a kategorizovány.\n"
+"Když je čárový kód naskenován, je spojen s <i>prvním</i> pravidlem se shodným vzorem. Syntaxe vzoru je stejná jako u regulárního výrazu a čárový kód se shoduje, pokud se regulární výraz shoduje s předponou čárového kódu."
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -63,6 +65,8 @@ msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
 msgstr ""
+"Nomenklatura čárových kódů definuje, jak prodejní místo čárové kódy "
+"identifikuje a interpretuje"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -83,12 +87,12 @@ msgstr "Vždy"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__name
 msgid "An internal identification for this barcode nomenclature rule"
-msgstr ""
+msgstr "Interní identifikace tohoto pravidla nomenklatury čárových kódů"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
 msgid "An internal identification of the barcode nomenclature"
-msgstr ""
+msgstr "Interní identifikace nomenklatury čárových kódů"
 
 #. module: barcodes
 #: selection:barcode.rule,encoding:0
@@ -117,7 +121,7 @@ msgstr "Nomenklatury čárových kódů"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
 msgid "Barcode Pattern"
-msgstr ""
+msgstr "Vzor čárového kódu"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_rule
@@ -199,7 +203,7 @@ msgstr "EAN-8"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__encoding
 msgid "Encoding"
-msgstr ""
+msgstr "Kódování"
 
 #. module: barcodes
 #. openerp-web
@@ -298,6 +302,13 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as \n"
 "                                zeroes."
 msgstr ""
+"Vzory mohou také definovat, jakým způsobem mohou být do čárového kódu "
+"zakódovány číselné hodnoty, například hmotnost nebo cena. Označují se "
+"<code>{NNN}</code>, kde N určuje, kde jsou číslice čísla zakódovány. "
+"Podporovány jsou také plovoucí číslice, jejichž desetinná místa jsou "
+"označena písmeny D, například <code>{NNNDD}</code>. V těchto případech "
+"<i>musí</i> být v poli čárového kódu na přidružených záznamech tyto číslice "
+"uvedeny jako nuly."
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -331,7 +342,7 @@ msgstr "Číselná řada"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:381
 #, python-format
 msgid "Set quantity"
-msgstr ""
+msgstr "Nastavte množství"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -341,7 +352,7 @@ msgstr "Tabulky"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
-msgstr ""
+msgstr "Vzor shody čárového kódu"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
@@ -351,7 +362,7 @@ msgstr "Seznam pravidel čárového kódu"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
 msgid "The matched pattern will alias to this barcode"
-msgstr ""
+msgstr "Odpovídající vzor bude alias tohoto čárového kódu"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:198
@@ -367,6 +378,8 @@ msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
 msgstr ""
+"Toto pravidlo platí pouze v případě, že je čárový kód kódován zadaným "
+"kódováním"
 
 #. module: barcodes
 #. openerp-web
@@ -423,11 +436,13 @@ msgstr "Jednotkový produkt"
 msgid ""
 "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
+"Slouží k uspořádání pravidel tak, aby se nejprve shodovala pravidla s menší "
+"sekvencí"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Value of the last barcode scanned."
-msgstr ""
+msgstr "Hodnota posledního naskenovaného čárového kódu."
 
 #. module: barcodes
 #: selection:barcode.rule,type:0

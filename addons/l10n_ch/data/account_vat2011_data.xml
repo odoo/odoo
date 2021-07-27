@@ -94,6 +94,16 @@
             <field name="applicability">taxes</field>
         </record>
 
+        <record id="vat_tag_other_movements_900" model="account.account.tag">
+            <field name="name">Subventions, taxes touristiques à 0%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="vat_tag_other_movements_910" model="account.account.tag">
+            <field name="name">Dons, dividendes, dédommagements à 0%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
 
         <!--
         #  TVA - Taxe sur la Valeur Ajoutée
@@ -398,5 +408,26 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('vat_77_purchase_return'), ref('vat_77_purchase')])]"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('vat_tag_382_a'), ref('vat_tag_382_b')])]"/>
+        </record>
+
+        <!-- Taxes for other movements -->
+        <record model="account.tax.template" id="vat_other_movements_900">
+            <field name="name">Subventions, taxes touristiques à 0%</field>
+            <field name="amount" eval="0.00"/>
+            <field name="description">0% subventions</field>
+            <field name="amount_type">percent</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">sale</field>
+            <field name="tag_ids" eval="[(6,0,[ref('vat_tag_other_movements_900')])]"/>
+        </record>
+
+        <record model="account.tax.template" id="vat_other_movements_910">
+            <field name="name">Dons, dividendes, dédommagements à 0%</field>
+            <field name="amount" eval="0.00"/>
+            <field name="description">0% dons</field>
+            <field name="amount_type">percent</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">sale</field>
+            <field name="tag_ids" eval="[(6,0,[ref('vat_tag_other_movements_910')])]"/>
         </record>
 </odoo>

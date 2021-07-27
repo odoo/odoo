@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2018
 # Jorunn D. Newth, 2019
-# Marius Stedjan <marius@stedjan.com>, 2020
+# Marius Stedjan <marius@stedjan.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2021\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1191,7 +1191,7 @@ msgstr "Standard debetkonto"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_fiscal_position_id
 msgid "Default Fiscal Position"
-msgstr ""
+msgstr "Standard avgiftsregel"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1301,13 +1301,13 @@ msgstr "Velg bort kunde"
 #: model:product.product,name:point_of_sale.desk_organizer
 #: model:product.template,name:point_of_sale.desk_organizer_product_template
 msgid "Desk Organizer"
-msgstr ""
+msgstr "Oppbevaring til pult"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.desk_pad
 #: model:product.template,name:point_of_sale.desk_pad_product_template
 msgid "Desk Pad"
-msgstr ""
+msgstr "Skrivematte"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_desks
@@ -1627,7 +1627,7 @@ msgstr "Regnskapsstatus"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position per Order"
-msgstr ""
+msgstr "Avgiftsregel pr ordre"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
@@ -1709,7 +1709,7 @@ msgstr "Grupper produkter i kassasystemet"
 #: code:addons/point_of_sale/static/src/js/models.js:142
 #, python-format
 msgid "HTTPS connection to IoT Box failed"
-msgstr ""
+msgstr "Sikker tilkobling (https) til IoT Box feilet"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1783,6 +1783,10 @@ msgid ""
 "can also decide to not put lots in this operation type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
 msgstr ""
+"Ved å huke av denne, vil du kunne velge parti/serienummer. Du kan også velge"
+" å ikke bruke partier i denne operasjonstypen. Dette betyr at systemet vil "
+"opprette lagerbevegelser uten parti, eller ikke sette restriksjoner på "
+"hvilke parti det blir tatt av."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image
@@ -1932,7 +1936,7 @@ msgstr "Journalregistrering"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
 msgid "Kpi Pos Total Value"
-msgstr ""
+msgstr "Kpi Kasse Total Verdi"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.led_lamp
@@ -2120,6 +2124,8 @@ msgid ""
 "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
 "the certificate of your IoT Box."
 msgstr ""
+"Forsikre deg om at du bruker IoT Box v18.12 eller høyere. Naviger til %s for"
+" å akseptere sertifikatet til IoT-boksen."
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
@@ -3632,7 +3638,7 @@ msgstr "Sett strekkoder for å scanne produkter, kunderkort osv"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:128
 #, python-format
 msgid "Set fiscal position"
-msgstr ""
+msgstr "Angi avgiftsregel"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3720,6 +3726,8 @@ msgid ""
 "errors. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Noen ordre kunne ikke sendes til serveren på grunn av feilkonfigurasjon. Du "
+"kan gå ut av kassaløsningen, men ikke lukk økten før feilen er rettet."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3730,6 +3738,9 @@ msgid ""
 "issues. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Enkelte ordre kunne ikke sendes til serveren pga problemer med "
+"internettilkoblingen. Du kan gå ut av kassaløsningen, men ikke lukk økten "
+"før feilen er rettet."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
@@ -3918,12 +3929,12 @@ msgstr "MVA-nummer"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime
 msgid "Tax Regime"
-msgstr ""
+msgstr "Avgiftsregel"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime_selection
 msgid "Tax Regime Selection value"
-msgstr ""
+msgstr "Avgiftsregel Valg Verdi"
 
 #. module: point_of_sale
 #: selection:pos.config,iface_tax_included:0
@@ -4078,6 +4089,8 @@ msgid ""
 "The order has been synchronized earlier. To print the invoice please refer "
 "to the order in the backend"
 msgstr ""
+"Ordren er synkronisert tidligere. For å skrive ut faktura, finn ordren i "
+"backend."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_precompute_cash
@@ -4471,12 +4484,12 @@ msgstr "Total for alle betalte ordrer"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end_real
 msgid "Total of closing cash control lines."
-msgstr ""
+msgstr "Kontantbeholdning ved avslutning."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_start
 msgid "Total of opening cash control lines."
-msgstr ""
+msgstr "Kontantbeholdning ved åpning."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
@@ -4572,7 +4585,7 @@ msgstr "Bruk eksisterende parti-/serienummere"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Use a default specific tax regime"
-msgstr ""
+msgstr "Bruk en standard avgiftsregel"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_pricelist

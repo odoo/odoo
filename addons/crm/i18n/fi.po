@@ -18,7 +18,7 @@
 # Jukka Paulin <jukka.paulin@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
-# Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
+# Johanna Valkonen <johanna@vividi.fi>, 2019
 # Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2019
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2019
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2019
@@ -188,6 +188,14 @@ msgstr ""
 "<p><b>Lähetä viestejä</b> ja saa vastaukset automaattisesti kytkettyä tähän "
 "mahdollisuuteen.</p><p class=\"mb0\">Kirjoita <i>'@'</i> jakaaksesi viestin "
 "muille.</p>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:152
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -1621,6 +1629,7 @@ msgstr "Oma myyntiputki"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag__name
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__name
+#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Name"
 msgstr "Nimi"
 

@@ -9,7 +9,7 @@
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
 # Tim Siu Lai <tl@roomsfor.hk>, 2019
 # Hau Dao <hau@quartile.co>, 2020
-# Noma Yuki <yuki.noma@rakus.co.jp>, 2020
+# Noma Yuki, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-02 10:05+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Noma Yuki <yuki.noma@rakus.co.jp>, 2020\n"
+"Last-Translator: Noma Yuki, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,6 +58,7 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"インポート中に不明な問題が発生しました（接続が失われた、データ制限を超えた、またはメモリ制限を超えた可能性があります）。問題が一時的なものである場合は、再試行してください。それでも問題が発生する場合は、ファイルを一度にインポートするのではなく、分割してみてください。"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -72,7 +73,7 @@ msgstr "基盤インポート"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "ベースインポート時のマッピング"
 
 #. module: base_import
 #. openerp-web
@@ -112,14 +113,14 @@ msgstr "コンマ"
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
-msgstr ""
+msgstr "取得できなかったURL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:108
 #, python-format
 msgid "Create if doesn't exist"
-msgstr ""
+msgstr "無ければ作成"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -172,6 +173,7 @@ msgid ""
 "Note that the value in the column will be used as the new record's 'name', "
 "and assumes this is sufficient to create the record."
 msgstr ""
+"（インポートに失敗する代わりに）既存レコードが見つからない場合は、新しいレコードを作成します。列の値は新しいレコードの'名前'として使用され、レコードを作成しようとします。"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -259,7 +261,7 @@ msgstr "ダウンロード"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
 msgid "Dt"
-msgstr ""
+msgstr "Dt"
 
 #. module: base_import
 #. openerp-web
@@ -326,7 +328,7 @@ msgstr "ファイルタイプ"
 #: code:addons/base_import/models/base_import.py:814
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "ファイルサイズが設定された最大値を超えています(%s bytes)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
@@ -338,7 +340,7 @@ msgstr "ファイルのチェック と/または インポート。 バイナ�
 #: code:addons/base_import/static/src/xml/base_import.xml:137
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
-msgstr ""
+msgstr "CSVファイルの場合、正しい区切り文字を選択する必要がある場合があります。"
 
 #. module: base_import
 #. openerp-web
@@ -674,77 +676,77 @@ msgstr "インポートテスト"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "Tests : Base Import Model Preview"
-msgstr ""
+msgstr "テスト:基本インポートモデルプレビュー"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr ""
+msgstr "テスト:基本インポートモデル, 文字"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr ""
+msgstr "テスト:基本インポートモデル, 文字不可読み取りのみ"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr ""
+msgstr "テスト:基本インポートモデル, 文字読み取り飲み"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr ""
+msgstr "テスト:基本インポートモデル, 文字が必要"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr ""
+msgstr "テスト:基本インポートモデル, 文字の状態"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr ""
+msgstr "テスト:基本インポートモデル, 文字はまだ読み取り専用"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "Tests : Base Import Model, Many to One"
-msgstr ""
+msgstr "テスト:基本インポートモデル, 多対一"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "Tests : Base Import Model, Many to One related"
-msgstr ""
+msgstr "テスト:基本インポートモデル, 多対一関係"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "Tests : Base Import Model, Many to One required"
-msgstr ""
+msgstr "テスト:基本インポートモデル, 多対一必須"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "Tests : Base Import Model, Many to One required related"
-msgstr ""
+msgstr "テスト:基本インポートモデル, 多対一必須関係"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "Tests : Base Import Model, One to Many"
-msgstr ""
+msgstr "テスト:基本インポートモデル, 一対多"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "Tests : Base Import Model, One to Many child"
-msgstr ""
+msgstr "テスト:基本インポートモデル, 一対多子"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_complex
 msgid "Tests: Base Import Model Complex"
-msgstr ""
+msgstr "テスト:基本インポートモデル, 複雑"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_float
 msgid "Tests: Base Import Model Float"
-msgstr ""
+msgstr "テスト:基本インポートモデル 浮動小数"
 
 #. module: base_import
 #. openerp-web
@@ -814,7 +816,7 @@ msgstr "値"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value2
 msgid "Value2"
-msgstr ""
+msgstr "値2"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:760
@@ -822,7 +824,7 @@ msgstr ""
 msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
-msgstr ""
+msgstr "URL経由で画像をインポートすることはできません。理由については、管理者またはサポートに確認してください。"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:631

@@ -15,7 +15,7 @@
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2018
 # nle_odoo, 2018
 # Martin Trigaux, 2018
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
@@ -331,6 +331,13 @@ msgstr "<strong>Centro de trabajo</strong>"
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
 msgstr "Una orden de fabricación ya ha sido terminada o cancelada."
+
+#. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:288
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -4450,6 +4457,14 @@ msgstr "No puede modificar la orden de trabajo terminada."
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr "No puede consumirlos sin decir para qué lote lo consumió."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:122
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:117

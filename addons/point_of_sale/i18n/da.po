@@ -19,6 +19,7 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2020
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1613,6 +1614,10 @@ msgid ""
 "administrator in a multi-company setup, with the administrator account set "
 "to the wrong company."
 msgstr ""
+"Fejl: Point of Sale Brugeren skal tilhøre samme virksomhed som Point of "
+"Salet. Du prøver formentligt at indlæse point of salet som en administrator "
+"i en multi-virksomheds opsætning, med administrator kontoen angivet under "
+"den forkerte virksomhed."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1686,6 +1691,11 @@ msgid ""
 "recommended for an easy review of your journal entries when managing lots of"
 " orders."
 msgstr ""
+"Indhent én journalpostering per produkt, i stedet for en journalpostering "
+"per kvitteringslinje. Dette virker for enhver anonym ordre. Hvis kunden er "
+"angivet på ordren, oprettes der en journalpostering for hver "
+"kvitteringslinje. Denne mulighed er anbefalet for nemt at gennemgå dine "
+"journalposteringer når mange ordre skal administreres."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2190,7 +2200,7 @@ msgstr "Skærmfod"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_sales_price
 msgid "Multiple Product Prices"
-msgstr ""
+msgstr "Flere Produkt Priser"
 
 #. module: point_of_sale
 #: selection:res.config.settings,pos_pricelist_setting:0
@@ -2289,6 +2299,8 @@ msgid ""
 "No payment method configured! \n"
 "Either no Chart of Account is installed or no payment method is configured for this POS."
 msgstr ""
+"Ingen betalingsmetode konfigureret!\n"
+"Enten er der ingen kontoplan installeret, eller ingen betalingsmetode er konfigureret for denne POS."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:24
@@ -2456,7 +2468,7 @@ msgstr "Operation type"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Operation type used to record product pickings"
-msgstr ""
+msgstr "Operationstype anvendt til at registrere produkt pluk"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2495,7 +2507,7 @@ msgstr "Ordre-ID sekvens"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Order Interface"
-msgstr ""
+msgstr "Ordre brugerflade"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_line_id
@@ -2701,6 +2713,10 @@ msgid ""
 "                from the touchscreen interface, you must set the payment method\n"
 "                on the <i>Point of Sale</i> configuration."
 msgstr ""
+"Betalingsmetoder er defineret af regnskabsjournaler som har\n"
+"               <i>PoS Betalingsmetode</i> krydset af. For at kunne anvendes\n"
+"               fra berørings brugerfladen, skal du angive betalingsmetoden\n"
+"               i <i>Point of Sale</i> konfigurationen."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form

@@ -12,6 +12,8 @@
 # Kostas Goutoudis <goutoudis@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Vangelis Skarmoutsos <skarmoutsosv@gmail.com>, 2019
+# Alexandros Kapetanios <alexandros@gnugr.org>, 2021
+# Methodoos Greece <info@methodoos.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-10 14:44+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Vangelis Skarmoutsos <skarmoutsosv@gmail.com>, 2019\n"
+"Last-Translator: Methodoos Greece <info@methodoos.com>, 2021\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7667,7 +7669,7 @@ msgstr "Οδηγός Αυτόματης συγχώνευσης"
 #. module: base
 #: model:ir.model,name:base.model_ir_autovacuum
 msgid "Automatic Vacuum"
-msgstr ""
+msgstr "Αυτόματη Εκκένωση"
 
 #. module: base
 #: code:addons/base/models/ir_module.py:725
@@ -9076,7 +9078,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Ρυθμίσεις διαμόρφωσης"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -21985,6 +21987,12 @@ msgid "The internal user in charge of this contact."
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "Η λίστα των υποδειγμάτων που εκτείνεται στο τρέχον υπόδειγμα."
@@ -22414,14 +22422,6 @@ msgstr ""
 msgid "This module will trigger the uninstallation of below modules."
 msgstr ""
 "Αυτή η εφαρμογή θα εκκινήσει την απεγκατάσταση των παρακάτω εφαρμογών."
-
-#. module: base
-#: code:addons/base/ir/ir_sequence.py:56
-#, python-format
-msgid ""
-"This transaction wasn't executed because another transaction is already "
-"using the same no-gap sequence. Please try again later."
-msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -24142,7 +24142,7 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/res_partner.py:509
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
+msgid "You cannot archive a contact linked to a portal or internal user."
 msgstr ""
 
 #. module: base

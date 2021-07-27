@@ -135,6 +135,8 @@ class Inventory(models.Model):
             self.package_id = False
         if self.filter != 'category':
             self.category_id = False
+        if self.filter != 'product':
+            self.exhausted = False
         if self.filter == 'product':
             self.exhausted = True
             if self.product_id:

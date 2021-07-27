@@ -1,5 +1,6 @@
 odoo.define('website_blog.website_blog', function (require) {
 "use strict";
+var core = require('web.core');
 
 function page_transist(event) {
     event.preventDefault();
@@ -25,14 +26,16 @@ function animate(event) {
     });
 }
 
-function shareArticle(event){
+function shareArticle(event) {
     var url = '';
     var articleURL;
+    var twitterText = core._t("Amazing blog article : %s! Check it live: %s");
     if ($(this).is('*[class*="_complete"]')) {
         var blog_title_complete = encodeURIComponent($('#blog_post_name').html() || '');
         articleURL = encodeURIComponent(window.location.href);
         if ($(this).hasClass('o_twitter_complete')){
-            url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=Amazing blog article : ' + blog_title_complete + "! Check it live: " + articleURL;
+            var tweetText = _.string.sprintf(twitterText, blog_title_complete, articleURL);
+            url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=' + tweetText;
         } else if ($(this).hasClass('o_facebook_complete')){
             url = 'https://www.facebook.com/sharer/sharer.php?u=' + articleURL;
         } else if ($(this).hasClass('o_linkedin_complete')){
@@ -47,7 +50,8 @@ function shareArticle(event){
         var blog_article_link = blog_post.find('.o_blog_post_title').parent('a').attr('href');
         articleURL = encodeURIComponent(window.location.host + blog_article_link);
         if ($(this).hasClass('o_twitter')) {
-            url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=Amazing blog article : ' + blog_post_title + "! " + articleURL;
+            var tweetText = _.string.sprintf(twitterText, blog_post_title, articleURL);
+            url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=' + tweetText;
         } else if ($(this).hasClass('o_facebook')){
             url = 'https://www.facebook.com/sharer/sharer.php?u=' + articleURL;
         } else if ($(this).hasClass('o_linkedin')){

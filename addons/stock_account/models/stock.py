@@ -418,6 +418,17 @@ class StockMove(models.Model):
             move._run_valuation()
         for move in res.filtered(lambda m: m.product_id.valuation == 'real_time' and (m._is_in() or m._is_out() or m._is_dropshipped() or m._is_dropshipped_returned())):
             move._account_entry_move()
+
+        max_moves_to_vacuum = int(self.env['ir.config_parameter'].sudo().get_param('stock_account.max_moves_to_vacuum'))
+        products_to_vacuum = defaultdict(lambda: self.env['product.product'])
+        for move in res.filtered(lambda m: m.product_id.valuation == 'real_time' and m._is_in() and (m.product_id.property_cost_method == 'fifo' or m.product_id.categ_id.property_cost_method == 'fifo')):
+            products_to_vacuum[move.company_id.id] += move.product_id
+        for company_id in products_to_vacuum:
+            moves_to_vacuum = self.search(
+                [('product_id', 'in', products_to_vacuum[company_id].ids), ('remaining_qty', '<', 0)] + self._get_all_base_domain(company_id=company_id),
+                limit=max_moves_to_vacuum)
+            moves_to_vacuum._fifo_vacuum()
+
         return res
 
     @api.multi
@@ -426,10 +437,10 @@ class StockMove(models.Model):
         # adapt standard price on incomming moves if the product cost_method is 'average'
         std_price_update = {}
         for move in self.filtered(lambda move: move._is_in() and move.product_id.cost_method == 'average'):
-            product_tot_qty_available = move.product_id.qty_available + tmpl_dict[move.product_id.id]
+            product_tot_qty_available = move.product_id.with_context(owner_id=False).qty_available + tmpl_dict[move.product_id.id]
             rounding = move.product_id.uom_id.rounding
 
-            qty_done = move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id)
+            qty_done = move.product_uom._compute_quantity(move.with_context(exclude_owner=True).quantity_done, move.product_id.uom_id)
             qty = forced_qty or qty_done
             # If the current stock is negative, we should not average it with the incoming one
             if float_is_zero(product_tot_qty_available, precision_rounding=rounding) or product_tot_qty_available < 0:
@@ -736,6 +747,12 @@ class StockMove(models.Model):
         to the way they mix stock moves with invoices.
         """
         return self.env['account.invoice']
+
+    def _get_move_lines(self):
+        move_lines = super(StockMove, self)._get_move_lines()
+        if self._context.get('exclude_owner'):
+            move_lines = move_lines.filtered(lambda mv: not mv.owner_id)
+        return move_lines
 
 
 class StockReturnPicking(models.TransientModel):

@@ -13,7 +13,8 @@
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2019
 # Dao Nguyen <trucdao.uel@gmail.com>, 2019
 # Duy BQ <duybq86@gmail.com>, 2020
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
+# Trần Hà <tranthuha13590@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-10 14:44+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
+"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -846,6 +847,10 @@ msgid ""
 "        UNSPSC code for their products and uoms.  \n"
 "    "
 msgstr ""
+"\n"
+"        Countries like Colombia, Peru and Mexico need to be able to use the \n"
+"        UNSPSC code for their products and uoms.  \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -979,6 +984,9 @@ msgid ""
 "        This bridge module is auto-installed when the modules stock_barcode and quality_control are installed.\n"
 "    "
 msgstr ""
+"\n"
+"        This bridge module is auto-installed when the modules stock_barcode and quality_control are installed.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_barcode
@@ -1048,6 +1056,13 @@ msgid ""
 "        but aims to connect with all European banks later on\n"
 "    "
 msgstr ""
+"\n"
+"        This module connects to my myponto.com to retrieve bank statements.\n"
+"\n"
+"        Currently, that service allows to connect to belgian banks only\n"
+"        (BNP Paribas Fortis, KBC, CBC, KBC Brussels, Fintro, Hello Bank, ING Belgium, AXA Belgium)\n"
+"        but aims to connect with all European banks later on\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
@@ -6425,6 +6440,11 @@ msgid ""
 "    - generic Indonesian chart of accounts\n"
 "    - tax structure"
 msgstr ""
+"\n"
+"This is the latest Indonesian Odoo localisation necessary to run Odoo accounting for SMEs with:\n"
+"=================================================================================================\n"
+"    - generic Indonesian chart of accounts\n"
+"    - tax structure"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
@@ -6454,6 +6474,11 @@ msgid ""
 "    - a generic chart of accounts\n"
 "    - SARS VAT Ready Structure"
 msgstr ""
+"\n"
+"This is the latest basic South African localisation necessary to run Odoo in ZA:\n"
+"================================================================================\n"
+"    - a generic chart of accounts\n"
+"    - SARS VAT Ready Structure"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -9186,6 +9211,7 @@ msgstr "Một mô-đun để xác minh cơ chế Gói tài sản."
 msgid ""
 "A module to verify the inheritance using _inherits in non-original modules."
 msgstr ""
+"A module to verify the inheritance using _inherits in non-original modules."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits
@@ -11002,7 +11028,7 @@ msgstr "Bridge module for helpdesk modules using the website."
 #. module: base
 #: model:ir.module.module,summary:base.module_project_enterprise
 msgid "Bridge module for project and enterprise"
-msgstr ""
+msgstr "Mô-đun cầu nối cho dự án và doanh nghiệp"
 
 #. module: base
 #: model:res.country,name:base.io
@@ -25885,6 +25911,12 @@ msgid "The internal user in charge of this contact."
 msgstr "Tài khoản người dùng nội bộ có liên kết với liên lạc này."
 
 #. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "Danh sách các model mà mở rộng model hiện hành."
@@ -28133,9 +28165,8 @@ msgstr "Bạn không thể kích hoạt superuser."
 #. module: base
 #: code:addons/base/models/res_partner.py:509
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
+msgid "You cannot archive a contact linked to a portal or internal user."
 msgstr ""
-"Bạn không thể lưu trữ một liên hệ được liên kết với một người dùng nội bộ."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:330
@@ -28621,7 +28652,7 @@ msgstr "lựa chọn"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "serialized"
-msgstr ""
+msgstr "serialized"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail_account

@@ -226,6 +226,7 @@ class WebsitePayment(http.Controller):
 
         render_values = {
             'partner_id': partner_id,
+            'type': tx.type,
         }
 
         return acquirer.sudo().render(tx.reference, float(amount), int(currency_id), values=render_values)
@@ -235,6 +236,7 @@ class WebsitePayment(http.Controller):
     def payment_token(self, pm_id, reference, amount, currency_id, return_url=None, **kwargs):
         token = request.env['payment.token'].browse(int(pm_id))
         order_id = kwargs.get('order_id')
+        invoice_id = kwargs.get('invoice_id')
 
         if not token:
             return request.redirect('/website_payment/pay?error_msg=%s' % _('Cannot setup the payment.'))
@@ -254,6 +256,8 @@ class WebsitePayment(http.Controller):
 
         if order_id:
             values['sale_order_ids'] = [(6, 0, [order_id])]
+        if invoice_id:
+            values['invoice_ids'] = [(6, 0, [int(invoice_id)])]
 
         tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
         PaymentProcessing.add_payment_transaction(tx)

@@ -2513,6 +2513,57 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('drag and drop event on month mode without being allday', function (assert) {
+        assert.expect(3);
+
+        this.data.event.records.push({
+            id: 7,
+            user_id: session.uid,
+            partner_id: false,
+            name: "event 7",
+            start: "2016-12-04 09:15:05",
+            stop: "2016-12-04 10:25:40",
+            allday: false,
+            partner_ids: [2],
+            type: 1
+        });
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="month">'+
+                    '<field name="name"/>'+
+                    '<field name="start"/>'+
+                    '<field name="stop"/>'+
+                    '<field name="allday"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        // Move event to another day (on 27 november)
+        testUtils.dragAndDrop(
+            calendar.$('.fc-event:contains(event 7)').first(),
+            calendar.$('.fc-day-top').first()
+        );
+
+        var $cell = calendar.$('.fc-event:contains(event 7)').first();
+
+        assert.strictEqual($cell.find('.o_field_allday').text().trim(), 'False');
+        assert.strictEqual($cell.find('.o_field_start').text().trim(), "11/27/2016 09:15:05");
+        assert.strictEqual($cell.find('.o_field_stop').text().trim(), "11/27/2016 10:25:40");
+
+        calendar.destroy();
+    });
+
     QUnit.test('form_view_id attribute works (for creating events)', function (assert) {
         assert.expect(1);
 

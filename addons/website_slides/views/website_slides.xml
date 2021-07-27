@@ -401,7 +401,7 @@
                         <div class="row">
                             <h4 t-field="slide.name" class="col-lg-6"/>
                             <div class="col-lg-6">
-                                <div clas="row">
+                                <div class="row">
                                     <div class="col-lg-8" t-if="slide.tag_ids">
                                         <t t-foreach="slide.tag_ids" t-as="slide_tag">
                                             <a t-attf-href="/slides/#{slug(slide.channel_id)}/tag/#{slug(slide_tag)}"  t-attf-class="badge badge-secondary ml4 mb4 float-right #{tag and tag.id == slide_tag.id and 'badge-primary' ''}" t-field="slide_tag.name"/>

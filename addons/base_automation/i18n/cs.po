@@ -7,7 +7,8 @@
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
-# Jiří Podhorecký, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Jiří Podhorecký, 2020\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -116,7 +117,7 @@ msgstr "Automatizace"
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
-msgstr ""
+msgstr "Základní pravidlo akce: zkontrolujte a proveďte"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_recursive
@@ -163,12 +164,12 @@ msgstr ""
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "Based on Form Modification"
-msgstr ""
+msgstr "Na základě úpravy formuláře"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "Based on Timed Condition"
-msgstr ""
+msgstr "Založeno na časovaném stavu"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
@@ -438,27 +439,27 @@ msgstr "Poznámka"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_fields
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "Při změně polí se spustí"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "On Creation"
-msgstr ""
+msgstr "Na stvoření"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "On Creation & Update"
-msgstr ""
+msgstr "Při vytváření a aktualizaci"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "On Deletion"
-msgstr ""
+msgstr "Při mazání"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "On Update"
-msgstr ""
+msgstr "Při aktualizaci"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__help
@@ -537,7 +538,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "Nastavit novou automatizovanou automatizaci"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__state
@@ -594,6 +595,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Typ akce serveru. K dispozici jsou následující hodnoty:\n"
+"- 'Execute Python Code': blok kódu Pythonu, který bude spuštěn\n"
+"- 'Create': vytvoření nového záznamu s novými hodnotami\n"
+"- 'Update a Record': aktualizuje hodnoty záznamu\n"
+"- 'Execute several actions': definujte akci, která spustí několik dalších akcí serveru\n"
+"- 'Send Email': automaticky odešle e-mail (u Diskuse)\n"
+"- 'Add Followers': přidá sledující k záznamu (u Diskuse)\n"
+"- 'Create Next Activity': vytvoří novou aktivitu (u Diskuse)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -608,11 +617,14 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"Pomocí funkce „Specifický uživatel“ vždy přiřadíte stejného uživatele k "
+"další aktivitě. Pomocí možnosti „Obecný uživatel ze záznamu“ zadejte název "
+"pole uživatele, který chcete v záznamu vybrat."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
 msgid "Use Calendar"
-msgstr ""
+msgstr "Použít kalendář"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act

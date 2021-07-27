@@ -13,8 +13,12 @@ odoo.define('website_forum.website_forum', function (require) {
         return $.Deferred().reject("DOM doesn't contain '.website_forum'");
     }
 
+    var $forumPostContent = $('span[data-oe-model="forum.post"][data-oe-field="content"]');
     // float-left class messes up the post layout OPW 769721
-    $('span[data-oe-model="forum.post"][data-oe-field="content"]').find('img.float-left').removeClass('float-left');
+    $forumPostContent.find('img.float-left').removeClass('float-left');
+    // o_we_selected_image has not always been removed when
+    // saving a post so we need the line below to remove it if it is present.
+    $forumPostContent.find('img.o_we_selected_image').removeClass('o_we_selected_image');
 
     $("[data-toggle='popover']").popover();
     $('.karma_required').on('click', function (ev) {
@@ -418,7 +422,9 @@ odoo.define('website_forum.website_forum', function (require) {
         // float-left class messes up the post layout OPW 769721
         $form.find('.note-editable').find('img.float-left').removeClass('float-left');
         $form.on('click', 'button, .a-submit', function () {
-            $textarea.html($form.find('.note-editable').code());
+            var $formContent = $form.find('.note-editable');
+            $formContent.find('img.o_we_selected_image').removeClass('o_we_selected_image');
+            $textarea.html($formContent.code());
         });
     });
 

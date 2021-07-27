@@ -675,43 +675,6 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: 'div[name=bank_journal_cta] > button[data-name=action_cofigure_bank_journal], div[name=bank_journal_cta] > button[data-name=action_configure_bank_journal]',
-    content: _t('Configure Bank Journal'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
-    trigger: '.js_configure_manually',
-    content: _t('Enter manual data for bank account'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
-    trigger: '.o_field_widget[name=create_or_link_option] .o_radio_input[data-value="link"]',
-    content: _t('Link to existing journal'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
-    trigger: ".o_field_widget[name=acc_number]",
-    content: _t("Enter an account number"),
-    position: "right",
-    run: "text 867656544",
-}, {
-    edition: "enterprise",
-    trigger: ".o_field_widget[name=linked_journal_id] input",
-    extra_trigger: ".modal-dialog",
-    content: _t("Select Journal"),
-    position: "bottom",
-    run: 'text Bank',
-}, {
-    edition: "enterprise",
-    trigger: ".ui-menu-item > a",
-    auto: true,
-    in_modal:false,
-}, {
-    trigger: ".modal-footer .btn-primary",
-    content: _t('Save'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
     trigger: 'div[name=bank_statement_create_button] > a[data-name=create_bank_statement], div[name=bank_statement_create_button] > a[data-name=create_bank_statement]',
     content: _t('Create a new bank statement'),
     position: 'bottom',

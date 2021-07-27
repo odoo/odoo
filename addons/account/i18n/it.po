@@ -6,8 +6,8 @@
 # Christian <chris@effeci.info>, 2018
 # Alessandro Camilli <alessandrocamilli@openforce.it>, 2018
 # Daniele Faraglia <daniele.faraglia@gmail.com>, 2018
-# Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
+# Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Davide Corio <enlightx@gmail.com>, 2018
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
@@ -24,10 +24,11 @@
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2019
 # Paolo Valier, 2019
-# Lorenzo Battistini <lb@takobi.online>, 2019
 # Luana Andronico <andronicoluana@gmail.com>, 2019
 # Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Lorenzo Battistini <lb@takobi.online>, 2021
+# Vortex Storm <vortexstorm@protonmail.com>, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2488,7 +2489,7 @@ msgstr "fatture da pagare"
 #. module: account
 #: selection:res.partner,invoice_warn:0
 msgid "Blocking Message"
-msgstr "Messaggio bloccante"
+msgstr "Messaggio di blocco"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type__include_initial_balance
@@ -2705,7 +2706,7 @@ msgstr "Criterio di cassa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_cash_basis_journal_id
 msgid "Cash Basis Journal"
-msgstr "Registro per cassa"
+msgstr "Registro criterio di cassa"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:413
@@ -3093,7 +3094,7 @@ msgstr "Indice colore"
 #: model:ir.model.fields,field_description:account.field_account_invoice__commercial_partner_id
 #: model:ir.model.fields,help:account.field_account_invoice_report__commercial_partner_id
 msgid "Commercial Entity"
-msgstr "Ente commerciale"
+msgstr "Entità commerciale"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:519
@@ -3779,7 +3780,7 @@ msgstr "Passività correnti"
 #. module: account
 #: model:account.account.type,name:account.data_unaffected_earnings
 msgid "Current Year Earnings"
-msgstr "Ricavi anno corrente"
+msgstr "Utili di esercizio"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__starred
@@ -6698,14 +6699,14 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:33
 #, python-format
 msgid "Load more"
-msgstr "Caricamento ulteriore"
+msgstr "Carica altri"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:154
 #, python-format
 msgid "Load more... ("
-msgstr "Mostra altri... ("
+msgstr "Carica altri... ("
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__fiscalyear_lock_date
@@ -7162,7 +7163,7 @@ msgstr "Nuovo nome registro"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New Transactions"
-msgstr "Nuova operazione"
+msgstr "Nuove operazioni"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1121
@@ -8208,6 +8209,12 @@ msgstr ""
 "di procedere."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr "Impostare un valore di arrotondamento strettamente positivo."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "Per il pagamento utilizzare la seguente indicazione:"
@@ -8736,7 +8743,7 @@ msgstr "Modello documento collegato"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__rating_ids
 msgid "Related ratings"
-msgstr "Valutazioni collegate"
+msgstr "Valutazioni correlate"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__residual_company_signed
@@ -8764,8 +8771,8 @@ msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
 msgstr ""
-"Rispondi all'indirizzo email. Impostando reply_to viene elusa la creazione "
-"automatica del thread."
+"Indirizzo e-mail per la risposta. Impostando reply_to viene aggirata la "
+"creazione automatica della discussione."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to
@@ -8849,6 +8856,8 @@ msgstr "Limita partner a"
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
 msgstr ""
+"Limitare le proposte che hanno la stessa valuta della casella di "
+"dichiarazione."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
@@ -9043,7 +9052,7 @@ msgstr "Fattura campione inviata."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__sanitized_acc_number
 msgid "Sanitized Account Number"
-msgstr ""
+msgstr "Numero conto pulito"
 
 #. module: account
 #. openerp-web
@@ -9250,7 +9259,7 @@ msgid ""
 "block the flow. The Message has to be written in the next field."
 msgstr ""
 "Selezionando l'opzione \"Avviso\" l'utente viene notificato con un "
-"messaggio. Selezionando \"Messaggio bloccante\" viene inviata un'eccezione "
+"messaggio. Selezionando \"Messaggio di blocco\" viene inviata un'eccezione "
 "con il messaggio e viene bloccato il flusso. Scrivere il messaggio nel campo"
 " successivo."
 
@@ -9340,7 +9349,7 @@ msgstr "Sequenza"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:239
 #, python-format
 msgid "Set"
-msgstr ""
+msgstr "fissare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -9351,20 +9360,20 @@ msgstr "Imposta a bozza"
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
-"Impostare «Attivo» a falso per nascondere l'etichetta del conto senza "
-"rimuoverla."
+"Per nascondere l'etichetta del conto senza rimuoverla, impostare Attivo a "
+"falso."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__active
 msgid "Set active to false to hide the Journal without removing it."
 msgstr ""
-"Impostare «Attivo» a falso per nascondere il registro senza rimuoverlo."
+"Per nascondere il registro senza rimuoverlo, impostare Attivo a falso."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__active
 #: model:ir.model.fields,help:account.field_account_tax_template__active
 msgid "Set active to false to hide the tax without removing it."
-msgstr "Impostare «Attivo» a falso per nascondere l'imposta senza rimuoverla."
+msgstr "Per nascondere l'imposta senza rimuoverla, impostare Attivo a falso."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
@@ -9826,7 +9835,7 @@ msgstr "Metodo di arrotondamento per il calcolo imposte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_rec_id
 msgid "Tax Cash Basis Entry of"
-msgstr "Registrazione per cassa di"
+msgstr "Registrazione imposte criterio di cassa di"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_cash_basis_journal_id
@@ -10025,7 +10034,7 @@ msgstr "Mappatura imposte"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_ids
 msgid "Taxes that apply on the base amount"
-msgstr ""
+msgstr "Imposte che si applicano all'importo imponibile"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -10112,6 +10121,8 @@ msgid ""
 "Technical field indicating if the registering payment will generate multiple"
 " payments or not."
 msgstr ""
+"Casella informativa che indica se il pagamento che si sta registrando "
+"genererà pagamenti multipli o no"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund__refund_only
@@ -10576,9 +10587,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
 msgstr ""
-"L'intestatario del conto bancario in un registro deve essere l'azienda (%s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__account_id
@@ -10958,7 +10971,7 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:100
 #, python-format
 msgid "This Week"
-msgstr "Questa settimana"
+msgstr "Questa sett."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_payable_id
@@ -11983,6 +11996,9 @@ msgid ""
 "When receiving an email with a bill, or uploading scanned bills, Odoo will "
 "parse them (OCR) and auto-complete (AI) Draft Bills to validate."
 msgstr ""
+"Quando si riceve un'email con una fattura, o si aggiungono fatture "
+"scansionate, Odoo l'elaborerà (OCR) e compilerà automaticamente (AI) Bozze "
+"di fatture da convalidare."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__post_at_bank_rec
@@ -12048,6 +12064,8 @@ msgid ""
 "Wrong credit or debit value in accounting entry! Credit and debit should be "
 "positive."
 msgstr ""
+"Valore avere o dare errato nella registrazione contabile! Avere e dare "
+"dovrebbero essere positivi."
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -12269,7 +12287,7 @@ msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
 msgstr ""
-"Impossibile avere più di un conto di tipo \"Ricavi anno corrente\". (conti: "
+"Impossibile avere più di un conto di tipo \"Utili di esercizio\". (conti: "
 "%s)"
 
 #. module: account
@@ -12492,14 +12510,8 @@ msgid ""
 "to differences between exchange rates."
 msgstr ""
 "Per gestire automaticamente le registrazioni contabili relative alle "
-"differenze fra tassi di cambio è necessario configurare il \"Conto perdite "
-"tasso di cambio\" nelle impostazioni della contabilità."
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr "Impostare un valore di arrotondamento positivo."
+"differenze fra tassi di cambio è necessario configurare, nelle impostazioni "
+"della contabilità, il \"Conto perdite tasso di cambio\"."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -12655,7 +12667,7 @@ msgstr "secondi per operazione."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:319
 #, python-format
 msgid "statement lines"
-msgstr "righe estratto conto"
+msgstr "righe di estratto conto"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form

@@ -464,10 +464,11 @@ class PricelistItem(models.Model):
             self.name = _("All Products")
 
         if self.compute_price == 'fixed':
+            decimal_places = self.env['decimal.precision'].precision_get('Product Price')
             self.price = ("%s %s") % (
                 float_repr(
                     self.fixed_price,
-                    self.pricelist_id.currency_id.decimal_places,
+                    decimal_places,
                 ),
                 self.pricelist_id.currency_id.name
             )
@@ -493,6 +494,7 @@ class PricelistItem(models.Model):
             self.percent_price = 0.0
         if self.compute_price != 'formula':
             self.update({
+                'base': 'list_price',
                 'price_discount': 0.0,
                 'price_surcharge': 0.0,
                 'price_round': 0.0,

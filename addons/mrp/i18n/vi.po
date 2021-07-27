@@ -325,6 +325,13 @@ msgid "A Manufacturing Order is already done or cancelled."
 msgstr "Một lệnh sản xuất đã xong hoặc đã bị hủy."
 
 #. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:288
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
 msgid "Access Token"
 msgstr "Token truy cập"
@@ -4414,6 +4421,14 @@ msgstr "Bạn không thể thay đổi hoạt động sản xuất đã hoàn th
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr "Bạn không thể tiêu thụ mà không biết bạn đã tiêu thụ lô hàng nào"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:122
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:117

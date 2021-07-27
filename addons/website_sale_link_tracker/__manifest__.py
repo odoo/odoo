@@ -18,4 +18,5 @@ View Link Tracker Statistics on eCommerce dashboard
     ],
     'qweb': ['static/src/xml/*.xml'],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

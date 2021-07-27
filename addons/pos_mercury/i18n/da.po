@@ -10,6 +10,7 @@
 # lhmflexerp <lhm@flexerp.dk>, 2018
 # Sanne Kristensen <sanne@vkdata.dk>, 2018
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-02 10:04+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,6 +47,12 @@ msgid ""
 "                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
+"<i>Mercury Konfigurationer</i> definere hvilken Mercury konto vil blive brugt under\n"
+"                                  behandling af kreditkort transaktioner ved Point og Sale. Opsætning af en Mercury\n"
+"                                  konfiguration, vil gøre dig i stand til, at tillade betalinger med diverse kreditkort \n"
+"                                   (f.eks. Visa, MasterCard, Discovery, Dankort, ...).\n"
+"Efter opsætning af denne \n"
+"                                   konfiguration, burde du kunne associere den med en Point of Sale betalingsmetode."
 
 #. module: pos_mercury
 #. openerp-web
@@ -231,6 +238,8 @@ msgid ""
 "If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
+"Hvis du ikke allerede har en Mercury konto, kan du kontakte Mercury på +1 (800) 846-4472\n"
+"                              for at oprette en."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_invoice_no
@@ -289,7 +298,7 @@ msgstr "Mercury konfigurationer"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_journal__pos_mercury_config_id
 msgid "Mercury Credentials"
-msgstr ""
+msgstr "Mercury Legitimationsoplysninger"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_invoice_no
@@ -299,12 +308,12 @@ msgstr "Mercury fakturanummer"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_record_no
 msgid "Mercury record number"
-msgstr ""
+msgstr "Mercury datasæt nummer"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_ref_no
 msgid "Mercury reference number"
-msgstr ""
+msgstr "Mercury referencenummer"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__name
@@ -314,13 +323,13 @@ msgstr "Navn"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__name
 msgid "Name of this Mercury configuration"
-msgstr ""
+msgstr "Navn på denne Mercury konfiguration"
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:34
 #, python-format
 msgid "No Mercury configuration associated with the journal."
-msgstr ""
+msgstr "Ingen Mercury konfiguration associeret med denne journal."
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:22
@@ -333,7 +342,7 @@ msgstr "Ingen åbnede point of sale sessioner for bruger %s fundet."
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:328
 #, python-format
 msgid "No response from Mercury (Mercury down?)"
-msgstr ""
+msgstr "Intet svar fra Mercury (Mercury er nede?)"
 
 #. module: pos_mercury
 #. openerp-web
@@ -394,29 +403,29 @@ msgstr "Betal med:"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_record_no
 msgid "Payment record number from Mercury Pay"
-msgstr ""
+msgstr "Betaling datasæt nummer fra Mercury Pay"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_ref_no
 msgid "Payment reference number from Mercury Pay"
-msgstr ""
+msgstr "Betaling referencenummer fra Mercury Pay"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:416
 #, python-format
 msgid "Please setup your Mercury merchant account."
-msgstr ""
+msgstr "Vær venlig at opsætte din Mercury handelskonto."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
 msgid "Point of Sale Mercury Configuration"
-msgstr ""
+msgstr "Point of Sale Mercury Konfiguration"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
 msgid "Point of Sale Mercury Transaction"
-msgstr ""
+msgstr "Point of Sale Mercury Transaktion"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -476,7 +485,7 @@ msgstr "Kortnummeret som er anvendt til betalingen."
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_journal__pos_mercury_config_id
 msgid "The configuration of Mercury used for this journal"
-msgstr ""
+msgstr "Mercury konfigurationen anvendt for denne journal"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_card_number
@@ -524,6 +533,9 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
+"Brugen af Mercury integrationen i Point of Sale er ligetil: Blot tryk på den\n"
+"                                tilhørende betalings metode. Efterfølgende kan mængden justeres (f.eks. ved veksling)\n"
+"                                nøjagtig som enhver anden betalingslinje. Hver gang betalingslinjen opsættes, kan et kort trækkes igennem kortlæser enheden."
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury

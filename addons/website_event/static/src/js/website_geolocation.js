@@ -18,6 +18,7 @@ sAnimation.registry.visitor = sAnimation.Class.extend({
             if (data) {
                 self._$loadedContent = $(data);
 
+                self._$loadedContent.attr('contentEditable', false);
                 self._$loadedContent.addClass('o_temp_auto_element');
                 self._$loadedContent.attr('data-temp-auto-element-original-content', self._originalContent);
 

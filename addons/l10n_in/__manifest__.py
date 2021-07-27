@@ -35,4 +35,5 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'views/res_country_state_view.xml',
         'views/res_partner_views.xml',
     ],
+    'license': 'LGPL-3',
 }

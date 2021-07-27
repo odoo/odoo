@@ -340,6 +340,13 @@ msgid "A Manufacturing Order is already done or cancelled."
 msgstr "أحد أوامر التصنيع منتهي أو ملغي."
 
 #. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:288
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
 msgid "Access Token"
 msgstr "رمز الوصول"
@@ -4375,6 +4382,14 @@ msgstr "لا يمكنك تغيير أمر العمل المنتهي."
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr "لا يمكنك استهلاك مواد خام بدون تحديد رقم اللوط الخاص بهم"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:122
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:117

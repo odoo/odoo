@@ -16,4 +16,5 @@ Configure the price accuracy you need for different kinds of usage: accounting, 
     ],
     'demo': [],
     'installable': True,
+    'license': 'LGPL-3',
 }
