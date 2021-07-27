@@ -6,6 +6,7 @@ from odoo import fields
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
+from odoo.tools import mute_logger
 
 
 class TestProcurement(TestMrpCommon):
@@ -127,6 +128,97 @@ class TestProcurement(TestMrpCommon):
             production_form.product_qty = 1
             production_product_4 = production_form.save()
             production_product_4.action_confirm()
+
+    def test_procurement_4(self):
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        product_A = self.env['product.product'].create({
+            'name': 'productA',
+            'type': 'product',
+            'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))]
+        })
+        product_B = self.env['product.product'].create({
+            'name': 'productB',
+            'type': 'product',
+            'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))]
+        })
+        product_C = self.env['product.product'].create({
+            'name': 'productC',
+            'type': 'product',
+        })
+        product_route = self.env['stock.location.route'].create({
+            'name': 'Stock -> output route',
+            'product_selectable': True,
+            'rule_ids': [(0, 0, {
+                'name': 'Stock -> output rule',
+                'action': 'pull',
+                'picking_type_id': self.ref('stock.picking_type_internal'),
+                'location_src_id': self.ref('stock.stock_location_stock'),
+                'location_id': self.ref('stock.stock_location_output'),
+            })],
+        })
+
+        # Set this route on `product.product_product_3`
+        product_C.write({
+            'route_ids': [(4, product_route.id)]
+        })
+
+        bom_A = self.env['mrp.bom'].create({
+            'product_id': product_A.id,
+            'product_tmpl_id': product_A.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_B.id, 'product_qty': 2.0})
+            ]})
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'A RR',
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': product_A.id,
+            'product_min_qty': 10,
+            'product_max_qty': 100,
+        })
+
+        bom_B = self.env['mrp.bom'].create({
+            'product_id': product_B.id,
+            'product_tmpl_id': product_B.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_C.id, 'product_qty': 1.0})
+            ]})
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'B RR',
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': product_B.id,
+            'product_min_qty': 20,
+            'product_max_qty': 200,
+        })
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'C RR',
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': product_C.id,
+            'product_min_qty': 20,
+            'product_max_qty': 200,
+        })
+
+        with mute_logger('odoo.addons.stock.models.procurement'):
+            self.env['procurement.group'].run_scheduler()
+
+        production_A = self.env['mrp.production'].search([
+            ('product_id', '=', product_A.id),
+            ('state', '=', 'confirmed')
+        ])
+        self.assertEqual(production_A.product_uom_qty, 100, "100 units of A should be scheduled for production")
+        production_B = self.env['mrp.production'].search([
+            ('product_id', '=', product_B.id),
+            ('state', '=', 'confirmed')
+        ])
+        self.assertEqual(sum(production_B.mapped('product_uom_qty')), 400, "400 units of B should be scheduled for production")
 
     def test_procurement_3(self):
         warehouse = self.env['stock.warehouse'].search([], limit=1)
