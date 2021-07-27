@@ -452,7 +452,7 @@ class MrpProduction(models.Model):
             'date': self.date_planned_start,
             'date_expected': self.date_planned_start,
         })
-        if not self.routing_id:
+        if self.date_planned_start and not self.routing_id:
             self.date_planned_finished = self.date_planned_start + datetime.timedelta(hours=1)
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
