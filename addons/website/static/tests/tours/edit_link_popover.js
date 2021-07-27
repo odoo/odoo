@@ -160,12 +160,22 @@ tour.register('edit_link_popover', {
         run: function () {}, // it's a check
     },
     {
+        content: "Toolbar should be shown (3)",
+        trigger: '#toolbar:has(#o_link_dialog_url_input:propValue(/contactus))',
+        run: function () {}, // it's a check
+    },
+    {
         content: "Click 'Home' link in footer",
         trigger: 'footer a[href="/"]',
     },
     {
         content: "Popover should be shown (4)",
         trigger: '.o_edit_menu_popover .o_we_url_link:contains("Home")',
+        run: function () {}, // it's a check
+    },
+    {
+        content: "Toolbar should be shown (4)",
+        trigger: '#toolbar:has(#o_link_dialog_url_input:propValue(/))',
         run: function () {}, // it's a check
     },
     // 4. Popover should close when clicking non-link element

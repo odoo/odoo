@@ -75,6 +75,12 @@ Wysiwyg.include({
                         $target.data('popover-widget-initialized', true);
                     })();
                 }
+                $target.focus();
+                $('#wrapwrap').data('wysiwyg').toggleLinkTools({
+                    forceOpen: true,
+                    link: $target[0],
+                    noFocusUrl: true,
+                });
             }
         });
 
