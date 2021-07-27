@@ -19,11 +19,20 @@
                                 attrs="{'invisible': [('invoices_count', '=', 0)]}">
                             <field name="invoices_count" widget="statinfo" string="Invoice(s)"/>
                         </button>
+                        <button name="action_view_refunds"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-money"
+                                attrs="{'invisible': [('refunds_count', '=', 0)]}">
+                            <field name="refunds_count" widget="statinfo" string="Refunds"/>
+                        </button>
                     </div>
                     <group>
                         <group name="transaction_details">
                             <field name="reference"/>
                             <field name="payment_id"/>
+                            <field name="source_transaction_id"
+                                   attrs="{'invisible': [('source_transaction_id', '=', False)]}"/>
                             <field name="amount"/>
                             <field name="fees" attrs="{'invisible': [('fees', '=', 0.0)]}"/>
                             <field name="currency_id" invisible="1"/>

@@ -84,115 +84,14 @@ class PaymentTransaction(models.Model):
         feedback_data = {'reference': self.reference, 'response': res_content}
         self._handle_feedback_data('authorize', feedback_data)
 
-    @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
-        """ Find the transaction based on the feedback data.
-
-        :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The feedback data sent by the acquirer
-        :return: The transaction if found
-        :rtype: recordset of `payment.transaction`
-        """
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'authorize':
-            return tx
-
-        reference = data.get('reference')
-        tx = self.search([('reference', '=', reference), ('provider', '=', 'authorize')])
-        if not tx:
-            raise ValidationError(
-                "Authorize.Net: " + _("No transaction found matching reference %s.", reference)
-            )
-        return tx
-
-    def _process_feedback_data(self, data):
-        """ Override of payment to process the transaction based on Authorize data.
-
-        Note: self.ensure_one()
-
-        :param dict data: The feedback data sent by the provider
-        :return: None
-        """
-        super()._process_feedback_data(data)
-        if self.provider != 'authorize':
-            return
-
-        response_content = data.get('response')
-
-        self.acquirer_reference = response_content.get('x_trans_id')
-        status_code = response_content.get('x_response_code', '3')
-        if status_code == '1':  # Approved
-            status_type = response_content.get('x_type').lower()
-            if status_type in ('auth_capture', 'prior_auth_capture'):
-                self._set_done()
-                if self.tokenize and not self.token_id:
-                    self._authorize_tokenize()
-            elif status_type == 'auth_only':
-                self._set_authorized()
-                if self.tokenize and not self.token_id:
-                    self._authorize_tokenize()
-                self._send_refund_request()  # In last step because it calls _handle_feedback_data()
-            elif status_type == 'void':
-                if self.operation == 'validation':  # Validation txs are authorized and then voided
-                    self._set_done()  # If the refund went through, the validation tx is confirmed
-                else:
-                    self._set_canceled()
-        elif status_code == '2':  # Declined
-            self._set_canceled()
-        elif status_code == '4':  # Held for Review
-            self._set_pending()
-        else:  # Error / Unknown code
-            error_code = response_content.get('x_response_reason_text')
-            _logger.info(
-                "received data with invalid status code %s and error code %s",
-                status_code, error_code
-            )
-            self._set_error(
-                "Authorize.Net: " + _(
-                    "Received data with status code \"%(status)s\" and error code \"%(error)s\"",
-                    status=status_code, error=error_code
-                )
-            )
-
-    def _authorize_tokenize(self):
-        """ Create a token for the current transaction.
-
-        Note: self.ensure_one()
-
-        :return: None
-        """
-        self.ensure_one()
-
-        authorize_API = AuthorizeAPI(self.acquirer_id)
-        cust_profile = authorize_API.create_customer_profile(
-            self.partner_id, self.acquirer_reference
-        )
-        _logger.info("create_customer_profile request response:\n%s", pprint.pformat(cust_profile))
-        if cust_profile:
-            token = self.env['payment.token'].create({
-                'acquirer_id': self.acquirer_id.id,
-                'name': cust_profile.get('name'),
-                'partner_id': self.partner_id.id,
-                'acquirer_ref': cust_profile.get('payment_profile_id'),
-                'authorize_profile': cust_profile.get('profile_id'),
-                'verified': True,
-            })
-            self.write({
-                'token_id': token.id,
-                'tokenize': False,
-            })
-            _logger.info(
-                "created token with id %s for partner with id %s", token.id, self.partner_id.id
-            )
-
-    def _send_refund_request(self):
+    def _send_refund_request(self, refund_amount=None, create_refund_transaction=True):
         """ Override of payment to send a refund request to Authorize.
 
         Note: self.ensure_one()
 
         :return: None
         """
-        super()._send_refund_request()
+        super()._send_refund_request(refund_amount=refund_amount, create_refund_transaction=False)
         if self.provider != 'authorize':
             return
 
@@ -246,3 +145,104 @@ class PaymentTransaction(models.Model):
         # data in order to go through the centralized `_handle_feedback_data` method.
         feedback_data = {'reference': self.reference, 'response': res_content}
         self._handle_feedback_data('authorize', feedback_data)
+
+    @api.model
+    def _get_tx_from_feedback_data(self, provider, data):
+        """ Find the transaction based on the feedback data.
+
+        :param str provider: The provider of the acquirer that handled the transaction
+        :param dict data: The feedback data sent by the acquirer
+        :return: The transaction if found
+        :rtype: recordset of `payment.transaction`
+        """
+        tx = super()._get_tx_from_feedback_data(provider, data)
+        if provider != 'authorize':
+            return tx
+
+        reference = data.get('reference')
+        tx = self.search([('reference', '=', reference), ('provider', '=', 'authorize')])
+        if not tx:
+            raise ValidationError(
+                "Authorize.Net: " + _("No transaction found matching reference %s.", reference)
+            )
+        return tx
+
+    def _process_feedback_data(self, data):
+        """ Override of payment to process the transaction based on Authorize data.
+
+        Note: self.ensure_one()
+
+        :param dict data: The feedback data sent by the provider
+        :return: None
+        """
+        super()._process_feedback_data(data)
+        if self.provider != 'authorize':
+            return
+
+        response_content = data.get('response')
+
+        self.acquirer_reference = response_content.get('x_trans_id')
+        status_code = response_content.get('x_response_code', '3')
+        if status_code == '1':  # Approved
+            status_type = response_content.get('x_type').lower()
+            if status_type in ('auth_capture', 'prior_auth_capture'):
+                self._set_done()
+                if self.tokenize and not self.token_id:
+                    self._authorize_tokenize()
+            elif status_type == 'auth_only':
+                self._set_authorized()
+                if self.tokenize and not self.token_id:
+                    self._authorize_tokenize()
+                self._send_refund_request(create_refund_transaction=False)  # In last step because it calls _handle_feedback_data()
+            elif status_type == 'void':
+                if self.operation == 'validation':  # Validation txs are authorized and then voided
+                    self._set_done()  # If the refund went through, the validation tx is confirmed
+                else:
+                    self._set_canceled()
+        elif status_code == '2':  # Declined
+            self._set_canceled()
+        elif status_code == '4':  # Held for Review
+            self._set_pending()
+        else:  # Error / Unknown code
+            error_code = response_content.get('x_response_reason_text')
+            _logger.info(
+                "received data with invalid status code %s and error code %s",
+                status_code, error_code
+            )
+            self._set_error(
+                "Authorize.Net: " + _(
+                    "Received data with status code \"%(status)s\" and error code \"%(error)s\"",
+                    status=status_code, error=error_code
+                )
+            )
+
+    def _authorize_tokenize(self):
+        """ Create a token for the current transaction.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        self.ensure_one()
+
+        authorize_API = AuthorizeAPI(self.acquirer_id)
+        cust_profile = authorize_API.create_customer_profile(
+            self.partner_id, self.acquirer_reference
+        )
+        _logger.info("create_customer_profile request response:\n%s", pprint.pformat(cust_profile))
+        if cust_profile:
+            token = self.env['payment.token'].create({
+                'acquirer_id': self.acquirer_id.id,
+                'name': cust_profile.get('name'),
+                'partner_id': self.partner_id.id,
+                'acquirer_ref': cust_profile.get('payment_profile_id'),
+                'authorize_profile': cust_profile.get('profile_id'),
+                'verified': True,
+            })
+            self.write({
+                'token_id': token.id,
+                'tokenize': False,
+            })
+            _logger.info(
+                "created token with id %s for partner with id %s", token.id, self.partner_id.id
+            )

@@ -41,3 +41,30 @@ class AdyenForm(AdyenCommon):
         token = self.create_token(active=False)
         with self.assertRaises(UserError):
             token._handle_reactivation_request()
+
+    @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
+    def test_send_refund_request(self):
+        self.acquirer.support_refund = 'full_only'  # Should simply not be False
+        tx = self.create_transaction(
+            'redirect', state='done', acquirer_reference='source_reference'
+        )
+        tx._reconcile_after_done()  # Create the payment
+
+        # Send the refund request
+        with patch(
+            'odoo.addons.payment_adyen.models.payment_acquirer.PaymentAcquirer._adyen_make_request',
+            new=lambda *args, **kwargs: {'pspReference': "refund_reference", 'status': "received"}
+        ):
+            tx._send_refund_request()
+
+        refund_tx = self.env['payment.transaction'].search([('source_transaction_id', '=', tx.id)])
+        self.assertTrue(
+            refund_tx,
+            msg="Refunding an Adyen transaction should always create a refund transaction."
+        )
+        self.assertNotEqual(
+            refund_tx.acquirer_reference,
+            tx.acquirer_reference,
+            msg="The acquirer reference of the refund transaction should different from that of "
+                "the source transaction."
+        )
