@@ -16,5 +16,4 @@ class MailComposeMessage(models.TransientModel):
                 ('cart_recovery_email_sent', '=', False),
                 ('is_abandoned_cart', '=', True)
             ]).write({'cart_recovery_email_sent': True})
-            self = self.with_context(mail_post_autofollow=self.env.context.get('mail_post_autofollow', True))
         return super(MailComposeMessage, self).send_mail(auto_commit=auto_commit)
