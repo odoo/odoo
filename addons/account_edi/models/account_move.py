@@ -546,6 +546,53 @@ class AccountMoveLine(models.Model):
 
         res['price_discount'] = res['price_subtotal_before_discount'] - self.price_subtotal
 
+<<<<<<< HEAD
+=======
+        # Tax details.
+        tax_detail_per_tax = {}
+        taxes_res = self.tax_ids.compute_all(
+            res['price_unit_after_discount'],
+            currency=self.currency_id,
+            quantity=self.quantity,
+            product=self.product_id,
+            partner=self.partner_id,
+            is_refund=self.move_id.move_type in ('in_refund', 'out_refund'),
+        )
+        taxes_added_to_base = set()
+        for tax_vals in taxes_res['taxes']:
+            tax_rep = self.env['account.tax.repartition.line'].browse(tax_vals['tax_repartition_line_id'])
+            tax = tax_rep.tax_id
+            tax_detail_per_tax.setdefault(tax, {
+                'tax': tax,
+                'orig_tax': tax_vals['group'].id if tax_vals['group'] else tax.id,
+                'tax_base_amount_currency': 0.0,
+                'tax_amount_currency': 0.0,
+                'tax_amount_currency_closing': 0.0,
+                'tag_ids': set(),
+            })
+            vals = tax_detail_per_tax[tax]
+
+            # Avoid adding multiple times the same base (e.g. with multiple repartition lines).
+            if tax.id not in taxes_added_to_base:
+                vals['tax_base_amount_currency'] = tax_vals['base']
+                taxes_added_to_base.add(tax.id)
+
+            vals['tax_amount_currency'] += tax_vals['amount']
+            vals['tax_amount_currency_closing'] += tax_vals['amount'] if tax_rep.use_in_tax_closing else 0
+            for tag in tax_rep.tag_ids:
+                vals['tag_ids'].add(tag.id)
+
+        res['tax_detail_vals_list'] = []
+        for tax_detail_vals in tax_detail_per_tax.values():
+            res['tax_detail_vals_list'].append({
+                **tax_detail_vals,
+                'tags': self.env['account.account.tag'].browse(tax_detail_vals['tag_ids']),
+                'tax_base_amount': convert(tax_detail_vals['tax_base_amount_currency']),
+                'tax_amount': convert(tax_detail_vals['tax_amount_currency']),
+                'tax_amount_closing': convert(tax_detail_vals['tax_amount_currency_closing']),
+            })
+
+>>>>>>> e23c809222e... temp
         return res
 
     def reconcile(self):
