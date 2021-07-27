@@ -9,12 +9,17 @@ class AccountPayment(models.Model):
 
     # == Business fields ==
     payment_transaction_id = fields.Many2one(
-        string="Payment Transaction", comodel_name='payment.transaction', readonly=True)
+        string="Payment Transaction",
+        comodel_name='payment.transaction',
+        readonly=True,
+        auto_join=True,  # No access rule bypass since access to payments means access to txs too
+    )
     payment_token_id = fields.Many2one(
         string="Saved Payment Token", comodel_name='payment.token', domain="""[
             ('id', 'in', suitable_payment_token_ids),
         ]""",
         help="Note that only tokens from acquirers allowing to capture the amount are available.")
+    amount_available_for_refund = fields.Monetary(compute='_compute_amount_available_for_refund')
 
     # == Display purpose fields ==
     suitable_payment_token_ids = fields.Many2many(
@@ -25,6 +30,30 @@ class AccountPayment(models.Model):
         compute='_compute_use_electronic_payment_method',
         help='Technical field used to hide or show the payment_token_id if needed.'
     )
+
+    # == Fields used for traceability ==
+    source_payment_id = fields.Many2one(
+        string="Source Payment",
+        comodel_name='account.payment',
+        help="The source payment of related refund payments",
+        related='payment_transaction_id.source_transaction_id.payment_id',
+        readonly=True,
+        store=True,  # Stored for the group by in `_compute_refunds_count`
+    )
+    refunds_count = fields.Integer(string="Refunds Count", compute='_compute_refunds_count')
+
+    def _compute_amount_available_for_refund(self):
+        for payment in self:
+            if payment.payment_transaction_id.sudo().acquirer_id.support_refund:
+                # Only consider refund transactions that are confirmed by summing the amounts of
+                # payments linked to such refund transactions. Indeed, should a refund transaction
+                # be stuck forever in a transient state (due to webhook failure, for example), the
+                # user would never be allowed to refund the source transaction again.
+                refund_payments = self.search([('source_payment_id', '=', self.id)])
+                refunded_amount = abs(sum(refund_payments.mapped('amount')))
+                payment.amount_available_for_refund = payment.amount - refunded_amount
+            else:
+                payment.amount_available_for_refund = 0
 
     @api.depends('payment_method_line_id')
     def _compute_suitable_payment_token_ids(self):
@@ -53,6 +82,19 @@ class AccountPayment(models.Model):
             codes = [key for key in dict(self.env['payment.acquirer']._fields['provider']._description_selection(self.env))]
             payment.use_electronic_payment_method = payment.payment_method_code in codes
 
+    def _compute_refunds_count(self):
+        rg_data = self.env['account.payment'].read_group(
+            domain=[
+                ('source_payment_id', 'in', self.ids),
+                ('payment_transaction_id.operation', '=', 'refund')
+            ],
+            fields=['source_payment_id'],
+            groupby=['source_payment_id']
+        )
+        data = {x['source_payment_id'][0]: x['source_payment_id_count'] for x in rg_data}
+        for payment in self:
+            payment.refunds_count = data.get(payment.id, 0)
+
     @api.onchange('partner_id', 'payment_method_line_id', 'journal_id')
     def _onchange_set_payment_token_id(self):
         codes = [key for key in dict(self.env['payment.acquirer']._fields['provider']._description_selection(self.env))]
@@ -72,6 +114,63 @@ class AccountPayment(models.Model):
             ('acquirer_id.capture_manually', '=', False),
             ('acquirer_id', '=', self.payment_method_line_id.payment_acquirer_id.id),
          ], limit=1)
+
+    def action_post(self):
+        # Post the payments "normally" if no transactions are needed.
+        # If not, let the acquirer update the state.
+
+        payments_need_tx = self.filtered(
+            lambda p: p.payment_token_id and not p.payment_transaction_id
+        )
+        # creating the transaction require to access data on payment acquirers, not always accessible to users
+        # able to create payments
+        transactions = payments_need_tx.sudo()._create_payment_transaction()
+
+        res = super(AccountPayment, self - payments_need_tx).action_post()
+
+        for tx in transactions:  # Process the transactions with a payment by token
+            tx._send_payment_request()
+
+        # Post payments for issued transactions
+        transactions._finalize_post_processing()
+        payments_tx_done = payments_need_tx.filtered(
+            lambda p: p.payment_transaction_id.state == 'done'
+        )
+        super(AccountPayment, payments_tx_done).action_post()
+        payments_tx_not_done = payments_need_tx.filtered(
+            lambda p: p.payment_transaction_id.state != 'done'
+        )
+        payments_tx_not_done.action_cancel()
+
+        return res
+
+    def action_refund_wizard(self):
+        self.ensure_one()
+        return {
+            'name': _("Refund"),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'payment.refund.wizard',
+            'target': 'new',
+        }
+
+    def action_view_refunds(self):
+        self.ensure_one()
+        action = {
+            'name': _("Refund"),
+            'res_model': 'account.payment',
+            'type': 'ir.actions.act_window',
+        }
+        if self.refunds_count == 1:
+            refund_tx = self.env['account.payment'].search([
+                ('source_payment_id', '=', self.id)
+            ], limit=1)
+            action['res_id'] = refund_tx.id
+            action['view_mode'] = 'form'
+        else:
+            action['view_mode'] = 'tree,form'
+            action['domain'] = [('source_payment_id', '=', self.id)]
+        return action
 
     def _get_payment_chatter_link(self):
         self.ensure_one()
@@ -108,32 +207,3 @@ class AccountPayment(models.Model):
             'payment_id': self.id,
             **extra_create_values,
         }
-
-    def action_post(self):
-        # Post the payments "normally" if no transactions are needed.
-        # If not, let the acquirer update the state.
-
-        payments_need_tx = self.filtered(
-            lambda p: p.payment_token_id and not p.payment_transaction_id
-        )
-        # creating the transaction require to access data on payment acquirers, not always accessible to users
-        # able to create payments
-        transactions = payments_need_tx.sudo()._create_payment_transaction()
-
-        res = super(AccountPayment, self - payments_need_tx).action_post()
-
-        for tx in transactions:  # Process the transactions with a payment by token
-            tx._send_payment_request()
-
-        # Post payments for issued transactions
-        transactions._finalize_post_processing()
-        payments_tx_done = payments_need_tx.filtered(
-            lambda p: p.payment_transaction_id.state == 'done'
-        )
-        super(AccountPayment, payments_tx_done).action_post()
-        payments_tx_not_done = payments_need_tx.filtered(
-            lambda p: p.payment_transaction_id.state != 'done'
-        )
-        payments_tx_not_done.action_cancel()
-
-        return res

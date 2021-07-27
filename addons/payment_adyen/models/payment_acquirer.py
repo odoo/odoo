@@ -60,16 +60,21 @@ class PaymentAcquirer(models.Model):
 
     #=== BUSINESS METHODS ===#
 
-    def _adyen_make_request(self, url_field_name, endpoint, payload=None, method='POST'):
+    def _adyen_make_request(
+        self, url_field_name, endpoint, endpoint_param=None, payload=None, method='POST'
+    ):
         """ Make a request to Adyen API at the specified endpoint.
 
         Note: self.ensure_one()
 
         :param str url_field_name: The name of the field holding the base URL for the request
         :param str endpoint: The endpoint to be reached by the request
+        :param str endpoint_param: A variable required by some endpoints which are interpolated with
+                                   it if provided. For example, the acquirer reference of the source
+                                   transaction for the '/payments/{}/refunds' endpoint.
         :param dict payload: The payload of the request
         :param str method: The HTTP method of the request
-        :return The JSON-formatted content of the response
+        :return: The JSON-formatted content of the response
         :rtype: dict
         :raise: ValidationError if an HTTP error occurs
         """
@@ -77,7 +82,7 @@ class PaymentAcquirer(models.Model):
         def _build_url(_base_url, _version, _endpoint):
             """ Build an API URL by appending the version and endpoint to a base URL.
 
-            The final URL follows this pattern : `<_base>/V<_version>/<_endpoint>`.
+            The final URL follows this pattern: `<_base>/V<_version>/<_endpoint>`.
 
             :param str _base_url: The base of the url prefixed with `https://`
             :param int _version: The version of the endpoint
@@ -91,8 +96,9 @@ class PaymentAcquirer(models.Model):
 
         self.ensure_one()
 
-        version = API_ENDPOINT_VERSIONS[endpoint]
         base_url = self[url_field_name]  # Restrict request URL to the stored API URL fields
+        version = API_ENDPOINT_VERSIONS[endpoint]
+        endpoint = endpoint if not endpoint_param else endpoint.format(endpoint_param)
         url = _build_url(base_url, version, endpoint)
         headers = {'X-API-Key': self.adyen_api_key}
         try:
