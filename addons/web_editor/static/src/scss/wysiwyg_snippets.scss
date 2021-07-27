@@ -548,12 +548,17 @@ body.editor_enable.editor_has_snippets {
                     }
                     .dropdown-menu.show {
                         position: absolute !important;
+                        padding: 0;
 
                         we-button {
                             text-align: left;
                             font-family: Roboto, "Montserrat", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
                             font-size: 12px;
                             font-weight: 400;
+
+                            div {
+                                width: 100%;
+                            }
                         }
                     }
                 }
@@ -665,6 +670,19 @@ body.editor_enable.editor_has_snippets {
                 padding: 0;
             }
         }
+
+        // Firefox layout issue
+        // Somehow fields on this row take a very wide space.
+        // Could be related to the 999px width of the border previews.
+        .link-custom-color-border {
+            we-input, we-select {
+                max-width: max-content;
+            }
+            we-toggler {
+                width: 85px !important;
+            }
+        }
+
         // END toolbar
 
         #oe-table-options {
