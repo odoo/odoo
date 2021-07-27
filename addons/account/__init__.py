@@ -59,6 +59,8 @@ def _auto_install_l10n(env):
             module_list.append('base_vat')
         if country_code == 'MX':
             module_list.append('l10n_mx_edi')
+        if country_code == 'IT':
+            module_list.append('l10n_it_edi_sdicoop')
 
         module_ids = env['ir.module.module'].search([('name', 'in', module_list), ('state', '=', 'uninstalled')])
         module_ids.sudo().button_install()
