@@ -200,7 +200,8 @@ class MrpStockReport(models.TransientModel):
             lines.append(self._final_vals_to_lines(final_vals, line['level'])[0])
         return lines
 
-    def get_pdf(self, line_data=[]):
+    def get_pdf(self, line_data=None):
+        line_data = [] if line_data is None else line_data
         lines = self.with_context(print_mode=True).get_pdf_lines(line_data)
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         rcontext = {
@@ -211,6 +212,8 @@ class MrpStockReport(models.TransientModel):
         context = dict(self.env.context)
         if not config['test_enable']:
             context['commit_assetsbundle'] = True
+        if context.get('active_id') and context.get('active_model'):
+            rcontext['reference'] = self.env[context.get('active_model')].browse(int(context.get('active_id'))).display_name
 
         body = self.env['ir.ui.view'].with_context(context)._render_template(
             "stock.report_stock_inventory_print",
@@ -224,7 +227,7 @@ class MrpStockReport(models.TransientModel):
             [body],
             header=header,
             landscape=True,
-            specific_paperformat_args={'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+            specific_paperformat_args={'data-report-margin-top': 17, 'data-report-header-spacing': 12}
         )
 
     def _get_html(self):
