@@ -108,6 +108,13 @@ class ProductionLot(models.Model):
                 ))
         return super(ProductionLot, self).write(vals)
 
+    def copy(self, default=None):
+        if default is None:
+            default = {}
+        if 'name' not in default:
+            default['name'] = _("(copy of) %s", self.name)
+        return super().copy(default)
+
     @api.depends('quant_ids', 'quant_ids.quantity')
     def _product_qty(self):
         for lot in self:
