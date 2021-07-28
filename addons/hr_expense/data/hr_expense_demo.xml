@@ -47,6 +47,7 @@
         <record id="trans_expense_product" model="product.product">
             <field name="name">Flights, train, bus, taxi, parking</field>
             <field name="standard_price">0</field>
+            <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">TRANS</field>
@@ -69,6 +70,7 @@
         <record id="accomodation_expense_product" model="product.product">
             <field name="name">Accomodation</field>
             <field name="standard_price">0</field>
+            <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">ACC</field>
@@ -80,6 +82,7 @@
         <record id="allowance_expense_product" model="product.product">
             <field name="name">Daily Allowance</field>
             <field name="standard_price">100</field>
+            <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_day"/>
             <field name="uom_po_id" ref="uom.product_uom_day"/>
             <field name="default_code">DAL</field>
