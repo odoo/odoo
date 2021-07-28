@@ -529,6 +529,19 @@
             </field>
         </record>
 
+        <record id="action_lead_mass_mail" model="ir.actions.act_window">
+            <field name="name">Send email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context" eval="{
+                'default_composition_mode': 'mass_mail',
+                'default_use_template': False,
+            }"/>
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_view_types">list</field>
+        </record>
+
         <menuitem id="all_picking" name="Transfers" parent="menu_stock_warehouse_mgmt" sequence="5" action="action_picking_tree_all" groups="stock.group_stock_manager,stock.group_stock_user"/>
 
         <record id="stock_picking_action_picking_type" model="ir.actions.act_window">
