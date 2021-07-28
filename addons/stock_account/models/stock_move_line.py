@@ -35,7 +35,8 @@ class StockMoveLine(models.Model):
                 diff = vals['qty_done'] - move_line.qty_done
                 if float_is_zero(diff, precision_rounding=rounding):
                     continue
-                self._create_correction_svl(move, diff)
+                self._create_correction_svl(move, -move_line.qty_done)
+                self._create_correction_svl(move, vals['qty_done'])
         return super(StockMoveLine, self).write(vals)
 
     # -------------------------------------------------------------------------
