@@ -129,7 +129,7 @@
                 <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}"
                        readonly="context.get('single_product', False)" force_save="1"
                        options="{'no_create': True}"/>
-                <field name="product_categ_id" optional="show"/>
+                <field name="product_categ_id" optional="hide"/>
                 <field name="location_id" attrs="{'readonly': [('id', '!=', False)]}"
                        invisible="context.get('hide_location', False)"
                        options="{'no_create': True}"/>
