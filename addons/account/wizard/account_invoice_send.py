@@ -78,7 +78,7 @@ class AccountInvoiceSend(models.TransientModel):
             if wizard.composer_id:
                 wizard.composer_id.template_id = wizard.template_id.id
                 wizard._compute_composition_mode()
-                wizard.composer_id.onchange_template_id_wrapper()
+                wizard.composer_id._onchange_template_id_wrapper()
 
     @api.onchange('is_email')
     def onchange_is_email(self):
@@ -94,7 +94,7 @@ class AccountInvoiceSend(models.TransientModel):
                 self.composer_id.template_id = self.template_id.id
                 self._compute_composition_mode()
             if not self.env.context.get("wizard_opened"):
-                self.composer_id.onchange_template_id_wrapper()
+                self.composer_id._onchange_template_id_wrapper()
 
     @api.onchange('is_email')
     def _compute_invoice_without_email(self):
@@ -117,7 +117,7 @@ class AccountInvoiceSend(models.TransientModel):
     def _send_email(self):
         if self.is_email:
             # with_context : we don't want to reimport the file we just exported.
-            self.composer_id.with_context(no_new_invoice=True, mail_notify_author=self.env.user.partner_id in self.composer_id.partner_ids).send_mail()
+            self.composer_id.with_context(no_new_invoice=True, mail_notify_author=self.env.user.partner_id in self.composer_id.partner_ids)._action_send_mail()
             if self.env.context.get('mark_invoice_as_sent'):
                 #Salesman send posted invoice, without the right to write
                 #but they should have the right to change this flag
@@ -154,7 +154,7 @@ class AccountInvoiceSend(models.TransientModel):
 
     def save_as_template(self):
         self.ensure_one()
-        self.composer_id.save_as_template()
+        self.composer_id.action_save_as_template()
         self.template_id = self.composer_id.template_id.id
         action = _reopen(self, self.id, self.model, context=self._context)
         action.update({'name': _('Send Invoice')})

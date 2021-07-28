@@ -687,7 +687,7 @@ class MassMailing(models.Model):
             composer = composer.with_context(active_ids=res_ids, **extra_context)
             # auto-commit except in testing mode
             auto_commit = not getattr(threading.currentThread(), 'testing', False)
-            composer.send_mail(auto_commit=auto_commit)
+            composer._action_send_mail(auto_commit=auto_commit)
             mailing.write({
                 'state': 'done',
                 'sent_date': fields.Datetime.now(),

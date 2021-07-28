@@ -9,10 +9,6 @@ from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
 
 
-# main mako-like expression pattern
-EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
-
-
 def _reopen(self, res_id, model, context=None):
     # save original model in context, because selecting the list of available
     # templates requires a model in context
@@ -161,6 +157,15 @@ class MailComposer(models.TransientModel):
         for composer in self:
             composer.render_model = composer.model
 
+    # Onchanges
+
+    @api.onchange('template_id')
+    def _onchange_template_id_wrapper(self):
+        self.ensure_one()
+        values = self._onchange_template_id(self.template_id.id, self.composition_mode, self.model, self.res_id)['value']
+        for fname, value in values.items():
+            setattr(self, fname, value)
+
     @api.model
     def get_record_data(self, values):
         """ Returns a defaults-like dict with initial values for the composition
@@ -191,15 +196,36 @@ class MailComposer(models.TransientModel):
         return result
 
     # ------------------------------------------------------------
+    # CRUD / ORM
+    # ------------------------------------------------------------
+
+    @api.autovacuum
+    def _gc_lost_attachments(self):
+        """ Garbage collect lost mail attachments. Those are attachments
+            - linked to res_model 'mail.compose.message', the composer wizard
+            - with res_id 0, because they were created outside of an existing
+                wizard (typically user input through Chatter or reports
+                created on-the-fly by the templates)
+            - unused since at least one day (create_date and write_date)
+        """
+        limit_date = fields.Datetime.subtract(fields.Datetime.now(), days=1)
+        self.env['ir.attachment'].search([
+            ('res_model', '=', self._name),
+            ('res_id', '=', 0),
+            ('create_date', '<', limit_date),
+            ('write_date', '<', limit_date)]
+        ).unlink()
+
+    # ------------------------------------------------------------
     # ACTIONS
     # ------------------------------------------------------------
-    # action buttons call with positionnal arguments only, so we need an intermediary function
-    # to ensure the context is passed correctly
+
     def action_send_mail(self):
-        self.send_mail()
+        """ Used for action button that do not accept arguments. """
+        self._action_send_mail(auto_commit=False)
         return {'type': 'ir.actions.act_window_close'}
 
-    def send_mail(self, auto_commit=False):
+    def _action_send_mail(self, auto_commit=False):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
         notif_layout = self._context.get('custom_layout')
@@ -282,6 +308,30 @@ class MailComposer(models.TransientModel):
 
                 if wizard.composition_mode == 'mass_mail':
                     batch_mails_sudo.send(auto_commit=auto_commit)
+
+    def action_save_as_template(self):
+        """ hit save as template button: current form value will be a new
+            template attached to the current document. """
+        for record in self:
+            model = self.env['ir.model']._get(record.model or 'mail.message')
+            model_name = model.name or ''
+            template_name = "%s: %s" % (model_name, tools.ustr(record.subject))
+            values = {
+                'name': template_name,
+                'subject': record.subject or False,
+                'body_html': record.body or False,
+                'model_id': model.id or False,
+                'attachment_ids': [Command.set(record.attachment_ids.ids)],
+            }
+            template = self.env['mail.template'].create(values)
+            # generate the saved template
+            record.write({'template_id': template.id})
+            record._onchange_template_id_wrapper()
+            return _reopen(self, record.id, record.model, context=self._context)
+
+    # ------------------------------------------------------------
+    # RENDERING / VALUES GENERATION
+    # ------------------------------------------------------------
 
     def get_mail_values(self, res_ids):
         """Generate the values that will be used by send_mail to create mail_messages
@@ -371,18 +421,7 @@ class MailComposer(models.TransientModel):
             results[res_id] = mail_values
         return results
 
-    # ------------------------------------------------------------
-    # TEMPLATES
-    # ------------------------------------------------------------
-
-    @api.onchange('template_id')
-    def onchange_template_id_wrapper(self):
-        self.ensure_one()
-        values = self.onchange_template_id(self.template_id.id, self.composition_mode, self.model, self.res_id)['value']
-        for fname, value in values.items():
-            setattr(self, fname, value)
-
-    def onchange_template_id(self, template_id, composition_mode, model, res_id):
+    def _onchange_template_id(self, template_id, composition_mode, model, res_id):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values
             /!\ for x2many field, this onchange return command instead of ids
@@ -426,30 +465,6 @@ class MailComposer(models.TransientModel):
         values = self._convert_to_write(values)
 
         return {'value': values}
-
-    def save_as_template(self):
-        """ hit save as template button: current form value will be a new
-            template attached to the current document. """
-        for record in self:
-            model = self.env['ir.model']._get(record.model or 'mail.message')
-            model_name = model.name or ''
-            template_name = "%s: %s" % (model_name, tools.ustr(record.subject))
-            values = {
-                'name': template_name,
-                'subject': record.subject or False,
-                'body_html': record.body or False,
-                'model_id': model.id or False,
-                'attachment_ids': [Command.set([att.id for att in record.attachment_ids])],
-            }
-            template = self.env['mail.template'].create(values)
-            # generate the saved template
-            record.write({'template_id': template.id})
-            record.onchange_template_id_wrapper()
-            return _reopen(self, record.id, record.model, context=self._context)
-
-    # ------------------------------------------------------------
-    # RENDERING
-    # ------------------------------------------------------------
 
     def render_message(self, res_ids):
         """Generate template-based values of wizard, for the document records given
@@ -537,20 +552,3 @@ class MailComposer(models.TransientModel):
             values[res_id] = res_id_values
 
         return multi_mode and values or values[res_ids[0]]
-
-    @api.autovacuum
-    def _gc_lost_attachments(self):
-        """ Garbage collect lost mail attachments. Those are attachments
-            - linked to res_model 'mail.compose.message', the composer wizard
-            - with res_id 0, because they were created outside of an existing
-                wizard (typically user input through Chatter or reports
-                created on-the-fly by the templates)
-            - unused since at least one day (create_date and write_date)
-        """
-        limit_date = fields.Datetime.subtract(fields.Datetime.now(), days=1)
-        self.env['ir.attachment'].search([
-            ('res_model', '=', self._name),
-            ('res_id', '=', 0),
-            ('create_date', '<', limit_date),
-            ('write_date', '<', limit_date)]
-        ).unlink()
