@@ -14,11 +14,13 @@
                         groups="stock.group_stock_multi_locations"/>
                 </div>
                 <group name="first" position="after">
-                    <group string="Logistics">
-                        <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
-                        <field name="total_route_ids" widget="many2many_tags" groups="stock.group_adv_location" attrs="{'invisible': [('parent_id', '=', False)]}"/>
-                        <field name="removal_strategy_id" options="{'no_create': True}"/>
-                        <field name="packaging_reserve_method" widget="radio" groups="product.group_stock_packaging"/>
+                    <group>
+                        <group name="logistics" string="Logistics">
+                            <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
+                            <field name="total_route_ids" widget="many2many_tags" groups="stock.group_adv_location" attrs="{'invisible': [('parent_id', '=', False)]}"/>
+                            <field name="removal_strategy_id" options="{'no_create': True}"/>
+                            <field name="packaging_reserve_method" widget="radio" groups="product.group_stock_packaging"/>
+                        </group>
                     </group>
                 </group>
             </field>
