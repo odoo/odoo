@@ -15,7 +15,7 @@
         <record id="view_category_property_form" model="ir.ui.view">
             <field name="name">product.category.stock.property.form.inherit</field>
             <field name="model">product.category</field>
-            <field name="inherit_id" ref="account.view_category_property_form"/>
+            <field name="inherit_id" ref="stock.product_category_form_view_inherit"/>
             <field name="arch" type="xml">
                 <group name="account_property" position="inside">
                     <group name="account_stock_property" string="Account Stock Properties" groups="account.group_account_readonly" attrs="{'invisible':[('property_valuation', '=', 'manual_periodic')]}">
@@ -28,12 +28,10 @@
                         </div>
                     </group>
                 </group>
-                <group name="account_property" position="before">
-                    <group>
-                        <group string="Inventory Valuation">
-                            <field name="property_cost_method"/>
-                            <field name="property_valuation" groups="account.group_account_readonly,stock.group_stock_manager"/>
-                        </group>
+                <group name="logistics" position="after">
+                    <group string="Inventory Valuation">
+                        <field name="property_cost_method"/>
+                        <field name="property_valuation" groups="account.group_account_readonly,stock.group_stock_manager"/>
                     </group>
                 </group>
             </field>
