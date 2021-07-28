@@ -71,5 +71,6 @@ odoo.define("website_sale.tour_shop", function (require) {
         content: _t("Open your website app here."),
         extra_trigger: ".o_apps,#oe_applications",
         position: "bottom",
+        timeout: 30000, // ~ 10 secondes to be redirected, due to slow assets generation
     }];
 });
