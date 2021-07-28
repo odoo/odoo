@@ -254,7 +254,11 @@ class Location(models.Model):
             for values in quant_data:
                 qty_by_location[values['location_id'][0]] += values['quantity']
 
-        return putaway_rules._get_putaway_location(product, quantity, package, qty_by_location) or self
+        putaway_location = putaway_rules._get_putaway_location(product, quantity, package, qty_by_location)
+        if not putaway_location:
+            putaway_location = locations[0] if locations and self.usage == 'view' else self
+
+        return putaway_location
 
     def _get_next_inventory_date(self):
         """ Used to get the next inventory date for a quant located in this location. It is
