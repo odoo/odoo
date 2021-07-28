@@ -8,6 +8,7 @@
             <field name="symbol">$</field>
             <field name="rounding">0.01</field>
             <field name="position">before</field>
+            <field name="active" eval="False"/>
             <field name="currency_unit_label">Dollars</field>
             <field name="currency_subunit_label">Cents</field>
         </record>
@@ -36,6 +37,7 @@
             <field name="name">CHF</field>
             <field name="full_name">Swiss franc</field>
             <field name="symbol">CHF</field>
+            <field name="position">before</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Franc</field>
@@ -235,6 +237,7 @@
             <field name="name">HKD</field>
             <field name="full_name">Hong Kong dollar</field>
             <field name="symbol">$</field>
+            <field name="position">before</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Dollars</field>
@@ -340,6 +343,7 @@
             <field name="symbol">RM</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
+            <field name="position">before</field>
             <field name="currency_unit_label">Ringgit</field>
             <field name="currency_subunit_label">Sen</field>
         </record>
@@ -358,7 +362,7 @@
         <record id="PHP" model="res.currency">
             <field name="name">PHP</field>
             <field name="full_name">Philippine peso</field>
-            <field name="symbol">Php</field>
+            <field name="symbol">₱</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Peso</field>
@@ -885,6 +889,7 @@
             <field name="name">ILS</field>
             <field name="full_name">Israeli new shekel</field>
             <field name="symbol">₪</field>
+            <field name="position">before</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Shekel</field>
@@ -1256,6 +1261,7 @@
             <field name="full_name">Euro</field>
             <field name="symbol">€</field>
             <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
             <field name="currency_unit_label">Euros</field>
             <field name="currency_subunit_label">Cents</field>
         </record>

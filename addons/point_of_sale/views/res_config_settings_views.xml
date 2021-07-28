@@ -51,22 +51,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="multicurrencies_setting" title="This adds the choice of a currency on pricelists.">
-                            <div class="o_setting_left_pane">
-                                <field name="group_multi_currency"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="group_multi_currency"/>
-                                <div class="text-muted">
-                                    Record transactions in foreign currencies
-                                </div>
-                                <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
-                                    <div class="mt8">
-                                        <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="fa-arrow-right"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-12 col-lg-6 o_setting_box" title="Manage promotion and coupon programs.">
                             <div class="o_setting_left_pane">
                                 <field name="module_pos_coupon"/>

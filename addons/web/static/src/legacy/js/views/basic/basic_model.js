@@ -149,6 +149,7 @@ var BasicModel = AbstractModel.extend({
         'ir.actions.act_window',
         'ir.filters',
         'ir.ui.view',
+        'res.currency',
     ],
 
     /**
