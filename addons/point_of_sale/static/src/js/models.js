@@ -1174,6 +1174,35 @@ exports.load_fields = function(model_name, fields) {
         }
     }
 };
+exports.load_domains = function(model_name, domains) {
+    // Função desenvolvida pela Multidados para adicionar
+    // domínios aos modelos ja existentes.
+
+    if (!(domains instanceof Array)) {
+        domains = [domains];
+    }
+    var aux = [];
+    for (var i = 0; i < domains.length; i++){
+        var domain = domains[i];
+        if (domain.length == 3) {
+            aux.push(domain);
+        }
+        else{
+            console.log("Domain '"+ domain +"' failed to load !");
+        }
+    }
+    domains = aux;
+    var models = exports.PosModel.prototype.models;
+    for (var i = 0; i < models.length; i++) {
+        var model = models[i];
+        if (model.model === model_name) {
+            if ((model.domain instanceof Array) && model.domain.length > 0) {
+                model.domain = model.domain.concat(domains || []);
+            }
+            i += models.length;
+        }
+    }
+};
 
 // Loads openerp models at the point of sale startup.
 // load_models take an array of model loader declarations.
