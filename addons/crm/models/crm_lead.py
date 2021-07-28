@@ -521,18 +521,17 @@ class Lead(models.Model):
             duplicate_lead_ids = self.env['crm.lead']
             email_search = get_email_to_search(lead.email_from)
 
+            search_domain = []
+
             if email_search:
-                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
-                    ('email_from', 'ilike', email_search)
-                ])
+                search_domain = expression.OR([search_domain, common_lead_domain + [('email_from', 'ilike', email_search)]])
             if lead.partner_name and len(lead.partner_name) >= MIN_NAME_LENGTH:
-                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
-                    ('partner_name', 'ilike', lead.partner_name)
-                ])
+                search_domain = expression.OR([search_domain, common_lead_domain + [('partner_name', 'ilike', lead.partner_name)]])
             if lead.contact_name and len(lead.contact_name) >= MIN_NAME_LENGTH:
-                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
-                    ('contact_name', 'ilike', lead.contact_name)
-                ])
+                search_domain = expression.OR([search_domain, common_lead_domain + [('contact_name', 'ilike', lead.contact_name)]])
+
+            duplicate_lead_ids |= return_if_relevant('crm.lead', search_domain)
+
             if lead.partner_id and lead.partner_id.commercial_partner_id:
                 duplicate_lead_ids |= lead.with_context(active_test=False).search(common_lead_domain + [
                     ("partner_id", "child_of", lead.partner_id.commercial_partner_id.id)
