@@ -221,7 +221,7 @@ class StockMove(models.Model):
         for move in self:
             if not move.product_id:
                 move.show_details_visible = False
-            elif len(move.move_line_ids) > 1:
+            elif len(move._get_move_lines()) > 1:
                 move.show_details_visible = True
             else:
                 move.show_details_visible = (((consignment_enabled and move.picking_code != 'incoming') or
