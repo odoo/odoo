@@ -1942,9 +1942,9 @@ class MailThread(models.AbstractModel):
         # Simulate the onchange (like trigger in form the view) only
         # when having a template in single-email mode
         if template_id:
-            update_values = composer.onchange_template_id(template_id, kwargs['composition_mode'], self._name, res_id)['value']
+            update_values = composer._onchange_template_id(template_id, kwargs['composition_mode'], self._name, res_id)['value']
             composer.write(update_values)
-        return composer.send_mail(auto_commit=auto_commit)
+        return composer._action_send_mail(auto_commit=auto_commit)
 
     def message_notify(self, *,
                        partner_ids=False, parent_id=False, model=False, res_id=False,

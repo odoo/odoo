@@ -91,10 +91,10 @@ class ResCompany(models.Model):
             'composition_mode': 'comment'})
 
         # Simulate the onchange (like trigger in form the view)
-        update_values = message_composer.onchange_template_id(template.id, 'comment', 'sale.order', sample_sales_order.id)['value']
+        update_values = message_composer._onchange_template_id(template.id, 'comment', 'sale.order', sample_sales_order.id)['value']
         message_composer.write(update_values)
 
-        message_composer.send_mail()
+        message_composer._action_send_mail()
 
         self.set_onboarding_step_done('sale_onboarding_sample_quotation_state')
 

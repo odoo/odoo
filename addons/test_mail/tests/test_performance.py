@@ -272,7 +272,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             })
 
         with self.assertQueryCount(__system__=32, emp=38):
-            composer.send_mail()
+            composer._action_send_mail()
 
     @users('__system__', 'emp')
     @warmup
@@ -293,7 +293,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             })
 
         with self.assertQueryCount(__system__=25, emp=31):
-            composer.send_mail()
+            composer._action_send_mail()
 
     @users('__system__', 'emp')
     @warmup
@@ -309,10 +309,10 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'default_res_id': test_record.id,
                 'default_template_id': test_template.id,
             }).create({})
-            composer.onchange_template_id_wrapper()
+            composer._onchange_template_id_wrapper()
 
         with self.assertQueryCount(__system__=33, emp=39):
-            composer.send_mail()
+            composer._action_send_mail()
 
         # remove created partner to ensure tests are the same each run
         self.env['res.partner'].sudo().search([('email', '=', 'nopartner.test@example.com')]).unlink()
