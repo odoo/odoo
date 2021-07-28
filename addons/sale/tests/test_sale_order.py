@@ -551,16 +551,15 @@ class TestSaleOrder(TestSaleCommon):
 
     def test_onchange_packaging_00(self):
         """Create a SO and use packaging. Check we suggested suitable packaging
-        according to the product_qty. Also check product_qty or product_packaging
-        are correctly calculated when one of them changed.
+        according to the product_qty.
         """
         partner = self.env['res.partner'].create({'name': "I'm a partner"})
         product_tmpl = self.env['product.template'].create({'name': "I'm a product"})
         product = product_tmpl.product_variant_id
-        packaging_single = self.env['product.packaging'].create({
+        packaging_box = self.env['product.packaging'].create({
             'name': "I'm a packaging",
             'product_id': product.id,
-            'qty': 1.0,
+            'qty': 10.0,
         })
         packaging_dozen = self.env['product.packaging'].create({
             'name': "I'm also a packaging",
@@ -574,25 +573,16 @@ class TestSaleOrder(TestSaleCommon):
         so_form = Form(so)
         with so_form.order_line.new() as line:
             line.product_id = product
-            line.product_uom_qty = 1.0
+            line.product_uom_qty = 10.0
         so_form.save()
-        self.assertEqual(so.order_line.product_packaging_id, packaging_single)
+        self.assertEqual(so.order_line.product_packaging_id, packaging_box)
         self.assertEqual(so.order_line.product_packaging_qty, 1.0)
-        with so_form.order_line.edit(0) as line:
-            line.product_packaging_qty = 2.0
-        so_form.save()
-        self.assertEqual(so.order_line.product_uom_qty, 2.0)
-
 
         with so_form.order_line.edit(0) as line:
             line.product_uom_qty = 24.0
         so_form.save()
         self.assertEqual(so.order_line.product_packaging_id, packaging_dozen)
         self.assertEqual(so.order_line.product_packaging_qty, 2.0)
-        with so_form.order_line.edit(0) as line:
-            line.product_packaging_qty = 1.0
-        so_form.save()
-        self.assertEqual(so.order_line.product_uom_qty, 12)
 
     def _create_sale_order(self):
         """Create dummy sale order (without lines)"""

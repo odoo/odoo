@@ -1168,50 +1168,43 @@ class PurchaseOrderLine(models.Model):
 
         self.price_unit = price_unit
 
-    @api.onchange('product_id', 'product_qty', 'product_uom')
-    def _onchange_suggest_packaging(self):
-        # remove packaging if not match the product
-        if self.product_packaging_id.product_id != self.product_id:
-            self.product_packaging_id = False
-        # suggest biggest suitable packaging
-        if self.product_id and self.product_qty and self.product_uom:
-            self.product_packaging_id = self.product_id.packaging_ids.filtered('purchase')._find_suitable_product_packaging(self.product_qty, self.product_uom)
-
     @api.onchange('product_packaging_id')
     def _onchange_product_packaging_id(self):
-        if self.product_packaging_id and self.product_qty:
-            newqty = self.product_packaging_id._check_qty(self.product_qty, self.product_uom, "UP")
-            if float_compare(newqty, self.product_qty, precision_rounding=self.product_uom.rounding) != 0:
-                return {
-                    'warning': {
-                        'title': _('Warning'),
-                        'message': _(
-                            "This product is packaged by %(pack_size).2f %(pack_name)s. You should purchase %(quantity).2f %(unit)s.",
-                            pack_size=self.product_packaging_id.qty,
-                            pack_name=self.product_id.uom_id.name,
-                            quantity=newqty,
-                            unit=self.product_uom.name
-                        ),
-                    },
-                }
-
-    @api.onchange('product_packaging_id', 'product_uom', 'product_qty')
-    def _onchange_update_product_packaging_qty(self):
         if not self.product_packaging_id:
             self.product_packaging_qty = 0
         else:
-            packaging_uom = self.product_packaging_id.product_uom_id
-            packaging_uom_qty = self.product_uom._compute_quantity(self.product_qty, packaging_uom)
-            self.product_packaging_qty = float_round(packaging_uom_qty / self.product_packaging_id.qty, precision_rounding=packaging_uom.rounding)
+            self.product_qty = self.product_packaging_id._check_qty(self.product_qty, self.product_uom, 'UP')
+            self._set_product_packaging_qty()
 
-    @api.onchange('product_packaging_qty')
-    def _onchange_product_packaging_qty(self):
-        if self.product_packaging_id:
-            packaging_uom = self.product_packaging_id.product_uom_id
-            qty_per_packaging = self.product_packaging_id.qty
-            product_qty = packaging_uom._compute_quantity(self.product_packaging_qty * qty_per_packaging, self.product_uom)
-            if float_compare(product_qty, self.product_qty, precision_rounding=self.product_uom.rounding) != 0:
-                self.product_qty = product_qty
+    @api.onchange('product_id', 'product_qty', 'product_uom')
+    def _onchange_suggest_packaging(self):
+        if not self.product_id or not self.product_qty or not self.product_uom:
+            self.product_packaging_id = False
+        else:
+            # remove packaging if not match the product
+            if self.product_packaging_id.product_id != self.product_id:
+                self.product_packaging_id = False
+            self._set_product_packaging_qty()
+            # if no packaging, try find a suitable one
+            if not self.product_packaging_id:
+                self.product_packaging_id = self.product_id.packaging_ids.filtered('purchase')._find_suitable_product_packaging(self.product_qty, self.product_uom)
+
+    def _set_product_packaging_qty(self):
+        """Calculate and set product_packaging_qty, if the result is not a integer,
+        remove the product_packaging_id.
+        """
+        if not self.product_packaging_id or not self.product_id or not self.product_qty or not self.product_uom:
+            return
+        packaging_uom = self.product_packaging_id.product_uom_id
+        packaging_uom_qty = self.product_uom._compute_quantity(self.product_qty, packaging_uom)
+        product_packaging_qty = packaging_uom_qty / self.product_packaging_id.qty
+        product_packaging_qty_integer = float_round(product_packaging_qty, precision_rounding=1.0)
+        if float_compare(product_packaging_qty,
+                        product_packaging_qty_integer,
+                        precision_rounding=self.product_uom.rounding) == 0:
+            self.product_packaging_qty = product_packaging_qty_integer
+        else:
+            self.product_packaging_id = False
 
     @api.depends('product_uom', 'product_qty', 'product_id.uom_id')
     def _compute_product_uom_qty(self):

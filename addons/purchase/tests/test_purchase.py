@@ -176,13 +176,12 @@ class TestPurchase(AccountTestInvoicingCommon):
 
     def test_onchange_packaging_00(self):
         """Create a PO and use packaging. Check we suggested suitable packaging
-        according to the product_qty. Also check product_qty or product_packaging
-        are correctly calculated when one of them changed.
+        according to the product_qty.
         """
-        packaging_single = self.env['product.packaging'].create({
+        packaging_box = self.env['product.packaging'].create({
             'name': "I'm a packaging",
             'product_id': self.product_a.id,
-            'qty': 1.0,
+            'qty': 10.0,
         })
         packaging_dozen = self.env['product.packaging'].create({
             'name': "I'm also a packaging",
@@ -196,25 +195,16 @@ class TestPurchase(AccountTestInvoicingCommon):
         po_form = Form(po)
         with po_form.order_line.new() as line:
             line.product_id = self.product_a
-            line.product_qty = 1.0
+            line.product_qty = 10.0
         po_form.save()
-        self.assertEqual(po.order_line.product_packaging_id, packaging_single)
+        self.assertEqual(po.order_line.product_packaging_id, packaging_box)
         self.assertEqual(po.order_line.product_packaging_qty, 1.0)
-        with po_form.order_line.edit(0) as line:
-            line.product_packaging_qty = 2.0
-        po_form.save()
-        self.assertEqual(po.order_line.product_qty, 2.0)
-
 
         with po_form.order_line.edit(0) as line:
             line.product_qty = 24.0
         po_form.save()
         self.assertEqual(po.order_line.product_packaging_id, packaging_dozen)
         self.assertEqual(po.order_line.product_packaging_qty, 2.0)
-        with po_form.order_line.edit(0) as line:
-            line.product_packaging_qty = 1.0
-        po_form.save()
-        self.assertEqual(po.order_line.product_qty, 12)
 
     def test_with_different_uom(self):
         """ This test ensures that the unit price is correctly computed"""
