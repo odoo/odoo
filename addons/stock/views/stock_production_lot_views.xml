@@ -10,6 +10,16 @@
                 <field name="display_complete" invisible="1"/>
                 <div class="oe_button_box" name="button_box"
                      attrs="{'invisible': [('display_complete', '=', False)]}">
+                        <button class="oe_stat_button" name="action_lot_open_transfers"
+                                type="object" icon="fa-truck" help="Transfers"
+                                attrs="{'invisible': [('delivery_count', '=', 0)]}">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="delivery_count" widget="statinfo" nolabel="1" class="mr4"/>
+                                </span>
+                                <span class="o_stat_text">Transfers</span>
+                            </div>
+                        </button>                           
                         <button name="action_lot_open_quants" icon="fa-arrows" class="oe_stat_button" string="Location" type="object"/>
                         <button name="%(action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action"/>
                 </div>

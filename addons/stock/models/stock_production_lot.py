@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tools.misc import attrgetter
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
@@ -26,6 +27,8 @@ class ProductionLot(models.Model):
     note = fields.Html(string='Description')
     display_complete = fields.Boolean(compute='_compute_display_complete')
     company_id = fields.Many2one('res.company', 'Company', required=True, store=True, index=True)
+    delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
+    delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
 
     @api.constrains('name', 'product_id', 'company_id')
     def _check_unique_lot(self):
@@ -74,6 +77,15 @@ class ProductionLot(models.Model):
         for prod_lot in self:
             prod_lot.display_complete = prod_lot.id or self._context.get('display_complete')
 
+    def _compute_delivery_ids(self):
+        delivery_ids_by_lot = self._find_delivery_ids_by_lot()
+        for lot in self:
+            lot.delivery_ids = delivery_ids_by_lot[lot.id]
+            lot.delivery_count = len(lot.delivery_ids)
+            # If lot is serial, keep track of the latest delivery's partner
+            if lot.product_id.tracking == 'serial' and lot.delivery_count > 0:
+                lot.last_delivery_partner_id = lot.delivery_ids.sorted(key=attrgetter('date_done'), reverse=True)[0].partner_id
+
     @api.model_create_multi
     def create(self, vals_list):
         self._check_create()
@@ -106,3 +118,43 @@ class ProductionLot(models.Model):
         if self.user_has_groups('stock.group_stock_manager'):
             self = self.with_context(inventory_mode=True)
         return self.env['stock.quant']._get_quants_action()
+
+    def action_lot_open_transfers(self):
+        self.ensure_one()
+
+        action = {
+            'res_model': 'stock.picking',
+            'type': 'ir.actions.act_window'
+        }
+        if len(self.delivery_ids) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': self.delivery_ids[0].id
+            })
+        else:
+            action.update({
+                'name': _("Delivery orders of %s", self.display_name),
+                'domain': [('id', 'in', self.delivery_ids.ids)],
+                'view_mode': 'tree,form'
+            })
+        return action
+
+    def _find_delivery_ids_by_lot(self):
+        domain = [
+            ('lot_id', 'in', self.ids),
+            ('state', '=', 'done'),
+            '|', ('picking_code', '=', 'outgoing'), ('produce_line_ids', '!=', False)
+        ]
+        move_lines = self.env['stock.move.line'].search(domain)
+        delivery_by_lot = dict()
+        for lot in self:
+            delivery_ids = set()
+            for line in move_lines.filtered(lambda ml: ml.lot_id.id == lot.id):
+                if line.produce_line_ids:
+                    # Do the same process for lot_id contained in produce_line_ids, to fetch the end product deliveries
+                    for delivery_ids_set in line.produce_line_ids.lot_id._find_delivery_ids_by_lot().values():
+                        delivery_ids.update(delivery_ids_set)
+                else:
+                    delivery_ids.add(line.picking_id.id)
+            delivery_by_lot[lot.id] = list(delivery_ids)
+        return delivery_by_lot
