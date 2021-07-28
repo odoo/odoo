@@ -71,7 +71,10 @@ class SmsSms(models.Model):
                 notifications.mail_message_id._notify_message_notification_update()
 
     def action_set_outgoing(self):
-        self.state = 'outgoing'
+        self.write({
+            'state': 'outgoing',
+            'failure_type': False
+        })
         notifications = self.env['mail.notification'].sudo().search([
             ('sms_id', 'in', self.ids),
             # sent is sent -> cannot reset
