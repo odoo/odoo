@@ -372,7 +372,7 @@ class MailComposer(models.TransientModel):
                 record = self.env[self.model].browse(res_id)
                 mail_values['headers'] = record._notify_email_headers()
                 # keep a copy unless specifically requested, reset record name (avoid browsing records)
-                mail_values.update(notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
+                mail_values.update(is_notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail
                 if self.auto_delete or self.template_id.auto_delete:
                     mail_values['auto_delete'] = True
@@ -471,7 +471,7 @@ class MailComposer(models.TransientModel):
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_bl'
                 # Do not post the mail into the recipient's chatter
-                mail_values['notification'] = False
+                mail_values['is_notification'] = False
             elif optout_emails and mail_to in optout_emails:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_optout'

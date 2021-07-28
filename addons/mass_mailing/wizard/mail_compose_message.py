@@ -65,7 +65,7 @@ class MailComposeMessage(models.TransientModel):
                     'mailing_id': mass_mailing.id,
                     'mailing_trace_ids': [(0, 0, trace_vals)],
                     # email-mode: keep original message for routing
-                    'notification': mass_mailing.reply_to_mode == 'update',
+                    'is_notification': mass_mailing.reply_to_mode == 'update',
                     'auto_delete': not mass_mailing.keep_archives,
                 })
         return res

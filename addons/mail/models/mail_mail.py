@@ -35,7 +35,7 @@ class MailMail(models.Model):
     headers = fields.Text('Headers', copy=False)
     # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
     # and during unlink() we will not cascade delete the parent and its attachments
-    notification = fields.Boolean('Is Notification', help='Mail has been created to notify people of an existing mail.message')
+    is_notification = fields.Boolean('Notification Email', help='Mail has been created to notify people of an existing mail.message')
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
     email_to = fields.Text('To', help='Message recipients (emails)')
@@ -75,8 +75,8 @@ class MailMail(models.Model):
     def create(self, values_list):
         # notification field: if not set, set if mail comes from an existing mail.message
         for values in values_list:
-            if 'notification' not in values and values.get('mail_message_id'):
-                values['notification'] = True
+            if 'is_notification' not in values and values.get('mail_message_id'):
+                values['is_notification'] = True
 
         new_mails = super(MailMail, self).create(values_list)
 
@@ -98,7 +98,7 @@ class MailMail(models.Model):
 
     def unlink(self):
         # cascade-delete the parent message for all mails that are not created for a notification
-        mail_msg_cascade_ids = [mail.mail_message_id.id for mail in self if not mail.notification]
+        mail_msg_cascade_ids = [mail.mail_message_id.id for mail in self if not mail.is_notification]
         res = super(MailMail, self).unlink()
         if mail_msg_cascade_ids:
             self.env['mail.message'].browse(mail_msg_cascade_ids).unlink()
@@ -168,7 +168,7 @@ class MailMail(models.Model):
 
         :return: True
         """
-        notif_mails_ids = [mail.id for mail in self if mail.notification]
+        notif_mails_ids = [mail.id for mail in self if mail.is_notification]
         if notif_mails_ids:
             notifications = self.env['mail.notification'].search([
                 ('notification_type', '=', 'email'),
