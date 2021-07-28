@@ -471,7 +471,9 @@ def generate_tracking_message_id(res_id):
     return "<%s.%.15f-openerp-%s@%s>" % (rndstr, time.time(), res_id, socket.gethostname())
 
 def email_split_tuples(text):
-    """ Return a list of (name, email) address tuples found in ``text``"""
+    """ Return a list of (name, email) address tuples found in ``text`` . Note
+    that text should be an email header or a stringified email list as it may
+    give broader results than expected on actual text. """
     if not text:
         return []
     return [(addr[0], addr[1]) for addr in getaddresses([text])
