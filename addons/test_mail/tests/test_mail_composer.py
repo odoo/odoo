@@ -216,7 +216,7 @@ class TestComposerInternals(TestMailComposer):
             'body': '<p>Test Body</p>',
         })
         # currently onchange necessary
-        composer.onchange_template_id_wrapper()
+        composer._onchange_template_id_wrapper()
 
         # values coming from template
         self.assertEqual(len(composer.attachment_ids), 4)
@@ -255,7 +255,7 @@ class TestComposerInternals(TestMailComposer):
             # changing template should update its email_from
             composer.write({'template_id': self.template.id, 'author_id': self.env.user.partner_id})
             # currently onchange necessary
-            composer.onchange_template_id_wrapper()
+            composer._onchange_template_id_wrapper()
             self.assertEqual(composer.author_id, self.env.user.partner_id,
                              'MailComposer: should take value given by user')
             if composition_mode == 'comment':
@@ -294,7 +294,7 @@ class TestComposerInternals(TestMailComposer):
             # changing template should update its content
             composer.write({'template_id': self.template.id})
             # currently onchange necessary
-            composer.onchange_template_id_wrapper()
+            composer._onchange_template_id_wrapper()
 
             # values come from template
             if composition_mode == 'comment':
@@ -313,7 +313,7 @@ class TestComposerInternals(TestMailComposer):
             # reset template should reset values
             composer.write({'template_id': False})
             # currently onchange necessary
-            composer.onchange_template_id_wrapper()
+            composer._onchange_template_id_wrapper()
 
             # values are reset
             if composition_mode == 'comment':
@@ -336,7 +336,7 @@ class TestComposerInternals(TestMailComposer):
                 'template_id': self.template.id,
             })
             # currently onchange necessary
-            composer.onchange_template_id_wrapper()
+            composer._onchange_template_id_wrapper()
 
             # values come from template
             if composition_mode == 'comment':
@@ -354,7 +354,7 @@ class TestComposerInternals(TestMailComposer):
                 'template_id': self.template.id,
             })
             # currently onchange necessary
-            composer.onchange_template_id_wrapper()
+            composer._onchange_template_id_wrapper()
 
             # values come from template
             if composition_mode == 'comment':
@@ -407,7 +407,7 @@ class TestComposerInternals(TestMailComposer):
                 'subject': 'Subject',
                 'body': '<p>Body text</p>',
                 'partner_ids': []
-            }).send_mail()
+            })._action_send_mail()
 
             self.assertEqual(self.test_record.message_ids[0].body, '<p>Body text</p>')
             self.assertEqual(self.test_record.message_ids[0].author_id, portal_user.partner_id)
@@ -418,7 +418,7 @@ class TestComposerInternals(TestMailComposer):
             }).create({
                 'subject': 'Subject',
                 'body': '<p>Body text 2</p>'
-            }).send_mail()
+            })._action_send_mail()
 
             self.assertEqual(self.test_record.message_ids[0].body, '<p>Body text 2</p>')
             self.assertEqual(self.test_record.message_ids[0].author_id, portal_user.partner_id)
@@ -430,7 +430,7 @@ class TestComposerInternals(TestMailComposer):
         ).create({
             'subject': 'Template Subject',
             'body': '<p>Template Body</p>',
-        }).save_as_template()
+        }).action_save_as_template()
 
         # Test: email_template subject, body_html, model
         template = self.env['mail.template'].search([
@@ -457,7 +457,7 @@ class TestComposerResultsComment(TestMailComposer):
             'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
         })
         with self.mock_mail_gateway(mail_unlink_sent=True):
-            composer.send_mail()
+            composer._action_send_mail()
 
         # notifications
         message = self.test_record.message_ids[0]
@@ -477,7 +477,7 @@ class TestComposerResultsComment(TestMailComposer):
             'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
         })
         with self.mock_mail_gateway(mail_unlink_sent=True):
-            composer.send_mail()
+            composer._action_send_mail()
 
         # notifications
         message = self.test_record.message_ids[0]
@@ -498,7 +498,7 @@ class TestComposerResultsComment(TestMailComposer):
             'body': '<p>Test Body</p>',
             'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
         })
-        composer.send_mail()
+        composer._action_send_mail()
 
         message = self.test_record.message_ids[0]
         self.assertEqual(message.body, '<p>Test Body</p>')
@@ -543,7 +543,7 @@ class TestComposerResultsComment(TestMailComposer):
         ))
         composer = composer_form.save()
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
-            composer.send_mail()
+            composer._action_send_mail()
 
         # check new partners have been created based on emails given
         new_partners = self.env['res.partner'].search([
@@ -626,7 +626,7 @@ class TestComposerResultsMass(TestMailComposer):
         ))
         composer = composer_form.save()
         with self.mock_mail_gateway(mail_unlink_sent=True):
-            composer.send_mail()
+            composer._action_send_mail()
 
         # global outgoing
         self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
@@ -682,7 +682,7 @@ class TestComposerResultsMass(TestMailComposer):
         ))
         composer = composer_form.save()
         with self.mock_mail_gateway(mail_unlink_sent=False):
-            composer.send_mail()
+            composer._action_send_mail()
 
         new_partners = self.env['res.partner'].search([
             ('email', 'in', [email_to_1, email_to_2, email_to_3, email_cc_1])
@@ -731,7 +731,7 @@ class TestComposerResultsMass(TestMailComposer):
         ))
         composer = composer_form.save()
         with self.mock_mail_gateway(mail_unlink_sent=True):
-            composer.send_mail()
+            composer._action_send_mail()
 
         # global outgoing
         self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
@@ -764,7 +764,7 @@ class TestComposerResultsMass(TestMailComposer):
         ))
         composer = composer_form.save()
         with self.mock_mail_gateway(mail_unlink_sent=True):
-            composer.send_mail()
+            composer._action_send_mail()
 
         # global outgoing
         self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
@@ -793,7 +793,7 @@ class TestComposerResultsMass(TestMailComposer):
         ))
         composer = composer_form.save()
         with self.mock_mail_gateway(mail_unlink_sent=True):
-            composer.send_mail()
+            composer._action_send_mail()
 
         # global outgoing
         self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
@@ -812,7 +812,7 @@ class TestComposerResultsMass(TestMailComposer):
         ))
         composer = composer_form.save()
         with self.mock_mail_gateway(mail_unlink_sent=True):
-            composer.send_mail()
+            composer._action_send_mail()
 
         # global outgoing
         self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
@@ -826,7 +826,7 @@ class TestComposerResultsMass(TestMailComposer):
         ))
         composer = composer_form.save()
         with self.mock_mail_gateway(mail_unlink_sent=False):
-            composer.send_mail()
+            composer._action_send_mail()
 
         # global outgoing
         self.assertEqual(len(self._new_mails), 1, 'Should have created 1 mail.mail per record')
@@ -839,4 +839,4 @@ class TestComposerResultsMass(TestMailComposer):
         ))
         composer = composer_form.save()
         with self.mock_mail_gateway(mail_unlink_sent=False), self.assertRaises(ValueError):
-            composer.send_mail()
+            composer._action_send_mail()
