@@ -399,15 +399,14 @@ try:
     # as the sheet name is often translatable, can not control the input
     class PatchedXlsxWorkbook(xlsxwriter.Workbook):
 
-        # TODO when xlsxwriter bump to 0.9.8, add worksheet_class=None parameter instead of kw
-        def add_worksheet(self, name=None, **kw):
+        def add_worksheet(self, name=None, worksheet_class=None):
             if name:
                 # invalid Excel character: []:*?/\
                 name = re.sub(r'[\[\]:*?/\\]', '', name)
 
                 # maximum size is 31 characters
                 name = name[:31]
-            return super(PatchedXlsxWorkbook, self).add_worksheet(name, **kw)
+            return super(PatchedXlsxWorkbook, self).add_worksheet(name, worksheet_class)
 
     xlsxwriter.Workbook = PatchedXlsxWorkbook
 
