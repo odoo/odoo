@@ -22,6 +22,7 @@ import psycopg2.extras
 import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
+from psycopg2.sql import SQL, Identifier
 from werkzeug import urls
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
@@ -88,6 +89,63 @@ def check(f, self, *args, **kwargs):
         raise psycopg2.OperationalError('Unable to use a closed cursor.')
     return f(self, *args, **kwargs)
 
+class Savepoint:
+    """ Reifies an active breakpoint, allows :meth:`BaseCursor.savepoint` users
+    to internally rollback the savepoint (as many times as they want) without
+    having to implement their own savepointing, or triggering exceptions.
+
+    Should normally be created using :meth:`BaseCursor.savepoint` rather than
+    directly.
+
+    The savepoint will be rolled back on unsuccessful context exits
+    (exceptions). It will be released ("committed") on successful context exit.
+    The savepoint object can be wrapped in ``contextlib.closing`` to
+    unconditionally roll it back.
+
+    The savepoint can also safely be explicitly closed during context body. This
+    will rollback by default.
+
+    :param BaseCursor cr: the cursor to execute the `SAVEPOINT` queries on
+    """
+    def __init__(self, cr):
+        self.name = str(uuid.uuid1())
+        self._name = Identifier(self.name)
+        self._cr = cr
+        self.closed = False
+        cr.execute(SQL('SAVEPOINT {}').format(self._name))
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close(rollback=exc_type is not None)
+
+    def close(self, *, rollback=True):
+        if not self.closed:
+            self._close(rollback)
+
+    def rollback(self):
+        self._cr.execute(SQL('ROLLBACK TO SAVEPOINT {}').format(self._name))
+
+    def _close(self, rollback):
+        if rollback:
+            self.rollback()
+        self._cr.execute(SQL('RELEASE SAVEPOINT {}').format(self._name))
+        self.closed = True
+
+class _FlushingSavepoint(Savepoint):
+    def __init__(self, cr):
+        cr.flush()
+        super().__init__(cr)
+
+    def rollback(self):
+        self._cr.clear()
+        super().rollback()
+
+    def _close(self, rollback):
+        if not rollback:
+            self._cr.flush()
+        super()._close(rollback)
 
 class BaseCursor:
     """ Base class for cursors that manage pre/post commit hooks. """
@@ -121,25 +179,17 @@ class BaseCursor:
         if self.transaction is not None:
             self.transaction.reset()
 
-    @contextmanager
     @check
-    def savepoint(self, flush=True):
-        """context manager entering in a new savepoint"""
-        name = uuid.uuid1().hex
+    def savepoint(self, flush=True) -> Savepoint:
+        """context manager entering in a new savepoint
+
+        With ``flush`` (the default), will automatically run (or clear) the
+        relevant hooks.
+        """
         if flush:
-            self.flush()
-        self.execute('SAVEPOINT "%s"' % name)
-        try:
-            yield
-            if flush:
-                self.flush()
-        except Exception:
-            if flush:
-                self.clear()
-            self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
-            raise
+            return _FlushingSavepoint(self)
         else:
-            self.execute('RELEASE SAVEPOINT "%s"' % name)
+            return Savepoint(self)
 
     def __enter__(self):
         """ Using the cursor as a contextmanager automatically commits and
