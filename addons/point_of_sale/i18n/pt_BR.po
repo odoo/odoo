@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:22+0000\n"
-"PO-Revision-Date: 2021-07-13 17:22+0000\n"
+"POT-Creation-Date: 2021-07-28 16:28+0000\n"
+"PO-Revision-Date: 2021-07-28 16:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -87,8 +87,7 @@ msgstr "<i class=\"fa fa-eye-slash\"/>Esconder"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>How to manage tax-included prices"
-msgstr ""
-"<i class=\"fa fa-fw fa-arrow-right\"/>Como gerir preços com taxas embutidas"
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Como gerir preços com taxas embutidas"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_pos_kanban
@@ -457,7 +456,7 @@ msgstr "Quantidade Total"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:1268
+#: code:addons/point_of_sale/static/src/js/models.js:1297
 #, python-format
 msgid "An error occurred when loading product prices. Make sure all pricelists are available in the POS."
 msgstr "Um erro ao carregar as listas de preços. Tenha certeza que todas as listas de preços"
@@ -787,6 +786,12 @@ msgstr "Troco:"
 #: model:ir.model.fields,help:point_of_sale.field_product_template__to_weight
 msgid "Check if the product should be weighted using the hardware scale integration."
 msgstr "Marque se o produto deve ser pesado usando a integração com balança."
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_product_product__show_root_category
+#: model:ir.model.fields,help:point_of_sale.field_product_template__show_root_category
+msgid "Check if you want this product to appear in the Point of Sale root category."
+msgstr "Marque para este produto aparecer na categoria raiz do Ponto de Venda."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__available_in_pos
@@ -1682,7 +1687,7 @@ msgstr "Endereço IP"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__use_existing_lots
 msgid "If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this operation type.  This means it will create stock with no lot or not put a restriction on the lot taken. "
-msgstr "Se isto estiver marcado, possibilita a escolha de Números de Lote/Série. Pode também decidir não colocar lotes neste tipo de operação. Isto significa que irá criar estoque sem lote ou não impor uma restrição no lote retirado."
+msgstr "Se isto estiver marcado, possibilita a escolha de Números de Lote/Série. Pode também decidir não colocar lotes neste tipo de operação. Isto significa que irá criar estoque sem lote ou não impor uma restrição no lote retirado. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image
@@ -1798,7 +1803,7 @@ msgstr "Faturamento"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "IoT Box"
-msgstr "IoT Box"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_restaurant
@@ -1958,7 +1963,7 @@ msgstr "Nome do Lote"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:2421
+#: code:addons/point_of_sale/static/src/js/models.js:2450
 #, python-format
 msgid "Lot/Serial Number(s) Required"
 msgstr "Número (s) de série / lote necessários"
@@ -2306,8 +2311,8 @@ msgstr "Pedido"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:2013
-#: code:addons/point_of_sale/static/src/js/models.js:2053
+#: code:addons/point_of_sale/static/src/js/models.js:2042
+#: code:addons/point_of_sale/static/src/js/models.js:2082
 #, python-format
 msgid "Order "
 msgstr "Ordem"
@@ -2621,7 +2626,7 @@ msgstr "Confirme a grande quantidade"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:1926
+#: code:addons/point_of_sale/static/src/js/models.js:1955
 #, python-format
 msgid "Please configure a payment method in your POS."
 msgstr "Por favor, configure um método de pagamento no seu PdV."
@@ -2722,7 +2727,7 @@ msgstr "Configuração do Ponto de Vendas"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_tree
 msgid "Point of Sale Configuration"
-msgstr "Configuração do ponto de venda"
+msgstr "Configuração do Ponto de Vendas"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
@@ -2764,7 +2769,7 @@ msgstr "Linhas de pedido de Ponto de Venda"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Point of Sale Orders"
-msgstr "Pedidos do ponto de venda"
+msgstr "Pedidos do Ponto de Vendas"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
@@ -3531,6 +3536,12 @@ msgstr "Carrinho de compras"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display
 msgid "Show checkout to customers with a remotely-connected screen."
 msgstr "Mostre checkout aos clientes com uma tela remotamente conectada."
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_product_product__show_root_category
+#: model:ir.model.fields,field_description:point_of_sale.field_product_template__show_root_category
+msgid "Show in Root Category"
+msgstr "Mostrar na categoria Raiz"
 
 #. module: point_of_sale
 #. openerp-web
