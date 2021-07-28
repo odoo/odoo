@@ -56,7 +56,7 @@ class TestMassMailing(models.TransientModel):
                 'email_to': valid_email,
                 'subject': subject,
                 'body_html': mass_mail_layout._render({'body': full_body}, engine='ir.qweb', minimal_qcontext=True),
-                'notification': True,
+                'is_notification': True,
                 'mailing_id': mailing.id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
                 'auto_delete': False,  # they are manually deleted after notifying the document

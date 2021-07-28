@@ -143,7 +143,7 @@ class TestMailMailRace(common.TransactionCase):
         # we need to simulate a mail sent by the cron task, first create mail, message and notification by hand
         mail = self.env['mail.mail'].sudo().create({
             'body_html': '<p>Test</p>',
-            'notification': True,
+            'is_notification': True,
             'state': 'outgoing',
             'recipient_ids': [(4, self.partner.id)]
         })
