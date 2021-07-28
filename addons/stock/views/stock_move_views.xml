@@ -140,20 +140,22 @@
                     <field name="is_locked" invisible="1"/>
                     <field name="picking_type_entire_packs" invisible="1"/>
                     <field name="display_assign_serial" invisible="1"/>
+                    <field name="from_immediate_transfer" invisible="1"/>
+                    <field name="product_uom_category_id" invisible="1"/>
                     <group>
                         <group>
                             <field name="product_id" readonly="1"/>
-                            <label for="product_uom_qty"/>
-                            <div class="o_row">
+                            <label for="product_uom_qty" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}"/>
+                            <div class="o_row" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}">
                                 <span><field name="product_uom_qty" readonly="1" nolabel="1"/></span>
                                 <span><field name="product_uom" readonly="1" nolabel="1"/></span>
                             </div>
                             <label for="quantity_done"/>
                             <div class="o_row">
                                 <span><field name="quantity_done" readonly="1" nolabel="1"/></span>
-                                <span attrs="{'invisible': [('state', '=', 'done')]}"> / </span>
-                                <span><field name="reserved_availability" nolabel="1" attrs="{'invisible': [('state', '=', 'done')]}" /></span>
-                                <span><field name="product_uom" readonly="1" nolabel="1"/></span>
+                                <span attrs="{'invisible': ['|', ('state', '=', 'done'), ('from_immediate_transfer', '=', True)]}"> / </span>
+                                <span><field name="reserved_availability" nolabel="1" attrs="{'invisible': ['|', ('state', '=', 'done'), ('from_immediate_transfer', '=', True)]}" /></span>
+                                <span><field name="product_uom" readonly="1" nolabel="1" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}"/></span>
                             </div>
                             <field name="next_serial"
                                 attrs="{'invisible': [('display_assign_serial', '=', False)]}"/>
