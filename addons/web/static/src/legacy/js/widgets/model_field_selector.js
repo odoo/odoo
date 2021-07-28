@@ -3,6 +3,7 @@ odoo.define("web.ModelFieldSelector", function (require) {
 
 var core = require("web.core");
 var Widget = require("web.Widget");
+const { fuzzyLookup } = require('@web/core/utils/search');
 
 var _t = core._t;
 
@@ -381,10 +382,7 @@ var ModelFieldSelector = Widget.extend({
 
         var lines = _.filter(page, this.options.filter);
         if (this.searchValue) {
-            var matches = fuzzy.filter(this.searchValue, _.pluck(lines, 'string'));
-            lines = _.map(_.pluck(matches, 'index'), function (i) {
-                return lines[i];
-            });
+            lines = fuzzyLookup(this.searchValue, lines, (l) => l.string);
         }
 
         this.$(".o_field_selector_page").replaceWith(core.qweb.render(this.template + ".page", {

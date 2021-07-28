@@ -5,6 +5,7 @@ odoo.define('web.SearchBar', function (require) {
     const field_utils = require('web.field_utils');
     const { useAutofocus } = require('web.custom_hooks');
     const { useModel } = require('web.Model');
+    const { fuzzyTest } = require('@web/core/utils/search');
 
     const CHAR_FIELDS = ['char', 'html', 'many2many', 'many2one', 'one2many', 'text'];
     const { Component, hooks } = owl;
@@ -199,7 +200,7 @@ odoo.define('web.SearchBar', function (require) {
                     if (source.selection) {
                         const options = [];
                         source.selection.forEach(result => {
-                            if (fuzzy.test(query, result[1].toLowerCase())) {
+                            if (fuzzyTest(query, result[1].toLowerCase())) {
                                 options.push(this._createSubSource(source, result));
                             }
                         });
