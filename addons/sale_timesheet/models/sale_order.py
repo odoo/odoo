@@ -40,16 +40,18 @@ class SaleOrder(models.Model):
                 'timesheet_count': timesheet_count,
             })
 
-    @api.depends('timesheet_ids', 'company_id.timesheet_encode_uom_id')
+    @api.depends('company_id.project_time_mode_id', 'timesheet_ids', 'company_id.timesheet_encode_uom_id')
     def _compute_timesheet_total_duration(self):
+        if not self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
+            self.update({'timesheet_total_duration': 0})
+            return
+        group_data = self.env['account.analytic.line'].sudo().read_group([
+            ('order_id', 'in', self.ids)
+        ], ['order_id', 'unit_amount'], ['order_id'])
+        timesheet_unit_amount_dict = defaultdict(float)
+        timesheet_unit_amount_dict.update({data['order_id'][0]: data['unit_amount'] for data in group_data})
         for sale_order in self:
-            timesheets = sale_order.timesheet_ids if self.user_has_groups('hr_timesheet.group_hr_timesheet_approver') else sale_order.timesheet_ids.filtered(lambda t: t.user_id.id == self.env.uid)
-            total_time = 0.0
-            for timesheet in timesheets:
-                # Timesheets may be stored in a different unit of measure, so first we convert all of them to the reference unit
-                total_time += timesheet.unit_amount * timesheet.product_uom_id.factor_inv
-            # Now convert to the proper unit of measure
-            total_time *= sale_order.timesheet_encode_uom_id.factor
+            total_time = sale_order.company_id.project_time_mode_id._compute_quantity(timesheet_unit_amount_dict[sale_order.id], sale_order.timesheet_encode_uom_id)
             sale_order.timesheet_total_duration = round(total_time)
 
     def _compute_field_value(self, field):
