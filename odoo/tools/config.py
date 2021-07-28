@@ -10,7 +10,7 @@ import sys
 import tempfile
 import warnings
 import odoo
-from os.path import expandvars, expanduser, abspath, realpath
+from os.path import expandvars, expanduser, abspath, realpath, normcase
 from .. import release, conf, loglevels
 from . import appdirs
 
@@ -737,7 +737,7 @@ class configmanager(object):
     def _normalize(self, path):
         if not path:
             return ''
-        return realpath(abspath(expanduser(expandvars(path.strip()))))
+        return normcase(realpath(abspath(expanduser(expandvars(path.strip())))))
 
 
 config = configmanager()
