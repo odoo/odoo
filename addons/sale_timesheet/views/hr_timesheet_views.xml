@@ -89,13 +89,20 @@
         Reporting
     -->
     <record id="timesheet_action_billing_report" model="ir.actions.act_window">
-        <field name="name">Timesheets By Billing Type</field>
+        <field name="name">Timesheets by Billing Type</field>
         <field name="res_model">account.analytic.line</field>
-        <field name="view_mode">pivot,graph</field>
+        <field name="view_mode">tree,form,pivot,graph,kanban</field>
         <field name="domain">[('project_id', '!=', False)]</field>
         <field name="context">{
-            'search_default_groupby_date': 1,
+            'search_default_groupby_timesheet_invoice_type': 1,
+            'pivot_row_groupby': ['date:month'],
         }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+            <p>Review your timesheets by billing type and make sure your time is billable.</p>
+        </field>
         <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
     </record>
 
@@ -103,12 +110,26 @@
         <field name="name">account.analytic.line.pivot.billing.rate</field>
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
-            <pivot string="Timesheet" sample="1">
+            <pivot string="Timesheets" sample="1">
                 <field name="timesheet_invoice_type" type="col"/>
                 <field name="unit_amount" type="measure" widget="timesheet_uom"/>
                 <field name="amount" string="Timesheet Costs"/>
             </pivot>
         </field>
+    </record>
+
+    <record id="timesheet_action_view_report_by_billing_rate_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+        <field name="act_window_id" ref="timesheet_action_billing_report"/>
+    </record>
+
+    <record id="timesheet_action_view_report_by_billing_rate_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
+        <field name="act_window_id" ref="timesheet_action_billing_report"/>
     </record>
 
     <record id="timesheet_action_view_report_by_billing_rate_pivot" model="ir.actions.act_window.view">
@@ -122,6 +143,13 @@
         <field name="sequence" eval="6"/>
         <field name="view_mode">graph</field>
         <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_graph"/>
+        <field name="act_window_id" ref="timesheet_action_billing_report"/>
+    </record>
+
+    <record id="timesheet_action_view_report_by_billing_rate_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="8"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
         <field name="act_window_id" ref="timesheet_action_billing_report"/>
     </record>
 
