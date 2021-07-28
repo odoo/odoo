@@ -89,7 +89,8 @@ var stock_report_generic = AbstractAction.extend({
                 });
             });
             framework.blockUI();
-            var url_data = self.controller_url.replace('active_id', self.given_context.active_id);
+            var url_data = self.controller_url.replace(':active_id', self.given_context.active_id);
+            url_data = url_data.replace(':active_model', self.given_context.model);
             session.get_file({
                 url: url_data.replace('output_format', 'pdf'),
                 data: {data: JSON.stringify(dict)},
