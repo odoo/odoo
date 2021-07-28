@@ -18,6 +18,7 @@ class TestExpression(SavepointCaseWithUserDemo):
     def setUpClass(cls):
         super(TestExpression, cls).setUpClass()
         cls._load_partners_set()
+        cls.env['res.currency'].with_context({'active_test': False}).search([('name', 'in', ['EUR', 'USD'])]).write({'active': True})
 
     def _search(self, obj, domain, init_domain=[]):
         sql = obj.search(domain)
