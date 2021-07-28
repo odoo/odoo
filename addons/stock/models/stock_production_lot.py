@@ -29,6 +29,7 @@ class ProductionLot(models.Model):
     company_id = fields.Many2one('res.company', 'Company', required=True, store=True, index=True)
     delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
+    last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_delivery_ids')
 
     @api.constrains('name', 'product_id', 'company_id')
     def _check_unique_lot(self):
@@ -82,6 +83,7 @@ class ProductionLot(models.Model):
         for lot in self:
             lot.delivery_ids = delivery_ids_by_lot[lot.id]
             lot.delivery_count = len(lot.delivery_ids)
+            lot.last_delivery_partner_id = False
             # If lot is serial, keep track of the latest delivery's partner
             if lot.product_id.tracking == 'serial' and lot.delivery_count > 0:
                 lot.last_delivery_partner_id = lot.delivery_ids.sorted(key=attrgetter('date_done'), reverse=True)[0].partner_id
