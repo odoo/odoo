@@ -649,6 +649,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             The order will be in a different currency than the company currency.
         """
         # Make sure the company is in USD
+        self.env.ref('base.USD').active = True
+        self.env.ref('base.EUR').active = True
         self.env.cr.execute(
             "UPDATE res_company SET currency_id = %s WHERE id = %s",
             [self.env.ref('base.USD').id, self.env.company.id])

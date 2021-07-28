@@ -34,6 +34,8 @@ class TestSaleMrpKitBom(TransactionCase):
         # ----------------------------------------------
 
         self.env.user.company_id.anglo_saxon_accounting = True
+        self.env.ref('base.USD').active = True
+
         self.stock_input_account = self.env['account.account'].create({
             'name': 'Stock Input',
             'code': 'StockIn',

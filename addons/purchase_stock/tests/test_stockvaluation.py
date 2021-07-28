@@ -248,6 +248,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         Account = cls.env['account.account']
         cls.usd_currency = cls.env.ref('base.USD')
         cls.eur_currency = cls.env.ref('base.EUR')
+        cls.usd_currency.active = True
+        cls.eur_currency.active = True
 
         cls.stock_input_account = Account.create({
             'name': 'Stock Input',

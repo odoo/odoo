@@ -23,6 +23,7 @@ class TestStockValuationCommon(TransactionCase):
         })
         cls.picking_type_in = cls.env.ref('stock.picking_type_in')
         cls.picking_type_out = cls.env.ref('stock.picking_type_out')
+        cls.env.ref('base.EUR').active = True
 
     def setUp(self):
         super(TestStockValuationCommon, self).setUp()

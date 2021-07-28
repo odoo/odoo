@@ -626,6 +626,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         self.rule_1.write({'match_partner_ids': [(6, 0, partner.ids)], 'match_same_currency': False})
 
         currency_inv = self.env.ref('base.EUR')
+        currency_inv.active = True
         currency_statement = self.env.ref('base.JPY')
 
         currency_statement.active = True

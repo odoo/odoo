@@ -50,11 +50,6 @@ class ResConfigSettings(models.TransientModel):
         if self.module_sale_product_configurator and not self.group_product_variant:
             self.group_product_variant = True
 
-    @api.onchange('group_multi_currency')
-    def _onchange_group_multi_currency(self):
-        if self.group_multi_currency:
-            self.group_product_pricelist = True
-
     @api.onchange('group_product_pricelist')
     def _onchange_group_sale_pricelist(self):
         if not self.group_product_pricelist and self.group_sale_pricelist:

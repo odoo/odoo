@@ -52,6 +52,49 @@ class Currency(models.Model):
         ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding factor must be greater than 0!')
     ]
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        self._toggle_group_multi_currency()
+        return res
+
+    def unlink(self):
+        res = super().unlink()
+        self._toggle_group_multi_currency()
+        return res
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'active' not in vals:
+            return res
+        self._toggle_group_multi_currency()
+        return res
+
+    @api.model
+    def _toggle_group_multi_currency(self):
+        """
+        Automatically activate group_multi_currency if there is more than 1 active currency; deactivate it otherwise
+        """
+        active_currency_count = self.search_count([('active', '=', True)])
+        if active_currency_count > 1:
+            self._activate_group_multi_currency()
+        elif active_currency_count <= 1:
+            self._deactivate_group_multi_currency()
+
+    @api.model
+    def _activate_group_multi_currency(self):
+        group_user = self.env.ref('base.group_user', raise_if_not_found=False)
+        group_mc = self.env.ref('base.group_multi_currency', raise_if_not_found=False)
+        if group_user and group_mc:
+            group_user.sudo()._apply_group(group_mc)
+
+    @api.model
+    def _deactivate_group_multi_currency(self):
+        group_user = self.env.ref('base.group_user', raise_if_not_found=False)
+        group_mc = self.env.ref('base.group_multi_currency', raise_if_not_found=False)
+        if group_user and group_mc:
+            group_user.sudo()._remove_group(group_mc.sudo())
+
     def _get_rates(self, company, date):
         if not self.ids:
             return {}
