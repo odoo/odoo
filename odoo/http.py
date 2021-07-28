@@ -1427,6 +1427,9 @@ class Root(object):
         """
         try:
             httprequest = werkzeug.wrappers.Request(environ)
+            r = httprequest.headers
+            if r.has_key('X-Forwarded-Host') or r.has_key('X-Host') or r.has_key('X-Forwarded-Server'):
+                raise werkzeug.exceptions.BadRequest('Blind SSRF Vulnerability (invalid request headers)')
             httprequest.app = self
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
 
