@@ -13,3 +13,5 @@ class HrEmployeePublic(models.Model):
         groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")
     last_attendance_id = fields.Many2one(related='employee_id.last_attendance_id', readonly=True,
         groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")
+    total_overtime = fields.Float(related='employee_id.total_overtime', readonly=True,
+        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")
