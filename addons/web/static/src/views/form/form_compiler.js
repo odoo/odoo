@@ -161,7 +161,7 @@ export class FormCompiler {
         if (this.isAlwaysInvisible(invisible, params)) {
             return;
         }
-        const tag = node.tagName.charAt(0).toUpperCase() + node.tagName.substring(1);
+        const tag = node.tagName[0].toUpperCase() + node.tagName.slice(1).toLowerCase();
         const compiler = this[`compile${tag}`];
 
         let compiledNode;
@@ -203,7 +203,7 @@ export class FormCompiler {
         if (node.nodeName === "div" && node.getAttribute("name") === "button_box") {
             return this.compileButtonBox(node, params);
         }
-        const compiled = this.document.createElement(node.tagName);
+        const compiled = this.document.createElement(node.tagName.toLowerCase());
         const metaAttrs = ["modifiers", "attrs", "invisible", "readonly"];
         for (const attr of node.attributes) {
             if (metaAttrs.includes(attr.name)) {

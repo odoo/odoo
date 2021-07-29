@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.KanbanView" owl="1">
+    <div class="o_kanban_view">
+      <ControlPanel t-props="props.info" />
+      <div class="o_content">
+        <KanbanRenderer model="model" fields="props.fields" info="archInfo" />
+      </div>
+    </div>
+  </t>
+</templates>
