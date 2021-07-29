@@ -71,6 +71,61 @@ class TestInvoiceTaxAmountByGroup(AccountTestInvoicingCommon):
             (self.tax_group1.id, 3000.0, 600.0),
         ])
 
+    def test_note_section_lines_do_not_add_group(self):
+        # Getting some weird cases where section/note lines
+        # have different tax_ids that other lines. Assuming
+        # Account invoice has been created from sale order
+        # with the wrong tax. Accounting manager change
+        # tax on product line but can't change on section/note.
+        # As amount_by_group is used in invoice report
+        # those note/section line should must be filtered
+        # in tax amount by group summary.
+
+        tax_10 = self.env['account.tax'].create({
+            'name': "tax_10",
+            'amount_type': 'percent',
+            'amount': 10.0,
+            'tax_group_id': self.tax_group1.id,
+        })
+        tax_20 = self.env['account.tax'].create({
+            'name': "tax_20",
+            'amount_type': 'percent',
+            'amount': 20.0,
+            'tax_group_id': self.tax_group2.id,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': 'section line',
+                    'display_type': 'line_section',
+                    'account_id': None,
+                    'price_unit': 0.0,
+                    'tax_ids': [(6, 0, (tax_10 + tax_20).ids)],
+                }),
+                (0, 0, {
+                    'name': 'note line',
+                    'display_type': 'line_note',
+                    'account_id': None,
+                    'price_unit': 0.0,
+                    'tax_ids': [(6, 0, tax_10.ids)],
+                }),
+                (0, 0, {
+                    'name': 'line',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'price_unit': 1000.0,
+                    'tax_ids': [(6, 0, tax_20.ids)],
+                }),
+            ]
+        })
+
+        self.assertAmountByTaxGroup(invoice, [
+            (self.tax_group2.id, 1000.0, 200.0),
+        ])
+
     def test_zero_tax_lines(self):
         tax_0 = self.env['account.tax'].create({
             'name': "tax_0",
