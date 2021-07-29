@@ -8,7 +8,7 @@ from datetime import timedelta, datetime
 from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv.expression import OR
 
 from .project_task_recurrence import DAYS, WEEKS
@@ -1281,10 +1281,38 @@ class Task(models.Model):
 
         return vals
 
+    def _ensure_fields_are_accessible(self, fields, operation='read', check_group_user=True):
+        """" ensure all fields are accessible by the current user
+
+            This method checks if the portal user can access to all fields given in parameter.
+            By default, it checks if the current user is a portal user and then checks if all fields are accessible for this user.
+
+            :param fields: list of fields to check if the current user can access.
+            :param operation: contains either 'read' to check readable fields or 'write' to check writable fields.
+            :param check_group_user: contains boolean value.
+                - True, if the method has to check if the current user is a portal one.
+                - False if we are sure the user is a portal user,
+        """
+        assert operation in ('read', 'write'), 'Invalid operation'
+        if fields and (not check_group_user or self.env.user.has_group('base.group_portal')) and not self.env.su:
+            unauthorized_fields = set(fields) - (self.SELF_READABLE_FIELDS if operation == 'read' else self.SELF_WRITABLE_FIELDS)
+            if unauthorized_fields:
+                raise AccessError(_('You cannot %s %s fields in task.', operation if operation == 'read' else '%s on' % operation, ', '.join(unauthorized_fields)))
+
+    def read(self, fields=None, load='_classic_read'):
+        self._ensure_fields_are_accessible(fields)
+        return super(Task, self).read(fields=fields, load=load)
+
     @api.model_create_multi
     def create(self, vals_list):
+        is_portal_user = self.env.user.has_group('base.group_portal')
+        if is_portal_user:
+            self.check_access_rights('create')
         default_stage = dict()
         for vals in vals_list:
+            if is_portal_user:
+                self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
+
             project_id = vals.get('project_id') or self.env.context.get('default_project_id')
             if not vals.get('parent_id'):
                 # 1) We must initialize display_project_id to follow project_id if there is no parent_id
@@ -1316,13 +1344,36 @@ class Task(models.Model):
                 rec_values['next_recurrence_date'] = fields.Datetime.today()
                 recurrence = self.env['project.task.recurrence'].create(rec_values)
                 vals['recurrence_id'] = recurrence.id
-        tasks = super().create(vals_list)
+        # The sudo is required for a portal user as the record creation
+        # requires the read access on other models, as mail.template
+        # in order to compute the field tracking
+        if is_portal_user:
+            ctx = {
+                key: value for key, value in self.env.context.items()
+                if key == 'default_project_id' \
+                    or not key.startswith('default_') \
+                    or key[8:] in self.SELF_WRITABLE_FIELDS
+            }
+            self = self.with_context(ctx).sudo()
+        tasks = super(Task, self).create(vals_list)
+        if is_portal_user:
+            # since we use sudo to create tasks, we need to check
+            # if the portal user could really create the tasks based on the ir rule.
+            tasks.with_user(self.env.user).check_access_rule('create')
         for task in tasks:
             if task.project_id.privacy_visibility == 'portal':
                 task._portal_ensure_token()
         return tasks
 
     def write(self, vals):
+        portal_can_write = False
+        if self.env.user.has_group('base.group_portal') and not self.env.su:
+            # Check if all fields in vals are in SELF_WRITABLE_FIELDS
+            self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
+            self.check_access_rights('write')
+            self.check_access_rule('write')
+            portal_can_write = True
+
         now = fields.Datetime.now()
         if 'parent_id' in vals and vals['parent_id'] in self.ids:
             raise UserError(_("Sorry. You can't set a task as its parent task."))
@@ -1365,6 +1416,12 @@ class Task(models.Model):
             else:
                 recurrence_domain = [('recurrence_id', 'in', self.recurrence_id.ids)]
             tasks |= self.env['project.task'].search(recurrence_domain)
+
+        # The sudo is required for a portal user as the record update
+        # requires the write access on others models, as rating.rating
+        # in order to keep the same name than the task.
+        if portal_can_write:
+            tasks = tasks.sudo()
 
         result = super(Task, tasks).write(vals)
         # rating on stage
