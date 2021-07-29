@@ -30,7 +30,10 @@ function isComment(node) {
 }
 
 function isComponentNode(node) {
-    return node.tagName.charAt(0).toUpperCase() === node.tagName.charAt(0);
+    return (
+        node.tagName.charAt(0).toUpperCase() === node.tagName.charAt(0) ||
+        (node.tagName === "t" && "t-component" in node.attributes)
+    );
 }
 
 function appendToStringifiedObject(originalTattr, string) {
@@ -656,29 +659,27 @@ export class FormCompiler {
     }
 
     compileButton(node, params) {
-        const button = this.document.createElement("button");
+        const button = this.document.createElement("ViewButton");
+        // PROPS
         if ("string" in node.attributes) {
-            button.textContent = node.getAttribute("string");
-        } else if (node.childNodes.length) {
-            for (const child of node.childNodes) {
-                this.append(button, this.compileNode(child, params));
-            }
+            button.setAttribute("title", `"${node.getAttribute("string")}"`);
         }
+        if ("size" in node.attributes) {
+            button.setAttribute("size", `"${node.getAttribute("size")}"`);
+        }
+        if ("icon" in node.attributes) {
+            button.setAttribute("icon", `"${node.getAttribute("icon")}"`);
+        }
+        button.setAttribute("classes", JSON.stringify(Array.from(node.classList)));
 
-        button.classList.add("btn");
-
-        const explicitClasses = [
-            "btn-primary",
-            "btn-secondary",
-            "btn-link",
-            "btn-success",
-            "btn-info",
-            "btn-warning",
-            "btn-danger",
-        ];
-
-        if (!explicitClasses.some((el) => node.classList.contains(el))) {
-            button.classList.add("btn-secondary");
+        // Button's body
+        if (node.children.length) {
+            const contentSlot = this.document.createElement("t");
+            contentSlot.setAttribute("t-set-slot", "contents");
+            this.append(button, contentSlot);
+            for (const child of node.childNodes) {
+                this.append(contentSlot, this.compileNode(child, params));
+            }
         }
 
         const buttonClickParams = {};
@@ -688,7 +689,7 @@ export class FormCompiler {
                 buttonClickParams[attName] = att;
             }
         }
-        button.setAttribute("t-on-click", `buttonClicked(${JSON.stringify(buttonClickParams)})`);
+        button.setAttribute("onClick", `() => buttonClicked(${JSON.stringify(buttonClickParams)})`);
         return button;
     }
 
