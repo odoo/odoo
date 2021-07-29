@@ -136,7 +136,7 @@ class SaleOrder(models.Model):
         return min(self.order_line.filtered(lambda x: not x.is_reward_line and x.price_reduce > 0), key=lambda x: x['price_reduce'])
 
     def _get_reward_values_discount_percentage_per_line(self, program, line):
-        discount_amount = line.product_uom_qty * line.price_reduce * (program.discount_percentage / 100)
+        discount_amount = (line.product_uom_qty - line.qty_invoiced) * line.price_reduce * (program.discount_percentage / 100)
         return discount_amount
 
     def _get_reward_values_discount(self, program):
@@ -154,7 +154,7 @@ class SaleOrder(models.Model):
                 'tax_id': [(4, tax.id, False) for tax in taxes],
             }]
         reward_dict = {}
-        lines = self._get_paid_order_lines()
+        lines = self._get_paid_order_lines().filtered(lambda line: line.invoice_status != 'invoiced')
         amount_total = sum(self._get_base_order_lines(program).mapped('price_subtotal'))
         if program.discount_apply_on == 'cheapest_product':
             line = self._get_cheapest_line()
@@ -359,6 +359,7 @@ class SaleOrder(models.Model):
             values = order._get_reward_line_values(program)
             lines = order.order_line.filtered(lambda line: line.product_id == program.discount_line_product_id)
             if program.reward_type == 'discount' and program.discount_type == 'percentage':
+                lines = lines.filtered(lambda line: line.invoice_status != 'invoiced' or program.discount_apply_on == 'cheapest_product')
                 lines_to_remove = lines
                 # Values is what discount lines should really be, lines is what we got in the SO at the moment
                 # 1. If values & lines match, we should update the line (or delete it if no qty or price?)
@@ -372,7 +373,8 @@ class SaleOrder(models.Model):
                             value_found = True
                             # Working on Case 3.
                             lines_to_remove -= line
-                            lines_to_remove += update_line(order, line, value)
+                            if line.invoice_status != 'invoiced':
+                                lines_to_remove += update_line(order, line, value)
                             continue
                     # Case 2.
                     if not value_found:
