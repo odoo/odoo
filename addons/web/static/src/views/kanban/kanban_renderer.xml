@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.KanbanRenderer" owl="1">
+    <div class="o_kanban_view" t-attf-class="o_kanban_{{ isGrouped() ? '' : 'un' }}grouped {{ props.info.className }}">
+        <t t-foreach="props.model.root.data" t-as="record" t-key="record.id">
+            <t t-call="{{ cardTemplate }}" />
+        </t>
+    </div>
+  </t>
+</templates>
