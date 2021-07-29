@@ -80,21 +80,10 @@ export const uiService = {
             activeElems = activeElems.filter((x) => x !== el);
             bus.trigger("active-element-changed", ui.activeElement);
         }
-        function getVisibleElements(selector) {
-            const visibleElements = [];
-            for (const el of ui.activeElement.querySelectorAll(selector)) {
-                const isVisible = el.offsetWidth > 0 && el.offsetHeight > 0;
-                if (isVisible) {
-                    visibleElements.push(el);
-                }
-            }
-            return visibleElements;
-        }
 
         Object.assign(ui, {
             activateElement,
             deactivateElement,
-            getVisibleElements,
         });
         Object.defineProperty(ui, "activeElement", {
             get() {

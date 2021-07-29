@@ -4,39 +4,61 @@
   <t t-name="web.CommandPalette" owl="1">
     <div>
       <div class="o_command_palette_search">
-        <input type="text" class="o_command_palette_search" t-on-input="onSearchInput" autofocus="" placeholder="Search for an action..." />
+        <input type="text" class="o_command_palette_search" t-ref="search_bar" t-on-input="onDebouncedSearchInput" autofocus="" t-att-placeholder="state.placeHolder" />
         <i title="Search for an action..." role="img" aria-label="Search for an action..." class="fa fa-search"></i>
       </div>
 
       <div class="o_command_palette_listbox">
 
         <div t-if="!categories.length" class="o_command_palette_listbox_empty">No action found</div>
+        <t t-if="!isFuzzySearch">
+          <t t-foreach="categories" t-as="category">
 
-        <t t-foreach="categories" t-as="category">
+            <div class="o_command_category" t-att-aria-label="category.label" t-key="category.keyId">
 
-          <div class="o_command_category" t-att-aria-label="category.label">
-
-            <t t-foreach="category.commands" t-as="command">
-              <t t-set="commandIndex" t-value="state.commands.indexOf(command)" />
-              <span t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="onCommandClicked(commandIndex)" t-on-mouseenter="onCommandMouseEnter(commandIndex)">
-                <span t-esc="command.name" />
-                <span t-if="command.hotkey">
-                  <t t-foreach="getKeysToPress(command)" t-as="key">
-                    <kbd t-esc="key" />
-                    <span t-if="!key_last"> + </span>
-                  </t>
+              <t t-foreach="category.commands" t-as="command">
+                <t t-set="commandIndex" t-value="state.commands.indexOf(command)" />
+                <span t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="onCommandClicked(commandIndex)" t-on-mouseenter="onCommandMouseEnter(commandIndex)" t-key="command.keyId">
+                  <t t-component="command.Component || DefaultCommandItem" t-props="command" t-on-close="props.closeMe()"/>
                 </span>
-              </span>
-            </t>
+              </t>
 
-          </div>
+            </div>
 
-          <hr t-if="!category_last" />
+            <hr t-if="!category_last" />
 
+          </t>
         </t>
+        <div t-else="" class="o_command_category">
+          <t t-foreach="state.commands" t-as="command">
+            <t t-set="commandIndex" t-value="state.commands.indexOf(command)" />
+            <span t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="onCommandClicked(commandIndex)" t-on-mouseenter="onCommandMouseEnter(commandIndex)" t-key="command.keyId">
+              <t t-component="command.Component || DefaultCommandItem" t-props="command" t-on-close="props.closeMe()"/>
+            </span>
+          </t>
+        </div>
 
       </div>
 
     </div>
   </t>
+
+  <t t-name="web.defaultCommandItem" owl="1">
+    <div class="o_command_default">
+      <span t-esc="props.name" />
+    </div>
+  </t>
+
+  <t t-name="web.hotkeyCommandItem" owl="1">
+    <div class="o_command_hotkey">
+      <span t-esc="props.name" />
+      <span t-if="props.hotkey">
+        <t t-foreach="getKeysToPress(props)" t-as="key">
+          <kbd t-esc="key" />
+          <span t-if="!key_last"> + </span>
+        </t>
+      </span>
+    </div>
+  </t>
+
 </templates>

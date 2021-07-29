@@ -1,15 +1,23 @@
 /** @odoo-module **/
 
+import { useAutofocus } from "@web/core/autofocus_hook";
+import { useHotkey } from "@web/core/hotkey_hook";
 import { registry } from "@web/core/registry";
-import { useAutofocus } from "../../core/autofocus_hook";
-import { isMacOS } from "../../core/browser/feature_detection";
-import { useHotkey } from "../../core/hotkey_hook";
-import { scrollTo } from "../../core/utils/scrolling";
+import { useService } from "@web/core/service_hook";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { scrollTo } from "@web/core/utils/scrolling";
+import { fuzzyLookup } from "@web/core/utils/search";
+import { debounce } from "@web/core/utils/timing";
 
 const { Component, hooks } = owl;
-const { useState } = hooks;
+const { useRef, useState } = hooks;
+
+const DEFAULT_PLACEHOLDER = "Search for an action...";
+const FUZZY_SEARCH = ["__default__"];
 
 const commandCategoryRegistry = registry.category("command_categories");
+const commandProviderRegistry = registry.category("command_provider");
+
 /**
  * @typedef {import("./command_service").Command} Command
  */
@@ -30,24 +38,18 @@ function commandsWithinCategory(categoryName) {
     };
 }
 
+export class DefaultCommandItem extends Component {}
+DefaultCommandItem.template = "web.defaultCommandItem";
+
 export class CommandPalette extends Component {
     setup() {
-        /**
-         * @type Command[]
-         */
-        this.initialCommands = [];
-        for (const [key, _] of commandCategoryRegistry.getEntries()) {
-            const commands = this.props.commands.filter(commandsWithinCategory(key));
-            this.initialCommands = this.initialCommands.concat(commands);
-        }
-
-        /**
-         * @type {{commands:Command[], selectedCommand: Command}}
-         */
-        this.state = useState({
-            commands: this.initialCommands,
-            selectedCommand: this.initialCommands[0],
-        });
+        this.keyId = 1;
+        this.displayByCategory = true;
+        this.keepLast = new KeepLast();
+        this.DefaultCommandItem = DefaultCommandItem;
+        this.activeElement = useService("ui").activeElement;
+        this.searchBar = useRef("search_bar");
+        this.onDebouncedSearchInput = debounce(this.onSearchInput, 250);
 
         useAutofocus();
 
@@ -56,39 +58,90 @@ export class CommandPalette extends Component {
         useHotkey("ArrowUp", () => this.selectCommandAndScrollTo("PREV"), { allowRepeat: true });
         useHotkey("ArrowDown", () => this.selectCommandAndScrollTo("NEXT"), { allowRepeat: true });
 
-        for (const command of this.initialCommands) {
-            if (command.hotkey) {
-                useHotkey(command.hotkey, () => {
-                    command.action();
-                    this.props.closeMe();
-                });
+        /**
+         * @type {{commands: Command[], selectedCommand: Command, placeHolder: String}}
+         */
+        this.state = useState({
+            commands: [],
+            selectedCommand: -1,
+            placeHolder: DEFAULT_PLACEHOLDER,
+        });
+
+        const mainProviders = { __default__: [] };
+        for (const provider of commandProviderRegistry.getAll()) {
+            const nameSpace = provider.nameSpace || "__default__";
+            if (nameSpace in mainProviders) {
+                mainProviders[nameSpace] = mainProviders[nameSpace].concat([provider]);
+            } else {
+                mainProviders[nameSpace] = [provider];
             }
         }
+        this.providerStack = [mainProviders];
+
+        this.setCommands("__default__", {
+            activeElement: this.activeElement,
+        });
     }
 
     get categories() {
         const categories = [];
-        for (const [key, value] of commandCategoryRegistry.getEntries()) {
-            const commands = this.state.commands.filter(commandsWithinCategory(key));
+        if (this.displayByCategory) {
+            for (const [key, value] of commandCategoryRegistry.getEntries()) {
+                const commands = this.state.commands.filter(commandsWithinCategory(key));
+                if (commands.length) {
+                    categories.push({
+                        commands,
+                        keyId: key,
+                        ...value,
+                    });
+                }
+            }
+        } else {
+            const commands = this.state.commands;
             if (commands.length) {
                 categories.push({
-                    ...value,
                     commands,
+                    keyId: "default",
+                    label: "",
                 });
             }
         }
         return categories;
     }
 
-    getKeysToPress(command) {
-        const { hotkey } = command;
-        let result = hotkey.split("+");
-        if (isMacOS()) {
-            result = result
-                .map((x) => x.replace("control", "command"))
-                .map((x) => x.replace("alt", "control"));
+    get lastProvider() {
+        return this.providerStack[this.providerStack.length - 1];
+    }
+
+    async setCommands(key, options = {}) {
+        const proms = this.lastProvider[key].map((provider) => {
+            const { provide } = provider;
+            const result = provide(this.env, options);
+            return result;
+        });
+        let commands = (await this.keepLast.add(Promise.all(proms))).flatMap(
+            (commands) => commands
+        );
+
+        if (options.searchValue && FUZZY_SEARCH.includes(key)) {
+            this.displayByCategory = false;
+            commands = fuzzyLookup(options.searchValue, commands, (c) => c.name);
+        } else {
+            this.displayByCategory = true;
+            // we have to sort the commands by category to avoid navigation issues with the arrows
+            let commandsSorted = [];
+            for (const [key, _] of commandCategoryRegistry.getEntries()) {
+                const commandsByCategory = commands.filter(commandsWithinCategory(key));
+                commandsSorted = commandsSorted.concat(commandsByCategory);
+            }
+            commands = commandsSorted;
         }
-        return result.map((key) => key.toUpperCase());
+
+        this.state.commands = commands.map((command) => ({
+            ...command,
+            keyId: this.keyId++,
+        }));
+        this.selectCommand(this.state.commands.length ? 0 : -1);
     }
 
     selectCommand(index) {
@@ -124,8 +177,18 @@ export class CommandPalette extends Component {
 
     executeSelectedCommand() {
         if (this.state.selectedCommand) {
-            this.props.closeMe();
-            this.state.selectedCommand.action();
+            const result = this.state.selectedCommand.action();
+            if (result) {
+                const { placeHolder, provide } = result;
+                this.providerStack.push({ __default__: [{ provide }] });
+                this.setCommands("__default__", {
+                    activeElement: this.activeElement,
+                });
+                this.state.placeHolder = placeHolder || DEFAULT_PLACEHOLDER;
+                this.searchBar.el.value = "";
+            } else {
+                this.props.closeMe();
+            }
         }
     }
 
@@ -137,16 +200,17 @@ export class CommandPalette extends Component {
         }
     }
 
-    onSearchInput(ev) {
-        const searchValue = ev.target.value;
-        const newCommands = [];
-        for (const command of this.initialCommands) {
-            if (fuzzy.test(searchValue, command.name)) {
-                newCommands.push(command);
-            }
+    async onSearchInput(ev) {
+        let searchValue = ev.target.value;
+        let key = "__default__";
+        if (searchValue.length && searchValue[0] in this.lastProvider) {
+            key = searchValue[0];
+            searchValue = searchValue.slice(1);
         }
-        this.state.commands = newCommands;
-        this.selectCommand(this.state.commands.length ? 0 : -1);
+        this.setCommands(key, {
+            searchValue,
+            activeElement: this.activeElement,
+        });
     }
 }
 CommandPalette.template = "web.CommandPalette";

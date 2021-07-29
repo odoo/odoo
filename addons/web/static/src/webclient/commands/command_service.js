@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { registry } from "../../core/registry";
-import { capitalize } from "../../core/utils/strings";
+import { registry } from "@web/core/registry";
 import { CommandPaletteDialog } from "./command_palette_dialog";
 
 /**
@@ -38,40 +37,11 @@ export const commandService = {
                 return;
             }
 
-            const overlayModifier = registry.category("services").get("hotkey").overlayModifier;
-            const commands = [...registeredCommands.values()].filter(
-                (command) => command.activeElement === ui.activeElement
-            );
-
-            // Also retrieve all hotkeyables elements
-            for (const el of ui.getVisibleElements("[data-hotkey]:not(:disabled)")) {
-                const closest = el.closest("[data-command-category]");
-                const category = closest ? closest.dataset.commandCategory : "default";
-
-                const description =
-                    el.title ||
-                    el.dataset.originalTitle || // LEGACY: bootstrap moves title to data-original-title
-                    el.placeholder ||
-                    (el.innerText &&
-                        `${el.innerText.slice(0, 50)}${el.innerText.length > 50 ? "..." : ""}`) ||
-                    "no description provided";
-                commands.push({
-                    name: capitalize(description.trim().toLowerCase()),
-                    hotkey: `${overlayModifier}+${el.dataset.hotkey}`,
-                    action: () => {
-                        // AAB: not sure it is enough, we might need to trigger all events that occur when you actually click
-                        el.focus();
-                        el.click();
-                    },
-                    category,
-                });
-            }
-
             // Open palette dialog
             isPaletteOpened = true;
             dialog.add(
                 CommandPaletteDialog,
-                { commands },
+                {},
                 {
                     onClose: () => {
                         isPaletteOpened = false;
@@ -143,6 +113,11 @@ export const commandService = {
                 return () => {
                     unregisterCommand(token);
                 };
+            },
+            getCommands(activeElement) {
+                return [...registeredCommands.values()].filter(
+                    (command) => command.activeElement === activeElement
+                );
             },
         };
     },

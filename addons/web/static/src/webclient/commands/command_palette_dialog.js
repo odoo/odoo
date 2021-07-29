@@ -32,7 +32,3 @@ CommandPaletteDialog.renderFooter = false;
 CommandPaletteDialog.contentClass = "o_command_palette";
 CommandPaletteDialog.bodyTemplate = "web.CommandPaletteDialogBody";
 CommandPaletteDialog.components = Object.assign({}, Dialog.components, { CommandPalette });
-CommandPaletteDialog.props = {
-    commands: { type: Array, element: { type: Object } },
-    close: Function,
-};
