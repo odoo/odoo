@@ -79,6 +79,26 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="reception_report">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_reception_report"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_reception_report"/>
+                                    <div class="text-muted">
+                                        View and allocate received quantities.
+                                    </div>
+                                    <div class="row mt-2" attrs="{'invisible': [('group_stock_reception_report','=',False)]}">
+                                        <field name="group_stock_auto_reception_report" class="col-lg-1 ml16 mr0"/>
+                                        <div class="col pl-0">
+                                            <label for="group_stock_auto_reception_report"/>
+                                            <div class="text-muted">
+                                                Automatically open reception report when a receipt is validated.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <h2>Barcode</h2>
                         <div class="row mt16 o_settings_container" name="barcode_setting_container">

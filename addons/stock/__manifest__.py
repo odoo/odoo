@@ -30,6 +30,7 @@
 
         'report/report_stock_forecasted.xml',
         'report/report_stock_quantity.xml',
+        'report/report_stock_reception.xml',
         'report/stock_report_views.xml',
         'report/report_package_barcode.xml',
         'report/report_lot_barcode.xml',
@@ -94,6 +95,7 @@
             'web/static/src/legacy/scss/views.scss',
             'web/static/src/legacy/scss/graph_view.scss',
             'stock/static/src/scss/report_stock_forecasted.scss',
+            'stock/static/src/scss/report_stock_reception.scss',
             'stock/static/src/scss/report_stock_rule.scss',
         ],
         'web.assets_common': [
@@ -106,6 +108,7 @@
             'stock/static/src/js/inventory_singleton_list_controller.js',
             'stock/static/src/js/inventory_singleton_list_view.js',
             'stock/static/src/js/report_stock_forecasted.js',
+            'stock/static/src/js/report_stock_reception.js',
             'stock/static/src/js/stock_orderpoint_list_controller.js',
             'stock/static/src/js/stock_orderpoint_list_model.js',
             'stock/static/src/js/stock_orderpoint_list_view.js',
@@ -132,6 +135,7 @@
             'stock/static/src/xml/popover_widget.xml',
             'stock/static/src/xml/forecast_widget.xml',
             'stock/static/src/xml/report_stock_forecasted.xml',
+            'stock/static/src/xml/report_stock_reception.xml',
             'stock/static/src/xml/stock_orderpoint.xml',
             'stock/static/src/xml/stock_traceability_report_backend.xml',
         ],

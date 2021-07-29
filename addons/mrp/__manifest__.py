@@ -43,6 +43,7 @@
         'report/mrp_report_bom_structure.xml',
         'report/mrp_production_templates.xml',
         'report/report_stock_forecasted.xml',
+        'report/report_stock_reception.xml',
         'report/report_stock_rule.xml',
         'report/mrp_zebra_production_templates.xml',
     ],
@@ -68,6 +69,7 @@
             'mrp/static/src/js/mrp_document_kanban_view.js',
             'mrp/static/src/js/mrp_should_consume.js',
             'mrp/static/src/js/mrp_field_one2many_with_copy.js',
+            'mrp/static/src/js/report_stock_reception.js',
         ],
         'web.assets_common': [
             'mrp/static/src/scss/mrp_bom_report.scss',
