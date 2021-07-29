@@ -577,7 +577,7 @@ class MrpProduction(models.Model):
             'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
-            'move_dest_ids': [(4, x.id) for x in self.move_dest_ids],
+            'move_dest_ids': not byproduct_id and [(4, x.id) for x in self.move_dest_ids],
         }
 
     def _generate_finished_moves(self):
