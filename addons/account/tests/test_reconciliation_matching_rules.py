@@ -985,3 +985,77 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         self._check_statement_matching(self.rule_1, {
             self.bank_line_1.id: {'aml_ids': (pmt_line_1 + pmt_line_2).ids, 'model': self.rule_1, 'partner': payment_partner},
         }, statements=self.bank_line_1.statement_id)
+
+    def test_tax_tags_inversion_with_reconciliation_model(self):
+        country = self.env.ref('base.us')
+        tax_report = self.env['account.tax.report'].create({
+            'name': "Tax report",
+            'country_id': country.id,
+        })
+        tax_report_line = self.env['account.tax.report.line'].create({
+            'name': 'test_tax_report_line',
+            'tag_name': 'test_tax_report_line',
+            'report_id': tax_report.id,
+            'sequence': 10,
+        })
+        tax_tag_pos = tax_report_line.tag_ids.filtered(lambda x: not x.tax_negate)
+        tax_tag_neg = tax_report_line.tag_ids.filtered(lambda x: x.tax_negate)
+        tax = self.env['account.tax'].create({
+            'name': 'Test Tax',
+            'amount': 10,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tag_pos.ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'tag_ids': [(6, 0, tax_tag_neg.ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tag_neg.ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'tag_ids': [(6, 0, tax_tag_pos.ids)],
+                }),
+            ],
+        })
+        reconciliation_model = self.env['account.reconcile.model'].create({
+            'name': 'Charge with Tax',
+            'line_ids': [(0, 0, {
+                'account_id': self.company_data['default_account_expense'].id,
+                'amount_type': 'percentage',
+                'amount_string': '100',
+                'tax_ids': [(6, 0, tax.ids)]
+            })]
+        })
+        bank_stmt = self.env['account.bank.statement'].create({
+            'journal_id': self.bank_journal.id,
+            'date': '2020-07-15',
+            'name': 'test',
+            'line_ids': [(0, 0, {
+                'payment_ref': 'testLine',
+                'amount': 5,
+                'date': '2020-07-15',
+            })]
+        })
+        res = reconciliation_model._get_write_off_move_lines_dict(bank_stmt.line_ids, 5)
+        self.assertEqual(len(res), 2)
+        self.assertEqual(
+            res[0]['tax_tag_ids'],
+            [(6, 0, tax.refund_repartition_line_ids[0].tag_ids.ids)],
+            'The tags of the first repartition line are not inverted'
+        )
+        self.assertEqual(
+            res[1]['tax_tag_ids'],
+            [(6, 0, tax.refund_repartition_line_ids[1].tag_ids.ids)],
+            'The tags of the second repartition line are not inverted'
+        )

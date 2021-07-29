@@ -276,8 +276,18 @@ class AccountReconcileModel(models.Model):
         '''
         self.ensure_one()
         balance = base_line_dict['balance']
+        tax_type = tax.type_tax_use
+        is_refund = (tax_type == 'sale' and balance < 0) or (tax_type == 'purchase' and balance > 0)
 
-        res = tax.compute_all(balance)
+        res = tax.compute_all(balance, is_refund=is_refund)
+
+        if (tax_type == 'sale' and not is_refund) or (tax_type == 'purchase' and is_refund):
+            base_tags = self.env['account.account.tag'].browse(res['base_tags'])
+            res['base_tags'] = self.env['account.move.line']._revert_signed_tags(base_tags).ids
+
+            for tax_result in res['taxes']:
+                tax_tags = self.env['account.account.tag'].browse(tax_result['tag_ids'])
+                tax_result['tag_ids'] = self.env['account.move.line']._revert_signed_tags(tax_tags).ids
 
         new_aml_dicts = []
         for tax_res in res['taxes']:
