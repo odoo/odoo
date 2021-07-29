@@ -19,6 +19,9 @@ from odoo.exceptions import UserError
 from odoo.modules.module import get_module_path, get_resource_path
 from odoo.tools.misc import file_open
 from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.image import image_data_uri, base64_to_image
+from odoo.addons.web.controllers.main import Binary
+from odoo.addons.base.models.assetsbundle import AssetsBundle
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_MIMETYPES
 
@@ -521,6 +524,57 @@ class Web_Editor(http.Controller):
         attachment.generate_access_token()
         return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
 
+    def _get_shape_svg(self, module, *segments):
+        shape_path = get_resource_path(module, 'static', *segments)
+        if not shape_path:
+            raise werkzeug.exceptions.NotFound()
+        with tools.file_open(shape_path, 'r', filter_ext=('.svg',)) as file:
+            return file.read()
+
+    def _update_svg_colors(self, options, svg):
+        user_colors = []
+        svg_options = {}
+        default_palette = {
+            '1': '#3AADAA',
+            '2': '#7C6576',
+            '3': '#F6F6F6',
+            '4': '#FFFFFF',
+            '5': '#383E45',
+        }
+        bundle_css = None
+        regex_hex = r'#[0-9A-F]{6,8}'
+        regex_rgba = r'rgba?\(\d{1,3},\d{1,3},\d{1,3}(?:,[0-9.]{1,4})?\)'
+        for key, value in options.items():
+            colorMatch = re.match('^c([1-5])$', key)
+            if colorMatch:
+                css_color_value = value
+                # Check that color is hex or rgb(a) to prevent arbitrary injection
+                if not re.match(r'(?i)^%s$|^%s$' % (regex_hex, regex_rgba), css_color_value.replace(' ', '')):
+                    if re.match('^o-color-([1-5])$', css_color_value):
+                        if not bundle_css:
+                            bundle = 'web.assets_frontend'
+                            files, _ = request.env["ir.qweb"]._get_asset_content(bundle, options=request.context)
+                            asset = AssetsBundle(bundle, files)
+                            bundle_css = asset.css().index_content
+                        color_search = re.search(r'(?i)--%s:\s+(%s|%s)' % (css_color_value, regex_hex, regex_rgba), bundle_css)
+                        if not color_search:
+                            raise werkzeug.exceptions.BadRequest()
+                        css_color_value = color_search.group(1)
+                    else:
+                        raise werkzeug.exceptions.BadRequest()
+                user_colors.append([tools.html_escape(css_color_value), colorMatch.group(1)])
+            else:
+                svg_options[key] = value
+
+        color_mapping = {default_palette[palette_number]: color for color, palette_number in user_colors}
+        # create a case-insensitive regex to match all the colors to replace, eg: '(?i)(#3AADAA)|(#7C6576)'
+        regex = '(?i)%s' % '|'.join('(%s)' % color for color in color_mapping.keys())
+
+        def subber(match):
+            key = match.group().upper()
+            return color_mapping[key] if key in color_mapping else key
+        return re.sub(regex, subber, svg), svg_options
+
     @http.route(['/web_editor/shape/<module>/<path:filename>'], type='http', auth="public", website=True)
     def shape(self, module, filename, **kwargs):
         """
@@ -536,43 +590,38 @@ class Web_Editor(http.Controller):
                 raise werkzeug.exceptions.NotFound()
             svg = b64decode(attachment.datas).decode('utf-8')
         else:
-            shape_path = get_resource_path(module, 'static', 'shapes', filename)
-            if not shape_path:
-                raise werkzeug.exceptions.NotFound()
-            with tools.file_open(shape_path, 'r') as file:
-                svg = file.read()
+            svg = self._get_shape_svg(module, 'shapes', filename)
 
-        user_colors = []
-        for key, value in kwargs.items():
-            colorMatch = re.match('^c([1-5])$', key)
-            if colorMatch:
-                # Check that color is hex or rgb(a) to prevent arbitrary injection
-                if not re.match(r'(?i)^#[0-9A-F]{6,8}$|^rgba?\(\d{1,3},\d{1,3},\d{1,3}(?:,[0-9.]{1,4})?\)$', value.replace(' ', '')):
-                    raise werkzeug.exceptions.BadRequest()
-                user_colors.append([tools.html_escape(value), colorMatch.group(1)])
-            elif key == 'flip':
-                if value == 'x':
-                    svg = svg.replace('<svg ', '<svg style="transform: scaleX(-1);" ')
-                elif value == 'y':
-                    svg = svg.replace('<svg ', '<svg style="transform: scaleY(-1)" ')
-                elif value == 'xy':
-                    svg = svg.replace('<svg ', '<svg style="transform: scale(-1)" ')
+        svg, options = self._update_svg_colors(kwargs, svg)
+        flip_value = options.get('flip', False)
+        if flip_value == 'x':
+            svg = svg.replace('<svg ', '<svg style="transform: scaleX(-1);" ')
+        elif flip_value == 'y':
+            svg = svg.replace('<svg ', '<svg style="transform: scaleY(-1)" ')
+        elif flip_value == 'xy':
+            svg = svg.replace('<svg ', '<svg style="transform: scale(-1)" ')
 
-        default_palette = {
-            '1': '#3AADAA',
-            '2': '#7C6576',
-            '3': '#F6F6F6',
-            '4': '#FFFFFF',
-            '5': '#383E45',
-        }
-        color_mapping = {default_palette[palette_number]: color for color, palette_number in user_colors}
-        # create a case-insensitive regex to match all the colors to replace, eg: '(?i)(#3AADAA)|(#7C6576)'
-        regex = '(?i)%s' % '|'.join('(%s)' % color for color in color_mapping.keys())
+        return request.make_response(svg, [
+            ('Content-type', 'image/svg+xml'),
+            ('Cache-control', 'max-age=%s' % http.STATIC_CACHE_LONG),
+        ])
 
-        def subber(match):
-            key = match.group().upper()
-            return color_mapping[key] if key in color_mapping else key
-        svg = re.sub(regex, subber, svg)
+    @http.route(['/web_editor/image_shape/<string:img_key>/<module>/<path:filename>'], type='http', auth="public", website=True)
+    def image_shape(self, module, filename, img_key, **kwargs):
+        svg = self._get_shape_svg(module, 'image_shapes', filename)
+        _, _, image_base64 = request.env['ir.http'].binary_content(
+            xmlid=img_key, model='ir.attachment', field='datas', default_mimetype='image/png')
+        if not image_base64:
+            image_base64 = b64encode(Binary.placeholder())
+        image = base64_to_image(image_base64)
+        width, height = tuple(str(size) for size in image.size)
+        root = etree.fromstring(svg)
+        root.attrib.update({'width': width, 'height': height})
+        # Update default color palette on shape SVG.
+        svg, _ = self._update_svg_colors(kwargs, etree.tostring(root, pretty_print=True).decode('utf-8'))
+        # Add image in base64 inside the shape.
+        uri = image_data_uri(image_base64)
+        svg = svg.replace('<image xlink:href="', '<image xlink:href="%s' % uri)
 
         return request.make_response(svg, [
             ('Content-type', 'image/svg+xml'),

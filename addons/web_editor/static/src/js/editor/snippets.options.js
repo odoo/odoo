@@ -4231,7 +4231,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     async willStart() {
         const _super = this._super.bind(this);
-        await this._loadImageInfo();
+        await this._initializeImage();
         return _super(...arguments);
     },
     /**
@@ -4438,9 +4438,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      *
      * @private
      */
-    async _loadImageInfo() {
+    async _loadImageInfo(attachmentSrc = '') {
         const img = this._getImg();
-        await loadImageInfo(img, this._rpc.bind(this));
+        await loadImageInfo(img, this._rpc.bind(this), attachmentSrc);
         if (!img.dataset.originalId) {
             this.originalId = null;
             this.originalSrc = null;
@@ -4493,6 +4493,12 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     _getImageMimetype(img) {
         return img.dataset.mimetype;
     },
+    /**
+     * @private
+     */
+    async _initializeImage() {
+        return this._loadImageInfo();
+    }
 });
 
 /**
@@ -4603,9 +4609,11 @@ registry.ImageOptimize = ImageHandlerOption.extend({
     async _applyOptions() {
         const img = await this._super(...arguments);
         if (img && img.dataset.shape) {
-            // Reapplying the shape
             await this._loadShape(img.dataset.shape);
-            await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
+            if (/^data:/.test(img.src)) {
+                // Reapplying the shape
+                await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
+            }
         }
         return img;
     },
@@ -4649,7 +4657,7 @@ registry.ImageOptimize = ImageHandlerOption.extend({
             // shape's colors by the current palette's
             newColors = oldColors.map((color, i) => color !== null ? this._getCSSColorValue(`o-color-${(i + 1)}`) : null);
         }
-        newColors.forEach((color, i) => shape = shape.replace(new RegExp(oldColors[i], 'g'), color));
+        newColors.forEach((color, i) => shape = shape.replace(new RegExp(oldColors[i], 'g'), this._getCSSColorValue(color)));
         await this._writeShape(shape);
         if (save) {
             img.dataset.shapeColors = newColors.join(';');
@@ -4792,10 +4800,28 @@ registry.ImageOptimize = ImageHandlerOption.extend({
      * @returns {string}
      */
     _getCSSColorValue(color) {
-        if (ColorpickerWidget.isCSSColor(color)) {
+        if (!color || ColorpickerWidget.isCSSColor(color)) {
             return color;
         }
         return weUtils.getCSSVariableValue(color);
+    },
+    /**
+     * Overridden to set attachment data on theme images (with default shapes).
+     *
+     * @override
+     * @private
+     */
+    async _initializeImage() {
+        const img = this._getImg();
+        const match = img.src.match(/\/web_editor\/image_shape\/(\w+\.\w+)/);
+        if (img.dataset.shape && match) {
+            await this._loadImageInfo(`/web/image/${match[1]}`);
+            // Image data-mimetype should be changed to SVG since loadImageInfo()
+            // will set the original attachment mimetype on it.
+            img.dataset.mimetype = 'image/svg+xml';
+            return;
+        }
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
