@@ -954,6 +954,24 @@ class Picking(models.Model):
             pickings_to_backorder = self
         pickings_not_to_backorder.with_context(cancel_backorder=True)._action_done()
         pickings_to_backorder.with_context(cancel_backorder=False)._action_done()
+
+        if self.user_has_groups('stock.group_reception_report') \
+                and self.user_has_groups('stock.group_auto_reception_report') \
+                and self.filtered(lambda p: p.picking_type_id.code != 'outgoing'):
+            lines = self.move_lines.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel' and m.quantity_done and not m.move_dest_ids)
+            if lines:
+                # don't show reception report if all already assigned/nothing to assign
+                wh_location_ids = self.env['stock.location'].search([('id', 'child_of', self.picking_type_id.warehouse_id.view_location_id.id), ('location_id.usage', '!=', 'supplier')]).ids
+                if self.env['stock.move'].search([
+                        ('state', 'in', ['confirmed', 'partially_available', 'waiting', 'assigned']),
+                        ('product_qty', '>', 0),
+                        ('location_id', 'in', wh_location_ids),
+                        ('move_orig_ids', '=', False),
+                        ('picking_id', 'not in', self.ids),
+                        ('product_id', 'in', lines.product_id.ids)], limit=1):
+                    action = self.action_view_reception_report()
+                    action['context'] = {'default_picking_ids': self.ids}
+                    return action
         return True
 
     def action_set_quantities_to_reservation(self):
@@ -1399,6 +1417,9 @@ class Picking(models.Model):
         action['context'] = self.env.context
         action['domain'] = [('picking_id', 'in', self.ids)]
         return action
+
+    def action_view_reception_report(self):
+        return self.env["ir.actions.actions"]._for_xml_id("stock.stock_reception_action")
 
     def _attach_sign(self):
         """ Render the delivery report in pdf and attach it to the picking in `self`. """
