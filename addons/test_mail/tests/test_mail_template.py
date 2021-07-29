@@ -331,13 +331,18 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
             'attachment_ids': False,
             'report_template': report_template.id,
         })
+        template_3 = self.email_template.copy({
+            'attachment_ids': False,
+            'report_template': False,
+        })
 
-        onchange_templates = [template_1, template_2, template_1, False]
+        onchange_templates = [template_1, template_2, template_1, template_3, template_1, False]
         attachments_onchange = [composer.attachment_ids]
         # template_1 has two static attachments and one dynamically generated report,
-        # template_2 only has the report, so we should get 3, 1, 3 attachments
+        # template_2 only has the report,
+        # template_3 has no attachments, so we should get 3, 1, 3, 0, 3 attachments
         # and when there is no template, no attachments
-        attachment_numbers = [0, 3, 1, 3, 0]
+        attachment_numbers = [0, 3, 1, 3, 0, 3, 0]
 
         with self.env.do_in_onchange():
             for template in onchange_templates:
