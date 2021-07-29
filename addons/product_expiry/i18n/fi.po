@@ -3,16 +3,33 @@
 # * product_expiry
 # 
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2018
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
+=======
+# Martin Trigaux, 2020
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2020
+# Jussi Lehto <jussi@gulfeo.com>, 2020
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2020
+# Jussi Heikkilä <jussi.heikkila@panimo.com>, 2020
+# 
+>>>>>>> 276275c3813... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018\n"
+=======
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:17+0000\n"
+"Last-Translator: Jussi Heikkilä <jussi.heikkila@panimo.com>, 2020\n"
+>>>>>>> 276275c3813... temp
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,8 +47,13 @@ msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+<<<<<<< HEAD
 msgid "<span>days</span>"
 msgstr ""
+=======
+msgid "<span> days</span>"
+msgstr "<span> päivää</span>"
+>>>>>>> 276275c3813... temp
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
@@ -47,6 +69,46 @@ msgstr ""
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
 msgid "Best before Date"
 msgstr "Parasta ennen päiväys"
+<<<<<<< HEAD
+=======
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "Best before:"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfiguraatioasetukset"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Confirm"
+msgstr "Vahvista"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_expiry_picking_confirmation
+msgid "Confirm Expiry"
+msgstr ""
+
+#. module: product_expiry
+#: code:addons/product_expiry/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+#, python-format
+msgid "Confirmation"
+msgstr "Vahvistus"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_date
+msgid "Created on"
+msgstr "Luotu"
+>>>>>>> 276275c3813... temp
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__alert_date
@@ -63,9 +125,39 @@ msgid "Dates"
 msgstr "Päivämäärät"
 
 #. module: product_expiry
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__life_date
 msgid "End of Life Date"
 msgstr "Elinkaaren loppupäivä"
+=======
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__description
+msgid "Description"
+msgstr "Kuvaus"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Discard"
+msgstr "Hylkää"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
+msgid "Display Expiration Dates on Delivery Slips"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_procurement_group__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+>>>>>>> 276275c3813... temp
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
@@ -73,6 +165,88 @@ msgid "Expiration Alerts"
 msgstr ""
 
 #. module: product_expiry
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__use_expiration_date
+#: model_terms:ir.ui.view,arch_db:product_expiry.stock_report_delivery_document_inherit_product_expiry
+msgid "Expiration Date"
+msgstr "Viim. voimassaolo"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__expiration_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__expiration_time
+msgid "Expiration Time"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.res_config_settings_view_form_stock
+msgid "Expiration dates will appear on the delivery slip"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Expired Lot(s)"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
+msgid "Expiry has been reminded"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
+#: model:ir.model.fields,field_description:product_expiry.field_procurement_group__id
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__id
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__id
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_picking__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__id
+msgid "ID"
+msgstr "Tunniste (ID)"
+
+#. module: product_expiry
+#: model:res.groups,name:product_expiry.group_expiry_date_on_delivery_slip
+msgid "Include expiration dates on delivery slip"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_procurement_group____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_product_product____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_product_template____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_stock_picking____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant____last_update
+msgid "Last Modified on"
+msgstr "Viimeksi muokattu"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivitetty"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__lot_ids
+msgid "Lot"
+msgstr "Erä/sarjanumero"
+
+#. module: product_expiry
+>>>>>>> 276275c3813... temp
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
 msgstr "Erä/sarja"
@@ -104,8 +278,24 @@ msgstr ""
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_time
 msgid ""
+<<<<<<< HEAD
 "Number of days before the goods starts deteriorating, without being "
 "dangerous yet. It will be computed using the lot/serial number."
+=======
+"Number of days before the Expiration Date after which the goods starts "
+"deteriorating, without being dangerous yet. It will be computed on the "
+"lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
+msgid "Picking"
+msgstr "Keräily"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Proceed except for expired one"
+>>>>>>> 276275c3813... temp
 msgstr ""
 
 #. module: product_expiry
@@ -114,10 +304,16 @@ msgid "Procurement Group"
 msgstr "Hankintaryhmä"
 
 #. module: product_expiry
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
 msgid "Product Alert Time"
 msgstr "Tuotten hälytysaika"
+=======
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product"
+msgstr "Tuote"
+>>>>>>> 276275c3813... temp
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
@@ -125,6 +321,7 @@ msgid "Product Expiry Alert"
 msgstr ""
 
 #. module: product_expiry
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__life_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__life_time
 msgid "Product Life Time"
@@ -135,17 +332,25 @@ msgstr "Tuotteen elinikä"
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
 msgid "Product Removal Time"
 msgstr "Tuotteen poistopäivä"
+=======
+#: model:ir.model,name:product_expiry.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Tuotteiden siirrot (Stock Move Line)"
+>>>>>>> 276275c3813... temp
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
 msgid "Product Template"
 msgstr "Tuotemalli"
+<<<<<<< HEAD
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
 msgid "Product Use Time"
 msgstr "Tuotteen käyttöaika"
+=======
+>>>>>>> 276275c3813... temp
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
@@ -157,6 +362,25 @@ msgstr "Määrät"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
 msgid "Removal Date"
 msgstr "Poistopäivä"
+<<<<<<< HEAD
+=======
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
+msgid "Removal Time"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
+msgid "Show Lots"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_move
+msgid "Stock Move"
+msgstr "Varastosiirto"
+>>>>>>> 276275c3813... temp
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
@@ -196,3 +420,50 @@ msgid ""
 msgstr ""
 "Päivämäärä, jolloin tämän sarjanumeron tuotteet alkavat huonontua ilman, "
 "että niistä tulee vaarallisia."
+<<<<<<< HEAD
+=======
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_picking
+msgid "Transfer"
+msgstr "Siirto"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_expiration_date
+msgid "Use Expiration Date"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "Use by:"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_product_template__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_move__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
+msgid ""
+"When this box is ticked, you have the possibility to specify dates to manage"
+" product expiration, on the product and on the corresponding lot/serial "
+"numbers"
+msgstr ""
+
+#. module: product_expiry
+#: code:addons/product_expiry/wizard/confirm_expiry.py:0
+#, python-format
+msgid ""
+"You are going to deliver some product expired lots.\n"
+"Do you confirm you want to proceed ?"
+msgstr ""
+
+#. module: product_expiry
+#: code:addons/product_expiry/wizard/confirm_expiry.py:0
+#, python-format
+msgid ""
+"You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
+"Do you confirm you want to proceed ?"
+msgstr ""
+>>>>>>> 276275c3813... temp

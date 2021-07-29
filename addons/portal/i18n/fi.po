@@ -3,6 +3,7 @@
 # * portal
 # 
 # Translators:
+<<<<<<< HEAD
 # Tommi Rintala <tommi.rintala@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
@@ -16,13 +17,37 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2018
 # Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2018
+=======
+# Tommi Rintala <tommi.rintala@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2020
+# Miku Laitinen <miku.laitinen@gmail.com>, 2020
+# Mikko Salmela <salmemik@gmail.com>, 2020
+# Sanna Edelman <direct@generare.com>, 2020
+# Kari Lindgren <karisatu@gmail.com>, 2020
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
+# Jukka Paulin <jukka.paulin@gmail.com>, 2020
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2020
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2020
+# Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2020
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2020
+# Janne Rättyä <janne.rattya@web-veistamo.fi>, 2020
+# 
+>>>>>>> 276275c3813... temp
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2018-09-21 13:18+0000\n"
 "PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2018\n"
+=======
+"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"Last-Translator: Janne Rättyä <janne.rattya@web-veistamo.fi>, 2020\n"
+>>>>>>> 276275c3813... temp
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +63,7 @@ msgid "%d days overdue"
 msgstr "%d päivää myöhässä"
 
 #. module: portal
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:portal.portal_show_sign_in
 msgid "<b>Sign in</b>"
 msgstr "<b>Kirjaudu sisään</b>"
@@ -45,32 +71,61 @@ msgstr "<b>Kirjaudu sisään</b>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"fa fa-arrow-right\"/> Back to edit mode"
+=======
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "%s is not the reference of a report"
+msgstr "%s ei ole raportin viite"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
+msgid "<i class=\"fa fa-arrow-right mr-1\"/>Back to edit mode"
+msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Takaisin muokkaustilaan"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.record_pager
+msgid ""
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.record_pager
+msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
+>>>>>>> 276275c3813... temp
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil\"/> Muokkaa"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Filter By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">Suodata:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Group By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">Ryhmittele:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Sort By:</span>"
-msgstr ""
+msgstr "<span class=\"small mr-1 navbar-text\">Lajittele:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "<strong>Open </strong>"
-msgstr ""
+msgstr "<strong>Avoin </strong>"
 
 #. module: portal
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
@@ -158,29 +213,132 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Käyttäjätilisi</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.user_id.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${object.user_id.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.user_id.company_id.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Hyvä ${object.user_id.name or ''},<br/> <br/>\n"
+"                        Olet saanut pääsyn ${object.user_id.company_id.name} portaaliin.<br/>\n"
+"                        Käyttäjätunnuksesi on:\n"
+"                        <ul>\n"
+"                            <li>Käyttäjätunnus: ${object.user_id.login or ''}</li>\n"
+"                            <li>Portaali: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"                            <li>Tietokanta: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"                        </ul>\n"
+"                        Voit vaihtaa salasanasi seuraavasta linkistä:\n"
+"                        <ul>\n"
+"                            <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"                        </ul>\n"
+"                        ${object.wizard_id.welcome_message or ''}\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${object.user_id.company_id.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    ${object.user_id.company_id.phone}\n"
+"                    % if object.user_id.company_id.email\n"
+"                        | <a href=\"'mailto:%s' % ${object.user_id.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${object.user_id.company_id.email}</a>\n"
+"                    % endif\n"
+"                    % if object.user_id.company_id.website\n"
+"                        | <a href=\"'%s' % ${object.user_id.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                        ${object.user_id.company_id.website}\n"
+"                    </a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Järjestelmää pyörittää <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: portal
+<<<<<<< HEAD
+=======
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_signature.js:0
+#, python-format
+msgid "Accept & Sign"
+msgstr "Hyväksy & allekirjoita"
+
+#. module: portal
+>>>>>>> 276275c3813... temp
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
 #: model:ir.model.fields,field_description:portal.field_portal_share__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Käyttövaroitus"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add a note"
-msgstr ""
+msgstr "Lisää tekstirivi"
 
 #. module: portal
+<<<<<<< HEAD
+=======
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Add attachment"
+msgstr "Lisää liite"
+
+#. module: portal
+>>>>>>> 276275c3813... temp
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add contacts to share the document..."
-msgstr ""
+msgstr "Lisää kontaktit, joille dokumentti jaetaan..."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_share__note
 msgid "Add extra content to display in the email"
-msgstr ""
+msgstr "Lisää sisältöä joka näytetään sähköpostissa"
 
 #. module: portal
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
 msgstr "Käytä"
@@ -189,6 +347,17 @@ msgstr "Käytä"
 #: model_terms:ir.ui.view,arch_db:portal.portal_archive_groups
 msgid "Archives"
 msgstr "Arkistot"
+=======
+#: code:addons/portal/controllers/mail.py:0
+#, python-format
+msgid "An access token must be provided for each attachment."
+msgstr "Jokaisella liitteellä on oltava pääsytunniste."
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+msgid "Apply"
+msgstr "Käytä"
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #. openerp-web
@@ -202,6 +371,14 @@ msgstr "Avatar"
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Cancel"
 msgstr "Peruuta"
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Change Password"
+msgstr "Vaihda salasana"
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:220
@@ -210,18 +387,39 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"ALV-numeron muuttaminen ei ole sallittua sen jälkeen kun dokumentti on "
+"liitetty tiliisi. Jos tämä toiminto täytyy tehdä, ota meihin yhteyttä."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+<<<<<<< HEAD
 msgid "City"
 msgstr "Kaupunki"
+=======
+msgid ""
+"Changing company name is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"Yrityksen nimen muuttaminen ei ole sallittua sen jälkeen kun dokumentti on "
+"liitetty tiliisi. Jos tämä toiminto täytyy tehdä, ota meihin yhteyttä."
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_signature.xml:12
 #, python-format
+<<<<<<< HEAD
 msgid "Clear"
 msgstr "Pyyhi"
+=======
+msgid "Check failed"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "City"
+msgstr "Kaupunki"
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #. openerp-web
@@ -249,17 +447,45 @@ msgid ""
 msgstr ""
 "Vahvista\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Confirm Password"
+msgstr "Vahvista salasana"
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_partner
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__partner_id
 msgid "Contact"
 msgstr "Kontakti"
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Contact Details"
+msgstr "Yhteystiedot"
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
 msgstr "Yhteystiedot"
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_composer.js:0
+#, python-format
+msgid "Could not save file <strong>%s</strong>"
+msgstr ""
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -284,6 +510,27 @@ msgstr "Luonut"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_date
 msgid "Created on"
 msgstr "Luotu"
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid ""
+"Currently available to everyone viewing this document, click to restrict to "
+"internal employees."
+msgstr ""
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid ""
+"Currently restricted to internal employees, click to make it available to "
+"everyone viewing this document."
+msgstr ""
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -296,6 +543,26 @@ msgid "Dear"
 msgstr "Hyvä"
 
 #. module: portal
+<<<<<<< HEAD
+=======
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Delete"
+msgstr "Poista"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
+#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+msgid "Details"
+msgstr "Tiedot"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_ir_http__display_name
+#: model:ir.model.fields,field_description:portal.field_ir_ui_view__display_name
+#: model:ir.model.fields,field_description:portal.field_mail_message__display_name
+#: model:ir.model.fields,field_description:portal.field_mail_thread__display_name
+>>>>>>> 276275c3813... temp
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_share__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
@@ -304,25 +571,31 @@ msgid "Display Name"
 msgstr "Näyttönimi"
 
 #. module: portal
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_signature.xml:14
 #, python-format
 msgid "Draw your signature"
 msgstr "Piirrä allekirjoituksesi"
+=======
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+msgid "Documents"
+msgstr "Dokumentit"
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_sidebar.js:41
 #, python-format
 msgid "Due in %d days"
-msgstr ""
+msgstr "Eräpäivään %d päivää"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_sidebar.js:39
 #, python-format
 msgid "Due today"
-msgstr ""
+msgstr "Eräpäivä tänään"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
@@ -334,18 +607,43 @@ msgstr "Sähköposti"
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
 msgstr "Sähköpostiviestiketju"
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Employees Only"
+msgstr ""
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Forgot password?"
+msgstr ""
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: model:ir.model,name:portal.model_portal_wizard
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Portal Access"
-msgstr ""
+msgstr "Anna pääsy portaaliin"
 
 #. module: portal
+<<<<<<< HEAD
+=======
+#: model:ir.actions.act_window,name:portal.partner_wizard_action
+msgid "Grant portal access"
+msgstr "Anna pääsy asiakasportaaliin"
+
+#. module: portal
+>>>>>>> 276275c3813... temp
 #: model:ir.model,name:portal.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP-reititys"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -370,6 +668,15 @@ msgstr "Portaalissa"
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "Sähköpostiosoite on virheellinen. Anna oikean muotoinen osoite."
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "Invalid report type: %s"
+msgstr "Virheellinen raportin tyyppi: %s"
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -389,7 +696,11 @@ msgstr "Viimeksi muokattu"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
 msgid "Last Updated by"
+<<<<<<< HEAD
 msgstr "Viimeksi päivittänyt"
+=======
+msgstr "Viimeksi päivitetty"
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_date
@@ -413,7 +724,7 @@ msgstr "Linkki"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
 msgid "Login User"
-msgstr ""
+msgstr "Käyttäjätunnus"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
@@ -424,11 +735,35 @@ msgstr "Kirjaudu ulos"
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
 msgstr "Viesti"
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#: code:addons/portal/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Model %(model_name)s does not support token signature, as it does not have "
+"%(field_name)s field."
+msgstr ""
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
 msgid "My Account"
 msgstr "Oma tili"
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Name"
+msgstr "Nimi"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "New Password:"
+msgstr ""
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #. openerp-web
@@ -442,16 +777,19 @@ msgstr "Seuraava"
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
 msgid "Note"
 msgstr "Muistiinpano"
+<<<<<<< HEAD
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Odoo"
 msgstr "Odoo"
+=======
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Odoo Logo"
-msgstr ""
+msgstr "Odoo Logo"
 
 #. module: portal
 #. openerp-web
@@ -459,11 +797,41 @@ msgstr ""
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr "Oho! Jotain meni vikaa. Kokeile ladata sivu uudelleen ja kirjautua."
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Password"
+msgstr "Salasana"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Password Updated!"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Password:"
+msgstr ""
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Phone"
 msgstr "Puhelin"
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Please confirm your password to continue"
+msgstr ""
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
@@ -473,12 +841,12 @@ msgstr "Portaalin osoite"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "Portal Mixin"
-msgstr ""
+msgstr "Portal Mixin"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_share
 msgid "Portal Sharing"
-msgstr ""
+msgstr "Jako portaalissa"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -501,7 +869,7 @@ msgstr "Edellinen"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:84
 #, python-format
 msgid "Previous"
-msgstr ""
+msgstr "Edellinen"
 
 #. module: portal
 #. openerp-web
@@ -529,11 +897,26 @@ msgstr "Liittyvä dokumenttimalli"
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Search"
 msgstr "Haku"
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Security"
+msgstr "Turvallisuus"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Security Control"
+msgstr ""
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_token
 msgid "Security Token"
-msgstr ""
+msgstr "Turvatunnus"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -564,10 +947,24 @@ msgstr "Usealla kontaktilla on sama sähköpostiosoite:"
 #: model:ir.actions.act_window,name:portal.portal_share_action
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Share Document"
-msgstr ""
+msgstr "Jaa dokumentti"
 
 #. module: portal
+<<<<<<< HEAD
 #: code:addons/portal/wizard/portal_wizard.py:97
+=======
+#: model:ir.model.fields,field_description:portal.field_ir_ui_view__customize_show
+msgid "Show As Optional Inherit"
+msgstr "Näytä valinnaisena periytymisenä"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.user_sign_in
+msgid "Sign in"
+msgstr "Kirjaudu sisään"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:0
+>>>>>>> 276275c3813... temp
 #, python-format
 msgid "Some contacts don't have a valid email: "
 msgstr "Joillain kontakteilla ei ole toimivaa sähköpostiosoitetta:"
@@ -598,10 +995,64 @@ msgstr "Katuosoite"
 
 #. module: portal
 #. openerp-web
+<<<<<<< HEAD
 #: code:addons/portal/static/src/xml/portal_signature.xml:25
 #, python-format
 msgid "Thank You !"
 msgstr "Kiitos!"
+=======
+#: code:addons/portal/static/src/xml/portal_signature.xml:0
+#, python-format
+msgid "Thank You!"
+msgstr "Kiitos!"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "The attachment %s cannot be removed because it is linked to a message."
+msgstr "Liitettä %s ei voi poistaa, koska se on liitetty viestiin."
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid ""
+"The attachment %s cannot be removed because it is not in a pending state."
+msgstr "Liitettä %s ei voi poistaa, koska se ei ole odottavassa tilassa."
+
+#. module: portal
+#: code:addons/portal/controllers/mail.py:0
+#, python-format
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
+msgstr "Liitettä %s ei ole olemassa, tai sinulla ei ole oikeuksia nähdä sitä."
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid ""
+"The attachment does not exist or you do not have the rights to access it."
+msgstr "Liitettä ei ole olemassa, tai sinulla ei ole oikeuksia nähdä sitä"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr "Dokumenttia ei ole olemassa, tai sinulla ei ole oikeuksia nähdä sitä."
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "The new password and its confirmation must be identical."
+msgstr "Uusi salasana sekä vahvistus tulee olla samat."
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid ""
+"The old password you provided is incorrect, your password was not changed."
+msgstr "Antamasi vanha salasana on väärä. Salasanaa ei vaihdettu."
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #. openerp-web
@@ -609,11 +1060,20 @@ msgstr "Kiitos!"
 #, python-format
 msgid "There are no comments for now."
 msgstr "Ei kommentteja tällä hetkellä."
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "This document does not exist."
+msgstr "Tätä dokumenttia ei ole olemassa."
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "This is a preview of the customer portal."
-msgstr ""
+msgstr "Tämä on esikatselunäkymä asiakasportaalissa."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -637,11 +1097,14 @@ msgid ""
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
 msgstr ""
+"Ratkaistaksesi tämän ongelman voit: \n"
+"- Korjata vastaanottajien sähköpostiosoitteet\n"
+"- Sallia pääsyn vain kontakteille joilla on uniikki sähköpostiosoite"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
-msgstr ""
+msgstr "Kytke suotimet"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__user_ids
@@ -652,6 +1115,26 @@ msgstr "Käyttäjät"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "VAT Number"
 msgstr "Y-tunnus"
+<<<<<<< HEAD
+=======
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Verify New Password:"
+msgstr ""
+
+#. module: portal
+#: model:ir.model,name:portal.model_ir_ui_view
+msgid "View"
+msgstr "Näytä"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Visible"
+msgstr "Näytetään"
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
@@ -692,12 +1175,21 @@ msgstr "Kirjoita viesti..."
 #: code:addons/portal/wizard/portal_share.py:71
 #, python-format
 msgid "You are invited to access %s"
-msgstr ""
+msgstr "Sinulle on myönnetty pääsy %s"
 
 #. module: portal
+<<<<<<< HEAD
+=======
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "You cannot leave any password empty."
+msgstr "Et voi jättää salasanaa tyhjäksi."
+
+#. module: portal
+>>>>>>> 276275c3813... temp
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "You have been invited to access the following document:"
-msgstr ""
+msgstr "Sinut on kutsuttu seuraamaan dokumenttia:"
 
 #. module: portal
 #. openerp-web
@@ -714,6 +1206,7 @@ msgid ""
 msgstr ""
 "Sinulla pitää olla sähköpostiosoite määriteltynä käyttäjäasetuksissa, jotta "
 "voit lähettää sähköpostia"
+<<<<<<< HEAD
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -739,16 +1232,18 @@ msgstr "Omat dokumentit"
 #, python-format
 msgid "Your Name"
 msgstr "Nimesi"
+=======
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your Odoo account at ${object.user_id.company_id.name}"
-msgstr ""
+msgstr "Odoo-tunnuksesi - ${object.user_id.company_id.name}"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
 msgid "Your contact"
-msgstr ""
+msgstr "Kontaktinne"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -774,7 +1269,11 @@ msgstr "kommentti"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:10
 #, python-format
 msgid "comments"
+<<<<<<< HEAD
 msgstr "kommentit"
+=======
+msgstr "kommenttia"
+>>>>>>> 276275c3813... temp
 
 #. module: portal
 #. openerp-web
@@ -786,7 +1285,7 @@ msgstr "kirjautunut sisään"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "odoo"
-msgstr ""
+msgstr "odoo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details

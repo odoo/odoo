@@ -5706,9 +5706,21 @@ msgstr ""
 "täsmäytetty yhteen tai useampaan päiväkirjan maksuun."
 
 #. module: account
+<<<<<<< HEAD
 #: model:ir.model.fields,help:account.field_account_invoice__sent
 msgid "It indicates that the invoice has been sent."
 msgstr "Merkitsee, että lasku on lähetetty."
+=======
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "It was previously '%(previous)s' and it is now '%(now)s'."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "JRNL/2016/00001"
+msgstr ""
+>>>>>>> 276275c3813... temp
 
 #. module: account
 #: code:addons/account/models/account_move.py:971
@@ -10240,14 +10252,56 @@ msgid ""
 msgstr ""
 
 #. module: account
+<<<<<<< HEAD
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual_currency
+=======
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The sequence format has changed."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/sequence_mixin.py:0
+#, python-format
+>>>>>>> 276275c3813... temp
 msgid ""
 "The residual amount on a journal item expressed in its currency (possibly "
 "not the company currency)."
 msgstr ""
 
 #. module: account
+<<<<<<< HEAD
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual
+=======
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will never restart.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every month.\n"
+"The year detected here is '%(year)s' and the month is '%(month)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every year.\n"
+"The year detected here is '%(year)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/account_resequence.py:0
+#, python-format
+>>>>>>> 276275c3813... temp
 msgid ""
 "The residual amount on a journal item expressed in the company currency."
 msgstr ""

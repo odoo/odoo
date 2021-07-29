@@ -3,6 +3,7 @@
 # * snailmail
 # 
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2018
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
 # Mikko Salmela <salmemik@gmail.com>, 2018
@@ -10,14 +11,32 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
+=======
+# Martin Trigaux, 2020
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2020
+# Mikko Salmela <salmemik@gmail.com>, 2020
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2020
+# Kari Lindgren <karisatu@gmail.com>, 2020
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2020
+# Tukea <nokoa@live.fi>, 2020
+# Jussi Heikkilä <jussi.heikkila@panimo.com>, 2020
+>>>>>>> 276275c3813... temp
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2018-10-30 12:25+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018\n"
+=======
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
+"PO-Revision-Date: 2020-09-07 08:19+0000\n"
+"Last-Translator: Jussi Heikkilä <jussi.heikkila@panimo.com>, 2020\n"
+>>>>>>> 276275c3813... temp
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +45,24 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: snailmail
+<<<<<<< HEAD
 #: code:addons/snailmail/models/snailmail_letter.py:249
+=======
+#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
+#: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_cover
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__snailmail_cover
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
+msgid "Add a Cover Page"
+msgstr ""
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "Address"
+msgstr "Osoite"
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py:0
+>>>>>>> 276275c3813... temp
 #, python-format
 msgid "An error occured when sending the document by post.<br>Error: %s"
 msgstr ""
@@ -38,9 +74,42 @@ msgid "An unknown error happened. Please contact the support."
 msgstr ""
 
 #. module: snailmail
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
 msgid "Attachment"
 msgstr "Liite"
+=======
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#, python-format
+msgid "An unknown error occurred. Please contact our"
+msgstr ""
+
+#. module: snailmail
+#: code:addons/snailmail/wizard/snailmail_letter_cancel.py:0
+#, python-format
+msgid ""
+"Are you sure you want to discard %s snailmail delivery failures? You won't "
+"be able to re-send these letters later!"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
+msgid "Attachment"
+msgstr "Liite"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_fname
+msgid "Attachment Filename"
+msgstr ""
+
+#. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.js:0
+#, python-format
+msgid "Awaiting Dispatch"
+msgstr ""
+>>>>>>> 276275c3813... temp
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
@@ -56,6 +125,28 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
 msgid "Cancel"
 msgstr "Peruuta"
+<<<<<<< HEAD
+=======
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
+msgid "Cancel Letter"
+msgstr ""
+
+#. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+#, python-format
+msgid "Cancel letter"
+msgstr ""
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_cancel
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
+msgid "Cancel notification in failure"
+msgstr "Peru epäonnistumisilmoitus"
+>>>>>>> 276275c3813... temp
 
 #. module: snailmail
 #: selection:snailmail.letter,state:0
@@ -63,6 +154,7 @@ msgid "Canceled"
 msgstr "Peruttu"
 
 #. module: snailmail
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the ink used to print documents"
 msgstr ""
@@ -71,6 +163,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the layout to print documents"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__city
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__city
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "City"
+msgstr "Kaupunki"
+
+#. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+#, python-format
+msgid "Close"
+msgstr "Sulje"
+>>>>>>> 276275c3813... temp
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
@@ -91,12 +199,35 @@ msgstr "Yritys"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Konfiguraatioasetukset"
+
+#. module: snailmail
+<<<<<<< HEAD
+#: model:ir.model,name:snailmail.model_res_partner
+msgid "Contact"
+msgstr "Kontakti"
+=======
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
+msgid "Confirm"
+msgstr "Vahvista"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_partner
 msgid "Contact"
 msgstr "Kontakti"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__country_id
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__country_id
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "Country"
+msgstr "Maa"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__cover
+msgid "Cover Page"
+msgstr ""
+>>>>>>> 276275c3813... temp
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_uid
@@ -109,14 +240,61 @@ msgid "Created on"
 msgstr "Luotu"
 
 #. module: snailmail
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_cancel
+msgid "Discard delivery failures"
+msgstr "Hylkää toimitusvirheet"
+
+#. module: snailmail
+#: model:ir.actions.act_window,name:snailmail.snailmail_letter_cancel_action
+msgid "Discard snailmail delivery failures"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_snailmail_letter_cancel
+msgid "Dismiss notification for resend by model"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:snailmail.field_ir_qweb_field_contact__display_name
+#: model:ir.model.fields,field_description:snailmail.field_mail_message__display_name
+#: model:ir.model.fields,field_description:snailmail.field_mail_notification__display_name
+#: model:ir.model.fields,field_description:snailmail.field_res_company__display_name
+#: model:ir.model.fields,field_description:snailmail.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:snailmail.field_res_partner__display_name
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_confirm__display_name
+>>>>>>> 276275c3813... temp
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
+<<<<<<< HEAD
+=======
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_datas
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
+msgid "Document"
+msgstr "Dokumentti"
+>>>>>>> 276275c3813... temp
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__res_id
 msgid "Document ID"
 msgstr "Dokumentin ID"
+<<<<<<< HEAD
+=======
+
+#. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.js:0
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__error_code
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__error
+#, python-format
+msgid "Error"
+msgstr "Virhe"
+>>>>>>> 276275c3813... temp
 
 #. module: snailmail
 #: selection:snailmail.letter,state:0
@@ -124,14 +302,54 @@ msgid "Draft"
 msgstr "Luonnos"
 
 #. module: snailmail
+<<<<<<< HEAD
 #: selection:snailmail.letter,state:0
 msgid "Error"
 msgstr "Virhe"
+=======
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.js:0
+#: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
+#, python-format
+msgid "Failed letter"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_mail_notification__failure_type
+msgid "Failure type"
+msgstr "Epäonnistumisen tyyppi"
+
+#. module: snailmail
+#: model:ir.actions.act_window,name:snailmail.snailmail_letter_format_error_action
+msgid "Format Error"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_snailmail_letter_format_error
+msgid "Format Error Sending a Snailmail Letter"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_cancel__help_message
+msgid "Help message"
+msgstr "Apuviesti"
+>>>>>>> 276275c3813... temp
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__id
 msgid "ID"
 msgstr "Tunniste (ID)"
+<<<<<<< HEAD
+=======
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_cancel
+msgid ""
+"If you want to re-send them, click Cancel now, then click on the "
+"notification and review them one by one by clicking on the red paper-plane "
+"next to each message."
+msgstr ""
+>>>>>>> 276275c3813... temp
 
 #. module: snailmail
 #: selection:snailmail.letter,state:0
@@ -151,12 +369,32 @@ msgstr "Viimeksi muokattu"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
 msgid "Last Updated by"
+<<<<<<< HEAD
 msgstr "Viimeksi päivittänyt"
+=======
+msgstr "Viimeksi päivitetty"
+>>>>>>> 276275c3813... temp
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_date
 msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
+<<<<<<< HEAD
+=======
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_mail_mail__letter_ids
+#: model:ir.model.fields,field_description:snailmail.field_mail_message__letter_ids
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__letter_id
+msgid "Letter"
+msgstr "Kirje"
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "Letter sent by post with Snailmail"
+msgstr ""
+>>>>>>> 276275c3813... temp
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.action_mail_letters
@@ -166,12 +404,65 @@ msgid "Letters"
 msgstr ""
 
 #. module: snailmail
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__missing_required_fields
+msgid "MISSING_REQUIRED_FIELDS"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_mail_message
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__message_id
+msgid "Message"
+msgstr "Viesti"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_mail_notification
+msgid "Message Notifications"
+msgstr "Viestien ilmoitukset"
+
+#. module: snailmail
+#: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
+#: model:ir.model.fields,help:snailmail.field_mail_message__message_type
+msgid ""
+"Message type: email for email message, notification for system message, "
+"comment for other messages such as user replies"
+msgstr ""
+"Viestityyppi: Sähköposti  sähköposteille, Ilmoitus järjestelmän viesteille, "
+"ja Kommentti muille viesteille, kuten käyttäjien vastauksille."
+
+#. module: snailmail
+>>>>>>> 276275c3813... temp
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
 msgid "Model"
 msgstr "Malli"
 
 #. module: snailmail
+<<<<<<< HEAD
 #: code:addons/snailmail/models/snailmail_letter.py:211
+=======
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_confirm__model_name
+msgid "Model Name"
+msgstr "Mallin nimi"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__no_price_available
+msgid "NO_PRICE_AVAILABLE"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_mail_notification__notification_type
+msgid "Notification Type"
+msgstr "Ilmoitustyyppi"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__notification_ids
+msgid "Notifications"
+msgstr "Ilmoitukset"
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py:0
+>>>>>>> 276275c3813... temp
 #, python-format
 msgid "One or more required fields are empty."
 msgstr ""
@@ -188,9 +479,15 @@ msgid "Post letter: an error occured."
 msgstr ""
 
 #. module: snailmail
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Postal Printings"
 msgstr ""
+=======
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
+msgid "Partner"
+msgstr "Kumppani"
+>>>>>>> 276275c3813... temp
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
@@ -205,12 +502,20 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "Qweb kentän kontakti"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
 msgid "Recipient"
 msgstr "Vastaanottaja"
+<<<<<<< HEAD
+=======
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__reference
+msgid "Related Record"
+msgstr ""
+>>>>>>> 276275c3813... temp
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
@@ -226,6 +531,49 @@ msgstr "Lähetä heti"
 #: selection:snailmail.letter,state:0
 msgid "Sent"
 msgstr "Lähetetty"
+<<<<<<< HEAD
+=======
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
+msgid "Sent by"
+msgstr ""
+
+#. module: snailmail
+#: code:addons/snailmail/wizard/snailmail_confirm.py:0
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_message__message_type__snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__notification_type__snail
+#, python-format
+msgid "Snailmail"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_snailmail_confirm
+msgid "Snailmail Confirm"
+msgstr ""
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
+msgid "Snailmail Confirmation"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
+msgid "Snailmail Credit Error"
+msgstr ""
+
+#. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/models/notification_group/notification_group.js:0
+#, python-format
+msgid "Snailmail Failures"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_format
+msgid "Snailmail Format Error"
+msgstr ""
+>>>>>>> 276275c3813... temp
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
@@ -240,12 +588,59 @@ msgid "Snailmail: process letters queue"
 msgstr ""
 
 #. module: snailmail
+<<<<<<< HEAD
+=======
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__state_id
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "State"
+msgstr "Tila"
+
+#. module: snailmail
+>>>>>>> 276275c3813... temp
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
 msgid "Status"
 msgstr "Tila"
 
 #. module: snailmail
+<<<<<<< HEAD
 #: code:addons/snailmail/models/snailmail_letter.py:213
+=======
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__street
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__street
+msgid "Street"
+msgstr "Katuosoite"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "Street 2..."
+msgstr "Katuosoite 2..."
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "Street..."
+msgstr "Katu..."
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__street2
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__street2
+msgid "Street2"
+msgstr "Katuosoite2"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__trial_error
+msgid "TRIAL_ERROR"
+msgstr ""
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "The address of the recipient is not complete"
+msgstr ""
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py:0
+>>>>>>> 276275c3813... temp
 #, python-format
 msgid ""
 "The attachment of the letter could not be sent. Please check its content and"
@@ -262,8 +657,42 @@ msgstr ""
 #: code:addons/snailmail/models/snailmail_letter.py:242
 #, python-format
 msgid ""
+<<<<<<< HEAD
 "The document was correctly sent by post.<br>The tracking id is %ssend_id"
 msgstr ""
+=======
+"The country to which you want to send the letter is not supported by our "
+"service."
+msgstr ""
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid ""
+"The customer address is not complete. Update the address here and re-send "
+"the letter."
+msgstr ""
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "The document was correctly sent by post.<br>The tracking id is %s"
+msgstr ""
+
+#. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#, python-format
+msgid ""
+"The letter could not be sent due to insufficient credits on your IAP "
+"account."
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
+#: model:ir.model.fields,field_description:snailmail.field_mail_message__message_type
+msgid "Type"
+msgstr "Tyyppi"
+>>>>>>> 276275c3813... temp
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
@@ -293,3 +722,43 @@ msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
+<<<<<<< HEAD
+=======
+
+#. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#, python-format
+msgid "You need credits on your IAP account to send a letter."
+msgstr ""
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "ZIP"
+msgstr "Postinumero"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__zip
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__zip
+msgid "Zip"
+msgstr "Postinumero"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
+msgid "by post. Are you sure you want to continue?"
+msgstr ""
+
+#. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#, python-format
+msgid "for further assistance."
+msgstr ""
+
+#. module: snailmail
+#. openerp-web
+#: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
+#, python-format
+msgid "support"
+msgstr ""
+>>>>>>> 276275c3813... temp
