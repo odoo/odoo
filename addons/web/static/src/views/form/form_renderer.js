@@ -54,10 +54,14 @@ export class FormRenderer extends Component {
     }
 
     async buttonClicked(params) {
-        const buttonContext = evaluateExpr(params.context, this.record.data);
-        const envContext = null; //LPE FIXME record.context ?? new Context(payload.env.context).eval();
-
         const { resModel, resId, resIds } = this.props.model;
+
+        const valuesForEval = Object.assign({}, this.record.data, {
+            active_id: resId,
+            active_ids: resIds,
+        });
+        const buttonContext = evaluateExpr(params.context, valuesForEval);
+        const envContext = null; //LPE FIXME record.context ?? new Context(payload.env.context).eval();
 
         const doActionParams = Object.assign({}, params, {
             resModel,

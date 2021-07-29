@@ -4,9 +4,9 @@
 <t t-name="web.Form.ButtonBox" owl="1" >
     <div class="oe_button_box o_full">
         <t t-slot="default" />
-        <Dropdown beforeOpen="beforeOpenDropdown" t-ref="dropdown" togglerClass="'btn oe_stat_button o_button_more'" menuClass="'o_dropdown_more'">
-            More
-            <t t-set-slot="menu">
+        <Dropdown beforeOpen="beforeOpenDropdown" t-ref="dropdown" menuClass="'o_dropdown_more'" t-att-class="'btn oe_stat_button o_button_more'" togglerClass="'o_button_more'">
+            <t t-set-slot="toggler">More</t>
+            <t t-set-slot="default">
                 <t t-slot="liWrapped" />
             </t>
         </Dropdown>
