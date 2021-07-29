@@ -538,7 +538,7 @@ function makeActionManager(env) {
             }
             onHistoryBack() {
                 const previousController = controllerStack[controllerStack.length - 2];
-                if (previousController && !dialogCloseProm) {
+                if (previousController && !dialog.remove) {
                     restore(previousController.jsId);
                 } else {
                     _executeCloseAction();
