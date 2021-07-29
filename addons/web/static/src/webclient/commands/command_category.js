@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { _lt } from "../../core/l10n/translation";
-import { registry } from "../../core/registry";
+import { _lt } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 
 const commandCategoryRegistry = registry.category("command_categories");
 commandCategoryRegistry.add("app", { label: _lt("Current App Commands") }, { sequence: 10 });
