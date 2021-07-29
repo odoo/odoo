@@ -1481,6 +1481,9 @@ class MrpProduction(models.Model):
             productions_not_to_backorder = self
             productions_to_backorder = self.env['mrp.production']
 
+        if not self.move_finished_ids:
+            self._onchange_move_finished()
+
         self.workorder_ids.button_finish()
 
         productions_not_to_backorder._post_inventory(cancel_backorder=True)
