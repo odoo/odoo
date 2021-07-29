@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="ubl_bis3_InvoiceLineType" inherit_id="account_edi_ubl.ubl_20_InvoiceLineType" primary="True">
+            <xpath expr="//*[local-name()='LineExtensionAmount']" position="replace">
+                <cbc:LineExtensionAmount
+                        xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('line_extension_amount'), 2)"/>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

@@ -703,6 +703,8 @@ class AccountJournal(models.Model):
         ''' Create the invoices from files.
          :return: A action redirecting to account.move tree/form view.
         '''
+        self.ensure_one()
+
         attachments = self.env['ir.attachment'].browse(attachment_ids)
         if not attachments:
             raise UserError(_("No attachment was provided"))
@@ -713,7 +715,7 @@ class AccountJournal(models.Model):
             decoders = self.env['account.move']._get_create_invoice_from_attachment_decoders()
             invoice = False
             for decoder in sorted(decoders, key=lambda d: d[0]):
-                invoice = decoder[1](attachment)
+                invoice = decoder[1](attachment, self)
                 if invoice:
                     break
             if not invoice:

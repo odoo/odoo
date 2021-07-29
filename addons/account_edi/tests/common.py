@@ -136,37 +136,30 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
     def edi_cron(self):
         self.env['account.edi.document'].sudo().search([('state', 'in', ('to_send', 'to_cancel'))])._process_documents_web_services(with_commit=False)
 
-    def _create_empty_vendor_bill(self):
-        invoice = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'journal_id': self.company_data['default_journal_purchase'].id,
-        })
-        return invoice
-
-    def update_invoice_from_file(self, module_name, subfolder, filename, invoice):
-        file_path = get_module_resource(module_name, subfolder, filename)
+    def update_invoice_from_file(self, invoice, *path):
+        file_path = get_module_resource(*path)
         file = open(file_path, 'rb').read()
 
         attachment = self.env['ir.attachment'].create({
-            'name': filename,
+            'name': path[-1],
             'datas': base64.encodebytes(file),
             'res_id': invoice.id,
             'res_model': 'account.move',
         })
 
-        invoice.message_post(attachment_ids=[attachment.id])
+        invoice.message_post(attachment_ids=attachment.ids)
 
-    def create_invoice_from_file(self, module_name, subfolder, filename):
-        file_path = get_module_resource(module_name, subfolder, filename)
+    def create_invoice_from_file(self, *path):
+        file_path = get_module_resource(*path)
         file = open(file_path, 'rb').read()
 
         attachment = self.env['ir.attachment'].create({
-            'name': filename,
+            'name': path[-1],
             'datas': base64.encodebytes(file),
             'res_model': 'account.move',
         })
-        journal_id = self.company_data['default_journal_sale']
-        action_vals = journal_id.with_context(default_move_type='in_invoice').create_invoice_from_attachment(attachment.ids)
+        journal = self.company_data['default_journal_purchase']
+        action_vals = journal.with_context(default_move_type='in_invoice').create_invoice_from_attachment(attachment.ids)
         return self.env['account.move'].browse(action_vals['res_id'])
 
     def assert_generated_file_equal(self, invoice, expected_values, applied_xpath=None):
@@ -196,6 +189,9 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
             'move_id': move.id,
             'state': state
         })
+
+    def _retrieve_edi_attachment(self, move, edi_format_code):
+        return move.edi_document_ids.filtered(lambda x: x.edi_format_id.code == edi_format_code).attachment_id
 
     def _process_documents_web_services(self, moves, formats_to_return=None):
         """ Generates and returns EDI files for the specified moves.

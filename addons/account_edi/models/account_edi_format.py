@@ -203,9 +203,10 @@ class AccountEdiFormat(models.Model):
     # Import methods to override based on EDI Format
     ####################################################
 
-    def _create_invoice_from_xml_tree(self, filename, tree):
+    def _create_invoice_from_xml_tree(self, journal, filename, tree):
         """ Create a new invoice with the data inside the xml.
 
+        :param journal:  The journal on which importing the invoice.
         :param filename: The name of the xml.
         :param tree:     The tree of the xml to import.
         :returns:        The created invoice.
@@ -393,10 +394,11 @@ class AccountEdiFormat(models.Model):
 
         return to_process
 
-    def _create_invoice_from_attachment(self, attachment):
+    def _create_invoice_from_attachment(self, attachment, journal):
         """Decodes an ir.attachment to create an invoice.
 
         :param attachment:  An ir.attachment record.
+        :param journal:     The journal on which importing the attachment.
         :returns:           The invoice where to import data.
         """
         for file_data in self._decode_attachment(attachment):
@@ -404,9 +406,17 @@ class AccountEdiFormat(models.Model):
                 res = False
                 try:
                     if file_data['type'] == 'xml':
-                        res = edi_format.with_company(self.env.company)._create_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'])
+                        res = edi_format._create_invoice_from_xml_tree(
+                            journal,
+                            file_data['filename'],
+                            file_data['xml_tree'],
+                        )
                     elif file_data['type'] == 'pdf':
-                        res = edi_format.with_company(self.env.company)._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'])
+                        res = edi_format._create_invoice_from_pdf_reader(
+                            journal,
+                            file_data['filename'],
+                            file_data['pdf_reader'],
+                        )
                         file_data['pdf_reader'].stream.close()
                     else:
                         res = edi_format._create_invoice_from_binary(file_data['filename'], file_data['content'], file_data['extension'])

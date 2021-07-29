@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="ubl_bis3_CountryType" inherit_id="account_edi_ubl.ubl_20_CountryType" primary="True">
+            <xpath expr="//*[local-name()='Name']" position="replace"/>
+        </template>
+
+        <template id="ubl_bis3_PartyTaxSchemeType" inherit_id="account_edi_ubl.ubl_20_PartyTaxSchemeType" primary="True">
+            <xpath expr="//*[local-name()='RegistrationName']" position="replace"/>
+            <xpath expr="//*[local-name()='RegistrationAddress']" position="replace"/>
+        </template>
+
+        <template id="ubl_bis3_PartyLegalEntityType" inherit_id="account_edi_ubl.ubl_20_PartyLegalEntityType" primary="True">
+            <xpath expr="//*[local-name()='RegistrationAddress']" position="replace"/>
+        </template>
+
+        <template id="ubl_bis3_PaymentMeansType" inherit_id="account_edi_ubl.ubl_20_PaymentMeansType" primary="True">
+            <xpath expr="//*[local-name()='PaymentDueDate']" position="replace"/>
+            <xpath expr="//*[local-name()='InstructionID']" position="replace"/>
+        </template>
+
+        <template id="ubl_bis3_TaxCategoryType" inherit_id="account_edi_ubl.ubl_20_TaxCategoryType" primary="True">
+            <xpath expr="//*[local-name()='Name']" position="replace"/>
+        </template>
+
+        <template id="ubl_bis3_TaxSubtotalType" inherit_id="account_edi_ubl.ubl_20_TaxSubtotalType" primary="True">
+            <xpath expr="//*[local-name()='TaxableAmount']" position="replace">
+                <cbc:TaxableAmount
+                        xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('taxable_amount'), 2)"/>
+            </xpath>
+            <xpath expr="//*[local-name()='TaxAmount']" position="replace">
+                <cbc:TaxAmount
+                        xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('tax_amount'), 2)"/>
+            </xpath>
+            <xpath expr="//*[local-name()='Percent']" position="replace"/>
+        </template>
+
+        <template id="ubl_bis3_TaxTotalType" inherit_id="account_edi_ubl.ubl_20_TaxTotalType" primary="True">
+            <xpath expr="//*[local-name()='TaxAmount']" position="replace">
+                <cbc:TaxAmount
+                        xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('tax_amount'), 2)"/>
+            </xpath>
+        </template>
+
+        <template id="ubl_bis3_MonetaryTotalType" inherit_id="account_edi_ubl.ubl_20_MonetaryTotalType" primary="True">
+            <xpath expr="//*[local-name()='LineExtensionAmount']" position="replace">
+                <cbc:LineExtensionAmount
+                        xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('line_extension_amount'), 2)"/>
+            </xpath>
+            <xpath expr="//*[local-name()='TaxExclusiveAmount']" position="replace">
+                <cbc:TaxExclusiveAmount
+                        xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('tax_exclusive_amount'), 2)"/>
+            </xpath>
+            <xpath expr="//*[local-name()='TaxInclusiveAmount']" position="replace">
+                <cbc:TaxInclusiveAmount
+                        xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('tax_inclusive_amount'), 2)"/>
+            </xpath>
+            <xpath expr="//*[local-name()='PrepaidAmount']" position="replace">
+                <cbc:PrepaidAmount
+                        xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('prepaid_amount'), 2)"/>
+            </xpath>
+            <xpath expr="//*[local-name()='PayableAmount']" position="replace">
+                <cbc:PayableAmount
+                        xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('payable_amount'), 2)"/>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

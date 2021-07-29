@@ -480,23 +480,26 @@ class AccountTestInvoicingCommon(TransactionCase):
             self._turn_node_as_dict_hierarchy(expected_xml_tree),
         )
 
-    def with_applied_xpath(self, xml_tree, xpath):
+    @classmethod
+    def with_applied_xpath(cls, xml_tree, xpath):
         ''' Applies the xpath to the xml_tree passed as parameter.
         :param xml_tree:    An instance of etree.
         :param xpath:       The xpath to apply as a string.
         :return:            The resulting etree after applying the xpaths.
         '''
         diff_xml_tree = etree.fromstring('<data>%s</data>' % xpath)
-        return self.env['ir.ui.view'].apply_inheritance_specs(xml_tree, diff_xml_tree)
+        return cls.env['ir.ui.view'].apply_inheritance_specs(xml_tree, diff_xml_tree)
 
-    def get_xml_tree_from_attachment(self, attachment):
+    @classmethod
+    def get_xml_tree_from_attachment(cls, attachment):
         ''' Extract an instance of etree from an ir.attachment.
         :param attachment:  An ir.attachment.
         :return:            An instance of etree.
         '''
         return etree.fromstring(base64.b64decode(attachment.with_context(bin_size=False).datas))
 
-    def get_xml_tree_from_string(self, xml_tree_str):
+    @classmethod
+    def get_xml_tree_from_string(cls, xml_tree_str):
         ''' Convert the string passed as parameter to an instance of etree.
         :param xml_tree_str:    A string representing an xml.
         :return:                An instance of etree.

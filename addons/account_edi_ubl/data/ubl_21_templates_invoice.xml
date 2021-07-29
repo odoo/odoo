@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="ubl_21_InvoiceType" inherit_id="account_edi_ubl.ubl_20_InvoiceType" primary="True">
+            <xpath expr="//*[local-name()='OrderReference']" position="before">
+                    <cbc:BuyerReference
+                            xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                            t-esc="vals.get('buyer_reference')"/>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

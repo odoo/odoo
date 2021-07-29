@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="ubl_20_PartyIdentificationType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:ID
+                        t-att="vals.get('id_attrs', {})"
+                        t-esc="vals.get('id')"/>
+            </t>
+        </template>
+
+        <template id="ubl_20_PartyNameType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:Name t-esc="vals.get('name')"/>
+            </t>
+        </template>
+
+        <template id="ubl_20_CountryType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:IdentificationCode
+                        t-att="vals.get('identification_code_attrs', {})"
+                        t-esc="vals.get('identification_code')"/>
+                <cbc:Name t-esc="vals.get('name')"/>
+            </t>
+        </template>
+
+        <template id="ubl_20_AddressType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:StreetName t-esc="vals.get('street_name')"/>
+                <cbc:AdditionalStreetName t-esc="vals.get('additional_street_name')"/>
+                <cbc:CityName t-esc="vals.get('city_name')"/>
+                <cbc:PostalZone t-esc="vals.get('postal_zone')"/>
+                <cbc:CountrySubentity t-esc="vals.get('country_subentity')"/>
+                <cbc:CountrySubentityCode t-esc="vals.get('country_subentity_code')"/>
+                <cac:Country>
+                    <t t-call="{{CountryType_template}}">
+                        <t t-set="vals" t-value="vals.get('Country_vals', {})"/>
+                    </t>
+                </cac:Country>
+            </t>
+        </template>
+
+        <template id="ubl_20_TaxSchemeType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:ID t-att="vals.get('id_attrs', {})">VAT</cbc:ID>
+            </t>
+        </template>
+
+        <template id="ubl_20_PartyTaxSchemeType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:RegistrationName t-esc="vals.get('registration_name')"/>
+                <cbc:CompanyID
+                        t-att="vals.get('company_id_attrs', {})"
+                        t-esc="vals.get('company_id')"/>
+                <cac:RegistrationAddress>
+                    <t t-call="{{AddressType_template}}">
+                        <t t-set="vals" t-value="vals.get('RegistrationAddress_vals', {})"/>
+                    </t>
+                </cac:RegistrationAddress>
+                <cac:TaxScheme>
+                    <t t-call="{{TaxSchemeType_template}}">
+                        <t t-set="vals" t-value="vals.get('TaxScheme_vals', {})"/>
+                    </t>
+                </cac:TaxScheme>
+            </t>
+        </template>
+
+        <template id="ubl_20_PartyLegalEntityType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:RegistrationName t-esc="vals.get('registration_name')"/>
+                <cbc:CompanyID
+                        t-att="vals.get('company_id_attrs', {})"
+                        t-esc="vals.get('company_id')"/>
+                <cac:RegistrationAddress>
+                    <t t-call="{{AddressType_template}}">
+                        <t t-set="vals" t-value="vals.get('RegistrationAddress_vals', {})"/>
+                    </t>
+                </cac:RegistrationAddress>
+            </t>
+        </template>
+
+        <template id="ubl_20_ContactType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:ID t-esc="vals.get('id')"/>
+                <cbc:Name t-esc="vals.get('name')"/>
+                <cbc:Telephone t-esc="vals.get('telephone')"/>
+                <cbc:ElectronicMail t-esc="vals.get('electronic_mail')"/>
+            </t>
+        </template>
+
+        <template id="ubl_20_PartyType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-set="partner" t-value="vals.get('partner') or builder.env['res.partner']"/>
+
+                <cbc:WebsiteURI t-esc="partner.website"/>
+                <cbc:EndpointID
+                        t-att="vals.get('endpoint_id_attrs', {})"
+                        t-esc="vals.get('endpoint_id')"/>
+                <t t-foreach="vals.get('PartyIdentification_vals', [])" t-as="foreach_vals">
+                    <cac:PartyIdentification>
+                        <t t-call="{{PartyIdentificationType_template}}">
+                            <t t-set="vals" t-value="foreach_vals"/>
+                        </t>
+                    </cac:PartyIdentification>
+                </t>
+                <t t-foreach="vals.get('PartyName_vals', [])" t-as="foreach_vals">
+                    <cac:PartyName>
+                        <t t-call="{{PartyNameType_template}}">
+                            <t t-set="vals" t-value="foreach_vals"/>
+                        </t>
+                    </cac:PartyName>
+                </t>
+                <cac:PostalAddress>
+                    <t t-call="{{AddressType_template}}">
+                        <t t-set="vals" t-value="vals.get('PostalAddress_vals', {})"/>
+                    </t>
+                </cac:PostalAddress>
+                <cac:PartyTaxScheme>
+                    <t t-call="{{PartyTaxSchemeType_template}}">
+                        <t t-set="vals" t-value="vals.get('PartyTaxScheme_vals', {})"/>
+                    </t>
+                </cac:PartyTaxScheme>
+                <cac:PartyLegalEntity>
+                    <t t-call="{{PartyLegalEntityType_template}}">
+                        <t t-set="vals" t-value="vals.get('PartyLegalEntity_vals', {})"/>
+                    </t>
+                </cac:PartyLegalEntity>
+                <cac:Contact>
+                    <t t-call="{{ContactType_template}}">
+                        <t t-set="vals" t-value="vals.get('Contact_vals', {})"/>
+                    </t>
+                </cac:Contact>
+            </t>
+        </template>
+
+        <template id="ubl_20_SupplierPartyType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:Party>
+                    <t t-call="{{PartyType_template}}">
+                        <t t-set="vals" t-value="vals.get('Party_vals', {})"/>
+                    </t>
+                </cac:Party>
+            </t>
+        </template>
+
+        <template id="ubl_20_CustomerPartyType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:Party>
+                    <t t-call="{{PartyType_template}}">
+                        <t t-set="vals" t-value="vals.get('Party_vals', {})"/>
+                    </t>
+                </cac:Party>
+            </t>
+        </template>
+
+        <template id="ubl_20_FinancialInstitutionType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:ID
+                        t-att="vals.get('id_attrs', {})"
+                        t-esc="vals.get('id')"/>
+                <cbc:Name t-esc="vals.get('name')"/>
+                <cac:Address>
+                    <t t-call="{{AddressType_template}}">
+                        <t t-set="vals" t-value="vals.get('Address_vals', {})"/>
+                    </t>
+                </cac:Address>
+            </t>
+        </template>
+
+        <template id="ubl_20_BranchType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:ID
+                        t-att="vals.get('id_attrs', {})"
+                        t-esc="vals.get('id')"/>
+                <cac:FinancialInstitution>
+                    <t t-call="{{FinancialInstitutionType_template}}">
+                        <t t-set="vals" t-value="vals.get('FinancialInstitution_vals', {})"/>
+                    </t>
+                </cac:FinancialInstitution>
+            </t>
+        </template>
+
+        <template id="ubl_20_FinancialAccountType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:ID
+                        t-att="vals.get('id_attrs', {})"
+                        t-esc="vals.get('id')"/>
+                <cac:FinancialInstitutionBranch>
+                    <t t-call="{{BranchType_template}}">
+                        <t t-set="vals" t-value="vals.get('FinancialInstitutionBranch_vals', {})"/>
+                    </t>
+                </cac:FinancialInstitutionBranch>
+            </t>
+        </template>
+
+        <template id="ubl_20_PaymentMeansType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:PaymentMeansCode
+                        t-att="vals.get('payment_means_code_attrs', {})"
+                        t-esc="vals.get('payment_means_code')"/>
+                <cbc:PaymentDueDate t-esc="vals.get('payment_due_date')"/>
+                <cbc:InstructionID t-esc="vals.get('instruction_id')"/>
+                <t t-foreach="vals.get('payment_id_vals', [])" t-as="payment_id">
+                    <cbc:PaymentID t-esc="payment_id"/>
+                </t>
+                <cac:PayeeFinancialAccount>
+                    <t t-call="{{FinancialAccountType_template}}">
+                        <t t-set="vals" t-value="vals.get('PayeeFinancialAccount_vals', {})"/>
+                    </t>
+                </cac:PayeeFinancialAccount>
+            </t>
+        </template>
+
+        <template id="ubl_20_PaymentTermsType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-foreach="vals.get('note_vals', [])" t-as="note">
+                    <cbc:Note t-esc="note"/>
+                </t>
+            </t>
+        </template>
+
+        <template id="ubl_20_TaxCategoryType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:ID
+                    t-att="vals.get('id_attrs', {})"
+                    t-esc="vals.get('id')"/>
+                <cbc:Name t-esc="vals.get('name')"/>
+                <cbc:Percent t-esc="vals.get('percent')"/>
+                <cac:TaxScheme>
+                    <t t-call="{{TaxSchemeType_template}}">
+                        <t t-set="vals" t-value="vals.get('TaxScheme_vals', {})"/>
+                    </t>
+                </cac:TaxScheme>
+            </t>
+        </template>
+
+        <template id="ubl_20_TaxSubtotalType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:TaxableAmount
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('taxable_amount'), vals['currency'].decimal_places)"/>
+                <cbc:TaxAmount
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('tax_amount'), vals['currency'].decimal_places)"/>
+                <cbc:Percent t-esc="vals.get('percent')"/>
+                <cac:TaxCategory>
+                    <t t-call="{{TaxCategoryType_template}}">
+                        <t t-set="vals" t-value="vals.get('TaxCategory_vals', {})"/>
+                    </t>
+                </cac:TaxCategory>
+            </t>
+        </template>
+
+        <template id="ubl_20_TaxTotalType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:TaxAmount
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('tax_amount'), vals['currency'].decimal_places)"/>
+                <t t-foreach="vals.get('TaxSubtotal_vals', [])" t-as="foreach_vals">
+                    <cac:TaxSubtotal>
+                        <t t-call="{{TaxSubtotalType_template}}">
+                            <t t-set="vals" t-value="foreach_vals"/>
+                        </t>
+                    </cac:TaxSubtotal>
+                </t>
+            </t>
+        </template>
+
+        <template id="ubl_20_MonetaryTotalType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:LineExtensionAmount
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('line_extension_amount'), vals['currency'].decimal_places)"/>
+                <cbc:TaxExclusiveAmount
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('tax_exclusive_amount'), vals['currency'].decimal_places)"/>
+                <cbc:TaxInclusiveAmount
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('tax_inclusive_amount'), vals['currency'].decimal_places)"/>
+                <cbc:AllowanceTotalAmount
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('allowance_total_amount'), vals['currency'].decimal_places)"/>
+                <cbc:PrepaidAmount
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('prepaid_amount'), vals['currency'].decimal_places)"/>
+                <cbc:PayableAmount
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="format_float(vals.get('payable_amount'), vals['currency'].decimal_places)"/>
+            </t>
+        </template>
+
+        <template id="ubl_20_ItemIdentificationType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:ID t-esc="vals.get('id')"/>
+            </t>
+        </template>
+
+        <template id="ubl_20_ItemType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:Description t-esc="vals.get('description')"/>
+                <cbc:Name t-esc="vals.get('name')"/>
+                <cac:SellersItemIdentification>
+                    <t t-call="{{ItemIdentificationType_template}}">
+                        <t t-set="vals" t-value="vals.get('SellersItemIdentification_vals', {})"/>
+                    </t>
+                </cac:SellersItemIdentification>
+                <t t-foreach="vals.get('ClassifiedTaxCategory_vals', [])" t-as="foreach_vals">
+                    <cac:ClassifiedTaxCategory>
+                        <t t-call="{{TaxCategoryType_template}}">
+                            <t t-set="vals" t-value="foreach_vals"/>
+                        </t>
+                    </cac:ClassifiedTaxCategory>
+                </t>
+            </t>
+        </template>
+
+        <template id="ubl_20_AllowanceChargeType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:ChargeIndicator t-esc="vals.get('charge_indicator')"/>
+                <cbc:AllowanceChargeReasonCode t-esc="vals.get('allowance_charge_reason_code')"/>
+                <cbc:AllowanceChargeReason t-esc="vals.get('allowance_charge_reason')"/>
+                <cbc:Amount
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="vals.get('amount')"/>
+                <t t-foreach="vals.get('TaxCategory_vals', [])" t-as="foreach_vals">
+                    <cac:TaxCategory>
+                        <t t-call="{{TaxCategoryType_template}}">
+                            <t t-set="vals" t-value="foreach_vals"/>
+                        </t>
+                    </cac:TaxCategory>
+                </t>
+            </t>
+        </template>
+
+        <template id="ubl_20_PriceType">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:PriceAmount
+                        t-att-currencyID="vals['currency'].name"
+                        t-esc="vals.get('price_amount')"/>
+                <cbc:BaseQuantity
+                        t-att="vals.get('base_quantity_attrs', {})"
+                        t-esc="vals.get('base_quantity')"/>
+            </t>
+        </template>
+
+    </data>
+</odoo>

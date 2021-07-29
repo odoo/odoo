@@ -221,7 +221,7 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         def _serialize_python_dictionary(vals):
-            return '-'.join(str(vals[k]) for k in sorted(vals.keys()))
+            return '-'.join(str(vals[k]) for k in sorted(vals.keys()) if not k.startswith('_'))
 
         def default_grouping_key_generator(tax_values):
             return {'tax': tax_values['tax_id']}
