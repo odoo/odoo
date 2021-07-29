@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="views.ViewButton" owl="1">
+    <button class="btn" t-att-class="classes" t-att-title="props.title" t-att="attData">
+      <t t-if="icon" t-tag="icon.tag" t-att-class="icon.class" t-att-src="icon.src"/>
+      <t t-slot="contents"><span t-esc="props.title" /></t>
+    </button>
+  </t>
+
+</templates>
