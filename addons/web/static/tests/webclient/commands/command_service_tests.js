@@ -9,6 +9,7 @@ import { commandService } from "@web/webclient/commands/command_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, nextTick, patchWithCleanup, triggerHotkey } from "../../helpers/utils";
+import { clearRegistryWithCleanup } from "../../helpers/mock_env";
 
 const { Component, mount, tags } = owl;
 const { xml } = tags;
@@ -18,6 +19,7 @@ let target;
 let testComponent;
 const serviceRegistry = registry.category("services");
 const commandCategoryRegistry = registry.category("command_categories");
+const commandProviderRegistry = registry.category("command_provider");
 
 class TestComponent extends Component {
     get DialogContainer() {
@@ -33,6 +35,14 @@ TestComponent.template = xml`
 
 QUnit.module("Command", {
     async beforeEach() {
+        const commandProviders = commandProviderRegistry
+            .getEntries()
+            .filter((provider) => ["command", "data-hotkeys"].includes(provider[0]));
+        clearRegistryWithCleanup(commandProviderRegistry);
+        commandProviders.forEach((provider) => {
+            commandProviderRegistry.add(provider[0], provider[1]);
+        });
+
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("dialog", dialogService);
         serviceRegistry.add("hotkey", hotkeyService);
@@ -273,6 +283,13 @@ QUnit.test("access to hotkeys from the command palette", async (assert) => {
 QUnit.test("can be searched", async (assert) => {
     assert.expect(4);
 
+    patchWithCleanup(browser, {
+        clearTimeout: () => {},
+        setTimeout: (later, wait) => {
+            later();
+        },
+    });
+
     testComponent = await mount(TestComponent, { env, target });
 
     // Register some commands
@@ -320,6 +337,202 @@ QUnit.test("can be searched", async (assert) => {
         [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
         names,
         "all commands are again present"
+    );
+});
+
+QUnit.test("defined multiple providers with the same nameSpace", async (assert) => {
+    assert.expect(2);
+
+    patchWithCleanup(browser, {
+        clearTimeout: () => {},
+        setTimeout: (later, wait) => {
+            later();
+        },
+    });
+
+    clearRegistryWithCleanup(commandProviderRegistry);
+    const action = () => {};
+
+    const defaultNames = ["John", "Snow"];
+    commandProviderRegistry.add("default", {
+        nameSpace: "__default__",
+        provide: () =>
+            defaultNames.map((name) => ({
+                name,
+                action,
+            })),
+    });
+
+    const otherNames = ["Cersei", "Lannister"];
+    commandProviderRegistry.add("other", {
+        provide: () =>
+            otherNames.map((name) => ({
+                name,
+                action,
+            })),
+    });
+
+    testComponent = await mount(TestComponent, { env, target });
+
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    assert.deepEqual(
+        target.querySelector(".o_command_palette_search input").value,
+        "",
+        "search input is empty"
+    );
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        defaultNames.concat(otherNames),
+        "all default commands are present"
+    );
+});
+
+QUnit.test("can switch between command providers", async (assert) => {
+    assert.expect(4);
+
+    patchWithCleanup(browser, {
+        clearTimeout: () => {},
+        setTimeout: (later, wait) => {
+            later();
+        },
+    });
+
+    clearRegistryWithCleanup(commandProviderRegistry);
+    const action = () => {};
+
+    const defaultNames = ["John", "Snow"];
+    commandProviderRegistry.add("default", {
+        provide: () =>
+            defaultNames.map((name) => ({
+                name,
+                action,
+            })),
+    });
+
+    const otherNames = ["Cersei", "Lannister"];
+    commandProviderRegistry.add("other", {
+        nameSpace: "@",
+        provide: () =>
+            otherNames.map((name) => ({
+                name,
+                action,
+            })),
+    });
+
+    testComponent = await mount(TestComponent, { env, target });
+
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    assert.deepEqual(
+        target.querySelector(".o_command_palette_search input").value,
+        "",
+        "search input is empty"
+    );
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        defaultNames,
+        "all default commands are present"
+    );
+
+    // Switch to the other provider
+    let search = target.querySelector(".o_command_palette_search input");
+    search.value = "@";
+    search.dispatchEvent(new InputEvent("input"));
+    await nextTick();
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        otherNames,
+        "all other commands are present"
+    );
+
+    // Clear search input to recover the default provider
+    search.value = "";
+    search.dispatchEvent(new InputEvent("input"));
+    await nextTick();
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        defaultNames,
+        "all default commands are again present"
+    );
+});
+
+QUnit.test("multi level commands", async (assert) => {
+    assert.expect(5);
+
+    patchWithCleanup(browser, {
+        clearTimeout: () => {},
+        setTimeout: (later, wait) => {
+            later();
+        },
+    });
+
+    clearRegistryWithCleanup(commandProviderRegistry);
+    const defaultNames = ["John", "Snow"];
+    const otherNames = ["Cersei", "Lannister"];
+
+    const action = () => ({
+        placeHolder: "Who is the next King ?",
+        provide: () =>
+            otherNames.map((name) => ({
+                name,
+                action: () => {},
+            })),
+    });
+
+    commandProviderRegistry.add("default", {
+        provide: () =>
+            defaultNames.map((name) => ({
+                name,
+                action,
+            })),
+    });
+
+    testComponent = await mount(TestComponent, { env, target });
+
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    assert.deepEqual(
+        target.querySelector(".o_command_palette_search input").value,
+        "",
+        "search input is empty"
+    );
+
+    assert.deepEqual(
+        target.querySelector(".o_command_palette_search input").placeholder,
+        "Search for an action...",
+        "the default placeholder is correctly displayed"
+    );
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        defaultNames,
+        "all default commands are present"
+    );
+
+    await click(target, ".o_command.focused");
+    await nextTick();
+
+    assert.deepEqual(
+        target.querySelector(".o_command_palette_search input").placeholder,
+        "Who is the next King ?",
+        "the new placeholder is correctly displayed"
+    );
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        otherNames,
+        "all default commands are present"
     );
 });
 
@@ -419,7 +632,7 @@ QUnit.test("data-command-category", async (assert) => {
     assert.deepEqual(
         [
             ...target.querySelectorAll(
-                ".o_command_category:nth-of-type(1) .o_command > span:first-child"
+                ".o_command_category:nth-of-type(1) .o_command > div > span:first-child"
             ),
         ].map((el) => el.textContent),
         ["Robert baratheon", "Joffrey baratheon"]
@@ -427,7 +640,7 @@ QUnit.test("data-command-category", async (assert) => {
     assert.deepEqual(
         [
             ...target.querySelectorAll(
-                ".o_command_category:nth-of-type(2) .o_command > span:first-child"
+                ".o_command_category:nth-of-type(2) .o_command > div > span:first-child"
             ),
         ].map((el) => el.textContent),
         ["Aria stark", "Bran stark"]

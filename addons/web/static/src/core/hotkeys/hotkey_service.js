@@ -3,6 +3,7 @@
 import { isMacOS } from "../browser/feature_detection";
 import { registry } from "../registry";
 import { browser } from "../browser/browser";
+import { getVisibleElements } from "../utils/ui";
 
 const ALPHANUM_KEYS = "abcdefghijklmnopqrstuvwxyz0123456789".split("");
 const NAV_KEYS = [
@@ -63,7 +64,8 @@ export const hotkeyService = {
             }
 
             // FIXME : this is a temporary hack. It replaces all [accesskey] attrs by [data-hotkey] on all elements.
-            const elementsWithoutDataHotkey = ui.getVisibleElements(
+            const elementsWithoutDataHotkey = getVisibleElements(
+                ui.activeElement,
                 "[accesskey]:not([data-hotkey])"
             );
             for (const el of elementsWithoutDataHotkey) {
@@ -131,7 +133,10 @@ export const hotkeyService = {
                     .split("+")
                     .filter((key) => !overlayModParts.includes(key))
                     .join("+");
-                const elems = ui.getVisibleElements(`[data-hotkey='${cleanHotkey}' i]`);
+                const elems = getVisibleElements(
+                    ui.activeElement,
+                    `[data-hotkey='${cleanHotkey}' i]`
+                );
                 for (const el of elems) {
                     // AAB: not sure it is enough, we might need to trigger all events that occur when you actually click
                     el.focus();
@@ -153,7 +158,7 @@ export const hotkeyService = {
             if (overlaysVisible) {
                 return;
             }
-            for (const el of env.services.ui.getVisibleElements("[data-hotkey]:not(:disabled)")) {
+            for (const el of getVisibleElements(ui.activeElement, "[data-hotkey]:not(:disabled)")) {
                 const hotkey = el.dataset.hotkey;
                 const overlay = document.createElement("div");
                 overlay.className = "o_web_hotkey_overlay";
