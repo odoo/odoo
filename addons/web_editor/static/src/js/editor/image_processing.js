@@ -303,9 +303,11 @@ async function activateCropper(image, aspectRatio, dataset) {
  * @param {HTMLImageElement} img the image whose attachment data should be found
  * @param {Function} rpc a function that can be used to make the RPC. Typically
  *   this would be passed as 'this._rpc.bind(this)' from widgets.
+ * @param {string} [attachmentSrc=''] specifies the URL of the corresponding
+ * attachment if it can't be found in the 'src' attribute.
  */
-async function loadImageInfo(img, rpc) {
-    const src = img.getAttribute('src');
+async function loadImageInfo(img, rpc, attachmentSrc = '') {
+    const src = attachmentSrc || img.getAttribute('src');
     // If there is a marked originalSrc, the data is already loaded.
     if (img.dataset.originalSrc || !src) {
         return;
