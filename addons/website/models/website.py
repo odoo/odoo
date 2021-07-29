@@ -351,12 +351,13 @@ class Website(models.Model):
                     result = self.env['website'].new_page(name=feature_id.name, add_menu=True, template=feature_id.page_view_id.key)
                     pages_views[feature_id.iap_page_code] = result['view_id']
 
-            modules.button_immediate_install()
+            if modules:
+                modules.button_immediate_install()
+                # Force to refresh env after install of modules
+                self._cr.commit()
+                api.Environment.reset()
+                self.env = api.Environment(modules._cr, modules._uid, modules._context)
 
-            # Force to refresh env after install of modules
-            self._cr.commit()
-            api.Environment.reset()
-            self.env = api.Environment(modules._cr, modules._uid, modules._context)
             return pages_views
 
         def configure_page(page_code, snippet_list, pages_views, cta_data):
