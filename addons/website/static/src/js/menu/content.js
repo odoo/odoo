@@ -694,7 +694,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
             var newMenu = {
                 'fields': {
                     'id': _.uniqueId('new-'),
-                    'name': link.text,
+                    'name': _.unescape(link.text),
                     'url': link.url,
                     'new_window': link.isNewWindow,
                     'is_mega_menu': menuType === 'mega',
@@ -740,7 +740,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
             }, menu.fields));
             dialog.on('save', this, link => {
                 _.extend(menu.fields, {
-                    'name': link.text,
+                    'name': _.unescape(link.text),
                     'url': link.url,
                     'new_window': link.isNewWindow,
                 });
