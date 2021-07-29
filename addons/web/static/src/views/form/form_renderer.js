@@ -2,11 +2,12 @@
 
 import { Domain } from "@web/core/domain";
 import { useService } from "@web/core/service_hook";
-import { makeContext } from "@web/core/context";
+import { evaluateExpr } from "@web/core/py_js/py";
 
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { Field } from "@web/fields/field";
 import { ButtonBox } from "./button_box/button_box";
+import { ViewButton } from "@web/views/form/view_button/view_button";
 
 const { Component } = owl;
 const { useSubEnv, useState } = owl.hooks;
@@ -53,7 +54,7 @@ export class FormRenderer extends Component {
     }
 
     async buttonClicked(params) {
-        const buttonContext = makeContext(params.context);
+        const buttonContext = evaluateExpr(params.context, this.record.data);
         const envContext = null; //LPE FIXME record.context ?? new Context(payload.env.context).eval();
 
         const { resModel, resId, resIds } = this.props.model;
@@ -64,7 +65,7 @@ export class FormRenderer extends Component {
             resIds,
             context: envContext,
             buttonContext,
-            onclose: () => this.props.model.load()
+            onclose: () => this.props.model.load(),
         });
 
         // LPE TODO: disable all buttons
@@ -86,4 +87,4 @@ export class FormRenderer extends Component {
     }
 }
 
-FormRenderer.components = { Field, ButtonBox };
+FormRenderer.components = { Field, ButtonBox, ViewButton };
