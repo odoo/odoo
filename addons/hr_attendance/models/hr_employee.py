@@ -37,7 +37,8 @@ class HrEmployee(models.Model):
     overtime_ids = fields.One2many(
         'hr.attendance.overtime', 'employee_id', groups="hr_attendance.group_hr_attendance_user")
     total_overtime = fields.Float(
-        compute='_compute_total_overtime', groups="hr_attendance.group_hr_attendance_user")
+        compute='_compute_total_overtime', compute_sudo=True,
+        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")
 
     @api.depends('overtime_ids.duration', 'attendance_ids')
     def _compute_total_overtime(self):
