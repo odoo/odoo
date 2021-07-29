@@ -71,8 +71,16 @@ publicWidget.registry.productsSearchBar = publicWidget.Widget.extend({
                 },
             },
         });
-        if (this.displayDescription) {
-            res.products.forEach(p => {p.description_sale = Markup(p.description_sale);});
+        if (this.displayDescription || this.displayPrice) {
+            res.products.forEach(p => {
+                if (this.displayDescription) {
+                    p.description_sale = Markup(p.description_sale);
+                }
+                if (this.displayPrice) {
+                    p.list_price = Markup(p.list_price);
+                    p.price = Markup(p.price);
+                }
+            });
         }
         return res;
     },
