@@ -61,25 +61,25 @@ class TestPartner(TransactionCase):
             # encapsulated email
             (
                 "Vlad the Impaler <vlad.the.impaler@example.com>",
-                '"Balázs" <Vlad the Impaler <vlad.the.impaler@example.com>>'
+                '"Balázs" <vlad.the.impaler@example.com>'
             ), (
                 '"Balázs" <balazs@adam.hu>',
-                '"Balázs" <"Balázs" <balazs@adam.hu>>'
+                '"Balázs" <balazs@adam.hu>'
             ),
             # multi email
             (
                 "vlad.the.impaler@example.com, vlad.the.dragon@example.com",
-                '"Balázs" <vlad.the.impaler@example.com, vlad.the.dragon@example.com>'
+                '"Balázs" <vlad.the.impaler@example.com,vlad.the.dragon@example.com>'
             ), (
                 "vlad.the.impaler.com, vlad.the.dragon@example.com",
-                '"Balázs" <vlad.the.impaler.com, vlad.the.dragon@example.com>'
+                '"Balázs" <vlad.the.dragon@example.com>'
             ), (
                 'vlad.the.impaler.com, "Vlad the Dragon" <vlad.the.dragon@example.com>',
-                '"Balázs" <vlad.the.impaler.com, "Vlad the Dragon" <vlad.the.dragon@example.com>>'
+                '"Balázs" <vlad.the.dragon@example.com>'
             ),
             # falsy emails
-            (False, ''),
-            ('', ''),
+            (False, False),
+            ('', False),
             (' ', '"Balázs" <@ >'),
             ('notanemail', '"Balázs" <@notanemail>'),
         ]:
