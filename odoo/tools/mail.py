@@ -521,6 +521,21 @@ def email_normalize(text):
     return emails[0].lower()
 
 
+def email_normalize_all(text):
+    """ Tool method allowing to extract email addresses from a text input and returning
+    normalized version of all found emails. If no email is found, a void list
+    is returned.
+
+    e.g. if email is 'tony@e.com, "Tony2" <tony2@e.com' returned result is ['tony@e.com, tony2@e.com']
+
+    :return list: list of normalized emails found in text
+    """
+    if not text:
+        return []
+    emails = email_split(text)
+    return list(filter(None, [email_normalize(email) for email in emails]))
+
+
 def email_domain_extract(email):
     """ Extract the company domain to be used by IAP services notably. Domain
     is extracted from email information e.g:
@@ -531,12 +546,14 @@ def email_domain_extract(email):
         return normalized_email.split('@')[1]
     return False
 
+
 def email_domain_normalize(domain):
     """Return the domain normalized or False if the domain is invalid."""
     if not domain or '@' in domain:
         return False
 
     return domain.lower()
+
 
 def url_domain_extract(url):
     """ Extract the company domain to be used by IAP services notably. Domain
@@ -548,6 +565,7 @@ def url_domain_extract(url):
     if company_hostname and '.' in company_hostname:
         return '.'.join(company_hostname.split('.')[-2:])  # remove subdomains
     return False
+
 
 def email_escape_char(email_address):
     """ Escape problematic characters in the given email address string"""
