@@ -254,6 +254,7 @@ export class FormCompiler {
     compileButtonBox(node, params) {
         params = Object.create(params);
         params.enableInvisible = true;
+        node.classList.remove("oe_button_box");
 
         const buttonBox = this.document.createElement("ButtonBox");
         // because dropdown is a ul; so we need to wrap every element in a li
@@ -266,9 +267,6 @@ export class FormCompiler {
 
         for (const child of node.children) {
             const compiled = this.compileNode(child, params);
-            if (compiled && child.nodeName === "button") {
-                compiled.classList.add("oe_stat_button");
-            }
             if (compiled) {
                 const li = this.document.createElement("li");
                 this.append(li, compiled.cloneNode(true));
