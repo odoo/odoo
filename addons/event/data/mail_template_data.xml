@@ -21,8 +21,8 @@
         ${object.event_id.user_id.signature | safe}
     % endif
 </div></field>
-            <field name="report_template" ref="report_event_registration_badge"/>
-            <field name="report_name">badge_of_${(object.event_id.name or '').replace('/','_')}</field>
+            <field name="report_template" ref="action_report_event_registration_foldable_badge"/>
+            <field name="report_name">Foldable Badge - ${(object.event_id.name or 'Event').replace('/','')}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
         </record>
@@ -248,6 +248,8 @@
 </td></tr>
 </table>
             </field>
+            <field name="report_template" ref="action_report_event_registration_full_page_ticket"/>
+            <field name="report_name">Full Page Ticket - ${(object.event_id.name or 'Event').replace('/','')}</field>
             <field name="lang">${object.partner_id.lang}</field>
         </record>
 
