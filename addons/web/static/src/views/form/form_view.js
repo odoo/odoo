@@ -8,6 +8,7 @@ import { useModel } from "@web/views/helpers/model";
 import { useDebugMenu } from "../../core/debug/debug_menu";
 import { RelationalModel } from "../relational_model";
 import { FormRenderer } from "./form_renderer";
+import { useActionButtons } from "@web/views/form/view_button/hook";
 
 // -----------------------------------------------------------------------------
 
@@ -42,9 +43,11 @@ class FormView extends owl.Component {
             resId: this.props.resId,
             resIds: this.props.resIds,
             fields: this.props.fields,
-            activeFields: this.archInfo.fields
+            activeFields: this.archInfo.fields,
         });
         this.pagerProps = usePager(this.model, this.props.resId, this.props.resIds);
+
+        useActionButtons(this.model);
     }
 }
 
