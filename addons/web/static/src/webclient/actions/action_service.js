@@ -82,7 +82,7 @@ function makeActionManager(env) {
     let controllerStack = [];
     let dialogCloseProm;
     let actionCache = {};
-    let dialog = {};
+    let dialog = null;
 
     // The state action (or default user action if none) is loaded as soon as possible
     // so that the next "doAction" will have its action ready when needed.
@@ -99,6 +99,23 @@ function makeActionManager(env) {
     // ---------------------------------------------------------------------------
     // misc
     // ---------------------------------------------------------------------------
+
+    /**
+     * Removes the current dialog from the action service's state.
+     * It returns the dialog's onClose callback to be able to propagate it to the next dialog.
+     *
+     * @return {Function|undefined} When there was a dialog, returns its onClose callback for propagation to next dialog.
+     */
+    function _removeDialog() {
+        if (dialog) {
+            const { onClose, remove } = dialog;
+            dialog = null;
+            // Remove the dialog from the dialog_service.
+            // The code is well enough designed to avoid falling in a function call loop.
+            remove();
+            return onClose;
+        }
+    }
 
     /**
      * Returns the last controller of the current controller stack.
@@ -538,7 +555,7 @@ function makeActionManager(env) {
             }
             onHistoryBack() {
                 const previousController = controllerStack[controllerStack.length - 2];
-                if (previousController && !dialog.remove) {
+                if (previousController && !dialog) {
                     restore(previousController.jsId);
                 } else {
                     _executeCloseAction();
@@ -551,7 +568,7 @@ function makeActionManager(env) {
         ControllerComponent.template = ControllerComponentTemplate;
         ControllerComponent.Component = controller.Component;
 
-        let nextDialog = {};
+        let nextDialog = null;
         if (action.target === "new") {
             cleanDomFromBootstrap();
             const actionDialogProps = {
@@ -563,19 +580,12 @@ function makeActionManager(env) {
                 actionDialogProps.title = action.name;
             }
 
-            const { onClose } = dialog;
-            const removeOldDialog = dialog.remove;
-            if (removeOldDialog) {
-                dialog = {};
-                removeOldDialog();
-            }
+            let onClose = _removeDialog();
             const removeDialog = env.services.dialog.add(ActionDialog, actionDialogProps, {
                 onClose: () => {
-                    if (dialog.remove) {
-                        if (dialog.onClose) {
-                            dialog.onClose();
-                        }
-                        dialog = {};
+                    const onClose = _removeDialog();
+                    if (onClose) {
+                        onClose();
                     }
                     cleanDomFromBootstrap();
                 },
@@ -938,11 +948,8 @@ function makeActionManager(env) {
 
     async function _executeCloseAction(params = {}) {
         let onClose;
-        const removeDialog = dialog.remove;
-        if (removeDialog) {
-            onClose = dialog.onClose;
-            dialog = {};
-            removeDialog();
+        if (dialog) {
+            onClose = _removeDialog();
         } else {
             onClose = params.onClose;
         }
