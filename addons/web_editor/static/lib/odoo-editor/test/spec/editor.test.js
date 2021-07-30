@@ -1,3 +1,4 @@
+import { applyInlineStyle } from '../../src/commands/commands.js';
 import { OdooEditor } from '../../src/OdooEditor.js';
 import { getTraversedNodes } from '../../src/utils/utils.js';
 import {
@@ -2694,6 +2695,16 @@ X[]
             });
         });
     });
+
+    describe('applyInlineStyle', () => {
+        it('should apply style to selection only', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<span>[b<span>c]d</span>e</span>f</p>',
+                stepFunction: editor => applyInlineStyle(editor, (el) => el.style.color = 'tomato'),
+                contentAfter: '<p>a<span><span style="color: tomato;">[b</span><span><span style="color: tomato;">c]</span>d</span>e</span>f</p>',
+            });
+        });
+    })
 
     describe('setTagName', () => {
         describe('to paragraph', () => {
