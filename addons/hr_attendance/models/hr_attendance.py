@@ -211,14 +211,14 @@ class HrAttendance(models.Model):
                             # consider check_in as planned_start_dt if within threshold
                             # if delta_in < 0: Checked in after supposed start of the day
                             # if delta_in > 0: Checked in before supposed start of the day
-                            local_check_in = emp_tz.localize(attendance.check_in)
+                            local_check_in = pytz.utc.localize(attendance.check_in)
                             delta_in = (planned_start_dt - local_check_in).total_seconds() / 3600.0
 
                             # Started before or after planned date within the threshold interval
                             if (delta_in > 0 and delta_in <= company_threshold) or\
                                 (delta_in < 0 and abs(delta_in) <= employee_threshold):
                                 local_check_in = planned_start_dt
-                            local_check_out = emp_tz.localize(attendance.check_out)
+                            local_check_out = pytz.utc.localize(attendance.check_out)
 
                             # same for check_out as planned_end_dt
                             delta_out = (local_check_out - planned_end_dt).total_seconds() / 3600.0
