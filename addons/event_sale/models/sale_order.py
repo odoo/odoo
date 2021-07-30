@@ -28,6 +28,10 @@ class SaleOrder(models.Model):
                     .with_context(default_sale_order_id=so.id) \
                     ._for_xml_id('event_sale.action_sale_order_event_registration')
         return res
+    
+    def action_cancel(self):
+        self.order_line._cancel_associated_registrations()
+        return super(SaleOrder, self).action_cancel()
 
     def action_view_attendee_list(self):
         action = self.env["ir.actions.actions"]._for_xml_id("event.event_registration_action_tree")
@@ -48,7 +52,7 @@ class SaleOrder(models.Model):
             sale_order.attendee_count = attendee_count_data.get(sale_order.id, 0)
 
     def unlink(self):
-        self.order_line._unlink_associated_registrations()
+        self.mapped('order_line')._unlink_associated_registrations()
         return super(SaleOrder, self).unlink()
 
 
@@ -127,6 +131,9 @@ class SaleOrderLine(models.Model):
     def unlink(self):
         self._unlink_associated_registrations()
         return super(SaleOrderLine, self).unlink()
+
+    def _cancel_associated_registrations(self):
+        self.env['event.registration'].search([('sale_order_line_id', 'in', self.ids)]).action_cancel()
 
     def _unlink_associated_registrations(self):
         self.env['event.registration'].search([('sale_order_line_id', 'in', self.ids)]).unlink()
