@@ -1846,6 +1846,7 @@ var UrlWidget = InputField.extend({
             href: href,
             target: '_blank',
         });
+        this.el.textContent = '';
         this.el.appendChild(anchorEl);
     },
 

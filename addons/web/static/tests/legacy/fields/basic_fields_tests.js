@@ -2128,6 +2128,45 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('url old content is cleaned on render edit', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.foo2 = { string: "Foo2", type: "char", default: "foo2" };
+        this.data.partner.onchanges.foo2 = function (record) {
+            record.foo = record.foo2;
+        }
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:`
+                <form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="url" attrs="{'readonly': True}" />
+                            <field name="foo2" />
+                        </group>
+                    </sheet>
+                </form>
+                `,
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name=foo]').text(), 'yop',
+            "the starting value should be displayed properly");
+        await testUtils.form.clickEdit(form);
+
+        assert.strictEqual(form.$('.o_field_widget[name=foo2]').val(), 'foo2',
+            "input should contain field value in edit mode");
+        
+        await testUtils.fields.editInput(form.$('.o_field_widget[name=foo2]'), 'bonjour');
+        assert.strictEqual(form.$('.o_field_widget[name=foo]').text(), 'bonjour',
+        "Url widget should show the new value and not " + form.$('.o_field_widget[name=foo]').text());
+
+        form.destroy();
+    });
+
     QUnit.module('CopyClipboard');
 
     QUnit.test('Char & Text Fields: Copy to clipboard button', async function (assert) {
