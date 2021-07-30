@@ -23,10 +23,14 @@ class SaleOrder(models.Model):
                     .with_context(default_sale_order_id=so.id) \
                     .for_xml_id('event_sale', 'action_sale_order_event_registration')
         return res
+    
+    def action_cancel(self):
+        self.mapped('order_line')._cancel_associated_registrations()
+        return super(SaleOrder, self).action_cancel()
 
     def unlink(self):
-        self.order_line._unlink_associated_registrations()
-        super(SaleOrder, self).unlink()
+        self.mapped('order_line')._unlink_associated_registrations()
+        return super(SaleOrder, self).unlink()
 
 
 class SaleOrderLine(models.Model):
@@ -90,6 +94,9 @@ class SaleOrderLine(models.Model):
     def unlink(self):
         self._unlink_associated_registrations()
         super(SaleOrderLine, self).unlink()
+
+    def _cancel_associated_registrations(self):
+        self.env['event.registration'].search([('sale_order_line_id', 'in', self.ids)]).button_reg_cancel()
 
     def _unlink_associated_registrations(self):
         self.env['event.registration'].search([('sale_order_line_id', 'in', self.ids)]).unlink()
