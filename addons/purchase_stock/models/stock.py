@@ -10,6 +10,8 @@ class StockPicking(models.Model):
 
     purchase_id = fields.Many2one('purchase.order', related='move_lines.purchase_line_id.order_id',
         string="Purchase Orders", readonly=True)
+    # Technical field to activate cache mechanism on aggregating computed fields to recompute
+    purchase_ids = fields.Many2many('purchase.order', string="Inversed field for purchase.order")
 
 
 class StockMove(models.Model):
