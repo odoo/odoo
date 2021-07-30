@@ -410,7 +410,7 @@ var FieldMany2One = AbstractField.extend({
             domain: this.record.getDomain({fieldName: this.name}),
             context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
             dynamicFilters: dynamicFilters || [],
-            title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
+            title: _.str.sprintf((view === 'search' ? _t("Search: %s") : _t("Create: %s")), this.string),
             initial_ids: ids,
             initial_view: view,
             disable_multiple_selection: true,
@@ -1112,9 +1112,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
      */
     init: function (parent, name, record, options) {
         this._super.apply(this, arguments);
-        this.nodeOptions = _.defaults(this.nodeOptions, {
-            create_text: _t('Add'),
-        });
+        this.createText = this.attrs['add-label'] || _t('Add');
         this.operations = [];
         this.isReadonly = this.mode === 'readonly';
         this.view = this.attrs.views[this.attrs.mode];
@@ -1381,7 +1379,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
     _getButtonsRenderingContext() {
         return {
             btnClass: 'btn-secondary',
-            create_text: this.nodeOptions.create_text,
+            create_text: this.createText,
         };
     },
     /**
@@ -3589,7 +3587,7 @@ var FieldReference = FieldMany2One.extend({
     _applyModelField: function (initRecord) {
         let resourceRef = this.record.specialData[this.name];
         if (resourceRef) {
-            if (initRecord && resourceRef.hasChanged) {
+            if (initRecord && resourceRef.hasChanged && resourceRef.modelName !== this.modelName) {
                 this.reinitialize(false);
             }
             this.modelName = resourceRef.modelName;
@@ -3607,7 +3605,10 @@ var FieldReference = FieldMany2One.extend({
             this.$('.o_input_dropdown').show();
             if (!this.nodeOptions.model_field) {
                 // this class is used to display the two components (select & input) on the same line
-                this.$el.addClass('o_row');
+                if (this.nodeOptions.hide_model) {
+                    this.$el.addClass('o_row');
+                }
+                this.$el.find('.o_field_many2one_selection').addClass('o_row');
             }
         } else {
             // hide the many2one if the selection is empty
@@ -3645,7 +3646,8 @@ var FieldReference = FieldMany2One.extend({
         }
         if (this.nodeOptions.model_field) {
             this._applyModelField(initRecord);
-        } else if (this.value && this.value.model) {
+        }
+        if (this.value && this.value.model) {
             this.modelName = this.value.model;
         }
         if (this.modelName) {

@@ -56,4 +56,5 @@ German accounting chart and localization.
     'demo': [
         'demo/demo_company.xml',
     ],
+    'license': 'LGPL-3',
 }

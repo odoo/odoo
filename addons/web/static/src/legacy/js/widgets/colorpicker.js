@@ -187,6 +187,12 @@ var ColorpickerWidget = Widget.extend({
      * @param {integer} [a]
      */
     _updateRgba: function (r, g, b, a) {
+        // Remove full transparency in case some lightness is added
+        const opacity = a || this.colorComponents.opacity;
+        if (opacity < 0.1 && (r > 0.1 || g > 0.1 || b > 0.1)) {
+            a = 100;
+        }
+
         // We update the hexadecimal code by transforming into a css color and
         // ignoring the opacity (we don't display opacity component in hexa as
         // not supported on all browsers)
@@ -211,6 +217,12 @@ var ColorpickerWidget = Widget.extend({
      * @param {integer} l
      */
     _updateHsl: function (h, s, l) {
+        // Remove full transparency in case some lightness is added
+        let a = this.colorComponents.opacity;
+        if (a < 0.1 && l > 0.1) {
+            a = 100;
+        }
+
         var rgb = ColorpickerWidget.convertHslToRgb(h, s, l);
         if (!rgb) {
             return;
@@ -220,7 +232,8 @@ var ColorpickerWidget = Widget.extend({
         _.extend(this.colorComponents,
             {hue: h, saturation: s, lightness: l},
             rgb,
-            {hex: hex}
+            {hex: hex},
+            {opacity: a},
         );
         this._updateCssColor();
     },

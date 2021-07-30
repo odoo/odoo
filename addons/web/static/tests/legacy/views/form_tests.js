@@ -11,7 +11,6 @@ const fieldRegistryOwl = require('web.field_registry_owl');
 const FormRenderer = require('web.FormRenderer');
 var FormView = require('web.FormView');
 var mixins = require('web.mixins');
-var NotificationService = require('web.NotificationService');
 var pyUtils = require('web.py_utils');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
@@ -1062,6 +1061,58 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('reset local state when switching to another view', async function (assert) {
+        assert.expect(3);
+
+        serverData.views = {
+            'partner,false,form': `<form>
+                    <sheet>
+                        <field name="product_id"/>
+                        <notebook>
+                            <page string="Foo">
+                                <field name="foo"/>
+                            </page>
+                            <page string="Bar">
+                                <field name="bar"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            'partner,false,list': '<tree><field name="foo"/></tree>',
+            'partner,false,search': '<search></search>',
+        };
+
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: 'Partner',
+                res_model: 'partner',
+                type: 'ir.actions.act_window',
+                views: [[false, 'list'], [false, 'form']],
+            }
+        };
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+
+        await testUtils.dom.click(webClient.el.querySelector('.o_list_button_add'));
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, '.o_form_view');
+
+        // click on second page tab
+        await testUtils.dom.click($(webClient.el).find('.o_notebook .nav-link:eq(1)'));
+
+        await testUtils.dom.click('.o_control_panel .o_form_button_cancel');
+        await legacyExtraNextTick();
+        assert.containsNone(webClient, '.o_form_view');
+
+        await testUtils.dom.click(webClient.el.querySelector('.o_list_button_add'));
+        await legacyExtraNextTick();
+        // check notebook active page is 0th page
+        assert.hasClass($(webClient.el).find('.o_notebook .nav-link:eq(0)'), 'active');
+
+    });
+
     QUnit.test('rendering stat buttons', async function (assert) {
         assert.expect(3);
 
@@ -1489,6 +1540,65 @@ QUnit.module('Views', {
                 "no empty class on label");
         assert.containsNone(form, '.o_field_empty',
                 "no empty class on field");
+        form.destroy();
+    });
+
+    QUnit.test('label tag added for fields have o_form_empty class in readonly mode if field is empty', async function (assert) {
+        assert.expect(8);
+
+        this.data.partner.fields.foo.default = false; // no default value for this test
+        this.data.partner.records[1].foo = false;  // 1 is record with id=2
+        this.data.partner.records[1].trululu = false;  // 1 is record with id=2
+        this.data.partner.fields.int_field.readonly = true;
+        this.data.partner.onchanges.foo = function (obj) {
+            if (obj.foo === "hello") {
+                obj.int_field = false;
+            }
+        };
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                    <sheet>
+                        <label for="foo" string="Foo"/>
+                        <field name="foo"/>
+                        <label for="trululu" string="Trululu" attrs="{'readonly': [['foo', '=', False]]}"/>
+                        <field name="trululu" attrs="{'readonly': [['foo', '=', False]]}"/>
+                        <label for="int_field" string="IntField" attrs="{'readonly': [['int_field', '=', False]]}"/>
+                        <field name="int_field"/>
+                    </sheet>
+                </form>`,
+            res_id: 2,
+        });
+
+        assert.containsN(form, '.o_field_widget.o_field_empty', 2,
+            "should have 2 empty fields with correct class");
+        assert.containsN(form, '.o_form_label_empty', 2,
+            "should have 2 muted labels (for the empty fieds) in readonly");
+
+        await testUtils.form.clickEdit(form);
+
+        assert.containsOnce(form, '.o_field_empty',
+            "in edit mode, only empty readonly fields should have the o_field_empty class");
+        assert.containsOnce(form, '.o_form_label_empty',
+            "in edit mode, only labels associated to empty readonly fields should have the o_form_label_empty class");
+
+        await testUtils.fields.editInput(form.$('input[name=foo]'), 'test');
+
+        assert.containsNone(form, '.o_field_empty',
+            "after readonly modifier change, the o_field_empty class should have been removed");
+        assert.containsNone(form, '.o_form_label_empty',
+            "after readonly modifier change, the o_form_label_empty class should have been removed");
+
+        await testUtils.fields.editInput(form.$('input[name=foo]'), 'hello');
+
+        assert.containsOnce(form, '.o_field_empty',
+            "after value changed to false for a readonly field, the o_field_empty class should have been added");
+        assert.containsOnce(form, '.o_form_label_empty',
+            "after value changed to false for a readonly field, the o_form_label_empty class should have been added");
+
         form.destroy();
     });
 
@@ -3547,7 +3657,7 @@ QUnit.module('Views', {
                         '<group><field name="foo"/></group>' +
                 '</form>',
             services: {
-                notification: NotificationService.extend({
+                notification: {
                     notify: function (params) {
                         if (params.type !== 'danger') {
                             return;
@@ -3557,7 +3667,7 @@ QUnit.module('Views', {
                         assert.strictEqual(params.message, '<ul><li>Foo</li></ul>',
                             "should have a warning with correct message");
                     }
-                }),
+                },
             },
         });
 
@@ -6088,11 +6198,11 @@ QUnit.module('Views', {
                 return result;
             },
             services: {
-                notification: NotificationService.extend({
+                notification: {
                     notify: function (params) {
                         assert.step(params.type);
                     }
-                }),
+                },
             },
         });
 
@@ -9650,17 +9760,17 @@ QUnit.module('Views', {
 
         const $productLabel = form.$('.o_form_label:eq(1)');
         $productLabel.tooltip('show', false);
-        $productLabel.trigger($.Event('mouseenter'));
+        await testUtils.dom.triggerMouseEvent($productLabel, 'mouseenter');
         assert.strictEqual($('.tooltip .oe_tooltip_help').text().trim(),
             "this is a tooltip\n\nValues set here are company-specific.");
-        $productLabel.trigger($.Event('mouseleave'));
+        await testUtils.dom.triggerMouseEvent($productLabel, 'mouseleave');
 
         const $fooLabel = form.$('.o_form_label:first');
         $fooLabel.tooltip('show', false);
-        $fooLabel.trigger($.Event('mouseenter'));
+        await testUtils.dom.triggerMouseEvent($fooLabel, 'mouseenter');
         assert.strictEqual($('.tooltip .oe_tooltip_help').text().trim(),
             "Values set here are company-specific.");
-        $fooLabel.trigger($.Event('mouseleave'));
+        await testUtils.dom.triggerMouseEvent($fooLabel, 'mouseleave');
 
         form.destroy();
     });
@@ -9689,9 +9799,9 @@ QUnit.module('Views', {
         const $productLabel = form.$('.o_form_label');
 
         $productLabel.tooltip('show', false);
-        $productLabel.trigger($.Event('mouseenter'));
+        await testUtils.dom.triggerMouseEvent($productLabel, 'mouseenter');
         assert.strictEqual($('.tooltip .oe_tooltip_help').text().trim(), "this is a tooltip");
-        $productLabel.trigger($.Event('mouseleave'));
+        await testUtils.dom.triggerMouseEvent($productLabel, 'mouseleave');
 
         form.destroy();
     });
@@ -9704,7 +9814,7 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch: `<form>
-                      <widget name="pie_chart" title="qux by product" attrs="{'measure\': 'qux', 'groupby': 'product_id'}"/>
+                      <widget name="pie_chart" title="qux by product" attrs="{'measure': 'qux', 'groupby': 'product_id'}"/>
                   </form>`,
         });
 
@@ -11154,7 +11264,7 @@ QUnit.module('Views', {
 
         // double click selecting text doesn't start quick edit
         window.getSelection().removeAllRanges();
-        await testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
+        testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
         range.selectNode(form.$('.o_field_widget[name="display_name"]')[0]);
         window.getSelection().addRange(range);
         await testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));

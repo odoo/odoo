@@ -15,9 +15,15 @@
 //------------------------------------------------------------------------------
 
 .o_field_widget {
-    // Dropdowns input carret
-    .o_input_dropdown .o_dropdown_button {
-        @include o-position-absolute(2px, 4px);
+    &.o_field_many2manytags {
+        .o_dropdown_button {
+            top: 0;
+            right: 0;
+        }
+
+        &.avatar .o_dropdown_button {
+            top: $o-input-padding-y;
+        }
     }
 
     // Many2one

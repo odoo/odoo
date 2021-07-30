@@ -67,7 +67,7 @@ class SaleOrderLine(models.Model):
         super(SaleOrderLine, self)._compute_qty_delivered()
         for order_line in self:
             if order_line.qty_delivered_method == 'stock_move':
-                boms = order_line.move_ids.mapped('bom_line_id.bom_id')
+                boms = order_line.move_ids.filtered(lambda m: m.state != 'cancel').mapped('bom_line_id.bom_id')
                 dropship = False
                 if not boms and any(m._is_dropshipped() for m in order_line.move_ids):
                     boms = boms._bom_find(order_line.product_id, company_id=order_line.company_id.id, bom_type='phantom')[order_line.product_id]
@@ -86,7 +86,8 @@ class SaleOrderLine(models.Model):
                     # the products for this PO will set the qty_delivered. We might need to check the
                     # state of all PO as well... but sale_mrp doesn't depend on purchase.
                     if dropship:
-                        if order_line.move_ids and all(m.state == 'done' for m in order_line.move_ids):
+                        moves = order_line.move_ids.filtered(lambda m: m.state != 'cancel')
+                        if moves and all(m.state == 'done' for m in moves):
                             order_line.qty_delivered = order_line.product_uom_qty
                         else:
                             order_line.qty_delivered = 0.0

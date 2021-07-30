@@ -279,6 +279,65 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         response = self.portal_pay(**route_values)
         self.assertEqual(response.status_code, 404)
 
+    def test_invoice_payment_flow(self):
+        """Test the payment of an invoice through the payment/pay route"""
+        # Create a dummy invoice
+        account = self.env['account.account'].search([('company_id', '=', self.env.company.id)], limit=1)
+        invoice = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2019-01-01',
+            'line_ids': [
+                (0, 0, {
+                    'account_id': account.id,
+                    'currency_id': self.currency_euro.id,
+                    'debit': 100.0,
+                    'credit': 0.0,
+                    'amount_currency': 200.0,
+                }),
+                (0, 0, {
+                    'account_id': account.id,
+                    'currency_id': self.currency_euro.id,
+                    'debit': 0.0,
+                    'credit': 100.0,
+                    'amount_currency': -200.0,
+                }),
+            ],
+        })
+
+        # Pay for this invoice (no impact even if amounts do not match)
+        route_values = self._prepare_pay_values()
+        route_values['invoice_id'] = invoice.id
+        tx_context = self.get_tx_checkout_context(**route_values)
+        self.assertEqual(tx_context['invoice_id'], invoice.id)
+
+        # payment/transaction
+        route_values = {
+            k: tx_context[k]
+            for k in [
+                'amount',
+                'currency_id',
+                'reference_prefix',
+                'partner_id',
+                'access_token',
+                'landing_route',
+                'invoice_id',
+            ]
+        }
+        route_values.update({
+            'flow': 'direct',
+            'payment_option_id': self.acquirer.id,
+            'tokenization_requested': False,
+            'validation_route': False,
+        })
+        with mute_logger('odoo.addons.payment.models.payment_transaction'):
+            processing_values = self.get_processing_values(**route_values)
+        tx_sudo = self._get_tx(processing_values['reference'])
+        # Note: strangely, the check
+        # self.assertEqual(tx_sudo.invoice_ids, invoice)
+        # doesn't work, and cache invalidation doesn't work either.
+        invoice.invalidate_cache(['transaction_ids'])
+        self.assertEqual(invoice.transaction_ids, tx_sudo)
+
     def test_transaction_wrong_flow(self):
         transaction_values = self._prepare_pay_values()
         transaction_values.update({

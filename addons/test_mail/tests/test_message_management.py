@@ -43,7 +43,11 @@ class TestMailResend(TestMailCommon):
 
         # three more failure sent on bus, one for each mail in failure and one for resend
         self._reset_bus()
-        with self.mock_mail_gateway(), self.assertBus([(self.cr.dbname, 'res.partner', self.partner_admin.id)] * 3):
+        expected_bus_notifications = [
+            (self.cr.dbname, 'res.partner', self.partner_admin.id),
+            (self.cr.dbname, 'res.partner', self.env.user.partner_id.id),
+        ]
+        with self.mock_mail_gateway(), self.assertBus(expected_bus_notifications * 3):
             wizard.resend_mail_action()
         done_msgs, done_notifs = self.assertMailNotifications(message, [
             {'content': '', 'message_type': 'notification',
@@ -56,7 +60,7 @@ class TestMailResend(TestMailCommon):
 
         # two more failure update sent on bus, one for failed mail and one for resend
         self._reset_bus()
-        with self.mock_mail_gateway(), self.assertBus([(self.cr.dbname, 'res.partner', self.partner_admin.id)] * 2):
+        with self.mock_mail_gateway(), self.assertBus(expected_bus_notifications * 2):
             self.env['mail.resend.message'].with_context({'mail_message_to_resend': message.id}).create({}).resend_mail_action()
         done_msgs, done_notifs = self.assertMailNotifications(message, [
             {'content': '', 'message_type': 'notification',
@@ -69,7 +73,7 @@ class TestMailResend(TestMailCommon):
 
         # A success update should be sent on bus once the email has no more failure
         self._reset_bus()
-        with self.mock_mail_gateway(), self.assertBus([(self.cr.dbname, 'res.partner', self.partner_admin.id)]):
+        with self.mock_mail_gateway(), self.assertBus(expected_bus_notifications):
             self.env['mail.resend.message'].with_context({'mail_message_to_resend': message.id}).create({}).resend_mail_action()
         self.assertMailNotifications(message, [
             {'content': '', 'message_type': 'notification',
@@ -109,7 +113,11 @@ class TestMailResend(TestMailCommon):
         wizard = self.env['mail.resend.message'].with_context({'mail_message_to_resend': message.id}).create({})
         # one update for cancell
         self._reset_bus()
-        with self.mock_mail_gateway(), self.assertBus([(self.cr.dbname, 'res.partner', self.partner_admin.id)] * 1):
+        expected_bus_notifications = [
+            (self.cr.dbname, 'res.partner', self.partner_admin.id),
+            (self.cr.dbname, 'res.partner', self.env.user.partner_id.id),
+        ]
+        with self.mock_mail_gateway(), self.assertBus(expected_bus_notifications):
             wizard.cancel_mail_action()
 
         self.assertMailNotifications(message, [

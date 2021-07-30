@@ -39,5 +39,6 @@
         'web.assets_qweb': [
             'pos_coupon/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -42,8 +42,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//sheet" position="after">
                     <footer>
-                        <button string="Confirm" class="btn-primary" special="save"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        <button string="Confirm" class="btn-primary" special="save" data-hotkey="v"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </xpath>
             </field>
@@ -58,8 +58,8 @@
                     <p>The closing balance is different than the computed one!</p>
                     <p>Confirming this will create automatically a journal entry with the difference in the profit/loss account set on the cash journal.</p>
                     <footer>
-                        <button string="Confirm" name="validate" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        <button string="Confirm" name="validate" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </div>
                 </form>
@@ -171,12 +171,12 @@
                         </group><group>
                             <label for="balance_start"/>
                             <div>
-                                <field name="balance_start" class="oe_inline" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                                <field name="balance_start" class="oe_inline" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
                                 <button name="open_cashbox_id" attrs="{'invisible': ['|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'start'}"/>
                             </div>
                             <label for="balance_end_real"/>
                             <div>
-                                <field name="balance_end_real" class="oe_inline" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                                <field name="balance_end_real" class="oe_inline" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
                                 <button name="open_cashbox_id" attrs="{'invisible': ['|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'close'}"/>
                             </div>
                         </group>
@@ -308,16 +308,16 @@
                             <field name="company_id" invisible="1"/>
 
                             <!-- Displayed fields -->
-                            <field name="statement_id"/>
-                            <field name="date"/>
-                            <field name="payment_ref"/>
-                            <field name="ref"/>
-                            <field name="partner_id"/>
-                            <field name="amount"/>
-                            <field name="sequence"/>
-                            <field name="narration" string="Notes"/>
-                            <field name="transaction_type"/>
-                            <field name="move_id"/>
+                            <field name="statement_id" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="date" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="payment_ref" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="ref" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="partner_id" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="amount" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="sequence" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="narration" string="Notes" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="transaction_type" attrs="{'readonly': [('state', '!=', 'open')]}"/>
+                            <field name="move_id" attrs="{'readonly': [('state', '!=', 'open')]}"/>
                         </group>
                     </sheet>
                 </form>

@@ -91,9 +91,6 @@ class Website(Home):
         session, AFTER landing on that website domain (if set) as this will be a
         different session.
         """
-        parse = werkzeug.urls.url_parse
-        safe_path = parse(path).path
-
         if not (request.env.user.has_group('website.group_multi_website')
            and request.env.user.has_group('website.group_website_publisher')):
             # The user might not be logged in on the forced website, so he won't
@@ -103,19 +100,19 @@ class Website(Home):
             # Website 1 : 127.0.0.1 (admin)
             # Website 2 : 127.0.0.2 (not logged in)
             # Click on "Website 2" from Website 1
-            return request.redirect(safe_path)
+            return request.redirect(path)
 
         website = request.env['website'].browse(website_id)
 
         if not isredir and website.domain:
             domain_from = request.httprequest.environ.get('HTTP_HOST', '')
-            domain_to = parse(website._get_http_domain()).netloc
+            domain_to = werkzeug.urls.url_parse(website._get_http_domain()).netloc
             if domain_from != domain_to:
                 # redirect to correct domain for a correct routing map
-                url_to = werkzeug.urls.url_join(website._get_http_domain(), '/website/force/%s?isredir=1&path=%s' % (website.id, safe_path))
+                url_to = werkzeug.urls.url_join(website._get_http_domain(), '/website/force/%s?isredir=1&path=%s' % (website.id, path))
                 return request.redirect(url_to)
         website._force()
-        return request.redirect(safe_path)
+        return request.redirect(path)
 
     # ------------------------------------------------------
     # Login - overwrite of the web login so that regular users are redirected to the backend
@@ -265,7 +262,7 @@ class Website(Home):
         url = getattr(request.website, 'social_%s' % social, False)
         if not url:
             raise werkzeug.exceptions.NotFound()
-        return request.redirect(url)
+        return request.redirect(url, local=False)
 
     @http.route('/website/get_suggested_links', type='json', auth="user", website=True)
     def get_suggested_link(self, needle, limit=10):
@@ -291,8 +288,8 @@ class Website(Home):
         suggested_controllers = []
         for name, url, mod in current_website.get_suggested_controllers():
             if needle.lower() in name.lower() or needle.lower() in url.lower():
-                module = mod and request.env.ref('base.module_%s' % mod, False)
-                icon = mod and "<img src='%s' width='24px' class='mr-2 rounded' /> " % (module and module.icon or mod) or ''
+                module_sudo = mod and request.env.ref('base.module_%s' % mod, False).sudo()
+                icon = mod and "<img src='%s' width='24px' class='mr-2 rounded' /> " % (module_sudo and module_sudo.icon or mod) or ''
                 suggested_controllers.append({
                     'value': url,
                     'label': '%s%s (%s)' % (icon, url, name),
@@ -311,7 +308,7 @@ class Website(Home):
         dynamic_filter = request.env['website.snippet.filter'].sudo().search(
             [('id', '=', filter_id)] + request.website.website_domain()
         )
-        return dynamic_filter and dynamic_filter.render(template_key, limit, search_domain, with_sample) or ''
+        return dynamic_filter and dynamic_filter._render(template_key, limit, search_domain, with_sample) or ''
 
     @http.route('/website/snippet/options_filters', type='json', auth='user', website=True)
     def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):

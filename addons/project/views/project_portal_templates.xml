@@ -87,25 +87,29 @@
                 </t>
                 <t t-set="card_body">
                     <div class="row">
-                        <div t-if="project.partner_id" class="col-12 col-md-6 mb-2 mb-md-0">
-                            <h6>Customer</h6>
-                            <div class="row">
-                                <div class="col flex-grow-0 pr-3">
-                                    <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(project.partner_id.avatar_1024)" alt="Contact"/>
-                                </div>
-                                <div class="col pl-sm-0">
-                                    <address t-field="project.partner_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'/>
-                                </div>
-                            </div>
-                        </div>
                         <div t-if="project.user_id" class="col-12 col-md-6">
-                            <h6>Project Manager</h6>
+                            <h6><strong> Project Manager </strong></h6>
                             <div class="row">
                                 <div class="col flex-grow-0 pr-3">
                                     <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(project.user_id.avatar_1024)" alt="Contact"/>
                                 </div>
                                 <div class="col pl-sm-0">
-                                    <address t-field="project.user_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'/>
+                                    <div t-field="project.user_id" t-options='{"widget": "contact", "fields": ["name"]}'/>
+                                    <a t-attf-href="mailto:{{project.user_id.email}}" t-if="project.user_id.email"><div t-field="project.user_id" t-options='{"widget": "contact", "fields": ["email"]}'/></a>
+                                    <a t-attf-href="tel:{{project.user_id.phone}}" t-if="project.user_id.phone"><div t-field="project.user_id" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div t-if="project.partner_id" class="col-12 col-md-6 mb-2 mb-md-0">
+                            <h6><strong> Customer </strong></h6>
+                            <div class="row">
+                                <div class="col flex-grow-0 pr-3">
+                                    <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(project.partner_id.avatar_1024)" alt="Contact"/>
+                                </div>
+                                <div class="col pl-sm-0">
+                                    <div t-field="project.partner_id" t-options='{"widget": "contact", "fields": ["name"]}'/>
+                                    <a t-attf-href="mailto:{{project.partner_email}}" t-if="project.partner_email"><div t-field="project.partner_id" t-options='{"widget": "contact", "fields": ["email"]}'/></a>
+                                    <a t-attf-href="tel:{{project.partner_phone}}" t-if="project.partner_phone"><div t-field="project.partner_id" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
                                 </div>
                             </div>
                         </div>

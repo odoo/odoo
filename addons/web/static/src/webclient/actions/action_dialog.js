@@ -2,6 +2,7 @@
 
 import { Dialog } from "../../core/dialog/dialog";
 import { DebugMenu } from "../../core/debug/debug_menu";
+import { useOwnDebugContext } from "../../core/debug/debug_context";
 import { useEffect } from "../../core/effect_hook";
 
 const { hooks } = owl;
@@ -18,6 +19,7 @@ const LEGACY_SIZE_CLASSES = {
 class ActionDialog extends Dialog {
     setup() {
         super.setup();
+        useOwnDebugContext();
         this.actionRef = hooks.useRef("actionRef");
         const actionProps = this.props && this.props.actionProps;
         const action = actionProps && actionProps.action;
@@ -40,9 +42,6 @@ ActionDialog.props = {
  * The "ActionDialog" class should get exported from this file when the cleaning will occur.
  */
 class LegacyAdaptedActionDialog extends ActionDialog {
-    constructor(...args) {
-        super(...args);
-    }
     setup() {
         super.setup();
         const actionProps = this.props && this.props.actionProps;

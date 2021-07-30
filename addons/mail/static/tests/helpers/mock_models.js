@@ -76,15 +76,10 @@ export class MockModels {
                     id: { string: "Id", type: 'integer' },
                     // In python this belongs to mail.channel.partner. Here for simplicity.
                     is_minimized: { string: "isMinimized", type: "boolean", default: false },
-                    // In python it is moderator_ids. Here for simplicity.
-                    is_moderator: { string: "Is current partner moderator?", type: "boolean", default: false },
                     // In python this belongs to mail.channel.partner. Here for simplicity.
                     is_pinned: { string: "isPinned", type: "boolean", default: true },
-                    // In python: email_send.
-                    mass_mailing: { string: "Send messages by email", type: "boolean", default: false },
                     members: { string: "Members", type: 'many2many', relation: 'res.partner', default() { return [this.currentPartnerId]; } },
                     message_unread_counter: { string: "# unread messages", type: 'integer' },
-                    moderation: { string: "Moderation", type: 'boolean', default: false },
                     name: { string: "Name", type: "char", required: true },
                     public: { string: "Public", type: "boolean", default: 'groups' },
                     seen_message_id: { string: "Last Seen", type: 'many2one', relation: 'mail.message' },
@@ -135,7 +130,6 @@ export class MockModels {
                     model: { string: "Related Document model", type: 'char' },
                     needaction: { string: "Need Action", type: 'boolean' },
                     needaction_partner_ids: { string: "Partners with Need Action", type: 'many2many', relation: 'res.partner' },
-                    moderation_status: { string: "Moderation status", type: 'selection', selection: [['pending_moderation', "Pending Moderation"], ['accepted', "Accepted"], ['rejected', "Rejected"]], default: false },
                     notification_ids: { string: "Notifications", type: 'one2many', relation: 'mail.notification' },
                     partner_ids: { string: "Recipients", type: 'many2many', relation: 'res.partner' },
                     record_name: { string: "Name", type: 'char' },

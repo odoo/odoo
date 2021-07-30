@@ -481,6 +481,12 @@ class Team(models.Model):
             population.append(team)
             weights.append(team.assignment_max)
 
+        # Start a new transaction, since data fetching take times
+        # and the first commit occur at the end of the bundle,
+        # the first transaction can be long which we want to avoid
+        if auto_commit:
+            self._cr.commit()
+
         # assignment process data
         global_data = dict(assigned=set(), merged=set(), duplicates=set())
         leads_done_ids, lead_unlink_ids, counter = set(), set(), 0
@@ -489,7 +495,7 @@ class Team(models.Model):
             team = random.choices(population, weights=weights, k=1)[0]
 
             # filter remaining leads, remove team if no more leads for it
-            teams_data[team]["leads"] = teams_data[team]["leads"].filtered(lambda l: l.id not in leads_done_ids)
+            teams_data[team]["leads"] = teams_data[team]["leads"].filtered(lambda l: l.id not in leads_done_ids).exists()
             if not teams_data[team]["leads"]:
                 population_index = population.index(team)
                 population.pop(population_index)
@@ -553,7 +559,7 @@ class Team(models.Model):
                 # fill cache if not already done
                 if lead not in duplicates_cache:
                     duplicates_cache[lead] = lead._get_lead_duplicates(email=lead.email_from)
-                lead_duplicates = duplicates_cache[lead]
+                lead_duplicates = duplicates_cache[lead].exists()
 
                 if len(lead_duplicates) > 1:
                     leads_dups_dict[lead] = lead_duplicates
@@ -587,6 +593,15 @@ class Team(models.Model):
     @api.model
     def action_your_pipeline(self):
         action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_action_pipeline")
+        return self._action_update_to_pipeline(action)
+
+    @api.model
+    def action_opportunity_forecast(self):
+        action = self.env['ir.actions.actions']._for_xml_id('crm.crm_lead_action_forecast')
+        return self._action_update_to_pipeline(action)
+
+    @api.model
+    def _action_update_to_pipeline(self, action):
         user_team_id = self.env.user.sale_team_id.id
         if user_team_id:
             # To ensure that the team is readable in multi company

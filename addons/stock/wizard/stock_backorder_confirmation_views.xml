@@ -34,9 +34,9 @@
                 </field>
 
                 <footer>
-                    <button name="process" string="Create Backorder" type="object" class="oe_highlight"/>
-                    <button name="process_cancel_backorder" string="No Backorder" type="object" class="btn-primary" attrs="{'invisible': [('show_transfers', '=', True)]}"/>
-                    <button string="_Cancel" class="btn-secondary" special="cancel" />
+                    <button name="process" string="Create Backorder" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button name="process_cancel_backorder" string="No Backorder" type="object" class="btn-primary" attrs="{'invisible': [('show_transfers', '=', True)]}" data-hotkey="w"/>
+                    <button string="_Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
                 </footer>
             </form>
         </field>

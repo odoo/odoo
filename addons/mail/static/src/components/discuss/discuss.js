@@ -7,10 +7,9 @@ import { Composer } from '@mail/components/composer/composer';
 import { DiscussMobileMailboxSelection } from '@mail/components/discuss_mobile_mailbox_selection/discuss_mobile_mailbox_selection';
 import { DiscussSidebar } from '@mail/components/discuss_sidebar/discuss_sidebar';
 import { MobileMessagingNavbar } from '@mail/components/mobile_messaging_navbar/mobile_messaging_navbar';
-import { ModerationDiscardDialog } from '@mail/components/moderation_discard_dialog/moderation_discard_dialog';
-import { ModerationRejectDialog } from '@mail/components/moderation_reject_dialog/moderation_reject_dialog';
 import { NotificationList } from '@mail/components/notification_list/notification_list';
 import { ThreadView } from '@mail/components/thread_view/thread_view';
+import { link, unlink } from '@mail/model/model_field_command';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -21,8 +20,6 @@ const components = {
     DiscussMobileMailboxSelection,
     DiscussSidebar,
     MobileMessagingNavbar,
-    ModerationDiscardDialog,
-    ModerationRejectDialog,
     NotificationList,
     ThreadView,
 };
@@ -34,12 +31,7 @@ export class Discuss extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore((...args) => this._useStoreSelector(...args), {
-            compareDepth: {
-                checkedMessages: 1,
-                uncheckedMessages: 1,
-            },
-        });
+        useStore((...args) => this._useStoreSelector(...args));
         this._updateLocalStoreProps();
         /**
          * Reference of the composer. Useful to focus it.
@@ -65,7 +57,6 @@ export class Discuss extends Component {
     }
 
     patched() {
-        this.trigger('o-update-control-panel');
         if (this.discuss.thread) {
             this.trigger('o-push-state-action-manager');
         }
@@ -173,15 +164,10 @@ export class Discuss extends Component {
         const threadView = discuss && discuss.threadView;
         const replyingToMessage = discuss && discuss.replyingToMessage;
         const replyingToMessageOriginThread = replyingToMessage && replyingToMessage.originThread;
-        const checkedMessages = threadView ? threadView.checkedMessages : [];
         return {
-            checkedMessages,
-            checkedMessagesIsModeratedByCurrentPartner: checkedMessages && checkedMessages.some(message => message.isModeratedByCurrentPartner), // for widget
             discuss,
             discussActiveId: discuss && discuss.activeId, // for widget
             discussActiveMobileNavbarTabId: discuss && discuss.activeMobileNavbarTabId,
-            discussHasModerationDiscardDialog: discuss && discuss.hasModerationDiscardDialog,
-            discussHasModerationRejectDialog: discuss && discuss.hasModerationRejectDialog,
             discussIsAddingChannel: discuss && discuss.isAddingChannel,
             discussIsAddingChat: discuss && discuss.isAddingChat,
             discussIsDoFocus: discuss && discuss.isDoFocus,
@@ -190,37 +176,17 @@ export class Discuss extends Component {
             isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
             isMessagingInitialized: this.env.isMessagingInitialized(),
             replyingToMessage,
-            starred: this.env.messaging.starred, // for widget
             thread,
             threadCache: threadView && threadView.threadCache,
-            threadChannelType: thread && thread.channel_type, // for widget
-            threadDisplayName: thread && thread.displayName, // for widget
             threadCounter: thread && thread.counter,
             threadModel: thread && thread.model,
-            threadPublic: thread && thread.public, // for widget
             threadView,
-            threadViewMessagesLength: threadView && threadView.messages.length, // for widget
-            uncheckedMessages: threadView ? threadView.uncheckedMessages : [], // for widget
         };
     }
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onDialogClosedModerationDiscard() {
-        this.discuss.update({ hasModerationDiscardDialog: false });
-    }
-
-    /**
-     * @private
-     */
-    _onDialogClosedModerationReject() {
-        this.discuss.update({ hasModerationRejectDialog: false });
-    }
 
     /**
      * @private
@@ -296,14 +262,21 @@ export class Discuss extends Component {
         }
         this.discuss.clearReplyingToMessage();
         this.discuss.update({ activeMobileNavbarTabId: ev.detail.tabId });
-    }
-
-    /**
-     * @private
-     * @param {CustomEvent} ev
-     */
-    _onThreadRendered(ev) {
-        this.trigger('o-update-control-panel');
+        if (
+            this.discuss.activeMobileNavbarTabId === 'mailbox' &&
+            (!this.discuss.thread || this.discuss.thread.model !== 'mailbox')
+        ) {
+            this.discuss.update({ thread: link(this.env.messaging.inbox) });
+        }
+        if (this.discuss.activeMobileNavbarTabId !== 'mailbox') {
+            this.discuss.update({ thread: unlink() });
+        }
+        if (this.discuss.activeMobileNavbarTabId !== 'chat') {
+            this.discuss.update({ isAddingChat: false });
+        }
+        if (this.discuss.activeMobileNavbarTabId !== 'channel') {
+            this.discuss.update({ isAddingChannel: false });
+        }
     }
 
 }

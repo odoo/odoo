@@ -297,7 +297,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         production = production_form.save()
 
         production.action_confirm()
-
+        production.is_locked = False
         production_form = Form(production)
         with production_form.move_raw_ids.new() as move:
             move.product_id = new_product

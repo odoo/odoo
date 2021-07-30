@@ -1,6 +1,7 @@
 odoo.define('sale_timesheet.tour', function (require) {
 "use strict";
 
+const {Markup} = require('web.utils');
 const tour = require('web_tour.tour');
 
 tour.register('sale_timesheet_tour', {
@@ -28,7 +29,7 @@ tour.register('sale_timesheet_tour', {
     run: 'click',
 }, {
     trigger: '.o_field_widget[name="product_id"], .o_field_widget[name="product_template_id"]',
-    content: 'Select a prepaid service product <i>(e.g. Service Product (Prepaid Hours))</i>',
+    content: Markup('Select a prepaid service product <i>(e.g. Service Product (Prepaid Hours))</i>'),
     run: function (actions) {
         actions.text('Service Product (Prepaid Hours)', this.$anchor.find('input'));
     },
@@ -60,11 +61,7 @@ tour.register('sale_timesheet_tour', {
     run: function (actions) {
         actions.text('Project for Freeman', this.$anchor);
     },
-}, {
-    trigger: 'div[name="allow_billable"] input',
-    content: 'Click on the checkbox to have a billable project.',
-    run: 'click',
-}, {
+},  {
     trigger: 'button[name="action_view_tasks"]',
     content: 'Click on Create button to create and enter to this newest project.',
     run: 'click',
@@ -95,7 +92,7 @@ tour.register('sale_timesheet_tour', {
     run: 'click',
 }, {
     trigger: 'div[name="partner_id"]',
-    content: 'Select the customer of your Sales Order <i>(e.g. Brandon Freeman)</i>. Since we have a Sales Order for this customer with a prepaid service product which the remaining hours to deliver is greater than 0, the Sales Order Item in the task should be contain the Sales Order Item containing this prepaid service product.',
+    content: Markup('Select the customer of your Sales Order <i>(e.g. Brandon Freeman)</i>. Since we have a Sales Order for this customer with a prepaid service product which the remaining hours to deliver is greater than 0, the Sales Order Item in the task should be contain the Sales Order Item containing this prepaid service product.'),
     run: function (actions) {
         actions.text('Brandon Freeman', this.$anchor.find('input'));
     },
@@ -190,7 +187,7 @@ tour.register('sale_timesheet_tour', {
     },
 }, {
     trigger: 'div[name="partner_id"]',
-    content: 'Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.',
+    content: Markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
     run: function (actions) {
         actions.text('Azure Interior, Brandon Freeman', this.$anchor.find('input'));
     },

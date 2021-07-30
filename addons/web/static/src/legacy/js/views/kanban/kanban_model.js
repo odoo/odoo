@@ -113,8 +113,8 @@ var KanbanModel = BasicModel.extend({
         var group = this.localData[groupID];
         var context = this._getContext(group);
         var parent = this.localData[group.parentID];
-        var groupedBy = parent.groupedBy;
-        context['default_' + groupedBy] = viewUtils.getGroupValue(group, groupedBy);
+        var groupByField = viewUtils.getGroupByField(parent.groupedBy[0]);
+        context['default_' + groupByField] = viewUtils.getGroupValue(group, groupByField);
         var def;
         if (Object.keys(values).length === 1 && 'display_name' in values) {
             // only 'display_name is given, perform a 'name_create'
@@ -167,6 +167,8 @@ var KanbanModel = BasicModel.extend({
             } else {
                 result.isGroupedByM2ONoColumn = false;
             }
+            // Keep activeFilter
+            result.activeFilter = dp.activeFilter;
             // Add progressBarValues, loadMoreCount and loadMoreOffset key
             let loadMoreCount = result.count - result.data.length;
             let loadMoreOffset = result.data.length;
@@ -234,9 +236,12 @@ var KanbanModel = BasicModel.extend({
         var parent = this.localData[parentID];
         var new_group = this.localData[groupID];
         var changes = {};
-        var groupedFieldName = parent.groupedBy[0];
+        var groupedFieldName = viewUtils.getGroupByField(parent.groupedBy[0]);
         var groupedField = parent.fields[groupedFieldName];
-        if (groupedField.type === 'many2one') {
+        // for a date/datetime field, we take the last moment of the group as the group value
+        if (['date', 'datetime'].includes(groupedField.type)) {
+            changes[groupedFieldName] = viewUtils.getGroupValue(new_group, groupedFieldName);
+        } else if (groupedField.type === 'many2one') {
             changes[groupedFieldName] = {
                 id: new_group.res_id,
                 display_name: new_group.value,
@@ -261,6 +266,11 @@ var KanbanModel = BasicModel.extend({
             if (index >= 0) {
                 old_group.data.splice(index, 1);
                 old_group.count--;
+                if (!old_group.activeFilter || old_group.activeFilter.value === record.data[parent.progressBar.field]) {
+                    // Here, the record leaving the old group matches its domain,
+                    // so we must decrease the domainCount too.
+                    old_group.domainCount--;
+                }
                 old_group.res_ids = _.without(old_group.res_ids, resID);
                 self._updateParentResIDs(old_group);
                 break;
@@ -352,6 +362,10 @@ var KanbanModel = BasicModel.extend({
         if (params.progressBar) {
             dataPoint.progressBar = params.progressBar;
         }
+        // In Kanban view, we sometimes drag into a group records that are
+        // outside of its domain. Here we make sure to remember the initial
+        // domain count. This is useful for e.g. progressbars computations.
+        dataPoint.domainCount = dataPoint.count;
         return dataPoint;
     },
     /**
@@ -389,24 +403,37 @@ var KanbanModel = BasicModel.extend({
         const groupsDef = this._readGroup(list, options);
         const progressBarDef = this._readProgressBar(list);
         const [groups, progressBar] = await Promise.all([groupsDef, progressBarDef]);
-        list.data.forEach(groupId => {
-            const group = this.localData[groupId];
 
+        // For each empty group having an active filter, we clear their filter and refetch.
+        // For instance, this could arrive when we drag out all records of a column
+        // having an active filter, or when the view domain has been updated.
+        const groupProms = [];
+        for (const groupId of list.data) {
+            const group = this.localData[groupId];
+            if (group.activeFilter && group.activeFilter.value && !group.data.length) {
+                group.activeFilter = {};
+                groupProms.push(this._fetchUngroupedList(group));
+            }
+        }
+        await Promise.all(groupProms);
+
+        // Compute records count for progressbar field values
+        // not specified in the progressbar attributes
+        for (const groupId of list.data) {
+            const group = this.localData[groupId];
             const valuesCount = progressBar[group.value] || {};
             const valuesCountTotal = Object.keys(valuesCount).reduce((sum, key) => {
                 return sum + valuesCount[key];
             }, 0);
 
-            // Compute records count for progressbar field values
-            // not specified in the progressbar attributes
             const counts = Object.assign({
-                __false: group.count - valuesCountTotal
+                __false: group.domainCount - valuesCountTotal
             }, valuesCount);
 
             group.progressBarValues = Object.assign({
                 counts,
             }, list.progressBar);
-        });
+        }
         return list;
     },
     /**

@@ -30,5 +30,6 @@ This module allow to reinvoice employee expense, by setting the SO directly on t
         'web.qunit_suite_tests': [
             'sale_expense/static/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

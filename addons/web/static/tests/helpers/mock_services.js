@@ -6,7 +6,7 @@ import { localization } from "@web/core/l10n/localization";
 import { translatedTerms } from "@web/core/l10n/translation";
 import { rpcService } from "@web/core/network/rpc_service";
 import { userService } from "@web/core/user_service";
-import { effectService } from "@web/webclient/effects/effect_service";
+import { effectService } from "@web/core/effects/effect_service";
 import { objectToUrlEncodedString } from "@web/core/utils/urls";
 import { registerCleanup } from "./cleanup";
 import { patchWithCleanup } from "./utils";
@@ -76,20 +76,39 @@ export function makeMockXHR(response, sendCb, def) {
             addEventListener(type, listener) {
                 if (type === "load") {
                     this._loadListener = listener;
+                } else if (type === "error") {
+                    this._errorListener = listener;
                 }
+            },
+            set onload(listener) {
+                this._loadListener = listener;
+            },
+            set onerror(listener) {
+                this._errorListener = listener;
             },
             open(method, url) {
                 this.url = url;
             },
+            getResponseHeader() {},
             setRequestHeader() {},
             async send(data) {
+                let listener = this._loadListener;
                 if (sendCb) {
-                    sendCb.call(this, JSON.parse(data));
+                    if (typeof data === "string") {
+                        try {
+                            data = JSON.parse(data);
+                        } catch (e) {}
+                    }
+                    try {
+                        await sendCb.call(this, data);
+                    } catch (e) {
+                        listener = this._errorListener;
+                    }
                 }
                 if (def) {
                     await def;
                 }
-                this._loadListener();
+                listener.call(this);
             },
             response: JSON.stringify(response || ""),
         };

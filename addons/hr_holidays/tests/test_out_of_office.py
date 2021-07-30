@@ -47,7 +47,6 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'channel_partner_ids': [(4, partner.id), (4, partner2.id)],
             'public': 'private',
             'channel_type': 'chat',
-            'email_send': False,
             'name': 'test'
         })
         channel_info = channel.channel_info()[0]

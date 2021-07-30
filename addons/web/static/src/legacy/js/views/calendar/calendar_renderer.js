@@ -518,6 +518,7 @@ return AbstractRenderer.extend({
                 $(self.calendarElement).find(self._computeEventSelector(mouseLeaveInfo)).removeClass('o_cw_custom_hover');
             },
             eventDragStart: function (mouseDragInfo) {
+                mouseDragInfo.el.classList.add(mouseDragInfo.view.type);
                 $(self.calendarElement).find(`[data-event-id=${mouseDragInfo.event.id}]`).addClass('o_cw_custom_hover');
                 self._unselectEvent();
             },
@@ -904,7 +905,7 @@ return AbstractRenderer.extend({
             const start = moment(event.extendedProps.r_start);
             const end = moment(event.extendedProps.r_end);
             const duration = moment.duration(end.diff(start)).asDays();
-            event.extendedProps.record.start_hour = event.extendedProps.record.allday === false && duration < 1 ? start.format("HH:mm") : "";
+            event.extendedProps.record.start_hour = !event.extendedProps.record.allday && duration < 1 ? start.format("HH:mm") : "";
             const key = this._getFormattedDate(start, end, false, event.extendedProps.record.allday);
             if (!(key in groupedEvents)) {
                 groupedEvents[key] = [];

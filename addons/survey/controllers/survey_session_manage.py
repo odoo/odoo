@@ -3,7 +3,6 @@
 
 import datetime
 import json
-import werkzeug
 
 from dateutil.relativedelta import relativedelta
 from werkzeug.exceptions import NotFound
@@ -177,9 +176,9 @@ class UserInputSession(http.Controller):
 
         survey = self._fetch_from_session_code(session_code)
         if survey and survey.session_state in ['ready', 'in_progress']:
-            return werkzeug.utils.redirect("/survey/start/%s" % survey.access_token)
+            return request.redirect("/survey/start/%s" % survey.access_token)
 
-        return werkzeug.utils.redirect("/s")
+        return request.redirect("/s")
 
     @http.route('/survey/check_session_code/<string:session_code>', type='json', auth='public', website=True)
     def survey_check_session_code(self, session_code):

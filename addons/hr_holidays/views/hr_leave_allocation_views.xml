@@ -90,7 +90,7 @@
                     <group>
                         <group>
                             <field name="type_request_unit" invisible="1"/>
-                            <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
+                            <field name="holiday_status_id" context="{'employee_id':employee_id, 'default_date_from':current_date}"/>
 
                             <field name="allocation_type" invisible="1" widget="radio"/>
 
@@ -100,7 +100,7 @@
                                 <label for="number_of_days" string="Duration" attrs="{'invisible': [('allocation_type', '=', 'accrual')]}"/>
                                 <label for="number_of_days" string="Extra days" attrs="{'invisible': [('allocation_type', '!=', 'accrual')]}"/>
                             </div>
-                            <div>
+                            <div name="duration_display">
                                 <field name="number_of_days_display" class="oe_inline" nolabel="1"
                                     attrs="{'readonly': ['|', ('type_request_unit', '=', 'hour'), ('state', 'not in', ('draft', 'confirm'))], 'invisible': [('type_request_unit', '=', 'hour')]}"/>
                                 <field name="number_of_hours_display" class="oe_inline" nolabel="1"
@@ -456,8 +456,8 @@
             </div>
             <xpath expr="//sheet" position="after">
                 <footer>
-                    <button string="Save" special="save" class="oe_highlight" />
-                    <button string="Discard" special="cancel" />
+                    <button string="Save" special="save" data-hotkey="v" class="oe_highlight" />
+                    <button string="Discard" special="cancel" data-hotkey="z" />
                 </footer>
             </xpath>
         </field>

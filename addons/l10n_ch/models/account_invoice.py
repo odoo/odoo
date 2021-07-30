@@ -317,7 +317,7 @@ class AccountMove(models.Model):
     def message_post(self, **kwargs):
         if self.env.context.get('l10n_ch_mark_isr_as_sent'):
             self.filtered(lambda inv: not inv.l10n_ch_isr_sent).write({'l10n_ch_isr_sent': True})
-        return super(AccountMove, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
+        return super(AccountMove, self.with_context(mail_post_autofollow=self.env.context.get('mail_post_autofollow', True))).message_post(**kwargs)
 
     def _get_invoice_reference_ch_invoice(self):
         """ This sets ISR reference number which is generated based on customer's `Bank Account` and set it as

@@ -97,9 +97,7 @@ export function makeLegacyDialogMappingService(legacyEnv) {
 
             function onOpenDialog(dialog) {
                 ui.activateElement(getModalEl(dialog));
-                const remove = hotkey.add("escape", getCloseCallback(dialog), {
-                    altIsOptional: true,
-                });
+                const remove = hotkey.add("escape", getCloseCallback(dialog));
                 dialogHotkeyRemoveMap.set(dialog, remove);
             }
 
@@ -145,7 +143,10 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
         let rejection;
         const prom = new Promise((resolve, reject) => {
             const [route, params, settings = {}] = args;
-            const jsonrpc = wowlEnv.services.rpc(route, params, { silent: settings.shadow });
+            const jsonrpc = wowlEnv.services.rpc(route, params, {
+                silent: settings.shadow,
+                xhr: settings.xhr,
+            });
             rejection = () => {
                 jsonrpc.abort();
             };
@@ -279,7 +280,7 @@ export function makeLegacyCrashManagerService(legacyEnv) {
         start(env) {
             legacyEnv.services.crash_manager = {
                 show_message(message) {
-                    env.services.dialog.open(ErrorDialog, { traceback: message });
+                    env.services.dialog.add(ErrorDialog, { traceback: message });
                 },
                 rpc_error(errorResponse) {
                     // Will be handled by error_service
@@ -299,4 +300,15 @@ export function wrapSuccessOrFail(promise, { on_success, on_fail } = {}) {
             throw reason;
         }
     });
+}
+
+export function makeLegacyRainbowManService(legacyEnv) {
+    return {
+        dependencies: ["effect"],
+        start(env, { effect }) {
+            legacyEnv.bus.on("show-effect", null, (payload) => {
+                effect.add(payload.type, payload);
+            });
+        },
+    };
 }

@@ -172,10 +172,10 @@ export function click(el, selector) {
  * Triggers an hotkey properly disregarding the operating system.
  *
  * @param {string} hotkey
- * @param {boolean} altIsOptional
+ * @param {boolean} addOverlayModParts
  * @param {KeyboardEventInit} eventAttrs
  */
-export function triggerHotkey(hotkey, altIsOptional = false, eventAttrs = {}) {
+export function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {}) {
     eventAttrs.key = hotkey.split("+").pop();
 
     if (/shift/i.test(hotkey)) {
@@ -190,7 +190,7 @@ export function triggerHotkey(hotkey, altIsOptional = false, eventAttrs = {}) {
         }
     }
 
-    if (!altIsOptional) {
+    if (/alt/i.test(hotkey) || addOverlayModParts) {
         if (isMacOS()) {
             eventAttrs.ctrlKey = true;
         } else {
@@ -199,6 +199,7 @@ export function triggerHotkey(hotkey, altIsOptional = false, eventAttrs = {}) {
     }
 
     window.dispatchEvent(new KeyboardEvent("keydown", eventAttrs));
+    window.dispatchEvent(new KeyboardEvent("keyup", eventAttrs));
 }
 
 export async function legacyExtraNextTick() {
@@ -207,4 +208,9 @@ export async function legacyExtraNextTick() {
 
 export function mockDownload(cb) {
     patchWithCleanup(download, { _download: cb });
+}
+
+export const hushConsole = Object.create(null);
+for (const propName of Object.keys(window.console)) {
+    hushConsole[propName] = () => {};
 }

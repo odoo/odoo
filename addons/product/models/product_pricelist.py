@@ -5,7 +5,7 @@ from itertools import chain
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_repr
+from odoo.tools import float_repr, format_datetime
 from odoo.tools.misc import get_lang
 
 
@@ -346,6 +346,20 @@ class Pricelist(models.Model):
             'template': '/product/static/xls/product_pricelist.xls'
         }]
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_used_as_rule_base(self):
+        linked_items = self.env['product.pricelist.item'].sudo().with_context(active_test=False).search([
+            ('base', '=', 'pricelist'),
+            ('base_pricelist_id', 'in', self.ids),
+            ('pricelist_id', 'not in', self.ids),
+        ])
+        if linked_items:
+            raise UserError(_(
+                'You cannot delete those pricelist(s):\n(%s)\n, they are used in other pricelist(s):\n%s',
+                '\n'.join(linked_items.base_pricelist_id.mapped('display_name')),
+                '\n'.join(linked_items.pricelist_id.mapped('display_name'))
+            ))
+
 
 class ResCountryGroup(models.Model):
     _inherit = 'res.country.group'
@@ -451,6 +465,13 @@ class PricelistItem(models.Model):
         if any(item.base == 'pricelist' and item.pricelist_id and item.pricelist_id == item.base_pricelist_id for item in self):
             raise ValidationError(_('You cannot assign the Main Pricelist as Other Pricelist in PriceList Item'))
 
+    @api.constrains('date_start', 'date_end')
+    def _check_date_range(self):
+        for item in self:
+            if item.date_start and item.date_end and item.date_start >= item.date_end:
+                raise ValidationError(_('%s : end date (%s) should be greater than start date (%s)', item.display_name, format_datetime(self.env, item.date_end), format_datetime(self.env, item.date_start)))
+        return True
+
     @api.constrains('price_min_margin', 'price_max_margin')
     def _check_margin(self):
         if any(item.price_min_margin > item.price_max_margin for item in self):
@@ -537,6 +558,7 @@ class PricelistItem(models.Model):
             self.percent_price = 0.0
         if self.compute_price != 'formula':
             self.update({
+                'base': 'list_price',
                 'price_discount': 0.0,
                 'price_surcharge': 0.0,
                 'price_round': 0.0,

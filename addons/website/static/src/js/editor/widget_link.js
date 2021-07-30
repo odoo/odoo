@@ -57,20 +57,21 @@ weWidgets.LinkTools.include({
         const isFromWebsite = urlInputValue[0] === '/';
         const $selectMenu = this.$('we-selection-items[name="link_anchor"]');
 
-        $pageAnchor.toggleClass('d-none', !isFromWebsite);
-        $selectMenu.empty();
-
-        const always = () => $pageAnchor.find('we-toggler').text('\u00A0');
-        wUtils.loadAnchors(urlInputValue).then(anchors => {
-            for (const anchor of anchors) {
-                const $option = $('<we-button class="dropdown-item">');
-                $option.text(anchor);
-                $option.data('value', anchor);
-                $selectMenu.append($option);
-            }
-            always();
-        }).guardedCatch(always);
-
+        if ($selectMenu.data("anchor-for") !== urlInputValue) { // avoid useless query
+            $pageAnchor.toggleClass('d-none', !isFromWebsite);
+            $selectMenu.empty();
+            const always = () => $pageAnchor.find('we-toggler').text('\u00A0');
+            wUtils.loadAnchors(urlInputValue).then(anchors => {
+                for (const anchor of anchors) {
+                    const $option = $('<we-button class="dropdown-item">');
+                    $option.text(anchor);
+                    $option.data('value', anchor);
+                    $selectMenu.append($option);
+                }
+                always();
+            }).guardedCatch(always);
+        }
+        $selectMenu.data("anchor-for", urlInputValue);
     },
 
     //--------------------------------------------------------------------------

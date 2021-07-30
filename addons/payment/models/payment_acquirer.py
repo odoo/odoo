@@ -192,6 +192,10 @@ class PaymentAcquirer(models.Model):
             elif payment_method:
                 payment_method.unlink()
 
+    def _get_default_payment_method(self):
+        self.ensure_one()
+        return self.env.ref('account.account_payment_method_manual_in').id
+
     #=== CONSTRAINT METHODS ===#
 
     @api.constrains('fees_dom_var', 'fees_int_var')
@@ -267,7 +271,8 @@ class PaymentAcquirer(models.Model):
 
     @api.model
     def _get_compatible_acquirers(
-        self, company_id, partner_id, currency_id=None, force_tokenization=False, **kwargs
+        self, company_id, partner_id, currency_id=None, force_tokenization=False,
+        is_validation=False, **kwargs
     ):
         """ Select and return the acquirers matching the criteria.
 
@@ -278,6 +283,7 @@ class PaymentAcquirer(models.Model):
         :param int partner_id: The partner making the payment, as a `res.partner` id
         :param int currency_id: The payment currency if known beforehand, as a `res.currency` id
         :param bool force_tokenization: Whether only acquirers allowing tokenization can be matched
+        :param bool is_validation: Whether the operation is a validation
         :param dict kwargs: Optional data. This parameter is not used here
         :return: The compatible acquirers
         :rtype: recordset of `payment.acquirer`
@@ -389,6 +395,17 @@ class PaymentAcquirer(models.Model):
         self.ensure_one()
         return self.journal_id.currency_id or self.company_id.currency_id
 
-    def _get_default_payment_method(self):
+    def _get_redirect_form_view(self, is_validation=False):
+        """ Return the view of the template used to render the redirect form.
+
+        For an acquirer to return a different view depending on whether the operation is a
+        validation, it must override this method and return the appropriate view.
+
+        Note: self.ensure_one()
+
+        :param bool is_validation: Whether the operation is a validation
+        :return: The redirect form template
+        :rtype: record of `ir.ui.view`
+        """
         self.ensure_one()
-        return self.env.ref('account.account_payment_method_manual_in').id
+        return self.redirect_form_view_id

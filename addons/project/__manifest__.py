@@ -84,5 +84,6 @@
         'web.assets_tests': [
             'project/static/tests/tours/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

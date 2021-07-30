@@ -33,5 +33,6 @@
         'web.assets_qweb': [
             'google_calendar/static/src/xml/*.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

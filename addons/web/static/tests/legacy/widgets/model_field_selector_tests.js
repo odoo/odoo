@@ -182,7 +182,7 @@ QUnit.module('ModelFieldSelector', {
             readonly: false,
             debugMode: true,
         });
-        await testUtils.addMockEnvironment(fieldSelector, {data: this.data});
+        await testUtils.mock.addMockEnvironment(fieldSelector, {data: this.data});
         await fieldSelector.appendTo($target);
 
         // Focusing the field selector input should open a field selector popover

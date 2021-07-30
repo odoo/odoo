@@ -55,6 +55,7 @@ from .tools.func import lazy_property
 from .tools import profiler
 from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
 from .tools.mimetypes import guess_mimetype
+from .tools.misc import str2bool
 from .tools._vendor import sessions
 from .modules.module import read_manifest
 
@@ -159,21 +160,6 @@ def dispatch_rpc(service_name, method, params):
         odoo.tools.debugger.post_mortem(odoo.tools.config, sys.exc_info())
         raise
 
-def local_redirect(path, query=None, keep_hash=False, code=303):
-    # FIXME: drop the `keep_hash` param, now useless
-    url = path
-    if not query:
-        query = {}
-    if query:
-        url += '?' + urls.url_encode(query)
-    return werkzeug.utils.redirect(url, code)
-
-def redirect_with_hash(url, code=303):
-    # Section 7.1.2 of RFC 7231 requires preservation of URL fragment through redirects,
-    # so we don't need any special handling anymore. This function could be dropped in the future.
-    # seealso : http://www.rfc-editor.org/info/rfc7231
-    #           https://tools.ietf.org/html/rfc7231#section-7.1.2
-    return werkzeug.utils.redirect(url, code)
 
 class WebRequest(object):
     """ Parent class for all Odoo Web request types, mostly deals with
@@ -314,6 +300,21 @@ class WebRequest(object):
         # not guaranteed to copy.copy cleanly & we want `exception` as leaf (for
         # callers to check & look at)
         raise exception.with_traceback(None) from new_cause
+
+    def redirect(self, location, code=303, local=True):
+        # compatibility, Werkzeug support URL as location
+        if isinstance(location, urls.URL):
+            location = location.to_url()
+        if local:
+            location = urls.url_parse(location).replace(scheme='', netloc='').to_url()
+        if request and request.db:
+            return request.registry['ir.http']._redirect(location, code)
+        return werkzeug.utils.redirect(location, code, Response=Response)
+
+    def redirect_query(self, location, query=None, code=303, local=True):
+        if query:
+            location += '?' + urls.url_encode(query)
+        return self.redirect(location, code=code, local=local)
 
     def _is_cors_preflight(self, endpoint):
         return False
@@ -759,7 +760,7 @@ class HttpRequest(WebRequest):
                 query = werkzeug.urls.url_encode({
                     'redirect': redirect,
                 })
-                return werkzeug.utils.redirect('/web/login?%s' % query)
+                return request.redirect('/web/login?%s' % query)
         except werkzeug.exceptions.HTTPException as e:
             return e
 
@@ -1177,6 +1178,14 @@ def session_gc(session_store):
             except OSError:
                 pass
 
+ODOO_DISABLE_SESSION_GC = str2bool(os.environ.get('ODOO_DISABLE_SESSION_GC', '0'))
+
+if ODOO_DISABLE_SESSION_GC:
+    # empty function, in case another module would be
+    # calling it out of setup_session()
+    session_gc = lambda s: None
+
+
 #----------------------------------------------------------
 # WSGI Layer
 #----------------------------------------------------------
@@ -1282,6 +1291,8 @@ class Root(object):
         # Setup http sessions
         path = odoo.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
+        if ODOO_DISABLE_SESSION_GC:
+            _logger.info('Default session GC disabled, manual GC required.')
         return sessions.FilesystemSessionStore(
             path, session_class=OpenERPSession, renew_missing=True)
 

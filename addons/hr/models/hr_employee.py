@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
+import pytz
+from datetime import datetime, time
+from dateutil.rrule import rrule, DAILY
 from random import choice
 from string import digits
 from werkzeug.urls import url_encode
@@ -118,6 +120,8 @@ class HrEmployeePrivate(models.Model):
     departure_description = fields.Text(string="Additional Information", groups="hr.group_hr_user", copy=False, tracking=True)
     departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
     message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
+    id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_user")
+    driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_user")
 
     _sql_constraints = [
         ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),
@@ -393,6 +397,21 @@ class HrEmployeePrivate(models.Model):
             except AccessError:
                 employee.is_address_home_a_company = False
 
+    def _get_tz(self):
+        # Finds the first valid timezone in his tz, his work hours tz,
+        #  the company calendar tz or UTC and returns it as a string
+        self.ensure_one()
+        return self.tz or\
+               self.resource_calendar_id.tz or\
+               self.company_id.resource_calendar_id.tz or\
+               'UTC'
+
+    def _get_tz_batch(self):
+        # Finds the first valid timezone in his tz, his work hours tz,
+        #  the company calendar tz or UTC
+        # Returns a dict {employee_id: tz}
+        return {emp.id: emp._get_tz() for emp in self}
+
     # ---------------------------------------------------------
     # Business Methods
     # ---------------------------------------------------------
@@ -481,6 +500,19 @@ class HrEmployeePrivate(models.Model):
                 employee_id._message_log(
                     body='<br/>'.join(errors),
                 )
+
+    def _get_unusual_days(self, date_from, date_to=None):
+        # Checking the calendar directly allows to not grey out the leaves taken
+        # by the employee
+        self.ensure_one()
+        calendar = self.resource_calendar_id
+        if not calendar:
+            return {}
+        dfrom = datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=pytz.UTC)
+        dto = datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=pytz.UTC)
+
+        works = {d[0].date() for d in calendar._work_intervals_batch(dfrom, dto)[False]}
+        return {fields.Date.to_string(day.date()): (day.date() not in works) for day in rrule(DAILY, dfrom, until=dto)}
 
     # ---------------------------------------------------------
     # Messaging

@@ -26,7 +26,7 @@
                     t-ref="fileUploader"
                 />
                 <t t-if="hasHeader">
-                    <div class="o_Composer_coreHeader">
+                    <div class="o_Composer_coreHeader text-truncate">
                         <t t-if="props.hasThreadName and composer.thread">
                             <span class="o_Composer_threadName">
                                 on: <b><t t-esc="composer.thread.displayName"/></b>
@@ -38,8 +38,8 @@
                                 <b class="text-muted">To: </b>
                                 <em class="text-muted">Followers of </em>
                                 <b>
-                                    <t t-if="composer.thread and composer.thread.name">
-                                        &#32;&quot;<t t-esc="composer.thread.name"/>&quot;
+                                    <t t-if="composer.thread and composer.thread.displayName">
+                                        &#32;&quot;<t t-esc="composer.thread.displayName"/>&quot;
                                     </t>
                                     <t t-else="">
                                         this document
@@ -52,11 +52,6 @@
                         </t>
                     </div>
                 </t>
-                <t t-if="composer.thread and composer.thread.model === 'mail.channel' and composer.thread.mass_mailing">
-                    <div class="o_Composer_subject">
-                        <input class="o_Composer_subjectInput" type="text" placeholder="Subject" t-on-input="_onInputSubject" t-ref="subject"/>
-                    </div>
-                </t>
                 <t t-if="props.hasCurrentPartnerAvatar">
                     <div class="o_Composer_sidebarMain">
                         <img class="o_Composer_currentPartnerAvatar rounded-circle" t-att-src="currentPartnerAvatar" alt=""/>
@@ -66,7 +61,6 @@
                     class="o_Composer_coreMain"
                     t-att-class="{
                         'o-composer-is-compact': props.isCompact,
-                        'o-composer-is-extended': composer.thread and composer.thread.mass_mailing,
                     }"
                 >
                     <ComposerTextInput

@@ -54,6 +54,7 @@
         'wizard/stock_backorder_confirmation_views.xml',
         'wizard/stock_quantity_history.xml',
         'wizard/stock_request_count.xml',
+        'wizard/stock_replenishment_info.xml',
         'wizard/stock_rules_report_views.xml',
         'wizard/stock_warn_insufficient_qty_views.xml',
         'wizard/product_replenish_views.xml',
@@ -134,5 +135,6 @@
             'stock/static/src/xml/stock_orderpoint.xml',
             'stock/static/src/xml/stock_traceability_report_backend.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

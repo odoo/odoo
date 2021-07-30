@@ -260,7 +260,7 @@
         <t t-call="website.layout">
             <t t-set="additional_title">Shop</t>
             <div id="wrap" class="js_sale">
-                <div class="oe_structure oe_empty" id="oe_structure_website_sale_products_1"/>
+                <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_products_1"/>
                 <div class="container oe_website_sale pt-2">
                     <div class="row o_wsale_products_main_row">
                         <div t-if="enable_left_column" id="products_grid_before" class="col-lg-3 pb-2">
@@ -328,7 +328,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="oe_structure oe_empty" id="oe_structure_website_sale_products_2"/>
+                <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_products_2"/>
             </div>
         </t>
     </template>
@@ -342,15 +342,15 @@
 
     <template id="sort" inherit_id="website_sale.products" customize_show="True" name="Show Sort by">
         <xpath expr="//div[hasclass('products_header')]/t[@t-call='website_sale.pricelist_list']" position="after">
-            <t t-set="list_price_desc_label">Price - High to Low</t>
             <t t-set="list_price_asc_label">Price - Low to High</t>
-            <t t-set="name_asc_label">Name - A to Z</t>
-            <t t-set="name_desc_label">Name - Z to A</t>
+            <t t-set="list_price_desc_label">Price - High to Low</t>
+            <t t-set="newest_arrivals_desc_label">Newest arrivals</t>
+            <t t-set="name_asc_label">Name</t>
             <t t-set="website_sale_sortable" t-value="[
-                (list_price_desc_label, 'list_price desc'),
                 (list_price_asc_label, 'list_price asc'),
-                (name_asc_label, 'name asc'),
-                (name_desc_label, 'name desc')
+                (list_price_desc_label, 'list_price desc'),
+                (newest_arrivals_desc_label, 'create_date desc'),
+                (name_asc_label, 'name asc')
             ]"/>
             <t t-set="website_sale_sortable_current" t-value="[sort for sort in website_sale_sortable if sort[1]==request.params.get('order', '')]"/>
             <div class="o_sortby_dropdown dropdown dropdown_sorty_by ml-3 pb-2">
@@ -546,7 +546,7 @@
         <t t-call="website.layout">
             <t t-set="additional_title" t-value="product.name" />
             <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
-                <div class="oe_structure oe_empty" id="oe_structure_website_sale_product_1" data-editor-message="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
+                <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" data-editor-message="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
                 <section t-attf-class="container py-4 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}" id="product_detail" t-att-data-view-track="view_track and '1' or '0'">
                     <div class="row">
                         <div class="col-lg-6">
@@ -638,7 +638,7 @@
                     </div>
                 </section>
                 <div itemprop="description" t-field="product.website_description" class="oe_structure oe_empty mt16" id="product_full_description"/>
-                <div class="oe_structure oe_empty mt16" id="oe_structure_website_sale_product_2" data-editor-message="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
+                <div class="oe_structure oe_empty oe_structure_not_nearest mt16" id="oe_structure_website_sale_product_2" data-editor-message="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
             </div>
         </t>
     </template>
@@ -866,7 +866,7 @@
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
                                 <div class="container">
-                                    <form action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required s_website_form_no_recaptcha" data-mark="*" data-force_action="shop.sale.order" data-model_name="sale.order" data-success-mode="redirect" data-success-page="/shop/payment" hide-change-model="true">
+                                    <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required s_website_form_no_recaptcha" data-mark="*" data-force_action="shop.sale.order" data-model_name="sale.order" data-success-mode="redirect" data-success-page="/shop/payment" hide-change-model="true">
                                         <div class="s_website_form_rows row s_col_no_bgcolor">
                                             <div class="form-group col-12 s_website_form_field" data-type="char" data-name="Field">
                                                 <div class="row s_col_no_resize s_col_no_bgcolor">
@@ -993,7 +993,7 @@
                             </t>
                         </td>
                         <td class="text-center td-qty">
-                            <div class="css_quantity input-group mx-auto">
+                            <div class="css_quantity input-group mx-auto justify-content-center">
                                 <t t-if="not line._is_not_sellable_line()">
                                     <t t-if="show_qty">
                                         <div class="input-group-prepend">
@@ -1014,6 +1014,7 @@
                                 </t>
                                 <t t-else="">
                                     <span class="text-muted w-100" t-esc="int(line.product_uom_qty)"/>
+                                    <input type="hidden" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="line.product_uom_qty" />
                                 </t>
                             </div>
                         </td>

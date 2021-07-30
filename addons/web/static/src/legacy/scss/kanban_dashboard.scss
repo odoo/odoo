@@ -44,8 +44,11 @@
             }
 
             > .o_kanban_card_manage_section {
-                border-bottom: 1px solid gray('300');
                 margin-bottom: 10px;
+
+                + .o_kanban_card_manage_section {
+                    border-top: 1px solid gray('200');
+                }
 
                 > div {
                     @include o-kanban-dashboard-dropdown-link;
@@ -83,8 +86,11 @@
                 }
 
                 .row.o_kanban_card_manage_settings {
-                    border-top: 1px solid gray('300');
                     padding-top: $o-kanban-dashboard-dropdown-complex-gap*3;
+
+                    &:not(:first-child) {
+                        border-top: 1px solid gray('300');
+                    }
 
                     .oe_kanban_colorpicker {
                         max-width: none;
@@ -99,10 +105,6 @@
                     div.text-right {
                         text-align: left; // :/
                         @include o-kanban-dashboard-dropdown-link(0);
-                        > a {
-                            margin-left: 40px;
-                            padding-left: 20px;
-                        }
                     }
                 }
             }

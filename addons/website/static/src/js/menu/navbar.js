@@ -1,14 +1,12 @@
-odoo.define('website.navbar', function (require) {
-'use strict';
+/** @odoo-module alias=website.navbar */
 
-var core = require('web.core');
-var dom = require('web.dom');
-var publicWidget = require('web.public.widget');
-var concurrency = require('web.concurrency');
-var Widget = require('web.Widget');
-var websiteRootData = require('website.root');
+import core from 'web.core';
+import dom from 'web.dom';
+import publicWidget from 'web.public.widget';
+import concurrency from 'web.concurrency';
+import Widget from 'web.Widget';
 
-var websiteNavbarRegistry = new publicWidget.RootWidgetRegistry();
+import { registry } from "@web/core/registry";
 
 var WebsiteNavbar = publicWidget.RootWidget.extend({
     xmlDependencies: ['/website/static/src/xml/website.xml'],
@@ -78,7 +76,7 @@ var WebsiteNavbar = publicWidget.RootWidget.extend({
      * @override
      */
     _getRegistry: function () {
-        return websiteNavbarRegistry;
+        return registry.category("website_navbar_widgets");
     },
     /**
      * Searches for the automatic widget {@see RootWidget} which can handle that
@@ -282,11 +280,12 @@ var WebsiteNavbarActionWidget = Widget.extend({
     },
 });
 
-websiteRootData.websiteRootRegistry.add(WebsiteNavbar, '#oe_main_menu_navbar');
+registry.category("public_root_widgets").add("WebsiteNavbar", {
+    Widget: WebsiteNavbar,
+    selector: '#oe_main_menu_navbar',
+});
 
-return {
+export default {
     WebsiteNavbar: WebsiteNavbar,
-    websiteNavbarRegistry: websiteNavbarRegistry,
     WebsiteNavbarActionWidget: WebsiteNavbarActionWidget,
 };
-});

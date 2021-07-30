@@ -69,3 +69,49 @@ class ProductProduct(models.Model):
             qty_by_product_location[(product.id, location.id)] += product_qty
             qty_by_product_wh[(product.id, location.warehouse_id.id)] += product_qty
         return qty_by_product_location, qty_by_product_wh
+
+
+class SupplierInfo(models.Model):
+    _inherit = 'product.supplierinfo'
+
+    last_purchase_date = fields.Date('Last Purchase', compute='_compute_last_purchase_date')
+    show_set_supplier_button = fields.Boolean(
+        'Show Set Supplier Button', compute='_compute_show_set_supplier_button')
+
+    def _compute_last_purchase_date(self):
+        self.last_purchase_date = False
+        purchases = self.env['purchase.order'].search([
+            ('state', 'in', ('purchase', 'done')),
+            ('order_line.product_id', 'in',
+             self.product_tmpl_id.product_variant_ids.ids),
+            ('partner_id', 'in', self.name.ids),
+        ], order='date_order')
+        for supplier in self:
+            products = supplier.product_tmpl_id.product_variant_ids
+            for purchase in purchases:
+                if purchase.partner_id != supplier.name:
+                    continue
+                if not (products & purchase.order_line.product_id):
+                    continue
+                supplier.last_purchase_date = purchase.date_order
+                break
+
+    def _compute_show_set_supplier_button(self):
+        self.show_set_supplier_button = True
+        orderpoint_id = self.env.context.get('default_orderpoint_id')
+        orderpoint = self.env['stock.warehouse.orderpoint'].browse(orderpoint_id)
+        if orderpoint_id:
+            self.filtered(
+                lambda s: s.id == orderpoint.supplier_id.id
+            ).show_set_supplier_button = False
+
+    def action_set_supplier(self):
+        self.ensure_one()
+        orderpoint_id = self.env.context.get('orderpoint_id')
+        orderpoint = self.env['stock.warehouse.orderpoint'].browse(orderpoint_id)
+        if not orderpoint:
+            return
+        orderpoint.route_id = self.env['stock.rule'].search([('action', '=', 'buy')], limit=1).route_id.id
+        orderpoint.supplier_id = self
+        if orderpoint.qty_to_order < self.min_qty:
+            orderpoint.qty_to_order = self.min_qty

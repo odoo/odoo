@@ -57,6 +57,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/es6-promise/es6-promise-polyfill.js',
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/boot.js',
+            'web/static/src/session.js',
         ],
         'web.assets_common': [
             ('include', 'web._assets_helpers'),
@@ -73,6 +74,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/lib/es6-promise/es6-promise-polyfill.js'),
             ('remove', 'web/static/src/legacy/js/promise_extension.js'),
             ('remove', 'web/static/src/boot.js'),
+            ('remove', 'web/static/src/session.js'),
         ],
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),
@@ -94,7 +96,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/env.js',
 
             'web/static/lib/jquery.scrollTo/jquery.scrollTo.js',
-            'web/static/lib/fuzzy-master/fuzzy.js',
             'web/static/lib/luxon/luxon.js',
             'web/static/lib/py.js/lib/py.js',
             'web/static/lib/py.js/lib/py_extras.js',
@@ -193,8 +194,17 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_frontend_helpers'),
 
             'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/luxon/luxon.js',
 
             ('include', 'web._assets_bootstrap'),
+
+            'web/static/src/env.js',
+            'web/static/src/core/utils/transitions.scss', # included early because used by other files
+            'web/static/src/core/**/*',
+            # TODO: split debug files correctly when converting frontend debug
+            # manager so we don't need action-service and stuff
+            ('remove', 'web/static/src/core/debug/**/*'),
+            'web/static/src/public/error_notifications.js',
 
             'web/static/src/legacy/scss/base_frontend.scss',
             'web/static/src/legacy/scss/lazyloader.scss',
@@ -202,11 +212,15 @@ This module provides the core of the Odoo Web Client.
 
             ('include', 'web.assets_frontend_minimal'),
 
+            'web/static/src/legacy/utils.js',
+            'web/static/src/legacy/js/owl_compatibility.js',
             'web/static/src/legacy/js/services/session.js',
             'web/static/src/legacy/js/public/public_env.js',
             'web/static/src/legacy/js/public/public_root.js',
             'web/static/src/legacy/js/public/public_root_instance.js',
             'web/static/src/legacy/js/public/public_widget.js',
+            'web/static/src/legacy/legacy_promise_error_handler.js',
+            'web/static/src/legacy/legacy_rpc_error_handler.js',
 
             ('include', 'web.frontend_legacy'),
         ],
@@ -491,5 +505,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/legacy/frontend/*.js',
         ],
     },
-    'bootstrap': True,  # load translations for login screen
+    'bootstrap': True,  # load translations for login screen,
+    'license': 'LGPL-3',
 }

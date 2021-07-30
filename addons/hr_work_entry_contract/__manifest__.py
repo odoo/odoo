@@ -28,5 +28,6 @@
         'web.assets_backend': [
             'hr_work_entry_contract/static/src/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

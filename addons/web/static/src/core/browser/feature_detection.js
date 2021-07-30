@@ -16,7 +16,7 @@ export function isBrowserChrome() {
 }
 
 export function isMacOS() {
-    return Boolean(browser.navigator.platform.match(/Mac/i));
+    return Boolean(browser.navigator.userAgent.match(/Mac/i));
 }
 
 export function isMobileOS() {

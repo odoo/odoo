@@ -2,23 +2,49 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import models, fields, api, exceptions, _, SUPERUSER_ID
+from odoo import models, fields, api, exceptions, _
+from odoo.tools import float_round
 
 
-class HrEmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+class HrEmployee(models.Model):
+    _inherit = "hr.employee"
 
-    attendance_ids = fields.One2many('hr.attendance', 'employee_id', help='list of attendances for the employee')
-    last_attendance_id = fields.Many2one('hr.attendance', compute='_compute_last_attendance_id', store=True)
-    last_check_in = fields.Datetime(related='last_attendance_id.check_in', store=True)
-    last_check_out = fields.Datetime(related='last_attendance_id.check_out', store=True)
-    attendance_state = fields.Selection(string="Attendance Status", compute='_compute_attendance_state', selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")])
-    hours_last_month = fields.Float(compute='_compute_hours_last_month')
-    hours_today = fields.Float(compute='_compute_hours_today')
-    hours_last_month_display = fields.Char(compute='_compute_hours_last_month')
+    attendance_ids = fields.One2many(
+        'hr.attendance', 'employee_id', groups="hr_attendance.group_hr_attendance_user",
+        help='list of attendances for the employee')
+    last_attendance_id = fields.Many2one(
+        'hr.attendance', compute='_compute_last_attendance_id', store=True,
+        groups="hr_attendance.group_hr_attendance_user")
+    last_check_in = fields.Datetime(
+        related='last_attendance_id.check_in', store=True,
+        groups="hr_attendance.group_hr_attendance_user")
+    last_check_out = fields.Datetime(
+        related='last_attendance_id.check_out', store=True,
+        groups="hr_attendance.group_hr_attendance_user")
+    attendance_state = fields.Selection(
+        string="Attendance Status", compute='_compute_attendance_state',
+        selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")],
+        groups="hr_attendance.group_hr_attendance_user")
+    hours_last_month = fields.Float(
+        compute='_compute_hours_last_month', groups="hr_attendance.group_hr_attendance_user")
+    hours_today = fields.Float(
+        compute='_compute_hours_today', groups="hr_attendance.group_hr_attendance_user")
+    hours_last_month_display = fields.Char(
+        compute='_compute_hours_last_month', groups="hr_attendance.group_hr_attendance_user")
+    overtime_ids = fields.One2many(
+        'hr.attendance.overtime', 'employee_id', groups="hr_attendance.group_hr_attendance_user")
+    total_overtime = fields.Float(
+        compute='_compute_total_overtime', groups="hr_attendance.group_hr_attendance_user")
+
+    @api.depends('overtime_ids.duration', 'attendance_ids')
+    def _compute_total_overtime(self):
+        for employee in self:
+            if employee.company_id.hr_attendance_overtime:
+                employee.total_overtime = float_round(sum(employee.overtime_ids.mapped('duration')), 2)
+            else:
+                employee.total_overtime = 0
 
     @api.depends('user_id.im_status', 'attendance_state')
     def _compute_presence_state(self):
@@ -136,6 +162,7 @@ class HrEmployeeBase(models.AbstractModel):
         else:
             modified_attendance = employee._attendance_action_change()
         action_message['attendance'] = modified_attendance.read()[0]
+        action_message['total_overtime'] = employee.total_overtime
         return {'action': action_message}
 
     def _attendance_action_change(self):
@@ -164,7 +191,7 @@ class HrEmployeeBase(models.AbstractModel):
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if 'pin' in groupby or 'pin' in self.env.context.get('group_by', '') or self.env.context.get('no_group_by'):
             raise exceptions.UserError(_('Such grouping is not allowed.'))
-        return super(HrEmployeeBase, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        return super(HrEmployee, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def _compute_presence_icon(self):
         res = super()._compute_presence_icon()

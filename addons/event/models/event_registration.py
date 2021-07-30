@@ -155,7 +155,11 @@ class EventRegistration(models.Model):
         # some were created already open
         if registrations._check_auto_confirmation():
             registrations.sudo().action_confirm()
-        else:
+        elif not self.env.context.get('install_mode', False):
+            # running the scheduler for demo data can cause an issue where wkhtmltopdf runs during
+            # server start and hangs indefinitely, leading to serious crashes
+            # we currently avoid this by not running the scheduler, would be best to find the actual
+            # reason for this issue and fix it so we can remove this check
             registrations._update_mail_schedulers()
 
         return registrations
@@ -167,7 +171,11 @@ class EventRegistration(models.Model):
 
         ret = super(EventRegistration, self).write(vals)
 
-        if vals.get('state') == 'open':
+        if vals.get('state') == 'open' and not self.env.context.get('install_mode', False):
+            # running the scheduler for demo data can cause an issue where wkhtmltopdf runs during
+            # server start and hangs indefinitely, leading to serious crashes
+            # we currently avoid this by not running the scheduler, would be best to find the actual
+            # reason for this issue and fix it so we can remove this check
             pre_draft._update_mail_schedulers()
 
         return ret
@@ -227,7 +235,7 @@ class EventRegistration(models.Model):
             default_model='event.registration',
             default_res_id=self.id,
             default_use_template=bool(template),
-            default_template_id=template.id,
+            default_template_ref='mail.template,%i' % template.id,
             default_composition_mode='comment',
             custom_layout="mail.mail_notification_light",
         )

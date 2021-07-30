@@ -16,6 +16,7 @@
                 </header>
                 <sheet>
                     <field name="currency_id" invisible="1"/>
+                    <field name="country_code" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="open_assignation_logs"
                             type="object"
@@ -67,6 +68,7 @@
                         <group string="Driver">
                             <field name="active" invisible="1"/>
                             <field name="vehicle_type" invisible="1"/>
+                            <field name="fleet_id" widget="many2one_fleet_category"/>
                             <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]"/>
                             <field name="future_driver_id"/>
                             <field name="plan_to_change_car" groups="fleet.fleet_group_manager" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
@@ -75,53 +77,66 @@
                             <field name="location"/>
                         </group>
                         <group string="Vehicle">
+                            <field name="acquisition_date" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
+                            <field name="vin_sn"/>
                             <label for="odometer" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
                             <div class="o_row" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
                                 <field name="odometer"/>
                                 <field name="odometer_unit"/>
                             </div>
-                            <field name="acquisition_date" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
-                            <field name="vin_sn"/>
-                            <field name="trailer_hook"/>
-                            <field name="car_value" widget="monetary"/>
-                            <field name="net_car_value" widget="monetary"/>
-                            <field name="residual_value" widget="monetary"/>
+                            <field name="manager_id" domain="[('share', '=', False)]"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <group string="Contract" name="contract">
-                            <field name="manager_id" domain="[('share', '=', False)]"/>
-                            <field name="first_contract_date"/>
-                        </group>
-                        <group string="Model">
-                            <field name="seats" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
-                            <field name="doors" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
-                            <field name="color"/>
-                            <field name="model_year"/>
-                            <field name="frame_type" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
-                            <label for="frame_size" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
-                            <div class="o_row" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}">
-                                <field name="frame_size" /><span>cm</span>
-                            </div>
-                            <field name="electric_assistance" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
-                        </group>
-                        <group string="Engine" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
-                            <field name="transmission"/>
-                            <field name="fuel_type"/>
-                            <label for="co2"/>
-                            <div class="o_row" name="co2">
-                                <field name="co2"/><span>g/km</span>
-                            </div>
-                            <field name="horsepower"/>
-                            <field name="horsepower_tax" widget="monetary"/>
-                            <label for="power"/>
-                            <div class="o_row">
-                                <field name="power"/><span>kW</span>
-                            </div>
-                        </group>
-                        <group string="Description">
-                            <field name="description" nolabel="1" placeholder="Write here any other information related to this vehicle" />
-                        </group>
                     </group>
+                    <notebook>
+                        <page string="Tax Info">
+                            <group>
+                                <group string="Fiscality">
+                                    <field name="horsepower_tax" widget="monetary"/>
+                                </group>
+                                <group string="Contract">
+                                    <field name="first_contract_date"/>
+                                    <field name="car_value" widget="monetary"/>
+                                    <field name="net_car_value" widget="monetary"/>
+                                    <field name="residual_value" widget="monetary"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Model">
+                            <group>
+                                <group string="Model">
+                                    <field name="model_year"/>
+                                    <field name="transmission"/>
+                                    <field name="color"/>
+                                    <field name="seats" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
+                                    <field name="doors" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
+                                    <field name="trailer_hook" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
+                                    <field name="frame_type" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
+                                    <label for="frame_size" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
+                                    <div class="o_row" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}">
+                                        <field name="frame_size" /><span>cm</span>
+                                    </div>
+                                    <field name="electric_assistance" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
+                                </group>
+                                <group string="Engine">
+                                    <field name="horsepower"/>
+                                    <label for="power"/>
+                                    <div class="o_row">
+                                        <field name="power"/><span>kW</span>
+                                    </div>
+                                    <field name="fuel_type"/>
+                                    <label for="co2"/>
+                                    <div class="o_row" name="co2">
+                                        <field name="co2"/><span>g/km</span>
+                                    </div>
+                                    <field name="co2_standard"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Note">
+                            <field name="description" nolabel="1" placeholder="Write here any other information related to this vehicle" />
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
@@ -139,23 +154,27 @@
             <tree string="Vehicle" 
                 decoration-warning="contract_renewal_due_soon and not contract_renewal_overdue"
                 decoration-danger="contract_renewal_overdue"
+                multi_edit="1"
                 sample="1">
                 <field name="active" invisible="1"/>
-                <field name="license_plate"/>
-                <field name="model_id" widget="many2one_avatar" />
-                <field name="driver_id" widget="many2one_avatar"/>
-                <field name="future_driver_id"  widget="many2one_avatar"/>
+                <field name="license_plate" readonly="1"/>
+                <field name="model_id" widget="many2one_avatar" readonly="1"/>
+                <field name="fleet_id" widget="many2one_fleet_category" options="{'no_open': True}"/>
+                <field name="driver_id" widget="many2one_avatar" readonly="1"/>
+                <field name="future_driver_id"  widget="many2one_avatar" readonly="1"/>
                 <field name="log_drivers" invisible="1"/>
-                <field name="vin_sn"/>
-                <field name="co2" string="CO2 Emissions g/km" optional="hide" />
-                <field name="acquisition_date"/>
-                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                <field name="state_id" widget="badge" />
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="vin_sn" readonly="1" optional="hide"/>
+                <field name="co2" string="CO2 Emissions g/km" optional="hide"  readonly="1"/>
+                <field name="acquisition_date" readonly="1"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="1"/>
+                <field name="state_id" widget="badge" readonly="1" optional="hide"/>
                 <field name="contract_renewal_due_soon" invisible="1"/>
                 <field name="contract_renewal_overdue" invisible="1"/>
                 <field name="contract_renewal_total" invisible="1"/>
+                <field name="contract_state" widget="badge" decoration-info="contract_state == 'open'"
+                    decoration-danger="contract_state == 'expired'" optional="hide"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
+                <field name="manager_id" optional="hide"/>
             </tree>
         </field>
     </record>
@@ -168,13 +187,13 @@
                 <field string="Vehicle" name="name" filter_domain="['|', ('name', 'ilike', self), ('license_plate', 'ilike', self)]"/>
                 <field string="Drivers" name="log_drivers" filter_domain="[('log_drivers.driver_id.name', 'ilike', self)]"/>
                 <field string="Current Driver" name="driver_id"/>
-                <field name="model_id"/>
-                <field name="future_driver_id"/>
+                <field string="Model" name="model_id"/>
+                <field string="License Plate" name="license_plate"/>
                 <field name="tag_ids"/>
-                <field name="location"/>
                 <field string="Status" name="state_id"/>
                 <filter string="Available" name="available"
                     domain="['&amp;', ('future_driver_id', '=', False), '|', ('driver_id', '=', False), '|', '&amp;', ('plan_to_change_car', '=', True), ('vehicle_type', '=', 'car'), '&amp;', ('plan_to_change_bike', '=', True), ('vehicle_type', '=', 'bike')]"/>
+                <filter name="no_fleet" string="No Fleet" domain="[('fleet_id', '=', False)]"/>
                 <filter string="Bikes" name="bikes" domain="[('vehicle_type', '=', 'bike')]"/>
                 <filter string="Cars" name="cars" domain="[('vehicle_type', '=', 'car')]"/>
                 <filter string="Trailer Hook" name="trailer_hook" domain="[('trailer_hook', '=', True)]"/>
@@ -315,8 +334,9 @@
         </field>
     </record>
 
-    <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" sequence="2" groups="fleet_group_user"/>
-    <menuitem action="fleet_vehicle_action" parent="fleet_vehicles" id="fleet_vehicle_menu" groups="fleet_group_user" sequence="1"/>
+    <menuitem name="Fleet" parent="menu_root" id="fleet_vehicles" sequence="2" groups="fleet_group_user"/>
+    <menuitem action="fleet_vehicle_action" parent="fleet_vehicles" name="Search"
+        id="fleet_vehicle_menu" groups="fleet_group_user" sequence="0"/>
 
    <record id='fleet_vehicle_odometer_view_form' model='ir.ui.view'>
         <field name="name">fleet.vehicle.odometer.form</field>

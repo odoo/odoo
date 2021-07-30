@@ -16,6 +16,7 @@
         'views/payment_templates.xml',
 
         'views/account_invoice_views.xml',
+        'views/account_journal_views.xml',
         'views/account_payment_views.xml',
         'views/payment_acquirer_views.xml',
         'views/payment_icon_views.xml',
@@ -44,5 +45,6 @@
         'web.assets_backend': [
             'payment/static/src/scss/payment_acquirer.scss',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

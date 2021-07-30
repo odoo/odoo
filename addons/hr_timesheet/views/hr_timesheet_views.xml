@@ -10,7 +10,7 @@
             web_icon="hr_timesheet,static/description/icon_timesheet.png"/>
 
         <menuitem id="menu_hr_time_tracking"
-            name="Timesheet"
+            name="Timesheets"
             parent="timesheet_menu_root"
             sequence="5"/>
 
@@ -62,6 +62,18 @@
             </field>
         </record>
 
+        <record id="view_my_timesheet_line_pivot" model="ir.ui.view">
+            <field name="name">account.analytic.line.pivot</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <pivot string="Timesheet" sample="1">
+                    <field name="date" interval="week" type="row"/>
+                    <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                    <field name="amount" string="Timesheet Costs"/>
+                </pivot>
+            </field>
+        </record>
+
         <record id="view_hr_timesheet_line_graph" model="ir.ui.view">
             <field name="name">account.analytic.line.graph</field>
             <field name="model">account.analytic.line</field>
@@ -71,6 +83,34 @@
                     <field name="project_id" type="row"/>
                     <field name="unit_amount" type="measure" widget="timesheet_uom"/>
                     <field name="amount" string="Timesheet Costs"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- For My Timesheet view, groups by week then project -->
+        <record id="view_hr_timesheet_line_graph_my" model="ir.ui.view">
+            <field name="name">account.analytic.line.graph</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <graph string="Timesheet" sample="1" js_class="hr_timesheet_graphview">
+                    <field name="date" interval="week" type="row"/>
+                    <field name="project_id" type="row"/>
+                    <field name="amount" type="measure" string="Timesheet Costs"/>
+                    <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- For Other Timesheet view, groups by employee then project -->
+        <record id="view_hr_timesheet_line_graph_all" model="ir.ui.view">
+            <field name="name">account.analytic.line.graph</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <graph string="Timesheet" sample="1" js_class="hr_timesheet_graphview">
+                    <field name="employee_id" type="row"/>
+                    <field name="project_id" type="row"/>
+                    <field name="amount" type="measure" string="Timesheet Costs"/>
+                    <field name="unit_amount" type="measure" widget="timesheet_uom"/>
                 </graph>
             </field>
         </record>
@@ -211,7 +251,7 @@
         <record id="act_hr_timesheet_line" model="ir.actions.act_window">
             <field name="name">My Timesheets</field>
             <field name="res_model">account.analytic.line</field>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">tree,form,kanban,pivot,graph</field>
             <field name="domain">[('project_id', '!=', False), ('user_id', '=', uid)]</field>
             <field name="context">{
                 "search_default_week":1,
@@ -248,6 +288,20 @@
             <field name="act_window_id" ref="act_hr_timesheet_line"/>
         </record>
 
+        <record id="act_hr_timesheet_line_view_pivot" model="ir.actions.act_window.view">
+            <field name="view_mode">pivot</field>
+            <field name="sequence">7</field>
+            <field name="view_id" ref="hr_timesheet.view_my_timesheet_line_pivot"/>
+            <field name="act_window_id" ref="act_hr_timesheet_line"/>
+        </record>
+
+        <record id="act_hr_timesheet_line_view_graph" model="ir.actions.act_window.view">
+            <field name="view_mode">graph</field>
+            <field name="sequence">8</field>
+            <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_graph_my"/>
+            <field name="act_window_id" ref="act_hr_timesheet_line"/>
+        </record>
+
         <menuitem id="timesheet_menu_activity_mine"
             name="My Timesheets"
             parent="menu_hr_time_tracking"
@@ -272,7 +326,7 @@
         <record id="timesheet_action_all" model="ir.actions.act_window">
             <field name="name">All Timesheets</field>
             <field name="res_model">account.analytic.line</field>
-            <field name="view_mode">tree,form,pivot,kanban</field>
+            <field name="view_mode">tree,form,kanban,pivot,graph</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="domain">[('project_id', '!=', False)]</field>
             <field name="context">{
@@ -302,17 +356,24 @@
             <field name="act_window_id" ref="timesheet_action_all"/>
         </record>
 
+        <record id="timesheet_action_view_all_kanban" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field name="sequence">6</field>
+            <field name="view_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
+            <field name="act_window_id" ref="timesheet_action_all"/>
+        </record>
+
         <record id="timesheet_action_view_all_pivot" model="ir.actions.act_window.view">
-            <field name="sequence" eval="6"/>
+            <field name="sequence" eval="7"/>
             <field name="view_mode">pivot</field>
             <field name="view_id" ref="view_hr_timesheet_line_pivot"/>
             <field name="act_window_id" ref="timesheet_action_all"/>
         </record>
 
-        <record id="timesheet_action_view_all_kanban" model="ir.actions.act_window.view">
-            <field name="view_mode">kanban</field>
-            <field name="sequence">7</field>
-            <field name="view_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
+        <record id="timesheet_action_view_all_graph" model="ir.actions.act_window.view">
+            <field name="sequence" eval="8"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_hr_timesheet_line_graph_all"/>
             <field name="act_window_id" ref="timesheet_action_all"/>
         </record>
 

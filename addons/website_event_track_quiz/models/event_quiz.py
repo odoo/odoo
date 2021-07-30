@@ -11,18 +11,10 @@ class Quiz(models.Model):
 
     name = fields.Char('Name', required=True, translate=True)
     question_ids = fields.One2many('event.quiz.question', 'quiz_id', string="Questions")
-    event_track_ids = fields.One2many('event.track', 'quiz_id', string="Tracks")
-    event_track_id = fields.Many2one(
-        'event.track', compute='_compute_event_track_id',
-        readonly=True, store=True)
+    event_track_id = fields.Many2one('event.track', readonly=True)
     event_id = fields.Many2one(
         'event.event', related='event_track_id.event_id',
         readonly=True, store=True)
-
-    @api.depends('event_track_ids.quiz_id')
-    def _compute_event_track_id(self):
-        for quiz in self:
-            quiz.event_track_id = quiz.event_track_ids[0] if quiz.event_track_ids else False
 
 
 class QuizQuestion(models.Model):

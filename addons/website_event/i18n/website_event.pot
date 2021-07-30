@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.3\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-11 09:26+0000\n"
-"PO-Revision-Date: 2021-05-11 09:26+0000\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-07-12 07:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -115,6 +115,13 @@ msgid "<i class=\"fa fa-fw fa-calendar\"/> Add to iCal/Outlook"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
+msgid ""
+"<i class=\"fa fa-gear mr-1\" role=\"img\" aria-label=\"Configure\" "
+"title=\"Configure event tickets\"/><em>Configure Tickets</em>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
 msgstr ""
@@ -144,13 +151,6 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-long-arrow-left text-primary mr-2\"/>\n"
 "                            <span>All Events</span>"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid ""
-"<i class=\"fa fa-pencil mr-2\" role=\"img\" aria-label=\"Edit\" title=\"Edit"
-" event registration in backend\"/><em>Configure Event Tickets</em>"
 msgstr ""
 
 #. module: website_event
@@ -207,22 +207,12 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid ""
-"<span class=\"o_wevent_badge badge badge-success ml-3\">\n"
-"                            <i class=\"fa fa-check mr-2\"/>Registered\n"
-"                        </span>"
+msgid "<span class=\"py-2 o_wevent_registration_title text-left\">Tickets</span>"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid ""
-"<span class=\"py-2\">Tickets</span>\n"
-"                        <span class=\"close d-none\">×</span>"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid "<span class=\"text-dark font-weight-bold align-middle pr-2\">Qty</span>"
+msgid "<span class=\"text-dark font-weight-bold align-middle px-2\">Qty</span>"
 msgstr ""
 
 #. module: website_event
@@ -236,6 +226,13 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
 msgid "<span>Online Events</span>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid ""
+"<span>Tickets</span>\n"
+"                        <span class=\"btn p-0 close d-none\">×</span>"
 msgstr ""
 
 #. module: website_event
@@ -380,14 +377,7 @@ msgid "Date &amp; Time"
 msgstr ""
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__display_name
-#: model:ir.model.fields,field_description:website_event.field_event_registration__display_name
-#: model:ir.model.fields,field_description:website_event.field_event_tag_category__display_name
-#: model:ir.model.fields,field_description:website_event.field_event_type__display_name
-#: model:ir.model.fields,field_description:website_event.field_website__display_name
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__display_name
-#: model:ir.model.fields,field_description:website_event.field_website_menu__display_name
-#: model:ir.model.fields,field_description:website_event.field_website_visitor__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -549,14 +539,7 @@ msgid "Google"
 msgstr ""
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__id
-#: model:ir.model.fields,field_description:website_event.field_event_registration__id
-#: model:ir.model.fields,field_description:website_event.field_event_tag_category__id
-#: model:ir.model.fields,field_description:website_event.field_event_type__id
-#: model:ir.model.fields,field_description:website_event.field_website__id
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__id
-#: model:ir.model.fields,field_description:website_event.field_website_menu__id
-#: model:ir.model.fields,field_description:website_event.field_website_visitor__id
 msgid "ID"
 msgstr ""
 
@@ -593,14 +576,7 @@ msgid "John DOE"
 msgstr ""
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event____last_update
-#: model:ir.model.fields,field_description:website_event.field_event_registration____last_update
-#: model:ir.model.fields,field_description:website_event.field_event_tag_category____last_update
-#: model:ir.model.fields,field_description:website_event.field_event_type____last_update
-#: model:ir.model.fields,field_description:website_event.field_website____last_update
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu____last_update
-#: model:ir.model.fields,field_description:website_event.field_website_menu____last_update
-#: model:ir.model.fields,field_description:website_event.field_website_visitor____last_update
 msgid "Last Modified on"
 msgstr ""
 

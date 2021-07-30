@@ -1,13 +1,15 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
-import { uiService } from "@web/core/ui/ui_service";
+import { uiService, useActiveElement } from "@web/core/ui/ui_service";
 import { useCommand } from "@web/webclient/commands/command_hook";
 import { commandService } from "@web/webclient/commands/command_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { click, getFixture, nextTick, triggerHotkey } from "../../helpers/utils";
+import { click, getFixture, nextTick, patchWithCleanup, triggerHotkey } from "../../helpers/utils";
+import { clearRegistryWithCleanup } from "../../helpers/mock_env";
 
 const { Component, mount, tags } = owl;
 const { xml } = tags;
@@ -17,6 +19,7 @@ let target;
 let testComponent;
 const serviceRegistry = registry.category("services");
 const commandCategoryRegistry = registry.category("command_categories");
+const commandProviderRegistry = registry.category("command_provider");
 
 class TestComponent extends Component {
     get DialogContainer() {
@@ -32,6 +35,14 @@ TestComponent.template = xml`
 
 QUnit.module("Command", {
     async beforeEach() {
+        const commandProviders = commandProviderRegistry
+            .getEntries()
+            .filter((provider) => ["command", "data-hotkeys"].includes(provider[0]));
+        clearRegistryWithCleanup(commandProviderRegistry);
+        commandProviders.forEach((provider) => {
+            commandProviderRegistry.add(provider[0], provider[1]);
+        });
+
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("dialog", dialogService);
         serviceRegistry.add("hotkey", hotkeyService);
@@ -54,7 +65,7 @@ QUnit.test("palette dialog can be rendered and closed on outside click", async (
     testComponent = await mount(TestComponent, { env, target });
 
     // invoke command palette through hotkey control+k
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
     assert.containsOnce(target, ".o_command_palette");
 
@@ -98,7 +109,7 @@ QUnit.test("useCommand hook", async (assert) => {
     }
     testComponent = await mount(MyComponent, { env, target });
 
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
     assert.containsOnce(target, ".o_command");
     assert.deepEqual(target.querySelector(".o_command").textContent, "Take the throne");
@@ -107,9 +118,35 @@ QUnit.test("useCommand hook", async (assert) => {
     assert.verifySteps(["Hodor"]);
 
     testComponent.unmount();
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
     assert.containsNone(target, ".o_command");
+});
+
+QUnit.test("useCommand hook when the activeElement change", async (assert) => {
+    assert.expect(2);
+
+    class MyComponent extends TestComponent {
+        setup() {
+            useCommand("Take the throne", () => {});
+        }
+    }
+
+    class OtherComponent extends Component {
+        setup() {
+            useActiveElement();
+            useCommand("I'm taking the throne", () => {});
+        }
+    }
+    OtherComponent.template = xml`<div></div>`;
+
+    await mount(MyComponent, { env, target });
+    await mount(OtherComponent, { env, target });
+
+    triggerHotkey("control+k");
+    await nextTick();
+    assert.containsOnce(target, ".o_command");
+    assert.deepEqual(target.querySelector(".o_command").textContent, "I'm taking the throne");
 });
 
 QUnit.test("command with hotkey", async (assert) => {
@@ -118,11 +155,10 @@ QUnit.test("command with hotkey", async (assert) => {
     const hotkey = "a";
     env.services.command.add("test", () => assert.step(hotkey), {
         hotkey,
-        hotkeyOptions: { altIsOptional: true },
     });
     await nextTick();
 
-    triggerHotkey("a", true);
+    triggerHotkey("a");
     await nextTick();
     assert.verifySteps([hotkey]);
 });
@@ -140,19 +176,20 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
     <div>
       <button title="Aria Stark" data-hotkey="a" t-on-click="onClick" />
       <input title="Bran Stark" type="text" data-hotkey="b" />
+      <button title="Sansa Stark" data-hotkey="b" style="display: none;" />
       <TestComponent />
     </div>
   `;
     testComponent = await mount(MyComponent, { env, target });
 
     // Open palette
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
 
     assert.containsN(target, ".o_command", 2);
     assert.deepEqual(
         [...target.querySelectorAll(".o_command span:first-child")].map((el) => el.textContent),
-        ["Aria Stark", "Bran Stark"]
+        ["Aria stark", "Bran stark"]
     );
 
     // Click on first command
@@ -160,7 +197,7 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
     assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
 
     // Reopen palette
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
 
     // Click on second command
@@ -181,8 +218,77 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
     assert.verifySteps(["Hodor"]);
 });
 
+QUnit.test("access to hotkeys from the command palette", async (assert) => {
+    assert.expect(9);
+
+    const hotkey = "a";
+    env.services.command.add("A", () => assert.step("A"), {
+        hotkey,
+    });
+
+    class MyComponent extends Component {
+        onClickB() {
+            assert.step("B");
+        }
+        onClickC() {
+            assert.step("C");
+        }
+    }
+    MyComponent.components = { TestComponent };
+    MyComponent.template = xml`
+    <div>
+      <button title="B" data-hotkey="b" t-on-click="onClickB" />
+      <button title="C" data-hotkey="c" t-on-click="onClickC" />
+      <TestComponent />
+    </div>
+  `;
+    testComponent = await mount(MyComponent, { env, target });
+
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    assert.containsN(target, ".o_command", 3);
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command span:first-child")].map((el) => el.textContent),
+        ["A", "B", "C"]
+    );
+
+    // Trigger the command a
+    triggerHotkey("a");
+    await nextTick();
+    assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
+
+    // Reopen palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    // Trigger the command b
+    triggerHotkey("b", true);
+    await nextTick();
+    assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
+
+    // Reopen palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    // Trigger the command c
+    triggerHotkey("c", true);
+    await nextTick();
+    assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
+
+    assert.verifySteps(["A", "B", "C"]);
+});
+
 QUnit.test("can be searched", async (assert) => {
     assert.expect(4);
+
+    patchWithCleanup(browser, {
+        clearTimeout: () => {},
+        setTimeout: (later, wait) => {
+            later();
+        },
+    });
 
     testComponent = await mount(TestComponent, { env, target });
 
@@ -195,7 +301,7 @@ QUnit.test("can be searched", async (assert) => {
     await nextTick();
 
     // Open palette
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
 
     assert.deepEqual(
@@ -234,6 +340,248 @@ QUnit.test("can be searched", async (assert) => {
     );
 });
 
+QUnit.test("defined multiple providers with the same nameSpace", async (assert) => {
+    assert.expect(2);
+
+    patchWithCleanup(browser, {
+        clearTimeout: () => {},
+        setTimeout: (later, wait) => {
+            later();
+        },
+    });
+
+    clearRegistryWithCleanup(commandProviderRegistry);
+    const action = () => {};
+
+    const defaultNames = ["John", "Snow"];
+    commandProviderRegistry.add("default", {
+        nameSpace: "__default__",
+        provide: () =>
+            defaultNames.map((name) => ({
+                name,
+                action,
+            })),
+    });
+
+    const otherNames = ["Cersei", "Lannister"];
+    commandProviderRegistry.add("other", {
+        provide: () =>
+            otherNames.map((name) => ({
+                name,
+                action,
+            })),
+    });
+
+    testComponent = await mount(TestComponent, { env, target });
+
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    assert.deepEqual(
+        target.querySelector(".o_command_palette_search input").value,
+        "",
+        "search input is empty"
+    );
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        defaultNames.concat(otherNames),
+        "all default commands are present"
+    );
+});
+
+QUnit.test("can switch between command providers", async (assert) => {
+    assert.expect(4);
+
+    patchWithCleanup(browser, {
+        clearTimeout: () => {},
+        setTimeout: (later, wait) => {
+            later();
+        },
+    });
+
+    clearRegistryWithCleanup(commandProviderRegistry);
+    const action = () => {};
+
+    const defaultNames = ["John", "Snow"];
+    commandProviderRegistry.add("default", {
+        provide: () =>
+            defaultNames.map((name) => ({
+                name,
+                action,
+            })),
+    });
+
+    const otherNames = ["Cersei", "Lannister"];
+    commandProviderRegistry.add("other", {
+        nameSpace: "@",
+        provide: () =>
+            otherNames.map((name) => ({
+                name,
+                action,
+            })),
+    });
+
+    testComponent = await mount(TestComponent, { env, target });
+
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    assert.deepEqual(
+        target.querySelector(".o_command_palette_search input").value,
+        "",
+        "search input is empty"
+    );
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        defaultNames,
+        "all default commands are present"
+    );
+
+    // Switch to the other provider
+    let search = target.querySelector(".o_command_palette_search input");
+    search.value = "@";
+    search.dispatchEvent(new InputEvent("input"));
+    await nextTick();
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        otherNames,
+        "all other commands are present"
+    );
+
+    // Clear search input to recover the default provider
+    search.value = "";
+    search.dispatchEvent(new InputEvent("input"));
+    await nextTick();
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        defaultNames,
+        "all default commands are again present"
+    );
+});
+
+QUnit.test("multi level commands", async (assert) => {
+    assert.expect(5);
+
+    patchWithCleanup(browser, {
+        clearTimeout: () => {},
+        setTimeout: (later, wait) => {
+            later();
+        },
+    });
+
+    clearRegistryWithCleanup(commandProviderRegistry);
+    const defaultNames = ["John", "Snow"];
+    const otherNames = ["Cersei", "Lannister"];
+
+    const action = () => ({
+        placeHolder: "Who is the next King ?",
+        provide: () =>
+            otherNames.map((name) => ({
+                name,
+                action: () => {},
+            })),
+    });
+
+    commandProviderRegistry.add("default", {
+        provide: () =>
+            defaultNames.map((name) => ({
+                name,
+                action,
+            })),
+    });
+
+    testComponent = await mount(TestComponent, { env, target });
+
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    assert.deepEqual(
+        target.querySelector(".o_command_palette_search input").value,
+        "",
+        "search input is empty"
+    );
+
+    assert.deepEqual(
+        target.querySelector(".o_command_palette_search input").placeholder,
+        "Search for an action...",
+        "the default placeholder is correctly displayed"
+    );
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        defaultNames,
+        "all default commands are present"
+    );
+
+    await click(target, ".o_command.focused");
+    await nextTick();
+
+    assert.deepEqual(
+        target.querySelector(".o_command_palette_search input").placeholder,
+        "Who is the next King ?",
+        "the new placeholder is correctly displayed"
+    );
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        otherNames,
+        "all default commands are present"
+    );
+});
+
+QUnit.test("navigate in the command palette with the arrows", async (assert) => {
+    assert.expect(6);
+
+    testComponent = await mount(TestComponent, { env, target });
+
+    // Register some commands
+    function action() {}
+    const names = ["Cersei", "Jaime", "Tyrion"];
+    for (const name of names) {
+        env.services.command.add(name, action);
+    }
+    await nextTick();
+
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    let focusedCommand = target.querySelector(".o_command.focused");
+    assert.strictEqual(focusedCommand.textContent, names[0]);
+
+    triggerHotkey("arrowdown");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.strictEqual(focusedCommand.textContent, names[1]);
+
+    triggerHotkey("arrowdown");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.strictEqual(focusedCommand.textContent, names[2]);
+
+    triggerHotkey("arrowdown");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.strictEqual(focusedCommand.textContent, names[0]);
+
+    triggerHotkey("arrowup");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.strictEqual(focusedCommand.textContent, names[2]);
+
+    triggerHotkey("arrowup");
+    await nextTick();
+    focusedCommand = target.querySelector(".o_command.focused");
+    assert.strictEqual(focusedCommand.textContent, names[1]);
+});
+
 QUnit.test("command categories", async (assert) => {
     testComponent = await mount(TestComponent, { env, target });
 
@@ -246,7 +594,7 @@ QUnit.test("command categories", async (assert) => {
     await nextTick();
 
     // Open palette
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
 
     assert.containsN(target, ".o_command_category", 3);
@@ -277,24 +625,161 @@ QUnit.test("data-command-category", async (assert) => {
     testComponent = await mount(MyComponent, { env, target });
 
     // Open palette
-    triggerHotkey("control+k", true);
+    triggerHotkey("control+k");
     await nextTick();
 
     assert.containsN(target, ".o_command", 4);
     assert.deepEqual(
         [
             ...target.querySelectorAll(
-                ".o_command_category:nth-of-type(1) .o_command > span:first-child"
+                ".o_command_category:nth-of-type(1) .o_command > div > span:first-child"
             ),
         ].map((el) => el.textContent),
-        ["Robert Baratheon", "Joffrey Baratheon"]
+        ["Robert baratheon", "Joffrey baratheon"]
     );
     assert.deepEqual(
         [
             ...target.querySelectorAll(
-                ".o_command_category:nth-of-type(2) .o_command > span:first-child"
+                ".o_command_category:nth-of-type(2) .o_command > div > span:first-child"
             ),
         ].map((el) => el.textContent),
-        ["Aria Stark", "Bran Stark"]
+        ["Aria stark", "Bran stark"]
+    );
+});
+
+QUnit.test("display shortcuts correctly for non-MacOS ", async (assert) => {
+    class MyComponent extends Component {}
+    MyComponent.components = { TestComponent };
+    MyComponent.template = xml`
+    <div>
+      <button title="Click" data-hotkey="f" />
+      <TestComponent />
+    </div>
+  `;
+
+    testComponent = await mount(MyComponent, { env, target });
+
+    // Register some commands
+    function action() {}
+    env.services.command.add("a", action);
+    env.services.command.add("b", action, { hotkey: "alt+b" });
+    env.services.command.add("c", action, { hotkey: "c" });
+    env.services.command.add("d", action, {
+        hotkey: "control+d",
+    });
+    env.services.command.add("e", action, {
+        hotkey: "alt+control+e",
+    });
+    await nextTick();
+
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        ["a", "bALT + B", "cC", "dCONTROL + D", "eALT + CONTROL + E", "ClickALT + F"]
+    );
+});
+
+QUnit.test("display shortcuts correctly for MacOS ", async (assert) => {
+    patchWithCleanup(browser, {
+        navigator: {
+            userAgent: browser.navigator.userAgent.replace(/\([^)]*\)/, "(MacOs)"),
+        },
+    });
+
+    class MyComponent extends Component {}
+    MyComponent.components = { TestComponent };
+    MyComponent.template = xml`
+        <div>
+        <button title="Click" data-hotkey="f" />
+        <TestComponent />
+        </div>
+    `;
+
+    testComponent = await mount(MyComponent, { env, target });
+
+    // Register some commands
+    function action() {}
+    env.services.command.add("a", action);
+    env.services.command.add("b", action, { hotkey: "alt+b" });
+    env.services.command.add("c", action, { hotkey: "c" });
+    env.services.command.add("d", action, {
+        hotkey: "control+d",
+    });
+    env.services.command.add("e", action, {
+        hotkey: "alt+control+e",
+    });
+    await nextTick();
+
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        ["a", "bCONTROL + B", "cC", "dCOMMAND + D", "eCONTROL + COMMAND + E", "ClickCONTROL + F"]
+    );
+});
+
+QUnit.test(
+    "display shortcuts correctly for non-MacOS with a new overlayModifier",
+    async (assert) => {
+        const hotkeyService = serviceRegistry.get("hotkey");
+        patchWithCleanup(hotkeyService, {
+            overlayModifier: "alt+control",
+        });
+
+        class MyComponent extends Component {}
+        MyComponent.components = { TestComponent };
+        MyComponent.template = xml`
+    <div>
+      <button title="Click" data-hotkey="a" />
+      <TestComponent />
+    </div>
+  `;
+
+        testComponent = await mount(MyComponent, { env, target });
+        // Open palette
+        triggerHotkey("control+k");
+        await nextTick();
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+            ["ClickALT + CONTROL + A"]
+        );
+    }
+);
+
+QUnit.test("display shortcuts correctly for MacOS with a new overlayModifier", async (assert) => {
+    patchWithCleanup(browser, {
+        navigator: {
+            userAgent: browser.navigator.userAgent.replace(/\([^)]*\)/, "(MacOs)"),
+        },
+    });
+
+    const hotkeyService = serviceRegistry.get("hotkey");
+    patchWithCleanup(hotkeyService, {
+        overlayModifier: "alt+control",
+    });
+
+    class MyComponent extends Component {}
+    MyComponent.components = { TestComponent };
+    MyComponent.template = xml`
+    <div>
+      <button title="Click" data-hotkey="a" />
+      <TestComponent />
+    </div>
+  `;
+
+    testComponent = await mount(MyComponent, { env, target });
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        ["ClickCONTROL + COMMAND + A"]
     );
 });

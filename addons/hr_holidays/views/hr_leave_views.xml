@@ -236,7 +236,7 @@
                         <field name="employee_id" nolabel="1" readonly="1" force_save="1" invisible="1"/>
                     </h1>
                     <h2>
-                        <field name="holiday_status_id" nolabel="1" domain="['&amp;', ('virtual_remaining_leaves', '&gt;', 0), '|', ('allocation_type', 'in', ['fixed_allocation', 'no']),'&amp;',('allocation_type', '=', 'fixed'), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True}" class="w-100"/>
+                        <field name="holiday_status_id" nolabel="1" domain="[('valid', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), '|', ('allocation_type', 'in', ['fixed_allocation', 'no']),'&amp;',('allocation_type', '=', 'fixed'), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True}" class="w-100"/>
                     </h2>
                 </div>
                 <group>
@@ -314,7 +314,7 @@
                         <!-- When the user is leave manager, he should always see `number_of_days` to allow
                         him to edit the value. `number_of_hours_display` is only an informative field -->
                         <label for="number_of_days" string="Duration" attrs="{'invisible': [('request_unit_half', '=', True), ('leave_type_request_unit', '!=', 'hour')]}"/>
-                        <div>
+                        <div name="duration_display">
                             <div class="o_row">
                                 <div groups="!hr_holidays.group_hr_holidays_manager" attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}" class="o_row">
                                     <field name="number_of_days_display" nolabel="1" readonly="1" class="oe_inline"/>
@@ -386,8 +386,8 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="after">
                 <footer>
-                    <button string="Save" special="save" class="oe_highlight" />
-                    <button string="Discard" special="cancel" />
+                    <button string="Save" special="save" data-hotkey="v" class="oe_highlight" />
+                    <button string="Discard" special="cancel" data-hotkey="z" />
                 </footer>
             </xpath>
         </field>

@@ -1,20 +1,19 @@
 /** @odoo-module **/
 
-import core from 'web.core';
+import {_t} from 'web.core';
+import {Markup} from 'web.utils';
 import tour from 'web_tour.tour';
-
-var _t = core._t;
 
 tour.register('mail_tour', {
     url: "/web#action=mail.widgets.discuss",
     sequence: 80,
 }, [{
     trigger: '.o_DiscussSidebar_groupChannel .o_DiscussSidebar_groupHeaderItemAdd',
-    content: _t("<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>"),
+    content: Markup(_t("<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>")),
     position: 'bottom',
 }, {
     trigger: '.o_DiscussSidebar_itemNewInput',
-    content: _t("<p>Create a channel here.</p>"),
+    content: Markup(_t("<p>Create a channel here.</p>")),
     position: 'bottom',
     auto: true,
     run: function (actions) {
@@ -23,14 +22,14 @@ tour.register('mail_tour', {
     },
 }, {
     trigger: ".o_DiscussSidebar_newChannelAutocompleteSuggestions",
-    content: _t("<p>Create a public or private channel.</p>"),
+    content: Markup(_t("<p>Create a public or private channel.</p>")),
     position: 'right',
     run() {
         this.$consumeEventAnchors.find('li:first').click();
     },
 }, {
     trigger: '.o_Discuss_thread .o_ComposerTextInput_textarea',
-    content: _t("<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>"),
+    content: Markup(_t("<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>")),
     position: "top",
     width: 350,
     run: function (actions) {
@@ -43,7 +42,7 @@ tour.register('mail_tour', {
     position: "top",
 }, {
     trigger: '.o_Discuss_thread .o_Message_commandStar',
-    content: _t("Messages can be <b>starred</b> to remind you to check back later."),
+    content: Markup(_t("Messages can be <b>starred</b> to remind you to check back later.")),
     position: "bottom",
 }, {
     trigger: '.o_DiscussSidebarItem.o-starred-box',
@@ -51,6 +50,6 @@ tour.register('mail_tour', {
     position: "bottom",
 }, {
     trigger: '.o_DiscussSidebar_groupChat .o_DiscussSidebar_groupHeaderItemAdd',
-    content: _t("<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"),
+    content: Markup(_t("<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>")),
     position: 'bottom',
 }]);

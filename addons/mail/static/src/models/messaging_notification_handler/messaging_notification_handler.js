@@ -182,13 +182,6 @@ function factory(dependencies) {
             const wasChannelExisting = !!channel;
             const convertedData = this.env.models['mail.message'].convertData(messageData);
             const oldMessage = this.env.models['mail.message'].findFromIdentifyingData(convertedData);
-            // locally save old values, as insert would overwrite them
-            const oldMessageModerationStatus = (
-                oldMessage && oldMessage.moderation_status
-            );
-            const oldMessageWasModeratedByCurrentPartner = (
-                oldMessage && oldMessage.isModeratedByCurrentPartner
-            );
 
             // Fetch missing info from channel before going further. Inserting
             // a channel with incomplete info can lead to issues. This is in
@@ -207,42 +200,10 @@ function factory(dependencies) {
             const message = this.env.models['mail.message'].insert(convertedData);
             this._notifyThreadViewsMessageReceived(message);
 
-            // If the message was already known: nothing else should be done,
-            // except if it was pending moderation by the current partner, then
-            // decrement the moderation counter.
-            if (oldMessage) {
-                if (
-                    oldMessageModerationStatus === 'pending_moderation' &&
-                    message.moderation_status !== 'pending_moderation' &&
-                    oldMessageWasModeratedByCurrentPartner
-                ) {
-                    const moderation = this.env.messaging.moderation;
-                    moderation.update({ counter: decrement() });
-                }
-                return;
-            }
-
             // If the current partner is author, do nothing else.
             if (message.author === this.env.messaging.currentPartner) {
                 return;
             }
-
-            // Message from mailing channel should not make a notification in
-            // Odoo for users with notification "Handled by Email".
-            // Channel has been marked as read server-side in this case, so
-            // it should not display a notification by incrementing the
-            // unread counter.
-            if (
-                channel.mass_mailing &&
-                this.env.session.notification_type === 'email'
-            ) {
-                this._handleNotificationChannelSeen(channelId, {
-                    last_message_id: messageData.id,
-                    partner_id: this.env.messaging.currentPartner.id,
-                });
-                return;
-            }
-            // In all other cases: update counter and notify if necessary
 
             // Chat from OdooBot is considered disturbing and should only be
             // shown on the menu, but no notification and no thread open.
@@ -407,8 +368,6 @@ function factory(dependencies) {
                 return this._handleNotificationPartnerMessageNotificationUpdate(data.elements);
             } else if (type === 'mark_as_read') {
                 return this._handleNotificationPartnerMarkAsRead(data);
-            } else if (type === 'moderator') {
-                return this._handleNotificationPartnerModerator(data);
             } else if (type === 'simple_notification') {
                 this.env.services['notification'].notify({
                     message: data.message,
@@ -492,16 +451,9 @@ function factory(dependencies) {
          * @param {integer[]} param0.messag_ids
          */
         _handleNotificationPartnerDeletion({ message_ids }) {
-            const moderationMailbox = this.env.messaging.moderation;
             for (const id of message_ids) {
                 const message = this.env.models['mail.message'].findFromIdentifyingData({ id });
                 if (message) {
-                    if (
-                        message.moderation_status === 'pending_moderation' &&
-                        message.originThread.isModeratedByCurrentPartner
-                    ) {
-                        moderationMailbox.update({ counter: decrement() });
-                    }
                     message.delete();
                 }
             }
@@ -536,7 +488,7 @@ function factory(dependencies) {
         _handleNotificationPartnerMarkAsRead({ message_ids = [], needaction_inbox_counter }) {
             for (const message_id of message_ids) {
                 // We need to ignore all not yet known messages because we don't want them
-                // to be shown partially as they would be linked directly to mainCache
+                // to be shown partially as they would be linked directly to cache.
                 // Furthermore, server should not send back all message_ids marked as read
                 // but something like last read message_id or something like that.
                 // (just imagine you mark 1000 messages as read ... )
@@ -562,26 +514,11 @@ function factory(dependencies) {
                 // kept for compatibility in stable
                 inbox.update({ counter: decrement(message_ids.length) });
             }
-            if (inbox.counter > inbox.mainCache.fetchedMessages.length) {
+            if (inbox.counter > inbox.cache.fetchedMessages.length) {
                 // Force refresh Inbox because depending on what was marked as
                 // read the cache might become empty even though there are more
                 // messages on the server.
-                inbox.mainCache.update({ hasToLoadMessages: true });
-            }
-        }
-
-        /**
-         * @private
-         * @param {Object} param0
-         * @param {Object} param0.message
-         */
-        _handleNotificationPartnerModerator({ message: data }) {
-            this.env.models['mail.message'].insert(
-                this.env.models['mail.message'].convertData(data)
-            );
-            const moderationMailbox = this.env.messaging.moderation;
-            if (moderationMailbox) {
-                moderationMailbox.update({ counter: increment() });
+                inbox.cache.update({ hasToLoadMessages: true });
             }
         }
 

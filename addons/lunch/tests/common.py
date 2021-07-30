@@ -93,7 +93,7 @@ class TestsCommon(common.TransactionCase):
             self.topping_olives = self.env['lunch.topping'].create({
                 'name': 'Olives',
                 'price': 0.3,
-                'category_id': self.category_pizza.id,
+                'supplier_id': self.supplier_pizza_inn.id,
             })
 
             self.env['lunch.cashmove'].create({

@@ -982,6 +982,18 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _shouldIgnoreClick(ev) {
+        return !!ev.target.closest('[role="button"]');
+    },
+
+    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -991,7 +1003,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      * @private
      */
     _onClick: function (ev) {
-        if (ev.target.closest('[role="button"]')) {
+        if (this._shouldIgnoreClick(ev)) {
             return;
         }
 
@@ -1426,6 +1438,9 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         if (this.options.dataAttributes.withCombinations) {
             options.withCombinations = !!this.options.dataAttributes.withCombinations;
         }
+        if (this.options.dataAttributes.selectedTab) {
+            options.selectedTab = this.options.dataAttributes.selectedTab;
+        }
         const oldColorPalette = this.colorPalette;
         this.colorPalette = new ColorPaletteWidget(this, options);
         if (oldColorPalette) {
@@ -1434,6 +1449,12 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             });
         }
         return this.colorPalette.appendTo(document.createDocumentFragment());
+    },
+    /**
+     * @override
+     */
+    _shouldIgnoreClick(ev) {
+        return ev.originalEvent.__isColorpickerClick || this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -1487,16 +1508,6 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _onEnterKey: function () {
         this.close();
-    },
-    /**
-     * @override
-     */
-    _onClick: function (ev) {
-        // Do not close the colorpalette on colorpicker click
-        if (!ev.originalEvent.__isColorpickerClick) {
-            this._super(...arguments);
-        }
-        ev.stopPropagation();
     },
 });
 
@@ -2226,6 +2237,12 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _shouldIgnoreClick(ev) {
+        return !!ev.target.closest('.o_we_pager_header') || this._super(...arguments);
+    },
     /**
      * Updates the pager's page number display.
      *
@@ -3323,17 +3340,25 @@ const SnippetOptionWidget = Widget.extend({
             case 'selectClass': {
                 let maxNbClasses = 0;
                 let activeClassNames = '';
-                params.possibleValues.forEach(classNames => {
+                for (const classNames of params.possibleValues) {
                     if (!classNames) {
-                        return;
+                        continue;
                     }
                     const classes = classNames.split(/\s+/g);
+                    if (params.stateToFirstClass) {
+                        if (this.$target[0].classList.contains(classes[0])) {
+                            return classNames;
+                        } else {
+                            continue;
+                        }
+                    }
+
                     if (classes.length >= maxNbClasses
                             && classes.every(className => this.$target[0].classList.contains(className))) {
                         maxNbClasses = classes.length;
                         activeClassNames = classNames;
                     }
-                });
+                }
                 return activeClassNames;
             }
             case 'selectAttribute':
@@ -4124,145 +4149,9 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
 });
 
 /**
- * General options that are common to a font awesome icon and an image.
- */
-registry.StaticMediaTools = SnippetOptionWidget.extend({
-    currentShapes: {},
-    alignments: {
-        left: ['float-left'],
-        center: ['d-block', 'mx-auto'],
-        right: ['float-right'],
-    },
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    toggleShapeRounded(previewMode) {
-        this._toggleShape(previewMode, 'rounded');
-    },
-    toggleShapeCircle(previewMode) {
-        this._toggleShape(previewMode, 'rounded-circle');
-    },
-    toggleShapeShadow(previewMode) {
-        this._toggleShape(previewMode, 'shadow');
-    },
-    toggleShapeThumbnail(previewMode) {
-        this._toggleShape(previewMode, 'img-thumbnail');
-    },
-    setPadding(previewMode, padding) {
-        this.$target.css('padding', padding);
-    },
-    align(previewMode, alignment, params) {
-        if (previewMode === true) {
-            this.currentAlignment = this._getAlignment();
-        }
-        const targetAlignment = previewMode === 'reset' ? this.currentAlignment : alignment;
-        for (const value of params.possibleValues) {
-            this.$target.toggleClass(this.alignments[value] || '', value === targetAlignment);
-        }
-        if (previewMode === false) {
-            this.currentAlignment = alignment;
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _computeWidgetState(methodName, params) {
-        if (['toggleShapeRounded', 'toggleShapeCircle', 'toggleShapeShadow', 'toggleShapeThumbnail'].includes(methodName)) {
-            return params.possibleValues.find(c => this.$target.hasClass(c)) || '';
-        } else if (methodName === 'setPadding') {
-            return this.$target.css('padding');
-        } else if (methodName === 'align') {
-            return this._getAlignment();
-        }
-        return this._super(...arguments);
-    },
-    _getAlignment() {
-        for (const [alignment, [alignClass]] of Object.entries(this.alignments)) {
-            if (this.$target.hasClass(alignClass)) {
-                return alignment;
-            }
-        }
-        return '';
-    },
-    _toggleShape(previewMode, shape) {
-        if (previewMode === true) {
-            this.currentShapes[shape] = this.$target.hasClass(shape);
-            this.$target.toggleClass(shape, true);
-        } else if (previewMode === 'reset') {
-            this.$target.toggleClass(shape, this.currentShapes[shape]);
-        } else if (previewMode === false) {
-            this.$target.toggleClass(shape, !this.currentShapes[shape]);
-            this.currentShapes[shape] = this.$target.hasClass(shape);
-        }
-    },
-});
-
-/**
- * General options of a font awesome icon.
- */
-registry.FontawesomeTools = SnippetOptionWidget.extend({
-    setSize(previewMode, size, params) {
-        if (previewMode === true) {
-            this.currentSize = params.possibleValues.find(c => this.$target.hasClass(c)) || '';
-        }
-        for (const value of params.possibleValues) {
-            if (previewMode === 'reset') {
-                this.$target.toggleClass(value, value === this.currentSize);
-            } else {
-                this.$target.toggleClass(value, value === size)
-            }
-        }
-        if (previewMode === false) {
-            this.currentSize = size;
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _computeWidgetState(methodName, params) {
-        if (methodName === 'setSize') {
-            return params.possibleValues.find(c => this.$target.hasClass(c)) || '';
-        } else if (methodName === 'align') {
-            return this._getAlignment();
-        }
-        return this._super(...arguments);
-    },
-});
-
-/**
  * General options of an image.
  */
 registry.ImageTools = SnippetOptionWidget.extend({
-    setWidth(previewMode, width) {
-        if (previewMode === true) {
-            this.currentWidth = this.$target.css('width');
-        }
-        if (previewMode === 'reset') {
-            this.$target.css('width', this.currentWidth);
-        } else {
-            this.$target.css('width', width);
-        }
-        if (previewMode === false) {
-            this.currentWidth = width;
-        }
-    },
-    setAlt(previewMode, alt) {
-        this.$target.attr('alt', alt);
-    },
-    setTitle(previewMode, title) {
-        this.$target.attr('title', title);
-    },
     crop() {
         new weWidgets.ImageCropWidget(this, this.$target[0]).appendTo(this.options.wysiwyg.$editable);
     },
@@ -4271,8 +4160,8 @@ registry.ImageTools = SnippetOptionWidget.extend({
             this.$target.removeData('transfo-destroy');
             return;
         }
-        const document = this.$target[0].ownerDocument
-        this.$target.transfo({ document });
+        const document = this.$target[0].ownerDocument;
+        this.$target.transfo({document});
         const mousedown = mousedownEvent => {
             if (!$(mousedownEvent.target).closest('.transfo-container').length) {
                 this.$target.transfo('destroy');
@@ -4296,13 +4185,17 @@ registry.ImageTools = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    _computeWidgetState(methodName, params) {
-        if (methodName === 'setWidth') {
-            return this.$target[0].style.width || '';
-        } else if (methodName === 'setAlt') {
-            return this.$target.attr('alt');
-        } else if (methodName === 'setTitle') {
-            return this.$target.attr('title');
+    async _computeWidgetState(methodName, params) {
+        if (methodName === 'selectStyle' && params.cssProperty === 'width') {
+            // TODO check how to handle this the right way (here using inline
+            // style instead of computed because of the messy %-px convertion
+            // and the messy auto keyword).
+            const width = this.$target[0].style.width.trim();
+            if (width[width.length - 1] === '%') {
+                return `${parseInt(width)}%`;
+            } else {
+                return '';
+            }
         }
         return this._super(...arguments);
     },
@@ -6360,6 +6253,75 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
     _onImageChanged(methodName, params) {
         return this.updateUI();
     },
+});
+
+/**
+ * Allows to handle snippets with a list of items.
+ */
+registry.MultipleItems = SnippetOptionWidget.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    async addItem(previewMode, widgetValue, params) {
+        const $target = this.$(params.item);
+        const addBeforeItem = params.addBefore === 'true';
+        if ($target.length) {
+            await new Promise(resolve => {
+                this.trigger_up('clone_snippet', {
+                    $snippet: $target,
+                    onSuccess: resolve,
+                });
+            });
+            if (addBeforeItem) {
+                $target.before($target.next());
+            }
+            if (params.selectItem !== 'false') {
+                this.trigger_up('activate_snippet', {
+                    $snippet: addBeforeItem ? $target.prev() : $target.next(),
+                });
+            }
+            this._addItemCallback($target);
+        }
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    async removeItem(previewMode, widgetValue, params) {
+        const $target = this.$(params.item);
+        if ($target.length) {
+            await new Promise(resolve => {
+                this.trigger_up('remove_snippet', {
+                    $snippet: $target,
+                    onSuccess: resolve,
+                });
+            });
+            this._removeItemCallback($target);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Allows to add behaviour when item added.
+     *
+     * @private
+     * @abstract
+     * @param {jQueryElement} $target
+     */
+    _addItemCallback($target) {},
+    /**
+     * @private
+     * @abstract
+     * @param {jQueryElement} $target
+     */
+    _removeItemCallback($target) {},
 });
 
 return {

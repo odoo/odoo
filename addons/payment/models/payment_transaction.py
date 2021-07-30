@@ -424,17 +424,18 @@ class PaymentTransaction(models.Model):
         )
 
         # Render the html form for the redirect flow if available
-        if self.operation in ('online_redirect', 'validation') \
-                and self.acquirer_id.redirect_form_view_id:
+        if self.operation in ('online_redirect', 'validation'):
             rendering_values = self._get_specific_rendering_values(processing_values)
             _logger.info(
                 "acquirer-specific rendering values for transaction with id %s:\n%s",
                 self.id, pprint.pformat(rendering_values)
             )
-            redirect_form_html = self.acquirer_id.redirect_form_view_id._render(
-                rendering_values, engine='ir.qweb'
+            redirect_form_view = self.acquirer_id._get_redirect_form_view(
+                is_validation=self.operation == 'validation'
             )
-            processing_values.update(redirect_form_html=redirect_form_html)
+            if redirect_form_view:  # Some acquirer don't need a redirect form
+                redirect_form_html = redirect_form_view._render(rendering_values, engine='ir.qweb')
+                processing_values.update(redirect_form_html=redirect_form_html)
 
         return processing_values
 
@@ -823,7 +824,8 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-        payment_method = self.env['account.payment.method'].search([('code', '=', self.acquirer_id.provider)], limit=1)
+        payment_method_line = self.acquirer_id.journal_id.inbound_payment_method_line_ids\
+            .filtered(lambda l: l.code == self.provider)
         payment_values = {
             'amount': self.amount,
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
@@ -832,7 +834,7 @@ class PaymentTransaction(models.Model):
             'partner_type': 'customer',
             'journal_id': self.acquirer_id.journal_id.id,
             'company_id': self.acquirer_id.company_id.id,
-            'payment_method_id': payment_method.id,
+            'payment_method_line_id': payment_method_line.id,
             'payment_token_id': self.token_id.id,
             'payment_transaction_id': self.id,
             'ref': self.reference,

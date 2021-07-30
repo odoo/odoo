@@ -11,7 +11,9 @@ from . import lint_case
 
 RULES = ('{'
         '"no-undef": "error",'
-        '"no-restricted-globals": ["error", "event", "self"]'
+        '"no-restricted-globals": ["error", "event", "self"],'
+        '"no-const-assign": ["error"],'
+        '"no-debugger": ["error"]'
         '}'
 )
 PARSER_OPTIONS = '{ecmaVersion: 2019, sourceType: module}'

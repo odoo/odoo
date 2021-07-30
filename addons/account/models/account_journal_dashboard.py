@@ -71,6 +71,19 @@ class account_journal(models.Model):
     json_activity_data = fields.Text(compute='_get_json_activity_data')
     show_on_dashboard = fields.Boolean(string='Show journal on dashboard', help="Whether this journal should be displayed on the dashboard or not", default=True)
     color = fields.Integer("Color Index", default=0)
+    entries_count = fields.Integer(compute='_compute_entries_count')
+
+    def _compute_entries_count(self):
+        res = {
+            r['journal_id'][0]: r['journal_id_count']
+            for r in self.env['account.move'].read_group(
+                domain=[('journal_id', 'in', self.ids)],
+                fields=['journal_id'],
+                groupby=['journal_id'],
+            )
+        }
+        for journal in self:
+            journal.entries_count = res.get(journal.id, 0)
 
     def _graph_title_and_key(self):
         if self.type in ['sale', 'purchase']:
@@ -427,6 +440,25 @@ class account_journal(models.Model):
                 'domain': [('id', 'in', open_statements.ids)],
             })
         return action
+
+    def action_create_vendor_bill(self):
+        """ This function is called by the "Import" button of Vendor Bills,
+        visible on dashboard if no bill has been created yet.
+        """
+        self.env.company.sudo().set_onboarding_step_done('account_setup_bill_state')
+
+        new_wizard = self.env['account.tour.upload.bill'].create({})
+        view_id = self.env.ref('account.account_tour_upload_bill').id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Import your first bill'),
+            'view_mode': 'form',
+            'res_model': 'account.tour.upload.bill',
+            'target': 'new',
+            'res_id': new_wizard.id,
+            'views': [[view_id, 'form']],
+        }
 
     def to_check_ids(self):
         self.ensure_one()

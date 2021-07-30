@@ -4,9 +4,11 @@ odoo.define('web.ajax', function (require) {
 var config = require('web.config');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
+const {Markup} = require('web.utils');
 var time = require('web.time');
 var download = require('web.download');
 var contentdisposition = require('web.contentdisposition');
+const { session } = require('@web/session');
 
 var _t = core._t;
 
@@ -437,7 +439,7 @@ var loadAsset = (function () {
         if (cache[xmlId]) {
             return cache[xmlId];
         }
-        context = _.extend({}, odoo.session_info.user_context, context);
+        context = _.extend({}, session.user_context, context);
         const params = {
             args: [xmlId, {
                 debug: config.isDebug()
@@ -459,13 +461,13 @@ var loadAsset = (function () {
                     return $(this).attr('href');
                 }).get(),
                 cssContents: $xml.filter('style').map(function () {
-                    return $(this).html();
+                    return Markup($(this).html());
                 }).get(),
                 jsLibs: $xml.filter('script[src]').map(function () {
                     return $(this).attr('src');
                 }).get(),
                 jsContents: $xml.filter('script:not([src])').map(function () {
-                    return $(this).html();
+                    return Markup($(this).html());
                 }).get(),
             };
         }).guardedCatch(reason => {

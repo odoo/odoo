@@ -13,6 +13,7 @@ var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
 const widgetRegistryOwl = require('web.widgetRegistry');
+const {Markup} = require('web.utils');
 
 var makeTestPromise = testUtils.makeTestPromise;
 var nextTick = testUtils.nextTick;
@@ -440,6 +441,47 @@ QUnit.module('Views', {
 
         assert.strictEqual(cpHelpers.getPagerValue(kanban), "1-3", "pager's limit should be 3");
         assert.strictEqual(cpHelpers.getPagerSize(kanban), "4", "pager's size should be 4");
+        kanban.destroy();
+    });
+
+    QUnit.test('pager, ungrouped, deleting all records from last page should move to previous page', async function (assert) {
+        assert.expect(5);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                `<kanban class="o_kanban_test" limit="3">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div><a role="menuitem" type="delete" class="dropdown-item">Delete</a></div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        assert.strictEqual(cpHelpers.getPagerValue(kanban), "1-3",
+            "should have 3 records on current page");
+        assert.strictEqual(cpHelpers.getPagerSize(kanban), "4",
+            "should have 4 records");
+
+        // move to next page
+        await cpHelpers.pagerNext(kanban);
+        assert.strictEqual(cpHelpers.getPagerValue(kanban), "4-4",
+            "should be on second page");
+
+        // delete a record
+        await testUtils.dom.click(kanban.$('.o_kanban_record:first a:first'));
+        await testUtils.dom.click($('.modal-footer button:first'));
+        assert.strictEqual(cpHelpers.getPagerValue(kanban), "1-3",
+            "should have 1 page only");
+        assert.strictEqual(cpHelpers.getPagerSize(kanban), "3",
+            "should have 4 records");
+
         kanban.destroy();
     });
 
@@ -2062,6 +2104,66 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create record if grouped on date(time) field with attribute allow_group_range_value: true',
+        async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.records[0].date = '2017-01-08';
+        this.data.partner.records[1].date = '2017-01-09';
+        this.data.partner.records[2].date = '2017-01-08';
+        this.data.partner.records[3].date = '2017-01-10';
+        this.data.partner.records[0].datetime = '2017-01-08 10:55:05';
+        this.data.partner.records[1].datetime = '2017-01-09 11:31:10';
+        this.data.partner.records[2].datetime = '2017-01-08 09:20:25';
+        this.data.partner.records[3].datetime = '2017-01-10 08:05:51';
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create" quick_create_view="quick_form">' +
+                        '<field name="date" allow_group_range_value="true"/>' +
+                        '<field name="datetime" allow_group_range_value="true"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="display_name"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            archs: {
+                'partner,quick_form,form': '<form>' +
+                    '<field name="date"/>' +
+                    '<field name="datetime"/>' +
+                '</form>',
+            },
+            groupBy: ['date'],
+        });
+
+        assert.containsOnce(kanban, '.o_kanban_header .o_kanban_quick_add i',
+            "quick create should be enabled when grouped on a non-readonly date field");
+
+        // clicking on CREATE in control panel should open a quick create
+        await testUtils.kanban.clickCreate(kanban);
+        assert.containsOnce(kanban, '.o_kanban_group:first .o_kanban_quick_create',
+            "should have opened the quick create in the first column");
+        assert.strictEqual(kanban.$(
+            ".o_kanban_group:first .o_kanban_quick_create .o_datepicker_input[name=date]"
+        ).val(), "01/31/2017");
+
+        await kanban.reload({groupBy: ['datetime']});
+
+        assert.containsOnce(kanban, '.o_kanban_header .o_kanban_quick_add i',
+            "quick create should be enabled when grouped on a non-readonly datetime field");
+
+        // clicking on CREATE in control panel should open a quick create
+        await testUtils.kanban.clickCreate(kanban);
+        assert.containsOnce(kanban, '.o_kanban_group:first .o_kanban_quick_create',
+            "should have opened the quick create in the first column");
+        assert.strictEqual(kanban.$(
+            ".o_kanban_group:first .o_kanban_quick_create .o_datepicker_input[name=datetime]"
+        ).val(), "01/31/2017 23:59:59");
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create record feature is properly enabled/disabled at reload', async function (assert) {
         assert.expect(3);
 
@@ -2959,19 +3061,24 @@ QUnit.module('Views', {
     });
 
     QUnit.test('prevent drag and drop if grouped by date/datetime field', async function (assert) {
-        assert.expect(5);
+        assert.expect(10);
 
         this.data.partner.records[0].date = '2017-01-08';
         this.data.partner.records[1].date = '2017-01-09';
         this.data.partner.records[2].date = '2017-02-08';
         this.data.partner.records[3].date = '2017-02-10';
+        this.data.partner.records[0].datetime = '2017-01-08 10:55:05';
+        this.data.partner.records[1].datetime = '2017-01-09 11:31:10';
+        this.data.partner.records[2].datetime = '2017-02-08 09:20:25';
+        this.data.partner.records[3].datetime = '2017-02-10 08:05:51';
 
         var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             arch: '<kanban class="o_kanban_test">' +
-                        '<field name="bar"/>' +
+                        '<field name="date"/>' +
+                        '<field name="datetime"/>' +
                         '<templates><t t-name="kanban-box">' +
                         '<div><field name="foo"/></div>' +
                     '</t></templates></kanban>',
@@ -2987,13 +3094,107 @@ QUnit.module('Views', {
         // drag&drop a record in another column
         var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
         var $group = kanban.$('.o_kanban_group:nth-child(2)');
-        await testUtils.dragAndDrop($record, $group);
+        await testUtils.dom.dragAndDrop($record, $group);
 
         // should not drag&drop record
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length , 2,
                         "Should remain same records in first column(2 records)");
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 2,
                         "Should remain same records in 2nd column(2 record)");
+
+        await kanban.reload({groupBy: ['datetime:month']});
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have 2 columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 2,
+                        "1st column should contain 2 records of January month");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 2,
+                        "2nd column should contain 2 records of February month");
+
+        // drag&drop a record in another column
+        $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        $group = kanban.$('.o_kanban_group:nth-child(2)');
+        await testUtils.dom.dragAndDrop($record, $group);
+
+        // should not drag&drop record
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length , 2,
+                        "Should remain same records in first column(2 records)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 2,
+                        "Should remain same records in 2nd column(2 record)");
+        kanban.destroy();
+    });
+
+    QUnit.test('drag and drop record if grouped by date/time field with attribute allow_group_range_value: true', async function (assert) {
+        assert.expect(14);
+
+        this.data.partner.records[0].date = '2017-01-08';
+        this.data.partner.records[1].date = '2017-01-09';
+        this.data.partner.records[2].date = '2017-02-08';
+        this.data.partner.records[3].date = '2017-02-10';
+        this.data.partner.records[0].datetime = '2017-01-08 10:55:05';
+        this.data.partner.records[1].datetime = '2017-01-09 11:31:10';
+        this.data.partner.records[2].datetime = '2017-02-08 09:20:25';
+        this.data.partner.records[3].datetime = '2017-02-10 08:05:51';
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<field name="date" allow_group_range_value="true"/>' +
+                        '<field name="datetime" allow_group_range_value="true"/>' +
+                        '<templates>' +
+                            '<t t-name="kanban-box">' +
+                                '<div><field name="display_name"/></div>' +
+                            '</t>' +
+                        '</templates>' +
+                    '</kanban>',
+            groupBy: ['date:month'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    assert.ok(true, "should call resequence");
+                    return Promise.resolve(true);
+                }
+                if (args.model === 'partner' && args.method === 'write') {
+                    if ("date" in args.args[1]) {
+                        assert.deepEqual(args.args[1], {date: '2017-02-28'});
+                    } else if ("datetime" in args.args[1]) {
+                        assert.deepEqual(args.args[1], {datetime: '2017-02-28 23:59:59'});
+                    } 
+                }
+                return this._super(route, args);
+            },
+        });
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have 2 columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 2,
+                        "1st column should contain 2 records of January month");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 2,
+                        "2nd column should contain 2 records of February month");
+
+        var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        var $group = kanban.$('.o_kanban_group:nth-child(2)');
+        await testUtils.dom.dragAndDrop($record, $group);
+
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length , 1,
+                        "Should only have one record remaining");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 3,
+                        "Should now have 3 records");
+
+        await kanban.reload({groupBy: ['datetime:month']});
+        
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have 2 columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 2,
+                        "1st column should contain 2 records of January month");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 2,
+                        "2nd column should contain 2 records of February month");
+
+        $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        $group = kanban.$('.o_kanban_group:nth-child(2)');
+        await testUtils.dom.dragAndDrop($record, $group);
+
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length , 1,
+                        "Should only have one record remaining");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 3,
+                        "Should now have 3 records");
         kanban.destroy();
     });
 
@@ -3694,6 +3895,38 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create column should not be closed on widnow click if there is no column', async function (assert) {
+        assert.expect(4);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ['product_id'],
+            domain: [['foo', '=', 'norecord']],
+        });
+
+        assert.containsNone(kanban, '.o_kanban_group');
+        assert.containsOnce(kanban, '.o_column_quick_create');
+        assert.ok(kanban.$('.o_column_quick_create input').is(':visible'),
+            "the quick create should be opened");
+        // click outside should not discard quick create column
+        await testUtils.dom.click(kanban.$('.o_kanban_example_background_container'));
+        assert.ok(kanban.$('.o_column_quick_create input').is(':visible'),
+            "the quick create should still be opened");
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create several columns in a row', async function (assert) {
         assert.expect(10);
 
@@ -3750,10 +3983,11 @@ QUnit.module('Views', {
             examples:[{
                 name: "A first example",
                 columns: ["Column 1", "Column 2", "Column 3"],
-                description: "Some description",
+                description: "A <b>weak</b> description.",
             }, {
                 name: "A second example",
                 columns: ["Col 1", "Col 2"],
+                description: Markup`A <b>fantastic</b> description.`
             }],
         });
 
@@ -3791,23 +4025,27 @@ QUnit.module('Views', {
         assert.strictEqual($('.modal .o_kanban_examples_dialog_content .tab-pane').length, 2,
             "should have two examples");
 
-        var $firstPane = $('.modal .o_kanban_examples_dialog_content .tab-pane:first');
+        const $panes = $('.modal .o_kanban_examples_dialog_content .tab-pane');
+        var $firstPane = $panes.eq(0);
         assert.strictEqual($firstPane.find('.o_kanban_examples_group').length, 3,
             "there should be 3 stages in the first example");
         assert.strictEqual($firstPane.find('h6').text(), 'Column 1Column 2Column 3',
             "column titles should be correct");
-        assert.strictEqual($firstPane.find('.o_kanban_examples_description').text().trim(),
-            "Some description", "the correct description should be displayed");
+        assert.strictEqual($firstPane.find('.o_kanban_examples_description').html().trim(),
+            "A &lt;b&gt;weak&lt;/b&gt; description.",
+            "An escaped description should be displayed");
 
-        var $secondPane = $('.modal .o_kanban_examples_dialog_content .tab-pane:nth(1)');
+        var $secondPane = $panes.eq(1);
         assert.strictEqual($secondPane.find('.o_kanban_examples_group').length, 2,
             "there should be 2 stages in the second example");
         assert.strictEqual($secondPane.find('h6').text(), 'Col 1Col 2',
             "column titles should be correct");
-        assert.strictEqual($secondPane.find('.o_kanban_examples_description').text().trim(),
-            "", "there should be no description for the second example");
+        assert.strictEqual($secondPane.find('.o_kanban_examples_description').html().trim(),
+            "A <b>fantastic</b> description.",
+            "A formatted description should be displayed.");
 
         kanban.destroy();
+        delete kanbanExamplesRegistry.map['test'];
     });
 
     QUnit.test("quick create column's apply button's display text", async function (assert) {
@@ -3819,7 +4057,6 @@ QUnit.module('Views', {
             examples:[{
                 name: "A first example",
                 columns: ["Column 1", "Column 2", "Column 3"],
-                description: "Some description",
             }, {
                 name: "A second example",
                 columns: ["Col 1", "Col 2"],
@@ -3861,7 +4098,6 @@ QUnit.module('Views', {
             examples:[{
                 name: "A first example",
                 columns: ["Column 1", "Column 2", "Column 3"],
-                description: "Some description",
             }, {
                 name: "A second example",
                 columns: ["Col 1", "Col 2"],
@@ -7291,7 +7527,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('set cover image', async function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         var kanban = await createView({
             View: KanbanView,
@@ -7300,7 +7536,7 @@ QUnit.module('Views', {
             arch: '<kanban class="o_kanban_test">' +
                     '<templates>' +
                         '<t t-name="kanban-box">' +
-                            '<div>' +
+                            '<div class="oe_kanban_global_click">' +
                                 '<field name="name"/>' +
                                 '<div class="o_dropdown_kanban dropdown">' +
                                     '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
@@ -7324,6 +7560,16 @@ QUnit.module('Views', {
                 }
                 return this._super(route, args);
             },
+            intercepts: {
+                switch_view: function (event) {
+                    assert.deepEqual(_.pick(event.data, 'mode', 'model', 'res_id', 'view_type'), {
+                        mode: 'readonly',
+                        model: 'partner',
+                        res_id: 1,
+                        view_type: 'form',
+                    }, "should trigger an event to open the clicked record in a form view");
+                },
+            },
         });
 
         var $firstRecord = kanban.$('.o_kanban_record:first');
@@ -7341,6 +7587,7 @@ QUnit.module('Views', {
         $('.modal').find("img[data-id='2']").dblclick();
         await testUtils.nextTick();
         assert.containsOnce(kanban, 'img[data-src*="/web/image/2"]');
+        await testUtils.dom.click(kanban.$('.o_kanban_record:first .o_attachment_image'));
         assert.verifySteps(["1", "2"], "should writes on both kanban records");
 
         kanban.destroy();
@@ -7591,7 +7838,7 @@ QUnit.module('Views', {
                             <div class="oe_kanban_global_click">
                                 <field name="display_name"/>
                                 <div class="test" t-if="!widget.isHtmlEmpty(record.description.raw_value)">
-                                    <t t-raw="record.description.raw_value"/>
+                                    <t t-out="record.description.value"/>
                                 </div>
                             </div>
                         </t></templates>
@@ -7605,6 +7852,400 @@ QUnit.module('Views', {
             "the inner html content is rendered properly");
         assert.containsNone(kanban, '.o_kanban_record:last div.test',
             "the container is not displayed if description just have formatting tags and no actual content");
+
+        kanban.destroy();
+    });
+
+    QUnit.test("progressbar filter state is kept unchanged when domain is updated (records still in group)", async function (assert) {
+        assert.expect(16);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <kanban default_group_by="bar">
+                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="id"/>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        });
+
+        // Check that we have 2 columns and check their progressbar's state
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "1 __false"],
+        );
+
+        // Apply an active filter
+        await testUtils.dom.click(kanban.el.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]"));
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "true");
+
+        // Add searchdomain to something restricting progressbars' values (records still in filtered group)
+        await kanban.update({ domain: [["foo", "=", "yop"]] });
+
+        // Check that we have now 1 column only and check its progressbar's state
+        assert.containsOnce(kanban.el, ".o_kanban_group");
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.strictEqual(kanban.el.querySelector(".o_column_title").innerText, "true");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "0 blip", "0 __false"],
+        );
+
+        // Undo searchdomain
+        await kanban.update({ domain: [] });
+
+        // Check that we have 2 columns back and check their progressbar's state
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "1 __false"],
+        );
+
+        kanban.destroy();
+    });
+
+    QUnit.test("progressbar filter state is kept unchanged when domain is updated (emptying group)", async function (assert) {
+        assert.expect(25);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <kanban default_group_by="bar">
+                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="id"/>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        });
+
+        // Check that we have 2 columns, check their progressbar's state and check records
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_record")].map(el => el.innerText),
+            ["4 blip"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "1 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
+            ["1 yop", "2 blip", "3 gnap"],
+        );
+
+        // Apply an active filter
+        await testUtils.dom.click(kanban.el.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]"));
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "true");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group.o_kanban_group_show .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "1 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group.o_kanban_group_show .o_kanban_record")].map(el => el.innerText),
+            ["1 yop"],
+        );
+
+        // Add searchdomain to something restricting progressbars' values + emptying the filtered group
+        await kanban.update({ domain: [["foo", "=", "blip"]] });
+
+        // Check that we still have 2 columns, check their progressbar's state and check records
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_record")].map(el => el.innerText),
+            ["4 blip"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
+            ["2 blip"],
+        );
+
+        // Undo searchdomain
+        await kanban.update({ domain: [] });
+
+        // Check that we still have 2 columns and check their progressbar's state
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_record")].map(el => el.innerText),
+            ["4 blip"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "1 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
+            ["1 yop", "2 blip", "3 gnap"],
+        );
+
+        kanban.destroy();
+    });
+
+    QUnit.test("filtered column keeps consistent counters when dropping in a non-matching record", async function (assert) {
+        assert.expect(19);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <kanban default_group_by="bar">
+                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="id"/>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        });
+
+        // Check that we have 2 columns, check their progressbar's state, and check records
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_record")].map(el => el.innerText),
+            ["4 blip"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "1 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
+            ["1 yop", "2 blip", "3 gnap"],
+        );
+
+        // Apply an active filter
+        await testUtils.dom.click(kanban.el.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]"));
+        assert.hasClass(kanban.el.querySelector(".o_kanban_group:nth-child(2)"), "o_kanban_group_show");
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "true");
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show .o_kanban_record");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_kanban_record").innerText, "1 yop");
+
+        // Drop in the non-matching record from first column
+        await testUtils.dom.dragAndDrop(
+            kanban.el.querySelector(".o_kanban_group:nth-child(1) .o_kanban_record"),
+            kanban.el.querySelector(".o_kanban_group.o_kanban_group_show")
+        );
+
+        // Check that we have 2 columns, check their progressbar's state, and check records
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "0 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_record")].map(el => el.innerText),
+            [],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "2 blip", "1 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
+            ["1 yop", "4 blip"],
+        );
+
+        kanban.destroy();
+    });
+
+    QUnit.test("filtered column is reloaded when dragging out its last record", async function (assert) {
+        assert.expect(33);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <kanban default_group_by="bar">
+                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="id"/>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super(route, args);
+            },
+        });
+
+        // Check that we have 2 columns, check their progressbar's state, and check records
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_record")].map(el => el.innerText),
+            ["4 blip"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "1 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
+            ["1 yop", "2 blip", "3 gnap"],
+        );
+        assert.verifySteps([
+            "web_read_group",
+            "read_progress_bar",
+            "/web/dataset/search_read",
+            "/web/dataset/search_read",
+        ]);
+
+        // Apply an active filter
+        await testUtils.dom.click(kanban.el.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]"));
+        assert.hasClass(kanban.el.querySelector(".o_kanban_group:nth-child(2)"), "o_kanban_group_show");
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "true");
+        assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show .o_kanban_record");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_kanban_record").innerText, "1 yop");
+        assert.verifySteps(["/web/dataset/search_read"]);
+
+        // Drag out its only record onto the first column
+        await testUtils.dom.dragAndDrop(
+            kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_kanban_record"),
+            kanban.el.querySelector(".o_kanban_group:nth-child(1)")
+        );
+
+        // Check that we have 2 columns, check their progressbar's state, and check records
+        assert.containsN(kanban.el, ".o_kanban_group", 2);
+        assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
+            ["false", "true"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["1 yop", "1 blip", "0 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_record")].map(el => el.innerText),
+            ["4 blip", "1 yop"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
+            ["0 yop", "1 blip", "1 __false"],
+        );
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(2) .o_kanban_record")].map(el => el.innerText),
+            ["2 blip", "3 gnap"],
+        );
+        assert.verifySteps([
+            "write",
+            "read",
+            "web_read_group",
+            "read_progress_bar",
+            "/web/dataset/search_read",
+            "/web/dataset/resequence",
+        ]);
 
         kanban.destroy();
     });

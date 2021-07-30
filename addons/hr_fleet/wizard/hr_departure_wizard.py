@@ -24,4 +24,4 @@ class HrDepartureWizard(models.TransientModel):
             if self.departure_date and (not assignation.date_end or assignation.date_end > self.departure_date):
                 assignation.write({'date_end': self.departure_date})
         cars = self.env['fleet.vehicle'].search([('driver_id', 'in', drivers.ids)])
-        cars.write({'driver_id': False})
+        cars.write({'driver_id': False, 'driver_employee_id': False})

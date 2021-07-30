@@ -81,6 +81,7 @@
                 <field name="duration" readonly="1"/>
                 <field name="state"/>
                 <field name="date_start" string="Beginning" readonly="1"/>
+                <field name="date_stop" string="End" readonly="1"/>
             </tree>
         </field>
     </record>
@@ -137,7 +138,6 @@
         <field name="model">hr.work.entry.type</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code"/>
                 <field name="color" widget="color_picker"/>
@@ -161,9 +161,12 @@
                         <group name="identification">
                             <field name="code"/>
                             <field name="active" invisible="1"/>
-                            <field name="sequence"/>
+                            <field name="sequence" groups="base.group_no_one"/>
                             <field name="color" widget="color_picker"/>
                         </group>
+                    </group>
+                    <group name="other">
+                        <group name="time_off" string="Time Off Options"/>
                     </group>
                 </sheet>
             </form>

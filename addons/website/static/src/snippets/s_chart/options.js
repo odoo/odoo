@@ -203,6 +203,7 @@ options.registry.InnerChart = options.Class.extend({
         const rmbuttonEl = options.buildElement('we-button', null, {
             classes: ['o_we_text_danger', 'o_we_link', 'fa', 'fa-fw', 'fa-minus', ...classes],
         });
+        rmbuttonEl.title = classes.includes('o_we_matrix_remove_col') ? _t("Remove Serie") : _t("Remove Row");
         const newEl = document.createElement('td');
         newEl.appendChild(rmbuttonEl);
         return newEl;

@@ -71,5 +71,6 @@ If you want to save your employees' time and avoid them to always have coins in 
         'web.assets_qweb': [
             'lunch/static/src/xml/lunch_templates.xml',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

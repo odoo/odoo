@@ -184,6 +184,8 @@ odoo.define('web.DropdownMenu', function (require) {
         },
         title: { type: String, optional: 1 },
         closeOnSelected: { type: Boolean, optional: 1 },
+        hotkey: { type: String, optional: 1 },
+        hotkeyTitle: { type: String, optional: 1 },
     };
     DropdownMenu.template = 'web.DropdownMenu';
 

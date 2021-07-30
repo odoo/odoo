@@ -240,9 +240,81 @@ class UnknownPatchError extends Error {
     }
 }
 
+const __escape = _.escape;
+_.escapeMethod = Symbol('html')
+_.escape = function escape(s) {
+    return s[_.escapeMethod] ? s[_.escapeMethod]() : __escape(s);
+}
+
+// notable issues:
+// * objects can't be negative in JS, so !!"" -> false but
+//   !!(new String) -> true, likewise markup
+// TODO (?)
+// * Markup.join / Markup#join => escapes items and returns a Markup
+// * Markup#replace => automatically escapes the replacements (difficult impl)
+class _Markup extends String {
+    [_.escapeMethod]() {
+        return this;
+    }
+}
+// exposed for qweb2.js
+window._Markup = _Markup;
+
+/**
+ * Returns a markup object, which acts like a String but is considered safe by
+ * `_.escape`, and will therefore be injected as-is (without additional
+ * escaping) in templates. Can be used to inject dynamic HTML in templates
+ * (where the template itself can't), see first example.
+ *
+ * Can also be used as a *template tag*, in which case the literal content
+ * won't be escaped but the substitutions which are not already markup objects
+ * will be.
+ *
+ * ## WARNINGS:
+ * * A markup object is a `String` (boxed) but not a `string` (primitive), they
+ *   typecheck differently which can be relevant.
+ * * To strip out the "markupness", just call `String(markup)`.
+ * * Most string operations (e.g. concatenation, `String#replace`, ...) will
+ *   also strip out markupness
+ * * If the input is empty, returns a regular string (that way boolean tests
+ *   work as expected).
+ *
+ * @returns a markup object
+ *
+ * @example regular function
+ * let h;
+ * if (someTest) {
+ *     h = Markup(_t("This is a <strong>success</strong>"));
+ * } else {
+ *     h = Markup(_t("Things did <strong>not</strong> work out"));
+ * }
+ * qweb.render("some_template", { message: h });
+ *
+ * @example template tag
+ * const escaped = "<some> text";
+ * const asis = Markup`some <b>text</b>`;
+ * const h = Markup`Regular strings get ${escaped} but markup is injected ${asis}`;
+ */
+function Markup(v, ...exprs) {
+    if (!(v instanceof Array)) {
+        return v ? new _Markup(v) : '';
+    }
+    const elements = [];
+    let i = 0;
+    for(; i < exprs.length; ++i) {
+        elements.push(v[i], _.escape(exprs[i]));
+    }
+    elements.push(v[i]);
+
+    const s = elements.join('');
+    if (!s) { return '' }
+    return new _Markup(s);
+}
+
 var utils = {
     AlreadyDefinedPatchError,
     UnknownPatchError,
+    Markup,
 
     /**
      * Throws an error if the given condition is not true
@@ -818,25 +890,40 @@ var utils = {
     },
     /**
      * Returns a string formatted using given values.
+     *
      * If the value is an object, its keys will replace `%(key)s` expressions.
      * If the values are a set of strings, they will replace `%s` expressions.
      * If no value is given, the string will not be formatted.
      *
-     * @param {string} string
-     * @param  {(Object|...string)} values
+     * `Markup`-aware: if a `Markup` object is provided as format string,
+     * automatically escapes injected values and returns a new `Markup`
+     * object.
+     *
+     * @param {string|Markup} string format string
+     * @param values values injected into the format string, can be either a
+     *               sequence of positional parameters (for positional
+     *               placeholders) or a single Object acting a as map (for named
+     *               placeholders).
+     * @returns {string|Markup}
      */
-    sprintf: function (string, ...values) {
+    sprintf(string, ...values) {
+        let finalizer, mapper;
+        finalizer = mapper = a => a;
+        if (string instanceof _Markup) {
+            string = String(string);
+            finalizer = Markup;
+            mapper = _.escape;
+        }
         if (values.length === 1 && typeof values[0] === 'object') {
             const valuesDict = values[0];
-            for (const value in valuesDict) {
-                string = string.replace(`%(${value})s`, valuesDict[value]);
-            }
+            string = string.replace(
+                /%\((\w+)\)s/g,
+                (_, group) => mapper(valuesDict[group]));
         } else {
-            for (const value of values) {
-                string = string.replace(/%s/, value);
-            }
+            let i = 0;
+            string = string.replace(/%s/g, () => mapper(values[i++]));
         }
-        return string;
+        return finalizer(string);
     },
     /**
      * Sort an array in place, keeping the initial order for identical values.

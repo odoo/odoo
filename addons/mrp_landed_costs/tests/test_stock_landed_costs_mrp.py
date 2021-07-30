@@ -121,10 +121,12 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         landed_cost = Form(self.env['stock.landed.cost'].with_user(self.allow_user)).save()
         landed_cost.target_model = 'manufacturing'
 
-        self.assertTrue(man_order.id in landed_cost.allowed_mrp_production_ids.ids)
+        # Check domain of the views
+        self.assertTrue(man_order in self.env['mrp.production'].search([
+            ('move_finished_ids.stock_valuation_layer_ids', '!=', False), ('company_id', '=', landed_cost.company_id.id)]))
+
         landed_cost.mrp_production_ids = [(6, 0, [man_order.id])]
         landed_cost.cost_lines = [(0, 0, {'product_id': self.landed_cost.id, 'price_unit': 5.0, 'split_method': 'equal'})]
-
         landed_cost.button_validate()
 
         self.assertEqual(landed_cost.state, 'done')

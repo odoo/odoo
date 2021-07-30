@@ -1,0 +1,44 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ThreadViewTopbar {
+    height: $o-statusbar-height * 1.25;
+}
+
+.o_ThreadViewTopbar_threadDescriptionSeparator {
+    width: $border-width;
+    height: $font-size-sm;
+}
+
+.o_ThreadViewTopbar_threadName {
+    border: $border-width solid;
+}
+
+.o_ThreadViewTopbar_title {
+    min-width: 0;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ThreadViewTopbar {
+    background-color: gray('100');
+}
+
+.o_ThreadViewTopbar_threadDescriptionSeparator {
+    background-color: $border-color;
+}
+
+.o_ThreadViewTopbar_threadName {
+
+    &:not(.o-isMouseOverThreadName) {
+        border-color: transparent; // presence of border even if invisible to prevent flicker
+    }
+
+    &.o-isMouseOverThreadName {
+        background-color: $white;
+        border-color: $border-color;
+    }
+}

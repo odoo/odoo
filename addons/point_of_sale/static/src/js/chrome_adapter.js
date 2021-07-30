@@ -8,8 +8,7 @@ import { configureGui } from "point_of_sale.Gui";
 import { useBus } from "@web/core/bus_hook";
 import PosComponent from "point_of_sale.PosComponent";
 import PopupControllerMixin from "point_of_sale.PopupControllerMixin";
-import { useErrorHandlers } from "point_of_sale.custom_hooks";
-import { ConnectionLostError } from "@web/core/network/rpc_service";
+import { registry } from "@web/core/registry";
 
 function setupResponsivePlugin(env) {
     const isMobile = () => window.innerWidth <= 768;
@@ -32,7 +31,11 @@ export class ChromeAdapter extends PopupControllerMixin(PosComponent) {
         useBus(this.env.qweb, "update", () => this.render());
         const chrome = owl.hooks.useRef("chrome");
         owl.hooks.onMounted(async () => {
+            // Little trick to avoid displaying the block ui during the POS models loading
+            const BlockUiFromRegistry = registry.category("main_components").get("BlockUI");
+            registry.category("main_components").remove("BlockUI");
             await chrome.comp.start();
+            registry.category("main_components").add("BlockUI", BlockUiFromRegistry);
             configureGui({ component: chrome.comp });
             setupResponsivePlugin(this.env);
         });

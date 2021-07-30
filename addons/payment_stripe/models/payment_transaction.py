@@ -140,7 +140,7 @@ class PaymentTransaction(models.Model):
                 'address[line1]': self.partner_address or None,
                 'address[postal_code]': self.partner_zip or None,
                 'address[state]': self.partner_state_id.name or None,
-                'description': f'ODOO_PARTNER_{self.partner_id.id}',
+                'description': f'Odoo Partner: {self.partner_id.name} (id: {self.partner_id.id})',
                 'email': self.partner_email,
                 'name': self.partner_name,
                 'phone': self.partner_phone or None,

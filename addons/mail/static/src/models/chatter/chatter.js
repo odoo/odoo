@@ -150,9 +150,7 @@ function factory(dependencies) {
                         model: this.threadModel,
                     }),
                 });
-                for (const cache of this.thread.caches) {
-                    cache.update({ messages: link(message) });
-                }
+                this.thread.cache.update({ messages: link(message) });
             }
         }
 
@@ -160,7 +158,7 @@ function factory(dependencies) {
          * @private
          */
         _onThreadIsLoadingAttachmentsChanged() {
-            if (!this.thread.isLoadingAttachments) {
+            if (!this.thread || !this.thread.isLoadingAttachments) {
                 this._stopAttachmentsLoading();
                 return;
             }

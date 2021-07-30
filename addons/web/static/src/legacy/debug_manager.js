@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { editModelDebug } from "../core/debug/debug_service";
 import { Dialog } from "../core/dialog/dialog";
 import { formatDateTime, parseDateTime } from "../core/l10n/dates";
 import { _lt } from "../core/l10n/translation";
@@ -9,6 +8,19 @@ import { formatMany2one } from "../fields/format";
 
 const { hooks, tags } = owl;
 const { useState } = hooks;
+
+function editModelDebug(env, title, model, id) {
+    return env.services.action.doAction({
+        res_model: model,
+        res_id: id,
+        name: title,
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+        view_mode: "form",
+        target: "new",
+        flags: { action_buttons: true, headless: true },
+    });
+}
 
 // Action items
 
@@ -416,16 +428,21 @@ export function editView({ accessRights, action, component, env }) {
     };
 }
 
-function editControlPanelView({ accessRights, component, env }) {
+export function editSearchView({ accessRights, component, env }) {
     if (!accessRights.canEditView) {
         return null;
     }
-    const description = env._t("Edit ControlPanelView");
+    const description = env._t("Edit SearchView");
     return {
         type: "item",
         description,
         callback: () => {
-            editModelDebug(env, description, "ir.ui.view", component.props.viewInfo.view_id);
+            editModelDebug(
+                env,
+                description,
+                "ir.ui.view",
+                component.props.viewParams.controlPanelFieldsView.view_id
+            );
         },
         sequence: 360,
     };
@@ -516,7 +533,7 @@ debugRegistry
     .add("viewSeparator", viewSeparator)
     .add("fieldsViewGet", fieldsViewGet)
     .add("editView", editView)
-    .add("editControlPanelView", editControlPanelView);
+    .add("editSearchView", editSearchView);
 
 debugRegistry
     .category("form")

@@ -3,7 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
-import { clear, link, unlink } from '@mail/model/model_field_command';
+import { clear, create, link, unlink } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -82,12 +82,11 @@ function factory(dependencies) {
             if (!this.thread) {
                 return;
             }
-            const isMailingList = this.thread.model === 'mail.channel' && this.thread.mass_mailing;
             // Actually in mobile there is a send button, so we need there 'enter' to allow new line.
             // Hence, we want to use a different shortcut 'ctrl/meta enter' to send for small screen
             // size with a non-mailing channel.
             // here send will be done on clicking the button or using the 'ctrl/meta enter' shortcut.
-            if (this.env.messaging.device.isMobile || isMailingList) {
+            if (this.env.messaging.device.isMobile) {
                 return ['ctrl-enter', 'meta-enter'];
             }
             return ['enter'];
@@ -159,6 +158,18 @@ function factory(dependencies) {
         /**
          * @private
          */
+        _computeTopBar() {
+            if (!this.hasTopbar) {
+                return unlink();
+            }
+            if (this.hasTopbar && !this.topbar) {
+                return create();
+            }
+        }
+
+        /**
+         * @private
+         */
         _onThreadCacheChanged() {
             // clear obsolete hints
             this.update({ componentHintList: clear() });
@@ -198,9 +209,6 @@ function factory(dependencies) {
     }
 
     ThreadView.fields = {
-        checkedMessages: many2many('mail.message', {
-            related: 'threadCache.checkedMessages',
-        }),
         /**
          * List of component hints. Hints contain information that help
          * components make UI/UX decisions based on their UI state.
@@ -239,6 +247,12 @@ function factory(dependencies) {
         }),
         hasComposerFocus: attr({
             related: 'composer.hasFocus',
+        }),
+        /**
+         * Determines whether this thread view has a top bar.
+         */
+        hasTopbar: attr({
+            related: 'threadViewer.hasTopbar',
         }),
         /**
          * States whether `this.threadCache` is currently loading messages.
@@ -328,12 +342,6 @@ function factory(dependencies) {
             isOnChange: true,
         }),
         /**
-         * Determines the domain to apply when fetching messages for `this.thread`.
-         */
-        stringifiedDomain: attr({
-            related: 'threadViewer.stringifiedDomain',
-        }),
-        /**
          * Determines the keyboard shortcuts that are available to send a message
          * from the composer of this thread viewer.
          */
@@ -343,7 +351,6 @@ function factory(dependencies) {
                 'device',
                 'deviceIsMobile',
                 'thread',
-                'threadMassMailing',
                 'threadModel',
             ],
         }),
@@ -400,12 +407,6 @@ function factory(dependencies) {
         /**
          * Serves as compute dependency.
          */
-        threadMassMailing: attr({
-            related: 'thread.mass_mailing',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
         threadModel: attr({
             related: 'thread.model',
         }),
@@ -431,8 +432,15 @@ function factory(dependencies) {
             inverse: 'threadView',
             readonly: true,
         }),
-        uncheckedMessages: many2many('mail.message', {
-            related: 'threadCache.uncheckedMessages',
+        /**
+         * Determines the top bar of this thread view, if any.
+         */
+        topbar: one2one('mail.thread_view_topbar', {
+            compute: '_computeTopBar',
+            dependencies: ['hasTopbar'],
+            inverse: 'threadView',
+            isCausal: true,
+            readonly: true,
         }),
     };
 

@@ -49,14 +49,14 @@
                                     <h3 class="text-secondary mt0 mb4">
                                         <span t-field="job.name"/>
                                     </h3>
-                                    <h5 t-if="job.no_of_recruitment &gt; 1">
+                                    <h5 t-if="job.no_of_recruitment &gt;= 1">
                                         <t t-esc="job.no_of_recruitment"/> open positions
                                     </h5>
                                     <div t-if="editable"
                                        t-field="job.description"
                                        class="mt16 mb0 css_non_editable_mode_hidden"/>
-                                    <div t-esc="len((job.description or '').split(' ')) > 35 and '%s ...' % ' '.join(job.description.split(' ')[:35]) or job.description"
-                                        class="mt16 mb0 css_editable_mode_hidden"
+                                    <div t-esc="job.description or ''"
+                                        class="mt16 mb0 css_editable_mode_hidden o_website_hr_recruitment_job_description"
                                     />
                                     <div class="o_job_infos mt16">
                                         <span t-field="job.address_id" t-options='{
@@ -138,7 +138,7 @@
             <div id="jobs_section">
                 <section id="forms" class="s_website_form" data-vcss="001" data-snippet="s_website_form">
                     <div class="container">
-                        <form id="hr_recruitment_form" action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="hr.applicant" data-success-mode="redirect" data-success-page="/job-thank-you" hide-change-model="true">
+                        <form id="hr_recruitment_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="hr.applicant" data-success-mode="redirect" data-success-page="/job-thank-you" hide-change-model="true">
                             <div class="s_website_form_rows row s_col_no_bgcolor">
                                 <div class="form-group col-12 s_website_form_field s_website_form_required s_website_form_model_required" data-type="char" data-name="Field">
                                     <div class="row s_col_no_resize s_col_no_bgcolor">

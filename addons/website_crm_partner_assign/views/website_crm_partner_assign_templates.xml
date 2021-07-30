@@ -9,7 +9,7 @@
             <div class="oe_structure" id="oe_structure_website_crm_partner_assign_layout_1"/>
             <div class="container mt16">
                 <div class="row">
-                    <t t-raw="ref_content" />
+                    <t t-out="0" />
                 </div>
             </div>
             <div class="oe_structure" id="oe_structure_website_crm_partner_assign_layout_2"/>
@@ -19,95 +19,93 @@
 
 <template id="index" name="Find Resellers">
     <t t-call="website_crm_partner_assign.layout">
-        <t t-set="ref_content">
-            <div class="col-lg-12">
-                <h1 class="text-center">
-                    Looking For a Local Store?
-                </h1><h2 class="text-center text-muted">
-                    Contact a reseller
-                </h2>
+        <div class="col-lg-12">
+            <h1 class="text-center">
+                Looking For a Local Store?
+            </h1><h2 class="text-center text-muted">
+                Contact a reseller
+            </h2>
+        </div>
+
+        <div class="col-lg-3 mb32" id="partner_left">
+
+            <ul id="reseller_grades" class="nav nav-pills flex-column mt16">
+                <li class="nav-header nav-item"><h3>Filter by Level</h3></li>
+                <t t-foreach="grades" t-as="grade">
+                    <li class="nav-item">
+                        <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
+                           t-attf-class="nav-link#{grade['active'] and ' active' or ''}">
+                            <span class="badge badge-pill float-right" t-esc="grade['grade_id_count'] or ''"/>
+                            <t t-esc="grade['grade_id'][1]"/>
+                        </a>
+                    </li>
+                </t>
+            </ul>
+
+            <ul id="reseller_countries" class="nav nav-pills flex-column mt16">
+                <li class="nav-header nav-item"><h3>Filter by Country</h3></li>
+                <t t-foreach="countries" t-as="country">
+                    <li t-if="country['country_id']" class="nav-item">
+                        <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
+                           t-attf-class="nav-link#{country['active'] and ' active' or ''}">
+                            <span class="badge badge-pill float-right" t-esc="country['country_id_count'] or ''"/>
+                            <t t-esc="country['country_id'][1]"/>
+                        </a>
+                    </li>
+                </t>
+            </ul>
+
+        </div>
+
+        <div class="col-lg-8 offset-lg-1" id="ref_content">
+            <div class="d-flex p-2">
+                <t t-call="website.pager"/>
+                <form action="" method="get" class="form-inline ml-auto">
+                    <div class="form-group">
+                        <input t-if="country_all" type="hidden" name="country_all" value="True" />
+                        <input type="text" name="search" class="search-query form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
+                    </div>
+                </form>
             </div>
-
-            <div class="col-lg-3 mb32" id="partner_left">
-
-                <ul id="reseller_grades" class="nav nav-pills flex-column mt16">
-                    <li class="nav-header nav-item"><h3>Filter by Level</h3></li>
-                    <t t-foreach="grades" t-as="grade">
-                        <li class="nav-item">
-                            <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
-                               t-attf-class="nav-link#{grade['active'] and ' active' or ''}">
-                                <span class="badge badge-pill float-right" t-esc="grade['grade_id_count'] or ''"/>
-                                <t t-esc="grade['grade_id'][1]"/>
+            <div>
+                <p t-if="not partners">No result found</p>
+                <t t-foreach="partners" t-as="partner">
+                    <t t-if="last_grade != partner.grade_id.id">
+                        <h3 class="text-center mt-4">
+                            <span t-field="partner.grade_id"/> Partners
+                            <t t-call="website.publish_management">
+                                <t t-set="object" t-value="partner.grade_id"/>
+                                <t t-set="publish_edit" t-value="True"/>
+                            </t>
+                        </h3>
+                        <t t-set="last_grade" t-value="partner.grade_id.id"/>
+                    </t>
+                    <div class="media mt-3">
+                        <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
+                           t-field="partner.avatar_128"
+                           class="mr-3 text-center o_width_128"
+                           t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'
+                        ></a>
+                        <div class="media-body o_partner_body" style="min-height: 64px;">
+                            <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}">
+                                <span t-field="partner.display_name"/>
                             </a>
-                        </li>
-                    </t>
-                </ul>
-
-                <ul id="reseller_countries" class="nav nav-pills flex-column mt16">
-                    <li class="nav-header nav-item"><h3>Filter by Country</h3></li>
-                    <t t-foreach="countries" t-as="country">
-                        <li t-if="country['country_id']" class="nav-item">
-                            <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
-                               t-attf-class="nav-link#{country['active'] and ' active' or ''}">
-                                <span class="badge badge-pill float-right" t-esc="country['country_id_count'] or ''"/>
-                                <t t-esc="country['country_id'][1]"/>
-                            </a>
-                        </li>
-                    </t>
-                </ul>
-
-            </div>
-
-            <div class="col-lg-8 offset-lg-1" id="ref_content">
-                <div class="d-flex p-2">
-                    <t t-call="website.pager"/>
-                    <form action="" method="get" class="form-inline ml-auto">
-                        <div class="form-group">
-                            <input t-if="country_all" type="hidden" name="country_all" value="True" />
-                            <input type="text" name="search" class="search-query form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
+                            <div t-field="partner.website_short_description"/>
+                            <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
+                                <small><a t-attf-href="/partners/#{slug(partner)}#right_column">
+                                    <t t-esc="partner.implemented_count"/> reference(s)
+                                </a></small>
+                            </t>
                         </div>
-                    </form>
-                </div>
-                <div>
-                    <p t-if="not partners">No result found</p>
-                    <t t-foreach="partners" t-as="partner">
-                        <t t-if="last_grade != partner.grade_id.id">
-                            <h3 class="text-center mt-4">
-                                <span t-field="partner.grade_id"/> Partners
-                                <t t-call="website.publish_management">
-                                    <t t-set="object" t-value="partner.grade_id"/>
-                                    <t t-set="publish_edit" t-value="True"/>
-                                </t>
-                            </h3>
-                            <t t-set="last_grade" t-value="partner.grade_id.id"/>
-                        </t>
-                        <div class="media mt-3">
-                            <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
-                               t-field="partner.avatar_128"
-                               class="mr-3 text-center o_width_128"
-                               t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'
-                            ></a>
-                            <div class="media-body o_partner_body" style="min-height: 64px;">
-                                <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}">
-                                    <span t-field="partner.display_name"/>
-                                </a>
-                                <div t-field="partner.website_short_description"/>
-                                <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
-                                    <small><a t-attf-href="/partners/#{slug(partner)}#right_column">
-                                        <t t-esc="partner.implemented_count"/> reference(s)
-                                    </a></small>
-                                </t>
-                            </div>
-                        </div>
-                    </t>
-                </div>
-                <div class='navbar'>
-                    <t t-call="website.pager">
-                       <t t-set="classname" t-valuef="float-left"/>
-                    </t>
-                </div>
+                    </div>
+                </t>
             </div>
-        </t>
+            <div class='navbar'>
+                <t t-call="website.pager">
+                   <t t-set="classname" t-valuef="float-left"/>
+                </t>
+            </div>
+        </div>
     </t>
 </template>
 
@@ -139,17 +137,15 @@
 
 <template id="partner" name="Partner Detail">
     <t t-call="website_crm_partner_assign.layout">
-        <t t-set="ref_content">
-            <div class="col-lg-5">
-                <ol t-if="not edit_page" class="breadcrumb">
-                    <li class="breadcrumb-item"><a t-attf-href="/partners#{current_grade and '/grade/%s' % slug(current_grade)}#{current_country and '/country/%s' % slug(current_country)}">Our Partners</a></li>
-                    <li class="breadcrumb-item active"><span t-field="partner.display_name"/></li>
-                </ol>
-            </div>
-            <t t-call="website_partner.partner_detail">
-                <t t-set="right_column">
-                    <div id="right_column" class="mb16"><t t-call="website_crm_partner_assign.references_block"/></div>
-                </t>
+        <div class="col-lg-5">
+            <ol t-if="not edit_page" class="breadcrumb">
+                <li class="breadcrumb-item"><a t-attf-href="/partners#{current_grade and '/grade/%s' % slug(current_grade)}#{current_country and '/country/%s' % slug(current_country)}">Our Partners</a></li>
+                <li class="breadcrumb-item active"><span t-field="partner.display_name"/></li>
+            </ol>
+        </div>
+        <t t-call="website_partner.partner_detail">
+            <t t-set="right_column">
+                <div id="right_column" class="mb16"><t t-call="website_crm_partner_assign.references_block"/></div>
             </t>
         </t>
     </t>

@@ -210,18 +210,19 @@ class Project(models.Model):
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True,
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
+    alias_value = fields.Char(string='Alias email', compute='_compute_alias_value')
     privacy_visibility = fields.Selection([
             ('followers', 'Invited employees'),
             ('employees', 'All employees'),
-            ('portal', 'Portal users and all employees'),
+            ('portal', 'Invited portal users and all employees'),
         ],
         string='Visibility', required=True,
         default='portal',
         help="Defines the visibility of the tasks of the project:\n"
             "- Invited employees: employees may only see the followed project and tasks.\n"
             "- All employees: employees may see all project and tasks.\n"
-            "- Portal users and all employees: employees may see everything."
-            "   Portal users may see project and tasks followed by.\n"
+            "- Invited portal users and all employees: employees may see everything."
+            "   Invited portal users may see project and tasks followed by.\n"
             "   them or by someone of their company.")
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
@@ -232,7 +233,7 @@ class Project(models.Model):
 
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
-    rating_active = fields.Boolean('Customer Ratings', default=True)
+    rating_active = fields.Boolean('Customer Ratings', default=lambda self: self.env.user.has_group('project.group_project_rating'))
     rating_status = fields.Selection(
         [('stage', 'Rating when changing stage'),
          ('periodic', 'Periodic rating')
@@ -329,6 +330,14 @@ class Project(models.Model):
         mapped_count = {group['project_id'][0]: group['project_id_count'] for group in read_group}
         for project in self:
             project.milestone_count = mapped_count.get(project.id, 0)
+
+    @api.depends('alias_name', 'alias_domain')
+    def _compute_alias_value(self):
+        for project in self:
+            if not project.alias_name or not project.alias_domain:
+                project.alias_value = ''
+            else:
+                project.alias_value = "%s@%s" % (project.alias_name, project.alias_domain)
 
     @api.model
     def _map_tasks_default_valeus(self, task, project):
@@ -721,7 +730,7 @@ class Task(models.Model):
         index=True, tracking=True)
     partner_id = fields.Many2one('res.partner',
         string='Customer',
-        compute='_compute_partner_id', recursive=True, store=True, readonly=False,
+        compute='_compute_partner_id', recursive=True, store=True, readonly=False, tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     partner_is_company = fields.Boolean(related='partner_id.is_company', readonly=True)
     commercial_partner_id = fields.Many2one(related='partner_id.commercial_partner_id')
@@ -755,8 +764,8 @@ class Task(models.Model):
         compute='_compute_email_from', recursive=True, store=True, readonly=False)
     project_privacy_visibility = fields.Selection(related='project_id.privacy_visibility', string="Project Visibility")
     # Computed field about working time elapsed between record creation and assignation/closing.
-    working_hours_open = fields.Float(compute='_compute_elapsed', string='Working Hours to Assign', store=True, group_operator="avg")
-    working_hours_close = fields.Float(compute='_compute_elapsed', string='Working Hours to Close', store=True, group_operator="avg")
+    working_hours_open = fields.Float(compute='_compute_elapsed', string='Working Hours to Assign', digits=(16, 2), store=True, group_operator="avg")
+    working_hours_close = fields.Float(compute='_compute_elapsed', string='Working Hours to Close', digits=(16, 2), store=True, group_operator="avg")
     working_days_open = fields.Float(compute='_compute_elapsed', string='Working Days to Assign', store=True, group_operator="avg")
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working Days to Close', store=True, group_operator="avg")
     # customer portal: include comment and incoming emails in communication history
@@ -1482,7 +1491,7 @@ class Task(models.Model):
             'name': 'Tasks in Recurrence',
             'type': 'ir.actions.act_window',
             'res_model': 'project.task',
-            'view_mode': 'tree,form',
+            'view_mode': 'tree,form,kanban,calendar,pivot,graph,gantt,activity,map',
             'domain': [('recurrence_id', 'in', self.recurrence_id.ids)],
         }
 

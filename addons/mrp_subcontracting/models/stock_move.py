@@ -69,13 +69,8 @@ class StockMove(models.Model):
         subcontracted product. Otherwise use standard behavior.
         """
         self.ensure_one()
-        if self.is_subcontract:
-            rounding = self.product_uom.rounding
-            production = self.move_orig_ids.production_id[-1:]
-            if self._has_tracked_subcontract_components() and\
-                    float_compare(production.qty_produced, production.product_uom_qty, precision_rounding=rounding) < 0 and\
-                    float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) < 0:
-                return self._action_record_components()
+        if self._has_components_to_record():
+            return self._action_record_components()
         action = super(StockMove, self).action_show_details()
         if self.is_subcontract and self._has_tracked_subcontract_components():
             action['views'] = [(self.env.ref('stock.view_stock_move_operations').id, 'form')]
@@ -166,6 +161,17 @@ class StockMove(models.Model):
             subcontractor=self.picking_id.partner_id,
         )
         return bom
+
+    def _has_components_to_record(self):
+        """ Returns true if the move has still some tracked components to record. """
+        self.ensure_one()
+        if not self.is_subcontract:
+            return False
+        rounding = self.product_uom.rounding
+        production = self.move_orig_ids.production_id[-1:]
+        return self._has_tracked_subcontract_components() and\
+            float_compare(production.qty_produced, production.product_uom_qty, precision_rounding=rounding) < 0 and\
+            float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) < 0
 
     def _has_tracked_subcontract_components(self):
         self.ensure_one()

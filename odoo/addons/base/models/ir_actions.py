@@ -115,7 +115,10 @@ class IrActions(models.Model):
                 if action_model and not IrModelAccess.check(action_model, mode='read', raise_exception=False):
                     # the user won't be able to read records
                     continue
-                result[binding_type].append(action.read()[0])
+                fields = ['name', 'binding_view_types']
+                if 'sequence' in action._fields:
+                    fields.append('sequence')
+                result[binding_type].append(action.read(fields)[0])
             except (AccessError, MissingError):
                 continue
 

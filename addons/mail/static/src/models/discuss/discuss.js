@@ -153,6 +153,33 @@ function factory(dependencies) {
         }
 
         /**
+         * Handles click on the mobile "new chat" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickMobileNewChatButton(ev) {
+            this.update({ isAddingChat: true });
+        }
+
+        /**
+         * Handles click on the mobile "new channel" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickMobileNewChannelButton(ev) {
+            this.update({ isAddingChannel: true });
+        }
+
+        /**
+         * @param {mail.thread} thread
+         * @param {string} newName
+         */
+        onValidateEditableText(thread, newName) {
+            this.update({ renamingThreads: unlink(thread) });
+            thread.setCustomName(newName);
+        }
+
+        /**
          * Open thread from init active id. `initActiveId` is used to refer to
          * a thread that we may not have full data yet, such as when messaging
          * is not yet initialized.
@@ -195,15 +222,6 @@ function factory(dependencies) {
                     },
                 });
             }
-        }
-
-        /**
-         * @param {mail.thread} thread
-         * @param {string} newName
-         */
-        async renameThread(thread, newName) {
-            await this.async(() => thread.rename(newName));
-            this.update({ renamingThreads: unlink(thread) });
         }
 
         /**
@@ -360,8 +378,8 @@ function factory(dependencies) {
         _computeThreadViewer() {
             const threadViewerData = {
                 hasThreadView: this.hasThreadView,
+                hasTopbar: true,
                 selectedMessage: this.replyingToMessage ? link(this.replyingToMessage) : unlink(),
-                stringifiedDomain: this.stringifiedDomain,
                 thread: this.thread ? link(this.thread) : unlink(),
             };
             if (!this.threadViewer) {
@@ -405,18 +423,6 @@ function factory(dependencies) {
          */
         deviceIsMobile: attr({
             related: 'device.isMobile',
-        }),
-        /**
-         * Determine if the moderation discard dialog is displayed.
-         */
-        hasModerationDiscardDialog: attr({
-            default: false,
-        }),
-        /**
-         * Determine if the moderation reject dialog is displayed.
-         */
-        hasModerationRejectDialog: attr({
-            default: false,
         }),
         /**
          * Determines whether `this.thread` should be displayed.
@@ -531,13 +537,6 @@ function factory(dependencies) {
             default: "",
         }),
         /**
-         * Determines the domain to apply when fetching messages for `this.thread`.
-         * This value should only be written by the control panel.
-         */
-        stringifiedDomain: attr({
-            default: '[]',
-        }),
-        /**
          * Determines the `mail.thread` that should be displayed by `this`.
          */
         thread: many2one('mail.thread', {
@@ -572,7 +571,6 @@ function factory(dependencies) {
             dependencies: [
                 'hasThreadView',
                 'replyingToMessage',
-                'stringifiedDomain',
                 'thread',
             ],
             isCausal: true,

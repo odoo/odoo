@@ -472,7 +472,23 @@ function makeActionManager(env) {
                     throw error;
                 } else {
                     const lastCt = controllerStack[controllerStack.length - 1];
-                    const info = lastCt ? lastCt.__info__ : {};
+                    let info = {};
+                    if (lastCt) {
+                        if (lastCt.jsId === controller.jsId) {
+                            // the error occurred on the controller which is
+                            // already in the DOM, so simply show the error
+                            Promise.resolve().then(() => {
+                                throw error;
+                            });
+                            return;
+                        } else {
+                            info = lastCt.__info__;
+                            // the error occurred while rendering a new controller,
+                            // so go back to the last non faulty controller
+                            // (the error will be shown anyway as the promise
+                            // has been rejected)
+                        }
+                    }
                     env.bus.trigger("ACTION_MANAGER:UPDATE", info);
                 }
             }
@@ -561,6 +577,7 @@ function makeActionManager(env) {
                         }
                         dialog = {};
                     }
+                    cleanDomFromBootstrap();
                 },
             });
             nextDialog = {
@@ -920,7 +937,6 @@ function makeActionManager(env) {
     }
 
     async function _executeCloseAction(params = {}) {
-        cleanDomFromBootstrap();
         let onClose;
         const removeDialog = dialog.remove;
         if (removeDialog) {
@@ -1101,12 +1117,7 @@ function makeActionManager(env) {
         }
         // END LEGACY CODE COMPATIBILITY
 
-        newController.props = _getViewProps(
-            view,
-            controller.action,
-            controller.views,
-            props
-        );
+        newController.props = _getViewProps(view, controller.action, controller.views, props);
         controller.action.controllers[viewType] = newController;
         let index;
         if (view.multiRecord) {

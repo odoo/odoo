@@ -44,5 +44,6 @@ The module adds following features:
         'web.assets_qweb': [
             'l10n_fr_pos_cert/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

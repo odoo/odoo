@@ -2,11 +2,12 @@
 
 import { notificationService } from "@web/core/notifications/notification_service";
 import { registry } from "@web/core/registry";
-import { effectService } from "@web/webclient/effects/effect_service";
-import { RainbowMan } from "@web/webclient/effects/rainbow_man";
+import { effectService } from "@web/core/effects/effect_service";
+import { RainbowMan } from "@web/core/effects/rainbow_man";
 import { userService } from "@web/core/user_service";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, nextTick, patchWithCleanup } from "../../helpers/utils";
+import { session } from "@web/session";
 
 const { Component, mount, tags } = owl;
 const serviceRegistry = registry.category("services");
@@ -31,7 +32,7 @@ QUnit.module("RainbowMan", (hooks) => {
             fadeout: "nextTick",
         };
         target = getFixture();
-        patchWithCleanup(odoo.session_info, { show_effect: true });
+        patchWithCleanup(session, { show_effect: true });
         serviceRegistry.add("user", userService);
         serviceRegistry.add("effect", effectService);
         serviceRegistry.add("notification", notificationService);

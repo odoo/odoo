@@ -396,6 +396,7 @@ class TestMrpOrder(TestMrpCommon):
         production = production_form.save()
         production.action_confirm()
         production.action_assign()
+        production.is_locked = False
         production_form = Form(production)
         # change the quantity producing and the initial demand
         # in the same transaction
@@ -1027,6 +1028,7 @@ class TestMrpOrder(TestMrpCommon):
 
         mo.bom_id.consumption = 'flexible'  # Because we'll over-consume with a product not defined in the BOM
         mo.action_assign()
+        mo.is_locked = False
 
         mo_form = Form(mo)
         mo_form.qty_producing = 3
@@ -1741,7 +1743,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
         self.assertEqual(scrap.location_id, mo.location_dest_id, 'Location was not auto-corrected')
 
-    def test_multi_button_plan(self):
+    def test_a_multi_button_plan(self):
         """ Test batch methods (confirm/validate) of the MO with the same bom """
         self.bom_2.type = "normal"  # avoid to get the operation of the kit bom
 
@@ -1753,7 +1755,7 @@ class TestMrpOrder(TestMrpCommon):
 
         mo_3.button_plan()
         self.assertEqual(mo_3.state, 'confirmed')
-        self.assertEqual(mo_3.workorder_ids[0].state, 'ready')
+        self.assertEqual(mo_3.workorder_ids[0].state, 'waiting')
 
         mo_1 = Form(self.env['mrp.production'])
         mo_1.bom_id = self.bom_3
@@ -1772,8 +1774,8 @@ class TestMrpOrder(TestMrpCommon):
         (mo_1 | mo_2).button_plan()  # Confirm and plan in the same "request"
         self.assertEqual(mo_1.state, 'confirmed')
         self.assertEqual(mo_2.state, 'confirmed')
-        self.assertEqual(mo_1.workorder_ids[0].state, 'ready')
-        self.assertEqual(mo_2.workorder_ids[0].state, 'ready')
+        self.assertEqual(mo_1.workorder_ids[0].state, 'waiting')
+        self.assertEqual(mo_2.workorder_ids[0].state, 'waiting')
 
         # produce
         res_dict = (mo_1 | mo_2).button_mark_done()
@@ -1863,3 +1865,267 @@ class TestMrpOrder(TestMrpCommon):
             ('raw_material_production_id', '=', mo_backorder.id)])
         self.assertEqual(sum(move_prod_1_bo.mapped('product_uom_qty')), 60.0)
         self.assertEqual(sum(move_prod_2_bo.mapped('product_uom_qty')), 40.0)
+
+    def test_state_workorders(self):
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_4.id,
+            'product_tmpl_id': self.product_4.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 1})
+            ],
+            'operation_ids': [
+                (0, 0, {'name': 'amUgbidhaW1lIHBhcyBsZSBKUw==', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
+                (0, 0, {'name': '137 Python', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 1, 'sequence': 2}),
+            ],
+        })
+
+        self.env['stock.quant'].create({
+            'location_id': self.stock_location_components.id,
+            'product_id': self.product_2.id,
+            'inventory_quantity': 10
+        }).action_apply_inventory()
+
+        mo = Form(self.env['mrp.production'])
+        mo.bom_id = bom
+        mo = mo.save()
+
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["pending", "pending"])
+
+        mo.action_confirm()
+        mo.action_assign()
+        self.assertEqual(mo.move_raw_ids.state, "assigned")
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["ready", "pending"])
+        mo.do_unreserve()
+
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["waiting", "pending"])
+
+        mo.workorder_ids[0].unlink()
+
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["waiting"])
+        mo.action_assign()
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["ready"])
+
+        res_dict = mo.button_mark_done()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["done"])
+
+    def test_products_with_variants(self):
+        """Check for product with different variants with same bom"""
+
+        product = self.env['product.template'].create({
+            "attribute_line_ids": [
+                [0, 0, {"attribute_id": 2, "value_ids": [[6, 0, [3, 4]]]}]
+            ],
+            "name": "Product with variants",
+        })
+
+        variant_1 = product.product_variant_ids[0]
+        variant_2 = product.product_variant_ids[1]
+
+        component = self.env['product.template'].create({
+            "name": "Component",
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': False,
+            'product_tmpl_id': product.id,
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.product_variant_id.id, 'product_qty': 1})
+            ]
+        })
+
+        # First behavior to check, is changing the product (same product but another variant) after saving the MO a first time.
+
+        mo_form_1 = Form(self.env['mrp.production'])
+        mo_form_1.product_id = variant_1
+        mo_1 = mo_form_1.save()
+        mo_form_1 = Form(self.env['mrp.production'].browse(mo_1.id))
+        mo_form_1.product_id = variant_2
+        mo_1 = mo_form_1.save()
+        mo_1.action_confirm()
+        mo_1.action_assign()
+        mo_form_1 = Form(self.env['mrp.production'].browse(mo_1.id))
+        mo_form_1.qty_producing = 1
+        mo_1 = mo_form_1.save()
+        mo_1.button_mark_done()
+
+        move_lines_1 = self.env['stock.move.line'].search([("reference", "=", mo_1.name)])
+
+        # Second behavior is changing the product before saving the MO
+
+        mo_form_2 = Form(self.env['mrp.production'])
+        mo_form_2.product_id = variant_1
+        mo_form_2.product_id = variant_2
+        mo_2 = mo_form_2.save()
+        mo_2.action_confirm()
+        mo_2.action_assign()
+        mo_form_2 = Form(self.env['mrp.production'].browse(mo_2.id))
+        mo_form_2.qty_producing = 1
+        mo_2 = mo_form_2.save()
+        mo_2.button_mark_done()
+
+        move_lines_2 = self.env['stock.move.line'].search([("reference", "=", mo_2.name)])
+
+        # Third behavior is changing the product before saving the MO, then another time after
+
+        mo_form_3 = Form(self.env['mrp.production'])
+        mo_form_3.product_id = variant_1
+        mo_form_3.product_id = variant_2
+        mo_3 = mo_form_3.save()
+        mo_form_3 = Form(self.env['mrp.production'].browse(mo_3.id))
+        mo_form_3.product_id = variant_1
+        mo_3 = mo_form_3.save()
+        mo_3.action_confirm()
+        mo_3.action_assign()
+        mo_form_3 = Form(self.env['mrp.production'].browse(mo_3.id))
+        mo_form_3.qty_producing = 1
+        mo_3 = mo_form_3.save()
+        mo_3.button_mark_done()
+
+        move_lines_3 = self.env['stock.move.line'].search([("reference", "=", mo_3.name)])
+
+        # There always should be only two move lines, one for the component, another for the product
+        self.assertEqual(len(move_lines_1), 2)
+        self.assertEqual(len(move_lines_2), 2)
+        self.assertEqual(len(move_lines_3), 2)
+
+    def test_manufacturing_order_with_work_orders(self):
+        """Test the behavior of a manufacturing order when opening the workorder related to it,
+           as well as the behavior when a backorder is created
+           """
+
+        # create a few work centers
+
+        work_center_1 = self.env['mrp.workcenter'].create({"name": "WC1"})
+
+        work_center_2 = self.env['mrp.workcenter'].create({"name": "WC2"})
+
+        work_center_3 = self.env['mrp.workcenter'].create({"name": "WC3"})
+
+        # create a product, a bom related to it with 3 components and 3 operations
+
+        product = self.env['product.template'].create({"name": "Product"})
+
+        component_1 = self.env['product.template'].create({"name": "Component 1", "type": "product"})
+
+        self.env['stock.quant'].create({
+            "product_id": component_1.product_variant_id.id,
+            "location_id": 8,
+            "quantity": 100
+        })
+
+        component_2 = self.env['product.template'].create({"name": "Component 2", "type": "product"})
+
+        self.env['stock.quant'].create({
+            "product_id": component_2.product_variant_id.id,
+            "location_id": 8,
+            "quantity": 100
+        })
+
+        component_3 = self.env['product.template'].create({"name": "Component 3", "type": "product"})
+
+        self.env['stock.quant'].create({
+            "product_id": component_3.product_variant_id.id,
+            "location_id": 8,
+            "quantity": 100
+        })
+
+        self.env['mrp.bom'].create({
+            "product_tmpl_id": product.id,
+            "product_id": False,
+            "product_qty": 1,
+            "bom_line_ids": [
+                [0, 0, {"product_id": component_1.product_variant_id.id, "product_qty": 1}],
+                [0, 0, {"product_id": component_2.product_variant_id.id, "product_qty": 1}],
+                [0, 0, {"product_id": component_3.product_variant_id.id, "product_qty": 1}]
+            ],
+            "operation_ids": [
+                [0, 0, {"name": "Operation 1", "workcenter_id": work_center_1.id}],
+                [0, 0, {"name": "Operation 2", "workcenter_id": work_center_2.id}],
+                [0, 0, {"name": "Operation 3", "workcenter_id": work_center_3.id}]
+            ]
+        })
+
+        # create a manufacturing order with 10 product to produce
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product.product_variant_id
+        mo_form.product_qty = 10
+        mo = mo_form.save()
+
+        self.assertEqual(mo.state, 'draft')
+
+        mo.action_confirm()
+
+        wo_1 = mo.workorder_ids[0]
+        wo_2 = mo.workorder_ids[1]
+        wo_3 = mo.workorder_ids[2]
+
+        self.assertEqual(mo.state, 'confirmed')
+        self.assertEqual(wo_1.state, 'ready')
+
+        wo_1.button_start()
+
+        self.assertEqual(mo.state, 'progress')
+
+        wo_1.button_finish()
+
+        wo_2.button_start()
+
+        wo_2.qty_producing = 8
+
+        wo_2.button_finish()
+
+        wo_3.button_start()
+
+        wo_3.qty_producing = 8
+
+        wo_3.button_finish()
+
+        self.assertEqual(mo.state, 'to_close')
+
+        mo.button_mark_done()
+
+        bo = self.env['mrp.production.backorder'].create({
+            "mrp_production_backorder_line_ids": [
+                [0, 0, {"mrp_production_id": mo.id, "to_backorder": True}]
+            ]
+        })
+
+        bo.action_backorder()
+
+        self.assertEqual(mo.state, 'done')
+
+        mo_2 = self.env['mrp.production'].browse(mo.id + 1)
+
+        self.assertEqual(mo_2.state, 'progress')
+
+        wo_4, wo_5, wo_6 = mo_2.workorder_ids
+
+        self.assertEqual(wo_4.state, 'ready')
+
+        wo_4.button_start()
+
+        wo_4.button_finish()
+
+        wo_5.button_start()
+
+        self.assertEqual(mo_2.state, 'progress')
+
+        wo_5.button_finish()
+
+        wo_6.button_start()
+
+        wo_6.button_finish()
+
+        self.assertEqual(mo_2.state, 'to_close')
+
+        mo_2.button_mark_done()
+
+        self.assertEqual(mo_2.state, 'done')

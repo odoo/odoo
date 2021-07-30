@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_group_message_view_list" model="ir.ui.view">
+        <field name="name">mail.group.message.view.list</field>
+        <field name="model">mail.group.message</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="create_date" string="Date"/>
+                <field name="author_id"/>
+                <field name="email_from"/>
+                <field name="subject"/>
+                <field name="mail_group_id"/>
+                <field name="moderation_status"/>
+                <button name="action_moderate_accept" string="Accept" title="Accept"
+                    type="object" class="btn btn-primary"
+                    attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
+                <button name="action_moderate_reject" string="Discard" title="Remove message without explanation"
+                    type="object" class="btn btn-secondary" 
+                    attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
+                <button name="%(mail_group_message_reject_action)d"
+                    string="Reject" title="Remove message with explanation"
+                    type="action" class="btn btn-secondary"
+                    attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"
+                    context="{'default_mail_group_message_id': id}" />
+                <button name="action_allow" string="Always Allow"
+                    title="Add this email address to white list of people and accept all pending messages from the same author."
+                    type="object" class="btn btn-secondary"
+                    attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
+                <button name="action_ban" type="object" string="Ban"
+                    title="Ban this email address and reject all pending messages from the same author"
+                    class="btn btn-secondary"
+                    attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
+            </tree>
+        </field>
+    </record>
+    <record id="mail_group_message_view_form" model="ir.ui.view">
+        <field name="name">mail.group.message.view.form</field>
+        <field name="model">mail.group.message</field>
+        <field name="arch" type="xml">
+            <form string="Group Message">
+                <header>
+                    <button name="action_moderate_accept" string="Accept" title="Accept"
+                        type="object" class="btn btn-primary"
+                        attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
+                    <button name="action_moderate_reject" string="Discard" title="Remove message without explanation"
+                        type="object" class="btn btn-secondary"
+                        attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
+                    <button name="%(mail_group_message_reject_action)d"
+                        string="Reject" title="Remove message with explanation"
+                        type="action" class="btn btn-secondary"
+                        attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"
+                        context="{'default_mail_group_message_id': id}" />
+                    <button name="action_allow" string="Always Allow"
+                        title="Add this email address to white list of people and accept all pending messages from the same author."
+                        type="object" class="btn btn-secondary"
+                        attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
+                    <button name="action_ban" string="Ban"
+                        title="Ban this email address and reject all pending messages from the same author"
+                        type="object" class="btn btn-secondary"
+                        attrs="{'invisible': [('moderation_status', '!=', 'pending_moderation')]}"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Rejected" bg_color="bg-danger"
+                        attrs="{'invisible': [('moderation_status', '!=', 'rejected')]}"/>
+                    <widget name="web_ribbon" title="Accepted" bg_color="bg-success"
+                        attrs="{'invisible': [('moderation_status', '!=', 'accepted')]}"/>
+                    <group>
+                        <field name="mail_message_id" invisible="1"/>
+                        <field name="moderation_status" invisible="1"/>
+                        <field name="subject"/>
+                        <field name="author_id"/>
+                        <field name="email_from"/>
+                        <field name="mail_group_id"/>
+                        <field name="attachment_ids" widget="many2many_binary"/>
+                        <field name="body" options="{'style-inline': true}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="mail_group_message_view_search" model="ir.ui.view">
+        <field name="name">mail.group.message.view.search</field>
+        <field name="model">mail.group.message</field>
+        <field name="arch" type="xml">
+            <search string="Search Group Message">
+                <field name="mail_group_id"/>
+                <field name="email_from"/>
+                <field name="author_id"/>
+                <field name="moderation_status"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="group" name="group_by_group" context="{'group_by': 'mail_group_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="mail_group_message_action" model="ir.actions.act_window">
+        <field name="name">Messages</field>
+        <field name="res_model">mail.group.message</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_moderation_status': 'pending_moderation'}</field>
+    </record>
+</odoo>

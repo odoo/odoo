@@ -15,7 +15,7 @@
                 </div>
             </t>
         </xpath>
-        <xpath expr="//WrappedProductNameLines" position="after">
+        <xpath expr="//div[hasclass('orderlines')]" position="after">
             <t t-if="line.l10n_in_hsn_code and env.pos.company.country and env.pos.company.country.code == 'IN'">
                 <div class="pos-receipt-left-padding">
                     <span>HSN Code: </span>

@@ -216,7 +216,8 @@ class MicrosoftSync(models.AbstractModel):
             else:
                 value = self.env['calendar.event']._microsoft_to_odoo_values(recurrent_event, (), default_values)
                 self.env['calendar.event'].browse(recurrent_event.odoo_id(self.env)).with_context(no_mail_to_attendees=True, mail_create_nolog=True).write(dict(value, need_sync_m=False))
-            values[(self.id, value.get('start'), value.get('stop'))] = dict(value, need_sync_m=False)
+            if value.get('start') and value.get('stop'):
+                values[(self.id, value.get('start'), value.get('stop'))] = dict(value, need_sync_m=False)
 
         if (self.id, vals.get('start'), vals.get('stop')) in values:
             base_event_vals = dict(vals)
@@ -313,6 +314,17 @@ class MicrosoftSync(models.AbstractModel):
                 microsoft_id = microsoft_service.insert(values, token=token, timeout=timeout)
                 self.write({
                     'microsoft_id': microsoft_id,
+                    'need_sync_m': False,
+                })
+
+    def _microsoft_attendee_answer(self, microsoft_service: MicrosoftCalendarService, microsoft_id, answer, params, timeout=TIMEOUT):
+        if not answer:
+            return
+        with microsoft_calendar_token(self.env.user.sudo()) as token:
+            if token:
+                self._ensure_attendees_have_email()
+                microsoft_service.answer(microsoft_id, answer, params, token=token, timeout=timeout)
+                self.write({
                     'need_sync_m': False,
                 })
 

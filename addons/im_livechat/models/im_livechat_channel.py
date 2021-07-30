@@ -94,11 +94,11 @@ class ImLivechatChannel(models.Model):
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the
             sessions of the current channel
-            :returns : the ir.action 'action_view_rating' with the correct domain
+            :returns : the ir.action 'action_view_rating' with the correct context
         """
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('im_livechat.rating_rating_action_livechat')
-        action['domain'] = [('parent_res_id', '=', self.id), ('parent_res_model', '=', 'im_livechat.channel')]
+        action['context'] = {'search_default_parent_res_name': self.name}
         return action
 
     # --------------------------
@@ -130,7 +130,6 @@ class ImLivechatChannel(models.Model):
             'channel_type': 'livechat',
             'name': ' '.join([visitor_user.display_name if visitor_user else anonymous_name, operator.livechat_username if operator.livechat_username else operator.name]),
             'public': 'private',
-            'email_send': False,
         }
 
     def _open_livechat_mail_channel(self, anonymous_name, previous_operator_id=None, user_id=None, country_id=None):

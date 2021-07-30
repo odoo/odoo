@@ -11,6 +11,7 @@ var Widget = require('web.Widget');
 var session = require('web.session');
 const {removeOnImageChangeAttrs} = require('web_editor.image_processing');
 const {getCSSVariableValue, DEFAULT_PALETTE} = require('web_editor.utils');
+const { UploadProgressToast } = require('@web_editor/js/wysiwyg/widgets/upload_progress_toast');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -126,6 +127,10 @@ var FileWidget = SearchableMediaWidget.extend({
         'click .o_existing_attachment_remove': '_onRemoveClick',
         'click .o_load_more': '_onLoadMoreClick',
     }),
+    custom_events: Object.assign({}, SearchableMediaWidget.prototype.events || {}, {
+        'file_complete': '_onAttachmentUploaded',
+        'upload_complete': '_onUploadCompleted',
+    }),
     existingAttachmentsTemplate: undefined,
 
     IMAGE_MIMETYPES: ['image/jpg', 'image/jpeg', 'image/jpe', 'image/png', 'image/svg+xml', 'image/gif'],
@@ -192,6 +197,18 @@ var FileWidget = SearchableMediaWidget.extend({
             }
             return def;
         });
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        if (this.uploader) {
+            // Prevent uploader from being destroyed with call to super so it can linger
+            this.uploader.setParent(null);
+            this.uploader.destroyOnClose = true;
+            this.uploader.close(2000);
+        }
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -563,52 +580,18 @@ var FileWidget = SearchableMediaWidget.extend({
      * @returns {Promise}
      */
     async _addData() {
-        let files = this.$fileInput[0].files;
+        const files = this.$fileInput[0].files;
         if (!files.length) {
             // Case if the input is emptied, return resolved promise
             return;
         }
-
-        var uploadMutex = new concurrency.Mutex();
-
-        // Upload the smallest file first to block the user the least possible.
-        files = _.sortBy(files, 'size');
-        await this._setUpProgressToast(files);
-        this.hasError = false;
-        _.each(files, (file, index) => {
-            // Upload one file at a time: no need to parallel as upload is
-            // limited by bandwidth.
-            uploadMutex.exec(() => {
-                return utils.getDataURLFromFile(file).then(result => {
-                    return this._rpcShowProgress({
-                        route: '/web_editor/attachment/add_data',
-                        params: {
-                            'name': file.name,
-                            'data': result.split(',')[1],
-                            'res_id': this.options.res_id,
-                            'res_model': this.options.res_model,
-                            'is_image': this.widgetType === 'image',
-                            'width': 0,
-                            'quality': 0,
-                        }
-                    }, index).then(attachment => {
-                        if (!attachment.error) {
-                            this._handleNewAttachment(attachment);
-                        }
-                    });
-                });
-            });
+        this.uploader = new UploadProgressToast(this, {
+            files: files,
+            resModel: this.options.res_model,
+            resId: this.options.res_id,
+            isImage: this.widgetType === 'image',
         });
-
-        return uploadMutex.getUnlockedDef().then(() => {
-            if (!this.hasError) {
-                this._closeProgressToast();
-            }
-            if (!this.options.multiImages && !this.noSave) {
-                this.trigger_up('save_request');
-            }
-            this.noSave = false;
-        });
+        this.uploader.appendTo(document.body);
     },
     /**
      * @private
@@ -712,91 +695,22 @@ var FileWidget = SearchableMediaWidget.extend({
         this.numberOfAttachmentsToDisplay = this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY;
         this._super.apply(this, arguments);
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
-     * Sets up a progress bar for every file being uploaded in a toast.
-     *
      * @private
-     * @param {Object[]} files
      */
-    _setUpProgressToast: async function (files) {
-        this.$progress = $('<div/>');
-        _.each(files, (file, index) => {
-            let fileSize = file.size;
-            if (!fileSize) {
-                fileSize = null;
-            } else if (fileSize < 1024) {
-                fileSize = fileSize.toFixed(2) + " bytes";
-            } else if (fileSize < 1048576) {
-                fileSize = (fileSize / 1024).toFixed(2) + " KB";
-            } else {
-                fileSize = (fileSize / 1048576).toFixed(2) + " MB";
-            }
-
-            this.$progress.append(QWeb.render('wysiwyg.widgets.upload.progressbar', {
-                fileId: index,
-                fileName: file.name,
-                fileSize: fileSize,
-            }));
-        });
-        this.connectionNotificationID = this.displayNotification({
-            type: 'info',
-            sticky: true,
-            contentEl: this.$progress,
-        });
+    _onAttachmentUploaded({ data: attachment }) {
+        if (!attachment.error) {
+            this._handleNewAttachment(attachment);
+        }
     },
     /**
-     * Closes the toast holding the file(s) progress bar(s).
-     *
      * @private
      */
-    _closeProgressToast: function () {
-        this.call('notification', 'close', this.connectionNotificationID, false, 3000);
-    },
-    /**
-     * Calls a RPC and shows its progress status.
-     *
-     * @private
-     * @param {Object} params regular `_rpc()` parameters
-     * @param {integer} index file index to retrieve its related progress bar
-     * @returns {Promise}
-     */
-    _rpcShowProgress: function (params, index) {
-        let $progressBar = this.$progress.find(`.js_progressbar_${index}`);
-        return this._rpc(params, {
-            xhr: function () {
-                var xhr = $.ajaxSettings.xhr();
-                xhr.upload.onprogress = function (ev) {
-                    var prcComplete = ev.loaded / ev.total * 100;
-                    $progressBar.find('.progress-bar').css({
-                        width: parseInt(prcComplete) + '%',
-                    }).text(prcComplete.toFixed(2) + '%');
-                };
-                xhr.upload.onload = function () {
-                    // Don't show yet success as backend code only starts now
-                    $progressBar.find('.progress-bar').css({width: '100%'}).text('100%');
-                };
-                return xhr;
-            },
-        }).then(attachment => {
-            $progressBar.find('.fa-spinner, .progress').addClass('d-none');
-            if (attachment.error) {
-                this.hasError = true;
-                $progressBar.find('.js_progressbar_txt .text-danger').removeClass('d-none');
-                $progressBar.find('.js_progressbar_txt .text-danger .o_we_error_text').text(attachment.error);
-            } else {
-                $progressBar.find('.js_progressbar_txt .text-success').removeClass('d-none');
-            }
-            return attachment;
-        }).guardedCatch(() => {
-            this.hasError = true;
-            $progressBar.find('.fa-spinner, .progress').addClass('d-none');
-            $progressBar.find('.js_progressbar_txt .text-danger').removeClass('d-none');
-        });
+    _onUploadCompleted() {
+        if (!this.options.multiImages && !this.noSave) {
+            this.trigger_up('save_request');
+        }
+        this.noSave = false;
     },
 });
 

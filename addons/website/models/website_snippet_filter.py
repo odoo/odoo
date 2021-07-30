@@ -55,7 +55,7 @@ class WebsiteSnippetFilter(models.Model):
                 if not field_name.strip():
                     raise ValidationError(_("Empty field name in %r") % (record.field_names))
 
-    def render(self, template_key, limit, search_domain=None, with_sample=False):
+    def _render(self, template_key, limit, search_domain=None, with_sample=False):
         """Renders the website dynamic snippet items"""
         self.ensure_one()
         assert '.dynamic_filter_template_' in template_key, _("You can only use template prefixed by dynamic_filter_template_ ")
@@ -76,8 +76,8 @@ class WebsiteSnippetFilter(models.Model):
         content = View._render_template(template_key, dict(
             records=records,
             is_sample=is_sample,
-        )).decode('utf-8')
-        return [ET.tostring(el, encoding='utf-8') for el in ET.fromstring('<root>%s</root>' % content).getchildren()]
+        ))
+        return [ET.tostring(el, encoding='unicode') for el in ET.fromstring(b'<root>%s</root>' % content).getchildren()]
 
     def _prepare_values(self, limit=None, search_domain=None):
         """Gets the data and returns it the right format for render."""

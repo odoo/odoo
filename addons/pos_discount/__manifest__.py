@@ -26,5 +26,6 @@ discount to a customer.
         'web.assets_qweb': [
             'pos_discount/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -44,5 +44,6 @@ export function startTour({ env }) {
 
 registry
     .category("debug")
+    .category("default")
     .add("web_tour.startTour", startTour)
     .add("web_tour.disableTours", disableTours);

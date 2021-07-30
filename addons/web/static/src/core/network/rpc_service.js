@@ -50,7 +50,7 @@ function jsonrpc(env, rpcId, url, params, settings = {}) {
         method: "call",
         params: params,
     };
-    const request = new XHR();
+    const request = settings.xhr || new XHR();
     let rejectFn;
     const promise = new Promise((resolve, reject) => {
         rejectFn = reject;
