@@ -19,7 +19,7 @@ describe('FontSize', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<h1>[ab</h1><p>]cd</p>',
                 stepFunction: setFontSize('36px'),
-                contentAfter: '<h1><span style="font-size: 36px;">[ab</span></h1><p>]cd</p>',
+                contentAfter: '<h1><span style="font-size: 36px;">[ab]</span></h1><p>cd</p>',
             });
         });
     });

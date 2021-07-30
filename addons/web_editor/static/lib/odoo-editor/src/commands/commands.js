@@ -12,6 +12,7 @@ import {
     getDeepRange,
     getInSelection,
     getListMode,
+    getNormalizedCursorPosition,
     getSelectedNodes,
     getTraversedNodes,
     insertText,
@@ -173,19 +174,27 @@ function hasColor(element, mode) {
  * @param {Element => void} applyStyle Callback that receives an element to
  * which the wanted style should be applied
  */
-function applyInlineStyle(editor, applyStyle) {
+export function applyInlineStyle(editor, applyStyle) {
     const sel = editor.document.getSelection();
     const { startContainer, startOffset, endContainer, endOffset } = sel.getRangeAt(0);
     const { anchorNode, anchorOffset, focusNode, focusOffset } = sel;
     const direction = getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset);
-    const selectedTextNodes = getTraversedNodes(editor.editable).filter(node =>
-        isContentTextNode(node),
-    );
-    for (const textNode of selectedTextNodes) {
+    const [
+        normalizedStartContainer,
+        normalizedStartOffset
+    ] = getNormalizedCursorPosition(startContainer, startOffset)
+    const [
+        normalizedEndContainer,
+        normalizedEndOffset
+    ] = getNormalizedCursorPosition(endContainer, endOffset)
+    const selectedTextNodes = getTraversedNodes(editor.editable).filter(node => {
         const atLeastOneCharFromNodeInSelection = !(
-            (textNode === endContainer && endOffset === 0) ||
-            (textNode === startContainer && startOffset === textNode.textContent.length)
+            (node === normalizedEndContainer && normalizedEndOffset === 0) ||
+            (node === normalizedStartContainer && normalizedStartOffset === node.textContent.length)
         );
+        return isContentTextNode(node) && atLeastOneCharFromNodeInSelection;
+    });
+    for (const textNode of selectedTextNodes) {
         // If text node ends after the end of the selection, split it and
         // keep the part that is inside.
         if (endContainer === textNode && endOffset < textNode.textContent.length) {
@@ -203,26 +212,27 @@ function applyInlineStyle(editor, applyStyle) {
         // If the parent is not inline or is not completely in the
         // selection, wrap text node in inline node. Also skips <a> tags to
         // work with native `removeFormat` command
+        const siblings = [...textNode.parentElement.childNodes];
         if (
-            atLeastOneCharFromNodeInSelection &&
-            (isBlock(textNode.parentElement) ||
-                (textNode === endContainer && textNode.nextSibling) ||
-                (textNode === startContainer && textNode.previousSibling) ||
-                textNode.parentElement.tagName === 'A')
+            isBlock(textNode.parentElement) ||
+            !(
+                selectedTextNodes.includes(siblings[0]) &&
+                selectedTextNodes.includes(siblings[siblings.length - 1])
+            ) ||
+            textNode.parentElement.tagName === 'A'
         ) {
             const newParent = document.createElement('span');
             textNode.after(newParent);
             newParent.appendChild(textNode);
         }
-        // Make sure there's at least one char selected in the text node
-        if (atLeastOneCharFromNodeInSelection) {
-            applyStyle(textNode.parentElement);
-        }
+        applyStyle(textNode.parentElement);
     }
+    const firstNode = selectedTextNodes[0];
+    const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
     if (direction === DIRECTIONS.RIGHT) {
-        setCursor(startContainer, 0, endContainer, endOffset);
+        setCursor(firstNode, 0, lastNode, lastNode.length);
     } else {
-        setCursor(endContainer, endOffset, startContainer, 0);
+        setCursor(lastNode, lastNode.length, firstNode, 0);
     }
 }
 function addColumn(editor, beforeOrAfter) {
