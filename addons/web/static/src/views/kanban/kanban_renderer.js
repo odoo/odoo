@@ -7,7 +7,7 @@ import { Domain } from "@web/core/domain";
 import { FieldColorPicker } from "../../fields/basic_fields";
 import { fileTypeMagicWordMap } from "../../fields/basic_fields";
 import { url } from "../../core/utils/urls";
-import { ViewButton } from "@web/views/form/view_button/view_button";
+import { ViewButton } from "@web/views/view_button/view_button";
 
 const { Component } = owl;
 const { useState, useSubEnv } = owl.hooks;

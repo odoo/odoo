@@ -17,7 +17,7 @@ function toggleButtonsDisable(el, enable = true) {
     }
 }
 
-export function useActionButtons(model) {
+export function useViewButtons(model) {
     const action = useService("action");
     const comp = owl.hooks.useComponent();
 
