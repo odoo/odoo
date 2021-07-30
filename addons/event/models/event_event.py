@@ -44,6 +44,9 @@ class EventType(models.Model):
         _tz_get, string='Timezone', default=lambda self: self.env.user.tz or 'UTC')
     # communication
     event_type_mail_ids = fields.One2many('event.type.mail', 'event_type_id', string='Mail Schedule')
+    # ticket reports
+    ticket_instructions = fields.Html('Ticket Instructions', translate=True,
+        help="This information will be printed on your tickets.")
 
     @api.depends('has_seats_limitation')
     def _compute_default_registration(self):
@@ -162,12 +165,10 @@ class EventEvent(models.Model):
         tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     country_id = fields.Many2one(
         'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
-    # badge fields
-    badge_front = fields.Html(string='Badge Front')
-    badge_back = fields.Html(string='Badge Back')
-    badge_innerleft = fields.Html(string='Badge Inner Left')
-    badge_innerright = fields.Html(string='Badge Inner Right')
-    event_logo = fields.Html(string='Event Logo')
+    # ticket reports
+    ticket_instructions = fields.Html('Ticket Instructions', translate=True,
+        compute='_compute_ticket_instructions', store=True, readonly=False,
+        help="This information will be printed on your tickets.")
 
     @api.depends('stage_id', 'kanban_state')
     def _compute_kanban_state_label(self):
@@ -433,6 +434,13 @@ class EventEvent(models.Model):
         for event in self:
             if event.event_type_id and not is_html_empty(event.event_type_id.note):
                 event.note = event.event_type_id.note
+
+    @api.depends('event_type_id')
+    def _compute_ticket_instructions(self):
+        for event in self:
+            if is_html_empty(event.ticket_instructions) and not \
+               is_html_empty(event.event_type_id.ticket_instructions):
+                event.ticket_instructions = event.event_type_id.ticket_instructions
 
     @api.constrains('seats_max', 'seats_available', 'seats_limited')
     def _check_seats_limit(self):

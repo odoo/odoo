@@ -235,9 +235,8 @@ You receive this email because you are:
 
         for scheduler in schedulers:
             try:
-                with self.env.cr.savepoint():
-                    # Prevent a mega prefetch of the registration ids of all the events of all the schedulers
-                    self.browse(scheduler.id).execute()
+                # Prevent a mega prefetch of the registration ids of all the events of all the schedulers
+                self.browse(scheduler.id).execute()
             except Exception as e:
                 _logger.exception(e)
                 self.invalidate_cache()
