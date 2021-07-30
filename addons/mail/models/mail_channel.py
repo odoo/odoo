@@ -223,13 +223,6 @@ class Channel(models.Model):
             for channel in self
         )
 
-    def action_follow(self):
-        self.ensure_one()
-        self.check_access_rights('write')
-        self.check_access_rule('write')
-        self._action_add_members(self.env.user.partner_id)
-        return False
-
     def action_unfollow(self):
         return self._action_unfollow(self.env.user.partner_id)
 
@@ -243,24 +236,54 @@ class Channel(models.Model):
         # channel_info is called before actually unpinning the channel
         channel_info['is_pinned'] = False
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner.id), channel_info)
-        notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>', self.id, self.name)
+        notification = _('<div class="o_mail_notification">left the channel</div>')
         # post 'channel left' message as root since the partner just unsubscribed from the channel
         self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
         return result
 
-    def _action_add_members(self, partners):
-        """ Private implementation to add members to channels. Done as sudo to
-        avoid ACLs issues with channel partners. """
-        to_create = []
+    def add_members(self, partner_ids):
+        """ Adds the given partner_ids as member of self channels. """
+        self.check_access_rights('write')
+        self.check_access_rule('write')
+        partners = self.env['res.partner'].browse(partner_ids)
+        members_to_create = []
         for channel in self:
-            channel_new = partners - channel.channel_partner_ids
-            to_create += [
-                {'partner_id': partner.id,
-                 'channel_id': channel.id,
-                } for partner in channel_new]
-        if to_create:
-            self.env['mail.channel.partner'].sudo().create(to_create)
-            self.invalidate_cache(fnames=['channel_partner_ids', 'channel_last_seen_partner_ids'])
+            if channel.public == 'groups':
+                invalid_partners = partners.filtered(lambda partner: channel.group_public_id not in partner.user_ids.groups_id)
+                if invalid_partners:
+                    raise UserError(_(
+                        'Channel "%(channel_name)s" only accepts members of group "%(group_name)s". Forbidden for: %(partner_names)s',
+                        channel_name=channel.name,
+                        group_name=channel.group_public_id.name,
+                        partner_names=', '.join(partner.name for partner in invalid_partners)
+                    ))
+            existing_partners = self.env['res.partner'].search([('id', 'in', partner_ids), ('channel_ids', 'in', channel.id)])
+            members_to_create += [{
+                'partner_id': partner.id,
+                'channel_id': channel.id,
+            } for partner in partners - existing_partners]
+        new_members = self.env['mail.channel.partner'].sudo().create(members_to_create)
+        for channel_partner in new_members:
+            user = channel_partner.partner_id.user_ids[0] if channel_partner.partner_id.user_ids else self.env['res.users']
+            # notify invited members through the bus
+            if user:
+                self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', channel_partner.partner_id.id), {
+                    'type': 'mail.channel_joined',
+                    'payload': {
+                        'channel': channel_partner.channel_id.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).channel_info()[0],
+                        'invited_by_user_id': self.env.user.id,
+                    },
+                })
+            # notify existing members with a new message in the channel
+            if channel_partner.partner_id == self.env.user.partner_id:
+                notification = _('<div class="o_mail_notification">joined the channel</div>')
+            else:
+                notification = _(
+                    '<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="%(new_partner_id)d">%(new_partner_name)s</a> to the channel</div>',
+                    new_partner_id=channel_partner.partner_id.id,
+                    new_partner_name=channel_partner.partner_id.name,
+                )
+            channel_partner.channel_id.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment", notify_by_email=False)
 
     def _action_remove_members(self, partners):
         """ Private implementation to remove members from channels. Done as sudo
@@ -270,46 +293,6 @@ class Channel(models.Model):
             ('channel_id', 'in', self.ids)
         ]).unlink()
         self.invalidate_cache(fnames=['channel_partner_ids', 'channel_last_seen_partner_ids'])
-
-    def channel_invite(self, partner_ids):
-        """ Add the given partner_ids to the current channels and broadcast the channel header to them.
-            :param partner_ids : list of partner id to add
-        """
-        partners = self.env['res.partner'].browse(partner_ids)
-        self._invite_check_access(partners)
-
-        # add the partner
-        for channel in self:
-            partners_to_add = partners - channel.channel_partner_ids
-            channel.write({'channel_last_seen_partner_ids': [Command.create({'partner_id': partner_id}) for partner_id in partners_to_add.ids]})
-            for partner in partners_to_add:
-                if partner.id != self.env.user.partner_id.id:
-                    notification = _('<div class="o_mail_notification">%(author)s invited %(new_partner)s to <a href="#" class="o_channel_redirect" data-oe-id="%(channel_id)s">#%(channel_name)s</a></div>',
-                        author=self.env.user.display_name,
-                        new_partner=partner.display_name,
-                        channel_id=channel.id,
-                        channel_name=channel.name,
-                    )
-                else:
-                    notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>', channel.id, channel.name)
-                self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment", author_id=partner.id, notify_by_email=False)
-
-        # broadcast the channel header to the added partner
-        self._broadcast(partner_ids)
-
-    def _invite_check_access(self, partners):
-        """ Check invited partners could match channel access """
-        failed = []
-        if any(channel.public == 'groups' for channel in self):
-            for channel in self.filtered(lambda c: c.public == 'groups'):
-                invalid_partners = [partner for partner in partners if channel.group_public_id not in partner.mapped('user_ids.groups_id')]
-                failed += [(channel, partner) for partner in invalid_partners]
-
-        if failed:
-            raise UserError(
-                _('Following invites are invalid as user groups do not match: %s',
-                  ', '.join('%s (channel %s)' % (partner.name, channel.name) for channel, partner in failed))
-            )
 
     def _can_invite(self, partner_id):
         """Return True if the current user can invite the partner to the channel.
@@ -551,7 +534,7 @@ class Channel(models.Model):
             return []
         channel_infos = []
         # all relations partner_channel on those channels
-        all_partner_channel = self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids)])
+        all_partner_channel = self.env['mail.channel.partner'].sudo().search([('channel_id', 'in', self.ids)]).sudo(False)
 
         # all partner infos on those channels
         channel_dict = {channel.id: channel for channel in self}
@@ -881,16 +864,11 @@ class Channel(models.Model):
             domain = expression.AND([domain, [('name', 'ilike', '%'+name+'%')]])
         return self.search(domain).read(['name', 'public', 'uuid', 'channel_type'])
 
-    def channel_join_and_get_info(self):
-        self.ensure_one()
-        added = self.action_follow()
-        if added and self.channel_type == 'channel':
-            notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>', self.id, self.name)
-            self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
-
-        channel_info = self.channel_info('join')[0]
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
-        return channel_info
+    def channel_join(self):
+        """ Shortcut to add the current user as member of self channels.
+        Prefer calling add_members() directly when possible.
+        """
+        self.add_members(self.env.user.partner_id.ids)
 
     @api.model
     def channel_create(self, name, privacy='public'):

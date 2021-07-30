@@ -4,10 +4,10 @@
 from odoo import Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.exceptions import AccessError, ValidationError, UserError
+from odoo.exceptions import AccessError
 from odoo.tests import tagged, Form
 from odoo.tests.common import users
-from odoo.tools import mute_logger, formataddr
+from odoo.tools import mute_logger
 
 
 @tagged('mail_channel')
@@ -128,7 +128,7 @@ class TestChannelAccessRights(MailCommon):
             group_public.write({'name': 'Better Name'})
 
         with self.assertRaises(AccessError):
-            group_public.action_follow()
+            group_public.add_members(self.env.user.partner_id.ids)
 
         group_private = self.env['mail.channel'].browse(self.group_private.id)
         with self.assertRaises(AccessError):
@@ -184,7 +184,7 @@ class TestChannelInternals(MailCommon):
         self.assertEqual(channel.message_partner_ids, self.env['res.partner'])
         self.assertEqual(channel.channel_partner_ids, self.env['res.partner'])
 
-        channel._action_add_members(self.test_partner)
+        channel.add_members(self.test_partner.ids)
         self.assertEqual(channel.message_partner_ids, self.env['res.partner'])
         self.assertEqual(channel.channel_partner_ids, self.test_partner)
 
@@ -201,7 +201,7 @@ class TestChannelInternals(MailCommon):
     def test_channel_recipients_channel(self):
         """ Posting a message on a channel should not send emails """
         channel = self.env['mail.channel'].browse(self.test_channel.ids)
-        channel._action_add_members(self.partner_employee | self.partner_admin | self.test_partner)
+        channel.add_members((self.partner_employee | self.partner_admin | self.test_partner).ids)
         with self.mock_mail_gateway():
             new_msg = channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertNotSentEmail()
@@ -216,7 +216,7 @@ class TestChannelInternals(MailCommon):
         self.test_channel.write({
             'channel_type': 'chat',
         })
-        self.test_channel._action_add_members(self.partner_employee | self.partner_admin | self.test_partner)
+        self.test_channel.add_members((self.partner_employee | self.partner_admin | self.test_partner).ids)
         with self.mock_mail_gateway():
             with self.with_user('employee'):
                 channel = self.env['mail.channel'].browse(self.test_channel.ids)
@@ -250,9 +250,9 @@ class TestChannelInternals(MailCommon):
             'public': 'groups',
             'group_public_id': self.env.ref('base.group_user').id})
 
-        self.test_channel._action_add_members(self.partner_employee | self.partner_employee_nomail)
-        test_channel_private._action_add_members(self.partner_employee | self.partner_employee_nomail)
-        test_channel_group._action_add_members(self.partner_employee | self.partner_employee_nomail)
+        self.test_channel.add_members((self.partner_employee | self.partner_employee_nomail).ids)
+        test_channel_private.add_members((self.partner_employee | self.partner_employee_nomail).ids)
+        test_channel_group.add_members((self.partner_employee | self.partner_employee_nomail).ids)
 
         # Unsubscribe archived user from the private channels, but not from public channels
         self.user_employee.active = False
@@ -295,7 +295,7 @@ class TestChannelInternals(MailCommon):
         """ In case of concurrent channel_seen RPC, ensure the oldest call has no effect. """
         channel = self.env['mail.channel'].browse(self.test_channel.id)
         channel.write({'channel_type': 'chat'})
-        channel.action_follow()
+        channel.add_members(self.env.user.partner_id.ids)
 
         msg_1 = self._add_messages(self.test_channel, 'Body1', author=self.user_employee.partner_id)
         msg_2 = self._add_messages(self.test_channel, 'Body2', author=self.user_employee.partner_id)
@@ -370,7 +370,7 @@ class TestChannelInternals(MailCommon):
         even if `_action_unfollow()` is called again.
         '''
         channel = self.env['mail.channel'].browse(self.test_channel.id)
-        channel._action_add_members(self.test_partner)
+        channel.add_members(self.test_partner.ids)
 
         # no message should be posted under test_partner's name
         messages_0 = self.env['mail.message'].search([

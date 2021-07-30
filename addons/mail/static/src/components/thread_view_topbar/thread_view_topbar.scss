@@ -27,6 +27,29 @@
     background-color: gray('100');
 }
 
+.o_ThreadViewTopbar_button {
+    background: none;
+    border: none;
+    outline: none;
+
+    &.o-active {
+        color: gray('700');
+    }
+
+    &:not(.o-active) {
+        color: gray('500');
+    }
+
+    @include hover-focus () {
+        outline: none;
+        color: gray('600');
+    }
+}
+
+.o_ThreadViewTopbar_invitePopover .popover-body {
+    padding: 0; // cancel unwanted padding
+}
+
 .o_ThreadViewTopbar_threadDescriptionSeparator {
     background-color: $border-color;
 }

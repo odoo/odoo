@@ -14,6 +14,7 @@ function factory(dependencies) {
         _created() {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
             this.onClickInboxMarkAllAsRead = this.onClickInboxMarkAllAsRead.bind(this);
+            this.onClickInviteButton = this.onClickInviteButton.bind(this);
             this.onClickTopbarThreadName = this.onClickTopbarThreadName.bind(this);
             this.onClickUnstarAll = this.onClickUnstarAll.bind(this);
             this.onInputThreadNameInput = this.onInputThreadNameInput.bind(this);
@@ -44,6 +45,19 @@ function factory(dependencies) {
          */
         onClickInboxMarkAllAsRead(ev) {
             this.env.models['mail.message'].markAllAsRead();
+        }
+
+        /**
+         * Handles click on the "invite" button.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickInviteButton(ev) {
+            if (this.threadView.channelInvitationForm.component) {
+                return;
+            }
+            this.threadView.channelInvitationForm.update({ doFocusOnSearchInput: true });
+            this.threadView.channelInvitationForm.searchPartnersToInvite();
         }
 
         /**
@@ -184,6 +198,9 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         _onClickCaptureGlobal(ev) {
+            if (!this.threadNameInputRef) {
+                return;
+            }
             if (this.threadNameInputRef.el && this.threadNameInputRef.el.contains(ev.target)) {
                 return;
             }

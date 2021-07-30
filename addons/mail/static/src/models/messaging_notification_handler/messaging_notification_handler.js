@@ -76,6 +76,12 @@ function factory(dependencies) {
                     // uuid notification, only for (livechat) public handler
                     return;
                 }
+                if (typeof message === 'object') {
+                    switch (message.type) {
+                        case 'mail.channel_joined':
+                            return this._handleNotificationChannelJoined(message.payload);
+                    }
+                }
                 const [, model, id] = channel;
                 switch (model) {
                     case 'ir.needaction':
@@ -171,6 +177,26 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @param {Object} payload
+         * @param {mail.thread} payload.channel
+         * @param {integer} payload.invited_by_user_id
+         */
+        _handleNotificationChannelJoined({ channel: channelData, invited_by_user_id: invitedByUserId }) {
+            const channel = this.env.models['mail.thread'].insert(this.env.models['mail.thread'].convertData(channelData));
+            if (invitedByUserId !== this.env.messaging.currentUser.id) {
+                // Current user was invited by someone else.
+                this.env.services['notification'].notify({
+                    message: _.str.sprintf(
+                        this.env._t("You have been invited to #%s"),
+                        channel.name
+                    ),
+                    type: 'info',
+                });
+            }
+        }
+
+        /**
+         * @private
          * @param {integer} channelId
          * @param {Object} messageData
          */
@@ -181,7 +207,6 @@ function factory(dependencies) {
             });
             const wasChannelExisting = !!channel;
             const convertedData = this.env.models['mail.message'].convertData(messageData);
-            const oldMessage = this.env.models['mail.message'].findFromIdentifyingData(convertedData);
 
             // Fetch missing info from channel before going further. Inserting
             // a channel with incomplete info can lead to issues. This is in
