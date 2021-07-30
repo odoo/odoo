@@ -67,13 +67,13 @@ class TestMailChannelMembers(MailCommon):
         self.assertFalse(res)
 
         # User 1 can join private channel with SUDO
-        self.private_channel.with_user(self.user_1).sudo().action_follow()
+        self.private_channel.with_user(self.user_1).sudo().add_members(self.user_1.partner_id.ids)
         res = self.env['mail.channel.partner'].search([('channel_id', '=', self.private_channel.id)])
         self.assertEqual(res.partner_id, self.user_1.partner_id)
 
         # User 2 can not join private channel
         with self.assertRaises(AccessError):
-            self.private_channel.with_user(self.user_2).action_follow()
+            self.private_channel.with_user(self.user_2).add_members(self.user_2.partner_id.ids)
 
         # User 2 can not create a `mail.channel.partner` to join the private channel
         with self.assertRaises(AccessError):
@@ -105,7 +105,7 @@ class TestMailChannelMembers(MailCommon):
 
     def test_channel_private_members(self):
         """Test invitation in private channel part 1 (invite using crud methods)."""
-        self.private_channel.with_user(self.user_1).sudo().action_follow()
+        self.private_channel.with_user(self.user_1).sudo().add_members(self.user_1.partner_id.ids)
         channel_partners = self.env['mail.channel.partner'].search([('channel_id', '=', self.private_channel.id)])
         self.assertEqual(len(channel_partners), 1)
 
@@ -134,25 +134,25 @@ class TestMailChannelMembers(MailCommon):
 
     def test_channel_private_invite(self):
         """Test invitation in private channel part 2 (use `invite` action)."""
-        self.private_channel.with_user(self.user_1).sudo().action_follow()
+        self.private_channel.with_user(self.user_1).sudo().add_members(self.user_1.partner_id.ids)
         channel_partners = self.env['mail.channel.partner'].search([('channel_id', '=', self.private_channel.id)])
         self.assertEqual(channel_partners.mapped('partner_id'), self.user_1.partner_id)
 
         # User 2 is not in the channel, he can not invite user_portal
         with self.assertRaises(AccessError):
-            self.private_channel.with_user(self.user_2).channel_invite([self.user_portal.partner_id.id])
+            self.private_channel.with_user(self.user_2).add_members(self.user_portal.partner_id.ids)
         channel_partners = self.env['mail.channel.partner'].search([('channel_id', '=', self.private_channel.id)])
         self.assertEqual(channel_partners.mapped('partner_id'), self.user_1.partner_id)
 
         # User 1 is in the channel, he can invite user_portal
-        self.private_channel.with_user(self.user_1).channel_invite([self.user_portal.partner_id.id])
+        self.private_channel.with_user(self.user_1).add_members(self.user_portal.partner_id.ids)
         channel_partners = self.env['mail.channel.partner'].search([('channel_id', '=', self.private_channel.id)])
         self.assertEqual(channel_partners.mapped('partner_id'), self.user_1.partner_id | self.user_portal.partner_id)
 
     def test_channel_private_leave(self):
         """Test kick/leave channel."""
-        self.private_channel.with_user(self.user_1).sudo().action_follow()
-        self.private_channel.with_user(self.user_portal).sudo().action_follow()
+        self.private_channel.with_user(self.user_1).sudo().add_members(self.user_1.partner_id.ids)
+        self.private_channel.with_user(self.user_portal).sudo().add_members(self.user_portal.partner_id.ids)
         channel_partners = self.env['mail.channel.partner'].search([('channel_id', '=', self.private_channel.id)])
         self.assertEqual(len(channel_partners), 2)
 
@@ -173,13 +173,13 @@ class TestMailChannelMembers(MailCommon):
         self.assertFalse(channel_partners)
 
         # user 1 is in the group, he can join the channel
-        self.group_channel.with_user(self.user_1).action_follow()
+        self.group_channel.with_user(self.user_1).add_members(self.user_1.partner_id.ids)
         channel_partners = self.env['mail.channel.partner'].search([('channel_id', '=', self.group_channel.id)])
         self.assertEqual(channel_partners.mapped('partner_id'), self.user_1.partner_id)
 
         # user 3 is not in the group, he can not join
         with self.assertRaises(AccessError):
-            self.group_channel.with_user(self.user_portal).action_follow()
+            self.group_channel.with_user(self.user_portal).add_members(self.user_portal.partner_id.ids)
 
         channel_partners = self.env['mail.channel.partner'].search([('channel_id', '=', self.group_channel.id)])
         with self.assertRaises(AccessError):
@@ -190,12 +190,12 @@ class TestMailChannelMembers(MailCommon):
 
         # user 1 can not invite user 3 because he's not in the group
         with self.assertRaises(UserError):
-            self.group_channel.with_user(self.user_1).channel_invite([self.user_portal.partner_id.id])
+            self.group_channel.with_user(self.user_1).add_members(self.user_portal.partner_id.ids)
         channel_partners = self.env['mail.channel.partner'].search([('channel_id', '=', self.group_channel.id)])
         self.assertEqual(channel_partners.mapped('partner_id'), self.user_1.partner_id)
 
         # but user 2 is in the group and can be invited by user 1
-        self.group_channel.with_user(self.user_1).channel_invite([self.user_2.partner_id.id])
+        self.group_channel.with_user(self.user_1).add_members(self.user_2.partner_id.ids)
         channel_partners = self.env['mail.channel.partner'].search([('channel_id', '=', self.group_channel.id)])
         self.assertEqual(channel_partners.mapped('partner_id'), self.user_1.partner_id | self.user_2.partner_id)
 
@@ -208,16 +208,16 @@ class TestMailChannelMembers(MailCommon):
         channel_partners = self.env['mail.channel.partner'].search([('channel_id', '=', self.public_channel.id)])
         self.assertFalse(channel_partners)
 
-        self.public_channel.with_user(self.user_1).action_follow()
+        self.public_channel.with_user(self.user_1).add_members(self.user_1.partner_id.ids)
         channel_partners = self.env['mail.channel.partner'].search([('channel_id', '=', self.public_channel.id)])
         self.assertEqual(channel_partners.mapped('partner_id'), self.user_1.partner_id)
 
-        self.public_channel.with_user(self.user_2).action_follow()
+        self.public_channel.with_user(self.user_2).add_members(self.user_2.partner_id.ids)
         channel_partners = self.env['mail.channel.partner'].search([('channel_id', '=', self.public_channel.id)])
         self.assertEqual(channel_partners.mapped('partner_id'), self.user_1.partner_id | self.user_2.partner_id)
 
         # portal/public users still cannot join a public channel, should go through dedicated controllers
         with self.assertRaises(AccessError):
-            self.public_channel.with_user(self.user_portal).action_follow()
+            self.public_channel.with_user(self.user_portal).add_members(self.user_portal.partner_id.ids)
         with self.assertRaises(AccessError):
-            self.public_channel.with_user(self.user_public).action_follow()
+            self.public_channel.with_user(self.user_public).add_members(self.user_public.partner_id.ids)

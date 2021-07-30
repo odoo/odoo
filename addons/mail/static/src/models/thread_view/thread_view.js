@@ -3,7 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
-import { clear, create, link, unlink } from '@mail/model/model_field_command';
+import { clear, create, link, unlink, update } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -65,6 +65,25 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
+
+        /**
+         * @private
+         * @returns {mail.channel_invitation_form}
+         */
+        _computeChannelInvitationForm() {
+            if (!this.thread || !this.thread.hasInviteFeature) {
+                return clear();
+            }
+            if (!this.channelInvitationForm) {
+                return create();
+            }
+            return update({
+                searchResultCount: clear(),
+                searchTerm: clear(),
+                selectablePartners: clear(),
+                selectedPartners: clear(),
+            });
+        }
 
         /**
          * @private
@@ -209,6 +228,17 @@ function factory(dependencies) {
     }
 
     ThreadView.fields = {
+        /**
+         * States which channel invitation form is operating this thread view.
+         * Only applies if this thread is a channel.
+         */
+        channelInvitationForm: one2one('mail.channel_invitation_form', {
+            compute: '_computeChannelInvitationForm',
+            dependencies: ['thread', 'threadHasInviteFeature'],
+            inverse: 'threadView',
+            isCausal: true,
+            readonly: true,
+        }),
         /**
          * List of component hints. Hints contain information that help
          * components make UI/UX decisions based on their UI state.
@@ -403,6 +433,12 @@ function factory(dependencies) {
         threadCacheInitialScrollPositions: attr({
             default: {},
             related: 'threadViewer.threadCacheInitialScrollPositions',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        threadHasInviteFeature: attr({
+            related: 'thread.hasInviteFeature',
         }),
         /**
          * Serves as compute dependency.

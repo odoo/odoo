@@ -37,7 +37,7 @@ class IrAttachment(models.Model):
                     pass
 
     def _attachment_format(self):
-        safari = request and request.httprequest.user_agent.browser == 'safari'
+        safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
         return [{
             'checksum': attachment.checksum,
             'id': attachment.id,

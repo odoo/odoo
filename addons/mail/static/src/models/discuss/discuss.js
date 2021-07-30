@@ -60,11 +60,14 @@ function factory(dependencies) {
                 );
                 channel.open();
             } else {
-                const channel = await this.async(() =>
-                    this.env.models['mail.thread'].performRpcJoinChannel({
-                        channelId: ui.item.id,
-                    })
-                );
+                const channel = this.env.models['mail.thread'].insert({
+                    id: ui.item.id,
+                    model: 'mail.channel',
+                });
+                await channel.join();
+                // Channel must be pinned immediately to be able to open it before
+                // the result of join is received on the bus.
+                channel.update({ isServerPinned: true });
                 channel.open();
             }
         }

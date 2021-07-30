@@ -167,9 +167,10 @@ MockServer.include({
             const ids = args.args[0];
             return this._mockMailChannelChannelInfo(ids);
         }
-        if (args.model === 'mail.channel' && args.method === 'channel_join_and_get_info') {
+        if (args.model === 'mail.channel' && args.method === 'add_members') {
             const ids = args.args[0];
-            return this._mockMailChannelChannelJoinAndGetInfo(ids);
+            const partner_ids = args.args[1] || args.kwargs.partner_ids;
+            return this._mockMailChannelAddMembers(ids, partner_ids);
         }
         if (args.model === 'mail.channel' && args.method === 'channel_minimize') {
             return;
@@ -542,6 +543,41 @@ MockServer.include({
         };
     },
     /**
+     * Simulates `add_members` on `mail.channel`.
+     * For simplicity only handles the current partner joining himself.
+     *
+     * @private
+     * @param {integer[]} ids
+     * @param {integer[]} partner_ids
+     */
+    _mockMailChannelAddMembers(ids, partner_ids) {
+        const id = ids[0]; // ensure one
+        const channel = this._getRecords('mail.channel', [['id', '=', id]])[0];
+        // channel.partner not handled here for simplicity
+        if (!channel.is_pinned) {
+            this._mockWrite('mail.channel', [
+                [channel.id],
+                { is_pinned: true },
+            ]);
+            const body = `<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="${channel.id}">#${channel.name}</a></div>`;
+            const message_type = "notification";
+            const subtype_xmlid = "mail.mt_comment";
+            this._mockMailChannelMessagePost(
+                'mail.channel',
+                [channel.id],
+                { body, message_type, subtype_xmlid },
+            );
+        }
+        const notification = [[false, 'res.partner', this.currentPartnerId], {
+            type: 'mail.channel_joined',
+            payload: {
+                'channel': this._mockMailChannelChannelInfo([channel.id])[0],
+                'invited_by_user_id': this.currentUserId,
+            },
+        }];
+        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
+    },
+    /**
      * Simulates `_broadcast` on `mail.channel`.
      *
      * @private
@@ -753,36 +789,6 @@ MockServer.include({
             }
             return res;
         });
-    },
-    /**
-     * Simulates `channel_join_and_get_info` on `mail.channel`.
-     *
-     * @private
-     * @param {integer[]} ids
-     * @returns {Object[]}
-     */
-    _mockMailChannelChannelJoinAndGetInfo(ids) {
-        const id = ids[0]; // ensure one
-        const channel = this._getRecords('mail.channel', [['id', '=', id]])[0];
-        // channel.partner not handled here for simplicity
-        if (!channel.is_pinned) {
-            this._mockWrite('mail.channel', [
-                [channel.id],
-                { is_pinned: true },
-            ]);
-            const body = `<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="${channel.id}">#${channel.name}</a></div>`;
-            const message_type = "notification";
-            const subtype_xmlid = "mail.mt_comment";
-            this._mockMailChannelMessagePost(
-                'mail.channel',
-                [channel.id],
-                { body, message_type, subtype_xmlid },
-            );
-        }
-        const channelInfo = this._mockMailChannelChannelInfo([channel.id], 'join')[0];
-        const notification = [[false, 'res.partner', this.currentPartnerId], channelInfo];
-        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
-        return channelInfo;
     },
     /**
      * Simulates the `channel_seen` method of `mail.channel`.
