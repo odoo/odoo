@@ -5431,6 +5431,16 @@ Fields:
                 recs = field.convert_to_record(null, recs)
         return recs
 
+    def filtered_iterator(self, func, ids=False):
+        if isinstance(func, str):
+            name = func
+            func = lambda rec: any(rec.mapped(name))
+            # populate cache
+            self.mapped(name)
+        for rec in self:
+            if func(rec):
+                yield rec.id if ids else rec
+
     def filtered(self, func):
         """Return the records in ``self`` satisfying ``func``.
 
@@ -5446,12 +5456,7 @@ Fields:
             # only keep records whose partner is a company
             records.filtered("partner_id.is_company")
         """
-        if isinstance(func, str):
-            name = func
-            func = lambda rec: any(rec.mapped(name))
-            # populate cache
-            self.mapped(name)
-        return self.browse([rec.id for rec in self if func(rec)])
+        return self.browse(self.filtered_iterator(func, ids=True))
 
     def filtered_domain(self, domain):
         if not domain: return self
