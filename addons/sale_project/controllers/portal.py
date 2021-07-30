@@ -16,8 +16,8 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
 
     def _task_get_searchbar_groupby(self):
         values = super()._task_get_searchbar_groupby()
-        values['sale_order'] = {'input': 'sale_order', 'label': _('Sales Order'), 'order': 4}
-        values['sale_line'] = {'input': 'sale_line', 'label': _('Sales Order Item'), 'order': 5}
+        values['sale_order'] = {'input': 'sale_order', 'label': _('Sales Order'), 'order': 7}
+        values['sale_line'] = {'input': 'sale_line', 'label': _('Sales Order Item'), 'order': 8}
         return dict(sorted(values.items(), key=lambda item: item[1]["order"]))
 
     def _task_get_groupby_mapping(self):
@@ -27,9 +27,9 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
 
     def _task_get_searchbar_inputs(self):
         values = super()._task_get_searchbar_inputs()
-        values['sale_order'] = {'input': 'sale_order', 'label': _('Search in Sales Order'), 'order': 4}
-        values['sale_line'] = {'input': 'sale_line', 'label': _('Search in Sales Order Item'), 'order': 5}
-        values['invoice'] = {'input': 'invoice', 'label': _('Search in Invoice'), 'order': 6}
+        values['sale_order'] = {'input': 'sale_order', 'label': _('Search in Sales Order'), 'order': 7}
+        values['sale_line'] = {'input': 'sale_line', 'label': _('Search in Sales Order Item'), 'order': 8}
+        values['invoice'] = {'input': 'invoice', 'label': _('Search in Invoice'), 'order': 9}
         return dict(sorted(values.items(), key=lambda item: item[1]["order"]))
 
     def _task_get_search_domain(self, search_in, search):

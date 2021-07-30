@@ -22,6 +22,14 @@
         </xpath>
     </template>
 
+    <template id="portal_my_tasks_priority_widget_template" name="Priority Widget Template">
+        <span t-attf-class="o_priority_star fa fa-star#{'' if task.priority == '1' else '-o'}"/>
+    </template>
+
+    <template id="portal_my_tasks_state_widget_template" name="Status Widget Template">
+        <span t-att-title="task.kanban_state_label" t-attf-class="o_status rounded-circle #{'bg-success' if task.kanban_state == 'done' else 'bg-danger' if task.kanban_state == 'blocked' else ''}"/>
+    </template>
+
     <template id="portal_my_home" name="Show Projects / Tasks" customize_show="True" inherit_id="portal.portal_my_home" priority="40">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-call="portal.portal_docs_entry">
@@ -56,10 +64,8 @@
                             <a t-attf-href="/my/project/#{project.id}?{{ keep_query() }}"><span t-field="project.name"/></a>
                         </td>
                         <td class="text-right">
-                            <a t-attf-href="/my/tasks?{{keep_query(filterby=project.id)}}">
-                                <t t-esc="project.task_count_with_subtasks" />
-                                <t t-esc="project.label_tasks" />
-                            </a>
+                            <t t-out="project.task_count_with_subtasks" />
+                            <t t-out="project.label_tasks" />
                         </td>
                     </tr>
                 </tbody>
@@ -95,6 +101,7 @@
                     <thead>
                         <tr t-attf-class="{{'thead-light' if not groupby == 'none' else ''}}">
                             <th class="text-left">Ref</th>
+                            <th t-if="groupby != 'priority'">Priority</th>
                             <th t-if="groupby == 'none'">Name</th>
                             <th t-if="groupby == 'project'">
                                 <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for project:</em>
@@ -102,14 +109,19 @@
                             <th t-if="groupby == 'stage'">
                                 <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> in stage:</em>
                                 <span class="text-truncate" t-field="tasks[0].sudo().stage_id.name"/></th>
-                            <th t-if="groupby == 'user'">
-                                <em class="font-weight-normal text-muted" t-if="tasks[0].sudo().user_ids"><span t-field="tasks[0].sudo().project_id.label_tasks"/> assigned to:</em>
-                                <span class="text-truncate" t-esc="', '.join(tasks[0].sudo().mapped('user_ids.name'))"/></th>
+                            <th t-if="groupby == 'priority'">
+                                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> in priority:</em>
+                                <span class="text-truncate" t-field="tasks[0].sudo().priority"/></th>
+                            <th t-if="groupby == 'status'">
+                                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> in status:</em>
+                                <span class="text-truncate" t-field="tasks[0].sudo().kanban_state"/></th>
                             <th t-if="groupby == 'customer'">
                                 <em class="font-weight-normal text-muted" t-if="tasks[0].sudo().partner_id"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for customer:</em>
                                 <span class="text-truncate" t-field="tasks[0].sudo().partner_id.name"/></th>
-                            <th t-if="groupby != 'project'" class="text-center" name="portal_my_tasks_project_th">Project</th>
-                            <th t-if="groupby != 'stage'" class="text-center">Stage</th>
+                            <th name="project_portal_assignees">Assignees</th>
+                            <th t-if="groupby != 'status'">Status</th>
+                            <th t-if="groupby != 'project'">Project</th>
+                            <th t-if="groupby != 'stage'">Stage</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -118,13 +130,25 @@
                                 <td class="text-left">
                                     #<span t-esc="task.id"/>
                                 </td>
+                                <td t-if="groupby != 'priority'">
+                                    <t t-call="project.portal_my_tasks_priority_widget_template"/>
+                                </td>
                                 <td>
-                                    <a t-attf-href="/my/task/#{task.id}?{{ keep_query() }}"><span t-field="task.name"/></a>
+                                    <a t-attf-href="/my/#{task_url}/#{task.id}?{{ keep_query() }}"><span t-field="task.name"/></a>
                                 </td>
-                                <td t-if="groupby != 'project'" class="text-center">
-                                    <span class="badge badge-pill badge-info" title="Current project of the task" t-esc="task.project_id.name" />
+                                <td name="project_portal_assignees">
+                                    <t t-set="assignees" t-value="task.sudo().user_ids"/>
+                                    <span t-if="assignees" t-out="'%s%s' % (assignees[:1].name, ' + %s others' % len(assignees[1:]) if len(assignees.user_ids) > 1 else '')" t-att-title="'\n'.join(assignees[1:].mapped('name'))"/>
                                 </td>
-                                <td t-if="groupby != 'stage'" class="text-center">
+                                <td t-if="groupby != 'status'">
+                                    <t t-call="project.portal_my_tasks_state_widget_template">
+                                        <t t-set="path" t-value="'tasks'"/>
+                                    </t>
+                                </td>
+                                <td t-if="groupby != 'project'">
+                                    <span class="badge badge-pill badge-info mw-100 text-truncate" title="Current project of the task" t-esc="task.project_id.name" />
+                                </td>
+                                <td t-if="groupby != 'stage'">
                                     <span class="badge badge-pill badge-info" title="Current stage of the task" t-esc="task.stage_id.name" />
                                 </td>
                             </tr>
@@ -165,6 +189,7 @@
                         <div class="col-12">
                             <h5 class="d-flex mb-1 mb-md-0 row">
                                 <div class="col-9">
+                                    <t t-call="project.portal_my_tasks_priority_widget_template"/>
                                     <span t-field="task.name" class="text-truncate"/>
                                     <small class="text-muted d-none d-md-inline"> (#<span t-field="task.id"/>)</small>
                                 </div>
@@ -177,7 +202,12 @@
                     </div>
                 </t>
                 <t t-set="card_body">
-                    <div class="row" t-if="task.user_ids or task.partner_id">
+                    <div class="float-right">
+                        <t t-call="project.portal_my_tasks_state_widget_template">
+                            <t t-set="path" t-value="'task'"/>
+                        </t>
+                    </div>
+                    <div class="row mt-3" t-if="task.user_ids or task.partner_id">
                         <div class="col-12 col-md-6 pb-2" t-if="task.user_ids">
                             <strong>Assigned to</strong>
                             <div class="row">
@@ -193,7 +223,7 @@
                                 </t>
                             </div>
                         </div>
-                        <div class="coll-12 col-md-6 pb-2" t-if="task.partner_id">
+                        <div class="col-12 col-md-6 pb-2" t-if="task.partner_id">
                             <strong>Customer</strong>
                             <div class="row">
                                 <div class="col d-flex align-items-center flex-grow-0 pr-3">
