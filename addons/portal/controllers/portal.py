@@ -121,7 +121,7 @@ class CustomerPortal(Controller):
     MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street", "city", "country_id"]
     OPTIONAL_BILLING_FIELDS = ["zipcode", "state_id", "vat", "company_name"]
 
-    _items_per_page = 20
+    _items_per_page = 80
 
     def _prepare_portal_layout_values(self):
         """Values for /my/* templates rendering.
