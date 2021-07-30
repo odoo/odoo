@@ -7,6 +7,7 @@ import { Domain } from "@web/core/domain";
 import { FieldColorPicker } from "../../fields/basic_fields";
 import { fileTypeMagicWordMap } from "../../fields/basic_fields";
 import { url } from "../../core/utils/urls";
+import { ViewButton } from "@web/views/form/view_button/view_button";
 
 const { Component } = owl;
 const { useState, useSubEnv } = owl.hooks;
@@ -22,10 +23,7 @@ export class KanbanRenderer extends Component {
     setup() {
         let templateId = templateIds[this.props.info.arch];
         if (!templateId) {
-            const formCompiler = new FormCompiler(
-                this.env.qweb,
-                this.props.info.fields
-            );
+            const formCompiler = new FormCompiler(this.env.qweb, this.props.info.fields);
             const xmldoc = formCompiler.compile(this.props.info.xmlDoc);
             console.group("Compiled template:");
             console.dirxml(xmldoc);
@@ -34,14 +32,15 @@ export class KanbanRenderer extends Component {
             this.env.qweb.addTemplate(templateId, xmldoc.outerHTML);
             templateIds[this.props.info.arch] = templateId;
         }
+        console.group("Kanban data:");
+        console.table(this.props.model.root.data.map((r) => r.data));
+        console.groupEnd();
         this.cardTemplate = templateId;
         this.cards = this.props.info.cards;
         this.className = this.props.info.className;
         this.state = useState({});
         this.action = useService("action");
         useSubEnv({ model: this.props.model });
-
-        console.log(this.props.model.root.data);
     }
 
     // TODO
@@ -50,15 +49,13 @@ export class KanbanRenderer extends Component {
     }
 
     openRecord(record) {
-        const resIds = this.props.model.root.data.map(
-            (datapoint) => datapoint.resId
-        );
+        const resIds = this.props.model.root.data.map((datapoint) => datapoint.resId);
         this.action.switchView("form", { resId: record.resId, resIds });
     }
 
-    evalDomain(domain) {
-        domain = new Domain(domain);
-        return domain.contains(this.record.data);
+    evalDomain(record, expr) {
+        const domain = new Domain(expr);
+        return domain.contains(record.data);
     }
 
     isFieldEmpty(fieldName, widgetName) {
@@ -75,6 +72,19 @@ export class KanbanRenderer extends Component {
         return toImplement;
     }
 
+    findRecord(id) {
+        return this.props.model.root.data.find((r) => r.data.id === id);
+    }
+
+    getFieldText(record, fieldName) {
+        const value = record.data[fieldName];
+        if (Array.isArray(value)) {
+            return value[1] || "";
+        } else {
+            return value;
+        }
+    }
+
     //-------------------------------------------------------------------------
     // KANBAN SPECIAL FUNCTIONS
     //
@@ -86,13 +96,13 @@ export class KanbanRenderer extends Component {
      * Returns the image URL of a given record.
      * @param {string} model model name
      * @param {string} field field name
-     * @param {number | number[]} id
+     * @param {number | number[]} idOrIds
      * @param {string} placeholder
      * @returns {string}
      */
-    kanban_image(model, field, id, placeholder) {
-        id = (Array.isArray(id) ? id[0] : id) || null;
-        const record = this.props.model.db[id] || { data: {} };
+    kanban_image(model, field, idOrIds, placeholder) {
+        const id = (Array.isArray(idOrIds) ? idOrIds[0] : idOrIds) || null;
+        const record = this.findRecord(id) || { data: {} };
         const value = record.data[field];
         if (value && !isBinSize(value)) {
             // Use magic-word technique for detecting image type
@@ -121,10 +131,7 @@ export class KanbanRenderer extends Component {
         if (typeof value === "number") {
             return Math.round(value) % RECORD_COLORS.length;
         } else if (typeof value === "string") {
-            const charCodeSum = [...value].reduce(
-                (acc, _, i) => acc + value.charCodeAt(i),
-                0
-            );
+            const charCodeSum = [...value].reduce((acc, _, i) => acc + value.charCodeAt(i), 0);
             return charCodeSum % RECORD_COLORS.length;
         } else {
             return 0;
@@ -135,7 +142,7 @@ export class KanbanRenderer extends Component {
      * Returns the proper translated name of a record color.
      */
     kanban_getcolorname(value) {
-        return KANBAN_RECORD_COLORS[this.kanban_getcolor(value)];
+        return RECORD_COLORS[this.kanban_getcolor(value)];
     }
 
     /**
@@ -147,4 +154,4 @@ export class KanbanRenderer extends Component {
 }
 
 KanbanRenderer.template = "web.KanbanRenderer";
-KanbanRenderer.components = { Field };
+KanbanRenderer.components = { Field, ViewButton };

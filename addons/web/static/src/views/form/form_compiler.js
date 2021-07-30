@@ -1,5 +1,6 @@
 /* @odoo-module */
 import { evaluateExpr } from "@web/core/py_js/py";
+import { combineAttributes } from "../../core/utils/xml";
 
 /**
  * there is no particular expecation of what should be a boolean
@@ -127,11 +128,16 @@ export class FormCompiler {
             return;
         }
         if (!params.enableInvisible) {
-            compiled.setAttribute("t-if", `!evalDomain(${JSON.stringify(invisible)})`);
+            combineAttributes(
+                compiled,
+                "t-if",
+                `!evalDomain(record, ${JSON.stringify(invisible)})`,
+                " and "
+            );
         } else {
             let expr;
             if (Array.isArray(invisible)) {
-                expr = `evalDomain(${JSON.stringify(invisible)})`;
+                expr = `evalDomain(record, ${JSON.stringify(invisible)})`;
             } else {
                 expr = invisible;
             }
@@ -438,7 +444,7 @@ export class FormCompiler {
             if (!Array.isArray(readonly)) {
                 readonlyExpr = readonly;
             } else {
-                readonlyExpr = `evalDomain(${JSON.stringify(readonly)})`;
+                readonlyExpr = `evalDomain(record, ${JSON.stringify(readonly)})`;
             }
             const tAttClass = `${roClass}: ${readonlyExpr}`;
             appendAttr(compiled, "class", tAttClass);
@@ -458,7 +464,7 @@ export class FormCompiler {
             if (!Array.isArray(required)) {
                 reqExpr = required;
             } else {
-                reqExpr = `evalDomain(${JSON.stringify(required)})`;
+                reqExpr = `evalDomain(record, ${JSON.stringify(required)})`;
             }
             const tAttClass = `${reqClass}: ${reqExpr}`;
             appendAttr(compiled, "class", tAttClass);
@@ -474,7 +480,7 @@ export class FormCompiler {
             emptyClass = "o_form_label_empty";
         }
         if (emptyClass) {
-            const tAttClass = `${emptyClass}: isFieldEmpty("${params.fieldName}", "${
+            const tAttClass = `${emptyClass}: isFieldEmpty(record, "${params.fieldName}", "${
                 params.widgetName || null
             }")`;
             appendAttr(compiled, "class", tAttClass);
@@ -673,12 +679,19 @@ export class FormCompiler {
         button.setAttribute("classes", JSON.stringify(Array.from(node.classList)));
 
         // Button's body
-        if (node.children.length) {
+        const buttonContent = [];
+        for (const child of node.childNodes) {
+            const compiled = this.compileNode(child, params);
+            if (compiled) {
+                buttonContent.push(compiled);
+            }
+        }
+        if (buttonContent.length) {
             const contentSlot = this.document.createElement("t");
             contentSlot.setAttribute("t-set-slot", "contents");
             this.append(button, contentSlot);
-            for (const child of node.childNodes) {
-                this.append(contentSlot, this.compileNode(child, params));
+            for (const buttonChild of buttonContent) {
+                this.append(contentSlot, buttonChild);
             }
         }
 
@@ -703,5 +716,6 @@ export class FormCompiler {
         return tComponent;
     }
 }
+
 FormCompiler.INNER_GROUP_COL = 2;
 FormCompiler.OUTER_GROUP_COL = 2;
