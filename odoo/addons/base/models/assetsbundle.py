@@ -439,7 +439,6 @@ class AssetsBundle(object):
                 [".." for i in range(0, len(debug_asset_url.split("/")) - 2)]
                 ) + "/",
         )
-        self.preprocess_css()
 
         # adds the @import rules at the beginning of the bundle
         content_bundle_list = [content_import_rules]
