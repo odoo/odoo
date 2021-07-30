@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
 
 <t t-name="web.Form.ButtonBox" owl="1" >
-    <div class="oe_button_box o_full">
+    <div class="o-form-buttonbox">
         <t t-slot="default" />
-        <Dropdown beforeOpen="beforeOpenDropdown" t-ref="dropdown" menuClass="'o_dropdown_more'" t-att-class="'btn oe_stat_button o_button_more'" togglerClass="'o_button_more'">
+        <ButtonBoxDropdown redrawButtons="dropdownRedrawButtons" t-ref="dropdown" menuClass="'o_dropdown_more'" t-att-class="'btn oe_stat_button o_button_more'">
             <t t-set-slot="toggler">More</t>
             <t t-set-slot="default">
                 <t t-slot="liWrapped" />
             </t>
-        </Dropdown>
+        </ButtonBoxDropdown>
     </div>
 </t>
 
