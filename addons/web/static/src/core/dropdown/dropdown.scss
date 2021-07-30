@@ -8,7 +8,7 @@
 }
 
 .dropdown-item {
-  &.active {
+  &.active, &.selected {
     position: relative;
     font-weight: $font-weight-bold;
 
@@ -32,7 +32,8 @@
   }
 
   &.selected { // Legacy
-    @extend .active;
+    // FIXME: does commenting this break anything?
+    // @extend .active;
   }
 }
 
@@ -79,10 +80,12 @@
         @extend .dropdown-item;
       }
       &.selected > :first-child {
-        @extend .active;
+        // FIXME: does commenting this break anything?
+        //@extend .active;
       }
       &.disabled > :first-child {
-        @extend .disabled;
+        // FIXME: does commenting this break anything?
+        //@extend .disabled;
       }
     }
   }
