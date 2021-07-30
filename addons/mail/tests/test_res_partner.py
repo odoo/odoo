@@ -123,8 +123,8 @@ class TestPartner(MailCommon):
         self.assertEqual(
             partners.mapped('email_formatted'),
             ['"Classic Format" <classic.format@test.example.com>',
-             '"FindMe Format" <"FindMe Format" <find.me.format@test.example.com>>',
-             '"FindMe Multi" <find.me.multi.1@test.example.com, "FindMe Multi" <find.me.multi.2@test.example.com>>']
+             '"FindMe Format" <find.me.format@test.example.com>',
+             '"FindMe Multi" <find.me.multi.1@test.example.com,find.me.multi.2@test.example.com>']
         )
         self.assertEqual(
             partners.mapped('email_normalized'),
