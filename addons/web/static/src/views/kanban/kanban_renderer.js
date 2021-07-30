@@ -58,7 +58,7 @@ export class KanbanRenderer extends Component {
         return domain.contains(record.data);
     }
 
-    isFieldEmpty(fieldName, widgetName) {
+    isFieldEmpty(record, fieldName, widgetName) {
         const cls = Field.getTangibleField(this.record, widgetName, fieldName);
         if ("isEmpty" in cls) {
             return cls.isEmpty(this.record, fieldName);

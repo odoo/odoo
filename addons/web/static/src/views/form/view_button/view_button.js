@@ -1,7 +1,5 @@
 /** @odoo-module */
 
-import { useListener } from "web.custom_hooks";
-
 const explicitRankClasses = [
     "btn-primary",
     "btn-secondary",
@@ -61,17 +59,13 @@ export class ViewButton extends owl.Component {
         if (this.props.icon) {
             this.icon = iconFromString(this.props.icon);
         }
+    }
 
-        if (this.props.onClick) {
-            useListener("click", () => this.props.onClick());
-        }
-
-        if (this.props.data) {
-            this.attData = {};
-            for (const key in this.props.data) {
-                this.attData[`data-${key}`] = this.props.data[key];
-            }
-        }
+    onClick() {
+        this.trigger("action-button-clicked", {
+            clickParams: this.props.clickParams,
+            record: this.props.record,
+        });
     }
 }
 ViewButton.template = "views.ViewButton";

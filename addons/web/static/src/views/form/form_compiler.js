@@ -676,6 +676,16 @@ export class FormCompiler {
         }
         button.setAttribute("classes", JSON.stringify(Array.from(node.classList)));
 
+        const clickParams = {};
+        for (const attName of ["name", "type", "args", "context", "close", "special", "effect"]) {
+            const att = node.getAttribute(attName);
+            if (att) {
+                clickParams[attName] = att;
+            }
+        }
+        button.setAttribute("record", "record");
+        button.setAttribute("clickParams", `${JSON.stringify(clickParams)}`);
+
         // Button's body
         const buttonContent = [];
         for (const child of node.childNodes) {
@@ -692,15 +702,6 @@ export class FormCompiler {
                 this.append(contentSlot, buttonChild);
             }
         }
-
-        const buttonClickParams = {};
-        for (const attName of ["name", "type", "args", "context", "close", "special", "effect"]) {
-            const att = node.getAttribute(attName);
-            if (att) {
-                buttonClickParams[attName] = att;
-            }
-        }
-        button.setAttribute("onClick", `() => buttonClicked(${JSON.stringify(buttonClickParams)})`);
         return button;
     }
 
