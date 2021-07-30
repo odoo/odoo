@@ -72,7 +72,7 @@ class NewLeadNotification(TestCrmCommon):
                'name': 'Std Name', 'user_id': self.user_sales_leads.id,
                'team_id': self.sales_team_1.id,
               }),
-             (self.contact_1.id, '"Philip J Fry" <"Philip, J. Fry" <philip.j.fry@test.example.com>>', self.contact_1.lang, 'Customer',
+             (self.contact_1.id, '"Philip J Fry" <philip.j.fry@test.example.com>', self.contact_1.lang, 'Customer',
               {}),  # creation values only if not partner
             ]
         ):
