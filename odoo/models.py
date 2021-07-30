@@ -4393,6 +4393,9 @@ Fields:
     @api.model
     def _flush_search(self, domain, fields=None, order=None, seen=None):
         """ Flush all the fields appearing in `domain`, `fields` and `order`. """
+        if self.env.context.get('skip_flush_search' == self._name):
+            return
+
         if seen is None:
             seen = set()
         elif self._name in seen:
