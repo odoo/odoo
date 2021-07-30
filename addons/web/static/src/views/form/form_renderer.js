@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
 import { Domain } from "@web/core/domain";
-import { useService } from "@web/core/service_hook";
-import { evaluateExpr } from "@web/core/py_js/py";
 
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { Field } from "@web/fields/field";
@@ -33,7 +31,6 @@ export class FormRenderer extends Component {
         this.owlifiedArch = templateId;
         this.state = useState({});
         useSubEnv({ model: this.props.model });
-        this.action = useService("action");
     }
 
     get record() {
@@ -51,29 +48,6 @@ export class FormRenderer extends Component {
                 return page;
             }
         }
-    }
-
-    async buttonClicked(params) {
-        const { resModel, resId, resIds } = this.props.model;
-
-        const valuesForEval = Object.assign({}, this.record.data, {
-            active_id: resId,
-            active_ids: resIds,
-        });
-        const buttonContext = evaluateExpr(params.context, valuesForEval);
-        const envContext = null; //LPE FIXME record.context ?? new Context(payload.env.context).eval();
-
-        const doActionParams = Object.assign({}, params, {
-            resModel,
-            resId,
-            resIds,
-            context: envContext,
-            buttonContext,
-            onclose: () => this.props.model.load(),
-        });
-
-        // LPE TODO: disable all buttons
-        this.action.doActionButton(doActionParams);
     }
 
     isFieldEmpty(record, fieldName, widgetName) {
