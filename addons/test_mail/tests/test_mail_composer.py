@@ -1358,15 +1358,15 @@ class TestComposerResultsComment(TestMailComposer):
         # ensure values used afterwards for testing
         self.assertEqual(
             self.partner_employee.email_formatted,
-            '"Ernest Employee" <email.from.1@test.example.com, email.from.2@test.example.com>',
+            '"Ernest Employee" <email.from.1@test.example.com,email.from.2@test.example.com>',
             'Formatting: wrong formatting due to multi-email')
         self.assertEqual(
             self.partner_1.email_formatted,
-            '"Valid Lelitre" <"Valid Formatted" <valid.lelitre@agrolait.com>>',
-            'Formatting: wrong double encapsulation')
+            '"Valid Lelitre" <valid.lelitre@agrolait.com>',
+            'Formatting: avoid wrong double encapsulation')
         self.assertEqual(
             self.partner_2.email_formatted,
-            '"Valid Poilvache" <valid.other.1@agrolait.com, valid.other.cc@agrolait.com>',
+            '"Valid Poilvache" <valid.other.1@agrolait.com,valid.other.cc@agrolait.com>',
             'Formatting: wrong formatting due to multi-email')
 
         # instantiate composer, post message
@@ -1401,8 +1401,8 @@ class TestComposerResultsComment(TestMailComposer):
         )
         self.assertEqual(
             sorted(new_partners.mapped('email_formatted')),
-            sorted(['"FindMe Format" <"FindMe Format" <find.me.format@test.example.com>>',
-                    '"FindMe Multi" <find.me.multi.1@test.example.com, "FindMe Multi" <find.me.multi.2@test.example.com>>',
+            sorted(['"FindMe Format" <find.me.format@test.example.com>',
+                    '"FindMe Multi" <find.me.multi.1@test.example.com,find.me.multi.2@test.example.com>',
                     '"find.me.multi.1@test.example.com" <find.me.multi.1@test.example.com>',
                     '"find.me.multi.2@test.example.com" <find.me.multi.2@test.example.com>',
                     '"test.cc.1@example.com" <test.cc.1@example.com>',
@@ -1443,12 +1443,12 @@ class TestComposerResultsComment(TestMailComposer):
             email_values={
                 'body_content': f'TemplateBody {self.test_record.name}',
                 # currently holding multi-email 'from'
-                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com, email.from.2@test.example.com')),
+                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com,email.from.2@test.example.com')),
                 'subject': f'TemplateSubject {self.test_record.name}',
             },
             fields_values={
                 # currently holding multi-email 'email_from'
-                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com, email.from.2@test.example.com')),
+                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com,email.from.2@test.example.com')),
             },
             mail_message=self.test_record.message_ids[0],
         )
@@ -1457,12 +1457,12 @@ class TestComposerResultsComment(TestMailComposer):
             author=self.partner_employee,
             email_values={
                 'body_content': f'TemplateBody {self.test_record.name}',
-                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com, email.from.2@test.example.com')),
+                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com,email.from.2@test.example.com')),
                 'subject': f'TemplateSubject {self.test_record.name}',
             },
             fields_values={
                 # currently holding multi-email 'email_from'
-                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com, email.from.2@test.example.com')),
+                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com,email.from.2@test.example.com')),
             },
             mail_message=self.test_record.message_ids[0],
         )
@@ -1801,13 +1801,27 @@ class TestComposerResultsMass(TestMailComposer):
                     # check layouting and language. Note that standard layout
                     # is not tested against translations, only the custom one
                     # to ease translations checks.
-                    email = self._find_sent_email(self.partner_employee_2.email_formatted, [record.customer_id.email_formatted])
-                    self.assertTrue(bool(email), 'Email not found, check recipients')
-
+                    sent_mail = self._find_sent_email(
+                        self.partner_employee_2.email_formatted,
+                        [formataddr((record.customer_id.name, record.customer_id.email))]
+                    )
+                    debug_info = ''
+                    if not sent_mail:
+                        debug_info = '-'.join('From: %s-To: %s' % (mail['email_from'], mail['email_to']) for mail in self._mails)
+                    self.assertTrue(
+                        bool(sent_mail),
+                        f'Expected mail from {self.partner_employee_2.email_formatted} to {formataddr((record.customer_id.name, record.customer_id.email))} not found in {debug_info}'
+                    )
+                    if record == self.test_records[0]:
+                        self.assertEqual(sent_mail['email_to'], ['"Partner_0" <Nonetest_partner_0@example.com>'],
+                                         'FIXME: currently not taking email normalized for outgoing emaisl')
+                    else:
+                        self.assertEqual(sent_mail['email_to'], ['"Partner_1" <Nonetest_partner_1@example.com>'],
+                                         'FIXME: currently not taking email normalized for outgoing emaisl')
                     # Currently layouting in mailing mode is not supported.
                     # Hence no translations.
                     self.assertEqual(
-                        email['body'],
+                        sent_mail['body'],
                         f'<p>TemplateBody {record.name}</p>'
                     )
 
@@ -1918,15 +1932,15 @@ class TestComposerResultsMass(TestMailComposer):
         # ensure values used afterwards for testing
         self.assertEqual(
             self.partner_employee.email_formatted,
-            '"Ernest Employee" <email.from.1@test.example.com, email.from.2@test.example.com>',
+            '"Ernest Employee" <email.from.1@test.example.com,email.from.2@test.example.com>',
             'Formatting: wrong formatting due to multi-email')
         self.assertEqual(
             self.partner_1.email_formatted,
-            '"Valid Lelitre" <"Valid Formatted" <valid.lelitre@agrolait.com>>',
-            'Formatting: wrong double encapsulation')
+            '"Valid Lelitre" <valid.lelitre@agrolait.com>',
+            'Formatting: avoid wrong double encapsulation')
         self.assertEqual(
             self.partner_2.email_formatted,
-            '"Valid Poilvache" <valid.other.1@agrolait.com, valid.other.cc@agrolait.com>',
+            '"Valid Poilvache" <valid.other.1@agrolait.com,valid.other.cc@agrolait.com>',
             'Formatting: wrong formatting due to multi-email')
 
         # instantiate composer, send mailing
@@ -1961,8 +1975,8 @@ class TestComposerResultsMass(TestMailComposer):
         )
         self.assertEqual(
             sorted(new_partners.mapped('email_formatted')),
-            sorted(['"FindMe Format" <"FindMe Format" <find.me.format@test.example.com>>',
-                    '"FindMe Multi" <find.me.multi.1@test.example.com, "FindMe Multi" <find.me.multi.2@test.example.com>>',
+            sorted(['"FindMe Format" <find.me.format@test.example.com>',
+                    '"FindMe Multi" <find.me.multi.1@test.example.com,find.me.multi.2@test.example.com>',
                     '"find.me.multi.1@test.example.com" <find.me.multi.1@test.example.com>',
                     '"find.me.multi.2@test.example.com" <find.me.multi.2@test.example.com>',
                     '"test.cc.1@example.com" <test.cc.1@example.com>',

@@ -39,7 +39,7 @@ class NewLeadNotification(TestCrmCommon):
             [(False, '"New Customer" <new.customer.format@test.example.com>', None, 'Customer Email'),
              (False, 'new.customer.multi.1@test.example.com, new.customer.2@test.example.com', None, 'Customer Email'),
              (False, 'new.customer.simple@test.example.com', None, 'Customer Email'),
-             (self.contact_1.id, '"Philip J Fry" <"Philip, J. Fry" <philip.j.fry@test.example.com>>', self.contact_1.lang, 'Customer'),
+             (self.contact_1.id, '"Philip J Fry" <philip.j.fry@test.example.com>', self.contact_1.lang, 'Customer'),
             ]
         ):
             with self.subTest(lead=lead, email_from=lead.email_from):
