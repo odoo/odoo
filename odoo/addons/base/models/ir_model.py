@@ -2163,7 +2163,6 @@ class IrModelData(models.Model):
                     records.unlink()
             except Exception:
                 if len(records) <= 1:
-                    _logger.info('Unable to delete %s', records, exc_info=True)
                     undeletable_ids.extend(ref_data._ids)
                 else:
                     # divide the batch in two, and recursively delete them
@@ -2199,6 +2198,9 @@ class IrModelData(models.Model):
 
         # remove models
         delete(self.env['ir.model'].browse(unique(model_ids)))
+
+        # announce undeletable ids
+        _logger.info(f"ir.model.data with the following IDs could not be deleted ({undeletable_ids})")
 
         # sort out which undeletable model data may have become deletable again because
         # of records being cascade-deleted or tables being dropped just above
