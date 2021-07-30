@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-extend="slides.course.unsubscribe.modal.leave">
-        <t t-jquery="p" t-operation="after">
+        <t t-jquery="p:last" t-operation="after">
             <t t-if="widget.enroll === 'payment'">
                 <p class="alert alert-warning">
                     <i class="fa fa-exclamation-triangle fa-3x float-left mr-3"></i>
