@@ -15,7 +15,7 @@ const TRANSPILED_EXPRESSIONS = [
     // `record.prop` => `record.data.prop`
     { regex: /\brecord\.(\w+)\b/g, value: "record.data.$1" },
     // `prop.raw_value` => `prop`
-    { regex: /(\w+)\.raw_value\b/g, value: "$1" },
+    { regex: /(\w+)\.(raw_)?value\b/g, value: "$1" },
     // `#{expr}` => `{{expr}}`
     { regex: /#{([^}]+)}/g, value: "{{$1}}" },
 ];
@@ -53,18 +53,26 @@ class KanbanArchParser extends XMLParser {
 
         // Concrete kanban box element in the template
         const kanbanBox =
-            [...kanbanBoxTemplate.children].find(
-                (node) => node.tagName === "div"
-            ) || kanbanBoxTemplate;
+            [...kanbanBoxTemplate.children].find((node) => node.tagName === "div") ||
+            kanbanBoxTemplate;
 
         // Kanban box template
         this.visitXML(kanbanBoxTemplate, (node) => {
-            if (node.tagName === "field") {
-                fields.add(node.getAttribute("name"));
-            }
             // Converts server qweb attributes to Owl attributes.
             for (const { name, value } of node.attributes) {
                 node.setAttribute(name, translateAttribute(value));
+            }
+            if (node.tagName === "field") {
+                const fname = node.getAttribute("name");
+                const widget = node.getAttribute("widget");
+                fields.add(fname);
+                if (!widget) {
+                    // Fields without a specified widget are rendered as simple
+                    // spans in kanban records.
+                    const tesc = document.createElement("span");
+                    tesc.setAttribute("t-esc", `getFieldText(record, '${fname}')`);
+                    node.replaceWith(tesc);
+                }
             }
         });
 
@@ -83,10 +91,7 @@ class KanbanView extends owl.Component {
     setup() {
         console.log(this.props);
         useDebugMenu("view", { component: this });
-        this.archInfo = new KanbanArchParser().parse(
-            this.props.arch,
-            this.props.fields
-        );
+        this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
             fields: this.props.fields,

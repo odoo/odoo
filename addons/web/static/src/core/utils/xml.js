@@ -42,3 +42,20 @@ export class XMLParser {
         return xml.documentElement;
     }
 }
+
+/**
+ * Combines the existing value of a node attribute with new given parts. The glue
+ * is the string used to join the parts.
+ * @param {Node} node
+ * @param {string} attr
+ * @param {string | string[]} parts
+ * @param {string} [glue=" "]
+ */
+export const combineAttributes = (node, attr, parts, glue = " ") => {
+    const allValues = [];
+    if (node.hasAttribute(attr)) {
+        allValues.push(node.getAttribute(attr));
+    }
+    allValues.push(...(Array.isArray(parts) ? parts : [parts]));
+    node.setAttribute(attr, allValues.join(glue));
+};

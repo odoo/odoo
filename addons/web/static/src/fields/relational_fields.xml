@@ -16,7 +16,11 @@
 
     <t t-name="web.FieldMany2ManyTags" owl="1">
         <span class="o-field">
-            <t t-esc="data" />
+            <t t-foreach="data" t-as="tag" t-key="tag">
+                <div class="badge badge-pill">
+                    <t t-esc="tag" />
+                </div>
+            </t>
         </span>
     </t>
 
