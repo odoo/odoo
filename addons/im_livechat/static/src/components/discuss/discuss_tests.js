@@ -410,8 +410,7 @@ QUnit.test('livechats with no messages are sorted by creation date in the sideba
     );
 });
 
-QUnit.skip('invite button should be present on livechat', async function (assert) {
-    // Disabled until the new invite form is introduced.
+QUnit.test('invite button should be present on livechat', async function (assert) {
     assert.expect(1);
 
     this.data['mail.channel'].records.push(

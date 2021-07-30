@@ -2271,7 +2271,7 @@ QUnit.test('sidebar quick search', async function (assert) {
 });
 
 QUnit.test('basic top bar rendering', async function (assert) {
-    assert.expect(7);
+    assert.expect(8);
 
     // channel expected to be found in the sidebar
     // with a random unique id and name that will be referenced in the test
@@ -2334,6 +2334,11 @@ QUnit.test('basic top bar rendering', async function (assert) {
         `).textContent,
         "General",
         "display general in the breadcrumb"
+    );
+    const inviteButton = document.querySelector(`.o_ThreadViewTopbar_inviteButton`);
+    assert.isVisible(
+        inviteButton,
+        "should have button 'Invite' in the top bar of channel"
     );
 });
 

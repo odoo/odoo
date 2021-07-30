@@ -113,6 +113,36 @@ class Partner(models.Model):
         return 0
 
     @api.model
+    def search_for_channel_invite(self, search_term, channel_id=None, limit=30):
+        """ Returns partners matching search_term that can be invited to a channel.
+        If the channel_id is specified, only partners that can actually be invited to the channel
+        are returned (not already members, and in accordance to the channel configuration).
+        """
+        domain = expression.AND([
+            expression.OR([
+                [('name', 'ilike', search_term)],
+                [('email', 'ilike', search_term)],
+            ]),
+            [('active', '=', True)],
+            [('type', '!=', 'private')],
+            [('user_ids', '!=', False)],
+            [('user_ids.active', '=', True)],
+            [('user_ids.share', '=', False)],
+        ])
+        if channel_id:
+            channel = self.env['mail.channel'].search([('id', '=', int(channel_id))])
+            domain = expression.AND([domain, [('channel_ids', 'not in', channel.id)]])
+            if channel.public == 'groups':
+                domain = expression.AND([domain, [('user_ids.groups_id', 'in', channel.group_public_id.id)]])
+        query = self.env['res.partner']._search(domain, order='name, id')
+        query.order = 'LOWER("res_partner"."name"), "res_partner"."id"'  # bypass lack of support for case insensitive order in search()
+        query.limit = int(limit)
+        return {
+            'count': self.env['res.partner'].search_count(domain),
+            'partners': [p.mail_partner_format() for p in self.env['res.partner'].browse(query)],
+        }
+
+    @api.model
     def get_mention_suggestions(self, search, limit=8, channel_id=None):
         """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
             Prioritize partners that are also users, and then extend the research to all partners.

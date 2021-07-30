@@ -511,33 +511,6 @@ function factory(dependencies) {
         }
 
         /**
-         * Performs the `channel_join_and_get_info` RPC on `mail.channel`.
-         *
-         * @static
-         * @param {Object} param0
-         * @param {integer} param0.channelId
-         * @returns {mail.thread} the channel that was joined
-         */
-        static async performRpcJoinChannel({ channelId }) {
-            const device = this.env.messaging.device;
-            const data = await this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_join_and_get_info',
-                args: [[channelId]],
-                kwargs: {
-                    context: Object.assign({}, this.env.session.user_content, {
-                        // optimize the return value by avoiding useless queries
-                        // in non-mobile devices
-                        isMobile: device.isMobile,
-                    }),
-                },
-            });
-            return this.env.models['mail.thread'].insert(
-                this.env.models['mail.thread'].convertData(data)
-            );
-        }
-
-        /**
          * Performs the `execute_command` RPC on `mail.channel`.
          *
          * @static
@@ -703,6 +676,18 @@ function factory(dependencies) {
          */
         getMentionText() {
             return this.name;
+        }
+
+        /**
+         * Joins this thread. Only makes sense on channels.
+         */
+        async join() {
+            await this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'add_members',
+                args: [[this.id]],
+                kwargs: { partner_ids: [this.env.messaging.currentPartner.id] }
+            });
         }
 
         /**
@@ -1162,6 +1147,17 @@ function factory(dependencies) {
          */
         _computeFutureActivities() {
             return replace(this.activities.filter(activity => activity.state === 'planned'));
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasInviteFeature() {
+            if (this.model !== 'mail.channel') {
+                return false;
+            }
+            return this.channel_type === 'channel';
         }
 
         /**
@@ -1795,6 +1791,14 @@ function factory(dependencies) {
          */
         hasActivities: attr({
             default: false,
+        }),
+        /**
+         * States whether this thread should has the invite feature. Only makes
+         * sense for channels.
+         */
+        hasInviteFeature: attr({
+            compute: '_computeHasInviteFeature',
+            dependencies: ['channel_type', 'model'],
         }),
         /**
          * Determine whether this thread has the seen indicators (V and VV)
