@@ -40,9 +40,9 @@ export class FormRenderer extends Component {
         return this.props.model.root;
     }
 
-    evalDomain(domain) {
-        domain = new Domain(domain);
-        return domain.contains(this.record.data);
+    evalDomain(record, expr) {
+        const domain = new Domain(expr);
+        return domain.contains(record.data);
     }
 
     getActivePage(invisibleDomains) {
@@ -58,7 +58,7 @@ export class FormRenderer extends Component {
 
         const valuesForEval = Object.assign({}, this.record.data, {
             active_id: resId,
-            active_ids: resIds,
+            active_ids: resIds
         });
         const buttonContext = evaluateExpr(params.context, valuesForEval);
         const envContext = null; //LPE FIXME record.context ?? new Context(payload.env.context).eval();
@@ -69,19 +69,19 @@ export class FormRenderer extends Component {
             resIds,
             context: envContext,
             buttonContext,
-            onclose: () => this.props.model.load(),
+            onclose: () => this.props.model.load()
         });
 
         // LPE TODO: disable all buttons
         this.action.doActionButton(doActionParams);
     }
 
-    isFieldEmpty(fieldName, widgetName) {
-        const cls = Field.getTangibleField(this.record, widgetName, fieldName);
+    isFieldEmpty(record, fieldName, widgetName) {
+        const cls = Field.getTangibleField(record, widgetName, fieldName);
         if ("isEmpty" in cls) {
-            return cls.isEmpty(this.record, fieldName);
+            return cls.isEmpty(record, fieldName);
         }
-        return !this.record.data[fieldName];
+        return !record.data[fieldName];
     }
 
     getWidget(widgetName) {

@@ -18,8 +18,7 @@ export class FieldMany2ManyTags extends Component {
     static template = "web.FieldMany2ManyTags";
 
     setup() {
-        const data = this.props.record.data[this.props.name];
-        this.data = data ? data[1] : "";
+        this.data = this.props.record.data[this.props.name] || [];
     }
 }
 
