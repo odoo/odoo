@@ -1002,7 +1002,7 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
                                         <field name="kanban_state" widget="state_selection" groups="base.group_user" invisible="context.get('fsm_mode', False)"/>
-                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                        <t t-if="record.user_id.raw_value"><field name="user_id" widget="many2one_avatar_user"/></t>
                                     </div>
                                 </div>
                             </div>
