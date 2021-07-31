@@ -6677,6 +6677,12 @@ msgid ""
 msgstr "仕訳の作成以降、税金が変更されたようです。代わりに、手動でのクレジットメモを作成する必要があります。"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "It was previously '%(previous)s' and it is now '%(now)s'."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "JRNL/2016/00001"
 msgstr "JRNL/2016/00001"
@@ -12472,6 +12478,12 @@ msgid ""
 msgstr "シーケンスフィールドは、税務上のラインが適用される順序を定義するために使用されます。"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The sequence format has changed."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid ""
@@ -12480,6 +12492,32 @@ msgid ""
 msgstr ""
 "シーケンスの正規表現は、少なくともキーをグルーピングする配列が含まれている必要があります。\n"
 "例: ^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will never restart.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every month.\n"
+"The year detected here is '%(year)s' and the month is '%(month)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every year.\n"
+"The year detected here is '%(year)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
