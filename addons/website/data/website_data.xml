@@ -394,6 +394,9 @@
         <field name="sequence">1</field>
         <field name="page_view_id" ref="aboutus"/>
         <field name="icon">fa-building</field>
+        <field name="menu_company">True</field>
+        <field name="menu_sequence">50</field>
+        <field name="feature_url">/about-us</field>
     </record>
     <record id="feature_page_our_services" model="website.configurator.feature">
         <field name="name">Services</field>
@@ -402,6 +405,8 @@
         <field name="sequence">3</field>
         <field name="page_view_id" ref="our_services"/>
         <field name="icon">fa-handshake-o</field>
+        <field name="menu_sequence">30</field>
+        <field name="feature_url">/our-services</field>
     </record>
     <record id="feature_page_pricing" model="website.configurator.feature">
         <field name="name">Pricing</field>
@@ -410,6 +415,8 @@
         <field name="sequence">4</field>
         <field name="page_view_id" ref="pricing"/>
         <field name="icon">fa-random</field>
+        <field name="menu_sequence">35</field>
+        <field name="feature_url">/pricing</field>
     </record>
     <record id="feature_page_privacy_policy" model="website.configurator.feature">
         <field name="name">Privacy Policy</field>
@@ -418,6 +425,7 @@
         <field name="sequence">5</field>
         <field name="page_view_id" ref="privacy_policy"/>
         <field name="icon">fa-gavel</field>
+        <field name="feature_url">/privacy</field>
     </record>
 
     <!-- Configurator apps features -->
@@ -428,6 +436,9 @@
         <field name="website_config_preselection">blog</field>
         <field name="module_id" ref="base.module_website_blog"/>
         <field name="icon">fa-rss</field>
+        <field name="menu_company">True</field>
+        <field name="menu_sequence">40</field>
+        <field name="feature_url">/blog</field>
     </record>
     <record id="feature_module_success_stories" model="website.configurator.feature">
         <field name="name">Success Stories</field>
@@ -435,6 +446,9 @@
         <field name="sequence">7</field>
         <field name="module_id" ref="base.module_website_blog"/>
         <field name="icon">fa-star</field>
+        <field name="menu_company">True</field>
+        <field name="menu_sequence">45</field>
+        <field name="feature_url">/blog</field>
     </record>
     <record id="feature_module_career" model="website.configurator.feature">
         <field name="name">Career</field>
@@ -450,6 +464,8 @@
         <field name="website_config_preselection">online_store</field>
         <field name="module_id" ref="base.module_website_sale"/>
         <field name="icon">fa-shopping-cart</field>
+        <field name="menu_sequence">15</field>
+        <field name="feature_url">/shop</field>
     </record>
     <record id="feature_module_event" model="website.configurator.feature">
         <field name="name">Events</field>
@@ -458,6 +474,8 @@
         <field name="website_config_preselection">event</field>
         <field name="module_id" ref="base.module_website_event_sale"/>
         <field name="icon">fa-ticket</field>
+        <field name="menu_sequence">20</field>
+        <field name="feature_url">/event</field>
     </record>
     <record id="feature_module_forum" model="website.configurator.feature">
         <field name="name">Forum</field>
@@ -465,6 +483,7 @@
         <field name="sequence">11</field>
         <field name="module_id" ref="base.module_website_forum"/>
         <field name="icon">fa-users</field>
+        <field name="feature_url">/forum</field>
     </record>
     <record id="feature_module_live_chat" model="website.configurator.feature">
         <field name="name">Live Chat</field>
@@ -480,6 +499,8 @@
         <field name="website_config_preselection">elearning</field>
         <field name="module_id" ref="base.module_website_slides"/>
         <field name="icon">fa-graduation-cap</field>
+        <field name="menu_sequence">25</field>
+        <field name="feature_url">/slides</field>
     </record>
     <record id="feature_module_stores_locator" model="website.configurator.feature">
         <field name="name">Stores Locator</field>

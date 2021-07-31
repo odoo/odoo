@@ -1361,6 +1361,10 @@
                                 <li><a href="#">Products</a></li>
                                 <li><a href="#">Services</a></li>
                                 <li><a href="#">Legal</a></li>
+                                <t t-set="configurator_footer_links" t-value="[]"/>
+                                <li t-foreach="configurator_footer_links" t-as="link">
+                                    <a t-att-href="link['href']" t-esc="link['text']"/>
+                                </li>
                                 <li><a href="/contactus">Contact us</a></li>
                             </ul>
                         </div>
@@ -1496,6 +1500,10 @@
                                 <li class="list-item py-1"><a href="#">Our Company</a></li>
                                 <li class="list-item py-1"><a href="#">Case Studies</a></li>
                                 <li class="list-item py-1"><a href="#">Blog</a></li>
+                                <t t-set="configurator_footer_links" t-value="[]"/>
+                                <li t-foreach="configurator_footer_links" t-as="link" class="list-item py-1">
+                                    <a t-att-href="link['href']" t-esc="link['text']"/>
+                                </li>
                             </ul>
                         </div>
                         <div class="col-lg-2 pb16">
@@ -1551,6 +1559,10 @@
                                 <li class="list-inline-item"><a href="#">About us</a></li>
                                 <li class="list-inline-item"><a href="#">Products</a></li>
                                 <li class="list-inline-item"><a href="#">Services</a></li>
+                                <t t-set="configurator_footer_links" t-value="[]"/>
+                                <li t-foreach="configurator_footer_links" t-as="link" class="list-inline-item">
+                                    <a t-att-href="link['href']" t-esc="link['text']"/>
+                                </li>
                             </ul>
                         </div>
                         <div class="col-lg-3 pt16 pb16">
@@ -1636,6 +1648,11 @@
                                 <li class="list-inline-item"><a href="#">Products</a></li>
                                 <li class="list-inline-item">•</li>
                                 <li class="list-inline-item"><a href="#">Terms of Services</a></li>
+                                <t t-set="configurator_footer_links" t-value="[]"/>
+                                <t t-foreach="configurator_footer_links" t-as="link" class="list-inline-item">
+                                    <li class="list-inline-item">•</li>
+                                    <li class="list-inline-item"><a t-att-href="link['href']" t-esc="link['text']"/></li>
+                                </t>
                             </ul>
                         </div>
                     </div>
@@ -1708,6 +1725,10 @@
                             <ul class="pl-3 mb-0">
                                 <li><a href="/">Home</a></li>
                                 <li><a href="/contactus">Contact us</a></li>
+                                <t t-set="configurator_footer_links" t-value="[]"/>
+                                <li t-foreach="configurator_footer_links" t-as="link">
+                                    <a t-att-href="link['href']" t-esc="link['text']"/>
+                                </li>
                             </ul>
                         </div>
                         <div class="col-lg-6 pb24">
