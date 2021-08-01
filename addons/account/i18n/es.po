@@ -15,12 +15,12 @@
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
 # Wilson Pujols <wpujols@capw.com.do>, 2021
 # Antonio García <aunamedia@gmail.com>, 2021
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
 # Juan Rivero <jr@adhoc.com.ar>, 2021
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
 # Lucia Pacheco <lpo@odoo.com>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # Cécile Collart <cco@odoo.com>, 2021
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2894,7 +2894,7 @@ msgstr "Por país"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
 msgid "By Credit Note"
-msgstr "Por nota de crédito"
+msgstr "Por factura rectificativa"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
@@ -3334,7 +3334,7 @@ msgid ""
 " credit notes made from this journal"
 msgstr ""
 "Marca esta casilla si no desea compartir la misma secuencia de facturas y "
-"notas de crédito de este diario"
+"facturas rectificativas para este diario"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
@@ -3848,7 +3848,7 @@ msgstr "Crear una cuenta bancaria"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
 msgid "Create a credit note"
-msgstr "Crear una nota de crédito"
+msgstr "Crear una factura rectificativa"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
@@ -3918,7 +3918,7 @@ msgstr "Crear una factura de proveedor"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
 msgid "Create a vendor credit note"
-msgstr "Crear una nota de crédito de proveedor"
+msgstr "Crear una factura rectificativa de proveedor"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -4131,13 +4131,13 @@ msgstr "Movimiento de crédito"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Credit Note"
-msgstr "Nota de Crédito"
+msgstr "Factura rectificativa"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Credit Note Created"
-msgstr "Nota de Crédito Creada"
+msgstr "Factura rectificativa creada"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
@@ -4145,7 +4145,7 @@ msgstr "Nota de Crédito Creada"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Credit Notes"
-msgstr "Notas de Crédito"
+msgstr "Facturas rectificativas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__credit_account_id
@@ -4266,7 +4266,7 @@ msgstr "Cliente"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_refund
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_refund
 msgid "Customer Credit Note"
-msgstr "Nota de Crédito de Cliente"
+msgstr "Factura rectificativa de cliente"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_invoice
@@ -4536,7 +4536,7 @@ msgstr "Separador de decimales"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "Secuencia de notas de crédito dedicada"
+msgstr "Secuencia de facturas rectificativas dedicada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
@@ -4934,7 +4934,7 @@ msgstr "Mostrar en facturas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Credit Notes"
-msgstr "Distribución de Notas de Crédito"
+msgstr "Distribución para facturas rectificativas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
@@ -5011,7 +5011,7 @@ msgstr "Borrador de factura"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Credit Note"
-msgstr "Borrador de Nota de Crédito"
+msgstr "Borrador de factura rectificativa"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -5054,7 +5054,7 @@ msgstr "Borrador de recibo de ventas"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Vendor Credit Note"
-msgstr "Borrador de nota de crédito de proveedor"
+msgstr "Borrador de factura rectificativa de proveedor"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -5106,7 +5106,7 @@ msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note:\n"
 "%s"
 msgstr ""
-"Referencia de proveedor duplicada detectada. Probablemente registró dos veces la misma factura / nota de crédito del proveedor:\n"
+"Referencia de proveedor duplicada detectada. Probablemente registró dos veces la misma factura / factura rectificativa del proveedor:\n"
 "%s"
 
 #. module: account
@@ -6395,7 +6395,7 @@ msgid ""
 "transactions will be reconciled with entries on the Outstanding Receipts "
 "Account instead of the receivable account."
 msgstr ""
-"Los asientos de pagos generados por facturas / notas de crédito se "
+"Los asientos de pagos generados por facturas / facturas rectificativas se "
 "publicarán en la Cuenta de recibos pendientes y se mostrarán como líneas "
 "azules en el widget de conciliación bancaria. Durante el proceso de "
 "conciliación, las transacciones en cuestión se conciliarán con los asientos "
@@ -6687,8 +6687,8 @@ msgid ""
 "Invoice and credit note distribution should each contain exactly one line "
 "for the base."
 msgstr ""
-"La distribución de facturas y notas de crédito debe contener cada una "
-"exactamente una línea para la base."
+"La distribución de facturas y facturas rectificativas debe contener cada una"
+" exactamente una línea para la base."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -6696,8 +6696,8 @@ msgstr ""
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
 msgstr ""
-"La distribución de facturas y notas de crédito debe tener el mismo número de"
-" líneas."
+"La distribución de facturas y facturas rectificativas debe tener el mismo "
+"número de líneas."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -6706,8 +6706,8 @@ msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
 msgstr ""
-"La distribución de facturas y notas de crédito debe coincidir (los mismos "
-"porcentajes, en el mismo orden)."
+"La distribución de facturas y facturas rectificativas debe coincidir (los "
+"mismos porcentajes, en el mismo orden)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_line_ids
@@ -6928,7 +6928,13 @@ msgid ""
 " entry. You should create the credit note manually instead."
 msgstr ""
 "Parece que los impuestos se han modificado desde la creación de la entrada "
-"de diario. En su lugar, debe crear la nota de crédito manualmente."
+"de diario. En su lugar, debe crear la factura rectificativa manualmente."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "It was previously '%(previous)s' and it is now '%(now)s'."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -8254,7 +8260,7 @@ msgid ""
 "Note that the easiest way to create a credit note is to do it directly\n"
 "                from the customer invoice."
 msgstr ""
-"Toma en cuenta que la manera más sencilla para crear una nota de crédito es crearla directamente\n"
+"Tenga en cuenta que la manera más sencilla para crear una factura rectificativa es crearla directamente\n"
 "                desde la factura del cliente."
 
 #. module: account
@@ -8263,8 +8269,8 @@ msgid ""
 "Note that the easiest way to create a vendor credit note it to do it "
 "directly from the vendor bill."
 msgstr ""
-"Toma en cuenta que la forma más sencilla de crear una nota de crédito de "
-"proveedor es crearla directamente desde la factura del proveedor. "
+"Tenga en cuenta que la forma más sencilla de crear una factura rectificativa"
+" de proveedor es crearla directamente desde la factura del proveedor. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -8768,11 +8774,12 @@ msgid ""
 "transactions will be reconciled with entries on the Outstanding Payments "
 "Account instead of the payable account."
 msgstr ""
-"Los asientos de pagos salientes activados por facturas/notas de crédito se "
-"publicarán en la Cuenta de pagos pendientes y se mostrarán como líneas "
-"azules en el widget de conciliación bancaria. Durante el proceso de "
-"conciliación, las transacciones en cuestión se conciliarán con los asientos "
-"en la cuenta de pagos pendientes en lugar de la cuenta por pagar."
+"Los asientos de pagos salientes activados por facturas/facturas "
+"rectificativas se publicarán en la Cuenta de pagos pendientes y se mostrarán"
+" como líneas azules en el widget de conciliación bancaria. Durante el "
+"proceso de conciliación, las transacciones en cuestión se conciliarán con "
+"los asientos en la cuenta de pagos pendientes en lugar de la cuenta por "
+"pagar."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_account_output_categ_id
@@ -11357,7 +11364,7 @@ msgstr "Cuenta transitoria"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
 msgid "Switch into refund/credit note"
-msgstr "Cambiar a reembolso/nota de crédito"
+msgstr "Cambiar a reembolso/factura rectificativa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -12433,7 +12440,8 @@ msgstr "El país para usar los informes fiscales de esta empresa"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "The credit note is auto-validated and reconciled with the invoice."
 msgstr ""
-"La nota de crédito se valida automáticamente y se concilia con la factura."
+"La factura rectificativa se valida automáticamente y se concilia con la "
+"factura."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -12441,7 +12449,7 @@ msgid ""
 "The credit note is auto-validated and reconciled with the invoice.\n"
 "                               The original invoice is duplicated as a new draft."
 msgstr ""
-"La nota de crédito se valida automáticamente y se concilia con la factura.\n"
+"La factura rectificativa se valida automáticamente y se concilia con la factura.\n"
 "                               La factura original se duplica como un nuevo borrador."
 
 #. module: account
@@ -12449,7 +12457,7 @@ msgstr ""
 msgid ""
 "The credit note is created in draft and can be edited before being issued."
 msgstr ""
-"La nota de crédito se crea en borrador y puede ser editada antes de "
+"La factura rectificativa se crea en borrador y puede ser editada antes de "
 "expedirse."
 
 #. module: account
@@ -12831,9 +12839,9 @@ msgid ""
 " order as the credit note distribution lines they correspond to."
 msgstr ""
 "El orden en que se muestran y coinciden las líneas de distribución. Para que"
-" los reembolsos funcionen correctamente, las líneas de reparto de facturas "
-"deben organizarse en el mismo orden que las líneas de reparto de las notas "
-"de crédito a las que corresponden."
+" las facturas rectificativas funcionen correctamente, las líneas de reparto "
+"de facturas deben organizarse en el mismo orden que las líneas de reparto de"
+" las facturas rectificativas a las que corresponden."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_id
@@ -13046,6 +13054,12 @@ msgstr ""
 "apuntes de impuestos."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The sequence format has changed."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid ""
@@ -13054,6 +13068,32 @@ msgid ""
 msgstr ""
 "La expresión regular de la secuencia debe contener al menos las claves de agrupación seq. Por ejemplo:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will never restart.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every month.\n"
+"The year detected here is '%(year)s' and the month is '%(month)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every year.\n"
+"The year detected here is '%(year)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -14146,7 +14186,7 @@ msgstr "Facturas de proveedores"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_refund
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Vendor Credit Note"
-msgstr "Nota de crédito de proveedor"
+msgstr "Factura rectificativa de proveedor"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -14897,9 +14937,9 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
-"No puedes validar una factura con un importe total negativo. En su lugar, "
-"debes crear una nota de crédito. Usa el menú de acciones para transformarlo "
-"en una nota de crédito o reembolso."
+"No puede validar una factura con un importe total negativo. En su lugar, "
+"debe crear una factura rectificativa. Use el menú de acciones para "
+"transformarlo en una factura rectificativa/reembolso."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
