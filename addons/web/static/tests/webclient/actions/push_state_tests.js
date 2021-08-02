@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/service_hook";
+import { useService } from "@web/core/utils/hooks";
 import testUtils from "web.test_utils";
 import { click, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";

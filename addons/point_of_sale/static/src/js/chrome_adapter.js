@@ -1,11 +1,11 @@
 /** @odoo-module */
 
-import { useService } from "@web/core/service_hook";
+import { useService } from "@web/core/utils/hooks";
 
 import Chrome from "point_of_sale.Chrome";
 import Registries from "point_of_sale.Registries";
 import { configureGui } from "point_of_sale.Gui";
-import { useBus } from "@web/core/bus_hook";
+import { useBus } from "@web/core/utils/hooks";
 import PosComponent from "point_of_sale.PosComponent";
 import PopupControllerMixin from "point_of_sale.PopupControllerMixin";
 import { registry } from "@web/core/registry";

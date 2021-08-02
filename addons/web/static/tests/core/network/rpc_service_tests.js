@@ -4,7 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { ConnectionAbortedError, rpcService } from "@web/core/network/rpc_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/service_hook";
+import { useService } from "@web/core/utils/hooks";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { makeMockXHR } from "../../helpers/mock_services";

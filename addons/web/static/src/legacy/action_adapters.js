@@ -6,8 +6,7 @@ import { ComponentAdapter } from "web.OwlCompatibility";
 import { objectToQuery } from "../core/browser/router_service";
 import { useDebugCategory } from "../core/debug/debug_context";
 import { Dialog } from "../core/dialog/dialog";
-import { useEffect } from "../core/effect_hook";
-import { useService } from "../core/service_hook";
+import { useEffect, useService } from "@web/core/utils/hooks";
 import { ViewNotFoundError } from "../webclient/actions/action_service";
 import { cleanDomFromBootstrap, wrapSuccessOrFail, mapDoActionOptionAPI } from "./utils";
 

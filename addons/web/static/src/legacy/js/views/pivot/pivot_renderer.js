@@ -1,6 +1,6 @@
 /** @odoo-module alias=web.PivotRenderer **/
 
-    import { useEffect } from "@web/core/effect_hook";
+    import { useEffect } from "@web/core/utils/hooks";
     import DropdownMenu from 'web.DropdownMenu';
     import DropdownMenuItem from 'web.DropdownMenuItem';
     import OwlAbstractRenderer from '../abstract_renderer_owl';

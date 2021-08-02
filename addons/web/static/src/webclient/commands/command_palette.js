@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import { useAutofocus } from "@web/core/autofocus_hook";
-import { useHotkey } from "@web/core/hotkey_hook";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/service_hook";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";

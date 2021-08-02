@@ -2,7 +2,7 @@ odoo.define('web.custom_hooks', function (require) {
     "use strict";
 
     const { Component } = owl;
-    const { useEffect } = require("@web/core/effect_hook");
+    const { useEffect } = require("@web/core/utils/hooks");
 
     /**
      * Focus a given selector as soon as it appears in the DOM and if it was not

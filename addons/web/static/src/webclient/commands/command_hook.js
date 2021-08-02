@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { useEffect } from "@web/core/effect_hook";
-import { useService } from "@web/core/service_hook";
+import { useEffect, useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {import("./command_service").CommandServiceAddOptions} CommandServiceAddOptions
