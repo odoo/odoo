@@ -12,8 +12,9 @@ export const displayNotificationAction = (env, action) => {
     const options = {
         className: params.className || "",
         sticky: params.sticky || false,
-        title: params.title ? escape(params.title) : "",
+        title: params.title,
         type: params.type || "info",
+        messageIsHtml: true,
     };
     let links = (params.links || []).map((link) => {
         return `<a href="${escape(link.url)}" target="_blank">${escape(link.label)}</a>`;
