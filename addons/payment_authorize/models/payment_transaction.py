@@ -132,7 +132,10 @@ class PaymentTransaction(models.Model):
                 if self.tokenize and not self.token_id:
                     self._authorize_tokenize()
             elif status_type == 'void':
-                self._set_canceled()
+                if self.operation == 'validation':  # Validation txs are authorized and then voided
+                    self._set_done()  # If the refund went through, the validation tx is confirmed
+                else:
+                    self._set_canceled()
         elif status_code == '2':  # Declined
             self._set_canceled()
         elif status_code == '4':  # Held for Review
