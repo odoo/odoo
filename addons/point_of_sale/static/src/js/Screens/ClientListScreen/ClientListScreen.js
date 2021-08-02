@@ -84,11 +84,11 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
          */
         get nextButton() {
             if (!this.props.client) {
-                return { command: 'set', text: 'Set Customer' };
+                return { command: 'set', text: this.env._t('Set Customer') };
             } else if (this.props.client && this.props.client === this.state.selectedClient) {
-                return { command: 'deselect', text: 'Deselect Customer' };
+                return { command: 'deselect', text: this.env._t('Deselect Customer') };
             } else {
-                return { command: 'set', text: 'Change Customer' };
+                return { command: 'set', text: this.env._t('Change Customer') };
             }
         }
 
