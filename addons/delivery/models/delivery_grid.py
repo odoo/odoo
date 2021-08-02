@@ -69,7 +69,7 @@ class ProviderGrid(models.Model):
                 'error_message': False,
                 'warning_message': False}
 
-    def _get_price_available(self, order):
+    def _get_price_available(self, order, extra_params=None):
         self.ensure_one()
         self = self.sudo()
         order = order.sudo()
@@ -90,25 +90,27 @@ class ProviderGrid(models.Model):
 
         total = order.currency_id._convert(
             total, order.company_id.currency_id, order.company_id, order.date_order or fields.Date.today())
+        params = {"price": total, "volume": volume, "weight": weight, "quantity": quantity}
+        if extra_params:
+            params.update(extra_params)
+        return self._get_price_from_picking(params)
 
-        return self._get_price_from_picking(total, weight, volume, quantity)
-
-    def _get_price_dict(self, total, weight, volume, quantity):
+    def _get_price_dict(self, params):
         '''Hook allowing to retrieve dict to be used in _get_price_from_picking() function.
         Hook to be overridden when we need to add some field to product and use it in variable factor from price rules. '''
         return {
-            'price': total,
-            'volume': volume,
-            'weight': weight,
-            'wv': volume * weight,
-            'quantity': quantity
+            'price': params.get("price", 0),
+            'volume': params.get("volume", 0),
+            'weight': params.get("weight", 0),
+            'wv': params.get("volume", 0) * params.get("weight", 0),
+            'quantity': params.get("quantity", 0)
         }
 
-    def _get_price_from_picking(self, total, weight, volume, quantity):
+    def _get_price_from_picking(self, params):
         price = 0.0
         criteria_found = False
-        price_dict = self._get_price_dict(total, weight, volume, quantity)
-        if self.free_over and total >= self.amount:
+        price_dict = self._get_price_dict(params)
+        if self.free_over and price_dict.get("price", 0) >= self.amount:
             return 0
         for line in self.price_rule_ids:
             test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
