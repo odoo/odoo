@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/service_hook";
+import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _lt } from "@web/core/l10n/translation";
 

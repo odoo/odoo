@@ -4,7 +4,7 @@ import { browser } from "../browser/browser";
 import { Dialog } from "../dialog/dialog";
 import { _lt } from "../l10n/translation";
 import { registry } from "../registry";
-import { useService } from "../service_hook";
+import { useService } from "@web/core/utils/hooks";
 import { capitalize } from "../utils/strings";
 
 const { hooks } = owl;
@@ -20,7 +20,7 @@ export const odooExceptionTitleMap = new Map(
         "odoo.exceptions.UserError": _lt("User Error"),
         "odoo.exceptions.ValidationError": _lt("Validation Error"),
         "odoo.exceptions.AccessError": _lt("Access Error"),
-        "odoo.exceptions.Warning": _lt("Warning")
+        "odoo.exceptions.Warning": _lt("Warning"),
     })
 );
 
@@ -31,7 +31,7 @@ export class ErrorDialog extends Dialog {
     setup() {
         super.setup();
         this.state = useState({
-            showTraceback: false
+            showTraceback: false,
         });
     }
     onClickClipboard() {

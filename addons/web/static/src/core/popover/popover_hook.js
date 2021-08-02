@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "../service_hook";
+import { useService } from "@web/core/utils/hooks";
 
 const { onWillUnmount, useComponent } = owl.hooks;
 

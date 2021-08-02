@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { useService } from "../../core/service_hook";
-import { registry } from "../../core/registry";
-import { browser } from "../../core/browser/browser";
-import { symmetricalDifference } from "../../core/utils/arrays";
+import { useService } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
+import { browser } from "@web/core/browser/browser";
+import { symmetricalDifference } from "@web/core/utils/arrays";
 
 const { Component, hooks } = owl;
 const { useState } = hooks;

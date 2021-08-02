@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/service_hook";
+import { useEffect, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
-import { useEffect } from "@web/core/effect_hook";
 import { BlockUI } from "./block_ui";
 
 const { Component, core, hooks } = owl;

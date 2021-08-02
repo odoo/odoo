@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
 import { cleanDomFromBootstrap } from "@web/legacy/utils";
-import { browser } from "../../core/browser/browser";
-import { useBus } from "../../core/bus_hook";
-import { makeContext } from "../../core/context";
-import { download } from "../../core/network/download";
-import { evaluateExpr } from "../../core/py_js/py";
-import { registry } from "../../core/registry";
-import { KeepLast } from "../../core/utils/concurrency";
-import { sprintf } from "../../core/utils/strings";
+import { browser } from "@web/core/browser/browser";
+import { useBus } from "@web/core/utils/hooks";
+import { makeContext } from "@web/core/context";
+import { download } from "@web/core/network/download";
+import { evaluateExpr } from "@web/core/py_js/py";
+import { registry } from "@web/core/registry";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { sprintf } from "@web/core/utils/strings";
 import { ActionDialog } from "./action_dialog";
 
 /** @typedef {number|false} ActionId */

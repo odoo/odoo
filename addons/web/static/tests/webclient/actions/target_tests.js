@@ -4,16 +4,11 @@ import testUtils from "web.test_utils";
 import core from "web.core";
 import AbstractAction from "web.AbstractAction";
 import { registry } from "@web/core/registry";
-import {
-    click,
-    legacyExtraNextTick,
-    patchWithCleanup,
-    makeDeferred,
-} from "../../helpers/utils";
+import { click, legacyExtraNextTick, patchWithCleanup, makeDeferred } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 import { registerCleanup } from "../../helpers/cleanup";
 import { errorService } from "@web/core/errors/error_service";
-import { useService } from "@web/core/service_hook";
+import { useService } from "@web/core/utils/hooks";
 import { ClientErrorDialog } from "@web/core/errors/error_dialogs";
 
 let serverData;

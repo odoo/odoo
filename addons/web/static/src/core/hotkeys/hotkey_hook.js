@@ -1,7 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
-import { useService } from "./service_hook";
-import { useEffect } from "./effect_hook";
+import { useEffect, useService } from "@web/core/utils/hooks";
 
 /**
  * This hook will register/unregister the given registration

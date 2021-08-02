@@ -1,10 +1,8 @@
 /** @odoo-module **/
 
-import { useService } from "../core/service_hook";
-import { useBus } from "../core/bus_hook";
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
-import { useEffect } from "@web/core/effect_hook";
+import { useBus, useEffect, useService } from "@web/core/utils/hooks";
 import { NotUpdatable } from "../core/utils/components";
 import { MainComponentsContainer } from "../core/main_components_container";
 import { useOwnDebugContext } from "../core/debug/debug_context";

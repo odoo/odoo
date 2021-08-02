@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { isMacOS } from "@web/core/browser/feature_detection";
-import { useHotkey } from "@web/core/hotkey_hook";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { registry } from "@web/core/registry";
 import { capitalize } from "@web/core/utils/strings";
 import { getVisibleElements } from "@web/core/utils/ui";

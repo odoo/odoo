@@ -3,7 +3,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
 
     const field_utils = require('web.field_utils');
     const { useListener } = require('web.custom_hooks');
-    const { useEffect } = require('@web/core/effect_hook');
+    const { useEffect } = require("@web/core/utils/hooks");
 
     /**
      * This file defines the Owl version of the AbstractField. Specific fields

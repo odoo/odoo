@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { useBus } from "../bus_hook";
-import { useService } from "../service_hook";
-import { useEffect } from "../effect_hook";
+import { useBus, useEffect, useService } from "@web/core/utils/hooks";
 import { scrollTo } from "../utils/scrolling";
 import { ParentClosingMode } from "./dropdown_item";
 

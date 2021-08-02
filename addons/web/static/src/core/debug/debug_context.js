@@ -1,7 +1,7 @@
 /** @odoo-module **/
 import { registry } from "../registry";
 import { memoize } from "../utils/functions";
-import { useEffect } from "../effect_hook";
+import { useEffect } from "@web/core/utils/hooks";
 
 const { useEnv, useSubEnv } = owl.hooks;
 const debugRegistry = registry.category("debug");
