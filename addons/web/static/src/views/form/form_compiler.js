@@ -1,6 +1,9 @@
 /* @odoo-module */
 import { evaluateExpr } from "@web/core/py_js/py";
 import { combineAttributes } from "../../core/utils/xml";
+import { registry } from "@web/core/registry";
+
+const compilersRegistry = registry.category("form_compilers");
 
 /**
  * there is no particular expecation of what should be a boolean
@@ -61,6 +64,7 @@ export class FormCompiler {
         this.document = this.parseXML("<templates />");
         this.id = 0;
         this.labels = {};
+        this.compilers = compilersRegistry.getAll();
     }
 
     parseXML(string) {
@@ -168,7 +172,11 @@ export class FormCompiler {
             return;
         }
         const tag = node.tagName[0].toUpperCase() + node.tagName.slice(1).toLowerCase();
-        const compiler = this[`compile${tag}`];
+
+        let compiler = this.compilers.find(
+            (cp) => cp.tag === node.tagName && node.classList.contains(cp.class)
+        );
+        compiler = compiler ? compiler.fn : this[`compile${tag}`];
 
         let compiledNode;
         if (compiler) {
