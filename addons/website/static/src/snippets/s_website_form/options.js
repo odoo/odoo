@@ -659,7 +659,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         inputEl.dataset.fieldName = field.name;
         inputEl.dataset.addActionField = '';
         inputEl.setAttribute('string', field.string);
-        inputEl.classList.add('o_we_large_input');
+        inputEl.classList.add('o_we_large');
         return inputEl;
     },
     /**

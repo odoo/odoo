@@ -39,7 +39,7 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
         linkButton.title = _t("Redirect to URL in a new tab");
         linkButton.appendChild(icon);
         this.containerEl.appendChild(linkButton);
-        this.el.classList.add('o_we_large_input');
+        this.el.classList.add('o_we_large');
         this.inputEl.classList.add('text-left');
         const options = {
             position: {
@@ -284,7 +284,7 @@ const GPSPicker = InputUserValueWidget.extend({
      */
     async start() {
         await this._super(...arguments);
-        this.el.classList.add('o_we_large_input');
+        this.el.classList.add('o_we_large');
         if (!this._gmapLoaded) {
             return;
         }

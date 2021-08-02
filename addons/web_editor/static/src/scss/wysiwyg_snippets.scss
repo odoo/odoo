@@ -862,6 +862,14 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
+        // TODO: Keep only the first class in master
+        .o_we_large, .o_we_large_input {
+            > div {
+                flex: 1 1 auto !important;
+                width: 100%;
+            }
+        }
+
         // Buttons
         we-button.o_we_user_value_widget {
             > div {
@@ -1147,9 +1155,6 @@ body.editor_enable.editor_has_snippets {
             > div {
                 flex: 0 1 auto;
                 width: $o-we-sidebar-content-field-input-max-width;
-            }
-            &.o_we_large_input > div {
-                flex: 1 1 auto;
             }
             input {
                 flex: 1 1 auto;
