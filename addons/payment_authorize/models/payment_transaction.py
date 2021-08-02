@@ -171,6 +171,7 @@ class PaymentTransaction(models.Model):
                 'partner_id': self.partner_id.id,
                 'acquirer_ref': cust_profile.get('payment_profile_id'),
                 'authorize_profile': cust_profile.get('profile_id'),
+                'verified': True,
             })
             self.write({
                 'token_id': token.id,
