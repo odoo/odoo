@@ -3,6 +3,7 @@
 import json
 import logging
 from werkzeug.exceptions import Forbidden, NotFound
+from werkzeug.urls import url_decode, url_encode, url_parse
 
 from odoo import fields, http, SUPERUSER_ID, tools, _
 from odoo.fields import Command
@@ -207,8 +208,17 @@ class WebsiteSale(http.Controller):
         '''/shop/category/<model("product.public.category"):category>''',
         '''/shop/category/<model("product.public.category"):category>/page/<int:page>'''
     ], type='http', auth="public", website=True, sitemap=sitemap_shop)
-    def shop(self, page=0, category=None, search='', ppg=False, **post):
+    def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, ppg=False, **post):
         add_qty = int(post.get('add_qty', 1))
+        try:
+            min_price = float(min_price)
+        except ValueError:
+            min_price = 0
+        try:
+            max_price = float(max_price)
+        except ValueError:
+            max_price = 0
+
         Category = request.env['product.public.category']
         if category:
             category = Category.search([('id', '=', int(category))], limit=1)
@@ -232,10 +242,9 @@ class WebsiteSale(http.Controller):
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attributes_ids = {v[0] for v in attrib_values}
         attrib_set = {v[1] for v in attrib_values}
-
         domain = self._get_search_domain(search, category, attrib_values)
 
-        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list, order=post.get('order'))
+        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list, min_price=min_price, max_price=max_price, order=post.get('order'))
 
         pricelist_context, pricelist = self._get_pricelist_context()
 
@@ -248,6 +257,37 @@ class WebsiteSale(http.Controller):
             post['attrib'] = attrib_list
 
         Product = request.env['product.template'].with_context(bin_size=True)
+
+        filter_by_price_enabled = request.website.is_view_active('website_sale.filter_products_price')
+        if filter_by_price_enabled:
+            company_currency = request.website.company_id.currency_id
+            conversion_rate = request.env['res.currency']._get_conversion_rate(company_currency, pricelist.currency_id, request.website.company_id, fields.Date.today())
+
+            # This is ~4 times more efficient than a search for the cheapest and most expensive products
+            from_clause, where_clause, where_params = Product._where_calc(domain).get_sql()
+            query = f"""
+                SELECT COALESCE(MIN(list_price), 0) * {conversion_rate}, COALESCE(MAX(list_price), 0) * {conversion_rate}
+                  FROM {from_clause}
+                 WHERE {where_clause}
+            """
+            request.env.cr.execute(query, where_params)
+            available_min_price, available_max_price = request.env.cr.fetchone()
+
+            if min_price or max_price:
+                # The if/else condition in the min_price / max_price value assignment
+                # tackles the case where we switch to a list of products with different
+                # available min / max prices than the ones set in the previous page.
+                # In order to have logical results and not yield empty product lists, the
+                # price filter is set to their respective available prices when the specified
+                # min exceeds the max, and / or the specified max is lower than the available min.
+                if min_price:
+                    min_price = min_price if min_price <= available_max_price else available_min_price
+                    post['min_price'] = min_price
+                    domain = expression.AND([domain, [('list_price', '>=', min_price / conversion_rate)]])
+                if max_price:
+                    max_price = max_price if max_price >= available_min_price else available_max_price
+                    post['max_price'] = max_price
+                    domain = expression.AND([domain, [('list_price', '<=', max_price / conversion_rate)]])
 
         search_product = Product.search(domain, order=self._get_search_order(post))
         website_domain = request.website.website_domain()
@@ -300,6 +340,11 @@ class WebsiteSale(http.Controller):
             'search_categories_ids': search_categories.ids,
             'layout_mode': layout_mode,
         }
+        if filter_by_price_enabled:
+            values['min_price'] = min_price or available_min_price
+            values['max_price'] = max_price or available_max_price
+            values['available_min_price'] = tools.float_round(available_min_price, 2)
+            values['available_max_price'] = tools.float_round(available_max_price, 2)
         if category:
             values['main_object'] = category
         return request.render("website_sale.products", values)
@@ -325,10 +370,12 @@ class WebsiteSale(http.Controller):
             category = ProductCategory.browse(int(category)).exists()
 
         attrib_list = request.httprequest.args.getlist('attrib')
+        min_price = request.params.get('min_price')
+        max_price = request.params.get('max_price')
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attrib_set = {v[1] for v in attrib_values}
 
-        keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_list)
+        keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_list, min_price=min_price, max_price=max_price)
 
         categs = ProductCategory.search([('parent_id', '=', False)])
 
@@ -359,9 +406,32 @@ class WebsiteSale(http.Controller):
     def pricelist_change(self, pl_id, **post):
         if (pl_id.selectable or pl_id == request.env.user.partner_id.property_product_pricelist) \
                 and request.website.is_pricelist_available(pl_id.id):
+            redirect_url = request.httprequest.referrer
+            if redirect_url and request.website.is_view_active('website_sale.filter_products_price'):
+                decoded_url = url_parse(redirect_url)
+                args = url_decode(decoded_url.query)
+                min_price = args.get('min_price')
+                max_price = args.get('max_price')
+                if min_price or max_price:
+                    previous_price_list = request.website.get_current_pricelist()
+                    try:
+                        min_price = float(min_price)
+                        args['min_price'] = min_price and str(
+                            previous_price_list.currency_id._convert(min_price, pl_id.currency_id, request.website.company_id, fields.Date.today(), round=False)
+                        )
+                    except (ValueError, TypeError):
+                        pass
+                    try:
+                        max_price = float(max_price)
+                        args['max_price'] = max_price and str(
+                            previous_price_list.currency_id._convert(max_price, pl_id.currency_id, request.website.company_id, fields.Date.today(), round=False)
+                        )
+                    except (ValueError, TypeError):
+                        pass
+                    redirect_url = decoded_url.replace(query=url_encode(args)).to_url()
             request.session['website_sale_current_pl'] = pl_id.id
             request.website.sale_get_order(force_pricelist=pl_id.id)
-        return request.redirect(request.httprequest.referrer or '/shop')
+        return request.redirect(redirect_url or '/shop')
 
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True, sitemap=False)
     def pricelist(self, promo, **post):
