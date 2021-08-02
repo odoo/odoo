@@ -151,12 +151,20 @@ class SaleAdvancePaymentInv(models.TransientModel):
         }
         del context
         return so_values
+    
 
     def create_invoices(self):
         sale_orders = self.env['sale.order'].browse(self._context.get('active_ids', []))
+        self._generate_invoices(sale_orders)
+        if self._context.get('open_invoices', False):
+            return sale_orders.action_view_invoice()
+        return {'type': 'ir.actions.act_window_close'}
+        
+    def _generate_invoices(self, sale_orders):
+        created_invoices = self.env['account.move']
 
         if self.advance_payment_method == 'delivered':
-            sale_orders._create_invoices(final=self.deduct_down_payments)
+            created_invoices |= sale_orders._create_invoices(final=self.deduct_down_payments)
         else:
             # Create deposit product if necessary
             if not self.product_id:
@@ -180,10 +188,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
                 so_line_values = self._prepare_so_line(order, analytic_tag_ids, tax_ids, amount)
                 so_line = sale_line_obj.create(so_line_values)
-                self._create_invoice(order, so_line, amount)
-        if self._context.get('open_invoices', False):
-            return sale_orders.action_view_invoice()
-        return {'type': 'ir.actions.act_window_close'}
+                created_invoices |= self._create_invoice(order, so_line, amount)
+        
+        return created_invoices
 
     def _prepare_deposit_product(self):
         return {
