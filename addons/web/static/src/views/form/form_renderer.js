@@ -14,8 +14,6 @@ const templateIds = Object.create(null);
 let nextId = 1;
 
 export class FormRenderer extends Component {
-    static template = owl.tags.xml`<t t-call="{{ owlifiedArch }}" />`;
-
     setup() {
         let templateId = templateIds[this.props.info.arch];
         if (!templateId) {
@@ -65,4 +63,5 @@ export class FormRenderer extends Component {
     }
 }
 
+FormRenderer.template = owl.tags.xml`<t t-call="{{ owlifiedArch }}" />`;
 FormRenderer.components = { Field, ButtonBox, ViewButton };

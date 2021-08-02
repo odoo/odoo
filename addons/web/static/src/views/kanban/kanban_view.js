@@ -1,10 +1,11 @@
-/* @odoo-module */
+/** @odoo-module */
 
-import { registry } from "@web/core/registry";
-import { XMLParser } from "@web/core/utils/xml";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { useModel } from "@web/views/helpers/model";
 import { useDebugMenu } from "../../core/debug/debug_menu";
+import { registry } from "../../core/registry";
+import { combineAttributes, XMLParser } from "../../core/utils/xml";
+import { ControlPanel } from "../../search/control_panel/control_panel";
+import { useModel } from "../../views/helpers/model";
+import { FieldParser } from "../helpers/view_utils";
 import { RelationalModel } from "../relational_model";
 import { KanbanRenderer } from "./kanban_renderer";
 
@@ -19,6 +20,18 @@ const TRANSPILED_EXPRESSIONS = [
     // `#{expr}` => `{{expr}}`
     { regex: /#{([^}]+)}/g, value: "{{$1}}" },
 ];
+// These classes determine whether a click on a record should open it.
+const KANBAN_CLICK_CLASSES = ["oe_kanban_global_click", "oe_kanban_global_click_edit"];
+
+const hasClass = (node, ...classes) => {
+    const classAttribute = node.getAttribute("class") || "";
+    const attfClassAttribute = node.getAttribute("t-attf-class") || "";
+    const nodeClasses = [
+        ...classAttribute.split(/\s+/),
+        ...attfClassAttribute.replace(/{{[^}]+}}/g, "").split(/\s+/),
+    ];
+    return classes.some((cls) => nodeClasses.includes(cls));
+};
 
 const translateAttribute = (attrValue) => {
     for (const { regex, value } of TRANSPILED_EXPRESSIONS) {
@@ -28,25 +41,27 @@ const translateAttribute = (attrValue) => {
 };
 
 const applyDefaultAttributes = (kanbanBox) => {
-    const originalClass = kanbanBox.getAttribute("class");
-    kanbanBox.setAttribute("t-on-click", "openRecord(record)");
-    kanbanBox.setAttribute("class", `o_kanban_record ${originalClass}`);
+    kanbanBox.setAttribute("tabindex", 0);
+    kanbanBox.setAttribute("role", "article");
+    if (hasClass(kanbanBox, ...KANBAN_CLICK_CLASSES)) {
+        kanbanBox.setAttribute("t-on-click", "openRecord(record)");
+    }
+    combineAttributes(kanbanBox, "class", "o_kanban_record", " ");
     return kanbanBox;
 };
 
 class KanbanArchParser extends XMLParser {
-    parse(arch) {
-        const fields = new Set();
+    parse(arch, fields) {
         const xmlDoc = this.parseXML(arch);
         const className = xmlDoc.getAttribute("class") || null;
+        const fieldParser = new FieldParser(fields);
         let kanbanBoxTemplate = document.createElement("t");
 
         // Root level of the template
         this.visitXML(xmlDoc, (node) => {
             if (node.tagName === "field") {
-                fields.add(node.getAttribute("name"));
-            }
-            if (node.getAttribute("t-name") === KANBAN_BOX_ATTRIBUTE) {
+                fieldParser.addField(node);
+            } else if (node.getAttribute("t-name") === KANBAN_BOX_ATTRIBUTE) {
                 kanbanBoxTemplate = node;
             }
         });
@@ -62,25 +77,34 @@ class KanbanArchParser extends XMLParser {
             for (const { name, value } of node.attributes) {
                 node.setAttribute(name, translateAttribute(value));
             }
+            // Fields
             if (node.tagName === "field") {
-                const fname = node.getAttribute("name");
-                const widget = node.getAttribute("widget");
-                fields.add(fname);
+                const { name, widget } = fieldParser.addField(node);
                 if (!widget) {
                     // Fields without a specified widget are rendered as simple
                     // spans in kanban records.
                     const tesc = document.createElement("span");
-                    tesc.setAttribute("t-esc", `getFieldText(record, '${fname}')`);
+                    const value = `record.data['${name}']`;
+                    tesc.setAttribute(
+                        "t-esc",
+                        `(Array.isArray(${value}) ? ${value}[1] : ${value}) or ''`
+                    );
                     node.replaceWith(tesc);
                 }
+            }
+            // Dropdowns
+            if (hasClass(node, "dropdown")) {
+                const dropdown = document.createElement("Dropdown");
+                node.replaceWith(dropdown);
             }
         });
 
         return {
-            fields: [...fields],
             arch,
-            xmlDoc: applyDefaultAttributes(kanbanBox),
             className,
+            xmlDoc: applyDefaultAttributes(kanbanBox),
+            fields: fieldParser.getFields(),
+            relations: fieldParser.getRelations(),
         };
     }
 }
@@ -89,12 +113,12 @@ class KanbanArchParser extends XMLParser {
 
 class KanbanView extends owl.Component {
     setup() {
-        console.log(this.props);
         useDebugMenu("view", { component: this });
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
             fields: this.props.fields,
+            relations: this.archInfo.relations,
             activeFields: this.archInfo.fields,
         });
     }
