@@ -330,7 +330,6 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
 
     def action_submit_expenses(self):
         sheet = self._create_sheet_from_expenses()
-        sheet.action_submit_sheet()
         return {
             'name': _('New Expense Report'),
             'type': 'ir.actions.act_window',
