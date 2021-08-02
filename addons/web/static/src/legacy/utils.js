@@ -6,6 +6,7 @@ import {
     ConnectionAbortedError,
     RPCError,
     makeErrorFromResponse,
+    ConnectionLostError,
 } from "../core/network/rpc_service";
 import { ErrorDialog } from "../core/errors/error_dialogs";
 
@@ -151,7 +152,7 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
                 jsonrpc.abort();
             };
             jsonrpc.then(resolve).catch((reason) => {
-                if (reason instanceof RPCError) {
+                if (reason instanceof RPCError || reason instanceof ConnectionLostError) {
                     // we do not reject an error here because we want to pass through
                     // the legacy guardedCatch code
                     reject({ message: reason, event: $.Event(), legacy: true });

@@ -2,7 +2,8 @@
 
 import { registry } from "@web/core/registry";
 import { RPCErrorDialog } from "../core/errors/error_dialogs";
-import { RPCError } from "../core/network/rpc_service";
+import { ConnectionLostError, RPCError } from "../core/network/rpc_service";
+import { lostConnectionHandler } from "@web/core/errors/error_handlers";
 
 const errorNotificationRegistry = registry.category("error_notifications");
 const errorDialogRegistry = registry.category("error_dialogs");
@@ -28,8 +29,12 @@ function legacyRPCErrorHandler(env, error, originalError) {
         originalError &&
         originalError.legacy &&
         originalError.message &&
-        originalError.message instanceof RPCError
+        (originalError.message instanceof RPCError ||
+            originalError.message instanceof ConnectionLostError)
     ) {
+        if (originalError.message instanceof ConnectionLostError) {
+            return lostConnectionHandler(env, error, originalError.message);
+        }
         const event = originalError.event;
         originalError = originalError.message;
         error.unhandledRejectionEvent.preventDefault();
@@ -59,7 +64,7 @@ function legacyRPCErrorHandler(env, error, originalError) {
             data: originalError.data,
             subType: originalError.subType,
             code: originalError.code,
-            type: originalError.type
+            type: originalError.type,
         });
         return true;
     }

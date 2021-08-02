@@ -7,6 +7,10 @@ var AbstractStorageService = require('web.AbstractStorageService');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
+const LegacyRegistry = require("web.Registry");
+const { ConnectionLostError } = require("@web/core/network/rpc_service");
+const { patchWithCleanup, nextTick } = require("@web/../tests/helpers/utils");
+const { createWebClient } =  require('@web/../tests/webclient/helpers');
 
 
 var LocalStorageServiceMock;
@@ -79,6 +83,50 @@ QUnit.module('Bus', {
         ]);
 
         parent.destroy();
+    });
+
+    QUnit.test('longpolling restarts when connection is lost', async function (assert) {
+        assert.expect(4);
+        const legacyRegistry = new LegacyRegistry();
+        legacyRegistry.add("bus_service", BusService);
+        legacyRegistry.add("local_storage", LocalStorageServiceMock);
+
+        const oldSetTimeout = window.setTimeout;
+        patchWithCleanup(
+            window,
+            {
+                setTimeout: callback => oldSetTimeout(callback, 0)
+            },
+            { pure: true },
+        )
+
+        let busService;
+        let rpcCount = 0;
+        // Using createWebclient to get the compatibility layer between the old services and the new
+        await createWebClient({
+            mockRPC(route) {
+                if (route === '/longpolling/poll') {
+                    rpcCount++;
+                    assert.step(`polling ${rpcCount}`);
+                    if (rpcCount == 1) {
+                        return Promise.reject(new ConnectionLostError());
+                    }
+                    assert.equal(rpcCount, 2, "Should not be called after stopPolling");
+                    busService.stopPolling();
+                    return Promise.reject(new ConnectionLostError());
+                }
+            },
+            legacyParams: { serviceRegistry: legacyRegistry },
+        });
+        busService = owl.Component.env.services.bus_service;
+        busService.startPolling();
+        // Give longpolling bus a tick to try to restart polling
+        await nextTick();
+
+        assert.verifySteps([
+            "polling 1",
+            "polling 2",
+        ]);
     });
 
     QUnit.test('provide notification ID of 0 by default', async function (assert) {
