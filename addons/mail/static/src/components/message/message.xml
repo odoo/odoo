@@ -34,9 +34,11 @@
                         </div>
                     </t>
                     <t t-else="">
-                        <div class="o_Message_date o_Message_sidebarItem o-message-squashed" t-att-class="{ 'o-message-selected': props.isSelected }">
-                            <t t-esc="shortTime"/>
-                        </div>
+                        <t t-if="message.date">
+                            <div class="o_Message_date o_Message_sidebarItem o-message-squashed" t-att-class="{ 'o-message-selected': props.isSelected }">
+                                <t t-esc="shortTime"/>
+                            </div>
+                        </t>
                         <div class="o_Message_commands o_Message_sidebarCommands o_Message_sidebarItem o-message-squashed" t-att-class="{ 'o-message-selected': props.isSelected, 'o-mobile': env.messaging.device.isMobile }">
                             <t t-if="message.message_type !== 'notification'">
                                 <div class="o_Message_command o_Message_commandStar fa"
@@ -73,9 +75,11 @@
                                     Anonymous
                                 </div>
                             </t>
-                            <div class="o_Message_date o_Message_headerDate" t-att-class="{ 'o-message-selected': props.isSelected }" t-att-title="datetime">
-                                - <t t-esc="message.dateFromNow"/>
-                            </div>
+                            <t t-if="message.date">
+                                <div class="o_Message_date o_Message_headerDate" t-att-class="{ 'o-message-selected': props.isSelected }" t-att-title="datetime">
+                                    - <t t-esc="message.dateFromNow"/>
+                                </div>
+                            </t>
                             <t t-if="message.isCurrentPartnerAuthor and threadView and threadView.thread and threadView.thread.hasSeenIndicators">
                                 <MessageSeenIndicator class="o_Message_seenIndicator" messageLocalId="message.localId" threadLocalId="threadView.thread.localId"/>
                             </t>

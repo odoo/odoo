@@ -172,6 +172,11 @@ class MessageList extends Component {
      * @returns {string}
      */
     getDateDay(message) {
+        if (!message.date) {
+            // Without a date, we assume that it's a today message. This is
+            // mainly done to avoid flicker inside the UI.
+            return this.env._t("Today");
+        }
         const date = message.date.format('YYYY-MM-DD');
         if (date === moment().format('YYYY-MM-DD')) {
             return this.env._t("Today");
@@ -293,7 +298,10 @@ class MessageList extends Component {
         if (!this.props.hasSquashCloseMessages) {
             return false;
         }
-        if (Math.abs(message.date.diff(prevMessage.date)) > 60000) {
+        if (!prevMessage.date && message.date) {
+            return false;
+        }
+        if (message.date && prevMessage.date && Math.abs(message.date.diff(prevMessage.date)) > 60000) {
             // more than 1 min. elasped
             return false;
         }
