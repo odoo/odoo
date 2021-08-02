@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/service_hook";
-import { Field } from "@web/fields/field";
-import { FormCompiler } from "@web/views/form/form_compiler";
-import { Domain } from "@web/core/domain";
-import { FieldColorPicker } from "../../fields/basic_fields";
-import { fileTypeMagicWordMap } from "../../fields/basic_fields";
+import { Domain } from "../../core/domain";
+import { useService } from "../../core/service_hook";
+import { Field } from "../../fields/field";
+import { FormCompiler } from "../../views/form/form_compiler";
+import { ViewButton } from "../view_button/view_button";
 import { url } from "../../core/utils/urls";
-import { ViewButton } from "@web/views/view_button/view_button";
+import { FieldColorPicker, fileTypeMagicWordMap } from "../../fields/basic_fields";
 
 const { Component } = owl;
 const { useState, useSubEnv } = owl.hooks;
@@ -32,9 +31,6 @@ export class KanbanRenderer extends Component {
             this.env.qweb.addTemplate(templateId, xmldoc.outerHTML);
             templateIds[this.props.info.arch] = templateId;
         }
-        console.group("Kanban data:");
-        console.table(this.props.model.root.data.map((r) => r.data));
-        console.groupEnd();
         this.cardTemplate = templateId;
         this.cards = this.props.info.cards;
         this.className = this.props.info.className;
@@ -59,11 +55,11 @@ export class KanbanRenderer extends Component {
     }
 
     isFieldEmpty(record, fieldName, widgetName) {
-        const cls = Field.getTangibleField(this.record, widgetName, fieldName);
+        const cls = Field.getTangibleField(record, widgetName, fieldName);
         if ("isEmpty" in cls) {
-            return cls.isEmpty(this.record, fieldName);
+            return cls.isEmpty(record, fieldName);
         }
-        return !this.record.data[fieldName];
+        return !record.data[fieldName];
     }
 
     getWidget(widgetName) {
@@ -74,15 +70,6 @@ export class KanbanRenderer extends Component {
 
     findRecord(id) {
         return this.props.model.root.data.find((r) => r.data.id === id);
-    }
-
-    getFieldText(record, fieldName) {
-        const value = record.data[fieldName];
-        if (Array.isArray(value)) {
-            return value[1] || "";
-        } else {
-            return value;
-        }
     }
 
     //-------------------------------------------------------------------------

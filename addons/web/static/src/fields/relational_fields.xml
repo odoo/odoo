@@ -15,13 +15,13 @@
     </t>
 
     <t t-name="web.FieldMany2ManyTags" owl="1">
-        <span class="o-field">
-            <t t-foreach="data" t-as="tag" t-key="tag">
-                <div class="badge badge-pill">
-                    <t t-esc="tag" />
+        <div class="o_field_widget o_field_many2manytags">
+            <t t-foreach="data" t-as="tag" t-key="tag.id">
+                <div class="badge badge-pill" t-attf-class="o_tag_color_{{ tag.data.color }}">
+                    <t t-esc="tag.data.display_name" />
                 </div>
             </t>
-        </span>
+        </div>
     </t>
 
 </templates>

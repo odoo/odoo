@@ -1,46 +1,44 @@
-/* @odoo-module */
+/** @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { XMLParser } from "@web/core/utils/xml";
+import { XMLParser } from "../../core/utils/xml";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { useModel } from "@web/views/helpers/model";
 import { useDebugMenu } from "../../core/debug/debug_menu";
+import { FieldParser } from "../helpers/view_utils";
 import { RelationalModel } from "../relational_model";
 import { ListRenderer } from "./list_renderer";
 
 class ListArchParser extends XMLParser {
     parse(arch, fields) {
-        const columns = [];
+        const fieldParser = new FieldParser(fields);
         this.visitXML(arch, (node) => {
             if (node.tagName === "field") {
                 if (
-                    node.getAttribute("invisible") !== "1" &&
-                    node.getAttribute("optional") !== "hide"
+                    this.isAttr(node, "invisible").falsy() &&
+                    this.isAttr(node, "optional").notEqualTo("hide")
                 ) {
-                    const name = node.getAttribute("name");
-                    const string = node.getAttribute("string") || fields[name].string;
-                    columns.push({
-                        type: "field",
-                        name,
-                        string
+                    fieldParser.addField(node, (fieldName) => {
+                        const string = node.getAttribute("string") || fields[fieldName].string;
+                        return {
+                            type: "field",
+                            name: fieldName,
+                            string,
+                        };
                     });
                 }
             }
         });
-        return { columns };
+        return {
+            columns: fieldParser.getFields(),
+            relations: fieldParser.getRelations(),
+        };
     }
 }
 
 // -----------------------------------------------------------------------------
 
 class ListView extends owl.Component {
-    static type = "list";
-    static display_name = "List";
-    static icon = "fa-list-ul";
-    static multiRecord = true;
-    static template = `web.ListView`;
-    static components = { ControlPanel, ListRenderer };
-
     setup() {
         console.log(this.props);
         useDebugMenu("view", { component: this });
@@ -48,8 +46,17 @@ class ListView extends owl.Component {
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
             fields: this.props.fields,
-            activeFields: this.archInfo.columns.map((col) => col.name)
+            relations: this.archInfo.relations,
+            activeFields: this.archInfo.columns.map((col) => col.name),
         });
     }
 }
+
+ListView.type = "list";
+ListView.display_name = "List";
+ListView.icon = "fa-list-ul";
+ListView.multiRecord = true;
+ListView.template = `web.ListView`;
+ListView.components = { ControlPanel, ListRenderer };
+
 registry.category("views").add("list", ListView);
