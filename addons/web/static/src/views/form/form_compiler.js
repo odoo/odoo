@@ -269,6 +269,7 @@ export class FormCompiler {
             const compiled = this.compileNode(child, params);
             if (compiled) {
                 const li = this.document.createElement("li");
+                li.classList.add("o_dropdown_item");
                 this.append(li, compiled.cloneNode(true));
                 this.append(liWrappedSlot, li);
             }
