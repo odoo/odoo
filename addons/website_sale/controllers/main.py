@@ -893,6 +893,9 @@ class WebsiteSale(ProductConfiguratorController):
 
         assert order.partner_id.id != request.website.partner_id.id
 
+        if order.transaction_ids.filtered(lambda t: t.state == 'done' and not t.is_processed):
+            return {'redirect': '/payment/process'}
+
         # Create transaction
         vals = {'acquirer_id': acquirer_id,
                 'return_url': '/shop/payment/validate'}

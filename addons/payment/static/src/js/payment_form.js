@@ -167,6 +167,10 @@ odoo.define('payment.payment_form', function (require) {
                             'callback_method': self.options.callbackMethod,
                             'order_id': self.options.orderId,
                         }).then(function (result) {
+                            if(result.redirect){
+                                window.location = result.redirect;
+                                return;
+                            }
                             if (result) {
                                 // if the server sent us the html form, we create a form element
                                 var newForm = document.createElement('form');
