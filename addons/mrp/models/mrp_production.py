@@ -215,9 +215,6 @@ class MrpProduction(models.Model):
     reserve_visible = fields.Boolean(
         'Allowed to Reserve Production', compute='_compute_unreserve_visible',
         help='Technical field to check when we can reserve quantities')
-    confirm_no_consumption = fields.Boolean(
-        compute='_compute_components_availability',
-        help='Technical field used to see if we have to display a warning or not when confirming an order without any components.')
     user_id = fields.Many2one(
         'res.users', 'Responsible', default=lambda self: self.env.user,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
@@ -288,13 +285,9 @@ class MrpProduction(models.Model):
     def _compute_components_availability(self):
         self.components_availability = False
         self.components_availability_state = 'available'
-        self.confirm_no_consumption = False
         productions = self.filtered(lambda mo: mo.state not in ['cancel', 'draft', 'done'])
         productions.components_availability = _('Available')
         for production in productions:
-            if not production.move_raw_ids:
-                production.confirm_no_consumption = True
-                continue
             forecast_date = max(production.move_raw_ids.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
             if any(float_compare(move.forecast_availability, move.product_qty, move.product_id.uom_id.rounding) == -1 for move in production.move_raw_ids):
                 production.components_availability = _('Not Available')
