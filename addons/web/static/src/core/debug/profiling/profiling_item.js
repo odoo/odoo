@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useBus } from "@web/core/bus_hook";
-import { useService } from "@web/core/service_hook";
+import { useBus, useService } from "@web/core/utils/hooks";
 
 const { Component } = owl;
 

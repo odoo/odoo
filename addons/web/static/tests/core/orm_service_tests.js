@@ -2,7 +2,7 @@
 
 import { ormService } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/service_hook";
+import { useService } from "@web/core/utils/hooks";
 import { makeTestEnv } from "../helpers/mock_env";
 import { getFixture } from "../helpers/utils";
 

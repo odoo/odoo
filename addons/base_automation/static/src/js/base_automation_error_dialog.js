@@ -3,7 +3,7 @@
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
 import session from "web.session";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/service_hook";
+import { useService } from "@web/core/utils/hooks";
 
 export class BaseAutomationErrorDialog extends ErrorDialog {
     setup() {

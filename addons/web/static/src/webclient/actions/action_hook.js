@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { getScrollPosition, setScrollPosition } from "../../core/utils/scrolling";
-import { useEffect } from "../../core/effect_hook";
+import { getScrollPosition, setScrollPosition } from "@web/core/utils/scrolling";
+import { useEffect } from "@web/core/utils/hooks";
 
 const { useComponent } = owl.hooks;
 

@@ -1,5 +1,7 @@
 /** @odoo-module **/
+
 import { useCurrentDebugContext } from "./debug_context";
+
 const { Component } = owl;
 
 export class DebugMenu extends Component {

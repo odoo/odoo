@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { browser } from "../../core/browser/browser";
-import { DropdownItem } from "../../core/dropdown/dropdown_item";
-import { useService } from "../../core/service_hook";
-import { registry } from "../../core/registry";
-import { useEffect } from "../../core/effect_hook";
+import { browser } from "@web/core/browser/browser";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { registry } from "@web/core/registry";
+import { useEffect, useService } from "@web/core/utils/hooks";
 
 const { Component } = owl;
 
