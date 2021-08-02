@@ -408,7 +408,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             'default_employee_id': self[0].employee_id.id,
             'default_name': expense_name,
             'default_expense_line_ids': [Command.set(todo.ids)],
-            'default_state': 'submit',
+            'default_state': 'draft',
             'create': False
         }
         return values
