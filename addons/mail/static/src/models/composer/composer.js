@@ -4,7 +4,8 @@ import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
 import { clear, create, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
-import emojis from '@mail/js/emojis';
+import { emojis } from '@mail/js/emojis'
+import { setLastUsedEmoji } from '@mail/js/emojis';
 import {
     addLink,
     escapeAndCompactTextContent,
@@ -679,7 +680,11 @@ function factory(dependencies) {
                     const regexp = new RegExp(
                         '(\\s|^)(' + escapedSource + ')(?=\\s|$)',
                         'g');
+                    const oldHtmlString = htmlString
                     htmlString = htmlString.replace(regexp, '$1' + emoji.unicode);
+                    if (oldHtmlString != htmlString) {
+                        setLastUsedEmoji(this.env, emoji.unicode);
+                    }
                 }
             }
             return htmlString;

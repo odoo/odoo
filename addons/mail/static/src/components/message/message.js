@@ -7,6 +7,7 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 import { _lt } from 'web.core';
 import { format } from 'web.field_utils';
 import { getLangDatetimeFormat } from 'web.time';
+import { useEmojisOnDiscussComponent } from '../emoji/emoji_hook';
 
 const { Component, useState } = owl;
 const { useRef } = owl.hooks;
@@ -58,6 +59,7 @@ export class Message extends Component {
          */
         this._intervalId = undefined;
         this._constructor();
+
     }
 
     /**
@@ -442,6 +444,8 @@ export class Message extends Component {
         this._intervalId = setInterval(() => {
             this.message.refreshDateFromNow();
         }, 60 * 1000);
+
+        useEmojisOnDiscussComponent(this.el);
     }
 
     //--------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { clear, create, insert, insertAndReplace, link, replace, unlinkAll } from '@mail/model/model_field_command';
-import emojis from '@mail/js/emojis';
+import { emojis } from '@mail/js/emojis';
 import { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } from '@mail/js/utils';
 
 import { session } from '@web/session';

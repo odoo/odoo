@@ -2,30 +2,63 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
-import emojis from '@mail/js/emojis';
+import { getEmojisCategories, getAllEmojisAsArray, getEmojiesFromCategoryAsArray, getRecentlyUsedEmojis, setLastUsedEmoji } from '@mail/js/emojis';
+import { emojis } from '@mail/js/emojis';
+import { _e } from '@mail/js/emojis';
+import { useAutofocus } from "web.custom_hooks"
+import { Emoji } from '../emoji/emoji'
+import { useEmojis } from '../emoji/emoji_hook';
 
-const { Component } = owl;
+const { Component, useState } = owl;
 
 export class EmojisPopover extends Component {
+
+    state = useState({ search: "", activeCategory: null });
 
     /**
      * @param {...any} args
      */
     constructor(...args) {
         super(...args);
-        this.emojis = emojis;
-        useUpdate({ func: () => this._update() });
+        this.emojisAllCategories = getEmojisCategories();
+        useAutofocus();
+        this._e = _e;
     }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    get EMOJI_SEARCH_PLACEHOLDER() {
+        return this.env._t("Search emojis...");
+    }
 
-    /**
-     * @private
-     */
-    _update() {
-        this.trigger('o-popover-compute');
+    get NO_EMOJIS_FOUND_AFTER_SEARCH() {
+        return this.env._t("Nothing found");
+    }
+
+    get RECENTLY_USED() {
+        return this.env._t("Recently used");
+    }
+
+    get CATEGORIES() {
+        return this.env._t("Categories");
+    }
+
+    get filteredEmojis() {
+        if (!this.state.search) return this.emojis;
+        return getAllEmojisAsArray().filter( (key, _) => key.description.includes(this.state.search));
+    }
+
+    emojisByCategory(category) {
+        return getEmojiesFromCategoryAsArray(category)
+    }
+
+    get recentlyUsedEmojis() {
+        return getRecentlyUsedEmojis(this.env);
+    }
+
+    get emojisCategories() {
+        if (!this.state.activeCategory) {
+            return getEmojisCategories();
+        }
+        return [this.state.activeCategory];
     }
 
     //--------------------------------------------------------------------------
@@ -59,9 +92,20 @@ export class EmojisPopover extends Component {
      */
     _onClickEmoji(ev) {
         this.close();
+        setLastUsedEmoji(this.env, ev.currentTarget.dataset.unicode);
         this.trigger('o-emoji-selection', {
             unicode: ev.currentTarget.dataset.unicode,
+            source: ev.currentTarget.dataset.source
         });
+    }
+
+    _onClickEmojisCategory(category) {
+        if (this.state.activeCategory === category) {
+            this.state.activeCategory = null;
+        }
+        else {
+            this.state.activeCategory = category;
+        }
     }
 
 }
@@ -69,6 +113,7 @@ export class EmojisPopover extends Component {
 Object.assign(EmojisPopover, {
     props: {},
     template: 'mail.EmojisPopover',
+    components:  { Emoji }
 });
 
 registerMessagingComponent(EmojisPopover);

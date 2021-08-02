@@ -3,6 +3,7 @@
 import * as mailUtils from '@mail/js/utils';
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useEmojis } from "@mail/components/emoji/emoji_hook"
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -19,6 +20,7 @@ export class ThreadPreview extends Component {
          * top-level click handler when clicking on this specific button.
          */
         this._markAsReadRef = useRef('markAsRead');
+        useEmojis();
     }
 
     //--------------------------------------------------------------------------

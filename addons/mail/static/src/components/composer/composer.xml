@@ -106,7 +106,7 @@
                                 <div class="o_Composer_toolButtonSeparator"/>
                             </t>
                             <div class="o_Composer_primaryToolButtons" t-att-class="{ 'o-composer-is-compact': props.isCompact }">
-                                <Popover position="'top'" t-on-o-emoji-selection="_onEmojiSelection">
+                                <Popover position="'top'" t-on-o-emoji-selection="_onEmojiSelection" popoverClass="env.device.isMobile ? 'o_EmojisPopoverContainerMobile' : ''">
                                     <!-- TODO FIXME o-open not possible to code due to https://github.com/odoo/owl/issues/693 -->
                                     <button class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton btn btn-light"
                                         t-att-class="{

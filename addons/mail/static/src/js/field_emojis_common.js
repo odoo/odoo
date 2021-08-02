@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import emojis from '@mail/js/emojis';
+import { emojis } from '@mail/js/emojis';
 import MailEmojisMixin from '@mail/js/emojis_mixin';
 
 import basicFields from 'web.basic_fields';
