@@ -327,7 +327,7 @@ class AccountTaxReportLine(models.Model):
         '''
         self.ensure_one()
 
-        target = self.carry_over_destination_line_id or self
+        target = self._get_carryover_destination_line(options)
         domain = target._get_carryover_lines_domain(options)
         carryover_lines = self.env['account.tax.carryover.line'].search(domain)
 
@@ -394,3 +394,12 @@ class AccountTaxReportLine(models.Model):
         # Lines below 0 will be set to 0 and reduce the balance of the carryover.
         # Lines above 0 will be set to 0 and increase the balance of the carryover.
         return (0, 0)
+
+    def _get_carryover_destination_line(self, options):
+        """
+        Return the destination line for the carryover for this tax report line.
+        :param options: The options of the tax report.
+        :return: The line on which we'll carryover this tax report line when closing the tax period.
+        """
+        self.ensure_one()
+        return self.carry_over_destination_line_id or self
