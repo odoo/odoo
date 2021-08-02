@@ -116,7 +116,7 @@ let connectionLostNotifRemove = null;
  * @param {Error} originalError
  * @returns {boolean}
  */
-function lostConnectionHandler(env, error, originalError) {
+export function lostConnectionHandler(env, error, originalError) {
     if (!(error instanceof UncaughtPromiseError)) {
         return false;
     }
