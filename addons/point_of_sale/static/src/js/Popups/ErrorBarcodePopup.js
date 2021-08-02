@@ -3,6 +3,7 @@ odoo.define('point_of_sale.ErrorBarcodePopup', function(require) {
 
     const ErrorPopup = require('point_of_sale.ErrorPopup');
     const Registries = require('point_of_sale.Registries');
+    const { _t } = require('web.core');
 
     // formerly ErrorBarcodePopupWidget
     class ErrorBarcodePopup extends ErrorPopup {
@@ -12,12 +13,12 @@ odoo.define('point_of_sale.ErrorBarcodePopup', function(require) {
     }
     ErrorBarcodePopup.template = 'ErrorBarcodePopup';
     ErrorBarcodePopup.defaultProps = {
-        confirmText: 'Ok',
-        cancelText: 'Cancel',
-        title: 'Error',
+        confirmText: _t('Ok'),
+        cancelText: _t('Cancel'),
+        title: _t('Error'),
         body: '',
         message:
-            'The Point of Sale could not find any product, client, employee or action associated with the scanned barcode.',
+            _t('The Point of Sale could not find any product, client, employee or action associated with the scanned barcode.'),
     };
 
     Registries.Component.add(ErrorBarcodePopup);

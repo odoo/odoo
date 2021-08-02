@@ -364,8 +364,8 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             } catch (error) {
                 if (error.message.code < 0) {
                     await this.showPopup('OfflineErrorPopup', {
-                        title: 'Offline',
-                        body: 'Unable to get orders count',
+                        title: this.env._t('Offline'),
+                        body: this.env._t('Unable to get orders count'),
                     });
                 } else {
                     throw error;
