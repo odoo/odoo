@@ -136,6 +136,9 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
     # automatically generate a name as "Login (groups)" to ease user comprehension
     if not create_values.get('name'):
         create_values['name'] = '%s (%s)' % (login, groups)
+    # automatically give a password equal to login
+    if not create_values.get('password'):
+        create_values['password'] = login + 'x' * (8 - len(login))
     # generate email if not given as most test require an email
     if 'email' not in create_values:
         if single_email_re.match(login):
@@ -1051,11 +1054,22 @@ class ChromeBrowser():
             res['success'] = 'test successful' in message
 
         if res.get('method') == 'Runtime.exceptionThrown':
-            exception_details = res['params']['exceptionDetails']
-            descr = exception_details.get('exception', {}).get('description')
-            self.take_screenshot()
-            self._save_screencast()
-            raise ChromeBrowserException(descr or pprint.pformat(exception_details))
+            details = res['params']['exceptionDetails']
+            message = details['text']
+            exception = details.get('exception')
+            if exception:
+                message += str(self._from_remoteobject(exception))
+            details['type'] = 'trace' # fake this so _format_stack works
+            stack = ''.join(self._format_stack(details))
+            if stack:
+                message += '\n' + stack
+
+            if raise_log_error:
+                self.take_screenshot()
+                self._save_screencast()
+                raise ChromeBrowserException(message)
+            else:
+                self._logger.getChild('browser').error(message)
 
         return res
 
@@ -1063,7 +1077,7 @@ class ChromeBrowser():
         'debug': logging.DEBUG,
         'log': logging.INFO,
         'info': logging.INFO,
-        'warning': logging.INFO, # logging.WARNING,
+        'warning': logging.WARNING,
         'error': logging.ERROR,
         # TODO: what do with
         # dir, dirxml, table, trace, clear, startGroup, startGroupCollapsed,
@@ -2121,6 +2135,7 @@ class Form(object):
             for k, v in values.items()
             if k in self._view['fields']
         )
+        return result
 
     def _onchange_values(self):
         return self._onchange_values_(self._view['fields'], self._values)

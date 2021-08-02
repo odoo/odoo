@@ -6,6 +6,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var mixins = require('web.mixins');
 var utils = require('web.utils');
+const { session } = require('@web/session');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -258,7 +259,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @returns {Promise} promise indicating the session is done reloading
      */
     session_reload: function () {
-        var result = _.extend({}, window.odoo.session_info);
+        var result = _.extend({}, session);
         _.extend(this, result);
         return Promise.resolve();
     },
@@ -373,9 +374,12 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @private
      */
     _configureLocale: function () {
+        // TODO: try to test when re - writing this file in the new system with luxon
+        const dow = (_t.database.parameters.week_start || 0) % 7;
         moment.updateLocale(moment.locale(), {
             week: {
-                dow: (_t.database.parameters.week_start || 0) % 7,
+                dow: dow,
+                doy: 7 + dow - 4 // Note: ISO 8601 week date: https://momentjscom.readthedocs.io/en/latest/moment/07-customization/16-dow-doy/
             },
         });
     },

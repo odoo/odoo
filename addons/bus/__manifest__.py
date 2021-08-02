@@ -21,5 +21,6 @@
         'web.qunit_suite_tests': [
             'bus/static/tests/*.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

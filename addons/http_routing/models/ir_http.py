@@ -152,9 +152,9 @@ def url_lang(path_or_uri, lang_code=None):
         lang_code = pycompat.to_text(lang_code or request.context['lang'])
         lang_url_code = Lang._lang_code_to_urlcode(lang_code)
         lang_url_code = lang_url_code if lang_url_code in lang_url_codes else lang_code
-
         if (len(lang_url_codes) > 1 or force_lang) and is_multilang_url(location, lang_url_codes):
-            ps = location.split(u'/')
+            loc, sep, qs = location.partition('?')
+            ps = loc.split(u'/')
             default_lg = request.env['ir.http']._get_default_lang()
             if ps[1] in lang_url_codes:
                 # Replace the language only if we explicitly provide a language to url_for
@@ -166,7 +166,7 @@ def url_lang(path_or_uri, lang_code=None):
             # Insert the context language or the provided language
             elif lang_url_code != default_lg.url_code or force_lang:
                 ps.insert(1, lang_url_code)
-            location = u'/'.join(ps)
+            location = u'/'.join(ps) + sep + qs
     return location
 
 
@@ -423,7 +423,7 @@ class IrHttp(models.AbstractModel):
         # handle // in url
         if request.httprequest.method == 'GET' and '//' in request.httprequest.path:
             new_url = request.httprequest.path.replace('//', '/') + '?' + request.httprequest.query_string.decode('utf-8')
-            return werkzeug.utils.redirect(new_url, 301)
+            return request.redirect(new_url, code=301)
 
         # locate the controller method
         try:
@@ -456,8 +456,6 @@ class IrHttp(models.AbstractModel):
 
         # For website routes (only), add website params on `request`
         if request.is_frontend:
-            request.redirect = lambda url, code=302: werkzeug.utils.redirect(url_for(url), code)
-
             cls._add_dispatch_parameters(func)
 
             path = request.httprequest.path.split('/')
@@ -493,7 +491,7 @@ class IrHttp(models.AbstractModel):
                         path = request.httprequest.path[:-1]
                         if request.httprequest.query_string:
                             path += '?' + request.httprequest.query_string.decode('utf-8')
-                        return werkzeug.utils.redirect(path, code=301)
+                        return request.redirect(path, code=301)
                     path.pop(1)
                     routing_error = None
                     return cls.reroute('/'.join(path) or '/')
@@ -520,6 +518,12 @@ class IrHttp(models.AbstractModel):
             result.set_cookie('frontend_lang', request.lang.code)
 
         return result
+
+    @classmethod
+    def _redirect(cls, location, code=303):
+        if request and request.db and getattr(request, 'is_frontend', False):
+            location = url_for(location)
+        return super()._redirect(location, code)
 
     @classmethod
     def reroute(cls, path):
@@ -557,7 +561,7 @@ class IrHttp(models.AbstractModel):
                     path = '/' + request.lang.url_code + path
                 if request.httprequest.query_string:
                     path += '?' + request.httprequest.query_string.decode('utf-8')
-                return werkzeug.utils.redirect(path, code=301)
+                return request.redirect(path, code=301)
 
     @classmethod
     def _get_exception_code_values(cls, exception):

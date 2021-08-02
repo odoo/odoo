@@ -24,7 +24,8 @@ const WEBSITE_PURPOSES = {
     1: {id: 1, label: _lt("get leads"), name: 'get_leads'},
     2: {id: 2, label: _lt("develop the brand"), name: 'develop_brand'},
     3: {id: 3, label: _lt("sell more"), name: 'sell_more'},
-    4: {id: 4, label: _lt("inform customers"), name: 'inform_customers'}
+    4: {id: 4, label: _lt("inform customers"), name: 'inform_customers'},
+    5: {id: 5, label: _lt("schedule appointments"), name: 'schedule_appointments'}
 };
 
 const PALETTE_NAMES = [
@@ -49,6 +50,8 @@ const PALETTE_NAMES = [
     'graphene-2',
     'enark-4',
 ];
+
+const SESSION_STORAGE_ITEM_NAME = 'websiteConfigurator' + session.website_id;
 
 //---------------------------------------------------------
 // Components
@@ -90,7 +93,6 @@ class DescriptionScreen extends Component {
 
     mounted() {
         this.dispatch('selectWebsitePurpose', undefined);
-        this.dispatch('selectIndustry', undefined);
         $(this.industrySelection.el).autocomplete({
             appendTo: '.o_configurator_industry_wrapper',
             delay: 400,
@@ -101,6 +103,11 @@ class DescriptionScreen extends Component {
                 'ui-autocomplete': 'custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast',
             }
         });
+        if (this.state.selectedIndustry) {
+            this.industrySelection.el.value = this.state.selectedIndustry.label;
+            this.industrySelection.el.parentNode.dataset.value = this.state.selectedIndustry.label;
+            this.labelToId[this.state.selectedIndustry.label] = this.state.selectedIndustry.id;
+        }
     }
 
     autocompleteSearch(request, response) {
@@ -128,13 +135,13 @@ class DescriptionScreen extends Component {
 
     selectIndustry(_, ui) {
         this.industrySelection.el.parentNode.dataset.value = ui.item.label;
-        this.dispatch('selectIndustry', this.labelToId[ui.item.label]);
+        this.dispatch('selectIndustry', ui.item.label, this.labelToId[ui.item.label]);
         this.checkDescriptionCompletion();
     }
 
     blurIndustrySelection(ev) {
         const id = this.labelToId[ev.target.value];
-        this.dispatch('selectIndustry', id);
+        this.dispatch('selectIndustry', ev.target.value, id);
         if (id === undefined) {
             this.industrySelection.el.value = '';
             this.industrySelection.el.parentNode.dataset.value = '';
@@ -234,7 +241,7 @@ class FeaturesSelectionScreen extends Component {
     }
 
     async buildWebsite() {
-        const industryId = this.state.selectedIndustry;
+        const industryId = this.state.selectedIndustry && this.state.selectedIndustry.id;
         if (!industryId) {
             this.env.router.navigate({to: 'CONFIGURATOR_DESCRIPTION_SCREEN'});
             return;
@@ -297,6 +304,7 @@ Object.assign(App, {
 
 const ROUTES = [
     {name: 'CONFIGURATOR_WELCOME_SCREEN', path: '/website/configurator', component: WelcomeScreen},
+    {name: 'CONFIGURATOR_WELCOME_SCREEN_FALLBACK', path: '/website/configurator/1', component: WelcomeScreen},
     {name: 'CONFIGURATOR_DESCRIPTION_SCREEN', path: '/website/configurator/2', component: DescriptionScreen},
     {name: 'CONFIGURATOR_PALETTE_SELECTION_SCREEN', path: '/website/configurator/3', component: PaletteSelectionScreen},
     {name: 'CONFIGURATOR_FEATURES_SELECTION_SCREEN', path: '/website/configurator/4', component: FeaturesSelectionScreen},
@@ -349,15 +357,23 @@ const getters = {
 const actions = {
     selectWebsiteType({state}, id) {
         Object.values(state.features).filter((feature) => feature.module_state !== 'installed').forEach((feature) => {
-            feature.selected = feature.website_types_preselection.includes(WEBSITE_TYPES[id].name);
+            feature.selected = feature.website_config_preselection.includes(WEBSITE_TYPES[id].name);
         });
         state.selectedType = id;
     },
     selectWebsitePurpose({state}, id) {
+        Object.values(state.features).filter((feature) => feature.module_state !== 'installed').forEach((feature) => {
+            // need to check id, since we set to undefined in mount() to avoid the auto next screen on back button
+            feature.selected |= id && feature.website_config_preselection.includes(WEBSITE_PURPOSES[id].name);
+        });
         state.selectedPurpose = id;
     },
-    selectIndustry({state}, id) {
-        state.selectedIndustry = id;
+    selectIndustry({state}, label, id) {
+        if (!label || !id) {
+            state.selectedIndustry = undefined;
+        } else {
+            state.selectedIndustry = {id, label};
+        }
     },
     changeLogo({state}, data) {
         state.logo = data;
@@ -403,15 +419,9 @@ async function getInitialState() {
         method: 'configurator_init',
     });
     const r = {
-        features: {},
         industries: results.industries,
         logo: results.logo ? 'data:image/png;base64,' + results.logo : false,
     };
-    results.features.forEach(feature => {
-        r.features[feature.id] = Object.assign({}, feature, {selected: feature.module_state === 'installed'});
-        const wtp = r.features[feature.id].website_types_preselection;
-        r.features[feature.id].website_types_preselection = wtp ? wtp.split(',') : [];
-    });
 
     // Load palettes from the current CSS
     const palettes = {};
@@ -428,6 +438,30 @@ async function getInitialState() {
         palettes[paletteName] = palette;
     });
 
+    const localState = JSON.parse(window.sessionStorage.getItem(SESSION_STORAGE_ITEM_NAME));
+    if (localState) {
+        let themes = [];
+        if (localState.selectedIndustry && localState.selectedPalette) {
+            const params = {
+                industry_id: localState.selectedIndustry.id,
+                palette: localState.selectedPalette
+            };
+            themes = await rpc.query({
+                model: 'website',
+                method: 'configurator_recommended_themes',
+                kwargs: params,
+            });
+        }
+        return Object.assign(r, {...localState, palettes, themes});
+    }
+
+    const features = {};
+    results.features.forEach(feature => {
+        features[feature.id] = Object.assign({}, feature, {selected: feature.module_state === 'installed'});
+        const wtp = features[feature.id].website_config_preselection;
+        features[feature.id].website_config_preselection = wtp ? wtp.split(',') : [];
+    });
+
     return Object.assign(r, {
         selectedType: undefined,
         selectedPurpose: undefined,
@@ -435,6 +469,7 @@ async function getInitialState() {
         selectedPalette: undefined,
         recommendedPalette: undefined,
         palettes: palettes,
+        features: features,
         themes: [],
     });
 }
@@ -444,6 +479,7 @@ async function skipConfigurator() {
         model: 'website',
         method: 'configurator_skip',
     });
+    window.sessionStorage.removeItem(SESSION_STORAGE_ITEM_NAME);
     window.location = '/web#action=website.theme_install_kanban_action';
 }
 
@@ -472,15 +508,18 @@ async function applyConfigurator(self, themeName) {
         const data = {
             selected_features: selectedFeatures,
             logo: self.state.logo,
-            industry_id: self.state.selectedIndustry,
+            industry_id: self.state.selectedIndustry.id,
             selected_palette: selectedPalette,
             theme_name: themeName,
+            website_purpose: WEBSITE_PURPOSES[self.state.selectedPurpose].name,
+            website_type: WEBSITE_TYPES[self.state.selectedType].name,
         };
         const resp = await rpc.query({
             model: 'website',
             method: 'configurator_apply',
             kwargs: {...data},
         });
+        window.sessionStorage.removeItem(SESSION_STORAGE_ITEM_NAME);
         window.location = resp.url;
     }
 }
@@ -491,6 +530,18 @@ async function makeEnvironment() {
     await router.start();
     const state = await getInitialState();
     const store = new Store({state, actions, getters});
+    store.on("update", null, () => {
+        const newState = {
+            selectedType: store.state.selectedType,
+            selectedPurpose: store.state.selectedPurpose,
+            selectedIndustry: store.state.selectedIndustry,
+            selectedPalette: store.state.selectedPalette,
+            recommendedPalette: store.state.recommendedPalette,
+            features: store.state.features,
+            logo: store.state.logo,
+        };
+        window.sessionStorage.setItem(SESSION_STORAGE_ITEM_NAME, JSON.stringify(newState));
+    });
     await session.is_bound;
     const qweb = new QWeb({translateFn: _t});
     const loaderTemplate = await owl.utils.loadFile('/website/static/src/xml/theme_preview.xml');

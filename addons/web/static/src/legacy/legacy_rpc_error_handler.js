@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { RPCErrorDialog } from "../core/errors/error_dialogs";
 import { RPCError } from "../core/network/rpc_service";
 
+const errorNotificationRegistry = registry.category("error_notifications");
 const errorDialogRegistry = registry.category("error_dialogs");
 const errorHandlerRegistry = registry.category("error_handlers");
 
@@ -39,8 +40,15 @@ function legacyRPCErrorHandler(env, error, originalError) {
         event.preventDefault();
         const exceptionName = originalError.exceptionName;
         let ErrorComponent = originalError.Component;
-        if (!ErrorComponent && exceptionName && errorDialogRegistry.contains(exceptionName)) {
-            ErrorComponent = errorDialogRegistry.get(exceptionName);
+        if (!ErrorComponent && exceptionName) {
+            if (errorNotificationRegistry.contains(exceptionName)) {
+                const notif = errorNotificationRegistry.get(exceptionName);
+                env.services.notification.add(notif.message || originalError.data.message, notif);
+                return true;
+            }
+            if (errorDialogRegistry.contains(exceptionName)) {
+                ErrorComponent = errorDialogRegistry.get(exceptionName);
+            }
         }
 
         env.services.dialog.add(ErrorComponent || RPCErrorDialog, {
@@ -51,7 +59,7 @@ function legacyRPCErrorHandler(env, error, originalError) {
             data: originalError.data,
             subType: originalError.subType,
             code: originalError.code,
-            type: originalError.type,
+            type: originalError.type
         });
         return true;
     }

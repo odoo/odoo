@@ -1,0 +1,70 @@
+.o_event_foldable_badge_container {
+    .o_event_foldable_badge_top {
+        height: 148mm;
+
+        &.o_event_foldable_badge_ticket {
+            border-left: 1px dashed black;
+        }
+    }
+
+    .o_event_foldable_badge_font_small {
+        font-size: .8rem;
+    }
+
+    .o_event_foldable_badge_bottom.o_event_foldable_badge_left {
+        border-top: 1px dashed black;
+        height: 148mm;
+
+        p {
+            margin: 0px;  // to match editor style (.oe_form_field_html p)
+        }
+    }
+
+    .o_event_foldable_badge_bottom.o_event_foldable_badge_right {
+        border-left: 1px dashed black;
+        border-top:1px dashed black;
+        height: 148mm;
+        background: white;
+    }
+
+    .o_event_foldable_badge_ticket {
+        background-repeat: no-repeat;
+        background-image: url(/event/static/src/img/report_foldable_badge_background.png);
+
+        .o_event_foldable_badge_ticket_wrapper {
+            background-color: white;
+            border: solid 1px #939393;
+            border-radius: .7rem;
+            margin: 0px 8px;
+            padding: 10px 3px;
+            font-size: 1.2rem;
+            box-shadow: -3px 3px 9px 0px rgba(0,0,0,0.51);
+
+            .o_event_foldable_badge_ticket_wrapper_top {
+                min-height: 80mm;
+            }
+
+            .o_event_foldable_badge_event_name {
+                color: $o-brand-odoo;
+            }
+
+            .o_event_foldable_badge_font_faded {
+                color: #939393;
+            }
+
+            .o_event_foldable_badge_barcode {
+                min-height: 35mm;
+            }
+        }
+    }
+
+    .o_event_foldable_badge_step {
+        position: absolute;
+        padding: 3px 9px;
+        top: 5mm;
+        left: 0mm;
+        border-radius: 50%;
+        background-color: black;
+        color: white;
+    }
+}

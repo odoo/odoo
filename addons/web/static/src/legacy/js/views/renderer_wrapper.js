@@ -7,6 +7,7 @@
         getLocalState() { }
         setLocalState() { }
         giveFocus() { }
+        resetLocalState() { }
     }
 
     export default RendererWrapper;

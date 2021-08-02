@@ -21,6 +21,8 @@ actions(Check in/Check out) performed by them.
         'security/hr_attendance_security.xml',
         'security/ir.model.access.csv',
         'views/hr_attendance_view.xml',
+        'views/hr_attendance_overtime_view.xml',
+        'report/hr_attendance_report_views.xml',
         'views/hr_department_view.xml',
         'views/hr_employee_view.xml',
         'views/res_config_settings_views.xml',
@@ -47,5 +49,6 @@ actions(Check in/Check out) performed by them.
         'web.assets_qweb': [
             'hr_attendance/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

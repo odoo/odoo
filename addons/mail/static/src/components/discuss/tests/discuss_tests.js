@@ -13,12 +13,6 @@ import {
 import Bus from 'web.Bus';
 import { makeTestPromise, file } from 'web.test_utils';
 
-import {
-    applyFilter,
-    toggleAddCustomFilter,
-    toggleFilterMenu,
-} from 'web.test_utils_control_panel';
-
 const { createFile, inputFiles } = file;
 
 QUnit.module('mail', {}, function () {
@@ -559,18 +553,6 @@ QUnit.test('sidebar: channel rendering with needaction counter', async function 
     );
 });
 
-QUnit.test('sidebar: mailing channel', async function (assert) {
-    assert.expect(1);
-
-    // channel that is expected to be in the sidebar, with proper mass_mailing value
-    this.data['mail.channel'].records.push({ mass_mailing: true });
-    await this.start();
-    assert.containsOnce(
-        document.querySelector(`.o_DiscussSidebar_groupChannel .o_DiscussSidebar_item`),
-        '.fa.fa-envelope-o',
-        "should have an icon to indicate that the channel is a mailing channel"
-    );
-});
 
 QUnit.test('sidebar: public/private channel rendering', async function (assert) {
     assert.expect(5);
@@ -2288,8 +2270,8 @@ QUnit.test('sidebar quick search', async function (assert) {
     );
 });
 
-QUnit.test('basic control panel rendering', async function (assert) {
-    assert.expect(8);
+QUnit.test('basic top bar rendering', async function (assert) {
+    assert.expect(7);
 
     // channel expected to be found in the sidebar
     // with a random unique id and name that will be referenced in the test
@@ -2297,19 +2279,19 @@ QUnit.test('basic control panel rendering', async function (assert) {
     await this.start();
     assert.strictEqual(
         document.querySelector(`
-            .o_widget_Discuss .o_control_panel .breadcrumb
+            .o_ThreadViewTopbar_threadName
         `).textContent,
         "Inbox",
-        "display inbox in the breadcrumb"
+        "display inbox in the top bar"
     );
-    const markAllReadButton = document.querySelector(`.o_widget_Discuss_controlPanelButtonMarkAllRead`);
+    const markAllReadButton = document.querySelector(`.o_ThreadViewTopbar_markAllReadButton`);
     assert.isVisible(
         markAllReadButton,
-        "should have visible button 'Mark all read' in the control panel of inbox"
+        "should have visible button 'Mark all read' in the top bar of inbox"
     );
     assert.ok(
         markAllReadButton.disabled,
-        "should have disabled button 'Mark all read' in the control panel of inbox (no messages)"
+        "should have disabled button 'Mark all read' in the top bar of inbox (no messages)"
     );
 
     await afterNextRender(() =>
@@ -2321,19 +2303,19 @@ QUnit.test('basic control panel rendering', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector(`
-            .o_widget_Discuss .o_control_panel .breadcrumb
+            .o_ThreadViewTopbar_threadName
         `).textContent,
         "Starred",
         "display starred in the breadcrumb"
     );
-    const unstarAllButton = document.querySelector(`.o_widget_Discuss_controlPanelButtonUnstarAll`);
+    const unstarAllButton = document.querySelector(`.o_ThreadViewTopbar_unstarAllButton`);
     assert.isVisible(
         unstarAllButton,
-        "should have visible button 'Unstar all' in the control panel of starred"
+        "should have visible button 'Unstar all' in the top bar of starred"
     );
     assert.ok(
         unstarAllButton.disabled,
-        "should have disabled button 'Unstar all' in the control panel of starred (no messages)"
+        "should have disabled button 'Unstar all' in the top bar of starred (no messages)"
     );
 
     await afterNextRender(() =>
@@ -2348,15 +2330,10 @@ QUnit.test('basic control panel rendering', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector(`
-            .o_widget_Discuss .o_control_panel .breadcrumb
+            .o_ThreadViewTopbar_threadName
         `).textContent,
-        "#General",
+        "General",
         "display general in the breadcrumb"
-    );
-    const inviteButton = document.querySelector(`.o_widget_Discuss_controlPanelButtonInvite`);
-    assert.isVisible(
-        inviteButton,
-        "should have visible button 'Invite' in the control panel of channel"
     );
 });
 
@@ -2429,10 +2406,10 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
         2,
         "should have 2 messages in inbox"
     );
-    let markAllReadButton = document.querySelector(`.o_widget_Discuss_controlPanelButtonMarkAllRead`);
+    let markAllReadButton = document.querySelector(`.o_ThreadViewTopbar_markAllReadButton`);
     assert.notOk(
         markAllReadButton.disabled,
-        "should have enabled button 'Mark all read' in the control panel of inbox (has messages)"
+        "should have enabled button 'Mark all read' in the top bar of inbox (has messages)"
     );
 
     await afterNextRender(() => markAllReadButton.click());
@@ -2464,10 +2441,10 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
         0,
         "should have no message in inbox"
     );
-    markAllReadButton = document.querySelector(`.o_widget_Discuss_controlPanelButtonMarkAllRead`);
+    markAllReadButton = document.querySelector(`.o_ThreadViewTopbar_markAllReadButton`);
     assert.ok(
         markAllReadButton.disabled,
-        "should have disabled button 'Mark all read' in the control panel of inbox (no messages)"
+        "should have disabled button 'Mark all read' in the top bar of inbox (no messages)"
     );
 });
 
@@ -2501,10 +2478,10 @@ QUnit.test('starred: unstar all', async function (assert) {
         2,
         "should have 2 messages in starred"
     );
-    let unstarAllButton = document.querySelector(`.o_widget_Discuss_controlPanelButtonUnstarAll`);
+    let unstarAllButton = document.querySelector(`.o_ThreadViewTopbar_unstarAllButton`);
     assert.notOk(
         unstarAllButton.disabled,
-        "should have enabled button 'Unstar all' in the control panel of starred (has messages)"
+        "should have enabled button 'Unstar all' in the top bar starred (has messages)"
     );
 
     await afterNextRender(() => unstarAllButton.click());
@@ -2523,10 +2500,10 @@ QUnit.test('starred: unstar all', async function (assert) {
         0,
         "should have no message in starred"
     );
-    unstarAllButton = document.querySelector(`.o_widget_Discuss_controlPanelButtonUnstarAll`);
+    unstarAllButton = document.querySelector(`.o_ThreadViewTopbar_unstarAllButton`);
     assert.ok(
         unstarAllButton.disabled,
-        "should have disabled button 'Unstar all' in the control panel of starred (no messages)"
+        "should have disabled button 'Unstar all' in the top bar of starred (no messages)"
     );
 });
 
@@ -2882,12 +2859,12 @@ QUnit.test('post a simple message', async function (assert) {
     );
 });
 
-QUnit.test('post message on non-mailing channel with "Enter" keyboard shortcut', async function (assert) {
+QUnit.test('post message on channel with "Enter" keyboard shortcut', async function (assert) {
     assert.expect(2);
 
     // channel expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20, mass_mailing: false });
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
         discuss: {
             params: {
@@ -2917,7 +2894,7 @@ QUnit.test('post message on non-mailing channel with "Enter" keyboard shortcut',
     );
 });
 
-QUnit.test('do not post message on non-mailing channel with "SHIFT-Enter" keyboard shortcut', async function (assert) {
+QUnit.test('do not post message on channel with "SHIFT-Enter" keyboard shortcut', async function (assert) {
     // Note that test doesn't assert SHIFT-Enter makes a newline, because this
     // default browser cannot be simulated with just dispatching
     // programmatically crafted events...
@@ -2925,7 +2902,7 @@ QUnit.test('do not post message on non-mailing channel with "SHIFT-Enter" keyboa
 
     // channel expected to be found in the sidebar
     // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
         discuss: {
             params: {
@@ -2953,114 +2930,6 @@ QUnit.test('do not post message on non-mailing channel with "SHIFT-Enter" keyboa
         "should still not have any message in channel after pressing 'Shift-Enter' in text input of composer"
     );
 });
-
-QUnit.test('post message on mailing channel with "CTRL-Enter" keyboard shortcut', async function (assert) {
-    assert.expect(2);
-
-    // channel expected to be found in the sidebar
-    // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
-    await this.start({
-        discuss: {
-            params: {
-                default_active_id: 'mail.channel_20',
-            },
-        },
-    });
-    assert.containsNone(
-        document.body,
-        '.o_Message',
-        "should not have any message initially in channel"
-    );
-
-    // insert some HTML in editable
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
-    await afterNextRender(() => {
-        const kevt = new window.KeyboardEvent('keydown', { ctrlKey: true, key: "Enter" });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
-    });
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should now have single message in channel after posting message from pressing 'CTRL-Enter' in text input of composer"
-    );
-});
-
-QUnit.test('post message on mailing channel with "META-Enter" keyboard shortcut', async function (assert) {
-    assert.expect(2);
-
-    // channel expected to be found in the sidebar
-    // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
-    await this.start({
-        discuss: {
-            params: {
-                default_active_id: 'mail.channel_20',
-            },
-        },
-    });
-    assert.containsNone(
-        document.body,
-        '.o_Message',
-        "should not have any message initially in channel"
-    );
-
-    // insert some HTML in editable
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
-    await afterNextRender(() => {
-        const kevt = new window.KeyboardEvent('keydown', { key: "Enter", metaKey: true });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
-    });
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should now have single message in channel after posting message from pressing 'META-Enter' in text input of composer"
-    );
-});
-
-QUnit.test('do not post message on mailing channel with "Enter" keyboard shortcut', async function (assert) {
-    // Note that test doesn't assert Enter makes a newline, because this
-    // default browser cannot be simulated with just dispatching
-    // programmatically crafted events...
-    assert.expect(2);
-
-    // channel expected to be found in the sidebar
-    // with a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
-    await this.start({
-        discuss: {
-            params: {
-                default_active_id: 'mail.channel_20',
-            },
-        },
-    });
-    assert.containsNone(
-        document.body,
-        '.o_Message',
-        "should not have any message initially in mailing channel"
-    );
-
-    // insert some HTML in editable
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
-    const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
-    document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
-    await nextAnimationFrame();
-    assert.containsNone(
-        document.body,
-        '.o_Message',
-        "should still not have any message in mailing channel after pressing 'Enter' in text input of composer"
-    );
-});
-
 QUnit.test('rendering of inbox message', async function (assert) {
     // AKU TODO: kinda message specific test
     assert.expect(7);
@@ -3355,6 +3224,21 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
             }
             return this._super(...arguments);
         },
+        services: {
+            notification: {
+                notify(notification) {
+                    assert.ok(
+                        true,
+                        "should display a notification after posting reply"
+                    );
+                    assert.strictEqual(
+                        notification.message,
+                        "Message posted on \"Refactoring\"",
+                        "notification should tell that message has been posted to the record 'Refactoring'"
+                    );
+                }
+            }
+        },
     });
     assert.strictEqual(
         document.querySelectorAll('.o_Message').length,
@@ -3418,15 +3302,6 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
     assert.notOk(
         document.querySelector('.o_Message').classList.contains('o-selected'),
         "message should not longer be selected after posting reply"
-    );
-    assert.ok(
-        document.querySelector('.o_notification'),
-        "should display a notification after posting reply"
-    );
-    assert.strictEqual(
-        document.querySelector('.o_notification_content').textContent,
-        "Message posted on \"Refactoring\"",
-        "notification should tell that message has been posted to the record 'Refactoring'"
     );
 });
 
@@ -3615,7 +3490,7 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
     );
 
     await afterNextRender(() =>
-        document.querySelector('.o_widget_Discuss_controlPanelButtonMarkAllRead').click()
+        document.querySelector('.o_ThreadViewTopbar_markAllReadButton').click()
     );
     assert.ok(
         document.querySelector(`
@@ -3818,7 +3693,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
     });
 
     await afterNextRender(async () => {
-        const markAllReadButton = document.querySelector('.o_widget_Discuss_controlPanelButtonMarkAllRead');
+        const markAllReadButton = document.querySelector('.o_ThreadViewTopbar_markAllReadButton');
         markAllReadButton.click();
     });
     assert.containsNone(
@@ -4203,31 +4078,6 @@ QUnit.test('mark channel as seen if last message is visible when switching chann
         'o-unread',
         "sidebar item of channel ID 10 should no longer be unread"
     );
-});
-
-QUnit.test('add custom filter should filter messages accordingly to selected filter', async function (assert) {
-    assert.expect(4);
-
-    this.data['mail.channel'].records.push({
-        id: 20,
-        name: "General"
-    });
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'message_fetch') {
-                const domainsAsStr = args.kwargs.domain.map(domain => domain.join(''));
-                assert.step(`message_fetch:${domainsAsStr.join(',')}`);
-            }
-            return this._super(...arguments);
-        },
-    });
-    assert.verifySteps(['message_fetch:needaction=true'], "A message_fetch request should have been done for needaction messages as inbox is selected by default");
-
-    // Open filter menu of control panel and select a custom filter (id = 0, the only one available)
-    await toggleFilterMenu(document.body);
-    await toggleAddCustomFilter(document.body);
-    await applyFilter(document.body);
-    assert.verifySteps(['message_fetch:id=0,needaction=true'], "A message_fetch request should have been done for selected filter & domain of current thread (inbox)");
 });
 
 });

@@ -22,12 +22,11 @@ export class ThreadNeedactionPreview extends Component {
         useShouldUpdateBasedOnProps();
         useStore(props => {
             const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            const mainThreadCache = thread ? thread.mainCache : undefined;
             let lastNeedactionMessageAsOriginThreadAuthor;
             let lastNeedactionMessageAsOriginThread;
             let threadCorrespondent;
             if (thread) {
-                lastNeedactionMessageAsOriginThread = mainThreadCache.lastNeedactionMessageAsOriginThread;
+                lastNeedactionMessageAsOriginThread = thread.lastNeedactionMessageAsOriginThread;
                 threadCorrespondent = thread.correspondent;
             }
             if (lastNeedactionMessageAsOriginThread) {

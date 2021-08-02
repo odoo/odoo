@@ -35,7 +35,6 @@ export class DiscussSidebarItem extends Component {
                 threadDisplayName: thread && thread.displayName,
                 threadGroupBasedSubscription: thread && thread.group_based_subscription,
                 threadLocalMessageUnreadCounter: thread && thread.localMessageUnreadCounter,
-                threadMassMailing: thread && thread.mass_mailing,
                 threadMessageNeedactionCounter: thread && thread.message_needaction_counter,
                 threadModel: thread && thread.model,
             };
@@ -201,7 +200,7 @@ export class DiscussSidebarItem extends Component {
      */
     _onValidateEditableText(ev) {
         ev.stopPropagation();
-        this.discuss.renameThread(this.thread, ev.detail.newName);
+        this.discuss.onValidateEditableText(this.thread, ev.detail.newName);
     }
 
 }

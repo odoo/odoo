@@ -39,5 +39,6 @@
         'web.assets_qweb': [
             'partner_autocomplete/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

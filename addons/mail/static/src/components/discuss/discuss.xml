@@ -21,22 +21,16 @@
                         <t t-call="mail.Discuss.content"/>
                     </div>
                 </t>
-                <t t-if="discuss.hasModerationDiscardDialog">
-                    <ModerationDiscardDialog messageLocalIds="discuss.threadView.checkedMessages.map(message => message.localId)" t-on-dialog-closed="_onDialogClosedModerationDiscard"/>
-                </t>
-                <t t-if="discuss.hasModerationRejectDialog">
-                    <ModerationRejectDialog messageLocalIds="discuss.threadView.checkedMessages.map(message => message.localId)" t-on-dialog-closed="_onDialogClosedModerationReject"/>
-                </t>
             </t>
         </div>
     </t>
 
     <t t-name="mail.Discuss.content" owl="1">
         <t t-if="env.messaging.device.isMobile and discuss.activeMobileNavbarTabId === 'mailbox'">
-            <DiscussMobileMailboxSelection class="o_Discuss_mobileMailboxSelection"/>
+            <DiscussMobileMailboxSelection class="o_Discuss_mobileMailboxSelection border-bottom"/>
         </t>
         <t t-if="env.messaging.device.isMobile and (discuss.isAddingChannel or discuss.isAddingChat)">
-            <div class="o_Discuss_mobileAddItemHeader">
+            <div class="o_Discuss_mobileAddItemHeader border-bottom">
                 <AutocompleteInput
                     class="o_Discuss_mobileAddItemHeaderInput"
                     isFocusOnMount="true"
@@ -56,14 +50,12 @@
                 hasComposer="discuss.thread.model !== 'mail.box'"
                 hasComposerCurrentPartnerAvatar="!env.messaging.device.isMobile"
                 hasComposerThreadTyping="true"
-                hasMessageCheckbox="true"
                 hasSquashCloseMessages="discuss.thread.model !== 'mail.box'"
                 haveMessagesMarkAsReadIcon="discuss.thread === env.messaging.inbox"
                 haveMessagesReplyIcon="discuss.thread === env.messaging.inbox"
                 isDoFocus="discuss.isDoFocus"
                 threadViewLocalId="discuss.threadView.localId"
                 t-on-o-focusin-composer="_onFocusinComposer"
-                t-on-o-rendered="_onThreadRendered"
                 t-ref="threadView"
             />
         </t>
@@ -73,6 +65,16 @@
             </div>
         </t>
         <t t-if="env.messaging.device.isMobile and discuss.activeMobileNavbarTabId !== 'mailbox'">
+            <t t-if="env.messaging.discuss.activeMobileNavbarTabId === 'chat'">
+                <button class="o_Discuss_mobileNewChatButton btn btn-secondary" t-on-click="env.messaging.discuss.onClickMobileNewChatButton.bind(env.messaging.discuss)">
+                    Start a conversation
+                </button>
+            </t>
+            <t t-if="env.messaging.discuss.activeMobileNavbarTabId === 'channel'">
+                <button class="o_Discuss_mobileNewChannelButton btn btn-secondary" t-on-click="env.messaging.discuss.onClickMobileNewChannelButton.bind(env.messaging.discuss)">
+                    New Channel
+                </button>
+            </t>
             <NotificationList
                 class="o_Discuss_notificationList"
                 filter="discuss.activeMobileNavbarTabId"

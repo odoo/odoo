@@ -19,5 +19,6 @@
         'web.qunit_suite_tests': [
             'barcodes_gs1_nomenclature/static/src/js/tests/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

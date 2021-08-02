@@ -20,13 +20,19 @@
                 </div>
                 <div class="s_tabs_content tab-content">
                     <div class="tab-pane fade show active" id="nav_tabs_content_1" role="tabpanel" aria-labelledby="nav_tabs_link_1">
-                        <div class="oe_structure oe_empty"/>
+                        <div class="oe_structure oe_empty">
+                            <t t-snippet-call="website.s_text_block"/>
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="nav_tabs_content_2" role="tabpanel" aria-labelledby="nav_tabs_link_2">
-                        <div class="oe_structure oe_empty"/>
+                        <div class="oe_structure oe_empty">
+                            <t t-snippet-call="website.s_text_block"/>
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="nav_tabs_content_3" role="tabpanel" aria-labelledby="nav_tabs_link_3">
-                        <div class="oe_structure oe_empty"/>
+                        <div class="oe_structure oe_empty">
+                            <t t-snippet-call="website.s_text_block"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -37,10 +43,10 @@
 <template id="s_tabs_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
         <div data-js="NavTabs" data-selector="section.s_tabs">
-            <we-button data-add-tab="" data-no-preview="true" class="o_we_text_success ml-0" title="Add Tab" aria-label="Add Tab">
+            <we-button data-add-item="" data-item=".tab-pane.active" data-no-preview="true" class="o_we_text_success ml-0" title="Add Tab" aria-label="Add Tab">
                 <i class="fa fa-fw fa-plus"/>
             </we-button>
-            <we-button data-remove-tab="" data-name="remove_tab_opt" data-no-preview="true" class="o_we_text_danger mr-3" title="Remove Tab" aria-label="Remove Tab">
+            <we-button data-remove-item="" data-item=".tab-pane.active" data-name="remove_tab_opt" data-no-preview="true" class="o_we_text_danger mr-3" title="Remove Tab" aria-label="Remove Tab">
                 <i class="fa fa-fw fa-minus"/>
             </we-button>
         </div>

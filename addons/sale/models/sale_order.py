@@ -471,7 +471,7 @@ class SaleOrder(models.Model):
                 }
             }
 
-    @api.onchange('pricelist_id')
+    @api.onchange('pricelist_id', 'order_line')
     def _onchange_pricelist_id(self):
         if self.order_line and self.pricelist_id and self._origin.pricelist_id != self.pricelist_id:
             self.show_update_pricelist = True
@@ -649,12 +649,16 @@ class SaleOrder(models.Model):
 
     @api.model
     def _nothing_to_invoice_error(self):
-        msg = _("""There is nothing to invoice!\n
-Reason(s) of this behavior could be:
-- You should deliver your products before invoicing them: Click on the "truck" icon (top-right of your screen) and follow instructions.
-- You should modify the invoicing policy of your product: Open the product, go to the "Sales tab" and modify invoicing policy from "delivered quantities" to "ordered quantities".
-        """)
-        return UserError(msg)
+        return UserError(_(
+            "There is nothing to invoice!\n\n"
+            "Reason(s) of this behavior could be:\n"
+            "- You should deliver your products before invoicing them: Click on the \"truck\" icon "
+            "(top-right of your screen) and follow instructions.\n"
+            "- You should modify the invoicing policy of your product: Open the product, go to the "
+            "\"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered "
+            "quantities\". For Services, you should modify the Service Invoicing Policy to "
+            "'Prepaid'."
+        ))
 
     def _get_invoiceable_lines(self, final=False):
         """Return the invoiceable lines for order `self`."""
@@ -710,7 +714,7 @@ Reason(s) of this behavior could be:
             invoiceable_lines = order._get_invoiceable_lines(final)
 
             if not any(not line.display_type for line in invoiceable_lines):
-                raise self._nothing_to_invoice_error()
+                continue
 
             invoice_line_vals = []
             down_payment_section_added = False
@@ -723,7 +727,7 @@ Reason(s) of this behavior could be:
                             sequence=invoice_item_sequence,
                         )),
                     )
-                    dp_section = True
+                    down_payment_section_added = True
                     invoice_item_sequence += 1
                 invoice_line_vals.append(
                     (0, 0, line._prepare_invoice_line(
@@ -742,6 +746,12 @@ Reason(s) of this behavior could be:
         if not grouped:
             new_invoice_vals_list = []
             invoice_grouping_keys = self._get_invoice_grouping_keys()
+            invoice_vals_list = sorted(
+                invoice_vals_list,
+                key=lambda x: [
+                    x.get(grouping_key) for grouping_key in invoice_grouping_keys
+                ]
+            )
             for grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: [x.get(grouping_key) for grouping_key in invoice_grouping_keys]):
                 origins = set()
                 payment_refs = set()
@@ -885,7 +895,7 @@ Reason(s) of this behavior could be:
     def message_post(self, **kwargs):
         if self.env.context.get('mark_so_as_sent'):
             self.filtered(lambda o: o.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
-        return super(SaleOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
+        return super(SaleOrder, self.with_context(mail_post_autofollow=self.env.context.get('mail_post_autofollow', True))).message_post(**kwargs)
 
     def _sms_get_number_fields(self):
         """ No phone or mobile field is available on sale model. Instead SMS will

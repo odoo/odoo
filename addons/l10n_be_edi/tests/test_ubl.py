@@ -4,7 +4,7 @@ from odoo.tests import tagged
 from odoo import Command
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nBeEdi(AccountEdiTestCommon):
 
     @classmethod
@@ -73,7 +73,7 @@ class TestL10nBeEdi(AccountEdiTestCommon):
         cls.expected_invoice_efff_values = '''
             <Invoice>
                 <UBLVersionID>2.0</UBLVersionID>
-                <ID>INV/2017/01/0001</ID>
+                <ID>INV/2017/00001</ID>
                 <IssueDate>2017-01-01</IssueDate>
                 <InvoiceTypeCode>380</InvoiceTypeCode>
                 <DocumentCurrencyCode>Gol</DocumentCurrencyCode>
@@ -107,7 +107,7 @@ class TestL10nBeEdi(AccountEdiTestCommon):
                 </AccountingCustomerParty>
                 <PaymentMeans>
                     <PaymentMeansCode listID="UN/ECE 4461">31</PaymentMeansCode>
-                    <InstructionID>INV/2017/01/0001</InstructionID>
+                    <InstructionID>INV/2017/00001</InstructionID>
                     <PaymentDueDate>2017-01-01</PaymentDueDate>
                 </PaymentMeans>
                 <TaxTotal>

@@ -25,12 +25,6 @@
                             </div>
                             Messages marked as read will appear in the history.
                         </t>
-                        <t t-elif="threadView.thread === env.messaging.moderation">
-                            <div class="o_MessageList_emptyTitle">
-                                You have no messages to moderate.
-                            </div>
-                            Messages pending moderation appear here.
-                        </t>
                         <t t-else="">
                             There are no messages in this conversation.
                         </t>
@@ -74,7 +68,6 @@
                         <Message
                             class="o_MessageList_item o_MessageList_message"
                             hasMarkAsReadIcon="props.haveMessagesMarkAsReadIcon"
-                            hasCheckbox="props.hasMessageCheckbox"
                             hasReplyIcon="props.haveMessagesReplyIcon"
                             isSquashed="isMessageSquashed"
                             messageLocalId="message.localId"

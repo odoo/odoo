@@ -142,7 +142,9 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             }
         }
         const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
-        this.menuTogglerEl.classList.add(`o_we_option_font_${activeWidget.el.dataset.font}`);
+        if (activeWidget) {
+            this.menuTogglerEl.classList.add(`o_we_option_font_${activeWidget.el.dataset.font}`);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1245,7 +1247,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
         for (let i = 1; i <= 5; i++) {
             const collapseEl = document.createElement('we-collapse');
             const ccPreviewEl = $(qweb.render('web_editor.color.combination.preview'))[0];
-            ccPreviewEl.classList.add('text-center', `o_cc${i}`);
+            ccPreviewEl.classList.add('text-center', `o_cc${i}`, 'o_we_collapse_toggler');
             collapseEl.appendChild(ccPreviewEl);
             const editionEls = $(qweb.render('website.color_combination_edition', {number: i}));
             for (const el of editionEls) {
@@ -1393,6 +1395,26 @@ options.registry.Carousel = options.Class.extend({
         $items.removeClass('next prev left right active').first().addClass('active');
         this.$indicators.find('li').removeClass('active').empty().first().addClass('active');
     },
+    /**
+     * @override
+     */
+    notify: function (name, data) {
+        this._super(...arguments);
+        if (name === 'add_slide') {
+            this._addSlide();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    addSlide(previewMode, widgetValue, params) {
+        this._addSlide();
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -1416,6 +1438,26 @@ options.registry.Carousel = options.Class.extend({
                 $el.attr('href', '#' + id);
             }
         });
+    },
+    /**
+     * Adds a slide.
+     *
+     * @private
+     */
+    _addSlide() {
+        const $items = this.$target.find('.carousel-item');
+        this.$controls.removeClass('d-none');
+        const $active = $items.filter('.active');
+        this.$indicators.append($('<li>', {
+            'data-target': '#' + $active.attr('id'),
+            'data-slide-to': $items.length,
+        }));
+        this.$indicators.append(' ');
+        // Need to remove editor data from the clone so it gets its own.
+        $active.clone(false)
+            .removeClass('active')
+            .insertAfter($active);
+        this.$target.carousel('next');
     },
 });
 
@@ -1468,24 +1510,13 @@ options.registry.CarouselItem = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Adds a slide.
-     *
      * @see this.selectClass for parameters
      */
-    addSlide: function (previewMode) {
-        const $items = this.$carousel.find('.carousel-item');
-        this.$controls.removeClass('d-none');
-        this.$indicators.append($('<li>', {
-            'data-target': '#' + this.$target.attr('id'),
-            'data-slide-to': $items.length,
-        }));
-        this.$indicators.append(' ');
-        // Need to remove editor data from the clone so it gets its own.
-        const $active = $items.filter('.active');
-        $active.clone(false)
-            .removeClass('active')
-            .insertAfter($active);
-        this.$carousel.carousel('next');
+    addSlideItem(previewMode, widgetValue, params) {
+        this.trigger_up('option_update', {
+            optionName: 'Carousel',
+            name: 'add_slide',
+        });
     },
     /**
      * Removes the current slide.
@@ -2721,7 +2752,8 @@ options.registry.SnippetMove = options.Class.extend({
                 }
                 break;
         }
-        if (params.name === 'move_up_opt' || params.name === 'move_down_opt') {
+        if (!this.$target.is(this.data.noScroll)
+                && (params.name === 'move_up_opt' || params.name === 'move_down_opt')) {
             dom.scrollTo(this.$target[0], {
                 extraOffset: 50,
                 easing: 'linear',
@@ -2756,6 +2788,20 @@ options.registry.ScrollButton = options.Class.extend({
     // Options
     //--------------------------------------------------------------------------
 
+    /**
+     * @see this.selectClass for parameters
+     */
+    async showScrollButton(previewMode, widgetValue, params) {
+        if (widgetValue) {
+            this.$button.show();
+        } else {
+            if (previewMode) {
+                this.$button.hide();
+            } else {
+                this.$button.detach();
+            }
+        }
+    },
     /**
      * Toggles the scroll down button.
      */

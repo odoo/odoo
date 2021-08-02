@@ -3,17 +3,7 @@
 import { isMacOS } from "../browser/feature_detection";
 import { registry } from "../registry";
 import { browser } from "../browser/browser";
-
-export function getHotkeyToPress(hotkey, altIsOptional = false) {
-    let result = hotkey.split("+");
-    if (isMacOS()) {
-        result = result.map((x) => x.replace("control", "command"));
-    }
-    if (!altIsOptional) {
-        result = isMacOS() ? ["control", ...result] : ["alt", ...result];
-    }
-    return result.join("+");
-}
+import { getVisibleElements } from "../utils/ui";
 
 const ALPHANUM_KEYS = "abcdefghijklmnopqrstuvwxyz0123456789".split("");
 const NAV_KEYS = [
@@ -28,12 +18,17 @@ const NAV_KEYS = [
     "backspace",
     "enter",
     "escape",
+    "tab",
+    "delete",
 ];
-const MODIFIERS = new Set(["control", "shift"]);
+const MODIFIERS = new Set(["alt", "control", "shift"]);
 const AUTHORIZED_KEYS = new Set([...ALPHANUM_KEYS, ...NAV_KEYS]);
 
 export const hotkeyService = {
     dependencies: ["ui"],
+    // Be aware that all odoo hotkeys are designed with this modifier in mind,
+    // so changing the overlay modifier may conflict with some shortcuts.
+    overlayModifier: "alt",
     start(env, { ui }) {
         const registrations = new Map();
         let nextToken = 0;
@@ -69,7 +64,8 @@ export const hotkeyService = {
             }
 
             // FIXME : this is a temporary hack. It replaces all [accesskey] attrs by [data-hotkey] on all elements.
-            const elementsWithoutDataHotkey = ui.getVisibleElements(
+            const elementsWithoutDataHotkey = getVisibleElements(
+                ui.activeElement,
                 "[accesskey]:not([data-hotkey])"
             );
             for (const el of elementsWithoutDataHotkey) {
@@ -78,7 +74,7 @@ export const hotkeyService = {
             }
 
             // Special case: open hotkey overlays
-            if (isMacOS() ? hotkey === "control" : hotkey === "alt") {
+            if (hotkey === hotkeyService.overlayModifier) {
                 addHotkeyOverlays();
                 event.preventDefault();
                 return;
@@ -96,7 +92,7 @@ export const hotkeyService = {
                 _originalEvent: event,
             };
             dispatch(infos);
-            removeHotkeyOverlays();
+            removeHotkeyOverlays(event);
         }
 
         /**
@@ -111,7 +107,6 @@ export const hotkeyService = {
         function dispatch(infos) {
             let dispatched = false;
             const { hotkey, _originalEvent: event } = infos;
-            const isAlted = isMacOS() ? event.ctrlKey : event.altKey;
             const activeElement = ui.activeElement;
 
             // Dispatch actual hotkey to all matching registrations
@@ -124,10 +119,6 @@ export const hotkeyService = {
                     continue;
                 }
 
-                if (!reg.altIsOptional && !isAlted) {
-                    continue;
-                }
-
                 if (!reg.allowRepeat && event.repeat) {
                     continue;
                 }
@@ -135,10 +126,17 @@ export const hotkeyService = {
                 reg.callback();
                 dispatched = true;
             }
-
-            if (!event.repeat && isAlted) {
-                // Click on all elements having a data-hotkey attribute matching the actual hotkey.
-                const elems = activeElement.querySelectorAll(`[data-hotkey='${hotkey}' i]`);
+            const overlayModParts = hotkeyService.overlayModifier.split("+");
+            if (!event.repeat && overlayModParts.every((el) => hotkey.includes(el))) {
+                // Click on all elements having a data-hotkey attribute matching the actual hotkey without the overlayModifier.
+                const cleanHotkey = hotkey
+                    .split("+")
+                    .filter((key) => !overlayModParts.includes(key))
+                    .join("+");
+                const elems = getVisibleElements(
+                    ui.activeElement,
+                    `[data-hotkey='${cleanHotkey}' i]`
+                );
                 for (const el of elems) {
                     // AAB: not sure it is enough, we might need to trigger all events that occur when you actually click
                     el.focus();
@@ -160,7 +158,7 @@ export const hotkeyService = {
             if (overlaysVisible) {
                 return;
             }
-            for (const el of env.services.ui.getVisibleElements("[data-hotkey]:not(:disabled)")) {
+            for (const el of getVisibleElements(ui.activeElement, "[data-hotkey]:not(:disabled)")) {
                 const hotkey = el.dataset.hotkey;
                 const overlay = document.createElement("div");
                 overlay.className = "o_web_hotkey_overlay";
@@ -187,7 +185,7 @@ export const hotkeyService = {
         /**
          * Remove all the hotkey overlays.
          */
-        function removeHotkeyOverlays() {
+        function removeHotkeyOverlays(event) {
             if (!overlaysVisible) {
                 return;
             }
@@ -195,6 +193,7 @@ export const hotkeyService = {
                 overlay.remove();
             }
             overlaysVisible = false;
+            event.preventDefault();
         }
 
         /**
@@ -208,6 +207,9 @@ export const hotkeyService = {
 
             // ------- Modifiers -------
             // Modifiers are pushed in ascending order to the hotkey.
+            if (isMacOS() ? ev.ctrlKey : ev.altKey) {
+                hotkey.push("alt");
+            }
             if (isMacOS() ? ev.metaKey : ev.ctrlKey) {
                 hotkey.push("control");
             }
@@ -221,11 +223,14 @@ export const hotkeyService = {
             if (ev.code && ev.code.indexOf("Digit") === 0) {
                 key = ev.code.slice(-1);
             }
+            // Prefer physical keys for non-latin keyboard layout.
+            if (!AUTHORIZED_KEYS.has(key) && ev.code && ev.code.indexOf("Key") === 0) {
+                key = ev.code.slice(-1).toLowerCase();
+            }
             // Make sure we do not duplicate a modifier key
-            if (!hotkey.includes(key)) {
+            if (!MODIFIERS.has(key)) {
                 hotkey.push(key);
             }
-
             return hotkey.join("+");
         }
 
@@ -235,8 +240,6 @@ export const hotkeyService = {
          * @param {string} hotkey
          * @param {()=>void} callback
          * @param {Object} options additional options
-         * @param {boolean} [options.altIsOptional=false]
-         *  allow registration to perform even without pressing the ALT key
          * @param {boolean} [options.allowRepeat=false]
          *  allow registration to perform multiple times when hotkey is held down
          * @param {boolean} [options.global=false]
@@ -283,7 +286,6 @@ export const hotkeyService = {
                 hotkey: hotkey.toLowerCase(),
                 callback,
                 activeElement: null,
-                altIsOptional: options && options.altIsOptional,
                 allowRepeat: options && options.allowRepeat,
                 global: options && options.global,
             };
@@ -312,7 +314,6 @@ export const hotkeyService = {
              * @param {string} hotkey
              * @param {() => void} callback
              * @param {Object} options
-             * @param {boolean} [options.altIsOptional=false]
              * @param {boolean} [options.allowRepeat=false]
              * @param {boolean} [options.global=false]
              * @returns {() => void}

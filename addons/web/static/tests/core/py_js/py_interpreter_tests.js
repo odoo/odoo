@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { evaluateExpr } from "@web/core/py_js/py";
-import { toPyDict } from "@web/core/py_js/py_utils";
 
 QUnit.module("py", {}, () => {
     QUnit.module("interpreter", () => {
@@ -138,11 +137,13 @@ QUnit.module("py", {}, () => {
             assert.deepEqual(evaluateExpr("foo", { foo: [1, 2, 3] }), [1, 2, 3]);
         });
 
-        QUnit.test("python values in context", (assert) => {
-            const context = toPyDict({ b: 3 });
-            assert.strictEqual(evaluateExpr("context.get('b', 54)", { context }), 3);
-            assert.strictEqual(evaluateExpr("context.get('c', 54)", { context }), 54);
-        });
+        QUnit.test(
+            "special case for context: the eval context can be accessed as 'context'",
+            (assert) => {
+                assert.strictEqual(evaluateExpr("context.get('b', 54)", { b: 3 }), 3);
+                assert.strictEqual(evaluateExpr("context.get('c', 54)", { b: 3 }), 54);
+            }
+        );
 
         QUnit.test("throw error if name is not defined", (assert) => {
             assert.throws(() => evaluateExpr("a"));

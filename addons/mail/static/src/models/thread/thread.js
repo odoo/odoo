@@ -140,6 +140,9 @@ function factory(dependencies) {
          */
         static convertData(data) {
             const data2 = {};
+            if ('description' in data) {
+                data2.description = data.description;
+            }
             if ('model' in data) {
                 data2.model = data.model;
             }
@@ -162,9 +165,6 @@ function factory(dependencies) {
             if ('is_minimized' in data && 'state' in data) {
                 data2.serverFoldState = data.is_minimized ? data.state : 'closed';
             }
-            if ('is_moderator' in data) {
-                data2.is_moderator = data.is_moderator;
-            }
             if ('is_pinned' in data) {
                 data2.isServerPinned = data.is_pinned;
             }
@@ -183,12 +183,6 @@ function factory(dependencies) {
                     res_id: data2.id,
                 });
                 data2.serverLastMessage = insert(messageData);
-            }
-            if ('mass_mailing' in data) {
-                data2.mass_mailing = data.mass_mailing;
-            }
-            if ('moderation' in data) {
-                data2.moderation = data.moderation;
             }
             if ('message_needaction_counter' in data) {
                 data2.message_needaction_counter = data.message_needaction_counter;
@@ -645,20 +639,9 @@ function factory(dependencies) {
                 !thread.isTemporary &&
                 thread.model === 'mail.channel' &&
                 thread.channel_type === 'channel' &&
-                thread.name &&
-                cleanSearchTerm(thread.name).includes(cleanedSearchTerm)
+                thread.displayName &&
+                cleanSearchTerm(thread.displayName).includes(cleanedSearchTerm)
             )];
-        }
-
-        /**
-         * @param {string} [stringifiedDomain='[]']
-         * @returns {mail.thread_cache}
-         */
-        cache(stringifiedDomain = '[]') {
-            return this.env.models['mail.thread_cache'].insert({
-                stringifiedDomain,
-                thread: link(this),
-            });
         }
 
         /**
@@ -726,7 +709,7 @@ function factory(dependencies) {
          * Load new messages on the main cache of this thread.
          */
         loadNewMessages() {
-            this.mainCache.loadNewMessages();
+            this.cache.loadNewMessages();
         }
 
         /**
@@ -999,22 +982,34 @@ function factory(dependencies) {
         }
 
         /**
-         * Rename the given thread with provided new name.
+         * Renames this thread to the given new name.
+         * Only makes sense for channels.
          *
          * @param {string} newName
          */
         async rename(newName) {
-            if (this.channel_type === 'chat') {
-                await this.async(() => this.env.services.rpc({
-                    model: 'mail.channel',
-                    method: 'channel_set_custom_name',
-                    args: [this.id],
-                    kwargs: {
-                        name: newName,
-                    },
-                }));
-            }
-            this.update({ custom_channel_name: newName });
+            return this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'channel_rename',
+                args: [this.id],
+                kwargs: { name: newName },
+            });
+        }
+
+        /**
+         * Sets the custom name of this thread for the current user to the given
+         * new name.
+         * Only makes sense for channels.
+         *
+         * @param {string} newName
+         */
+        async setCustomName(newName) {
+            return this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'channel_set_custom_name',
+                args: [this.id],
+                kwargs: { name: newName },
+            });
         }
 
         /**
@@ -1177,10 +1172,18 @@ function factory(dependencies) {
             if (this.model !== 'mail.channel') {
                 return false;
             }
-            if (this.mass_mailing) {
-                return false;
-            }
             return ['chat', 'livechat'].includes(this.channel_type);
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsChannelRenamable() {
+            return (
+                this.model === 'mail.channel' &&
+                ['chat', 'channel'].includes(this.channel_type)
+            );
         }
 
         /**
@@ -1199,20 +1202,6 @@ function factory(dependencies) {
             return this.followers.some(follower =>
                 follower.partner && follower.partner === this.env.messaging.currentPartner
             );
-        }
-
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsModeratedByCurrentPartner() {
-            if (!this.messaging) {
-                return false;
-            }
-            if (!this.messaging.currentPartner) {
-                return false;
-            }
-            return this.moderators.includes(this.env.messaging.currentPartner);
         }
 
         /**
@@ -1340,17 +1329,6 @@ function factory(dependencies) {
                 return link(lastNeedactionMessageAsOriginThread);
             }
             return unlink();
-        }
-
-        /**
-         * @private
-         * @returns {mail.thread_cache}
-         */
-        _computeMainCache() {
-            return insert({
-                stringifiedDomain: '[]',
-                thread: link(this),
-            });
         }
 
         /**
@@ -1736,9 +1714,12 @@ function factory(dependencies) {
         attachments: many2many('mail.attachment', {
             inverse: 'threads',
         }),
-        caches: one2many('mail.thread_cache', {
+        cache: one2one('mail.thread_cache', {
+            default: create(),
             inverse: 'thread',
             isCausal: true,
+            readonly: true,
+            required: true,
         }),
         channel_type: attr(),
         /**
@@ -1778,6 +1759,10 @@ function factory(dependencies) {
         }),
         creator: many2one('mail.user'),
         custom_channel_name: attr(),
+        /**
+         * States the description of this thread. Only applies to channels.
+         */
+        description: attr(),
         displayName: attr({
             compute: '_computeDisplayName',
             dependencies: [
@@ -1820,12 +1805,19 @@ function factory(dependencies) {
             default: false,
             dependencies: [
                 'channel_type',
-                'mass_mailing',
                 'model',
             ],
         }),
         id: attr({
             required: true,
+        }),
+        /**
+         * Determines whether this thread can be renamed.
+         * Only makes sense for channels.
+         */
+        isChannelRenamable: attr({
+            compute: '_computeIsChannelRenamable',
+            dependencies: ['channel_type', 'model'],
         }),
         /**
          * States whether this thread is a `mail.channel` qualified as chat.
@@ -1853,13 +1845,6 @@ function factory(dependencies) {
          */
         isLoadingAttachments: attr({
             default: false,
-        }),
-        isModeratedByCurrentPartner: attr({
-            compute: '_computeIsModeratedByCurrentPartner',
-            dependencies: [
-                'messagingCurrentPartner',
-                'moderators',
-            ],
         }),
         /**
          * Determine if there is a pending pin state change, which is a change
@@ -1894,9 +1879,6 @@ function factory(dependencies) {
             default: false,
         }),
         isTemporary: attr({
-            default: false,
-        }),
-        is_moderator: attr({
             default: false,
         }),
         lastCurrentPartnerMessageSeenByEveryone: many2one('mail.message', {
@@ -1962,12 +1944,6 @@ function factory(dependencies) {
                 'serverMessageUnreadCounter',
             ],
         }),
-        mainCache: one2one('mail.thread_cache', {
-            compute: '_computeMainCache',
-        }),
-        mass_mailing: attr({
-            default: false,
-        }),
         members: many2many('mail.partner', {
             inverse: 'memberThreads',
         }),
@@ -2032,15 +2008,6 @@ function factory(dependencies) {
             required: true,
         }),
         model_name: attr(),
-        moderation: attr({
-            default: false,
-        }),
-        /**
-         * Partners that are moderating this thread (only applies to channels).
-         */
-        moderators: many2many('mail.partner', {
-            inverse: 'moderatedChannels',
-        }),
         moduleIcon: attr(),
         name: attr(),
         /**

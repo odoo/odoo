@@ -16,18 +16,18 @@
             </t>
             <div class="media-body px-3">
                 <t t-set="description" t-value="widget.displayDescription and product['description_sale']"/>
-                <h6 t-attf-class="font-weight-bold #{description ? '' : 'mb-0'}" t-esc="product['name']"/>
-                <p t-if="description" class="mb-0" t-raw="description"/>
+                <h6 t-attf-class="font-weight-bold #{description ? '' : 'mb-0'}" t-out="product['name']"/>
+                <p t-if="description" class="mb-0" t-out="description"/>
             </div>
             <div t-if="widget.displayPrice" class="flex-shrink-0">
                 <t t-if="product['has_discounted_price']">
                     <span class="text-danger text-nowrap" style="text-decoration: line-through;">
-                        <t t-raw="product['list_price']"/>
+                        <t t-out="product['list_price']"/>
                     </span>
                     <br/>
                 </t>
                 <b class="text-nowrap">
-                    <t t-raw="product['price']"/>
+                    <t t-out="product['price']"/>
                 </b>
             </div>
         </div>
@@ -39,7 +39,7 @@
 
 <!-- Products Search Bar autocomplete item -->
 <we-button t-name="website_sale.ribbonSelectItem" t-att-data-set-ribbon="ribbon.id">
-    <t t-raw="ribbon.html"/>
+    <t t-out="ribbon.html"/>
     <span t-attf-class="fa fa-#{isTag ? 'tag' : 'bookmark'} ml-auto"></span>
     <span t-attf-class="fa fa-arrow-#{isLeft ? 'left' : 'right'} ml-1"></span>
     <span t-attf-class="o_wsale_color_preview #{colorClasses} ml-1" t-attf-style="background-color: #{ribbon.bg_color}"></span>

@@ -16,6 +16,7 @@ const CSS_SHORTHANDS = {
     'border-radius': ['border-top-left-radius', 'border-top-right-radius', 'border-bottom-right-radius', 'border-bottom-left-radius'],
     'border-color': ['border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color'],
     'border-style': ['border-top-style', 'border-right-style', 'border-bottom-style', 'border-left-style'],
+    'padding': ['padding-top', 'padding-right', 'padding-bottom', 'padding-left'],
 };
 /**
  * Key-value mapping to list converters from an unit A to an unit B.
@@ -31,6 +32,8 @@ const CSS_UNITS_CONVERSION = {
     'ms-s': () => 0.001,
     'rem-px': () => _computePxByRem(),
     'px-rem': () => _computePxByRem(true),
+    '%-px': () => -1, // Not implemented but should simply be ignored for now
+    'px-%': () => -1, // Not implemented but should simply be ignored for now
 };
 /**
  * Colors of the default palette, used for substitution in shapes/illustrations.

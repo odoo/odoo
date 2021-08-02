@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.tests import tagged
+
 from freezegun import freeze_time
 
 
+@tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUBL(AccountEdiTestCommon):
 
     @classmethod
@@ -59,7 +62,7 @@ class TestUBL(AccountEdiTestCommon):
             <Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
                 <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0</cbc:CustomizationID>
                 <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
-                <cbc:ID>INV/2020/12/0001</cbc:ID>
+                <cbc:ID>INV/2020/00001</cbc:ID>
                 <cbc:IssueDate>2020-12-16</cbc:IssueDate>
                 <cbc:DueDate>2020-12-16</cbc:DueDate>
                 <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>

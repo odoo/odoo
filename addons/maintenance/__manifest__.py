@@ -26,5 +26,6 @@
         'web.assets_backend': [
             'maintenance/static/src/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

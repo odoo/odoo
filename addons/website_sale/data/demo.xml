@@ -59,6 +59,37 @@
             <field name="website_size_x">2</field>
             <field name="website_size_y">2</field>
             <field name="website_sequence">9950</field>
+            <field name="website_description" type="html">
+                <section class="s_text_image pt32 pb32 o_colored_level o_cc o_cc1" data-snippet="s_text_image" data-name="Text - Image">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="pt16 pb16 col-lg-6">
+                                <h2>Ergonomic</h2>
+                                <p>Press a button and watch your desk glide effortlessly from sitting to standing height in seconds.</p>
+                                <p>The minimum height is 65 cm, and for standing work the maximum height position is 125 cm.</p>
+                            </div>
+                            <div class="pt16 pb16 col-lg-6">
+                                <img src="/website/static/src/img/snippets_demo/s_text_image.jpg" class="img img-fluid mx-auto" alt=""/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_text_image pt32 pb32 o_colored_level o_cc o_cc1" data-snippet="s_image_text" data-name="Image - Text">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="pt16 pb16 col-lg-6">
+                                <img src="/website_sale/static/src/img/carpentry.jpg" class="img img-fluid mx-auto" alt=""/>
+                            </div>
+                            <div class="pt16 pb16 col-lg-6">
+                                <h2>Locally handmade</h2>
+                                <p>We pay special attention to detail, which is why our desks are of a superior quality.</p>
+                                <p>Looking for a custom bamboo stain to match existing furniture? Contact us for a quote.</p>
+                                <p><a href="/contactus" class="mb-2 btn btn-primary">Contact Us</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </field>
         </record>
 
         <record id="product.product_product_6" model="product.product">
@@ -476,7 +507,7 @@
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">1</field>
             <field name="product_uom" ref="uom.product_uom_unit"/>
-            <field name="price_unit">2950.00</field>
+            <field name="price_unit">295.00</field>
         </record>
 
         <record id="website_sale_order_line_10" model="sale.order.line">
@@ -485,7 +516,7 @@
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">1</field>
             <field name="product_uom" ref="uom.product_uom_unit"/>
-            <field name="price_unit">12.50</field>
+            <field name="price_unit">120.50</field>
         </record>
 
         <!-- Active Carts -->
@@ -507,7 +538,7 @@
             <field name="product_id" ref="product.product_product_11"/>
             <field name="product_uom_qty">2</field>
             <field name="product_uom" ref="uom.product_uom_unit"/>
-            <field name="price_unit">16.50</field>
+            <field name="price_unit">33</field>
         </record>
 
         <!-- Abandoned Carts -->
@@ -656,6 +687,7 @@
             <field name="categ_id" ref="product.product_category_3"/>
             <field name="invoice_policy">delivery</field>
             <field name="public_categ_ids" eval="[(6, 0, [ref('website_sale.services')])]"/>
+            <field name="image_1920" type="base64" file="website_sale/static/src/img/warranty.png"/>
         </record>
 
         <record id="product_1_attribute_3_product_template_attribute_line" model="product.template.attribute.line">

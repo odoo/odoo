@@ -10,13 +10,19 @@ import { capitalize } from "../utils/strings";
 const { hooks } = owl;
 const { useState } = hooks;
 
-const odooExceptionTitleMap = new Map();
-
-odooExceptionTitleMap.set("odoo.exceptions.AccessDenied", _lt("Access Denied"));
-odooExceptionTitleMap.set("odoo.exceptions.AccessError", _lt("Access Error"));
-odooExceptionTitleMap.set("odoo.exceptions.MissingError", _lt("Missing Record"));
-odooExceptionTitleMap.set("odoo.exceptions.UserError", _lt("User Error"));
-odooExceptionTitleMap.set("odoo.exceptions.ValidationError", _lt("Validation Error"));
+export const odooExceptionTitleMap = new Map(
+    Object.entries({
+        "odoo.addons.base.models.ir_mail_server.MailDeliveryException": _lt(
+            "MailDeliveryException"
+        ),
+        "odoo.exceptions.AccessDenied": _lt("Access Denied"),
+        "odoo.exceptions.MissingError": _lt("Missing Record"),
+        "odoo.exceptions.UserError": _lt("User Error"),
+        "odoo.exceptions.ValidationError": _lt("Validation Error"),
+        "odoo.exceptions.AccessError": _lt("Access Error"),
+        "odoo.exceptions.Warning": _lt("Warning")
+    })
+);
 
 // -----------------------------------------------------------------------------
 // Generic Error Dialog
@@ -25,7 +31,7 @@ export class ErrorDialog extends Dialog {
     setup() {
         super.setup();
         this.state = useState({
-            showTraceback: false,
+            showTraceback: false
         });
     }
     onClickClipboard() {
@@ -45,12 +51,6 @@ export class ClientErrorDialog extends ErrorDialog {}
 ClientErrorDialog.title = _lt("Odoo Client Error");
 
 // -----------------------------------------------------------------------------
-// Server Error Dialog
-// -----------------------------------------------------------------------------
-export class ServerErrorDialog extends ErrorDialog {}
-ServerErrorDialog.title = _lt("Odoo Server Error");
-
-// -----------------------------------------------------------------------------
 // Network Error Dialog
 // -----------------------------------------------------------------------------
 export class NetworkErrorDialog extends ErrorDialog {}
@@ -59,13 +59,9 @@ NetworkErrorDialog.title = _lt("Odoo Network Error");
 // -----------------------------------------------------------------------------
 // RPC Error Dialog
 // -----------------------------------------------------------------------------
-export class RPCErrorDialog extends Dialog {
+export class RPCErrorDialog extends ErrorDialog {
     setup() {
         super.setup();
-        this.title = this.env._t("Odoo Error");
-        this.state = useState({
-            showTraceback: false,
-        });
         this.inferTitle();
         this.traceback = this.props.traceback;
         if (this.props.data && this.props.data.debug) {
@@ -99,7 +95,6 @@ export class RPCErrorDialog extends Dialog {
         );
     }
 }
-RPCErrorDialog.bodyTemplate = "web.ErrorDialogBody";
 
 // -----------------------------------------------------------------------------
 // Warning Dialog
@@ -140,9 +135,11 @@ export class RedirectWarningDialog extends Dialog {
         this.additionalContext = additional_context;
     }
     async onClick() {
-        await this.actionService.doAction(this.actionId, {
-            additionalContext: this.additionalContext,
-        });
+        const options = {};
+        if (this.additionalContext) {
+            options.additionalContext = this.additionalContext;
+        }
+        await this.actionService.doAction(this.actionId, options);
         this.close();
     }
     onCancel() {

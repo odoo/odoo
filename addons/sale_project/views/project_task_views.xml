@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="project_project_view_inherit_project_filter" model="ir.ui.view">
+        <field name="name">project.project.select.inherit.project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="sale_order_id"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="project_project_view_tree_inherit_sale_project" model="ir.ui.view">
         <field name="name">project.project.tree.inherit.sale.project</field>
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.view_project"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='analytic_account_id']" position="after">
-                <field name="sale_order_id" optional="hide" widget="sale_order_many2one"/>
+            <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="sale_line_id" optional="hide" widget="sale_order_many2one" readonly="1"/>
             </xpath>
         </field>
@@ -18,6 +28,15 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(project.act_project_project_2_project_task_all)d']" position="before">
+                <button class="d-none d-md-inline oe_stat_button"
+                        type="object" name="action_view_so" icon="fa-dollar"
+                        attrs="{'invisible': [('sale_order_id', '=', False)]}"
+                        string="Sales Order"
+                        groups="sales_team.group_sale_salesman_all_leads">
+                    <field name="sale_order_id" attrs="{'invisible': True}"/> 
+                </button>
+            </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'always_reload': True}</attribute>
                 <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
@@ -31,13 +50,13 @@
         <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
-            <div name="button_box" position="inside">
+            <xpath expr="//button[@name='action_recurring_tasks']" position="before">
                 <button class="d-none d-md-inline oe_stat_button"
                         type="object" name="action_view_so" icon="fa-dollar"
                         attrs="{'invisible': [('sale_order_id', '=', False)]}"
                         string="Sales Order"
                         groups="sales_team.group_sale_salesman_all_leads"/>
-            </div>
+            </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'always_reload': True}</attribute>
                 <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
@@ -68,8 +87,11 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_search_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='stage_id']" position="before">
+            <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="sale_order_id" string="Sale Order" filter_domain="['|', ('sale_order_id', 'ilike', self), ('sale_line_id', 'ilike', self)]"/>
+            </xpath>
+            <xpath expr="//search/group/filter[@name='customer']" position="after">
+                <filter string="Sales Order Item" name="sale_order_id" context="{'group_by': 'sale_order_id'}"/>
             </xpath>
         </field>
     </record>

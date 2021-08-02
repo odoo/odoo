@@ -2128,6 +2128,45 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('url old content is cleaned on render edit', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.foo2 = { string: "Foo2", type: "char", default: "foo2" };
+        this.data.partner.onchanges.foo2 = function (record) {
+            record.foo = record.foo2;
+        }
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:`
+                <form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="url" attrs="{'readonly': True}" />
+                            <field name="foo2" />
+                        </group>
+                    </sheet>
+                </form>
+                `,
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name=foo]').text(), 'yop',
+            "the starting value should be displayed properly");
+        await testUtils.form.clickEdit(form);
+
+        assert.strictEqual(form.$('.o_field_widget[name=foo2]').val(), 'foo2',
+            "input should contain field value in edit mode");
+        
+        await testUtils.fields.editInput(form.$('.o_field_widget[name=foo2]'), 'bonjour');
+        assert.strictEqual(form.$('.o_field_widget[name=foo]').text(), 'bonjour',
+        "Url widget should show the new value and not " + form.$('.o_field_widget[name=foo]').text());
+
+        form.destroy();
+    });
+
     QUnit.module('CopyClipboard');
 
     QUnit.test('Char & Text Fields: Copy to clipboard button', async function (assert) {
@@ -3852,6 +3891,49 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('Daterange field manually input wrong value should show toaster', async function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.date_end = { string: 'Date End', type: 'date' };
+        this.data.partner.records[0].date_end = '2017-02-08';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+            <form>
+                <field name="date" widget="daterange" options="{'related_end_date': 'date_end'}"/>
+                <field name="date_end" widget="daterange" options="{'related_start_date': 'date'}"/>
+            </form>`,
+            interceptsPropagate: {
+                call_service: function (ev) {
+                    if (ev.data.service === 'notification') {
+                        assert.strictEqual(ev.data.method, 'notify');
+                        assert.strictEqual(ev.data.args[0].title, 'Invalid fields:');
+                        assert.strictEqual(ev.data.args[0].message, '<ul><li>A date</li></ul>');
+                    }
+                }
+            },
+        });
+
+        await testUtils.fields.editInput(form.$('.o_field_date_range:first'), 'blabla');
+        // click outside daterange field
+        await testUtils.dom.click(form.$el);
+        assert.hasClass(form.$('input[name=date]'), 'o_field_invalid',
+            "date field should be displayed as invalid");
+        // update input date with right value
+        await testUtils.fields.editInput(form.$('.o_field_date_range:first'), '02/08/2017');
+        assert.doesNotHaveClass(form.$('input[name=date]'), 'o_field_invalid',
+            "date field should not be displayed as invalid now");
+
+        // again enter wrong value and try to save should raise invalid fields value
+        await testUtils.fields.editInput(form.$('.o_field_date_range:first'), 'blabla');
+        await testUtils.form.clickSave(form);
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDate');
 
     QUnit.test('date field: toggle datepicker [REQUIRE FOCUS]', async function (assert) {
@@ -3910,7 +3992,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 0,
             "datepicker should be closed initially");
 
-        testUtils.openDatepicker(form.$('.o_datepicker'));
+        testUtils.dom.openDatepicker(form.$('.o_datepicker'));
 
         assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 1,
             "datepicker should be opened");
@@ -4375,7 +4457,7 @@ QUnit.module('basic_fields', {
 
         var dateViewForm = form.$('.o_field_date').text();
         await testUtils.dom.click(form.$buttons.find('.o_form_button_edit'));
-        await testUtils.openDatepicker(form.$('.o_datepicker'));
+        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
         assert.strictEqual(form.$('.o_datepicker_input').val(), dateViewForm,
             "input date field should be the same as it was in the view form");
 
@@ -4915,8 +4997,93 @@ QUnit.module('basic_fields', {
         unpatchDate();
     });
 
+    QUnit.test('remaining_days widget on a date field in multi edit list view', async function (assert) {
+        assert.expect(7);
+
+        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        this.data.partner.records = [
+            { id: 1, date: '2017-10-08' }, // today
+            { id: 2, date: '2017-10-09' }, // tomorrow
+            { id: 8, date: false },
+        ];
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree multi_edit="1"><field name="date" widget="remaining_days"/></tree>',
+            translateParameters: { // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+            },
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:nth(0)').text(), 'Today');
+        assert.strictEqual(list.$('.o_data_cell:nth(1)').text(), 'Tomorrow');
+
+        // select two records and edit them
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell'));
+        assert.containsOnce(list, 'input.o_datepicker_input', 'should have date picker input');
+        await testUtils.fields.editAndTrigger(list.$('.o_datepicker_input'), '10/10/2017', ['input', 'change', 'focusout']);
+
+        assert.containsOnce(document.body, '.modal');
+        assert.strictEqual($('.modal .o_field_widget').text(), "In 2 days",
+            "should have 'In 2 days' value to change");
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+
+        assert.strictEqual(list.$('.o_data_row:first .o_data_cell').text(), "In 2 days",
+            "should have 'In 2 days' as date field value");
+        assert.strictEqual(list.$('.o_data_row:nth(1) .o_data_cell').text(), "In 2 days",
+            "should have 'In 2 days' as date field value");
+
+        list.destroy();
+        unpatchDate();
+    });
+
+    QUnit.test('remaining_days widget, enter wrong value manually in multi edit list view', async function (assert) {
+        assert.expect(6);
+
+        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        this.data.partner.records = [
+            { id: 1, date: '2017-10-08' }, // today
+            { id: 2, date: '2017-10-09' }, // tomorrow
+            { id: 8, date: false },
+        ];
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree multi_edit="1"><field name="date" widget="remaining_days"/></tree>',
+            translateParameters: { // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+            },
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:nth(0)').text(), 'Today');
+        assert.strictEqual(list.$('.o_data_cell:nth(1)').text(), 'Tomorrow');
+
+        // select two records and edit them
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell'));
+        assert.containsOnce(list, 'input.o_datepicker_input', 'should have date picker input');
+        await testUtils.fields.editAndTrigger(list.$('.o_datepicker_input'), 'blabla', ['input', 'change']);
+        await testUtils.dom.click(list.$el);
+
+        assert.containsNone(document.body, '.modal');
+        assert.strictEqual(list.$('.o_data_cell:nth(0)').text(), 'Today');
+        assert.strictEqual(list.$('.o_data_cell:nth(1)').text(), 'Tomorrow');
+
+        list.destroy();
+        unpatchDate();
+    });
+
     QUnit.test('remaining_days widget on a date field in form view', async function (assert) {
-        assert.expect(4);
+        assert.expect(8);
 
         const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
         this.data.partner.records = [
@@ -4934,11 +5101,64 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('.o_field_widget').text(), 'Today');
         assert.hasClass(form.$('.o_field_widget'), 'font-weight-bold text-warning');
 
-        // in edit mode, this widget should not be editable.
+        // in edit mode, this widget should be editable.
         await testUtils.form.clickEdit(form);
 
         assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
-        assert.containsOnce(form, 'div.o_field_widget[name=date]');
+        assert.containsOnce(form, 'div.o_field_widget[name=date] .o_datepicker');
+
+        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 1,
+            "datepicker should be opened");
+
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .day[data-day="10/09/2017"]'));
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').text(), 'Tomorrow');
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .day[data-day="10/07/2017"]'));
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').text(), 'Yesterday');
+        assert.hasClass(form.$('.o_field_widget'), 'text-danger');
+
+        form.destroy();
+        unpatchDate();
+    });
+
+    QUnit.test('remaining_days widget on a datetime field in form view', async function (assert) {
+        assert.expect(6);
+
+        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        this.data.partner.records = [
+            { id: 1, datetime: '2017-10-08 10:00:00' }, // today
+        ];
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="datetime" widget="remaining_days"/></form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget').text(), 'Today');
+        assert.hasClass(form.$('.o_field_widget'), 'text-warning');
+
+        // in edit mode, this widget should be editable.
+        await testUtils.form.clickEdit(form);
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+        assert.containsOnce(form, 'div.o_field_widget[name=datetime] .o_datepicker');
+
+        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 1,
+            "datepicker should be opened");
+
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .day[data-day="10/09/2017"]'));
+        await testUtils.dom.click($('a[data-action="close"]'));
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').text(), 'Tomorrow');
 
         form.destroy();
         unpatchDate();
@@ -6458,7 +6678,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('state_selection widget in editable list view', async function (assert) {
-        assert.expect(32);
+        assert.expect(33);
 
         var list = await createView({
             View: ListView,
@@ -6499,6 +6719,7 @@ QUnit.module('basic_fields', {
             "should still have one green status");
         assert.containsNone(list, '.dropdown-menu.state:visible',
             "there should not be a dropdown");
+        assert.containsNone(list, 'tr.o_selected_row', 'should not be in edit mode');
 
         // switch to edit mode and check the result
         $cell = list.$('tbody td.o_state_selection_cell').first();
@@ -7564,7 +7785,7 @@ QUnit.module('basic_fields', {
         var top = $progressBarEl.offset().top + 5;
         var left = $progressBarEl.offset().left + 5;
         try {
-            testUtils.triggerPositionalMouseEvent(left, top, "click");
+            testUtils.dom.triggerPositionalMouseEvent(left, top, "click");
         } catch (e) {
             form.destroy();
             $view.remove();
@@ -7611,7 +7832,7 @@ QUnit.module('basic_fields', {
         var top = $progressBarEl.offset().top + 5;
         var left = $progressBarEl.offset().left + 5;
         try {
-            testUtils.triggerPositionalMouseEvent(left, top, "click");
+            testUtils.dom.triggerPositionalMouseEvent(left, top, "click");
         } catch (e) {
             form.destroy();
             $view.remove();

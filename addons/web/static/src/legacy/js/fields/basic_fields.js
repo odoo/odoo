@@ -695,6 +695,31 @@ var FieldDateRange = InputField.extend({
         }
         this._super.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Field widget is valid if value entered can convered to date/dateime value
+     * while parsing input value to date/datetime throws error then widget considered
+     * invalid
+     *
+     * @override
+     */
+    isValid: function () {
+        const value = this.mode === "readonly" ? this.value : this.$input.val();
+        try {
+            return field_utils.parse[this.formatType](value, this.field, { timezone: true }) || true;
+        } catch (error) {
+            return false;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * Return the date written in the input, in UTC.
      *
@@ -702,7 +727,14 @@ var FieldDateRange = InputField.extend({
      * @returns {Moment|false}
      */
     _getValue: function () {
-        return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
+        try {
+            // user may enter manual value in input and it may not be parsed as date/datetime value
+            this.removeInvalidClass();
+            return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
+        } catch (error) {
+            this.setInvalidClass();
+            return false;
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -926,8 +958,8 @@ var FieldDate = InputField.extend({
      * @returns {boolean}
      */
     _isSameValue: function (value) {
-        if (value === false) {
-            return this.value === false;
+        if (this.value === false || value === false) {
+            return this.value === value;
         }
         return value.isSame(this.value, 'day');
     },
@@ -1005,8 +1037,8 @@ var FieldDateTime = FieldDate.extend({
      * @private
      */
     _isSameValue: function (value) {
-        if (value === false) {
-            return this.value === false;
+        if (this.value === false || value === false) {
+            return this.value === value;
         }
         return value.isSame(this.value);
     },
@@ -1036,9 +1068,82 @@ const RemainingDays = AbstractField.extend({
     description: _lt("Remaining Days"),
     supportedFieldTypes: ['date', 'datetime'],
 
+    /**
+     * @override
+     */
+    init() {
+        this._super(...arguments);
+        // use the session timezone when formatting dates
+        this.formatOptions.timezone = true;
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the associated <input/> element.
+     *
+     * @override
+     */
+    getFocusableElement() {
+        return this.datewidget && this.datewidget.$input || $();
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @returns {string} the content of the input
+     */
+    _getValue() {
+        let value = this.datewidget.getValue();
+        if (this.field.type === "datetime") {
+            value = value && value.add(-this.getSession().getTZOffset(value), 'minutes');
+        }
+        return value;
+    },
+    /**
+     * Instantiates a new DateWidget datepicker.
+     *
+     * @private
+     */
+    _makeDatePicker() {
+        this.datepickerOptions = _.defaults({}, { defaultDate: this.value });
+        if (this.field.type === "datetime" && this.value) {
+            const offset = this.getSession().getTZOffset(this.value);
+            const displayedValue = this.value.clone().add(offset, 'minutes');
+            this.datepickerOptions.defaultDate = displayedValue;
+        }
+        if (this.field.type === "date") {
+            return new datepicker.DateWidget(this, this.datepickerOptions);
+        }
+        return new datepicker.DateTimeWidget(this, this.datepickerOptions);
+    },
+    /**
+     * Displays date/datetime picker in edit mode.
+     *
+     * @override
+     */
+    async _renderEdit() {
+        await this._super(...arguments);
+        if (this.datewidget) {
+            this.datewidget.destroy();
+        }
+
+        this.datewidget = this._makeDatePicker();
+        this.datewidget.on('datetime_changed', this, () => {
+            const value = this._getValue();
+            if ((!value && this.value) || (value && !this._isSameValue(value))) {
+                this._setValue(value);
+            }
+        });
+
+        await this.datewidget.appendTo('<div>');
+        this.$el.append(this.datewidget.$el);
+    },
 
     /**
      * Displays the delta (in days) between the value of the field and today. If
@@ -1047,7 +1152,7 @@ const RemainingDays = AbstractField.extend({
      *
      * @override
      */
-    _render() {
+    _renderReadonly() {
         if (this.value === false) {
             this.$el.removeClass('font-weight-bold text-danger text-warning');
             return;
@@ -1741,6 +1846,7 @@ var UrlWidget = InputField.extend({
             href: href,
             target: '_blank',
         });
+        this.el.textContent = '';
         this.el.appendChild(anchorEl);
     },
 
@@ -2528,6 +2634,10 @@ var PriorityWidget = AbstractField.extend({
 
 var AttachmentImage = AbstractField.extend({
     className: 'o_attachment_image',
+    // Remove event handlers on this widget to ensure that the kanban 'global
+    // click' opens the clicked record, click on abstractField is useful in
+    // Form and List view only.
+    events: _.omit(AbstractField.prototype.events, 'click'),
 
     //--------------------------------------------------------------------------
     // Private
@@ -2650,6 +2760,9 @@ var StateSelectionWidget = AbstractField.extend({
      */
     _setSelection: function (ev) {
         ev.preventDefault();
+        if (this.mode !== 'edit') {
+            ev.stopPropagation();
+        }
         var $item = $(ev.currentTarget);
         var value = String($item.data('value'));
         this._setValue(value);

@@ -31,6 +31,7 @@
             <field name="name">Internal training</field>
             <field name="user_id" ref="base.user_admin"/>
             <field name="project_id" ref="project.project_project_1"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
         </record>
 
         <!-- Products -->

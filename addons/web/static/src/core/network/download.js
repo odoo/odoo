@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
-import { NetworkErrorDialog, ServerErrorDialog } from "../errors/error_dialogs";
 import { _lt } from "../l10n/translation";
+import { makeErrorFromResponse } from "@web/core/network/rpc_service";
+import { ConnectionLostError } from "@web/core/network/rpc_service";
+import { browser } from "@web/core/browser/browser";
 
 // -----------------------------------------------------------------------------
 // Content Disposition Library
@@ -456,7 +458,7 @@ export function download(options) {
 
 download._download = (options) => {
     return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
+        const xhr = new browser.XMLHttpRequest();
         let data;
         if (Object.prototype.hasOwnProperty.call(options, "form")) {
             xhr.open(options.form.method, options.form.action);
@@ -477,6 +479,8 @@ download._download = (options) => {
         xhr.responseType = "blob";
         xhr.onload = () => {
             const mimetype = xhr.response.type;
+            // In Odoo, the default mimetype, including for JSON errors is text/html (ref: http.py:Root.get_response )
+            // in that case, we have to assume the file is not valid, hence that there was an error
             if (xhr.status === 200 && mimetype !== "text/html") {
                 // replace because apparently we send some C-D headers with a trailing ";"
                 const header = (xhr.getResponseHeader("Content-Disposition") || "").replace(
@@ -486,6 +490,9 @@ download._download = (options) => {
                 const filename = header ? parse(header).parameters.filename : null;
                 _download(xhr.response, filename, mimetype);
                 return resolve(filename);
+
+            } else if (xhr.status === 502) { // If Odoo is behind another server (nginx)
+                reject(new ConnectionLostError());
             } else {
                 const decoder = new FileReader();
                 decoder.onload = () => {
@@ -493,32 +500,30 @@ download._download = (options) => {
                     const doc = new DOMParser().parseFromString(contents, "text/html");
                     const nodes =
                         doc.body.children.length === 0 ? doc.body.childNodes : doc.body.children;
-                    const error = new Error();
-                    error.name = "XHR_SERVER_ERROR";
-                    error.Component = ServerErrorDialog;
-                    try {
-                        // Case of a serialized Odoo Exception: It is Json Parsable
+
+                    let error;
+                    try { // a Serialized python Error
                         const node = nodes[1] || nodes[0];
-                        error.message = "Serialized Python Exception";
-                        error.traceback = JSON.parse(node.textContent);
+                        error = JSON.parse(node.textContent);
                     } catch (e) {
-                        // Arbitrary uncaught python side exception
-                        error.message = "Arbitrary Uncaught Python Exception";
-                        error.traceback = `${xhr.status}
-                        ${nodes.length > 0 ? nodes[0].textContent : ""}
-                        ${nodes.length > 1 ? nodes[1].textContent : ""}
-                    `;
+                        error = {
+                            message: "Arbitrary Uncaught Python Exception",
+                            data: {
+                                debug: `${xhr.status}` + `\n` +
+                                   `${nodes.length > 0 ? nodes[0].textContent : ""}
+                                    ${nodes.length > 1 ? nodes[1].textContent : ""}`
+                            },
+
+                        };
                     }
+                    error = makeErrorFromResponse(error);
                     reject(error);
                 };
                 decoder.readAsText(xhr.response);
             }
         };
         xhr.onerror = () => {
-            const error = new Error();
-            error.name = "XHR_NETWORK_ERROR";
-            error.Component = NetworkErrorDialog;
-            reject(error);
+            reject(new ConnectionLostError());
         };
         xhr.send(data);
     });

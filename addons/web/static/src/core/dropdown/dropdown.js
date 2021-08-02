@@ -48,7 +48,7 @@ export class Dropdown extends Component {
         // Set up UI active element related behavior ---------------------------
         this.ui = useService("ui");
         useBus(this.ui.bus, "active-element-changed", (activeElement) => {
-            if (activeElement !== this.myActiveEl && !this.state.open) {
+            if (activeElement !== this.myActiveEl && this.state.open) {
                 // Close when UI active element changes to something different
                 this.close();
             }
@@ -116,7 +116,6 @@ export class Dropdown extends Component {
                 for (const [hotkey, callback] of Object.entries(hotkeyCallbacks)) {
                     this.hotkeyRemoves.push(
                         this.hotkeyService.add(hotkey, callback, {
-                            altIsOptional: true,
                             allowRepeat: true,
                         })
                     );
@@ -131,6 +130,25 @@ export class Dropdown extends Component {
         }
 
         useEffect(autoSubscribeKeynav.bind(this));
+
+        if (this.props.toggler === "parent") {
+            useEffect(
+                () => {
+                    const onClick = (ev) => {
+                        if (this.el.contains(ev.target)) {
+                            // ignore clicks inside the dropdown
+                            return;
+                        }
+                        this.toggle();
+                    };
+                    this.el.parentElement.addEventListener("click", onClick);
+                    return () => {
+                        this.el.parentElement.removeEventListener("click", onClick);
+                    };
+                },
+                () => []
+            );
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -277,8 +295,10 @@ export class Dropdown extends Component {
         if (this.ui.activeElement !== this.myActiveEl) {
             return;
         }
-
-        const gotClickedInside = this.el.contains(ev.target);
+        // Close if we clicked outside the dropdown, or outside the parent
+        // element if it is the toggler
+        const rootEl = this.props.toggler === "parent" ? this.el.parentElement : this.el;
+        const gotClickedInside = rootEl.contains(ev.target);
         if (!gotClickedInside) {
             this.close();
         }
@@ -286,6 +306,11 @@ export class Dropdown extends Component {
 }
 Dropdown.bus = new EventBus();
 Dropdown.props = {
+    toggler: {
+        type: String,
+        optional: true,
+        validate: (prop) => ["parent"].includes(prop),
+    },
     startOpen: {
         type: Boolean,
         optional: true,

@@ -6,7 +6,7 @@ import pytz
 
 from odoo import _, api, Command, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.tools import format_datetime
+from odoo.tools import format_datetime, is_html_empty
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import html_translate
 
@@ -25,13 +25,10 @@ class EventType(models.Model):
     _order = 'sequence, id'
 
     name = fields.Char('Event Template', required=True, translate=True)
+    note = fields.Html(string='Note')
     sequence = fields.Integer()
     # tickets
-    use_ticket = fields.Boolean('Ticketing')
-    event_type_ticket_ids = fields.One2many(
-        'event.type.ticket', 'event_type_id',
-        string='Tickets', compute='_compute_event_type_ticket_ids',
-        readonly=False, store=True)
+    event_type_ticket_ids = fields.One2many('event.type.ticket', 'event_type_id', string='Tickets')
     tag_ids = fields.Many2many('event.tag', string="Tags")
     # registration
     has_seats_limitation = fields.Boolean('Limited Seats')
@@ -43,46 +40,13 @@ class EventType(models.Model):
         'Automatically Confirm Registrations', default=True,
         help="Events and registrations will automatically be confirmed "
              "upon creation, easing the flow for simple events.")
-    # location
-    use_timezone = fields.Boolean('Use Default Timezone')
     default_timezone = fields.Selection(
         _tz_get, string='Timezone', default=lambda self: self.env.user.tz or 'UTC')
     # communication
-    use_mail_schedule = fields.Boolean(
-        'Automatically Send Emails', default=True)
-    event_type_mail_ids = fields.One2many(
-        'event.type.mail', 'event_type_id',
-        string='Mail Schedule', compute='_compute_event_type_mail_ids',
-        readonly=False, store=True)
-
-    @api.depends('use_mail_schedule')
-    def _compute_event_type_mail_ids(self):
-        for template in self:
-            if not template.use_mail_schedule:
-                template.event_type_mail_ids = [(5, 0)]
-            elif not template.event_type_mail_ids:
-                template.event_type_mail_ids = [(0, 0, {
-                    'notification_type': 'mail',
-                    'interval_unit': 'now',
-                    'interval_type': 'after_sub',
-                    'template_id': self.env.ref('event.event_subscription').id,
-                }), (0, 0, {
-                    'notification_type': 'mail',
-                    'interval_nbr': 10,
-                    'interval_unit': 'days',
-                    'interval_type': 'before_event',
-                    'template_id': self.env.ref('event.event_reminder').id,
-                })]
-
-    @api.depends('use_ticket')
-    def _compute_event_type_ticket_ids(self):
-        for template in self:
-            if not template.use_ticket:
-                template.event_type_ticket_ids = [(5, 0)]
-            elif not template.event_type_ticket_ids:
-                template.event_type_ticket_ids = [(0, 0, {
-                    'name': _('Registration'),
-                })]
+    event_type_mail_ids = fields.One2many('event.type.mail', 'event_type_id', string='Mail Schedule')
+    # ticket reports
+    ticket_instructions = fields.Html('Ticket Instructions', translate=True,
+        help="This information will be printed on your tickets.")
 
     @api.depends('has_seats_limitation')
     def _compute_default_registration(self):
@@ -106,7 +70,7 @@ class EventEvent(models.Model):
         return self.env['ir.ui.view']._render_template('event.event_default_descripton')
 
     name = fields.Char(string='Event', translate=True, required=True)
-    note = fields.Html(string='Note')
+    note = fields.Html(string='Note', store=True, compute="_compute_note", readonly=False)
     description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False, default=_default_description)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
@@ -201,12 +165,10 @@ class EventEvent(models.Model):
         tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     country_id = fields.Many2one(
         'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
-    # badge fields
-    badge_front = fields.Html(string='Badge Front')
-    badge_back = fields.Html(string='Badge Back')
-    badge_innerleft = fields.Html(string='Badge Inner Left')
-    badge_innerright = fields.Html(string='Badge Inner Right')
-    event_logo = fields.Html(string='Event Logo')
+    # ticket reports
+    ticket_instructions = fields.Html('Ticket Instructions', translate=True,
+        compute='_compute_ticket_instructions', store=True, readonly=False,
+        help="This information will be printed on your tickets.")
 
     @api.depends('stage_id', 'kanban_state')
     def _compute_kanban_state_label(self):
@@ -355,7 +317,7 @@ class EventEvent(models.Model):
     @api.depends('event_type_id')
     def _compute_date_tz(self):
         for event in self:
-            if event.event_type_id.use_timezone and event.event_type_id.default_timezone:
+            if event.event_type_id.default_timezone:
                 event.date_tz = event.event_type_id.default_timezone
             if not event.date_tz:
                 event.date_tz = self.env.user.tz or 'UTC'
@@ -417,12 +379,10 @@ class EventEvent(models.Model):
                 lambda mail: not(mail._origin.mail_done) and not(mail._origin.mail_registration_ids)
             )
             command = [Command.unlink(mail.id) for mail in mails_to_remove]
-            if event.event_type_id.use_mail_schedule:
+            if event.event_type_id.event_type_mail_ids:
                 command += [
-                    Command.create({
-                        attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
-                        for attribute_name in self.env['event.type.mail']._get_event_mail_fields_whitelist()
-                    }) for line in event.event_type_id.event_type_mail_ids
+                    Command.create(line._prepare_event_mail_values())
+                    for line in event.event_type_id.event_type_mail_ids
                 ]
             if command:
                 event.event_mail_ids = command
@@ -460,7 +420,7 @@ class EventEvent(models.Model):
             # lines to keep: those with existing registrations
             tickets_to_remove = event.event_ticket_ids.filtered(lambda ticket: not ticket._origin.registration_ids)
             command = [Command.unlink(ticket.id) for ticket in tickets_to_remove]
-            if event.event_type_id.use_ticket:
+            if event.event_type_id.event_type_ticket_ids:
                 command += [
                     Command.create({
                         attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
@@ -468,6 +428,19 @@ class EventEvent(models.Model):
                     }) for line in event.event_type_id.event_type_ticket_ids
                 ]
             event.event_ticket_ids = command
+
+    @api.depends('event_type_id')
+    def _compute_note(self):
+        for event in self:
+            if event.event_type_id and not is_html_empty(event.event_type_id.note):
+                event.note = event.event_type_id.note
+
+    @api.depends('event_type_id')
+    def _compute_ticket_instructions(self):
+        for event in self:
+            if is_html_empty(event.ticket_instructions) and not \
+               is_html_empty(event.event_type_id.ticket_instructions):
+                event.ticket_instructions = event.event_type_id.ticket_instructions
 
     @api.constrains('seats_max', 'seats_available', 'seats_limited')
     def _check_seats_limit(self):

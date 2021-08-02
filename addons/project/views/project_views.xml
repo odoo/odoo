@@ -19,16 +19,19 @@
                     <field name="name" string="Task"/>
                     <field name="tag_ids"/>
                     <field name="user_id"/>
-                    <field name="partner_id" operator="child_of"/>
-                    <field name="stage_id"/>
                     <field string="Project" name="display_project_id"/>
+                    <field name="stage_id"/>
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="parent_id"/>
                     <filter string="My Tasks" name="my_tasks" domain="[('user_id', '=', uid)]"/>
                     <filter string="Followed Tasks" name="my_followed_tasks" domain="[('message_is_follower', '=', True)]" />
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <separator/>
-                    <filter string="Starred" name="starred" domain="[('priority', 'in', [1, 2])]"/>
+                    <filter string="Starred" name="starred" domain="[('priority', 'in', [0, 1])]"/>
+                    <separator/>
                     <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Rated tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
+                    <separator/>
+                    <filter string="Rated Tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                     <separator/>
@@ -45,9 +48,27 @@
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Assigned to" name="user" context="{'group_by': 'user_id'}"/>
                         <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
+                        <filter string="Customer" name="customer" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Kanban State" name="kanban_state" context="{'group_by': 'kanban_state'}"/>
+                        <filter string="Deadline" name="date_deadline" context="{'group_by': 'date_deadline'}"/>
                         <filter string="Creation Date" name="group_create_date" context="{'group_by': 'create_date'}"/>
                     </group>
                 </search>
+            </field>
+        </record>
+
+        <record id="view_task_search_form_extended" model="ir.ui.view">
+            <field name="name">project.task.search.form.extended</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_task_search_form"></field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+               <xpath expr="//filter[@name='unassigned']" position="after">
+                    <separator/>
+                    <filter string="My Projects" name="my_projects" domain="[('project_id.user_id', '=', uid)]"/>
+                    <filter string="My Favorite Projects" name="my_favorite_projects" domain="[('project_id.favorite_user_ids', 'in', [uid])]"/>
+                    <filter string="Followed Projects" name="my_followed_projects" domain="[('project_id.message_is_follower', '=', True)]"/>
+                </xpath>
             </field>
         </record>
 
@@ -237,7 +258,7 @@
             <field name="arch" type="xml">
                 <form string="Project" delete="0">
                     <header>
-                        <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight oe_read_only" groups="project.group_project_manager"
+                        <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight" groups="project.group_project_manager"
                         attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
                     </header>
                 <sheet string="Project">
@@ -245,6 +266,16 @@
                         <button class="oe_stat_button" type="action"
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
                             <field string="Tasks In Progress" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
+                        </button>
+                        <button class="oe_stat_button" name="%(project.project_milestone_all)d" type="action" icon="fa-check-square-o">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="milestone_count" nolabel="1"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    Milestones
+                                </span>
+                            </div>
                         </button>
                         <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_active', '=', False), ('rating_percentage_satisfaction', '=', -1)]}" class="oe_stat_button oe_read_only" icon="fa-smile-o" groups="project.group_project_rating">
                             <div class="o_field_widget o_stat_info">
@@ -274,16 +305,6 @@
                                 <field name="last_update_status" widget="status_with_color" options="{'color_field': 'last_update_color', 'no_quick_edit': 1}"/>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="%(project.project_milestone_all)d" type="action" icon="fa-check-square-o">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value">
-                                    <field name="milestone_count" nolabel="1"/>
-                                </span>
-                                <span class="o_stat_text">
-                                    Milestones
-                                </span>
-                            </div>
-                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
@@ -306,26 +327,18 @@
                                     <field name="date" string="Deadline"/>
                                     <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
                                         <!-- Always display the whole alias in edit mode. It depends in read only -->
-                                        <label for="alias_enabled" class="font-weight-bold" string="Create tasks by sending an email"/>
                                         <field name="alias_enabled" invisible="1"/>
-                                        <span>
-                                            <span class="font-weight-bold oe_read_only" attrs="{'invisible':  [('alias_name', '=', False)]}">to </span>
-                                            <span class="font-weight-bold oe_edit_only">to </span>
-                                            <field name="alias_name" class="oe_inline"/>
-                                            <span class="oe_read_only" attrs="{'invisible':  [('alias_name', '=', False)]}">@</span>
-                                            <span class="oe_edit_only">@</span>
-                                            <field name="alias_domain"
-                                                   attrs="{'invisible':  [('alias_name', '=', False)]}"
-                                                   class="oe_inline oe_read_only"
-                                                   readonly="1"/>
-                                            <field name="alias_domain"
-                                                   class="oe_inline oe_edit_only"
-                                                   readonly="1"/>
-                                        </span>
+                                        <span class="font-weight-bold oe_read_only" attrs="{'invisible':  [('alias_name', '=', False)]}">Create tasks by sending an email to </span>
+                                        <span class="font-weight-bold oe_edit_only">Create tasks by sending an email to </span>
+                                            <field name="alias_value" class="oe_read_only d-inline" readonly="1" widget="email" attrs="{'invisible':  [('alias_name', '=', False)]}" />
+                                            <span class="oe_edit_only">
+                                                <field name="alias_name" class="oe_inline"/>@
+                                                <field name="alias_domain" class="oe_inline" readonly="1"/>
+                                            </span>
                                     </div>
                                     <!-- the alias contact must appear when the user start typing and it must disappear
                                         when the string is deleted. -->
-                                    <field name="alias_contact" class="oe_inline oe_edit_only" string="Accept Emails From"
+                                    <field name="alias_contact" class="oe_inline" string="Accept Emails From"
                                            attrs="{'invisible': ['|', ('alias_name', '=', ''), ('alias_name', '=', False)]}"/>
                                 </group>
                                 <group>
@@ -413,6 +426,7 @@
                     <field name="name" string="Project"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Customer" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="analytic_account_id"/>
                     <filter string="My Favorites" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <separator/>
                     <filter string="Followed" name="followed_by_me" domain="[('message_is_follower', '=', True)]"/>
@@ -437,13 +451,12 @@
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
                     <field name="name" string="Name" class="font-weight-bold"/>
-                    <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user"/>
                     <field name="partner_id" optional="show" string="Customer"/>
-                    <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting"/>
                     <field name="privacy_visibility" optional="hide"/>
-                    <field name="label_tasks" optional="hide"/>
-                    <field name="company_id" optional="show"  groups="base.group_multi_company"/>
-                    <field name="date" string="Deadline" widget="remaining_days" optional="show"/>
+                    <field name="company_id" optional="show"  groups="base.group_multi_company" options="{'no_create': True, 'no_create_edit': True}"/>
+                    <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting"/>
+                    <field name="date" optional="hide" string="Deadline" widget="remaining_days"/>
+                    <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
                     <field name="last_update_color" invisible="1"/>
                     <field name="last_update_status" string="Status" optional="show" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
                 </tree>
@@ -490,7 +503,6 @@
                         <field name="name" class="o_project_name oe_inline"
                             string="Project Name" placeholder="e.g. Office Party"/>
                         <field name="user_id" invisible="1"/>
-                        <field name="allow_recurring_tasks" groups="project.group_project_recurring_tasks" />
                     </group>
                     <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
                         <label for="alias_name" class="oe_inline" string="Create tasks by sending an email to"/>
@@ -511,8 +523,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//group" position="after">
                     <footer>
-                        <button string="Create" name="action_view_tasks" type="object" class="btn-primary o_open_tasks"/>
-                        <button string="Discard" class="btn-secondary" special="cancel"/>
+                        <button string="Create" name="action_view_tasks" type="object" class="btn-primary o_open_tasks" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </xpath>
             </field>
@@ -524,6 +536,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="project_project_view_form_simplified_footer"/>
             <field name="target">new</field>
+            <field name="context">{"default_allow_billable": 1}</field>
         </record>
 
         <record model="ir.ui.view" id="view_project_kanban">
@@ -552,30 +565,28 @@
                     <field name="last_update_status"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon oe_kanban_content">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon oe_kanban_content oe_kanban_card">
                                 <div class="o_project_kanban_main ">
                                     <div class="o_kanban_card_content mw-100">
                                         <div class="o_kanban_primary_left">
                                             <div class="o_primary">
                                                 <span class="o_text_overflow"><t t-esc="record.name.value"/></span>
-                                                <span class="o_text_overflow" t-if="record.partner_id.value">
-                                                    <strong><t t-esc="record.commercial_partner_id.value"/></strong>
+                                                <span class="o_text_overflow text-muted" t-if="record.partner_id.value">
+                                                    <span class="fa fa-user mr-2" aria-label="Partner" title="Partner"></span><t t-esc="record.partner_id.value"/>
                                                 </span>
-                                                <div t-if="record.date.raw_value">
-                                                    <field name="date" widget="remaining_days"/>
+                                                <div t-if="record.date.raw_value" class="text-muted">
+                                                    <span class="fa fa-clock-o mr-2" aria-label="Remaining days" title="Remaining days"></span><field name="date" widget="remaining_days"/>
                                                 </div>
-                                            </div>
-                                            <div t-if="record.alias_name.value and record.alias_domain.value">
-                                                <span><i class="fa fa-envelope" role="img" aria-label="Domain Alias" title="Domain Alias"></i> <a t-att-href="'mailto:' + record.alias_id.value" title="Send an email"><t t-esc="record.alias_id.value"/></a></span>
-                                            </div>
-                                            <div t-if="record.rating_active.raw_value" class="text-primary" title="Percentage of happy ratings over the past 30 days." groups="project.group_project_rating">
-                                                <b>
-                                                    <a name="action_view_all_rating" type="object" context="{'search_default_rating_last_30_days':1}">
+                                                <div t-if="record.alias_name.value and record.alias_domain.value" class="text-muted">
+                                                    <span class="fa fa-envelope-o mr-2" aria-label="Domain Alias" title="Domain Alias"></span><t t-esc="record.alias_id.value"/>
+                                                </div>
+                                                <div t-if="record.rating_active.raw_value" class="text-muted" title="Percentage of happy ratings over the past 30 days." groups="project.group_project_rating">
+                                                    <b>
                                                         <t t-if="record.rating_percentage_satisfaction.value != -1">
                                                             <i class="fa fa-smile-o" role="img" aria-label="Percentage of satisfaction" title="Percentage of satisfaction"/> <t t-esc="record.rating_percentage_satisfaction.value"/>%
                                                         </t>
-                                                    </a>
-                                                </b>
+                                                    </b>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -614,10 +625,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a class="o_kanban_manage_toggle_button o_left" href="#" groups="base.group_user"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
-                                    <span class="o_right"><field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1" /></span>
+                                    <a class="o_kanban_manage_toggle_button o_dropdown_kanban" href="#" groups="base.group_user">
+                                        <i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/>
+                                    </a>
+                                    <span>
+                                       <field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1" />
+                                    </span>
                                 </div>
-                                <div class="o_kanban_record_bottom">
+                                <div class="o_kanban_record_bottom mt-3">
                                     <div class="oe_kanban_bottom_left">
                                         <div class="o_project_kanban_boxes">
                                             <a class="o_project_kanban_box" name="action_view_tasks" type="object">
@@ -651,7 +666,7 @@
                 <p class="o_view_nocontent_smiling_face">
                     No projects found. Let's create one!
                 </p><p>
-                    Projects regroup tasks on the same topic and each have their own dashboard.
+                    Projects regroup tasks on the same topic, and each has its dashboard.
                 </p>
             </field>
         </record>
@@ -670,7 +685,7 @@
                 <p class="o_view_nocontent_smiling_face">
                    No projects found. Let's create one!
                 </p><p>
-                    Projects regroup tasks on the same topic and each have their own dashboard.
+                    Projects regroup tasks on the same topic, and each has its dashboard.
                 </p>
             </field>
         </record>
@@ -693,10 +708,10 @@
                     <field name="allow_task_dependencies" invisible="1" />
                     <header>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
-                            attrs="{'invisible' : [('user_id', '!=', False)]}"/>
+                            attrs="{'invisible' : [('user_id', '!=', False)]}" data-hotkey="q"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}"/>
                     </header>
-                    <div class="alert alert-info oe_edit_only" role="status" attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_id', '=', False)]}">
+                    <div class="alert alert-info oe_edit_only mb-0" role="status" attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_id', '=', False)]}">
                         <p>Edit recurring task</p>
                         <field name="recurrence_update" widget="radio"/>
                     </div>
@@ -738,7 +753,6 @@
                                 attrs="{'invisible' : [('allow_subtasks', '=', False)]}"
                                 groups="base.group_no_one"
                             />
-                            <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('parent_id', '!=', False)]}" />
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
@@ -746,6 +760,7 @@
                             <field name="partner_phone" widget="phone" attrs="{'invisible': True}"/>
                             <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('parent_id', '!=', False)]}" />
                             <field name="legend_blocked" invisible="1"/>
                             <field name="legend_normal" invisible="1"/>
                             <field name="legend_done" invisible="1"/>
@@ -772,6 +787,23 @@
                                     <field name="kanban_state" widget="state_selection" optional="hide"/>
                                     <field name="stage_id" optional="show"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link pull-right"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="task_dependencies" string="Blocked By" attrs="{'invisible': [('allow_task_dependencies', '=', False)]}" groups="project.group_project_task_dependencies">
+                            <field name="depend_on_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="is_closed" invisible="1" />
+                                    <field name="name" />
+                                    <field name="project_id" optional="hide" />
+                                    <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                                    <field name="company_id" optional="hide" groups="base.group_multi_company" />
+                                    <field name="activity_ids" widget="list_activity" optional="hide"/>
+                                    <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show" />
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+                                    <field name="kanban_state" widget="state_selection" optional="hide" />
+                                    <field name="stage_id" optional="show" />
+                                    <button class="oe_link float-right" string="View Task" name="action_open_task" type="object"/>
                                 </tree>
                             </field>
                         </page>
@@ -820,7 +852,7 @@
                                     <field name="email_from" invisible="1"/>
                                     <field name="email_cc" groups="base.group_no_one"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                    <field name="displayed_image_id" groups="base.group_no_one"/>
+                                    <field name="displayed_image_id" groups="base.group_no_one" options="{'no_create': True}"/>
                                 </group>
                                 <group>
                                     <field name="date_assign" groups="base.group_no_one"/>
@@ -835,23 +867,6 @@
                                     <field name="working_days_close" string="Days"/>
                                 </group>
                             </group>
-                        </page>
-                        <page name="task_dependencies" string="Blocked By" attrs="{'invisible': [('allow_task_dependencies', '=', False)]}" groups="project.group_project_task_dependencies">
-                            <field name="depend_on_ids" nolabel="1">
-                                <tree editable="bottom">
-                                    <field name="is_closed" invisible="1" />
-                                    <field name="name" />
-                                    <field name="project_id" optional="hide" />
-                                    <field name="user_id" widget="many2one_avatar_user" optional="show"/>
-                                    <field name="company_id" optional="hide" groups="base.group_multi_company" />
-                                    <field name="activity_ids" widget="list_activity" optional="hide"/>
-                                    <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show" />
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
-                                    <field name="kanban_state" widget="state_selection" optional="hide" />
-                                    <field name="stage_id" optional="show" />
-                                    <button class="oe_link float-right" string="View Task" name="action_open_task" type="object"/>
-                                </tree>
-                            </field>
                         </page>
                     </notebook>
                     </sheet>
@@ -935,7 +950,7 @@
                                             <s t-if="!record.active.raw_value"><field name="name" widget="name_with_subtask_count"/></s>
                                             <t t-else=""><field name="name" widget="name_with_subtask_count"/></t>
                                         </strong>
-                                        <span  invisible="context.get('default_project_id', False) or context.get('fsm_mode', False)"><br/><field name="project_id" required="1"/></span>
+                                        <span invisible="context.get('default_project_id', False)"><br/><field name="project_id" required="1"/></span>
                                         <br />
                                         <t t-if="record.partner_id.value">
                                             <span t-if="!record.partner_is_company.raw_value">
@@ -955,18 +970,13 @@
                                             <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
                                             <a name="%(portal.portal_share_action)d" role="menuitem" type="action" class="dropdown-item">Share</a>
                                             <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
-                                            <a t-if="widget.editable" role="menuitem" class="dropdown-item" name="toggle_active" type="object">
-                                                <t t-if="record.active.raw_value">Archive</t>
-                                                <t t-if="!record.active.raw_value">Restore</t>
-                                            </a>
-                                            <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                             <div role="separator" class="dropdown-divider"></div>
                                             <ul class="oe_kanban_colorpicker" data-field="color"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_body">
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="context.get('fsm_mode', False)"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <div t-if="record.date_deadline.raw_value" name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}">
                                         <field name="date_deadline" widget="remaining_days"/>
                                     </div>
@@ -1008,6 +1018,7 @@
                     <field name="is_closed" invisible="1" />
                     <field name="allow_subtasks" invisible="1" />
                     <field name="sequence" invisible="1" readonly="1"/>
+                    <field name="priority" widget="priority" optional="show" nolabel="1"/>
                     <field name="name" widget="name_with_subtask_count"/>
                     <field name="child_text" invisible="1"/>
                     <field name="project_id" optional="show" readonly="1"/>
@@ -1018,7 +1029,7 @@
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
-                    <field name="kanban_state" widget="state_selection" optional="hide" readonly="1"/>
+                    <field name="kanban_state" widget="selection" optional="hide" />
                     <field name="stage_id" invisible="context.get('set_visible',False)" optional="show" readonly="not context.get('default_project_id')"/>
                     <field name="recurrence_id" invisible="1" />
                 </tree>
@@ -1047,12 +1058,15 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar date_start="date_deadline" string="Tasks" mode="month" color="user_id" event_limit="5"
-                          hide_time="true" quick_add="False" js_class="project_calendar">
-                    <field name="user_id" avatar_field="avatar_128" filters="1"/>
-                    <field name="date_deadline"/>
+                          hide_time="true" js_class="project_calendar" event_open_popup="true" quick_add="false">
                     <field name="project_id"/>
+                    <field name="user_id" avatar_field="avatar_128" filters="1"/>
+                    <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                     <field name="priority" widget="priority"/>
+                    <field name="date_deadline"/>
+                    <field name="tag_ids" widget="many2many_tags" attrs="{'invisible': [('tag_ids', '=', [])]}"/>
                     <field name="stage_id"/>
+                    <field name="kanban_state"/>
                 </calendar>
             </field>
         </record>
@@ -1061,10 +1075,15 @@
             <field name="name">project.task.pivot</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <pivot string="Project Tasks" sample="1" js_class="project_pivot">
+                <pivot string="Tasks" sample="1" js_class="project_pivot">
                     <field name="project_id" type="row"/>
                     <field name="stage_id" type="col"/>
                     <field name="color" invisible="1"/>
+                    <field name="rating_last_value" type="measure" string="Rating (/5)"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="planned_hours" widget="float_time"/>
+                    <field name="working_hours_close" widget="float_time"/>
+                    <field name="working_hours_open" widget="float_time"/>
                 </pivot>
             </field>
         </record>
@@ -1073,9 +1092,12 @@
             <field name="name">project.task.graph</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <graph string="Project Tasks" sample="1" js_class="project_graph">
+                <graph string="Tasks" sample="1" js_class="project_graph">
                     <field name="project_id"/>
                     <field name="stage_id"/>
+                    <field name="color" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="rating_last_value" type="measure" string="Rating (/5)"/>
                 </graph>
             </field>
         </record>
@@ -1088,7 +1110,7 @@
                     <field name="user_id"/>
                     <templates>
                         <div t-name="activity-box">
-                            <img t-att-src="activity_image('res.users', 'avatar_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
                             <div>
                                 <field name="name" display="full"/>
                                 <field name="project_id" muted="1" display="full" invisible="context.get('default_project_id', False)"/>
@@ -1121,7 +1143,7 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="context">{'search_default_my_tasks': 1, 'all_task': 0}</field>
-            <field name="search_view_id" ref="view_task_search_form"/>
+            <field name="search_view_id" ref="view_task_search_form_extended"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No tasks found. Let's create one!
@@ -1150,7 +1172,7 @@
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="search_view_id" ref="view_task_search_form"/>
+            <field name="search_view_id" ref="view_task_search_form_extended"/>
         </record>
 
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
@@ -1159,7 +1181,7 @@
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
             <field name="domain">[('is_closed', '=', False), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('display_project_id', '!=', False)]</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
+            <field name="search_view_id" ref="view_task_search_form_extended"/>
         </record>
 
         <!-- Opening task when double clicking on project -->

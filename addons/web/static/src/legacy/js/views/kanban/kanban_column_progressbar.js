@@ -35,6 +35,7 @@ var KanbanColumnProgressBar = Widget.extend({
             __false: 'muted', // color to use for false value
         });
         this.sumField = columnState.progressBarValues.sum_field;
+        this.sumFieldLabel = this.sumField ? columnState.fields[this.sumField].string : false;
 
         // Previous progressBar state
         var state = options.progressBarStates[this.columnID];
@@ -42,7 +43,7 @@ var KanbanColumnProgressBar = Widget.extend({
             this.groupCount = state.groupCount;
             this.subgroupCounts = state.subgroupCounts;
             this.totalCounterValue = state.totalCounterValue;
-            this.activeFilter = state.activeFilter;
+            this.activeFilter = columnState.activeFilter || state.activeFilter;
         }
 
         // Prepare currency (TODO this should be automatic... use a field ?)

@@ -14,7 +14,7 @@ import {
 } from "@web/legacy/utils";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
-import { effectService } from "@web/webclient/effects/effect_service";
+import { effectService } from "@web/core/effects/effect_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { menuService } from "@web/webclient/menu_service";
 import { WebClient } from "@web/webclient/webclient";
@@ -279,7 +279,12 @@ export async function loadState(env, state) {
         env = env.env;
     }
     env.bus.trigger("test:hashchange", state);
+    // wait the asynchronous hashchange
+    // (the event hashchange must be triggered in a nonBlocking stack)
     await nextTick();
+    // wait for the regular rendering
+    await nextTick();
+    // wait for the legacy rendering below owl layer
     await legacyExtraNextTick();
 }
 

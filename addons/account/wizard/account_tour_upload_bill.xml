@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <h2>With Odoo, you won't have to records bills manually</h2>
+                        <h2>With Odoo, you won't have to record bills manually</h2>
                         <p>We process bills automatically so that you only have to validate them. Choose how you want to test our artificial intelligence engine:</p>
                         <group>
                             <group>
@@ -22,8 +22,8 @@
                         </group>
                     </sheet>
                     <footer>
-                        <button string="Continue" type="object" name="apply" class="btn-primary"/>
-                        <button string="Discard" class="btn-secondary" special="cancel" />
+                        <button string="Continue" type="object" name="apply" class="btn-primary" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z" />
                     </footer>
                </form>
             </field>
@@ -39,8 +39,8 @@
                         <p>Once done, press continue.</p>
                     </sheet>
                     <footer>
-                        <button string="Continue" type="object" name="apply" class="btn-primary"/>
-                        <button string="Discard" class="btn-secondary" special="cancel" />
+                        <button string="Continue" type="object" name="apply" class="btn-primary" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z" />
                     </footer>
                </form>
             </field>

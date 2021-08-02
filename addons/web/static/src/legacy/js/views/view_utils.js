@@ -6,6 +6,17 @@ import * as utils from 'web.utils';
 
 var viewUtils = {
     /**
+     * Since a date field can have a granularity in a groupby (date_field:granularity),
+     * when we require only the field name, we have to split out the
+     * eventual granularity
+     * 
+     * @param {string} groupedBy the groupby with the eventual granularity
+     * @returns {string}
+     */
+    getGroupByField: function(groupedBy) {
+        return groupedBy && groupedBy.split(':')[0];
+    },
+    /**
      * Returns the value of a group dataPoint, i.e. the value of the groupBy
      * field for the records in that group.
      *
@@ -26,6 +37,13 @@ var viewUtils = {
             case 'char':
             case 'boolean':
                 return group.value;
+            // for a date/datetime field, we take the last moment of the group as the group value
+            case 'date':
+            case 'datetime':
+                const [format, granularity] = groupedByField.type === 'date' ?
+                    ["YYYY-MM-DD", 'day'] : ["YYYY-MM-DD HH:mm:ss", 'second'];
+                return group.range[groupByField] ?
+                    moment.utc(group.range[groupByField].to).subtract(1, granularity).format(format) : false;
             default:
                 return false; // other field types are not handled
         }
@@ -38,15 +56,18 @@ var viewUtils = {
      * @returns {Boolean} true iff the kanban quick create feature is available
      */
     isQuickCreateEnabled: function (list) {
-        var groupByField = list.groupedBy[0] && list.groupedBy[0].split(':')[0];
+        var groupByField = list.groupedBy[0] && viewUtils.getGroupByField(list.groupedBy[0]);
         if (!groupByField) {
             return false;
         }
-        var availableTypes = ['char', 'boolean', 'many2one', 'selection'];
-        if (!_.contains(availableTypes, list.fields[groupByField].type)) {
-            return false;
+        var dateTypes = ['date', 'datetime'];
+        if (!list.fields[groupByField].readonly &&
+            _.contains(dateTypes, list.fields[groupByField].type)) {
+            return list.fieldsInfo && list.fieldsInfo[list.viewType][groupByField] &&
+                list.fieldsInfo[list.viewType][groupByField].allowGroupRangeValue;
         }
-        return true;
+        var availableTypes = ['char', 'boolean', 'many2one', 'selection'];
+        return _.contains(availableTypes, list.fields[groupByField].type);
     },
     /**
      * @param {string} arch view arch

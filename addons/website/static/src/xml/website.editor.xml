@@ -14,6 +14,12 @@
         </label>
     </t>
 
+    <t t-extend="wysiwyg.widgets.link">
+        <t t-jquery="#o_link_dialog_url_input" t-operation="after">
+            <small class="form-text text-muted">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
+        </t>
+    </t>
+
     <t t-extend="wysiwyg.widgets.linkTools">
         <t t-jquery="#url_row" t-operation="after">
             <div style="text-align: center" t-attf-class="#{widget.isButton ? ' d-none' : ''}">

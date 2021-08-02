@@ -513,49 +513,14 @@ class WebsiteSlides(WebsiteProfile):
             'slide_types': slide_types,
             'sorting': actual_sorting,
             'search': search,
-            # chatter
-            'rating_avg': channel.rating_avg,
-            'rating_count': channel.rating_count,
             # display data
             'user': request.env.user,
             'pager': pager,
             'is_public_user': request.website.is_public_user(),
             # display upload modal
             'enable_slide_upload': 'enable_slide_upload' in kw,
+            ** self._slide_channel_prepare_review_values(channel),
         }
-        if not request.env.user._is_public():
-            last_message = request.env['mail.message'].search([
-                ('model', '=', channel._name),
-                ('res_id', '=', channel.id),
-                ('author_id', '=', request.env.user.partner_id.id),
-                ('message_type', '=', 'comment'),
-                ('is_internal', '=', False)
-            ], order='write_date DESC', limit=1)
-            if last_message:
-                last_message_values = last_message.read(['body', 'rating_value', 'attachment_ids'])[0]
-                last_message_attachment_ids = last_message_values.pop('attachment_ids', [])
-                if last_message_attachment_ids:
-                    # use sudo as portal user cannot read access_token, necessary for updating attachments
-                    # through frontend chatter -> access is already granted and limited to current user message
-                    last_message_attachment_ids = json.dumps(
-                        request.env['ir.attachment'].sudo().browse(last_message_attachment_ids).read(
-                            ['id', 'name', 'mimetype', 'file_size', 'access_token']
-                        )
-                    )
-            else:
-                last_message_values = {}
-                last_message_attachment_ids = []
-            values.update({
-                'last_message_id': last_message_values.get('id'),
-                'last_message': tools.html2plaintext(last_message_values.get('body', '')),
-                'last_rating_value': last_message_values.get('rating_value'),
-                'last_message_attachment_ids': last_message_attachment_ids,
-            })
-            if channel.can_review:
-                values.update({
-                    'message_post_hash': channel._sign_token(request.env.user.partner_id.id),
-                    'message_post_pid': request.env.user.partner_id.id,
-                })
 
         # fetch slides and handle uncategorized slides; done as sudo because we want to display all
         # of them but unreachable ones won't be clickable (+ slide controller will crash anyway)
@@ -600,7 +565,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route('/slides/channel/add', type='http', auth='user', methods=['POST'], website=True)
     def slide_channel_create(self, *args, **kw):
         channel = request.env['slide.channel'].create(self._slide_channel_prepare_values(**kw))
-        return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
+        return request.redirect("/slides/%s" % (slug(channel)))
 
     def _slide_channel_prepare_values(self, **kw):
         # `tag_ids` is a string representing a list of int with coma. i.e.: '2,5,7'
@@ -618,13 +583,57 @@ class WebsiteSlides(WebsiteProfile):
             'allow_comment': bool(kw.get('allow_comment')),
         }
 
+    def _slide_channel_prepare_review_values(self, channel):
+        values = {
+            'rating_avg': channel.rating_avg,
+            'rating_count': channel.rating_count,
+        }
+
+        if not request.env.user._is_public():
+            last_message = request.env['mail.message'].search([
+                ('model', '=', channel._name),
+                ('res_id', '=', channel.id),
+                ('author_id', '=', request.env.user.partner_id.id),
+                ('message_type', '=', 'comment'),
+                ('is_internal', '=', False)
+            ], order='write_date DESC', limit=1)
+
+            if last_message:
+                last_message_values = last_message.read(['body', 'rating_value', 'attachment_ids'])[0]
+                last_message_attachment_ids = last_message_values.pop('attachment_ids', [])
+                if last_message_attachment_ids:
+                    # use sudo as portal user cannot read access_token, necessary for updating attachments
+                    # through frontend chatter -> access is already granted and limited to current user message
+                    last_message_attachment_ids = json.dumps(
+                        request.env['ir.attachment'].sudo().browse(last_message_attachment_ids).read(
+                            ['id', 'name', 'mimetype', 'file_size', 'access_token']
+                        )
+                    )
+            else:
+                last_message_values = {}
+                last_message_attachment_ids = []
+
+            values.update({
+                'last_message_id': last_message_values.get('id'),
+                'last_message': tools.html2plaintext(last_message_values.get('body', '')),
+                'last_rating_value': last_message_values.get('rating_value'),
+                'last_message_attachment_ids': last_message_attachment_ids,
+            })
+            if channel.can_review:
+                values.update({
+                    'message_post_hash': channel._sign_token(request.env.user.partner_id.id),
+                    'message_post_pid': request.env.user.partner_id.id,
+                })
+
+        return values
+
     @http.route('/slides/channel/enroll', type='http', auth='public', website=True)
     def slide_channel_join_http(self, channel_id):
         # TDE FIXME: why 2 routes ?
         if not request.website.is_public_user():
             channel = request.env['slide.channel'].browse(int(channel_id))
             channel.action_add_member()
-        return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
+        return request.redirect("/slides/%s" % (slug(channel)))
 
     @http.route(['/slides/channel/join'], type='json', auth='public', website=True)
     def slide_channel_join(self, channel_id):
@@ -730,12 +739,13 @@ class WebsiteSlides(WebsiteProfile):
 
         values['channel'] = slide.channel_id
         values = self._prepare_additional_channel_values(values, **kwargs)
-        values.pop('channel', None)
-
         values['signup_allowed'] = request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'
 
         if kwargs.get('fullscreen') == '1':
+            values.update(self._slide_channel_prepare_review_values(slide.channel_id))
             return request.render("website_slides.slide_fullscreen", values)
+
+        values.pop('channel', None)
         return request.render("website_slides.slide_main", values)
 
     @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
@@ -795,7 +805,7 @@ class WebsiteSlides(WebsiteProfile):
         next_slide = None
         if next_slide_id:
             next_slide = self._fetch_slide(next_slide_id).get('slide', None)
-        return werkzeug.utils.redirect("/slides/slide/%s" % (slug(next_slide) if next_slide else slug(slide)))
+        return request.redirect("/slides/slide/%s" % (slug(next_slide) if next_slide else slug(slide)))
 
     @http.route('/slides/slide/set_completed', website=True, type="json", auth="public")
     def slide_set_completed(self, slide_id):
@@ -1041,7 +1051,7 @@ class WebsiteSlides(WebsiteProfile):
 
         request.env['slide.slide'].create(self._get_new_slide_category_values(channel, name))
 
-        return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
+        return request.redirect("/slides/%s" % (slug(channel)))
 
     # --------------------------------------------------
     # SLIDE.UPLOAD

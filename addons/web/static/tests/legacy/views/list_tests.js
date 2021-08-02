@@ -13,7 +13,6 @@ var FormView = require('web.FormView');
 var ListRenderer = require('web.ListRenderer');
 var ListView = require('web.ListView');
 var mixins = require('web.mixins');
-var NotificationService = require('web.NotificationService');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 const { patch, unpatch } = require('web.utils');
@@ -26,7 +25,7 @@ var _t = core._t;
 const cpHelpers = testUtils.controlPanel;
 var createView = testUtils.createView;
 
-const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
+const { click, legacyExtraNextTick } = require("@web/../tests/helpers/utils");
 const { createWebClient, doAction, loadState } = require('@web/../tests/webclient/helpers');
 
 let serverData;
@@ -3463,11 +3462,11 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             services: {
-                notification: NotificationService.extend({
+                notification: {
                     notify: function () {
                         throw new Error('should not display a notification');
                     },
-                }),
+                },
             },
             viewOptions: {
                 hasActionMenus: true,
@@ -3511,11 +3510,11 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             services: {
-                notification: NotificationService.extend({
+                notification: {
                     notify: function () {
                         assert.step('notify');
                     },
-                }),
+                },
             },
             session: {
                 active_ids_limit: 4,
@@ -3613,11 +3612,11 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             services: {
-                notification: NotificationService.extend({
+                notification: {
                     notify: function () {
                         throw new Error('should not display a notification');
                     },
-                }),
+                },
             },
             viewOptions: {
                 hasActionMenus: true,
@@ -3664,11 +3663,11 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             services: {
-                notification: NotificationService.extend({
+                notification: {
                     notify: function () {
                         assert.step('notify');
                     },
-                }),
+                },
             },
             session: {
                 active_ids_limit: 4,
@@ -3697,6 +3696,67 @@ QUnit.module('Views', {
         assert.verifySteps(['notify']);
 
         list.destroy();
+    });
+
+    QUnit.test('archive/unarchive handles returned action', async function (assert) {
+        assert.expect(6);
+
+        // add active field on foo model and make all records active
+        serverData.models.foo.fields.active = { string: 'Active', type: 'boolean', default: true };
+
+        serverData.actions = {
+            11: {
+                id: 11,
+                name: 'Action 11',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[3, 'list']],
+                search_view_id: [9, 'search'],
+            },
+        };
+        serverData.views = {
+            'foo,3,list': '<tree><field name="foo"/></tree>',
+            'foo,9,search': `
+                    <search>
+                        <filter string="Not Bar" name="not bar" domain="[['bar','=',False]]"/>
+                    </search>`,
+            'bar,false,form': '<form><field name="display_name"/></form>',
+        };
+
+        const mockRPC = (route, args) => {
+            if (route === '/web/dataset/call_kw/foo/action_archive') {
+                return Promise.resolve({
+                    'type': 'ir.actions.act_window',
+                    'name': 'Archive Action',
+                    'res_model': 'bar',
+                    'view_mode': 'form',
+                    'target': 'new',
+                    'views': [[false, 'form']]
+                });
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 11);
+
+        assert.containsNone(webClient, '.o_cp_action_menus', 'sidebar should be invisible');
+        assert.containsN(webClient, 'tbody td.o_list_record_selector', 4, "should have 4 records");
+
+        await click(webClient.el.querySelector('tbody td.o_list_record_selector input'));
+        assert.containsOnce(webClient, '.o_cp_action_menus', 'sidebar should be visible');
+
+        await click(webClient.el.querySelector('.o_cp_action_menus .o_dropdown_toggler'));
+        const archiveItem = [...webClient.el.querySelectorAll('.o_cp_action_menus .o_dropdown_menu li > a')]
+            .filter((elem) => elem.textContent === 'Archive');
+        await click(archiveItem[0]);
+        assert.strictEqual(document.querySelectorAll('.modal').length, 1,
+            'a confirm modal should be displayed');
+
+        await click(document.querySelector('.modal .modal-footer .btn-primary'));
+        assert.strictEqual(document.querySelectorAll('.modal').length, 1,
+            'archive action dialog should be displayed');
+        assert.strictEqual(document.querySelector('.modal .modal-title').textContent.trim(), 'Archive Action',
+            "action wizard should have been opened");
     });
 
     QUnit.test('pager (ungrouped and grouped mode), default limit', async function (assert) {
@@ -5771,13 +5831,13 @@ QUnit.module('Views', {
                     '<field name="bar"/>' +
                 '</tree>',
             services: {
-                notification: NotificationService.extend({
+                notification: {
                     notify: function (params) {
                         if (params.type === 'danger') {
                             warnings++;
                         }
                     }
-                }),
+                },
             },
         });
 
@@ -9160,6 +9220,153 @@ QUnit.module('Views', {
         assert.verifySteps(['clear_cache']); // triggered by the test environment on destroy
     });
 
+    QUnit.test('list view move to previous page when all records from last page deleted', async function (assert) {
+        assert.expect(5);
+
+        let checkSearchRead = false;
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="3">' +
+                '<field name="display_name"/>' +
+                '</tree>',
+            mockRPC: function (route, args) {
+                if (checkSearchRead && route === '/web/dataset/search_read') {
+                    assert.strictEqual(args.limit, 3, "limit should 3");
+                    assert.notOk(args.offset, "offset should not be passed i.e. offset 0 by default");
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                hasActionMenus: true,
+            },
+        });
+
+        assert.strictEqual(list.$('.o_pager_counter').text().trim(), '1-3 / 4',
+        "should have 2 pages and current page should be first page");
+
+        // move to next page
+        await testUtils.dom.click(list.$('.o_pager_next'));
+        assert.strictEqual(list.$('.o_pager_counter').text().trim(), '4-4 / 4',
+        "should be on second page");
+
+        // delete a record
+        await testUtils.dom.click(list.$('tbody .o_data_row:first td.o_list_record_selector:first input'));
+        checkSearchRead = true;
+        await testUtils.dom.click(list.$('.o_dropdown_toggler:contains(Action)'));
+        await testUtils.dom.click(list.$('a:contains(Delete)'));
+        await testUtils.dom.click($('body .modal button span:contains(Ok)'));
+        assert.strictEqual(list.$('.o_pager_counter').text().trim(), '1-3 / 3',
+            "should have 1 page only");
+
+        list.destroy();
+    });
+
+    QUnit.test('grouped list view move to previous page of group when all records from last page deleted', async function (assert) {
+        assert.expect(7);
+
+        let checkSearchRead = false;
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="2">' +
+                '<field name="display_name"/>' +
+                '</tree>',
+            mockRPC: function (route, args) {
+                if (checkSearchRead && route === '/web/dataset/search_read') {
+                    assert.strictEqual(args.limit, 2, "limit should 2");
+                    assert.notOk(args.offset, "offset should not be passed i.e. offset 0 by default");
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                hasActionMenus: true,
+            },
+            groupBy: ['m2o'],
+        });
+
+        assert.strictEqual(list.$('th:contains(Value 1 (3))').length, 1,
+            "Value 1 should contain 3 records");
+        assert.strictEqual(list.$('th:contains(Value 2 (1))').length, 1,
+            "Value 2 should contain 1 record");
+
+        await testUtils.dom.click(list.$('th.o_group_name:nth(0)'));
+        assert.strictEqual(list.$('th.o_group_name:eq(0) .o_pager_counter').text().trim(), '1-2 / 3',
+            "should have 2 pages and current page should be first page");
+
+        // move to next page
+        await testUtils.dom.click(list.$('.o_group_header .o_pager_next'));
+        assert.strictEqual(list.$('th.o_group_name:eq(0) .o_pager_counter').text().trim(), '3-3 / 3',
+            "should be on second page");
+
+        // delete a record
+        await testUtils.dom.click(list.$('tbody .o_data_row:first td.o_list_record_selector:first input'));
+        checkSearchRead = true;
+        await testUtils.dom.click(list.$('.o_dropdown_toggler:contains(Action)'));
+        await testUtils.dom.click(list.$('a:contains(Delete)'));
+        await testUtils.dom.click($('body .modal button span:contains(Ok)'));
+
+        assert.strictEqual(list.$('th.o_group_name:eq(0) .o_pager_counter').text().trim(), '',
+            "should be on first page now");
+
+        list.destroy();
+    });
+
+    QUnit.test('list view move to previous page when all records from last page archive/unarchived', async function (assert) {
+        assert.expect(9);
+
+        // add active field on foo model and make all records active
+        this.data.foo.fields.active = { string: 'Active', type: 'boolean', default: true };
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="3"><field name="display_name"/></tree>',
+            viewOptions: {
+                hasActionMenus: true,
+            },
+            mockRPC: function (route) {
+                if (route === '/web/dataset/call_kw/foo/action_archive') {
+                    this.data.foo.records[3].active = false;
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(list.$('.o_pager_counter').text().trim(), '1-3 / 4',
+            "should have 2 pages and current page should be first page");
+        assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 3,
+            "should have 3 records");
+
+        // move to next page
+        await testUtils.dom.click(list.$('.o_pager_next'));
+        assert.strictEqual(list.$('.o_pager_counter').text().trim(), '4-4 / 4',
+            "should be on second page");
+        assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 1,
+            "should have 1 records");
+        assert.containsNone(list, '.o_cp_action_menus', 'sidebar should not be available');
+
+        await testUtils.dom.click(list.$('tbody .o_data_row:first td.o_list_record_selector:first input'));
+        assert.containsOnce(list, '.o_cp_action_menus', 'sidebar should be available');
+
+        // archive all records of current page
+        await testUtils.dom.click(list.$('.o_cp_action_menus .o_dropdown_toggler:contains(Action)'));
+        await testUtils.dom.click(list.$('a:contains(Archive)'));
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+
+        await testUtils.dom.click($('body .modal button span:contains(Ok)'));
+        assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 3,
+            "should have 3 records");
+        assert.strictEqual(list.$('.o_pager_counter').text().trim(), '1-3 / 3',
+            "should have 1 page only");
+
+        list.destroy();
+    });
+
     QUnit.test('list should ask to scroll to top on page changes', async function (assert) {
         assert.expect(10);
 
@@ -10326,6 +10533,53 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('removing a groupby while adding a line from list', async function (assert) {
+        assert.expect(1);
+
+        let checkUnselectRow = false;
+        testUtils.mock.patch(ListRenderer, {
+            unselectRow(options = {}) {
+                if (checkUnselectRow) {
+                    assert.step('unselectRow');
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree multi_edit="1" editable="bottom">
+                    <field name="display_name"/>
+                    <field name="foo"/>
+                </tree>
+            `,
+            archs: {
+                'foo,false,search': `
+                    <search>
+                        <field name="foo"/>
+                        <group expand="1" string="Group By">
+                            <filter name="groupby_foo" context="{'group_by': 'foo'}"/>
+                        </group>
+                    </search>
+                `,
+            },
+        });
+
+        await cpHelpers.toggleGroupByMenu(list);
+        await cpHelpers.toggleMenuItem(list, 0);
+        // expand group
+        await testUtils.dom.click(list.el.querySelector('th.o_group_name'));
+        await testUtils.dom.click(list.el.querySelector('td.o_group_field_row_add a'));
+        checkUnselectRow = true;
+        await testUtils.dom.click($('.o_searchview_facet .o_facet_remove'));
+        assert.verifySteps([]);
+        testUtils.mock.unpatch(ListRenderer);
+        list.destroy();
+    });
+
     QUnit.test('cell-level keyboard navigation in editable grouped list', async function (assert) {
         assert.expect(56);
 
@@ -11055,6 +11309,45 @@ QUnit.module('Views', {
         delete fieldRegistry.map.asyncwidget;
     });
 
+    QUnit.test('open list optional fields dropdown position to right place', async function (assert) {
+        assert.expect(1);
+
+        this.data.bar.fields.name = { string: "Name", type: "char", sortable: true };
+        this.data.bar.fields.foo = { string: "Foo", type: "char", sortable: true };
+        this.data.foo.records[0].o2m = [1, 2];
+
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <form>
+                    <sheet>
+                        <notebook>
+                            <page string="Page 1">
+                                <field name="o2m">
+                                    <tree editable="bottom">
+                                        <field name="display_name"/>
+                                        <field name="foo"/>
+                                        <field name="name" optional="hide"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            res_id: 1,
+        });
+
+        const listWidth = form.el.querySelector('.o_list_view').offsetWidth;
+
+        await testUtils.dom.click(form.el.querySelector('.o_optional_columns_dropdown_toggle'));
+        assert.strictEqual(form.el.querySelector('.o_optional_columns').offsetLeft, listWidth,
+            "optional fields dropdown should opened at right place");
+
+        form.destroy();
+    });
+
     QUnit.test('change the viewType of the current action', async function (assert) {
         assert.expect(25);
 
@@ -11364,6 +11657,47 @@ QUnit.module('Views', {
             "first o2m table is resized and width of table has changed");
         assert.strictEqual(secondTableInititalWidth, form.el.querySelectorAll('thead')[1].offsetWidth,
             "second o2m table should not be impacted on first o2m in group resized");
+
+        form.destroy();
+    });
+
+    QUnit.test('resize column with x2many list with several fields in form notebook', async function (assert) {
+        assert.expect(1);
+
+        this.data.foo.records[0].o2m = [1, 2];
+
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <form>
+                    <sheet>
+                        <notebook>
+                            <page string="Page 1">
+                                <field name="o2m">
+                                    <tree editable="bottom">
+                                        <field name="display_name"/>
+                                        <field name="display_name"/>
+                                        <field name="display_name"/>
+                                        <field name="display_name"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            res_id: 1,
+        });
+
+        const th = form.el.getElementsByTagName('th')[0];
+        const resizeHandle = th.getElementsByClassName('o_resize')[0];
+        const listInitialWidth = form.el.querySelector('.o_list_view').offsetWidth;
+
+        await testUtils.dom.dragAndDrop(resizeHandle, form.el.getElementsByTagName('th')[1], { position: "right" });
+
+        assert.strictEqual(form.el.querySelector('.o_list_view').offsetWidth, listInitialWidth,
+            "resizing the column should not impact the width of list");
 
         form.destroy();
     });

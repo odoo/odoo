@@ -8,7 +8,14 @@ import core from "web.core";
 import AbstractAction from "web.AbstractAction";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
+import {
+    click,
+    getFixture,
+    legacyExtraNextTick,
+    patchWithCleanup,
+    nextTick,
+} from "../../helpers/utils";
+import { session } from "@web/session";
 import {
     createWebClient,
     doAction,
@@ -104,7 +111,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("fallback on home action if no action found", async (assert) => {
         assert.expect(2);
-        patchWithCleanup(odoo.session_info, { home_action_id: 1001 });
+        patchWithCleanup(session, { home_action_id: 1001 });
 
         const wc = await createWebClient({ serverData });
         await testUtils.nextTick(); // wait for the navbar to be updated
@@ -928,7 +935,7 @@ QUnit.module("ActionManager", (hooks) => {
     );
 
     QUnit.test("initial action crashes", async (assert) => {
-        assert.expect(7);
+        assert.expect(8);
 
         const handler = (ev) => {
             // need to preventDefault to remove error from console (so python test pass)
@@ -956,11 +963,71 @@ QUnit.module("ActionManager", (hooks) => {
 
         const webClient = await createWebClient({ serverData });
         assert.verifySteps(["clientAction setup"]);
+        await nextTick();
+        assert.containsOnce(webClient, ".o_dialog_error");
+        await click(webClient.el, ".modal-header .close");
+        assert.containsNone(webClient, ".o_dialog_error");
         await click(webClient.el, "nav .o_navbar_apps_menu .o_dropdown_toggler ");
         assert.containsN(webClient, ".o_dropdown_item.o_app", 3);
         assert.containsNone(webClient, ".o_menu_brand");
-        assert.containsOnce(webClient, ".o_dialog_error");
         assert.strictEqual(webClient.el.querySelector(".o_action_manager").innerHTML, "");
+        assert.deepEqual(webClient.env.services.router.current.hash, {
+            action: "__test__client__action__",
+            menu_id: 1,
+        });
+    });
+
+    QUnit.test("concurrent hashchange during action mounting -- 1", async (assert) => {
+        assert.expect(5);
+
+        class MyAction extends Component {
+            mounted() {
+                assert.step("myAction mounted");
+                browser.location.hash = "#action=__test__client__action__&menu_id=1";
+            }
+        }
+        MyAction.template = tags.xml`<div class="not-here" />`;
+        registry.category("actions").add("myAction", MyAction);
+
+        browser.location.hash = "#action=myAction";
+
+        const webClient = await createWebClient({ serverData });
+        assert.verifySteps(["myAction mounted"]);
+
+        await nextTick();
+        assert.containsNone(webClient, ".not-here");
+        assert.containsOnce(webClient, ".test_client_action");
+
+        assert.deepEqual(webClient.env.services.router.current.hash, {
+            action: "__test__client__action__",
+            menu_id: 1,
+        });
+    });
+
+    QUnit.test("concurrent hashchange during action mounting -- 2", async (assert) => {
+        assert.expect(5);
+
+        const baseURL = new URL(browser.location.href).toString();
+
+        class MyAction extends Component {
+            mounted() {
+                assert.step("myAction mounted");
+                const newURL = baseURL + "#action=__test__client__action__&menu_id=1";
+                // immediate triggering
+                window.dispatchEvent(new HashChangeEvent("hashchange", { newURL }));
+            }
+        }
+        MyAction.template = tags.xml`<div class="not-here" />`;
+        registry.category("actions").add("myAction", MyAction);
+
+        browser.location.hash = "#action=myAction";
+        const webClient = await createWebClient({ serverData });
+        assert.verifySteps(["myAction mounted"]);
+
+        await nextTick();
+        assert.containsNone(webClient, ".not-here");
+        assert.containsOnce(webClient, ".test_client_action");
+
         assert.deepEqual(webClient.env.services.router.current.hash, {
             action: "__test__client__action__",
             menu_id: 1,

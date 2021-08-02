@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { registry } from "../../core/registry";
-import { getHotkeyToPress } from "../../core/hotkeys/hotkey_service";
+import { registry } from "@web/core/registry";
 import { CommandPaletteDialog } from "./command_palette_dialog";
 
 /**
@@ -30,7 +29,6 @@ export const commandService = {
         let isPaletteOpened = false;
 
         hotkeyService.add("control+k", openPalette, {
-            altIsOptional: true,
             global: true,
         });
 
@@ -39,37 +37,11 @@ export const commandService = {
                 return;
             }
 
-            const commands = [...registeredCommands.values()];
-
-            // Also retrieve all hotkeyables elements
-            for (const el of ui.getVisibleElements("[data-hotkey]:not(:disabled)")) {
-                const closest = el.closest("[data-command-category]");
-                const category = closest ? closest.dataset.commandCategory : "default";
-
-                const description =
-                    el.title ||
-                    el.placeholder ||
-                    (el.innerText &&
-                        `${el.innerText.slice(0, 50)}${el.innerText.length > 50 ? "..." : ""}`) ||
-                    "no description provided";
-
-                commands.push({
-                    name: description,
-                    hotkey: getHotkeyToPress(el.dataset.hotkey),
-                    action: () => {
-                        // AAB: not sure it is enough, we might need to trigger all events that occur when you actually click
-                        el.focus();
-                        el.click();
-                    },
-                    category,
-                });
-            }
-
             // Open palette dialog
             isPaletteOpened = true;
             dialog.add(
                 CommandPaletteDialog,
-                { commands },
+                {},
                 {
                     onClose: () => {
                         isPaletteOpened = false;
@@ -95,8 +67,6 @@ export const commandService = {
                     command.action,
                     command.hotkeyOptions
                 );
-                const altIsOptional = command.hotkeyOptions && command.hotkeyOptions.altIsOptional;
-                registration.hotkey = getHotkeyToPress(command.hotkey, altIsOptional);
             }
 
             const token = nextToken++;
@@ -143,6 +113,11 @@ export const commandService = {
                 return () => {
                     unregisterCommand(token);
                 };
+            },
+            getCommands(activeElement) {
+                return [...registeredCommands.values()].filter(
+                    (command) => command.activeElement === activeElement
+                );
             },
         };
     },

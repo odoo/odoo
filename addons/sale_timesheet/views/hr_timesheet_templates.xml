@@ -266,25 +266,25 @@
                                                 <th t-if="is_uom_day" class="text-nowrap text-right pr-5">Days Spent</th>
                                                 <th t-else="" class="text-nowrap text-right pr-5">Hours Spent</th>
                                                 <td>
-                                                    <div class="float-right o_timesheet_plan_badge">
-                                                        <span class="badge badge-pill o_progress_billable_time">
+                                                    <div class="float-right o_timesheet_plan_badge h3 mb-3">
+                                                        <span class="badge badge-pill border-0 px-3 py-2 o_progress_billable_time">
                                                             <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','billable_time')])" tabindex="-1">Billed on Timesheets</a>
                                                         </span>
-                                                        <span class="badge badge-pill o_progress_billable_fixed">
+                                                        <span class="badge badge-pill border-0 px-3 py-2 o_progress_billable_fixed">
                                                             <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','billable_fixed')])" tabindex="-1">Billed at a Fixed price</a>
                                                         </span>
-                                                        <span t-if="dashboard['time']['non_billable_project'] != 0" class="badge badge-pill o_progress_non_billable_project">
+                                                        <span t-if="dashboard['time']['non_billable_project'] != 0" class="badge badge-pill border-0 px-3 py-2 o_progress_non_billable_project">
                                                             <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable_project')])" tabindex="-1">No task found</a>
                                                         </span>
-                                                        <span t-if="dashboard['time']['non_billable_timesheet'] != 0" class="badge badge-pill o_progress_non_billable_timesheet">
+                                                        <span t-if="dashboard['time']['non_billable_timesheet'] != 0" class="badge badge-pill border-0 px-3 py-2 o_progress_non_billable_timesheet">
                                                             <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable_timesheet')])" tabindex="-1">Non billable timesheets</a>
                                                         </span>
-                                                        <span class="badge badge-pill o_progress_non_billable">
+                                                        <span class="badge badge-pill border-0 px-3 py-2 o_progress_non_billable">
                                                             <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable')])" tabindex="-1">Non billable tasks</a>
                                                         </span>
                                                         <!-- only show the canceled pill if there were timesheets on canceled so -->
                                                         <t t-if="sum([employee.get('canceled', 0.0) for employee in repartition_employee.values()]) > 0">
-                                                            <span class="badge badge-pill o_progress_canceled">
+                                                            <span class="badge badge-pill border-0 px-3 py-2 o_progress_canceled">
                                                                 <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('so_line.state', '=', 'cancel')])" tabindex="-1">Cancelled</a>
                                                             </span>
                                                         </t>
@@ -309,7 +309,7 @@
                                                         <t t-else="" t-esc="employee['total']" t-options="{'widget': 'float_time'}"/>
                                                     </td>
                                                     <td style="vertical-align:middle">
-                                                        <div class="border rounded">
+                                                        <div class="border rounded overflow-hidden">
                                                             <div t-if="repartition_employee_max" class="progress" t-attf-style="width: {{max(0, employee['total'] / repartition_employee_max * 100)}}%; margin-bottom: 0em;">
 
                                                                 <t t-set="total" t-value="employee['total'] or 1.0" />

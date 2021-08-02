@@ -35,6 +35,8 @@
                      the message will be posted with the identity of the partner_id of the object
     -->
     <template id="rating_stars_static_popup_composer" name="Rating: rating composer in popup">
+        <t t-set="display_composer" t-value="not disable_composer and not request.session.is_website_user"/>
+
         <div class="d-print-none o_rating_popup_composer o_not_editable p-0"
             t-att-data-rating_avg="rating_avg or 0.0"
             t-att-data-rating_count="rating_count or 0.0"
@@ -50,7 +52,24 @@
             t-att-data-default_attachment_ids="default_attachment_ids"
             t-att-data-force_submit_url="force_submit_url"
             t-att-data-disable_composer="disable_composer"
-            t-att-data-link_btn_classes="_link_btn_classes">
+            t-att-data-display_composer="display_composer"
+            t-att-data-link_btn_classes="_link_btn_classes"
+            t-att-data-icon="icon"
+            t-att-data-text_classes="_text_classes"
+            t-att-data-hide_rating_avg="hide_rating_avg">
+            <div class="d-flex flex-wrap align-items-center">
+                <div class="o_rating_popup_composer_stars text-nowrap"/>
+                <button t-if="display_composer" type="button"
+                    t-att-class="'btn ' + _link_btn_classes or 'btn-primary'"
+                    data-toggle="modal" data-target="#ratingpopupcomposer">
+                    <i t-if="icon" t-att-class="icon"/>
+                    <span t-attf-class="#{_text_classes} o_rating_popup_composer_text">
+                        <t t-if="default_message_id">Modify your review</t>
+                        <t t-else="">Write a review</t>
+                    </span>
+                </button>
+                <div class="o_rating_popup_composer_modal"/>
+            </div>
         </div>
     </template>
 </odoo>

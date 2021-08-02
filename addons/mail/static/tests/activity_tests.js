@@ -1,11 +1,14 @@
 /** @odoo-module **/
 
+import ActivityRenderer from '@mail/js/views/activity/activity_renderer';
 import ActivityView from '@mail/js/views/activity/activity_view';
 import testUtils from 'web.test_utils';
+import domUtils from 'web.dom';
 
 import { legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
-import { registry } from "@web/core/registry";
+import { session } from '@web/session';
+import { click } from "@web/../tests/helpers/utils";
 
 let serverData;
 
@@ -391,7 +394,7 @@ QUnit.test("activity view: no group_by_menu and no comparison_menu", async funct
         }
     };
 
-    patchWithCleanup(odoo.session_info.user_context, { lang: "zz_ZZ" });
+    patchWithCleanup(session.user_context, { lang: "zz_ZZ" });
 
     const webClient = await createWebClient({ serverData, mockRPC , legacyParams: {withLegacyMockServer: true}});
 
@@ -526,6 +529,161 @@ QUnit.test("Activity view: discard an activity creation dialog", async function 
     await testUtils.dom.click($('.modal.o_technical_modal button[special="cancel"]'));
     await legacyExtraNextTick();
     assert.containsNone($, ".modal.o_technical_modal", "Activity Modal should be closed");
+});
+
+QUnit.test('Activity view: many2one_avatar_user widget in activity view', async function (assert) {
+    assert.expect(3);
+
+    const taskModel = serverData.models.task;
+
+    serverData.models['res.users'] = {
+        fields: {
+            display_name: { string: "Displayed name", type: "char" },
+            avatar_128: { string: "Image 128", type: 'image' },
+        },
+        records: [{
+            id: 1,
+            display_name: "first user",
+            avatar_128: "Atmaram Bhide",
+        }],
+    };
+    taskModel.fields.user_id = { string: "Related User", type: "many2one", relation: 'res.users' };
+    taskModel.records[0].user_id = 1;
+
+    serverData.actions = {
+        1: {
+            id: 1,
+            name: 'Task Action',
+            res_model: 'task',
+            type: 'ir.actions.act_window',
+            views: [[false, 'activity']],
+        }
+    };
+
+    serverData.views = {
+        'task,false,activity': `
+            <activity string="Task">
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="user_id" widget="many2one_avatar_user"/>
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </activity>`,
+        'task,false,search': '<search></search>'
+    };
+
+    const webClient = await createWebClient({ serverData, legacyParams: { withLegacyMockServer: true } });
+    await doAction(webClient, 1);
+
+    await legacyExtraNextTick();
+    assert.containsN(webClient, '.o_m2o_avatar', 2);
+    assert.containsOnce(webClient, 'tr[data-res-id=13] .o_m2o_avatar > img[src="/web/image/res.users/1/avatar_128"]',
+        "should have m2o avatar image");
+    assert.containsNone(webClient, '.o_m2o_avatar > span',
+        "should not have text on many2one_avatar_user if onlyImage node option is passed");
+});
+
+QUnit.test("Activity view: on_destroy_callback doesn't crash", async function (assert) {
+    assert.expect(3);
+
+    const params = {
+        View: ActivityView,
+        model: 'task',
+        data: this.data,
+        arch: `<activity string="Task">
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </activity>`,
+    };
+
+    patchWithCleanup(ActivityRenderer.prototype, {
+        mounted() {
+            assert.step('mounted');
+        },
+        willUnmount() {
+            assert.step('willUnmount');
+        }
+    });
+
+    const activity = await createView(params);
+    domUtils.detach([{ widget: activity }]);
+
+    assert.verifySteps([
+        'mounted',
+        'willUnmount'
+    ]);
+
+    activity.destroy();
+});
+
+QUnit.test("Schedule activity dialog uses the same search view as activity view", async function (assert) {
+    assert.expect(8);
+    serverData.models.task.records = [];
+    serverData.views = {
+        "task,false,activity": `
+            <activity string="Task">
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </activity>
+        `,
+        "task,false,list": `<list><field name="foo"/></list>`,
+        "task,false,search": `<search/>`,
+        'task,1,search': `<search/>`,
+    };
+
+    function mockRPC(route, args) {
+        if (args.method === "load_views") {
+            assert.step(JSON.stringify(args.kwargs.views));
+        } 
+    }
+
+    const webClient = await createWebClient({ serverData, mockRPC, legacyParams: {withLegacyMockServer: true} });
+
+    // open an activity view (with default search arch)
+    await doAction(webClient, {
+        name: 'Dashboard',
+        res_model: 'task',
+        type: 'ir.actions.act_window',
+        views: [[false, 'activity']],
+    });
+
+    assert.verifySteps([
+        '[[false,"activity"],[false,"search"]]',
+    ])
+
+    // click on "Schedule activity"
+    await click(webClient.el.querySelector(".o_activity_view .o_record_selector"));
+
+    assert.verifySteps([
+        '[[false,"list"],[false,"search"]]',
+    ])
+
+    // open an activity view (with search arch 1)
+    await doAction(webClient, {
+        name: 'Dashboard',
+        res_model: 'task',
+        type: 'ir.actions.act_window',
+        views: [[false, 'activity']],
+        search_view_id: [1,"search"],
+    });
+
+    assert.verifySteps([
+        '[[false,"activity"],[1,"search"]]',
+    ])
+
+    // click on "Schedule activity"
+    await click(webClient.el.querySelector(".o_activity_view .o_record_selector"));
+
+    assert.verifySteps([
+        '[[false,"list"],[1,"search"]]',
+    ])
 });
 
 });

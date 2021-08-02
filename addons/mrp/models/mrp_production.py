@@ -69,7 +69,7 @@ class MrpProduction(models.Model):
 
     @api.model
     def _get_default_is_locked(self):
-        return self.user_has_groups('mrp.group_locked_by_default')
+        return not self.user_has_groups('mrp.group_unlocked_by_default')
 
     name = fields.Char(
         'Reference', copy=False, readonly=True, default=lambda x: _('New'))
@@ -437,7 +437,7 @@ class MrpProduction(models.Model):
 
     @api.depends(
         'move_raw_ids.state', 'move_raw_ids.quantity_done', 'move_finished_ids.state',
-        'workorder_ids', 'workorder_ids.state', 'product_qty', 'qty_producing')
+        'workorder_ids.state', 'product_qty', 'qty_producing')
     def _compute_state(self):
         """ Compute the production state. This uses a similar process to stock
         picking, but has been adapted to support having no moves. This adaption
@@ -451,35 +451,36 @@ class MrpProduction(models.Model):
         for production in self:
             if not production.state:
                 production.state = 'draft'
-            elif production.move_raw_ids and all(move.state == 'cancel' for move in production.move_raw_ids):
+            elif production.state == 'cancel' or (production.move_raw_ids and all(move.state == 'cancel' for move in production.move_raw_ids)):
                 production.state = 'cancel'
             elif production.state == 'done' or (production.move_raw_ids and all(move.state in ('cancel', 'done') for move in production.move_raw_ids)):
                 production.state = 'done'
-            elif production.qty_producing >= production.product_qty:
+            elif production.workorder_ids and all(wo_state in ('done', 'cancel') for wo_state in production.workorder_ids.mapped('state')):
+                production.state = 'to_close'
+            elif not production.workorder_ids and production.qty_producing >= production.product_qty:
                 production.state = 'to_close'
             elif any(wo_state in ('progress', 'done') for wo_state in production.workorder_ids.mapped('state')):
                 production.state = 'progress'
-            elif not float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
+            elif production.product_uom_id and not float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
                 production.state = 'progress'
             elif any(not float_is_zero(move.quantity_done, precision_rounding=move.product_uom.rounding or move.product_id.uom_id.rounding) for move in production.move_raw_ids):
                 production.state = 'progress'
 
     @api.depends('state', 'move_raw_ids.state')
     def _compute_reservation_state(self):
+        self.reservation_state = False
         for production in self:
-            # Compute reservation state
-            # State where the reservation does not matter.
-            production.reservation_state = False
+            if production.state in ('draft', 'done', 'cancel'):
+                continue
+            relevant_move_state = production.move_raw_ids._get_relevant_state_among_moves()
             # Compute reservation state according to its component's moves.
-            if production.state not in ('draft', 'done', 'cancel'):
-                relevant_move_state = production.move_raw_ids._get_relevant_state_among_moves()
-                if relevant_move_state == 'partially_available':
-                    if production.bom_id.operation_ids and production.bom_id.ready_to_produce == 'asap':
-                        production.reservation_state = production._get_ready_to_produce_state()
-                    else:
-                        production.reservation_state = 'confirmed'
-                elif relevant_move_state != 'draft':
-                    production.reservation_state = relevant_move_state
+            if relevant_move_state == 'partially_available':
+                if production.bom_id.operation_ids and production.bom_id.ready_to_produce == 'asap':
+                    production.reservation_state = production._get_ready_to_produce_state()
+                else:
+                    production.reservation_state = 'confirmed'
+            elif relevant_move_state != 'draft':
+                production.reservation_state = relevant_move_state
 
     @api.depends('move_raw_ids', 'state', 'move_raw_ids.product_uom_qty')
     def _compute_unreserve_visible(self):
@@ -516,7 +517,11 @@ class MrpProduction(models.Model):
     @api.depends('state')
     def _compute_show_lock(self):
         for order in self:
-            order.show_lock = self.env.user.has_group('mrp.group_locked_by_default') and order.id is not False and order.state not in {'cancel', 'draft'}
+            order.show_lock = order.state == 'done' or (
+                not self.env.user.has_group('mrp.group_unlocked_by_default')
+                and order.id is not False
+                and order.state not in {'cancel', 'draft'}
+            )
 
     @api.depends('state','move_raw_ids')
     def _compute_show_lot_ids(self):
@@ -630,9 +635,7 @@ class MrpProduction(models.Model):
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
     def _onchange_move_finished(self):
         if self.product_id and self.product_qty > 0:
-            # keep manual entries
-            list_move_finished = [(4, move.id) for move in self.move_finished_ids.filtered(
-                lambda m: not m.byproduct_id and m.product_id != self.product_id)]
+            list_move_finished = []
             moves_finished_values = self._get_moves_finished_values()
             moves_byproduct_dict = {move.byproduct_id.id: move for move in self.move_finished_ids.filtered(lambda m: m.byproduct_id)}
             move_finished = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id)
@@ -645,6 +648,7 @@ class MrpProduction(models.Model):
                 else:
                     # add new entries
                     list_move_finished += [(0, 0, move_finished_values)]
+            self.move_finished_ids = [(5, 0, 0)]
             self.move_finished_ids = list_move_finished
         else:
             self.move_finished_ids = [(2, move.id) for move in self.move_finished_ids.filtered(lambda m: m.bom_line_id)]
@@ -731,7 +735,7 @@ class MrpProduction(models.Model):
                     production._plan_workorders(replan=True)
             if production.state == 'done' and ('lot_producing_id' in vals or 'qty_producing' in vals):
                 finished_move_lines = production.move_finished_ids.filtered(
-                    lambda move: move.product_id == self.product_id and move.state == 'done').mapped('move_line_ids')
+                    lambda move: move.product_id == production.product_id and move.state == 'done').mapped('move_line_ids')
                 if 'lot_producing_id' in vals:
                     finished_move_lines.write({'lot_id': vals.get('lot_producing_id')})
                 if 'qty_producing' in vals:
@@ -1124,7 +1128,7 @@ class MrpProduction(models.Model):
         """ Plan all the production's workorders depending on the workcenters
         work schedule.
 
-        :param replan: If it is a replan, only ready and pending workorder will be take in account
+        :param replan: If it is a replan, only ready and pending workorder will be taken into account
         :type replan: bool.
         """
         self.ensure_one()
@@ -1136,7 +1140,7 @@ class MrpProduction(models.Model):
         qty_to_produce = self.product_uom_id._compute_quantity(qty_to_produce, self.product_id.uom_id)
         start_date = max(self.date_planned_start, datetime.datetime.now())
         if replan:
-            workorder_ids = self.workorder_ids.filtered(lambda wo: wo.state in ['ready', 'pending'])
+            workorder_ids = self.workorder_ids.filtered(lambda wo: wo.state in ('pending', 'waiting', 'ready'))
             # We plan the manufacturing order according to its `date_planned_start`, but if
             # `date_planned_start` is in the past, we plan it as soon as possible.
             workorder_ids.leave_id.unlink()
@@ -1378,8 +1382,9 @@ class MrpProduction(models.Model):
         if not sequence:
             return name
         seq_back = "-" + "0" * (SIZE_BACK_ORDER_NUMERING - 1 - int(math.log10(sequence))) + str(sequence)
-        if re.search("-\\d{%d}$" % SIZE_BACK_ORDER_NUMERING, name):
-            return name[:-SIZE_BACK_ORDER_NUMERING-1] + seq_back
+        regex = re.compile(r"-\d+$")
+        if regex.search(name):
+            return regex.sub(seq_back, name)
         return name + seq_back
 
     def _get_backorder_mo_vals(self):

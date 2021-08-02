@@ -1,15 +1,14 @@
 odoo.define('web.field_one_to_many_tests', function (require) {
 "use strict";
 
+const {delay} = require('web.concurrency');
 var AbstractField = require('web.AbstractField');
 var AbstractStorageService = require('web.AbstractStorageService');
 const ControlPanel = require('web.ControlPanel');
 const fieldRegistry = require('web.field_registry');
-var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 var KanbanRecord = require('web.KanbanRecord');
 var ListRenderer = require('web.ListRenderer');
-var NotificationService = require('web.NotificationService');
 var RamStorage = require('web.RamStorage');
 var relationalFields = require('web.relational_fields');
 var testUtils = require('web.test_utils');
@@ -1659,9 +1658,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('embedded one2many with handle widget with minimum setValue calls', async function (assert) {
-            var done = assert.async();
             assert.expect(20);
-
 
             this.data.turtle.records[0].turtle_int = 6;
             this.data.turtle.records.push({
@@ -1669,18 +1666,18 @@ QUnit.module('fields', {}, function () {
                 turtle_int: 20,
                 turtle_foo: "a1",
             }, {
-                    id: 5,
-                    turtle_int: 9,
-                    turtle_foo: "a2",
-                }, {
-                    id: 6,
-                    turtle_int: 2,
-                    turtle_foo: "a3",
-                }, {
-                    id: 7,
-                    turtle_int: 11,
-                    turtle_foo: "a4",
-                });
+                id: 5,
+                turtle_int: 9,
+                turtle_foo: "a2",
+            }, {
+                id: 6,
+                turtle_int: 2,
+                turtle_foo: "a3",
+            }, {
+                id: 7,
+                turtle_int: 11,
+                turtle_foo: "a4",
+            });
             this.data.partner.records[0].turtles = [1, 2, 3, 4, 5, 6, 7];
 
             var form = await createView({
@@ -1688,18 +1685,12 @@ QUnit.module('fields', {}, function () {
                 model: 'partner',
                 data: this.data,
                 arch: '<form string="Partners">' +
-                    '<sheet>' +
-                    '<notebook>' +
-                    '<page string="P page">' +
                     '<field name="turtles">' +
                     '<tree default_order="turtle_int">' +
                     '<field name="turtle_int" widget="handle"/>' +
                     '<field name="turtle_foo"/>' +
                     '</tree>' +
                     '</field>' +
-                    '</page>' +
-                    '</notebook>' +
-                    '</sheet>' +
                     '</form>',
                 res_id: 1,
             });
@@ -1715,40 +1706,29 @@ QUnit.module('fields', {}, function () {
                 [5, 1, 'top', ['7', '6', '1', '2', '5']], // move the penultimate to the second line
                 [2, 5, 'bottom', ['1', '2', '5', '6']], // move the third to the penultimate line
             ];
-            async function dragAndDrop() {
-                var pos = positions.shift();
-
+            for (const [source, target, position, steps] of positions) {
                 await testUtils.dom.dragAndDrop(
-                    form.$('.ui-sortable-handle').eq(pos[0]),
-                    form.$('tbody tr').eq(pos[1]),
-                    { position: pos[2] }
+                    form.$('.ui-sortable-handle').eq(source),
+                    form.$('tbody tr').eq(target),
+                    {position: position}
                 );
 
-                assert.verifySteps(pos[3],
+                await delay(10);
+
+                assert.verifySteps(steps,
                     "sequences values should be apply from the begin index to the drop index");
-
-                if (positions.length) {
-
-                    setTimeout(dragAndDrop, 10);
-
-                } else {
-
-                    assert.deepEqual(_.pluck(form.model.get(form.handle).data.turtles.data, 'data'), [
-                        { id: 3, turtle_foo: "kawa", turtle_int: 2 },
-                        { id: 7, turtle_foo: "a4", turtle_int: 3 },
-                        { id: 1, turtle_foo: "yop", turtle_int: 4 },
-                        { id: 2, turtle_foo: "blip", turtle_int: 5 },
-                        { id: 5, turtle_foo: "a2", turtle_int: 6 },
-                        { id: 6, turtle_foo: "a3", turtle_int: 7 },
-                        { id: 4, turtle_foo: "a1", turtle_int: 8 }
-                    ], "sequences must be apply correctly");
-
-                    form.destroy();
-                    done();
-                }
             }
+            assert.deepEqual(_.pluck(form.model.get(form.handle).data.turtles.data, 'data'), [
+                { id: 3, turtle_foo: "kawa", turtle_int: 2 },
+                { id: 7, turtle_foo: "a4", turtle_int: 3 },
+                { id: 1, turtle_foo: "yop", turtle_int: 4 },
+                { id: 2, turtle_foo: "blip", turtle_int: 5 },
+                { id: 5, turtle_foo: "a2", turtle_int: 6 },
+                { id: 6, turtle_foo: "a3", turtle_int: 7 },
+                { id: 4, turtle_foo: "a1", turtle_int: 8 }
+            ], "sequences must be apply correctly");
 
-            dragAndDrop();
+            form.destroy();
         });
 
         QUnit.test('embedded one2many (editable list) with handle widget', async function (assert) {
@@ -2515,7 +2495,7 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.test('one2many kanban (editable): properly handle create_text node option', async function (assert) {
+        QUnit.test('one2many kanban (editable): properly handle add-label node attribute', async function (assert) {
             assert.expect(1);
 
             var form = await createView({
@@ -2523,7 +2503,7 @@ QUnit.module('fields', {}, function () {
                 model: 'partner',
                 data: this.data,
                 arch: '<form string="Partners">' +
-                    '<field name="turtles" options="{\'create_text\': \'Add turtle\'}" mode="kanban">' +
+                    '<field name="turtles" add-label="Add turtle" mode="kanban">' +
                     '<kanban>' +
                     '<templates>' +
                     '<t t-name="kanban-box">' +
@@ -5850,11 +5830,11 @@ QUnit.module('fields', {}, function () {
                 },
                 res_id: 1,
                 services: {
-                    notification: NotificationService.extend({
+                    notification: {
                         notify: function (params) {
                             assert.step(params.type);
                         }
-                    }),
+                    },
                 },
                 intercepts: {
                     execute_action: function (event) {
@@ -9720,7 +9700,7 @@ QUnit.module('fields', {}, function () {
             assert.expect(2);
 
             let o2m;
-            testUtils.patch(FieldOne2Many, {
+            testUtils.mock.patch(FieldOne2Many, {
                 init() {
                     this._super(...arguments);
                     o2m = this;
@@ -9747,7 +9727,7 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(o2m.recordData.display_name, "val");
 
             form.destroy();
-            testUtils.unpatch(FieldOne2Many);
+            testUtils.mock.unpatch(FieldOne2Many);
         });
 
         QUnit.test('nested one2many, onchange, no command value', async function (assert) {
@@ -9980,6 +9960,71 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(count, 0);
         });
 
+        QUnit.test('reordering embedded one2many with handle widget starting with same sequence', async function (assert) {
+            assert.expect(3);
+
+            this.data.turtle = {
+                fields: {turtle_int: {string: "int", type: "integer", sortable: true}},
+                records: [
+                    {id: 1, turtle_int: 1},
+                    {id: 2, turtle_int: 1},
+                    {id: 3, turtle_int: 1},
+                    {id: 4, turtle_int: 2},
+                    {id: 5, turtle_int: 3},
+                    {id: 6, turtle_int: 4},
+                ],
+            };
+            this.data.partner.records[0].turtles = [1, 2, 3, 4, 5, 6];
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form string="Partners">
+                        <sheet>
+                            <notebook>
+                                <page string="P page">
+                                    <field name="turtles">
+                                        <tree default_order="turtle_int">
+                                            <field name="turtle_int" widget="handle"/>
+                                            <field name="id"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </sheet>
+                    </form>`,
+                res_id: 1,
+            });
+
+            await testUtils.form.clickEdit(form);
+
+            assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "123456", "default should be sorted by id");
+
+            // Drag and drop the fourth line in first position
+            await testUtils.dom.dragAndDrop(
+                form.$('.ui-sortable-handle').eq(3),
+                form.$('tbody tr').first(),
+                {position: 'top'}
+            );
+            assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "412356", "should still have the 6 rows in the correct order");
+
+            await testUtils.form.clickSave(form);
+
+            assert.deepEqual(_.map(this.data.turtle.records, function (turtle) {
+                return _.pick(turtle, 'id', 'turtle_int');
+            }), [
+                {id: 1, turtle_int: 2},
+                {id: 2, turtle_int: 3},
+                {id: 3, turtle_int: 4},
+                {id: 4, turtle_int: 1},
+                {id: 5, turtle_int: 5},
+                {id: 6, turtle_int: 6},
+            ], "should have saved the updated turtle_int sequence");
+
+            form.destroy();
+        });
     });
 });
 });

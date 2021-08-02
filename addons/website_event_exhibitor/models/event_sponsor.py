@@ -31,7 +31,7 @@ class Sponsor(models.Model):
     event_id = fields.Many2one('event.event', 'Event', required=True)
     sponsor_type_id = fields.Many2one(
         'event.sponsor.type', 'Sponsoring Level',
-        default=lambda self: self._default_sponsor_type_id(), required=True)
+        default=lambda self: self._default_sponsor_type_id(), required=True, auto_join=True)
     url = fields.Char('Sponsor Website', compute='_compute_url', readonly=False, store=True)
     sequence = fields.Integer('Sequence')
     active = fields.Boolean(default=True)

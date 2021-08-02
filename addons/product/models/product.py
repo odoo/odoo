@@ -207,6 +207,12 @@ class ProductProduct(models.Model):
         for record in self:
             record.can_image_1024_be_zoomed = record.can_image_variant_1024_be_zoomed if record.image_variant_1920 else record.product_tmpl_id.can_image_1024_be_zoomed
 
+    def _get_placeholder_filename(self, field):
+        image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
+        if field in image_fields:
+            return 'product/static/img/placeholder.png'
+        return super()._get_placeholder_filename(field)
+
     def init(self):
         """Ensure there is at most one active variant for each combination.
 
@@ -334,6 +340,7 @@ class ProductProduct(models.Model):
 
     @api.onchange('default_code')
     def _onchange_default_code(self):
+        from pudb import set_trace; set_trace()
         if self.default_code and self.env['product.template'].search_count([('default_code', '=', self.default_code)]):
             return {'warning': {
                 'title': _("Note:"),

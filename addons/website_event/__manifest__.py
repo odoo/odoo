@@ -3,7 +3,7 @@
 
 {
     'name': 'Events',
-    'version': '1.3',
+    'version': '1.4',
     'category': 'Marketing/Events',
     'sequence': 140,
     'summary': 'Publish events, sell tickets',
@@ -63,5 +63,6 @@
         'website.assets_editor': [
             'website_event/static/src/js/website_event.editor.js',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

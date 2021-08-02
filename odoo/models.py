@@ -1587,15 +1587,9 @@ class BaseModel(metaclass=MetaModel):
         view = E.calendar(string=self._description)
         view.append(E.field(name=self._rec_name_fallback()))
 
-        if self._date_name not in self._fields:
-            date_found = False
-            for dt in ['date', 'date_start', 'x_date', 'x_date_start']:
-                if dt in self._fields:
-                    self._date_name = dt
-                    break
-            else:
-                raise UserError(_("Insufficient fields for Calendar View!"))
-        view.set('date_start', self._date_name)
+        if not set_first_of([self._date_name, 'date', 'date_start', 'x_date', 'x_date_start'],
+                            self._fields, 'date_start'):
+            raise UserError(_("Insufficient fields for Calendar View!"))
 
         set_first_of(["user_id", "partner_id", "x_user_id", "x_partner_id"],
                      self._fields, 'color')
@@ -2048,58 +2042,133 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     def _read_group_fill_temporal(self, data, groupby, aggregated_fields, annotated_groupbys,
-                                  interval=dateutil.relativedelta.relativedelta(months=1)):
+                                  fill_from=False, fill_to=False, min_groups=False):
         """Helper method for filling date/datetime 'holes' in a result set.
 
         We are in a use case where data are grouped by a date field (typically
         months but it could be any other interval) and displayed in a chart.
 
-        Assume we group records by month, and we only have data for August,
+        Assume we group records by month, and we only have data for June,
         September and December. By default, plotting the result gives something
         like:
                                                 ___
                                       ___      |   |
-                                     |   |     |   |
                                      |   | ___ |   |
-                                     |   ||   ||   |
                                      |___||___||___|
-                                      Aug  Sep  Dec
+                                      Jun  Sep  Dec
 
-        The problem is that December data follows immediately September data,
-        which is misleading for the user. Adding explicit zeroes for missing data
-        gives something like:
+        The problem is that December data immediately follow September data,
+        which is misleading for the user. Adding explicit zeroes for missing
+        data gives something like:
+                                                           ___
+                             ___                          |   |
+                            |   |           ___           |   |
+                            |___| ___  ___ |___| ___  ___ |___|
+                             Jun  Jul  Aug  Sep  Oct  Nov  Dec
+
+        To customize this output, the context key "fill_temporal" can be used
+        under its dictionary format, which has 3 attributes : fill_from,
+        fill_to, min_groups (see params of this function)
+
+        Fill between bounds:
+        Using either `fill_from` and/or `fill_to` attributes, we can further
+        specify that at least a certain date range should be returned as
+        contiguous groups. Any group outside those bounds will not be removed,
+        but the filling will only occur between the specified bounds. When not
+        specified, existing groups will be used as bounds, if applicable.
+        By specifying such bounds, we can get empty groups before/after any
+        group with data.
+
+        If we want to fill groups only between August (fill_from)
+        and October (fill_to):
                                                      ___
                                  ___                |   |
-                                |   |               |   |
-                                |   | ___           |   |
-                                |   ||   |          |   |
-                                |___||___| ___  ___ |___|
-                                 Aug  Sep  Oct  Nov  Dec
+                                |   |      ___      |   |
+                                |___| ___ |___| ___ |___|
+                                 Jun  Aug  Sep  Oct  Dec
+
+        We still get June and December. To filter them out, we should match
+        `fill_from` and `fill_to` with the domain e.g. ['&',
+            ('date_field', '>=', 'YYYY-08-01'),
+            ('date_field', '<', 'YYYY-11-01')]:
+                                         ___
+                                    ___ |___| ___
+                                    Aug  Sep  Oct
+
+        Minimal filling amount:
+        Using `min_groups`, we can specify that we want at least that amount of
+        contiguous groups. This amount is guaranteed to be provided from
+        `fill_from` if specified, or from the lowest existing group otherwise.
+        This amount is not restricted by `fill_to`. If there is an existing
+        group before `fill_from`, `fill_from` is still used as the starting
+        group for min_groups, because the filling does not apply on that
+        existing group. If neither `fill_from` nor `fill_to` is specified, and
+        there is no existing group, no group will be returned.
+
+        If we set min_groups = 4:
+                                         ___
+                                    ___ |___| ___ ___
+                                    Aug  Sep  Oct Nov
 
         :param list data: the data containing groups
         :param list groupby: name of the first group by
         :param list aggregated_fields: list of aggregated fields in the query
-        :param relativedelta interval: interval between two temporal groups
-                expressed as a relativedelta month by default
+        :param str fill_from: (inclusive) string representation of a
+            date/datetime, start bound of the fill_temporal range
+            formats: date -> %Y-%m-%d, datetime -> %Y-%m-%d %H:%M:%S
+        :param str fill_to: (inclusive) string representation of a
+            date/datetime, end bound of the fill_temporal range
+            formats: date -> %Y-%m-%d, datetime -> %Y-%m-%d %H:%M:%S
+        :param int min_groups: minimal amount of required groups for the
+            fill_temporal range (should be >= 1)
         :rtype: list
         :return: list
         """
         first_a_gby = annotated_groupbys[0]
-        if not data:
-            return data
         if first_a_gby['type'] not in ('date', 'datetime'):
             return data
         interval = first_a_gby['interval']
+        granularity = first_a_gby['granularity']
+        tz = pytz.timezone(self._context['tz']) if first_a_gby["tz_convert"] else False
         groupby_name = groupby[0]
 
         # existing non null datetimes
-        existing = [d[groupby_name] for d in data if d[groupby_name]]
+        existing = [d[groupby_name] for d in data if d[groupby_name]] or [None]
+        # assumption: existing data is sorted by field 'groupby_name'
+        existing_from, existing_to = existing[0], existing[-1]
 
-        if len(existing) < 2:
+        if fill_from:
+            fill_from = date_utils.start_of(odoo.fields.Datetime.to_datetime(fill_from), granularity)
+            if tz:
+                fill_from = tz.localize(fill_from)
+        elif existing_from:
+            fill_from = existing_from
+        if fill_to:
+            fill_to = date_utils.start_of(odoo.fields.Datetime.to_datetime(fill_to), granularity)
+            if tz:
+                fill_to = tz.localize(fill_to)
+        elif existing_to:
+            fill_to = existing_to
+
+        if not fill_to and fill_from:
+            fill_to = fill_from
+        if not fill_from and fill_to:
+            fill_from = fill_to
+        if not fill_from and not fill_to:
             return data
 
-        # assumption: existing data is sorted by field 'groupby_name'
-        first, last = existing[0], existing[-1]
+        if min_groups > 0:
+            fill_to = max(fill_to, fill_from + (min_groups - 1) * interval)
+
+        if fill_to < fill_from:
+            return data
+
+        required_dates = date_utils.date_range(fill_from, fill_to, interval)
+
+        if existing[0] is None:
+            existing = list(required_dates)
+        else:
+            existing = sorted(set().union(existing, required_dates))
 
         empty_item = {'id': False, (groupby_name.split(':')[0] + '_count'): 0}
         empty_item.update({key: False for key in aggregated_fields})
@@ -2110,8 +2179,7 @@ class BaseModel(metaclass=MetaModel):
             grouped_data[d[groupby_name]].append(d)
 
         result = []
-
-        for dt in date_utils.date_range(first, last, interval):
+        for dt in existing:
             result.extend(grouped_data[dt] or [dict(empty_item, **{groupby_name: dt})])
 
         if False in grouped_data:
@@ -2223,6 +2291,7 @@ class BaseModel(metaclass=MetaModel):
             'type': field_type,
             'display_format': display_formats[gb_function or 'month'] if temporal else None,
             'interval': time_intervals[gb_function or 'month'] if temporal else None,
+            'granularity': gb_function or 'month' if temporal else None,
             'tz_convert': tz_convert,
             'qualified_field': qualified_field,
         }
@@ -2346,6 +2415,9 @@ class BaseModel(metaclass=MetaModel):
                     * the values of fields grouped by the fields in ``groupby`` argument
                     * __domain: list of tuples specifying the search criteria
                     * __context: dictionary with argument like ``groupby``
+                    * __range: (date/datetime only) dictionary with field names as keys mapping to
+                        a dictionary with keys: "from" (inclusive) and "to" (exclusive)
+                        mapping to a string representation of the temporal bounds of the group
         :rtype: [{'field_name_1': value, ...]
         :raise AccessError: * if user has no read rights on the requested object
                             * if user tries to bypass access rules for read on the requested object
@@ -2358,16 +2430,29 @@ class BaseModel(metaclass=MetaModel):
             if self._fields[f.split(':')[0]].type in ('date', 'datetime')    # e.g. 'date:month'
         ]
 
-        # iterate on all results and replace the "full" date/datetime value
-        # (range, label) by just the formatted label, in-place
+        # iterate on all results and replace the "full" date/datetime value (<=> group[df])
+        # which is a tuple (range, label) by just the formatted label, in-place.
+        # we store the range under another format, by adding a new __range key for each
+        # group, mapping to a sub-dictionary: {field: {from: #inclusive#, to: #exclusive#}}
         for group in result:
+            if dt:
+                group["__range"] = {}
             for df in dt:
                 # could group on a date(time) field which is empty in some
                 # records, in which case as with m2o the _raw value will be
                 # `False` instead of a (value, label) pair. In that case,
                 # leave the `False` value alone
+                field_name = df.split(':')[0]
                 if group.get(df):
+                    range_from, range_to = group[df][0].split('/')
+                    # /!\ could break if DEFAULT_SERVER_DATE_FORMAT allows '/' characters
+                    group["__range"][field_name] = {
+                        "from": range_from,
+                        "to": range_to
+                    }
                     group[df] = group[df][1]
+                else:
+                    group["__range"][field_name] = False
         return result
 
     @api.model
@@ -2385,11 +2470,13 @@ class BaseModel(metaclass=MetaModel):
 
         self._apply_ir_rules(query, 'read')
         for gb in groupby_fields:
-            assert gb in self._fields, "Unknown field %r in 'groupby'" % gb
-            assert self._fields[gb].base_field.groupable, (
-                f"Field {gb} of model {self._name} is not a stored field, only stored fields "
-                "(regular or many2many) are valid for the 'groupby' parameter."
-            )
+            if gb not in self._fields:
+                raise UserError(_("Unknown field %r in 'groupby'") % gb)
+            if not self._fields[gb].base_field.groupable:
+                raise UserError(_(
+                    "Field %s is not a stored field, only stored fields (regular or "
+                    "many2many) are valid for the 'groupby' parameter", self._fields[gb],
+                ))
 
         aggregated_fields = []
         select_terms = []
@@ -2487,9 +2574,15 @@ class BaseModel(metaclass=MetaModel):
 
         data = [{k: self._read_group_prepare_data(k, v, groupby_dict) for k, v in r.items()} for r in fetched_data]
 
-        if self.env.context.get('fill_temporal') and data:
+        fill_temporal = self.env.context.get('fill_temporal')
+        if (data and fill_temporal) or isinstance(fill_temporal, dict):
+            # fill_temporal = {} is equivalent to fill_temporal = True
+            # if fill_temporal is a dictionary and there is no data, there is a chance that we
+            # want to display empty columns anyway, so we should apply the fill_temporal logic
+            if not isinstance(fill_temporal, dict):
+                fill_temporal = {}
             data = self._read_group_fill_temporal(data, groupby, aggregated_fields,
-                                                  annotated_groupbys)
+                                                  annotated_groupbys, **fill_temporal)
 
         result = [self._read_group_format_result(d, annotated_groupbys, groupby, domain) for d in data]
 
@@ -6020,7 +6113,7 @@ Fields:
             presence of ``other_fields``.
         """
         return (field.name in self._onchange_methods) or any(
-            dep in other_fields for dep in self._dependent_fields(field)
+            dep in other_fields for dep in self._dependent_fields(field.base_field)
         )
 
     @api.model
@@ -6287,6 +6380,11 @@ Fields:
         # triggers default_get() on the new record when creating snapshot0
         initial_values = dict(values, **dict.fromkeys(names, False))
 
+        # do not force delegate fields to False
+        for name in self._inherits.values():
+            if not initial_values.get(name, True):
+                initial_values.pop(name)
+
         # create a new record with values
         record = self.new(initial_values, origin=self)
 
@@ -6313,6 +6411,15 @@ Fields:
         protected = [self._fields[name] for name in names]
         with self.env.protecting(protected, record):
             record.modified(todo)
+            for name in todo:
+                field = self._fields[name]
+                if field.inherited:
+                    # modifying an inherited field should modify the parent
+                    # record accordingly; because we don't actually assign the
+                    # modified field on the record, the modification on the
+                    # parent record has to be done explicitly
+                    parent = record[field.related.split('.')[0]]
+                    parent[name] = record[name]
 
         result = {'warnings': OrderedSet()}
 
@@ -6355,6 +6462,16 @@ Fields:
             result['warning'] = dict(title=title, message=message, type='dialog')
 
         return result
+
+    def _get_placeholder_filename(self, field):
+        """ Returns the filename of the placeholder to use,
+            set on web/static/img by default, or the
+            complete path to access it (eg: module/path/to/image.png).
+
+            If a falsy value is returned, Binary.placeholder() will use
+            the default placeholder 'web/static/img/placeholder.png'.
+        """
+        return False
 
     def _populate_factories(self):
         """ Generates a factory for the different fields of the model.

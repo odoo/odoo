@@ -38,7 +38,7 @@ odoo.define('point_of_sale.ClientScreenButton', function(require) {
         async onClickProxy() {
             try {
                 const renderedHtml = await this.env.pos.render_html_for_customer_facing_display();
-                const ownership = await this.env.pos.proxy.take_ownership_over_client_screen(
+                let ownership = await this.env.pos.proxy.take_ownership_over_client_screen(
                     renderedHtml
                 );
                 if (typeof ownership === 'string') {
@@ -70,7 +70,7 @@ odoo.define('point_of_sale.ClientScreenButton', function(require) {
             async function loop() {
                 if (self.env.pos.proxy.posbox_supports_display) {
                     try {
-                        const ownership = await self.env.pos.proxy.test_ownership_of_client_screen();
+                        let ownership = await self.env.pos.proxy.test_ownership_of_client_screen();
                         if (typeof ownership === 'string') {
                             ownership = JSON.parse(ownership);
                         }

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
-
 from odoo import http
 from odoo.http import request
 
@@ -38,4 +36,4 @@ class WebsiteUrl(http.Controller):
         if code:
             return request.render("website_links.graphs", code.link_id.read()[0])
         else:
-            return werkzeug.utils.redirect('/', 301)
+            return request.redirect('/', code=301)

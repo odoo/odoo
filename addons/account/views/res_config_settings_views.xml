@@ -25,7 +25,7 @@
                         <field name="has_accounting_entries" invisible="1"/>
                         <h2 attrs="{'invisible': [('has_accounting_entries','!=',False)]}">Fiscal Localization</h2>
                         <div class="row mt16 o_settings_container" name="fiscal_localization_setting_container">
-                            <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('has_accounting_entries','!=',False)]}">
+                            <div class="col-12 o_setting_box" attrs="{'invisible': [('has_accounting_entries','!=',False)]}">
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <span class="o_form_label">Fiscal Localization</span>
@@ -35,7 +35,7 @@
                                     </div>
                                     <div class="content-group">
                                         <div class="row mt16">
-                                            <label for="chart_template_id" string="Package" class="col-lg-3 o_light_label"/>
+                                            <label for="chart_template_id" string="Package" class="col-2 o_light_label"/>
                                             <field name="chart_template_id" options="{'no_open': True, 'no_create': True}"/>
                                         </div>
                                         <div class="mt8">
@@ -93,14 +93,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="eu_service" title="If you're selling digital goods to customers in the EU, you must charge VAT based on your customers' locations. This rule applies regardless of you are located. Digital goods are defined in the legislation as broadcasting, telecommunications, and services that are electronically supplied instead of shipped. Gift cards sent online are not included in the definition.">
+                            <div class="col-12 col-lg-6 o_setting_box" id="eu_service" title="If you sell goods and services to customers in a foreign EU country, you must charge VAT based on the delivery address. This rule applies regardless of where you are located.">
                                 <div class="o_setting_left_pane">
                                     <field name="module_l10n_eu_service"/>
                                 </div>
                                 <div class="o_setting_right_pane" name="l10n_eu_service_right_pane">
                                     <label for="module_l10n_eu_service"/>
+                                    <a href="https://www.odoo.com/documentation/14.0/applications/finance/accounting/taxation/taxes/eu_distance_selling.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
-                                        Apply right VAT rates for digital products sold in EU
+                                        Apply VAT of the EU country to which goods and services are delivered.
                                     </div>
                                 </div>
                             </div>
@@ -473,7 +474,7 @@
                                 <div class="col-12 col-lg-6 o_setting_box">
                                     <div class="o_setting_left_panel"></div>
                                     <div class="o_setting_right_pane">
-                                        <span class="o_form_label">Post Payments and Money Transfers in:</span>
+                                        <span class="o_form_label">The following default accounts are used with certain features.</span>
                                         <div class="content-group">
                                             <div class="row mt8">
                                                 <label for="account_journal_suspense_account_id" class="col-lg-5 o_light_label"/>

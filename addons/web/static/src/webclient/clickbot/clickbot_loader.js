@@ -20,4 +20,4 @@ function runClickTestItem({ env }) {
     };
 }
 
-registry.category("debug").add("runClickTestItem", runClickTestItem);
+registry.category("debug").category("default").add("runClickTestItem", runClickTestItem);

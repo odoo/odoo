@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { formatFloat, humanNumber, parseFloat, InvalidNumberError } from "./numbers";
+import { session } from "@web/session";
 
 /**
  * Formats a value as a currency.
@@ -14,13 +15,13 @@ import { formatFloat, humanNumber, parseFloat, InvalidNumberError } from "./numb
  *    the number of digits that should be used, instead of the default digits precision in the field.
  *    Note: if the currency defines a precision, the currency's one is used.
  *    The first number is always ignored (legacy constraint)
- * @returns The formatted currency
+ * @returns {string} The formatted currency
  */
 export function formatCurrency(value, cid, options = {}) {
     if (value === false) {
         return "";
     }
-    const currency = odoo.session_info.currencies[cid];
+    const currency = session.currencies[cid];
     const { noSymbol } = options || {};
     const digits = (currency && currency.digits) || options.digits;
 
@@ -56,9 +57,9 @@ export function parseCurrency(value, options = {}) {
     }
     let currency;
     if (options.currencyId) {
-        currency = odoo.session_info.currencies[options.currencyId];
+        currency = session.currencies[options.currencyId];
     } else {
-        currency = Object.values(odoo.session_info.currencies)[0];
+        currency = Object.values(session.currencies)[0];
     }
     const symbolIndex = values.findIndex((v) => v === currency.symbol);
     if (symbolIndex === -1) {

@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
 import { _lt } from 'web.core';
+import {Markup} from 'web.utils';
 import kanbanExamplesRegistry from 'web.kanban_examples_registry';
 
-const greenBullet = '<span class="o_status o_status_green"></span>';
-const redBullet = '<span class="o_status o_status_red"></span>';
-const star = '<a style="color: gold;" class="fa fa-star"/>';
-const clock = '<a class="fa fa-clock-o" />';
+const greenBullet = Markup`<span class="o_status o_status_green"></span>`;
+const redBullet = Markup`<span class="o_status o_status_red"></span>`;
+const star = Markup`<a style="color: gold;" class="fa fa-star"/>`;
+const clock = Markup`<a class="fa fa-clock-o" />`;
 
 const descriptionActivities = escFormat(_lt('%s Use the %s icon to organize your daily activities.'), '<br/>', clock);
 const description = escFormat(_lt('Prioritize Tasks by using the %s icon.' +
@@ -15,21 +16,23 @@ const description = escFormat(_lt('Prioritize Tasks by using the %s icon.' +
             '%s'), star, '<br/>', greenBullet, '<br/>', redBullet, descriptionActivities);
 
 /**
- * Helper function to escape a text before formatting it.
+ * Helper function to escape the format string, but not the values formatted in,
+ * rougly equivalent to `_.str.sprintf(_.escape(fmt), ...)`.
  *
- * First argument is the string to format and the other arguments are the values
- * to inject into the string.
+ * Performs the escaping lazily (at point of use) as it's designed to be used
+ * with `_lt` as the source of the format string.
  *
- * Sort of 'lazy escaping' as it is used alongside _lt.
- *
- * @returns {string} the formatted and escaped string
+ * @param fmt format string, to escape
+ * @param args objects to format into `fmt`, unescaped
+ * @returns {Object} a stringifiable object returning the escaped then formatted string
  */
-function escFormat() {
-    const args = arguments;
+function escFormat(fmt, ...args) {
     return {
-        toString: function () {
-            args[0] = _.escape(args[0]);
-            return _.str.sprintf.apply(_.str, args);
+        [_.escapeMethod]() {
+            return this;
+        },
+        toString() {
+            return _.str.sprintf(_.escape(fmt), ...args);
         },
     };
 }
@@ -48,14 +51,13 @@ kanbanExamplesRegistry.add('project', {
     }, {
         name: _lt('Agile Scrum'),
         columns: [_lt('Backlog'), _lt('Sprint Backlog'), _lt('Sprint in Progress'), _lt('Sprint Complete'), _lt('Old Completed Sprint')],
-        description: escFormat(_lt('Waiting for the next stage: use %s and %s bullets. %s'), greenBullet, redBullet, descriptionActivities),
+        description: escFormat(_lt('Use %s and %s bullets to indicate the status of a task. %s'), greenBullet, redBullet, descriptionActivities),
         bullets: [greenBullet, redBullet],
     }, {
         name: _lt('Digital Marketing'),
         columns: [_lt('Ideas'), _lt('Researching'), _lt('Writing'), _lt('Editing'), _lt('Done')],
         description: escFormat(_lt('Everyone can propose ideas, and the Editor marks the best ones ' +
-            'as %s. Attach all documents or links to the task directly, to have all information about ' +
-            'a research centralized. %s'), greenBullet, descriptionActivities),
+            'as %s. Attach all documents or links to the task directly, to have all research information centralized. %s'), greenBullet, descriptionActivities),
         bullets: [greenBullet, redBullet],
     }, {
         name: _lt('Customer Feedback'),
@@ -68,7 +70,7 @@ kanbanExamplesRegistry.add('project', {
         name: _lt('Getting Things Done (GTD)'),
         columns: [_lt('Inbox'), _lt('Today'), _lt('This Week'), _lt('This Month'), _lt('Long Term')],
         description: escFormat(_lt('Fill your Inbox easily with the email gateway. Periodically review your ' +
-            'Inbox and schedule tasks by moving them to others columns. Every day, you review the ' +
+            'Inbox and schedule tasks by moving them to other columns. Every day, you review the ' +
             '%s column to move important tasks %s. Every Monday, you review the %s column. %s'), _lt('"This Week"'), _lt('"Today"'), _lt('"This Month"'), descriptionActivities),
     }, {
         name: _lt('Consulting'),
@@ -88,8 +90,8 @@ kanbanExamplesRegistry.add('project', {
         name: _lt('T-shirt Printing'),
         columns: [_lt('New Orders'), _lt('Logo Design'), _lt('To Print'), _lt('Done')],
         description: escFormat(_lt('Communicate with customers on the task using the email gateway. ' +
-            'Attach logo designs to the task, so that information flow from designers to the workers ' +
-            'who print the t-shirt. Organize priorities amongst orders %s using the icon. %s'), star, descriptionActivities),
+            'Attach logo designs to the task, so that information flows from designers to the workers ' +
+            'who print the t-shirt. Organize priorities amongst orders using the %s icon. %s'), star, descriptionActivities),
         bullets: [star],
     }, {
         name: _lt('Design'),
@@ -108,7 +110,7 @@ kanbanExamplesRegistry.add('project', {
         bullets: [greenBullet, redBullet, star, clock],
     }, {
         name: _lt('Podcast and Video Production'),
-        columns: [_lt('Research'), _lt('Script'), _lt('Recording'), _lt('Mixing'), _lt('Publishing')],
+        columns: [_lt('Research'), _lt('Script'), _lt('Recording'), _lt('Mixing'), _lt('Published')],
         description: description,
         bullets: [greenBullet, redBullet, star, clock],
     }],

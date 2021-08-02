@@ -4,7 +4,6 @@ import logging
 import pprint
 
 import requests
-import werkzeug
 
 from odoo import _, http
 from odoo.exceptions import ValidationError
@@ -22,7 +21,7 @@ class AlipayController(http.Controller):
         """ Alipay return """
         _logger.info("received Alipay return data:\n%s", pprint.pformat(data))
         request.env['payment.transaction'].sudo()._handle_feedback_data('alipay', data)
-        return werkzeug.utils.redirect('/payment/status')
+        return request.redirect('/payment/status')
 
     @http.route(_notify_url, type='http', auth='public', methods=['POST'], csrf=False)
     def alipay_notify(self, **post):

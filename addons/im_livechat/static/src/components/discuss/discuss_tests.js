@@ -410,7 +410,8 @@ QUnit.test('livechats with no messages are sorted by creation date in the sideba
     );
 });
 
-QUnit.test('invite button should be present on livechat', async function (assert) {
+QUnit.skip('invite button should be present on livechat', async function (assert) {
+    // Disabled until the new invite form is introduced.
     assert.expect(1);
 
     this.data['mail.channel'].records.push(
@@ -431,8 +432,8 @@ QUnit.test('invite button should be present on livechat', async function (assert
     });
     assert.containsOnce(
         document.body,
-        '.o_widget_Discuss_controlPanelButtonInvite',
-        "Invite button should be visible in control panel when livechat is active thread"
+        '.o_ThreadViewTopbar_inviteButton',
+        "Invite button should be visible in top bar when livechat is active thread"
     );
 });
 

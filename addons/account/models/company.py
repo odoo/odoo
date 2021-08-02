@@ -95,6 +95,7 @@ class ResCompany(models.Model):
     account_setup_bank_data_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding bank data step", default='not_done')
     account_setup_fy_data_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding fiscal year step", default='not_done')
     account_setup_coa_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding charts of account step", default='not_done')
+    account_setup_taxes_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding Taxes step", default='not_done')
     account_onboarding_invoice_layout_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding invoice layout step", default='not_done')
     account_onboarding_create_invoice_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding create invoice step", default='not_done')
     account_onboarding_sale_tax_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding sale tax step", default='not_done')
@@ -210,10 +211,10 @@ class ResCompany(models.Model):
     def get_account_dashboard_onboarding_steps_states_names(self):
         """ Necessary to add/edit steps from other modules (account_winbooks_import in this case). """
         return [
-            'account_setup_bill_state',
             'account_setup_bank_data_state',
             'account_setup_fy_data_state',
             'account_setup_coa_state',
+            'account_setup_taxes_state',
         ]
 
     def get_new_account_code(self, current_code, old_prefix, new_prefix):
@@ -469,6 +470,24 @@ class ResCompany(models.Model):
     def action_open_account_onboarding_create_invoice(self):
         action = self.env["ir.actions.actions"]._for_xml_id("account.action_open_account_onboarding_create_invoice")
         return action
+
+    @api.model
+    def action_open_taxes_onboarding(self):
+        """ Called by the 'Taxes' button of the setup bar."""
+
+        company = self.env.company
+        company.sudo().set_onboarding_step_done('account_setup_taxes_state')
+        view_id_list = self.env.ref('account.view_tax_tree').id
+        view_id_form = self.env.ref('account.view_tax_form').id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Taxes'),
+            'res_model': 'account.tax',
+            'target': 'current',
+            'views': [[view_id_list, 'list'], [view_id_form, 'form']],
+            'context': {'search_default_sale': True, 'search_default_purchase': True, 'active_test': False},
+        }
 
     def action_save_onboarding_invoice_layout(self):
         """ Set the onboarding step as done """

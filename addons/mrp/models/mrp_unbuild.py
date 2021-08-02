@@ -45,7 +45,7 @@ class MrpUnbuild(models.Model):
         states={'done': [('readonly', True)]}, check_company=True)
     mo_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',
-        domain="[('id', 'in', allowed_mo_ids)]",
+        domain="[('state', '=', 'done'), ('company_id', '=', company_id), ('product_id', '=?', product_id)]",
         states={'done': [('readonly', True)]}, check_company=True)
     mo_bom_id = fields.Many2one('mrp.bom', 'Bill of Material used on the Production Order', related='mo_id.bom_id')
     lot_id = fields.Many2one(
@@ -72,22 +72,6 @@ class MrpUnbuild(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done')], string='Status', default='draft')
-    allowed_mo_ids = fields.One2many('mrp.production', compute='_compute_allowed_mo_ids')
-
-    @api.depends('company_id', 'product_id')
-    def _compute_allowed_mo_ids(self):
-        for unbuild in self:
-            domain = [
-                    ('state', '=', 'done'),
-                    ('company_id', '=', unbuild.company_id.id)
-                ]
-            if unbuild.product_id:
-                domain = expression.AND([domain, [('product_id', '=', unbuild.product_id.id)]])
-            allowed_mos = self.env['mrp.production'].search_read(domain, ['id'])
-            if allowed_mos:
-                unbuild.allowed_mo_ids = [mo['id'] for mo in allowed_mos]
-            else:
-                unbuild.allowed_mo_ids = False
 
     @api.onchange('company_id')
     def _onchange_company_id(self):

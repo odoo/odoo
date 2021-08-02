@@ -24,7 +24,6 @@ export class ThreadIcon extends Component {
                 correspondentImStatus: correspondent && correspondent.im_status,
                 history: this.env.messaging.history,
                 inbox: this.env.messaging.inbox,
-                moderation: this.env.messaging.moderation,
                 partnerRoot: this.env.messaging.partnerRoot,
                 starred: this.env.messaging.starred,
                 thread,

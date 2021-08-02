@@ -193,6 +193,10 @@ class Orderpoint(models.Model):
         """ Extend to add more depends values """
         return super()._compute_qty()
 
+    @api.depends('supplier_id')
+    def _compute_lead_days(self):
+        return super()._compute_lead_days()
+
     @api.depends('route_id')
     def _compute_show_suppplier(self):
         buy_route = []
@@ -215,6 +219,12 @@ class Orderpoint(models.Model):
         result['domain'] = "[('id','in',%s)]" % (purchase_ids.ids)
 
         return result
+
+    def _get_lead_days_values(self):
+        values = super()._get_lead_days_values()
+        if self.supplier_id:
+            values['supplierinfo'] = self.supplier_id
+        return values
 
     def _get_replenishment_order_notification(self):
         self.ensure_one()

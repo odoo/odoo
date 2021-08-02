@@ -181,15 +181,15 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button o_stat_button_info" attrs="{'invisible': [('is_connected', '=', False)]}">
+                        <button class="oe_stat_button o_stat_button_info" disabled="1" attrs="{'invisible': [('is_connected', '=', False)]}">
                             <i class="fa fa-fw o_button_icon fa-circle text-success"/>
                             <span>Connected</span>
                         </button>
-                        <button class="oe_stat_button o_stat_button_info" attrs="{'invisible': [('is_connected', '=', True)]}">
+                        <button class="oe_stat_button o_stat_button_info" disabled="1" attrs="{'invisible': [('is_connected', '=', True)]}">
                             <i class="fa fa-fw o_button_icon fa-circle text-danger"/>
                             <span>Offline</span>
                         </button>
-                        <button id="w_visitor_visit_counter" class="oe_stat_button o_stat_button_info" icon="fa-globe">
+                        <button id="w_visitor_visit_counter" class="oe_stat_button o_stat_button_info" disabled="1" icon="fa-globe">
                             <field name="visit_count" widget="statinfo" string="Visits"/>
                         </button>
                         <button name="%(website.website_visitor_page_action)d" type="action"
@@ -327,11 +327,11 @@
     </record>
 
     <record id="website_visitor_view_action" model="ir.actions.act_window">
-        <field name="name">Views</field>
+        <field name="name">Page Views</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">website.track</field>
         <field name="view_mode">tree</field>
-        <field name="context">{'search_default_type_url':1}</field>
+        <field name="context">{'search_default_type_url': 1, 'create': False, 'edit': False, 'copy': False}</field>
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'tree', 'view_id': ref('website_visitor_track_view_tree')}),
             (0, 0, {'view_mode': 'graph', 'view_id': ref('website_visitor_track_view_graph')}),
@@ -352,7 +352,7 @@
         sequence="1"
         parent="website_visitor_menu"
         action="website.website_visitors_action"/>
-    <menuitem id="menu_visitor_view_menu" name="Views"
+    <menuitem id="menu_visitor_view_menu" name="Page Views"
         sequence="2"
         parent="website_visitor_menu"
         action="website.website_visitor_view_action"/>

@@ -14,16 +14,15 @@
                 <field name="website_url" invisible="1"/>
                 <field name="is_published" widget="website_redirect_button"/>
             </div>
-            <xpath expr="//field[@name='stage_id']" position="before">
-                <button name="action_open_badge_editor"
-                    type="object"
-                    string="Preview Badges"/>
-            </xpath>
             <xpath expr="//div[hasclass('oe_title')]" position="after">
                 <div name="event_menu_configuration" groups="base.group_no_one">
                     <label for="website_menu" string="Website Submenu"/>
                     <field name="website_menu"/>
-                    <label for="menu_register_cta" string="Register Button"/>
+                    <!-- hidden sub-menus, they are triggered all at once based on "website_menu" -->
+                    <field name="introduction_menu" invisible="1"/>
+                    <field name="location_menu" invisible="1"/>
+                    <field name="register_menu" invisible="1"/>
+                    <label for="menu_register_cta" string="Extra Register Button"/>
                     <field name="menu_register_cta"/>
                     <label for="community_menu" string="Community" invisible="1"/>
                     <field name="community_menu" invisible="1"/>

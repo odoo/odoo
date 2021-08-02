@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { debugService } from "@web/core/debug/debug_service";
 import { registry } from "@web/core/registry";
 import { editView } from "@web/legacy/debug_manager";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
@@ -10,6 +9,7 @@ import FormView from "web.FormView";
 import ListController from "web.ListController";
 import testUtils from "web.test_utils";
 import legacyViewRegistry from "web.view_registry";
+import { session } from "@web/session";
 import {
     click,
     legacyExtraNextTick,
@@ -712,7 +712,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("requests for execute_action of type object are handled", async function (assert) {
         assert.expect(11);
-        patchWithCleanup(odoo.session_info.user_context, { some_key: 2 });
+        patchWithCleanup(session.user_context, { some_key: 2 });
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
             if (route === "/web/dataset/call_button") {
@@ -2197,6 +2197,49 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
+    QUnit.test("do not pushState when target=new and dialog is opened", async function (assert) {
+        assert.expect(2);
+        const TestCustoFormController = FormView.prototype.config.Controller.extend({
+            _onButtonClicked() {
+                assert.ok(true, "Button was clicked");
+                this.trigger_up("push_state", { state: { id: 42 } });
+            },
+        });
+        const TestCustoFormView = FormView.extend({
+            config: Object.assign({}, FormView.prototype.config, {
+                Controller: TestCustoFormController,
+            }),
+        });
+        legacyViewRegistry.add("test_view", TestCustoFormView);
+        serverData.views["partner,3,form"] = `
+        <form js_class="test_view">
+            <field name="foo" />
+            <footer>
+            <button id="o_push_state_btn" special="special" />
+            </footer>
+        </form>`;
+        const webClient = await createWebClient({ serverData });
+        // Open Partner form in create mode
+        await doAction(webClient, 3, { viewType: "form" });
+        const prevHash = Object.assign({}, webClient.env.services.router.current.hash);
+        // Edit another partner in a dialog
+        await doAction(webClient, {
+            name: "Edit a Partner",
+            res_model: "partner",
+            res_id: 3,
+            type: "ir.actions.act_window",
+            views: [[3, "form"]],
+            target: "new",
+            view_mode: "form",
+        });
+        await click(document.getElementById("o_push_state_btn"));
+        assert.deepEqual(
+            webClient.env.services.router.current.hash,
+            prevHash,
+            "push_state in dialog shouldn't change the hash"
+        );
+    });
+
     QUnit.test("do not restore after action button clicked", async function (assert) {
         assert.expect(5);
         const mockRPC = async (route, args) => {
@@ -2232,7 +2275,6 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("debugManager is active for (legacy) views", async function (assert) {
         assert.expect(2);
 
-        serviceRegistry.add("debug", debugService);
         registry.category("debug").category("view").add("editView", editView);
         patchWithCleanup(odoo, { debug: "1" });
         const mockRPC = async (route) => {

@@ -79,12 +79,22 @@ class TestSequenceMixin(AccountTestInvoicingCommon):
         copy2.journal_id = new_journal
         self.assertEqual(copy2.name, 'MISC2/2016/01/0001')
         with Form(copy2) as move_form:  # It is editable in the form
-            move_form.name = 'MyMISC/2016/0001'
+            with mute_logger('odoo.tests.common.onchange'):
+                move_form.name = 'MyMISC/2016/0001'
+                self.assertIn(
+                    'The sequence will restart at 1 at the start of every year',
+                    move_form._perform_onchange(['name'])['warning']['message'],
+                )
             move_form.journal_id = self.test_move.journal_id
             self.assertEqual(move_form.name, '/')
             move_form.journal_id = new_journal
             self.assertEqual(move_form.name, 'MISC2/2016/01/0001')
-            move_form.name = 'MyMISC/2016/0001'
+            with mute_logger('odoo.tests.common.onchange'):
+                move_form.name = 'MyMISC/2016/0001'
+                self.assertIn(
+                    'The sequence will restart at 1 at the start of every year',
+                    move_form._perform_onchange(['name'])['warning']['message'],
+                )
         copy2.action_post()
         self.assertEqual(copy2.name, 'MyMISC/2016/0001')
 
@@ -169,10 +179,10 @@ class TestSequenceMixin(AccountTestInvoicingCommon):
         all_moves.action_post()
         self.assertEqual(entry.name, 'MISC/2016/01/0002')
         self.assertEqual(entry2.name, 'MISC/2016/01/0003')
-        self.assertEqual(invoice.name, 'INV/2016/01/0001')
-        self.assertEqual(invoice2.name, 'INV/2016/01/0002')
-        self.assertEqual(refund.name, 'RINV/2016/01/0001')
-        self.assertEqual(refund2.name, 'RINV/2016/01/0002')
+        self.assertEqual(invoice.name, 'INV/2016/00001')
+        self.assertEqual(invoice2.name, 'INV/2016/00002')
+        self.assertEqual(refund.name, 'RINV/2016/00001')
+        self.assertEqual(refund2.name, 'RINV/2016/00002')
 
     def test_journal_sequence_groupby_compute(self):
         """The grouping optimization is correctly done."""

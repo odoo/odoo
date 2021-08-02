@@ -230,28 +230,35 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onKarmaRequiredClick: function (ev) {
-        var $karma = $(ev.currentTarget);
-        var karma = $karma.data('karma');
-        var forum_id = $('#wrapwrap').data('forum_id');
+        const karma = parseInt(ev.currentTarget.dataset.karma);
         if (!karma) {
             return;
         }
+
         ev.preventDefault();
-        var msg = karma + ' ' + _t("karma is required to perform this action. ");
-        var title = _t("Karma Error");
-        if (forum_id) {
-            msg += '<a class="alert-link" href="/forum/' + forum_id + '/faq">' + _t("Read the guidelines to know how to gain karma.") + '</a>';
-        }
-        if (session.is_website_user) {
-            msg = _t("Sorry you must be logged in to perform this action");
-            title = _t("Access Denied");
-        }
-        this.call('crash_manager', 'show_warning', {
-            message: msg,
-            title: title,
-        }, {
+        const forumID = parseInt(document.getElementById('wrapwrap').dataset.forum_id);
+        const notifOptions = {
+            type: "warning",
             sticky: false,
-        });
+        };
+        if (session.is_website_user) {
+            notifOptions.title = _t("Access Denied");
+            notifOptions.message = _t("Sorry you must be logged in to perform this action");
+        } else {
+            notifOptions.title = _t("Karma Error");
+            // FIXME this translation is bad, the number should be part of the
+            // translation, to fix in the appropriate version
+            notifOptions.message = `${karma} ${_t("karma is required to perform this action. ")}`;
+            if (forumID) {
+                notifOptions.messageIsHtml = true;
+                const linkLabel = _.escape(_t("Read the guidelines to know how to gain karma."));
+                notifOptions.message = `
+                    ${_.escape(notifOptions.message)}<br/>
+                    <a class="alert-link" href="/forum/${forumID}/faq">${linkLabel}</a>
+                `;
+            }
+        }
+        this.displayNotification(notifOptions);
     },
     /**
      * @private
@@ -308,11 +315,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 } else if (data.error === 'post_non_flaggable') {
                     message = _t("This post can not be flagged");
                 }
-                self.call('crash_manager', 'show_warning', {
+                this.displayNotification({
                     message: message,
                     title: _t("Access Denied"),
-                }, {
                     sticky: false,
+                    type: "warning",
                 });
             } else if (data.success) {
                 var elem = $link;
@@ -348,11 +355,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 } else if (data.error === 'anonymous_user') {
                     message = _t('Sorry you must be logged to vote');
                 }
-                self.call('crash_manager', 'show_warning', {
+                this.displayNotification({
                     message: message,
                     title: _t("Access Denied"),
-                }, {
                     sticky: false,
+                    type: "warning",
                 });
             } else {
                 var $container = $btn.closest('.vote');
@@ -427,11 +434,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 if (data.error === 'anonymous_user') {
                     var message = _t("Sorry, anonymous users cannot choose correct answer.");
                 }
-                this.call('crash_manager', 'show_warning', {
+                this.displayNotification({
                     message: message,
                     title: _t("Access Denied"),
-                }, {
                     sticky: false,
+                    type: "warning",
                 });
             } else {
                 _.each(this.$('.forum_answer'), answer => {

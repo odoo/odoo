@@ -44,7 +44,6 @@ class StockLandedCost(models.Model):
     picking_ids = fields.Many2many(
         'stock.picking', string='Transfers',
         copy=False, states={'done': [('readonly', True)]})
-    allowed_picking_ids = fields.Many2many('stock.picking', compute='_compute_allowed_picking_ids')
     cost_lines = fields.One2many(
         'stock.landed.cost.lines', 'cost_id', 'Cost Lines',
         copy=True, states={'done': [('readonly', True)]})
@@ -78,20 +77,6 @@ class StockLandedCost(models.Model):
     def _compute_total_amount(self):
         for cost in self:
             cost.amount_total = sum(line.price_unit for line in cost.cost_lines)
-
-    @api.depends('company_id')
-    def _compute_allowed_picking_ids(self):
-        valued_picking_ids_per_company = defaultdict(list)
-        if self.company_id:
-            self.env.cr.execute("""SELECT sm.picking_id, sm.company_id
-                                     FROM stock_move AS sm
-                               INNER JOIN stock_valuation_layer AS svl ON svl.stock_move_id = sm.id
-                                    WHERE sm.picking_id IS NOT NULL AND sm.company_id IN %s
-                                 GROUP BY sm.picking_id, sm.company_id""", [tuple(self.company_id.ids)])
-            for res in self.env.cr.fetchall():
-                valued_picking_ids_per_company[res[1]].append(res[0])
-        for cost in self:
-            cost.allowed_picking_ids = valued_picking_ids_per_company[cost.company_id.id]
 
     @api.onchange('target_model')
     def _onchange_target_model(self):

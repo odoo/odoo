@@ -44,4 +44,5 @@ Re-implement Odoo's file import system:
             'base_import/static/tests/**/*',
         ],
     },
+    'license': 'LGPL-3',
 }

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.3\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-11 09:26+0000\n"
-"PO-Revision-Date: 2021-05-11 09:26+0000\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-07-12 07:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -275,6 +275,15 @@ msgid "<p>Create a public or private channel.</p>"
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"<p>Hi,<br/>\n"
+"The following email sent to %s cannot be accepted because this is a private email address.\n"
+"Only allowed people can contact us at this address.</p>"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
@@ -328,6 +337,11 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "<span>@</span>"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<strong>\n"
@@ -364,7 +378,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_defaults
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_defaults
 #: model:ir.model.fields,help:mail.field_mail_channel__alias_defaults
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
@@ -678,7 +691,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_contact
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
 msgstr ""
@@ -690,21 +702,18 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_name
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_name
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_name
 msgid "Alias Name"
 msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_domain
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_domain
 msgid "Alias domain"
 msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_model_id
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_model_id
 msgid "Aliased Model"
 msgstr ""
@@ -766,18 +775,10 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Anonymous"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_compose_message__no_auto_thread
-#: model:ir.model.fields,help:mail.field_mail_mail__no_auto_thread
-#: model:ir.model.fields,help:mail.field_mail_message__no_auto_thread
-msgid ""
-"Answers do not go in the original document discussion thread. This has an "
-"impact on the generated message-id."
 msgstr ""
 
 #. module: mail
@@ -1057,6 +1058,12 @@ msgstr ""
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_call
 msgid "Call"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
+#: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__can_edit_body
+msgid "Can Edit Body"
 msgstr ""
 
 #. module: mail
@@ -1405,6 +1412,11 @@ msgid "Connection failed (outgoing mail server problem)"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_force_new
+msgid "Considers answers as new thread"
+msgstr ""
+
+#. module: mail
 #: model:ir.model,name:mail.model_res_partner
 msgid "Contact"
 msgstr ""
@@ -1422,6 +1434,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body
+#: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__body
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body
 #: model:ir.model.fields,field_description:mail.field_mail_message__body
 msgid "Contents"
@@ -1502,7 +1515,6 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_alias__create_uid
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_channel__create_uid
@@ -1529,7 +1541,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_alias__create_date
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_channel__create_date
@@ -1581,7 +1592,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_bounced_content
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_bounced_content
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_bounced_content
 msgid "Custom Bounced Message"
 msgstr ""
@@ -1649,6 +1659,8 @@ msgid "Default User"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__null_value
+#: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__null_value
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__null_value
 #: model:ir.model.fields,field_description:mail.field_mail_template__null_value
 msgid "Default Value"
@@ -1656,7 +1668,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_defaults
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_defaults
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_defaults
 msgid "Default Values"
 msgstr ""
@@ -1806,21 +1817,9 @@ msgid "Dismiss notification for resend by model"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_base_module_uninstall__display_name
-#: model:ir.model.fields,field_description:mail.field_base_partner_merge_automatic_wizard__display_name
-#: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__display_name
-#: model:ir.model.fields,field_description:mail.field_ir_actions_server__display_name
-#: model:ir.model.fields,field_description:mail.field_ir_attachment__display_name
-#: model:ir.model.fields,field_description:mail.field_ir_config_parameter__display_name
-#: model:ir.model.fields,field_description:mail.field_ir_http__display_name
-#: model:ir.model.fields,field_description:mail.field_ir_model__display_name
-#: model:ir.model.fields,field_description:mail.field_ir_model_fields__display_name
-#: model:ir.model.fields,field_description:mail.field_ir_ui_view__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_activity__display_name
-#: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_alias__display_name
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_channel__display_name
@@ -1832,24 +1831,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_moderation__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_notification__display_name
-#: model:ir.model.fields,field_description:mail.field_mail_render_mixin__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_resend_cancel__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_template__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__display_name
-#: model:ir.model.fields,field_description:mail.field_mail_thread__display_name
-#: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__display_name
-#: model:ir.model.fields,field_description:mail.field_mail_thread_cc__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__display_name
-#: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract__display_name
-#: model:ir.model.fields,field_description:mail.field_res_company__display_name
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:mail.field_res_groups__display_name
-#: model:ir.model.fields,field_description:mail.field_res_partner__display_name
-#: model:ir.model.fields,field_description:mail.field_res_users__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -2146,7 +2135,22 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
-msgid "Email address to redirect replies..."
+msgid "Email address to which replies will be redirected"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
+msgid ""
+"Email address to which replies will be redirected when sending emails in "
+"mass"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_template__reply_to
+msgid ""
+"Email address to which replies will be redirected when sending emails in "
+"mass; only used when the reply is not logged in the original discussion "
+"thread."
 msgstr ""
 
 #. module: mail
@@ -2293,13 +2297,19 @@ msgstr ""
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render template : %s"
+msgid "Failed to render QWeb template : %s)"
 msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render template : %s (%d)"
+msgid "Failed to render template : %(xml_id)s (%(view_id)d)"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, python-format
+msgid "Failed to render template : %s"
 msgstr ""
 
 #. module: mail
@@ -2339,6 +2349,8 @@ msgid "Feedback"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__model_object_field
+#: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__model_object_field
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__model_object_field
 #: model:ir.model.fields,field_description:mail.field_mail_template__model_object_field
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field
@@ -2397,6 +2409,8 @@ msgid "Fields"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_compose_message__copyvalue
+#: model:ir.model.fields,help:mail.field_mail_composer_mixin__copyvalue
 #: model:ir.model.fields,help:mail.field_mail_render_mixin__copyvalue
 #: model:ir.model.fields,help:mail.field_mail_template__copyvalue
 msgid ""
@@ -2640,15 +2654,6 @@ msgid "Help message"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:0
-#, python-format
-msgid ""
-"Hi,<br/>\n"
-"The following email sent to %s cannot be accepted because this is a private email address.\n"
-"Only allowed people can contact us at this address."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__hidden
 msgid "Hidden"
 msgstr ""
@@ -2673,21 +2678,9 @@ msgid "History"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_base_module_uninstall__id
-#: model:ir.model.fields,field_description:mail.field_base_partner_merge_automatic_wizard__id
-#: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__id
-#: model:ir.model.fields,field_description:mail.field_ir_actions_server__id
-#: model:ir.model.fields,field_description:mail.field_ir_attachment__id
-#: model:ir.model.fields,field_description:mail.field_ir_config_parameter__id
-#: model:ir.model.fields,field_description:mail.field_ir_http__id
-#: model:ir.model.fields,field_description:mail.field_ir_model__id
-#: model:ir.model.fields,field_description:mail.field_ir_model_fields__id
-#: model:ir.model.fields,field_description:mail.field_ir_ui_view__id
 #: model:ir.model.fields,field_description:mail.field_mail_activity__id
-#: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:mail.field_mail_alias__id
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__id
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__id
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__id
@@ -2699,30 +2692,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__id
 #: model:ir.model.fields,field_description:mail.field_mail_moderation__id
 #: model:ir.model.fields,field_description:mail.field_mail_notification__id
-#: model:ir.model.fields,field_description:mail.field_mail_render_mixin__id
 #: model:ir.model.fields,field_description:mail.field_mail_resend_cancel__id
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__id
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__id
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__id
 #: model:ir.model.fields,field_description:mail.field_mail_template__id
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__id
-#: model:ir.model.fields,field_description:mail.field_mail_thread__id
-#: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__id
-#: model:ir.model.fields,field_description:mail.field_mail_thread_cc__id
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__id
-#: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract__id
-#: model:ir.model.fields,field_description:mail.field_res_company__id
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__id
-#: model:ir.model.fields,field_description:mail.field_res_groups__id
-#: model:ir.model.fields,field_description:mail.field_res_partner__id
-#: model:ir.model.fields,field_description:mail.field_res_users__id
 msgid "ID"
 msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_thread_id
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_parent_thread_id
 #: model:ir.model.fields,help:mail.field_mail_channel__alias_parent_thread_id
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
@@ -2818,7 +2800,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_bounced_content
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_bounced_content
 #: model:ir.model.fields,help:mail.field_mail_channel__alias_bounced_content
 msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
@@ -2832,6 +2813,15 @@ msgstr ""
 msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_mail__reply_to_force_new
+#: model:ir.model.fields,help:mail.field_mail_message__reply_to_force_new
+msgid ""
+"If true, answers do not go in the original document discussion thread. "
+"Instead, it will check for the reply_to in tracking message-id and "
+"redirected accordingly. This has an impact on the generated message-id."
 msgstr ""
 
 #. module: mail
@@ -3074,6 +3064,8 @@ msgid "Join a group"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__lang
+#: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__lang
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__lang
 #: model:ir.model.fields,field_description:mail.field_mail_template__lang
 msgid "Language"
@@ -3085,21 +3077,9 @@ msgid "Last Fetched"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_base_module_uninstall____last_update
-#: model:ir.model.fields,field_description:mail.field_base_partner_merge_automatic_wizard____last_update
-#: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view____last_update
-#: model:ir.model.fields,field_description:mail.field_ir_actions_server____last_update
-#: model:ir.model.fields,field_description:mail.field_ir_attachment____last_update
-#: model:ir.model.fields,field_description:mail.field_ir_config_parameter____last_update
-#: model:ir.model.fields,field_description:mail.field_ir_http____last_update
-#: model:ir.model.fields,field_description:mail.field_ir_model____last_update
-#: model:ir.model.fields,field_description:mail.field_ir_model_fields____last_update
-#: model:ir.model.fields,field_description:mail.field_ir_ui_view____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_activity____last_update
-#: model:ir.model.fields,field_description:mail.field_mail_activity_mixin____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_alias____last_update
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_channel____last_update
@@ -3111,24 +3091,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_moderation____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_notification____last_update
-#: model:ir.model.fields,field_description:mail.field_mail_render_mixin____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_resend_cancel____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_template____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview____last_update
-#: model:ir.model.fields,field_description:mail.field_mail_thread____last_update
-#: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist____last_update
-#: model:ir.model.fields,field_description:mail.field_mail_thread_cc____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value____last_update
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite____last_update
-#: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract____last_update
-#: model:ir.model.fields,field_description:mail.field_res_company____last_update
-#: model:ir.model.fields,field_description:mail.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:mail.field_res_groups____last_update
-#: model:ir.model.fields,field_description:mail.field_res_partner____last_update
-#: model:ir.model.fields,field_description:mail.field_res_users____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -3142,7 +3112,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_alias__write_uid
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_channel__write_uid
@@ -3167,7 +3136,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_alias__write_date
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_channel__write_date
@@ -3307,6 +3275,11 @@ msgid "Log an internal note..."
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
+msgid "Log in the original discussion thread"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
 #, python-format
@@ -3363,6 +3336,11 @@ msgid "Mail Channel Form"
 msgstr ""
 
 #. module: mail
+#: model:ir.model,name:mail.model_mail_composer_mixin
+msgid "Mail Composer Mixin"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/notification_group/notification_group.js:0
 #, python-format
@@ -3372,6 +3350,11 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_render_mixin
 msgid "Mail Render Mixin"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__template_id
+msgid "Mail Template"
 msgstr ""
 
 #. module: mail
@@ -3440,6 +3423,13 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Manage Messages"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_force_new
+msgid ""
+"Manage answers as new incoming emails instead of replies going to the same "
+"thread."
 msgstr ""
 
 #. module: mail
@@ -3856,6 +3846,13 @@ msgid "Months"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__my_activity_date_deadline
+#: model:ir.model.fields,field_description:mail.field_res_partner__my_activity_date_deadline
+#: model:ir.model.fields,field_description:mail.field_res_users__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__name
 #: model:ir.model.fields,field_description:mail.field_mail_channel__name
 #: model:ir.model.fields,field_description:mail.field_mail_followers__name
@@ -4101,9 +4098,8 @@ msgid "No starred messages"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_compose_message__no_auto_thread
-#: model:ir.model.fields,field_description:mail.field_mail_mail__no_auto_thread
-#: model:ir.model.fields,field_description:mail.field_mail_message__no_auto_thread
+#: model:ir.model.fields,field_description:mail.field_mail_mail__reply_to_force_new
+#: model:ir.model.fields,field_description:mail.field_mail_message__reply_to_force_new
 msgid "No threading for answers"
 msgstr ""
 
@@ -4404,7 +4400,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_force_thread_id
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_force_thread_id
 #: model:ir.model.fields,help:mail.field_mail_channel__alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
@@ -4430,6 +4425,8 @@ msgid "Optional report to print and attach"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_compose_message__lang
+#: model:ir.model.fields,help:mail.field_mail_composer_mixin__lang
 #: model:ir.model.fields,help:mail.field_mail_render_mixin__lang
 #: model:ir.model.fields,help:mail.field_mail_template__lang
 msgid ""
@@ -4440,9 +4437,19 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_compose_message__null_value
+#: model:ir.model.fields,help:mail.field_mail_composer_mixin__null_value
 #: model:ir.model.fields,help:mail.field_mail_render_mixin__null_value
 #: model:ir.model.fields,help:mail.field_mail_template__null_value
 msgid "Optional value to use if the target field is empty"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_mode
+msgid ""
+"Original Discussion: Answers go in the original document discussion thread. \n"
+" Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n"
+" This has an impact on the generated message-id."
 msgstr ""
 
 #. module: mail
@@ -4485,7 +4492,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_user_id
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_user_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_user_id
 msgid "Owner"
 msgstr ""
@@ -4513,21 +4519,18 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_model_id
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_parent_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_parent_model_id
 msgid "Parent Model"
 msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_parent_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_parent_thread_id
 msgid "Parent Record Thread ID"
 msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_parent_model_id
 #: model:ir.model.fields,help:mail.field_mail_channel__alias_parent_model_id
 msgid ""
 "Parent model holding the alias. The model holding the alias reference is not"
@@ -4615,6 +4618,8 @@ msgid "Phone"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__copyvalue
+#: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__copyvalue
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__copyvalue
 #: model:ir.model.fields,field_description:mail.field_mail_template__copyvalue
 msgid "Placeholder Expression"
@@ -4686,7 +4691,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_contact
 #: model:ir.model.fields,help:mail.field_mail_channel__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
@@ -4741,18 +4745,8 @@ msgid "Preceding Activities"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.email_template_form
-msgid "Preferred reply address"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__reply_to
 msgid "Preferred response address"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_template__reply_to
-msgid "Preferred response address (placeholders may be used here)"
 msgstr ""
 
 #. module: mail
@@ -4938,7 +4932,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_force_thread_id
-#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_force_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_force_thread_id
 msgid "Record Thread ID"
 msgstr ""
@@ -4948,6 +4941,11 @@ msgstr ""
 #: code:addons/mail/models/mail_message.py:0
 #, python-format
 msgid "Records:"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__new
+msgid "Redirect to another email address"
 msgstr ""
 
 #. module: mail
@@ -5073,11 +5071,30 @@ msgid "Rename conversation"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__render_model
+#: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__render_model
+#: model:ir.model.fields,field_description:mail.field_mail_render_mixin__render_model
+#: model:ir.model.fields,field_description:mail.field_mail_template__render_model
+msgid "Rendering Model"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
+msgid "Replies"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "Reply"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to
+#: model:ir.model.fields,field_description:mail.field_mail_template__reply_to
+msgid "Reply To"
 msgstr ""
 
 #. module: mail
@@ -5090,10 +5107,8 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_mail__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_message__reply_to
-#: model:ir.model.fields,field_description:mail.field_mail_template__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__reply_to
 msgid "Reply-To"
 msgstr ""
@@ -5337,6 +5352,8 @@ msgid "Select all messages"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_compose_message__model_object_field
+#: model:ir.model.fields,help:mail.field_mail_composer_mixin__model_object_field
 #: model:ir.model.fields,help:mail.field_mail_render_mixin__model_object_field
 #: model:ir.model.fields,help:mail.field_mail_template__model_object_field
 msgid ""
@@ -5610,12 +5627,16 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__sub_model_object_field
+#: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__sub_model_object_field
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__sub_model_object_field
 #: model:ir.model.fields,field_description:mail.field_mail_template__sub_model_object_field
 msgid "Sub-field"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__sub_object
+#: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__sub_object
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__sub_object
 #: model:ir.model.fields,field_description:mail.field_mail_template__sub_object
 msgid "Sub-model"
@@ -5626,6 +5647,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #: code:addons/mail/static/src/components/moderation_reject_dialog/moderation_reject_dialog.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__subject
+#: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__subject
 #: model:ir.model.fields,field_description:mail.field_mail_mail__subject
 #: model:ir.model.fields,field_description:mail.field_mail_message__subject
 #: model:ir.model.fields,field_description:mail.field_mail_template__subject
@@ -5756,6 +5778,13 @@ msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, python-format
+msgid "Template rendering should be called on a valid record IDs."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Template rendering should be called only using on a list of IDs."
 msgstr ""
@@ -5763,7 +5792,7 @@ msgstr ""
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Template rendering supports only jinja or qweb."
+msgid "Template rendering supports only raw jinja or qweb (view or raw)."
 msgstr ""
 
 #. module: mail
@@ -5846,7 +5875,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_model_id
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_model_id
 #: model:ir.model.fields,help:mail.field_mail_channel__alias_model_id
 msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
@@ -5856,7 +5884,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_name
 #: model:ir.model.fields,help:mail.field_mail_channel__alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
@@ -5865,7 +5892,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_user_id
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_user_id
 #: model:ir.model.fields,help:mail.field_mail_channel__alias_user_id
 msgid ""
 "The owner of records created upon receiving emails on this alias. If this "
@@ -6277,12 +6303,6 @@ msgid "Unsupported search filter on moderation status"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_render_mixin.py:0
-#, python-format
-msgid "Unsuspected None"
-msgstr ""
-
-#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #: code:addons/mail/static/src/xml/activity.xml:0
@@ -6478,6 +6498,8 @@ msgid "Weeks"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_compose_message__sub_model_object_field
+#: model:ir.model.fields,help:mail.field_mail_composer_mixin__sub_model_object_field
 #: model:ir.model.fields,help:mail.field_mail_render_mixin__sub_model_object_field
 #: model:ir.model.fields,help:mail.field_mail_template__sub_model_object_field
 msgid ""
@@ -6486,6 +6508,8 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_compose_message__sub_object
+#: model:ir.model.fields,help:mail.field_mail_composer_mixin__sub_object
 #: model:ir.model.fields,help:mail.field_mail_render_mixin__sub_object
 #: model:ir.model.fields,help:mail.field_mail_template__sub_object
 msgid ""
@@ -6822,6 +6846,12 @@ msgid "assigned you an activity"
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid "bounce"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -6835,6 +6865,12 @@ msgstr ""
 msgid ""
 "cannot be processed. This address\n"
 "    is used to collect replies and should not be used to directly contact"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid "catchall"
 msgstr ""
 
 #. module: mail
@@ -6865,6 +6901,11 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "done"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "e.g. \"mycompany.com\""
 msgstr ""
 
 #. module: mail
@@ -6973,11 +7014,6 @@ msgid "months"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "mycompany.odoo.com"
-msgstr ""
-
-#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/utils.js:0
 #, python-format
@@ -7083,6 +7119,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "to close for"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid "unknown error"
 msgstr ""
 
 #. module: mail

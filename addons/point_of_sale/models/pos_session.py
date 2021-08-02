@@ -110,7 +110,10 @@ class PosSession(models.Model):
         for session in self:
             cash_payment_method = session.payment_method_ids.filtered('is_cash_count')[:1]
             if cash_payment_method:
-                total_cash_payment = sum(session.order_ids.mapped('payment_ids').filtered(lambda payment: payment.payment_method_id == cash_payment_method).mapped('amount'))
+                total_cash_payment = 0.0
+                result = self.env['pos.payment'].read_group([('session_id', '=', session.id), ('payment_method_id', '=', cash_payment_method.id)], ['amount'], ['session_id'])
+                if result:
+                    total_cash_payment = result[0]['amount']
                 session.cash_register_total_entry_encoding = session.cash_register_id.total_entry_encoding + (
                     0.0 if session.state == 'closed' else total_cash_payment
                 )
@@ -123,8 +126,10 @@ class PosSession(models.Model):
 
     @api.depends('order_ids.payment_ids.amount')
     def _compute_total_payments_amount(self):
+        result = self.env['pos.payment'].read_group([('session_id', 'in', self.ids)], ['amount'], ['session_id'])
+        session_amount_map = dict((data['session_id'][0], data['amount']) for data in result)
         for session in self:
-            session.total_payments_amount = sum(session.order_ids.mapped('payment_ids.amount'))
+            session.total_payments_amount = session_amount_map.get(session.id) or 0
 
     def _compute_order_count(self):
         orders_data = self.env['pos.order'].read_group([('session_id', 'in', self.ids)], ['session_id'], ['session_id'])
@@ -135,8 +140,8 @@ class PosSession(models.Model):
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_picking_count(self):
         for session in self:
-            session.picking_count = len(session.picking_ids.ids)
-            session.failed_pickings = bool(session.picking_ids.filtered(lambda p: p.state != 'done'))
+            session.picking_count = self.env['stock.picking'].search_count([('pos_session_id', '=', session.id)])
+            session.failed_pickings = bool(self.env['stock.picking'].search([('pos_session_id', '=', session.id), ('state', '!=', 'done')], limit=1))
 
     def action_stock_picking(self):
         self.ensure_one()
@@ -176,6 +181,13 @@ class PosSession(models.Model):
             start_date = record.start_at.date()
             if (company.period_lock_date and start_date <= company.period_lock_date) or (company.fiscalyear_lock_date and start_date <= company.fiscalyear_lock_date):
                 raise ValidationError(_("You cannot create a session before the accounting lock date."))
+
+    def _check_bank_statement_state(self):
+        for session in self:
+            closed_statement_ids = session.statement_ids.filtered(lambda x: x.state != "open")
+            if closed_statement_ids:
+                raise UserError(_("Some Cash Registers are already posted. Please reset them to new in order to close the session.\n"
+                                  "Cash Registers: %r", list(statement.name for statement in closed_statement_ids)))
 
     @api.model
     def create(self, values):
@@ -257,6 +269,8 @@ class PosSession(models.Model):
     def action_pos_session_closing_control(self, balancing_account=False, amount_to_balance=0):
         self._check_pos_session_balance()
         for session in self:
+            if any(order.state == 'draft' for order in session.order_ids):
+                raise UserError(_("You cannot close the POS when orders are still in draft"))
             if session.state == 'closed':
                 raise UserError(_('This session is already closed.'))
             session.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
@@ -277,6 +291,7 @@ class PosSession(models.Model):
         # Session without cash payment method will not have a cash register.
         # However, there could be other payment methods, thus, session still
         # needs to be validated.
+        self._check_bank_statement_state()
         if not self.cash_register_id:
             return self._validate_session(balancing_account, amount_to_balance)
 
@@ -738,7 +753,7 @@ class PosSession(models.Model):
                 | combine_cash_receivable_lines[statement]
             )
             accounts = all_lines.mapped('account_id')
-            lines_by_account = [all_lines.filtered(lambda l: l.account_id == account) for account in accounts]
+            lines_by_account = [all_lines.filtered(lambda l: l.account_id == account and not l.reconciled) for account in accounts]
             for lines in lines_by_account:
                 lines.reconcile()
             # We try to validate the statement after the reconciliation is done
@@ -1130,7 +1145,7 @@ class PosSession(models.Model):
     def _alert_old_session(self):
         # If the session is open for more then one week,
         # log a next activity to close the session.
-        sessions = self.search([('start_at', '<=', (fields.datetime.now() - timedelta(days=7))), ('state', '!=', 'closed')])
+        sessions = self.sudo().search([('start_at', '<=', (fields.datetime.now() - timedelta(days=7))), ('state', '!=', 'closed')])
         for session in sessions:
             if self.env['mail.activity'].search_count([('res_id', '=', session.id), ('res_model', '=', 'pos.session')]) == 0:
                 session.activity_schedule(

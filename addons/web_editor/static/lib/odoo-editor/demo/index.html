@@ -1,0 +1,353 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <link rel="icon" href="./favicon.ico">
+
+        <title>Odoo Editor</title>
+
+        <!-- add bootstrap -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous"/>
+
+        <!-- custom style -->
+        <link rel="stylesheet" href="../src/style.css"/>
+        <style>
+            html, body {
+                width: 100%;
+                height: 100%;
+                line-height: unset;
+            }
+
+            /*control panel*/
+
+            #control-panel {
+                display: flex;
+                align-items: flex-end;
+            }
+            #control-panel > div {
+                flex: 1 1 0;
+                width: 100%;
+                padding: 15px;
+                text-align: center;
+            }
+            #control-panel > div:last-child {
+                max-width: 260px;
+            }
+            #control-panel textarea {
+                width: 100%;
+                height: 300px;
+            }
+            #control-panel button {
+                width: 100%;
+            }
+
+            /* local storage*/
+            #saved-html {
+                padding: 2px 16px;
+            }
+            .demo-editor-action {
+                display: none;
+            }
+            #saved-html-list a {
+                padding: 2px 16px;
+            }
+
+            /**/
+
+            #test-container {
+                display: flex;
+            }
+            #test-container > * {
+                width: 50%;
+                flex: 1 1 auto;
+                margin: 0 10px;
+            }
+
+            #sample-dom {
+                display: none;
+            }
+
+            #dom {
+                min-height: 500px;
+                padding: 5px;
+            }
+            span.btn {
+                display: inline-block;
+                background-color: blue;
+                padding: 15px;
+                color: white;
+            }
+            .mr8 {
+                margin-right: 16px;
+            }
+            td {
+                border: 1px solid grey;
+                padding: 6px;
+            }
+            .d-none {
+                display: none !important;
+            }
+            /* Checklists are styled separately in Odoo */
+            ul.o_checklist > li {
+                list-style: none;
+                position: relative;
+                margin-left: 20px;
+            }
+            ul.o_checklist > li:not(.oe-nested):before {
+                content: '';
+                position: absolute;
+                left: -20px;
+                display: block;
+                height: 14px;
+                width: 14px;
+                top: 1px;
+                border: 1px solid;
+                cursor: pointer;
+            }
+            ul.o_checklist > li.o_checked:after {
+                content: "✓";
+                transition: opacity .5s;
+                position: absolute;
+                left: -18px;
+                top: -1px;
+                opacity: 1;
+            }
+        </style>
+
+        <script src="main.js" type="module" defer></script>
+    </head>
+    <body>
+        <div id="control-panel">
+            <div>
+                Enter HTML code to edit in this textarea:
+                <textarea id="textarea"></textarea>
+                <button type="button" id="textarea-submit">Submit</button>
+            </div>
+            <div>
+                Or<br><button type="button" id="use-sample">Use the sample HTML</button>
+                <br><br>
+                Or<br><button type="button" id="start-tests">Launch tests</button>
+            </div>
+        </div>
+        <div class="demo-editor-action">
+            <button type="button" class="demo-editor-action-home">home</button>
+            <button type="button" id="save-c-html-button">Save current html for later tests</button>
+        </div>
+        <div id="saved-html">
+            <div id="saved-html-list">
+                <p>Snippets (localy stored): </p>
+                <ul></ul>
+            </div>
+        </div>
+        <div id="test-container" class="o_wysiwyg_wrapper">
+            <div id="dom-col">
+                <h1>DOM</h1>
+                <hr/>
+                <!-- innerHTML only used in non collaborative mode -->
+                <div id="dom"></div>
+            </div>
+        </div>
+        <div id="sample-dom">
+            <h1>Title H1</h1>
+            <h2><br/></h2>
+            <h3>Subtitle H3 (<u>empty <i>h2</i> above</u>)</h3>
+            <p>
+                <b>Select text to see the toolbar</b> dolor sit amet, consectetur
+                adipiscing elit. Pellentesque et purus vel enim scelerisque faucibus. Duis
+                malesuada lorem at placerat semper.
+                <br/>
+                Praesent cursus ornare convallis. Aliquam vitae vestibulum metus. Morbi
+                commodolacus ut varius tincidunt. Vivamus in mattis lectus.
+                Praesent commodo eget nunc non mollis.
+            </p><p>
+                <i>
+                Pe</i><i>lentesque id massa ac mi iaculis tincidunt accumsan vitae
+                tellus. Aliquam mi massa, suscipit non varius eu, ornare
+                aliquet ex. Quisque mattis mi in magna viverra blandit.
+                Curabitur auctor imperdiet nunc. Aenean id massa mauris.
+                Nulla placerat orci sed blandit luctus. In ac nisl augue.
+                </i>
+            </p>
+            <p>
+                Paragraph containing <b contenteditable="false">not editable inline node</b>.
+            </p>
+            <ul>
+                <li>first item</li>
+                <li class="oe-nested">
+                    <ul class="o_checklist">
+                        <li class="o_checked">first sub-item</li>
+                        <li><b>second sub-item</b></li>
+                    </ul>
+                </li>
+                <li><i>second item</i></li>
+                <li>third <b>item</b></li>
+            </ul>
+            <p>
+                Suspendisse euismod dictum ex
+            </p>
+            <div>
+                div containing a <span class="btn">span button</span> and a <a href="#">link</a> afterwards.
+            </div>
+            <p>final paragraph</p>
+            <div style="background-color: #eee" t="unbreak">
+                <h1>Unbreakable div</h1>
+                <p>unbreakable zone: light grey bg</p>
+            </div>
+            <p>
+                Outside unbreak
+            </p>
+            <div style="background-color: #eee" t="unbreak">
+                unbreakable <b id="ub">text field</b> (no block)
+            </div>
+            <p>
+                Unremovable
+            </p>
+            <div style="background-color: #eee; min-height: 20px; width: 100%;" class="oe_unremovable">
+                This div cannot be removed or broken
+            </div>
+            <p>
+                And here is a table
+            </p>
+            <table>
+                <tr>
+                    <td>cell 1</td>
+                    <td>cell 2</td>
+                    <td>cell 3</td>
+                </tr><tr>
+                    <td><i>italic</i> 2.1</td>
+                    <td></td>
+                    <td><b>bold 3.2</b></td>
+                </tr>
+            </table>
+            <p>
+                That's all folks!
+            </p>
+        </div>
+
+        <div id="toolbar" class="oe-toolbar">
+            <div class="button-group dropdown">
+                <button type="button" class="btn btn-secondary btn-sm dropdown-toggle"
+                    data-toggle="dropdown" title="" tabindex="-1"
+                    data-original-title="Style" aria-expanded="false">
+                    <i class="fa fa-magic"></i> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#" id="paragraph" data-call="setTag" data-arg1="p">Normal</a></li>
+                    <li><a class="dropdown-item" href="#" id="pre" data-call="setTag" data-arg1="pre"><pre>Code</pre></a></li>
+                    <li><a class="dropdown-item" href="#" id="heading1" data-call="setTag" data-arg1="h1"><h1>Header 1</h1></a></li>
+                    <li><a class="dropdown-item" href="#" id="heading2" data-call="setTag" data-arg1="h2"><h2>Header 2</h2></a></li>
+                    <li><a class="dropdown-item" href="#" id="heading3" data-call="setTag" data-arg1="h3"><h3>Header 3</h3></a></li>
+                    <li><a class="dropdown-item" href="#" id="heading4" data-call="setTag" data-arg1="h4"><h4>Header 4</h4></a></li>
+                    <li><a class="dropdown-item" href="#" id="heading5" data-call="setTag" data-arg1="h5"><h5>Header 5</h5></a></li>
+                    <li><a class="dropdown-item" href="#" id="heading6" data-call="setTag" data-arg1="h6"><h6>Header 6</h6></a></li>
+                    <li><a class="dropdown-item" href="#" id="blockquote" data-call="setTag" data-arg1="blockquote"><blockquote>Quote</blockquote></a></li>
+                </ul>
+            </div>
+            <div class="button-group">
+                <div id="bold" data-call="bold" title="Toggle bold" class="fa fa-bold fa-fw btn"></div>
+                <div id="italic" data-call="italic" title="Toggle italic" class="fa fa-italic fa-fw btn active"></div>
+                <div id="underline" data-call="underline" title="Toggle underline" class="fa fa-underline fa-fw btn"></div>
+                <div id="strikeThrough" data-call="strikeThrough" title="Toggle strikethrough" class="fa fa-strikethrough fa-fw btn"></div>
+                <div id="removeFormat" data-call="removeFormat" title="Remove format" class="fa fa-eraser fa-fw btn"></div>
+            </div>
+
+            <div class="button-group dropdown">
+                <button type="button" class="btn btn-secondary btn-sm dropdown-toggle"
+                    data-toggle="dropdown" title="" tabindex="-1"
+                    data-original-title="Style" aria-expanded="false">
+                    <span id="fontSizeCurrentValue"></span>
+                    <i class="fa fa-text-height"></i> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="medium">default</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="8px">8</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="9px">9</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="10px">10</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="11px">11</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="12px">12</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="14px">14</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="18px">18</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="24px">24</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="36px">36</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="48px">48</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="62px">62</a></li>
+                </ul>
+            </div>
+
+            <div class="button-group" id="colorInputButtonGroup">
+                <label id="foreColor" htmlFor="foreColorInput">
+                    <input id="foreColorInput" type="color" name="foreColor" />
+                    <i class="color-indicator fore-color fa fa-font"></i>&nbsp;<span class="caret"></span>
+                </label>
+                <label id="hiliteColor" htmlFor="hiliteColorInput">
+                    <input id="hiliteColorInput" type="color" name="hiliteColor" />
+                    <i class="color-indicator hilite-color fa fa-paint-brush"></i>&nbsp;<span class="caret"></span>
+                </label>
+            </div>
+
+            <div class="button-group">
+                <div id="fontawesome" data-call="insertFontAwesome" title="Insert font Awesome icon" class="fa fa-star fa-fw btn"></div>
+            </div>
+
+            <div class="button-group">
+                <div id="unordered" data-call="toggleList" data-arg1="UL" title="Toggle unordered list" class="fa fa-list-ul fa-fw btn"></div>
+                <div id="ordered" data-call="toggleList" data-arg1="OL" title="Toggle ordered list" class="fa fa-list-ol fa-fw btn"></div>
+                <div id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="fa fa-tasks fa-fw btn"></div>
+            </div>
+
+            <div class="button-group dropdown">
+                <button type="button" class="btn btn-secondary btn-sm dropdown-toggle"
+                    data-toggle="dropdown" title="" tabindex="-1"
+                    data-original-title="Paragraph" aria-expanded="false">
+                    <i id="paragraphDropdownButton" class="fa fa-align-left fa-fw"></i> <span class="caret"></span>
+                </button>
+                <div class="dropdown-menu">
+                    <div class="btn-group">
+                        <div class="btn" href="#" id="justifyLeft" data-call='justifyLeft'><i class="fa fa-align-left fa-fw btn"></i></div>
+                        <div class="btn" href="#" id="justifyCenter" data-call='justifyCenter'><i class="fa fa-align-center fa-fw btn"></i></div>
+                        <div class="btn" href="#" id="justifyRight" data-call='justifyRight'><i class="fa fa-align-right fa-fw btn"></i></div>
+                        <div class="btn" href="#" id="justifyFull" data-call='justifyFull'><i class="fa fa-align-justify fa-fw btn"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group dropdown">
+                <button type="button" class="btn btn-secondary btn-sm dropdown-toggle"
+                    data-toggle="dropdown" title="" tabindex="-1"
+                    data-original-title="Table" aria-expanded="false"
+                    id="tableDropdownButton">
+                    <i class="fa fa-table fa-fw"></i> <span class="caret"></span>
+                </button>
+                <div class="dropdown-menu">
+                    <div class="btn-group oe-tablepicker-dropdown"></div>
+                </div>
+            </div>
+            <div class="dropdown">
+                <button type="button" class="btn dropdown-toggle toolbar-edit-table"
+                    data-toggle="dropdown" title="" tabindex="-1"
+                    data-original-title="Edit table" aria-expanded="false">
+                    <i class="fa fa-columns fa-fw"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#" id="table-add-column-left" data-call="addColumnLeft">Add a column left</a></li>
+                    <li><a class="dropdown-item" href="#" id="table-add-column-right" data-call="addColumnRight">Add a column right</a></li>
+                    <li><a class="dropdown-item" href="#" id="table-add-row-above" data-call="addRowAbove">Add a row above</a></li>
+                    <li><a class="dropdown-item" href="#" id="table-add-row-below" data-call="addRowBelow">Add a row below</a></li>
+                    <li><a class="dropdown-item" href="#" id="table-remove-column" data-call="removeColumn">Remove current column</a></li>
+                    <li><a class="dropdown-item" href="#" id="table-remove-row" data-call="removeRow">Remove current row</a></li>
+                    <li><a class="dropdown-item" href="#" id="table-delete-table" data-call="deleteTable">Delete current table</a></li>
+                </ul>
+            </div>
+
+            <div class="button-group">
+                <div id="createLink" data-call="createLink" title="Link" class="fa fa-link fa-fw btn"></div>
+                <div id="unlink" data-call="unlink" title="Link" class="fa fa-unlink fa-fw btn"></div>
+            </div>
+        </div>
+    </body>
+</html>

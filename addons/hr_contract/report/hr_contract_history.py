@@ -9,6 +9,7 @@ class ContractHistory(models.Model):
     _name = 'hr.contract.history'
     _description = 'Contract history'
     _auto = False
+    _order = 'is_under_contract'
 
     # Even though it would have been obvious to use the reference contract's id as the id of the
     # hr.contract.history model, it turned out it was a bad idea as this id could change (for instance if a
@@ -22,6 +23,7 @@ class ContractHistory(models.Model):
     date_start = fields.Date('Start Date', readonly=True)
     date_end = fields.Date('End Date', readonly=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', readonly=True)
+    active_employee = fields.Boolean('Active Employee', readonly=True)
     is_under_contract = fields.Boolean('Is Currently Under Contract', readonly=True)
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     structure_type_id = fields.Many2one('hr.payroll.structure.type', string='Salary Structure Type', readonly=True)
@@ -33,35 +35,42 @@ class ContractHistory(models.Model):
         ('close', 'Expired'),
         ('cancel', 'Cancelled')
     ], string='Status', readonly=True)
-    resource_calendar_id = fields.Many2one('resource.calendar', readonly=True)
-    wage = fields.Monetary('Wage', help="Employee's monthly gross wage.", readonly=True)
+    resource_calendar_id = fields.Many2one('resource.calendar', string="Working Schedule", readonly=True)
+    wage = fields.Monetary('Wage', help="Employee's monthly gross wage.", readonly=True, group_operator="avg")
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     company_country_id = fields.Many2one('res.country', string="Company country", related='company_id.country_id', readonly=True)
     country_code = fields.Char(related='company_country_id.code', readonly=True)
     currency_id = fields.Many2one(string='Currency', related='company_id.currency_id', readonly=True)
     contract_type_id = fields.Many2one('hr.contract.type', 'Contract Type', readonly=True)
     contract_ids = fields.One2many('hr.contract', string='Contracts', compute='_compute_contract_ids', readonly=True)
+    contract_count = fields.Integer(compute='_compute_contract_count', string="# Contracts")
     under_contract_state = fields.Selection([
         ('done', 'Under Contract'),
         ('blocked', 'Not Under Contract')
     ], string='Contractual Status', compute='_compute_under_contract_state')
+    activity_state = fields.Selection(related='contract_id.activity_state')
+
+    @api.depends('contract_ids')
+    def _compute_contract_count(self):
+        for history in self:
+            history.contract_count = len(history.contract_ids)
 
     @api.depends('is_under_contract')
     def _compute_under_contract_state(self):
-        for contract in self:
-            contract.under_contract_state = 'done' if contract.is_under_contract else 'blocked'
+        for history in self:
+            history.under_contract_state = 'done' if history.is_under_contract else 'blocked'
 
     @api.depends('employee_id.name')
     def _compute_display_name(self):
-        for contract in self:
-            contract.display_name = _("%s's Contracts History", contract.employee_id.name)
+        for history in self:
+            history.display_name = _("%s's Contracts History", history.employee_id.name)
 
     @api.model
     def _get_fields(self):
         return ','.join('contract.%s' % name for name, field in self._fields.items()
                         if field.store 
                         and field.type not in ['many2many', 'one2many', 'related']
-                        and field.name not in ['id', 'contract_id', 'employee_id', 'date_hired', 'is_under_contract'])
+                        and field.name not in ['id', 'contract_id', 'employee_id', 'date_hired', 'is_under_contract', 'active_employee'])
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
@@ -92,6 +101,7 @@ class ContractHistory(models.Model):
             )
             SELECT     employee.id AS id,
                        employee.id AS employee_id,
+                       employee.active AS active_employee,
                        contract.id AS contract_id,
                        contract_information.is_under_contract::bool AS is_under_contract,
                        employee.first_contract_date AS date_hired,
@@ -102,7 +112,6 @@ class ContractHistory(models.Model):
                 ON  contract_information.employee_id = employee.id
                 AND contract.company_id = employee.company_id
             WHERE   employee.employee_type IN ('employee', 'student')
-            AND     (employee.active = true OR contract.state='draft')
         )""" % (self._table, self._get_fields()))
 
     @api.depends('employee_id.contract_ids')

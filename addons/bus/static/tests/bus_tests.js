@@ -316,7 +316,7 @@ QUnit.module('Bus', {
         assert.expect(5);
 
         let id = 1;
-        testUtils.patch(CrossTabBus, {
+        testUtils.mock.patch(CrossTabBus, {
             init: function () {
                 this._super.apply(this, arguments);
                 this.__tabId__ = id++;
@@ -333,7 +333,7 @@ QUnit.module('Bus', {
 
         let pollPromise;
         const parentTab1 = new Widget();
-        await testUtils.addMockEnvironment(parentTab1, {
+        await testUtils.mock.addMockEnvironment(parentTab1, {
             data: {},
             services: {
                 local_storage: LocalStorageServiceMock,
@@ -350,7 +350,7 @@ QUnit.module('Bus', {
             }
         });
         const parentTab2 = new Widget();
-        await testUtils.addMockEnvironment(parentTab2, {
+        await testUtils.mock.addMockEnvironment(parentTab2, {
             data: {},
             services: {
                 local_storage: LocalStorageServiceMock,
@@ -382,7 +382,7 @@ QUnit.module('Bus', {
             "Tab 2: addChannel beta",
         ]);
 
-        testUtils.unpatch(CrossTabBus);
+        testUtils.mock.unpatch(CrossTabBus);
         parentTab1.destroy();
         parentTab2.destroy();
     });

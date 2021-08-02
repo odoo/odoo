@@ -18,4 +18,5 @@ This widget allows to display gauges using d3 library.
         ],
     },
     'auto_install': True,
+    'license': 'LGPL-3',
 }

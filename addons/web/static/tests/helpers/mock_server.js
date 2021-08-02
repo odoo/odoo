@@ -242,7 +242,7 @@ export class MockServer {
                     // TODO
                     // const pyevalContext = window.py.dict.fromJSON(context || {});
                     // var v = pyUtils.py_eval(mod, {context: pyevalContext}) ? true : false;
-                    console.warn("MockServer: naive parse of modifier value");
+                    console.info("MockServer: naive parse of modifier value in", QUnit.config.current.testName);
                     const v = JSON.parse(mod);
                     if (inTreeView && !inListHeader && attr === "invisible") {
                         modifiers.column_invisible = v;
@@ -498,7 +498,7 @@ export class MockServer {
         if (!action) {
             // when the action doesn't exist, the real server doesn't crash, it
             // simply returns false
-            console.warn("No action found for ID " + kwargs.action_id);
+            console.warn(`No action found for ID ${kwargs.action_id} during test ${QUnit.config.current.testName}`);
         }
         return action || false;
     }
@@ -808,7 +808,7 @@ export class MockServer {
                     res[groupByField] = val;
                 }
                 if (field.type === "date" && val) {
-                    console.warn("Mock Server: read group not fully implemented (moment stuff)");
+                    console.info("Mock Server: read group not fully implemented (moment stuff) in", QUnit.config.current.testName);
                     // const aggregateFunction = groupByField.split(':')[1];
                     // let startDate;
                     // let endDate;

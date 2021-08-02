@@ -16,7 +16,7 @@
 
             <field name="state" position="before">
                 <field name="landed_costs_visible" invisible="1"/>
-                <button name="button_create_landed_costs" class="oe_highlight" string="Create Landed Costs" type="object" groups="account.group_account_invoice" attrs="{'invisible': [('landed_costs_visible', '!=', True)]}"/>
+                <button name="button_create_landed_costs" class="oe_highlight" string="Create Landed Costs" data-hotkey="l" type="object" groups="account.group_account_invoice" attrs="{'invisible': [('landed_costs_visible', '!=', True)]}"/>
             </field>
 
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='name']" position="after">

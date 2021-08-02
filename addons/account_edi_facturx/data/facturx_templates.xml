@@ -48,7 +48,8 @@
                     </ram:SpecifiedLineTradeDelivery>
 
                     <ram:SpecifiedLineTradeSettlement>
-                        <t t-foreach="line_vals['tax_detail_vals_list']" t-as="tax_detail_vals">
+                        <t t-foreach="tax_details['invoice_line_tax_details'][line]['tax_details'].values()"
+                           t-as="tax_detail_vals">
                             <t t-set="tax" t-value="tax_detail_vals['tax']"/>
                             <ram:ApplicableTradeTax t-if="tax.amount_type == 'percent'">
                                 <ram:RateApplicablePercent t-esc="tax.amount"/>
@@ -182,15 +183,15 @@
                         </ram:SpecifiedTradeSettlementPaymentMeans>
 
                         <!-- Tax Summary. -->
-                        <t t-foreach="tax_detail_vals_list" t-as="tax_detail_vals">
+                        <t t-foreach="tax_details['tax_details'].values()" t-as="tax_detail_vals">
                             <t t-set="tax" t-value="tax_detail_vals['tax']"/>
                             <ram:ApplicableTradeTax>
                                 <ram:CalculatedAmount
                                     t-att-currencyID="record.currency_id.name"
-                                    t-esc="format_monetary(tax_detail_vals['tax_amount_currency'], record.currency_id)"/>
+                                    t-esc="format_monetary(balance_multiplicator * tax_detail_vals['tax_amount_currency'], record.currency_id)"/>
                                 <ram:BasisAmount
                                     t-att-currencyID="record.currency_id.name"
-                                    t-esc="format_monetary(tax_detail_vals['tax_base_amount_currency'], record.currency_id)"/>
+                                    t-esc="format_monetary(balance_multiplicator * tax_detail_vals['base_amount_currency'], record.currency_id)"/>
                                 <ram:RateApplicablePercent
                                     t-if="tax.amount_type == 'percent'"
                                     t-esc="tax.amount"/>

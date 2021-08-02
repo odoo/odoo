@@ -1,10 +1,9 @@
 odoo.define("website_event.tour", function (require) {
     "use strict";
 
-    var core = require("web.core");
+    const {_t} = require("web.core");
+    const {Markup} = require('web.utils');
     var tour = require("web_tour.tour");
-
-    var _t = core._t;
 
     tour.register("website_event_tour", {
         test: true,
@@ -19,12 +18,12 @@ odoo.define("website_event.tour", function (require) {
         position: "bottom",
     }, {
         trigger: '.modal-dialog #editor_new_event input[type=text]',
-        content: _t("Create a name for your new event and click <em>\"Continue\"</em>. e.g: Technical Training"),
+        content: Markup(_t("Create a name for your new event and click <em>\"Continue\"</em>. e.g: Technical Training")),
         position: "left",
     }, {
         trigger: '.modal-footer button.btn-primary.btn-continue',
         extra_trigger: '#editor_new_event input[type=text][value!=""]',
-        content: _t("Click <em>Continue</em> to create the event."),
+        content: Markup(_t("Click <em>Continue</em> to create the event.")),
         position: "right",
     }, {
         trigger: "#snippet_structure .oe_snippet:eq(2) .oe_snippet_thumbnail",

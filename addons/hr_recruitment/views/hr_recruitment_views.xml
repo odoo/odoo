@@ -73,10 +73,10 @@
         <field name="arch" type="xml">
           <form string="Jobs - Recruitment Form" class="o_applicant_form">
             <header>
-                <button string="Create Employee" name="create_employee_from_applicant" type="object"
+                <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="v"
                         class="oe_highlight o_create_employee" attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}"/>
-                <button string="Refuse" name="archive_applicant" type="object" attrs="{'invisible': [('active', '=', False)]}"/>
-                <button string="Restore" name="toggle_active" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
+                <button string="Refuse" name="archive_applicant" type="object" attrs="{'invisible': [('active', '=', False)]}" data-hotkey="x"/>
+                <button string="Restore" name="toggle_active" type="object" attrs="{'invisible': [('active', '=', True)]}" data-hotkey="z"/>
                 <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('active', '=', False),('emp_id', '=', False)]}"/>
             </header>
             <sheet>
@@ -90,8 +90,11 @@
                         <field name="application_count" widget="statinfo" string="Other Applications"/>
                     </button>
                     <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object"
-                         help="Schedule interview with this applicant">
-                        <field name="meeting_count" widget="statinfo" string="Meetings"/>
+                         >
+                         <div class="o_field_widget o_stat_info">
+                             <span class="o_stat_value"><field name="meeting_display_text" /></span>
+                             <span class="o_stat_text"><field name="meeting_display_date" readonly="1"/></span>
+                         </div>
                     </button>
                 </div>
                 <widget name="web_ribbon" title="Refused" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -451,8 +454,8 @@
                         </div>
                     </group>
                     <footer>
-                        <button string="Create" name="close_dialog" type="object" class="btn-primary o_create_job"/>
-                        <button string="Discard" class="btn-secondary" special="cancel"/>
+                        <button string="Create" name="close_dialog" type="object" class="btn-primary o_create_job" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </sheet>
             </form>
@@ -903,10 +906,10 @@ action = act
                             <div class="oe_kanban_content">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings row">
-                                        <div class="col-3">
+                                        <div class="col-4">
                                             <h3 class="o_kanban_record_title"><field name="source_id"/></h3>
                                         </div>
-                                        <div class="col-9 text-right">
+                                        <div class="col-8 text-right">
                                             <div><field name="job_id"/></div>
                                         </div>
                                     </div>

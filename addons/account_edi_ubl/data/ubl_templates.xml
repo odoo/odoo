@@ -82,11 +82,11 @@
                     t-att-currencyID="line.currency_id.name"
                     t-esc="format_monetary(line.price_subtotal)"/>
                 <cac:TaxTotal
-                    t-foreach="line_vals['tax_detail_vals_list']"
+                    t-foreach="tax_details['invoice_line_tax_details'][line]['tax_details'].values()"
                     t-as="tax_detail_vals">
                     <cbc:TaxAmount
                         t-att-currencyID="line.currency_id.name"
-                        t-esc="format_monetary(tax_detail_vals['tax_amount_currency'])"/>
+                        t-esc="format_monetary(-tax_detail_vals['tax_amount_currency'])"/>
                 </cac:TaxTotal>
                 <cac:Item>
                     <cbc:Description t-if="line.name" t-esc="line.name.replace('\n', ', ')"/>
@@ -117,7 +117,7 @@
                 <cbc:ID t-esc="record.name"/>
                 <cbc:IssueDate t-esc="record.invoice_date"/>
                 <cbc:InvoiceTypeCode t-esc="type_code"/>
-                <cbc:Note t-esc="record.narration"/>
+                <cbc:Note t-if="note" t-esc="note"/>
                 <cbc:DocumentCurrencyCode t-esc="record.currency_id.name"/>
                 <cbc:BuyerReference t-esc="record.commercial_partner_id.name"/>
                 <cac:OrderReference t-if="record.invoice_origin">

@@ -197,30 +197,6 @@ QUnit.test('composer text input placeholder should contain correspondent name wh
     );
 });
 
-QUnit.test('mailing channel composer: basic rendering', async function (assert) {
-    assert.expect(2);
-
-    // channel that is expected to be rendered, with proper mass_mailing
-    // value and a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
-    await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
-    });
-    await this.createComposerComponent(thread.composer);
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerTextInput',
-        "Composer should have a text input"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Composer_subjectInput',
-        "Composer should have a subject input"
-    );
-});
-
 QUnit.test('add an emoji', async function (assert) {
     assert.expect(1);
 
@@ -1606,81 +1582,6 @@ QUnit.test('composer text input cleared on message post', async function (assert
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "",
         "should have no content in composer input after posting message"
-    );
-});
-
-QUnit.test('composer inputs cleared on message post in composer of a mailing channel', async function (assert) {
-    assert.expect(10);
-
-    // channel that is expected to be rendered, with proper mass_mailing
-    // value and a random unique id that will be referenced in the test
-    this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'message_post') {
-                assert.step('message_post');
-                assert.ok(
-                    'body' in args.kwargs,
-                    "body should be posted with the message"
-                );
-                assert.strictEqual(
-                    args.kwargs.body,
-                    "test message",
-                    "posted body should be the one typed in text input"
-                );
-                assert.ok(
-                    'subject' in args.kwargs,
-                    "subject should be posted with the message"
-                );
-                assert.strictEqual(
-                    args.kwargs.subject,
-                    "test subject",
-                    "posted subject should be the one typed in subject input"
-                );
-            }
-            return this._super(...arguments);
-        },
-    });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
-    });
-    await this.createComposerComponent(thread.composer);
-    // Type message
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "test message");
-    });
-    assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
-        "test message",
-        "should have inserted text content in editable"
-    );
-
-    await afterNextRender(() => {
-        document.querySelector(`.o_Composer_subjectInput`).focus();
-        document.execCommand('insertText', false, "test subject");
-    });
-    assert.strictEqual(
-        document.querySelector(`.o_Composer_subjectInput`).value,
-        "test subject",
-        "should have inserted text content in input"
-    );
-
-    // Send message
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonSend').click()
-    );
-    assert.verifySteps(['message_post']);
-    assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
-        "",
-        "should have no content in composer input after posting message"
-    );
-    assert.strictEqual(
-        document.querySelector(`.o_Composer_subjectInput`).value,
-        "",
-        "should have no content in composer subject input after posting message"
     );
 });
 

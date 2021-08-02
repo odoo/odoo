@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import Warning
+from odoo.exceptions import UserError
 
 
 class l10n_eu_service(models.TransientModel):
@@ -10,19 +10,12 @@ class l10n_eu_service(models.TransientModel):
     _name = "l10n_eu_service.wizard"
     _description = __doc__
 
-    def _get_eu_res_country_group(self):
-        eu_group = self.env.ref("base.europe", raise_if_not_found=False)
-        if not eu_group:
-            raise Warning(_('The Europe country group cannot be found. '
-                            'Please update the base module.'))
-        return eu_group
-
     def _get_default_company_id(self):
         return self.env.company.id
 
     def _default_fiscal_position_id(self):
         user = self.env.user
-        eu_id = self._get_eu_res_country_group()
+        eu_id = self.env.ref("base.europe")
         return self.env['account.fiscal.position'].search(
             [('company_id', '=', user.company_id.id), ('vat_required', '=', True),
              ('country_group_id.id', '=', eu_id.id)], limit=1)
@@ -35,12 +28,12 @@ class l10n_eu_service(models.TransientModel):
 
     def _default_done_country_ids(self):
         user = self.env.user
-        eu_country_group = self._get_eu_res_country_group()
+        eu_country_group = self.env.ref("base.europe")
         return eu_country_group.country_ids - self._default_todo_country_ids() - user.company_id.account_fiscal_country_id
 
     def _default_todo_country_ids(self):
         user = self.env.user
-        eu_country_group = self._get_eu_res_country_group()
+        eu_country_group = self.env.ref("base.europe")
         eu_fiscal = self.env['account.fiscal.position'].search(
             [('country_id', 'in', eu_country_group.country_ids.ids),
              ('vat_required', '=', False), ('auto_apply', '=', True),
@@ -69,6 +62,12 @@ class l10n_eu_service(models.TransientModel):
     todo_country_ids = fields.Many2many(
         'res.country', 'l10n_eu_service_country_rel_todo', default=_default_todo_country_ids,
         string='EU Customers From', required=True)
+
+    @api.model
+    def load_views(self, views, options=None):
+        # This wizard is outdated; it shouldn't be used anymore. Users might still be able to open it using the
+        # link in the settings if they didn't update the module. If they try, we tell them.
+        raise UserError(_("Starting July 1st 2021, OSS regulation has replaced MOSS. Please first upgrade 'l10n_eu_service' module in the Apps menu, then go back to this setting and click on 'Refresh tax mapping'."))
 
     def _get_repartition_line_copy_values(self, original_rep_lines):
         return [(0, 0, {

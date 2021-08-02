@@ -18,9 +18,9 @@
                     </tree>
                 </field>
                 <footer>
-                    <button string="Refuse" class="btn-primary" name="action_refuse" type="object" attrs="{'invisible': [('sheet_ids', '=', [])]}" />
-                    <button string="Approve" class="btn-secondary" name="action_approve" type="object" attrs="{'invisible': [('sheet_ids', '=', [])]}" />
-                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    <button string="Refuse" class="btn-primary" name="action_refuse" type="object" attrs="{'invisible': [('sheet_ids', '=', [])]}" data-hotkey="q" />
+                    <button string="Approve" class="btn-secondary" name="action_approve" type="object" attrs="{'invisible': [('sheet_ids', '=', [])]}" data-hotkey="w" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                 </footer>
            </form>
         </field>

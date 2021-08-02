@@ -92,8 +92,8 @@
             this.trigger('groupby-menu-selection', { fieldName, interval });
         }
 
-        _toggleMenu(groupNumber) {
-            this.openedSubMenus[groupNumber] = !this.openedSubMenus[groupNumber];
+        _toggleMenu(id) {
+            this.openedSubMenus[id] = !this.openedSubMenus[id];
             this.render();
         }
     }

@@ -234,7 +234,7 @@
 
                     <notebook colspan="4">
                         <page string="Contacts &amp; Addresses" name="contact_addresses" autofocus="autofocus">
-                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': None, 'default_user_id': user_id, 'default_type': 'other'}">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id, 'default_type': 'other'}">
                                 <kanban>
                                     <field name="id"/>
                                     <field name="color"/>
@@ -372,7 +372,7 @@
                     <sheet>
                         <field name="type" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
-                        <label for="name" class="oe_editonly"/>
+                        <label for="name" class="oe_edit_only"/>
                         <field name="name" required="0"/>
                         <group>
                             <group>
@@ -614,9 +614,10 @@
                 <form string="Contact Tag">
                     <sheet>
                         <group col="4">
-                            <field name="name"/>
-                            <field name="active" widget="boolean_toggle"/>
+                            <field name="name" placeholder='e.g. "Consulting Services"'/>
+                            <field name="color" widget="color_picker"/>
                             <field name="parent_id"/>
+                            <field name="active" widget="boolean_toggle"/>
                         </group>
                     </sheet>
                 </form>
@@ -630,6 +631,7 @@
             <field name="arch" type="xml">
                 <tree string="Contact Tags">
                     <field name="display_name"/>
+                    <field name="color" widget="color_picker"/>
                 </tree>
             </field>
         </record>

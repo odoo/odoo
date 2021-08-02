@@ -9,6 +9,17 @@ const ProjectCalendarController = CalendarController.extend({
     _renderButtonsParameters() {
         return Object.assign({}, this._super(...arguments), {scaleDrop: true});
     },
+
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onChangeDate: function (event) {
+        this._super.apply(this, arguments);
+        this.model.setScale('month');
+        this.model.setDate(event.data.date);
+        this.reload();
+    },
 });
 
 export const ProjectCalendarView = CalendarView.extend({

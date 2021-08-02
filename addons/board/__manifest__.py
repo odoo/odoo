@@ -31,5 +31,6 @@ Allows users to create custom dashboard.
         'web.assets_qweb': [
             'board/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

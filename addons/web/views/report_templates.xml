@@ -19,12 +19,12 @@
                 <!--in an iframe, we don't want the session to perform qweb_templates rpc-->
                 <script type="text/javascript">
                     window.odoo = {};
-                    window.odoo.session_info = {is_report: true};
+                    window.odoo.__session_info__ = {is_report: true};
                 </script>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.report_assets_common" t-css="false"/>
             </head>
-            <body t-att-class="'container' if not full_width else 'container-fluid'" style="overflow:hidden">
+            <body t-att-class="'container' if not full_width else 'container-fluid'">
                 <div id="wrapwrap">
                     <main>
                         <t t-out="0"/>
@@ -191,13 +191,13 @@
                                        <span>5.000</span>
                                    </td>
                                    <td class="text-right d-none d-md-table-cell">
-                                       <span class="text-nowrap">23,500.00</span>
+                                       <span class="text-nowrap">2,350.00</span>
                                    </td>
                                    <td class="text-left d-none d-md-table-cell">
                                        <span id="line_tax_ids">15.00%</span>
                                    </td>
                                    <td class="text-right o_price_total">
-                                       <span class="text-nowrap">$ <span class="oe_currency_value">117,500.00</span></span>
+                                       <span class="text-nowrap">$ <span class="oe_currency_value">11,750.00</span></span>
                                    </td>
                                </tr>
                            </tbody>
@@ -209,20 +209,20 @@
                                        <tbody><tr class="border-black o_subtotal" style="">
                                            <td><strong>Subtotal</strong></td>
                                            <td class="text-right">
-                                               <span>$ <span class="oe_currency_value">125,000.00</span></span>
+                                               <span>$ <span class="oe_currency_value">19,250.00</span></span>
                                            </td>
                                        </tr>
                                            <tr style="">
                                                <td><span class="text-nowrap">Tax 15%</span></td>
                                                <td class="text-right o_price_total">
-                                                   <span class="text-nowrap">$ 18,750.00</span>
+                                                   <span class="text-nowrap">$ 2,887.50</span>
                                                </td>
                                            </tr>
                                            <tr class="border-black o_total">
                                                <td><strong>Total</strong></td>
                                                <td class="text-right">
                                                    <span class="text-nowrap">$ <span class="oe_currency_value">
-                                                       143,750.00</span></span>
+                                                       22,137.50</span></span>
                                                </td>
                                            </tr>
                                        </tbody></table>

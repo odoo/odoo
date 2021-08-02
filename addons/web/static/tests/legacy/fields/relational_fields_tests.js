@@ -873,7 +873,7 @@ QUnit.module('relational_fields', {
                 </form>`,
             config: {device: {isMobile: false}},
         });
-        testUtils.intercept(form, 'call_service', function (ev) {
+        testUtils.mock.intercept(form, 'call_service', function (ev) {
             assert.strictEqual(ev.data.service, 'notification',
                 "should display an 'invalid fields' notification");
         }, true);
@@ -1482,7 +1482,7 @@ QUnit.module('relational_fields', {
         assert.containsN(list, '.o_field_many2manytags .badge', 2, "there should be 2 tags");
         assert.containsNone(list, '.badge.dropdown-toggle', "the tags should not be dropdowns");
 
-        testUtils.intercept(list, 'switch_view', function (event) {
+        testUtils.mock.intercept(list, 'switch_view', function (event) {
             assert.strictEqual(event.data.view_type, "form", "should switch to form view");
         });
         // click on the tag: should do nothing and open the form view
@@ -3263,6 +3263,53 @@ QUnit.module('relational_fields', {
             'the Product model should be selected in the model_id field');
         assert.strictEqual(form.$('.o_field_many2one[name="reference"] input').val(), 'John Smith',
             'the John Smith record should be selected in the reference field');
+
+        form.destroy();
+    });
+
+    QUnit.test('widget reference with model_field option (tree list in form view)', async function (assert) {
+        assert.expect(2);
+
+        this.data.turtle.records[0].partner_ids = [1];
+        this.data.partner.records[0].reference = 'product,41';
+        this.data.partner.records[0].model_id = 20;
+
+        const form = await createView({
+            View: FormView,
+            model: 'turtle',
+            data: this.data,
+            arch: `<form string="Turtle">
+                        <field name="partner_ids">
+                            <tree string="Partner" editable="bottom">
+                                <field name="name"/>
+                                <field name="model_id"/>
+                                <field name="reference" options="{'model_field': 'model_id'}" class="reference_field"/>
+                            </tree>
+                        </field>
+                   </form>`,
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+
+        assert.strictEqual(form.$('.reference_field').text(), 'xpad',
+            'should have the second product');
+
+        // Select the second product without changing the model
+        await testUtils.dom.click($('.o_list_table .reference_field'));
+        await testUtils.dom.click($('.o_list_table .reference_field input'));
+
+
+        // Enter to select it
+        $('.o_list_table .reference_field input').trigger($.Event('keydown', {
+            keyCode: $.ui.keyCode.ENTER,
+            which: $.ui.keyCode.ENTER,
+        }));
+
+        await testUtils.nextTick();
+
+        assert.strictEqual(form.$('.reference_field[name="reference"]').text(), 'xphone',
+            'should have selected the first product');
 
         form.destroy();
     });

@@ -11,6 +11,8 @@
     </xpath>
     <xpath expr="//t[@id='default_snippets']" position="replace">
         <t id="default_snippets">
+            <t t-set="cta_btn_text" t-value="False"/>
+            <t t-set="cta_btn_href">/contactus</t>
             <div id="snippet_mega_menu" class="o_panel d-none">
                 <div class="o_panel_header">Mega Menu</div>
                 <div class="o_panel_body">
@@ -107,7 +109,7 @@
             <div id="snippet_effect" class="o_panel">
                 <div class="o_panel_header">Dynamic Content</div>
                 <div class="o_panel_body">
-                    <t id="form_form_hook"/>
+                    <t t-snippet="website.s_website_form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg"/>
                     <t t-set="google_maps_api_key" t-value="request.env['website'].get_current_website().google_maps_api_key"/>
                     <t t-if="debug or not google_maps_api_key" t-snippet="website.s_map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_map.svg"/>
                     <t t-if="debug or google_maps_api_key" t-snippet="website.s_google_map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_google_map.svg"/>
@@ -125,7 +127,7 @@
                     <t t-snippet="website.s_countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg">
                         <keywords>celebration, launch</keywords>
                     </t>
-                    <t id="mail_channel_discussion_group_hook"/>
+                    <t id="mail_group_hook"/>
                     <t id="twitter_favorite_tweets_hook"/>
                     <t t-snippet="website.s_embed_code" t-thumbnail="/website/static/src/img/snippets_thumbs/s_embed_code.svg"/>
                 </div>
@@ -169,9 +171,8 @@
 
 <template id="external_snippets" inherit_id="website.snippets" priority="8">
     <xpath expr="//div[@id='snippet_effect']//t[@t-snippet][last()]" position="after">
-        <t t-install="website_form" string="Form Builder" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg"/>
         <t id="newsletter_popup_snippet" t-install="mass_mailing" string="Newsletter Popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.svg"/>
-        <t t-install="website_mail_channel" string="Discussion Group" t-thumbnail="/website/static/src/img/snippets_thumbs/s_channel.svg"/>
+        <t t-install="website_mail_group" string="Discussion Group" t-thumbnail="/website/static/src/img/snippets_thumbs/s_group.svg"/>
         <t t-install="website_twitter" string="Twitter Scroller" t-thumbnail="/website/static/src/img/snippets_thumbs/s_twitter_scroll.svg"/>
     </xpath>
     <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
@@ -373,6 +374,9 @@
     <div data-js="Carousel"
          data-selector="section"
          data-target="> .carousel">
+        <we-row string="Slide">
+            <we-button data-add-slide="true" data-no-preview="true" class="o_we_bg_brand_primary">Add Slide</we-button>
+        </we-row>
         <we-select string="Style">
             <we-button data-select-class="s_carousel_default">Default</we-button>
             <we-button data-select-class="s_carousel_bordered">Bordered</we-button>
@@ -392,16 +396,16 @@
 
     <div data-js="CarouselItem"
          data-selector=".s_carousel .carousel-item, .s_quotes_carousel .carousel-item">
-        <we-button data-slide="left" data-no-preview="true">
+        <we-button data-slide="left" data-no-preview="true" data-tooltip="true" title="Move Backward">
             <i class="fa fa-fw fa-angle-left"/>
         </we-button>
-        <we-button data-slide="right" data-no-preview="true" class="mr-2">
+        <we-button data-slide="right" data-no-preview="true" class="mr-2" data-tooltip="true" title="Move Forward">
             <i class="fa fa-fw fa-angle-right"/>
         </we-button>
-        <we-button data-add-slide="true" data-no-preview="true" class="o_we_text_success">
+        <we-button data-add-slide-item="true" data-no-preview="true" class="o_we_bg_success" data-tooltip="true" title="Add Slide">
             <i class="fa fa-fw fa-plus"/>
         </we-button>
-        <we-button data-remove-slide="true" data-no-preview="true" class="o_we_text_danger">
+        <we-button data-remove-slide="true" data-no-preview="true" class="o_we_bg_danger" data-tooltip="true" title="Remove Slide">
             <i class="fa fa-fw fa-minus"/>
         </we-button>
     </div>
@@ -410,6 +414,14 @@
     <div data-js="collapse"
          data-selector='.accordion > .card'
          data-drop-in='.accordion:has(> .card)'/>
+
+    <div data-js="MultipleItems" data-selector=".s_faq_collapse">
+        <we-row string="Item">
+            <we-button data-add-item="" data-item=".accordion > .card:last" data-select-item="" data-no-preview="true" class="o_we_bg_brand_primary">
+                Add Item
+            </we-button>
+        </we-row>
+    </div>
 
     <div data-js="layout_column"
         data-selector="section"
@@ -426,8 +438,7 @@
     </div>
 
     <!-- Move snippets around -->
-    <div data-js="SnippetMove"
-         data-selector="section, .accordion > .card, .s_showcase .row:not(.s_col_no_resize) > div">
+    <div data-js="SnippetMove" data-selector="section, .accordion > .card, .s_showcase .row:not(.s_col_no_resize) > div" data-no-scroll=".accordion > .card">
         <we-button class="fa fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true" data-name="move_up_opt"/>
         <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true" data-name="move_down_opt"/>
     </div>
@@ -1002,20 +1013,19 @@
         </we-button-group>
     </div>
 
-    <!-- Min height of section -->
-    <div data-option-name="minHeight" data-selector="section" data-exclude="[data-snippet] .row > div *">
-        <we-button-group string="Height">
-            <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
-            <we-button data-select-class="o_half_screen_height" title="Half screen">50%</we-button>
-            <we-button data-select-class="o_full_screen_height" title="Full screen">100%</we-button>
-        </we-button-group>
-    </div>
-
     <!-- Scroll to next section button (only for full height) -->
     <div data-js="ScrollButton" data-selector="section" data-exclude="[data-snippet] .row > div *">
-        <we-checkbox string="Scroll down button"
+        <!-- Min height of section -->
+        <we-button-group string="Height" data-show-scroll-button="">
+            <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
+            <we-button data-select-class="o_half_screen_height" title="Half screen">50%</we-button>
+            <we-button data-select-class="o_full_screen_height" title="Full screen" data-name="full_height_opt" data-show-scroll-button="true">100%</we-button>
+        </we-button-group>
+
+        <we-checkbox string="⌙ Scroll down button"
                      data-toggle-button="true"
                      data-no-preview="true"
+                     data-dependencies="full_height_opt"
                      data-name="scroll_button_opt"/>
         <!-- &emsp; -->
         <we-row string=" ⌙ Colors">
@@ -1081,16 +1091,16 @@
         <we-row class="o_we_theme_colors_selector">
             <we-colorpicker data-name="color_1_opt" title="Primary"
                             data-customize-website-color="" data-color="o-color-1"
-                            data-use-css-color="true"/>
+                            data-use-css-color="true" data-selected-tab="custom-colors"/>
             <we-colorpicker data-name="color_2_opt" title="Secondary"
                             data-customize-website-color="" data-color="o-color-2"
-                            data-use-css-color="true"/>
+                            data-use-css-color="true" data-selected-tab="custom-colors"/>
             <we-colorpicker data-customize-website-color="" data-color="o-color-3"
-                            data-use-css-color="true"/>
+                            data-use-css-color="true" data-selected-tab="custom-colors"/>
             <we-colorpicker data-customize-website-color="" data-color="o-color-4"
-                            data-use-css-color="true"/>
+                            data-use-css-color="true" data-selected-tab="custom-colors"/>
             <we-colorpicker data-customize-website-color="" data-color="o-color-5"
-                            data-use-css-color="true"/>
+                            data-use-css-color="true" data-selected-tab="custom-colors"/>
             <we-select data-icon="fa-lightbulb-o" class="o_we_theme_colors_select" data-variable="color-palettes-name"/>
         </we-row>
     </div>
@@ -1205,10 +1215,10 @@
         </we-collapse>
 
         <we-row string="Status Colors">
-            <we-colorpicker title="Success" data-customize-website-color="" data-color-type="theme" data-color="success"/>
-            <we-colorpicker title="Info" data-customize-website-color="" data-color-type="theme" data-color="info"/>
-            <we-colorpicker title="Warning" data-customize-website-color="" data-color-type="theme" data-color="warning"/>
-            <we-colorpicker title="Error" data-customize-website-color="" data-color-type="theme" data-color="danger"/>
+            <we-colorpicker title="Success" data-customize-website-color="" data-color-type="theme" data-color="success" data-selected-tab="custom-colors"/>
+            <we-colorpicker title="Info" data-customize-website-color="" data-color-type="theme" data-color="info" data-selected-tab="custom-colors"/>
+            <we-colorpicker title="Warning" data-customize-website-color="" data-color-type="theme" data-color="warning" data-selected-tab="custom-colors"/>
+            <we-colorpicker title="Error" data-customize-website-color="" data-color-type="theme" data-color="danger" data-selected-tab="custom-colors"/>
         </we-row>
         <we-collapse>
             <we-row string="Grays" class="o_we_gray_preview o_we_collapse_toggler">

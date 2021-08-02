@@ -17,14 +17,18 @@
         'portal',
         'social_media',
         'auth_signup',
+        'mail',
+        'google_recaptcha',
     ],
     'installable': True,
     'data': [
-        'data/ir_asset.xml',
-        'data/website_data.xml',
-        'data/website_visitor_cron.xml',
+        # security.xml first, data.xml need the group to exist (checking it)
         'security/website_security.xml',
         'security/ir.model.access.csv',
+        'data/ir_asset.xml',
+        'data/mail_mail_data.xml',
+        'data/website_data.xml',
+        'data/website_visitor_cron.xml',
         'data/digest_data.xml',
         'views/assets.xml',
         'views/website_templates.xml',
@@ -80,6 +84,7 @@
         'views/snippets/s_dynamic_snippet.xml',
         'views/snippets/s_dynamic_snippet_carousel.xml',
         'views/snippets/s_embed_code.xml',
+        'views/snippets/s_website_form.xml',
         'views/website_views.xml',
         'views/website_visitor_views.xml',
         'views/res_config_settings_views.xml',
@@ -87,6 +92,7 @@
         'views/ir_actions_views.xml',
         'views/ir_asset_views.xml',
         'views/ir_attachment_views.xml',
+        'views/ir_model_views.xml',
         'views/res_partner_views.xml',
         'wizard/base_language_install_views.xml',
         'wizard/website_robots.xml',
@@ -104,7 +110,6 @@
             ('replace', 'web/static/src/legacy/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
             'website/static/src/scss/website.scss',
             'website/static/src/scss/website.ui.scss',
-            'website/static/src/js/set_view_track.js',
             'website/static/src/js/utils.js',
             'website/static/src/js/content/website_root.js',
             'website/static/src/js/widgets/fullscreen_indication.js',
@@ -177,6 +182,7 @@
             'website/static/src/snippets/s_dynamic_snippet/options.js',
             'website/static/src/snippets/s_dynamic_snippet_carousel/options.js',
             'website/static/src/snippets/s_embed_code/options.js',
+            'website/static/src/snippets/s_website_form/options.js',
             'website/static/src/js/editor/wysiwyg.js',
             'website/static/src/js/editor/widget_link.js',
             'website/static/src/js/widgets/media.js',
@@ -188,6 +194,7 @@
             'web/static/src/legacy/scss/ace.scss',
             'website/static/src/scss/website.editor.ui.scss',
             'website/static/src/scss/website.theme_install.scss',
+            'website/static/src/js/form_editor_registry.js',
             'website/static/src/js/menu/content.js',
             'website/static/src/js/menu/customize.js',
             'website/static/src/js/menu/debug_manager.js',
@@ -196,6 +203,7 @@
             'website/static/src/js/menu/new_content.js',
             'website/static/src/js/menu/seo.js',
             'website/static/src/js/menu/translate.js',
+            'website/static/src/js/set_view_track.js',
             'website/static/src/js/tours/homepage.js',
             'website/static/src/js/tours/tour_utils.js',
             'website/static/src/js/widgets/ace.js',
@@ -216,7 +224,6 @@
             'http://test.external.link/style2.css',
         ],
         'website.website_configurator_assets_js': [
-            '/web/static/lib/owl/owl.js',
             '/website/static/src/components/configurator/configurator.js',
         ],
         'website.website_configurator_assets_scss': [
@@ -225,5 +232,6 @@
             '/website/static/src/scss/website.theme_install.scss',
             '/website/static/src/scss/website.wysiwyg.scss'
         ]
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -47,5 +47,6 @@ following:
         'web.assets_qweb': [
             'pos_mercury/static/src/xml/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

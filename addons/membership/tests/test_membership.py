@@ -64,7 +64,7 @@ class TestMembership(TestMembershipCommon):
         # payment process
         payment = self.env['account.payment'].create({
             'destination_account_id': invoice.line_ids.account_id.filtered(lambda account: account.internal_type == 'receivable').id,
-            'payment_method_id': self.env['account.payment.method'].search([], limit=1).id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
             'payment_type': 'inbound',
             'partner_type': 'customer',
             'partner_id': invoice.partner_id.id,
@@ -124,7 +124,8 @@ class TestMembership(TestMembershipCommon):
         payment = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
             .create({
-                'amount': 86.25
+                'amount': 86.25,
+                'payment_method_line_id': self.inbound_payment_method_line.id,
             })\
             ._create_payments()
 

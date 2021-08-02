@@ -126,5 +126,6 @@ Master Data:
         'web.assets_backend': [
             'l10n_ar/static/src/**/*',
         ],
-    }
+    },
+    'license': 'LGPL-3',
 }

@@ -12,6 +12,7 @@ import { userService } from "@web/core/user_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 import { click, getFixture, patchWithCleanup } from "../helpers/utils";
+import { session } from "@web/session";
 
 const { mount } = owl;
 const serviceRegistry = registry.category("services");
@@ -22,7 +23,7 @@ let userMenu;
 
 QUnit.module("UserMenu", {
     async beforeEach() {
-        patchWithCleanup(odoo.session_info, { name: "Sauron" });
+        patchWithCleanup(session, { name: "Sauron" });
         serviceRegistry.add("user", userService);
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("ui", uiService);

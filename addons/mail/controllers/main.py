@@ -23,7 +23,7 @@ class MailController(http.Controller):
     @classmethod
     def _redirect_to_messaging(cls):
         url = '/web#%s' % url_encode({'action': 'mail.action_discuss'})
-        return werkzeug.utils.redirect(url)
+        return request.redirect(url)
 
     @classmethod
     def _check_token(cls, token):
@@ -106,7 +106,7 @@ class MailController(http.Controller):
         record_action.pop('target_type', None)
         # the record has an URL redirection: use it directly
         if record_action['type'] == 'ir.actions.act_url':
-            return werkzeug.utils.redirect(record_action['url'])
+            return request.redirect(record_action['url'])
         # other choice: act_window (no support of anything else currently)
         elif not record_action['type'] == 'ir.actions.act_window':
             return cls._redirect_to_messaging()
@@ -124,7 +124,7 @@ class MailController(http.Controller):
         if cids:
             url_params['cids'] = ','.join([str(cid) for cid in cids])
         url = '/web?#%s' % url_encode(url_params)
-        return werkzeug.utils.redirect(url)
+        return request.redirect(url)
 
     @http.route('/mail/read_followers', type='json', auth='user')
     def read_followers(self, res_model, res_id):
@@ -261,11 +261,8 @@ class MailController(http.Controller):
             'channel_slots': request.env['mail.channel'].channel_fetch_slot(),
             'mail_failures': request.env['mail.message'].message_fetch_failed(),
             'commands': request.env['mail.channel'].get_mention_commands(),
-            'mention_partner_suggestions': request.env['res.partner'].get_static_mention_suggestions(),
             'shortcodes': request.env['mail.shortcode'].sudo().search_read([], ['source', 'substitution', 'description']),
             'menu_id': request.env['ir.model.data'].xmlid_to_res_id('mail.menu_root_discuss'),
-            'moderation_counter': request.env.user.moderation_counter,
-            'moderation_channel_ids': request.env.user.moderation_channel_ids.ids,
             'partner_root': request.env.ref('base.partner_root').sudo().mail_partner_format(),
             'public_partners': [partner.mail_partner_format() for partner in request.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id],
             'current_partner': request.env.user.partner_id.mail_partner_format(),
