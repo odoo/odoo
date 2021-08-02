@@ -410,6 +410,74 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
+    QUnit.test("test display_notification client action with links", async function (assert) {
+        assert.expect(8);
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+        assert.containsOnce(webClient, ".o_kanban_view");
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "display_notification",
+            params: {
+                title: "title",
+                message: "message %s <R&D>",
+                sticky: true,
+                links: [{
+                    label: "test <R&D>",
+                    url: '#action={action.id}&id={order.id}&model=purchase.order',
+                }],
+            },
+        });
+        const notificationSelector = ".o_notification_manager .o_notification";
+        assert.containsOnce(
+            document.body,
+            notificationSelector,
+            "a notification should be present"
+        );
+        let notificationElement = document.body.querySelector(notificationSelector);
+        assert.strictEqual(
+            notificationElement.querySelector(".o_notification_title").textContent,
+            "title",
+            "the notification should have the correct title"
+        );
+        assert.strictEqual(
+            notificationElement.querySelector(".o_notification_content").textContent,
+            "message test <R&D> <R&D>",
+            "the notification should have the correct message"
+        );
+        assert.containsOnce(webClient, ".o_kanban_view");
+        await testUtils.dom.click(notificationElement.querySelector(".o_notification_close"));
+        assert.containsNone(
+            document.body,
+            notificationSelector,
+            "the notification should be destroy "
+        );
+
+        // display_notification without title
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "display_notification",
+            params: {
+                message: "message %s <R&D>",
+                sticky: true,
+                links: [{
+                    label: "test <R&D>",
+                    url: '#action={action.id}&id={order.id}&model=purchase.order',
+                }],
+            },
+        });
+        assert.containsOnce(
+            document.body,
+            notificationSelector,
+            "a notification should be present"
+        );
+        notificationElement = document.body.querySelector(notificationSelector);
+        assert.containsNone(
+            notificationElement, ".o_notification_title",
+            "the notification should not have title"
+        );
+    });
+
     QUnit.test("test next action on display_notification client action", async function (assert) {
         const webClient = await createWebClient({ serverData });
         const options = {
