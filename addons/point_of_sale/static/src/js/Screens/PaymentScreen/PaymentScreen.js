@@ -195,7 +195,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 );
                 if (!result) {
                     await this.showPopup('ErrorPopup', {
-                        title: 'Error: no internet connection.',
+                        title: this.env._t('Error: no internet connection.'),
                         // FIXME: the variable 'error' is not declared
                         // eslint-disable-next-line no-undef
                         body: error,

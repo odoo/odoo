@@ -5,6 +5,7 @@ odoo.define('point_of_sale.EditListPopup', function(require) {
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
     const { useAutoFocusToLast } = require('point_of_sale.custom_hooks');
+    const { _t } = require('web.core');
 
     /**
      * Given a array of { id, text }, we show the user this popup to be able to modify this given array.
@@ -93,8 +94,8 @@ odoo.define('point_of_sale.EditListPopup', function(require) {
     }
     EditListPopup.template = 'EditListPopup';
     EditListPopup.defaultProps = {
-        confirmText: 'Ok',
-        cancelText: 'Cancel',
+        confirmText: _t('Ok'),
+        cancelText: _t('Cancel'),
         array: [],
         isSingleItem: false,
     };

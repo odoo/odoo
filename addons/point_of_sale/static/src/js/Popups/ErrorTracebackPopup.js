@@ -3,6 +3,7 @@ odoo.define('point_of_sale.ErrorTracebackPopup', function(require) {
 
     const ErrorPopup = require('point_of_sale.ErrorPopup');
     const Registries = require('point_of_sale.Registries');
+    const { _t } = require('web.core');
 
     // formerly ErrorTracebackPopupWidget
     class ErrorTracebackPopup extends ErrorPopup {
@@ -29,12 +30,12 @@ odoo.define('point_of_sale.ErrorTracebackPopup', function(require) {
     }
     ErrorTracebackPopup.template = 'ErrorTracebackPopup';
     ErrorTracebackPopup.defaultProps = {
-        confirmText: 'Ok',
-        cancelText: 'Cancel',
-        title: 'Error with Traceback',
+        confirmText: _t('Ok'),
+        cancelText: _t('Cancel'),
+        title: _t('Error with Traceback'),
         body: '',
         exitButtonIsShown: false,
-        exitButtonText: 'Exit Pos',
+        exitButtonText: _t('Exit Pos'),
         exitButtonTrigger: 'close-pos'
     };
 

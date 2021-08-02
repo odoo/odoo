@@ -4,6 +4,7 @@ odoo.define('point_of_sale.TextAreaPopup', function(require) {
     const { useState, useRef } = owl.hooks;
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
+    const { _t } = require('web.core');
 
     // formerly TextAreaPopupWidget
     // IMPROVEMENT: This code is very similar to TextInputPopup.
@@ -27,8 +28,8 @@ odoo.define('point_of_sale.TextAreaPopup', function(require) {
     }
     TextAreaPopup.template = 'TextAreaPopup';
     TextAreaPopup.defaultProps = {
-        confirmText: 'Ok',
-        cancelText: 'Cancel',
+        confirmText: _t('Ok'),
+        cancelText: _t('Cancel'),
         title: '',
         body: '',
     };
