@@ -51,6 +51,7 @@ function factory(dependencies) {
          * @returns {mail.thread|undefined}
          */
         _computeThread() {
+<<<<<<< HEAD
             if (this.res_id) {
                 return insert({
                     id: this.res_id,
@@ -58,6 +59,19 @@ function factory(dependencies) {
                 });
             }
             return unlink();
+=======
+            const notificationsThreadIds = this.notifications
+                  .filter(notification => notification.message && notification.message.originThread)
+                  .map(notification => notification.message.originThread.id);
+            const threadIds = new Set(notificationsThreadIds);
+            if (threadIds.size !== 1) {
+                return [['unlink']];
+            }
+            return [['insert', {
+                id: notificationsThreadIds[0],
+                model: this.res_model,
+            }]];
+>>>>>>> bc6e11cbaf0... temp
         }
 
         /**
@@ -65,6 +79,32 @@ function factory(dependencies) {
          */
         static _createRecordLocalId(data) {
             return `${this.modelName}_${data.id}`;
+        }
+
+        /**
+         * Compute the most recent date inside the notification messages.
+         *
+         * @private
+         * @returns {moment|undefined}
+         */
+         _computeDate() {
+            const dates = this.notifications
+                    .filter(notification => notification.message && notification.message.date)
+                    .map(notification => notification.message.date);
+            if (dates.length === 0) {
+                return [['clear']];
+            }
+            return moment.max(dates);
+        }
+
+        /**
+         * Compute the position of the group inside the notification list.
+         *
+         * @private
+         * @returns {number}
+         */
+        _computeSequence() {
+            return -Math.max(...this.notifications.map(notification => notification.message.id));
         }
 
         /**
@@ -97,23 +137,68 @@ function factory(dependencies) {
     }
 
     NotificationGroup.fields = {
+<<<<<<< HEAD
         date: attr(),
         id: attr({
             required: true,
         }),
+=======
+        /**
+         * States the most recent date of all the notification message.
+         */
+        date: attr({
+            compute: '_computeDate',
+            dependencies: [
+                'notifications',
+                'notificationsMessage',
+                'notificationsMessageDate',
+            ],
+        }),
+        id: attr(),
+>>>>>>> bc6e11cbaf0... temp
         notification_type: attr(),
         notifications: one2many('mail.notification'),
-        res_id: attr(),
+        /**
+         * Serves as compute dependency.
+         */
+         notificationsMessage: one2many('mail.message', {
+            related: 'notifications.message',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        notificationsMessageDate: attr({
+            related: 'notificationsMessage.date',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        notificationsMessageOriginThread: one2many('mail.thread', {
+            related: 'notificationsMessage.originThread',
+        }),
         res_model: attr(),
         res_model_name: attr(),
+        /**
+         * States the position of the group inside the notification list.
+         */
+        sequence: attr({
+            compute: '_computeSequence',
+            default: 0,
+            dependencies: [
+                'notifications',
+                'notificationsMessage',
+            ],
+        }),
         /**
          * Related thread when the notification group concerns a single thread.
          */
         thread: many2one('mail.thread', {
             compute: '_computeThread',
             dependencies: [
-                'res_id',
                 'res_model',
+                'notifications',
+                'notificationsMessage',
+                'notificationsMessageOriginThread',
             ],
         })
     };

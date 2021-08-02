@@ -124,7 +124,12 @@ class MockModels {
                     attachment_ids: { string: "Attachments", type: 'many2many', relation: 'ir.attachment', default: [] },
                     author_id: { string: "Author", type: 'many2one', relation: 'res.partner', default() { return this.currentPartnerId; } },
                     body: { string: "Contents", type: 'html', default: "<p></p>" },
+<<<<<<< HEAD
                     date: { string: "Date", type: 'datetime' },
+=======
+                    channel_ids: { string: "Channels", type: 'many2many', relation: 'mail.channel' },
+                    date: { string: "Date", type: 'datetime', default() { return moment.utc().format("YYYY-MM-DD HH:mm:ss"); } },
+>>>>>>> bc6e11cbaf0... temp
                     email_from: { string: "From", type: 'char' },
                     history_partner_ids: { string: "Partners with History", type: 'many2many', relation: 'res.partner' },
                     id: { string: "Id", type: 'integer' },

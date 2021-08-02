@@ -32,6 +32,7 @@ function factory(dependencies) {
                     res_model: thread.model,
                     res_model_name: thread.model_name,
                 });
+<<<<<<< HEAD
                 group.update({ notifications: link(notification) });
                 // keep res_id only if all notifications are for the same record
                 // set null if multiple records are present in the group
@@ -52,6 +53,9 @@ function factory(dependencies) {
                     date,
                     res_id,
                 });
+=======
+                group.update({ notifications: [['link', notification]] });
+>>>>>>> bc6e11cbaf0... temp
                 // avoid linking the same group twice when adding a notification
                 // to an existing group
                 if (!groups.includes(group)) {
