@@ -71,14 +71,13 @@
                 <form string="Manufacturing Orders">
                 <header>
                     <field name="confirm_cancel" invisible="1"/>
-                    <field name="confirm_no_consumption" invisible="1"/>
                     <field name="show_lock" invisible="1"/>
-                    <button name="button_mark_done" attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'cancel', 'done', 'to_close')), ('qty_producing', '=', 0), ('confirm_no_consumption', '=', False)]}" string="Validate" type="object" class="oe_highlight"
+                    <button name="button_mark_done" attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'cancel', 'done', 'to_close')), ('qty_producing', '=', 0), ('move_raw_ids', '!=', [])]}" string="Validate" type="object" class="oe_highlight"
                             confirm="There are no components to consume. Are you still sure you want to continue?" data-hotkey="g"/>
-                    <button name="button_mark_done" attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'cancel', 'done', 'to_close')), ('qty_producing', '=', 0), ('confirm_no_consumption', '=', True)]}" string="Validate" type="object" class="oe_highlight" data-hotkey="g"/>
+                    <button name="button_mark_done" attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'cancel', 'done', 'to_close')), ('qty_producing', '=', 0), ('move_raw_ids', '=', [])]}" string="Validate" type="object" class="oe_highlight" data-hotkey="g"/>
                     <button name="button_mark_done" attrs="{'invisible': [
                         '|',
-                        ('confirm_no_consumption', '=', True),
+                        ('move_raw_ids', '=', []),
                         '&amp;',
                         '|',
                         ('state', 'not in', ('confirmed', 'progress')),
@@ -86,7 +85,7 @@
                         ('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight" data-hotkey="g"/>
                     <button name="button_mark_done" attrs="{'invisible': [
                         '|',
-                        ('confirm_no_consumption', '=', False),
+                        ('move_raw_ids', '!=', []),
                         '&amp;',
                         '|',
                         ('state', 'not in', ('confirmed', 'progress')),
