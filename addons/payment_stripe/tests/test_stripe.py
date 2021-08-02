@@ -27,6 +27,3 @@ class StripeTest(StripeCommon):
 
         self.assertEqual(processing_values['publishable_key'], self.stripe.stripe_publishable_key)
         self.assertEqual(processing_values['session_id'], dummy_session_id)
-
-    def test_validation_amount(self):
-        self.assertEqual(self.stripe._get_validation_amount(), 1.0)

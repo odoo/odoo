@@ -27,18 +27,6 @@ class PaymentAcquirer(models.Model):
              "authenticate the messages sent from Stripe to Odoo.",
         groups='base.group_system')
 
-    def _get_validation_amount(self):
-        """ Override of payment to return the amount for Stripe validation operations.
-
-        :return: The validation amount
-        :rtype: float
-        """
-        res = super()._get_validation_amount()
-        if self.provider != 'stripe':
-            return res
-
-        return 1.0
-
     def _stripe_make_request(self, endpoint, payload=None, method='POST', offline=False):
         """ Make a request to Stripe API at the specified endpoint.
 

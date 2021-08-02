@@ -116,7 +116,8 @@ class PaymentTransaction(models.Model):
         else:  # 'validation'
             # {CHECKOUT_SESSION_ID} is a template filled by Stripe when the Session is created
             return_url = f'{urls.url_join(base_url, StripeController._validation_return_url)}' \
-                         f'?reference={urls.url_quote_plus(self.reference)}&checkout_session_id={{CHECKOUT_SESSION_ID}}'
+                         f'?reference={urls.url_quote_plus(self.reference)}' \
+                         f'&checkout_session_id={{CHECKOUT_SESSION_ID}}'
             checkout_session = self.acquirer_id._stripe_make_request(
                 'checkout/sessions', payload={
                     **common_session_values,
