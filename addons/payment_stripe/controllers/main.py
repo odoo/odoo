@@ -82,40 +82,40 @@ class StripeController(http.Controller):
         """
         event = json.loads(request.httprequest.data)
         _logger.info("event received:\n%s", pprint.pformat(event))
-        if event['type'] == 'checkout.session.completed':
-            checkout_session = event['data']['object']
+        try:
+            if event['type'] == 'checkout.session.completed':
+                checkout_session = event['data']['object']
 
-            # Check the source and integrity of the event
-            data = {'reference': checkout_session['client_reference_id']}
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
-                'stripe', data
-            )
-            if self._verify_webhook_signature(tx_sudo.acquirer_id.stripe_webhook_secret):
-                if checkout_session.get('payment_intent'):  # Can be None
+                # Check the source and integrity of the event
+                data = {'reference': checkout_session['client_reference_id']}
+                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+                    'stripe', data
+                )
+                if self._verify_webhook_signature(tx_sudo.acquirer_id.stripe_webhook_secret):
                     # Fetch the PaymentIntent, Charge and PaymentMethod objects from Stripe
-                    payment_intent = tx_sudo.acquirer_id._stripe_make_request(
-                        f'payment_intents/{tx_sudo.stripe_payment_intent}', method='GET'
-                    )
-                    _logger.info(
-                        "received payment_intents response:\n%s", pprint.pformat(payment_intent)
-                    )
-                    self._include_payment_intent_in_feedback_data(payment_intent, data)
-                if checkout_session.get('setup_intent'):  # Can be None
+                    if checkout_session.get('payment_intent'):  # Can be None
+                        payment_intent = tx_sudo.acquirer_id._stripe_make_request(
+                            f'payment_intents/{tx_sudo.stripe_payment_intent}', method='GET'
+                        )
+                        _logger.info(
+                            "received payment_intents response:\n%s", pprint.pformat(payment_intent)
+                        )
+                        self._include_payment_intent_in_feedback_data(payment_intent, data)
                     # Fetch the SetupIntent and PaymentMethod objects from Stripe
-                    setup_intent = tx_sudo.acquirer_id._stripe_make_request(
-                        f'setup_intents/{checkout_session.get("setup_intent")}',
-                        payload={'expand[]': 'payment_method'},
-                        method='GET'
-                    )
-                    _logger.info(
-                        "received setup_intents response:\n%s", pprint.pformat(setup_intent)
-                    )
-                    self._include_setup_intent_in_feedback_data(setup_intent, data)
-                try:
+                    if checkout_session.get('setup_intent'):  # Can be None
+                        setup_intent = tx_sudo.acquirer_id._stripe_make_request(
+                            f'setup_intents/{checkout_session.get("setup_intent")}',
+                            payload={'expand[]': 'payment_method'},
+                            method='GET'
+                        )
+                        _logger.info(
+                            "received setup_intents response:\n%s", pprint.pformat(setup_intent)
+                        )
+                        self._include_setup_intent_in_feedback_data(setup_intent, data)
                     # Handle the feedback data crafted with Stripe API objects as a regular feedback
                     request.env['payment.transaction'].sudo()._handle_feedback_data('stripe', data)
-                except ValidationError:  # Acknowledge the notification to avoid getting spammed
-                    _logger.exception("unable to handle the event data; skipping to acknowledge")
+        except ValidationError:  # Acknowledge the notification to avoid getting spammed
+            _logger.exception("unable to handle the event data; skipping to acknowledge")
         return ''
 
     @staticmethod
