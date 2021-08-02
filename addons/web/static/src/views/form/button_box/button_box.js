@@ -9,7 +9,15 @@ class ButtonBoxDropdown extends Dropdown {
     setup() {
         super.setup();
         useEffect(
-            () => this.props.redrawButtons(this.state.open),
+            () => {
+                this.props.redrawButtons(this.state.open);
+                const toggler = this.el.querySelector(".o_dropdown_toggler");
+                if (this.state.open) {
+                    toggler.setAttribute("aria-expanded", "true");
+                } else {
+                    toggler.removeAttribute("aria-expanded");
+                }
+            },
             () => [this.state.open]
         );
     }
