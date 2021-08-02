@@ -541,6 +541,22 @@
         </xpath>
     </template>
 
+    <template id="filter_products_price" inherit_id="website_sale.products" active="False" customize_show="True" name="Filter by Prices">
+        <xpath expr="//div[@id='products_grid_before']" position="before">
+            <t t-set="enable_left_column" t-value="True"/>
+        </xpath>
+        <xpath expr="//div[@id='products_grid_before']" position="inside">
+            <div t-if="available_min_price != available_max_price" id="o_wsale_price_range_option">
+                <label>Price</label>
+                <input type="range" multiple="multiple" class="custom-range range-with-input"
+                       t-att-data-currency="pricelist.currency_id.symbol"
+                       t-att-data-currency-position="pricelist.currency_id.position"
+                       t-att-step="pricelist.currency_id.rounding" t-att-min="'%f' % (available_min_price)"
+                       t-att-max="'%f' % (available_max_price)" t-att-value="'%f,%f' % (min_price, max_price)"/>
+            </div>
+        </xpath>
+    </template>
+
     <template id="products_list_view" inherit_id="website_sale.products" active="False" customize_show="True" name="List View (by default)">
         <xpath expr="//div[@id='products_grid']" position="after">
             <!-- Nothing to do, this view is only meant to allow the server -->
