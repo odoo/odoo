@@ -1168,7 +1168,7 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
         unitEl.textContent = unit;
         this.containerEl.appendChild(unitEl);
         if (unit.length > 3) {
-            this.el.classList.add('o_we_large_input');
+            this.el.classList.add('o_we_large');
         }
     },
 
@@ -1706,7 +1706,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
         await this._super(...arguments);
 
         const datetimePickerId = _.uniqueId('datetimepicker');
-        this.el.classList.add('o_we_large_input');
+        this.el.classList.add('o_we_large');
         this.inputEl.classList.add('datetimepicker-input', 'mx-0', 'text-left');
         this.inputEl.setAttribute('id', datetimePickerId);
         this.inputEl.setAttribute('data-target', '#' + datetimePickerId);
@@ -2412,7 +2412,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
 
         if (this.options.createMethod) {
             this.createInput = new InputUserValueWidget(this, undefined, {
-                classes: ['o_we_large_input'],
+                classes: ['o_we_large'],
                 dataAttributes: { noPreview: 'true' },
             }, this.$target);
             this.createButton = new ButtonUserValueWidget(this, undefined, {
