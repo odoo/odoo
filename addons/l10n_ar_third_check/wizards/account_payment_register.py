@@ -15,9 +15,9 @@ class AccountPaymentRegister(models.TransientModel):
     third_check_issuer_vat = fields.Char(store=True, compute='_compute_third_check_data', readonly=False)
     third_check_issuer_name = fields.Char(compute='_compute_third_check_issuer_name', store=True, readonly=False)
 
-    @api.depends('payment_method_id.code', 'partner_id')
+    @api.depends('payment_method_line_id.code', 'partner_id')
     def _compute_third_check_data(self):
-        new_third_checks = self.filtered(lambda x: x.payment_method_id.code == 'new_third_checks')
+        new_third_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_checks')
         (self - new_third_checks).update({'third_check_bank_id': False, 'third_check_issuer_vat': False, 'third_check_issue_date': False})
         for rec in new_third_checks:
             rec.update({
@@ -38,7 +38,7 @@ class AccountPaymentRegister(models.TransientModel):
 
     @api.depends('payment_method_code', 'payment_type')
     def _compute_third_check_from_state(self):
-        moved_third_checks = self.filtered(lambda x: x.payment_method_id.code in ['in_third_checks', 'out_third_checks'])
+        moved_third_checks = self.filtered(lambda x: x.payment_method_line_id.code in ['in_third_checks', 'out_third_checks'])
         (self - moved_third_checks).third_check_from_state = False
         for rec in moved_third_checks:
             from_state, to_state  = self.env['account.payment']._get_checks_states_model(

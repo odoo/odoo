@@ -15,7 +15,7 @@ class AccountPaymentMassTransfer(models.TransientModel):
         if self._context.get('active_model') != 'account.payment':
             raise UserError(_("The register payment wizard should only be called on account.payment records."))
         payments = self.env['account.payment'].browse(self._context.get('active_ids', []))
-        checks = payments.filtered(lambda x: x.payment_method_id.code == 'new_third_checks')
+        checks = payments.filtered(lambda x: x.payment_method_line_id.code == 'new_third_checks')
         if not all(check.state == '12312' for check in checks):
             raise UserError(_("All the selected check must be on "" state."))
 

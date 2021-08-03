@@ -11,6 +11,6 @@ class AccountMove(models.Model):
         res = super().button_draft()
         for rec in self.filtered(
                 lambda x: x.payment_id and x.payment_id.state != 'cancel' and
-                x.payment_id.payment_method_id.code in ['new_third_checks', 'in_third_checks', 'out_third_checks']):
+                x.payment_id.payment_method_line_id.code in ['new_third_checks', 'in_third_checks', 'out_third_checks']):
             rec.payment_id._cancel_third_check_operation()
         return res
