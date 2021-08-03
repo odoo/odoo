@@ -146,9 +146,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
     @freeze_time('2020-01-15')
     def test_out_invoice_onchange_invoice_date(self):
         for tax_date, invoice_date, accounting_date in [
-            ('2019-03-31', '2019-05-12', '2020-01-15'),
+            ('2019-03-31', '2019-05-12', '2019-05-12'),
             ('2019-03-31', '2019-02-10', '2020-01-15'),
-            ('2019-05-31', '2019-06-15', '2020-01-15'),
+            ('2019-05-31', '2019-06-15', '2019-06-15'),
         ]:
             self.invoice.company_id.tax_lock_date = tax_date
             with Form(self.invoice) as move_form:
