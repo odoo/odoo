@@ -208,6 +208,7 @@ export class View extends Component {
             info: { actionMenus, mode: this.props.display.mode },
             arch,
             fields,
+            fieldsView: viewDescription[type],
             resModel,
             useSampleModel: false,
         };

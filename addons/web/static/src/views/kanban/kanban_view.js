@@ -8,6 +8,7 @@ import { useModel } from "../../views/helpers/model";
 import { FieldParser } from "../helpers/view_utils";
 import { RelationalModel } from "../relational_model";
 import { KanbanRenderer } from "./kanban_renderer";
+import { useViewButtons } from "../view_button/hook";
 
 const KANBAN_BOX_ATTRIBUTE = "kanban-box";
 const TRANSPILED_EXPRESSIONS = [
@@ -121,6 +122,7 @@ class KanbanView extends owl.Component {
             relations: this.archInfo.relations,
             activeFields: this.archInfo.fields,
         });
+        useViewButtons(this.model);
     }
 }
 
