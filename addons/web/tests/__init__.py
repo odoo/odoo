@@ -11,3 +11,4 @@ from . import test_load_menus
 from . import test_profiler
 from . import test_session_info
 from . import test_read_progress_bar
+from . import test_assets
