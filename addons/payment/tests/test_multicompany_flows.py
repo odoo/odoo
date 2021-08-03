@@ -51,7 +51,6 @@ class TestMultiCompanyFlows(PaymentMultiCompanyCommon, PaymentHttpCommon):
             'flow': 'direct',
             'payment_option_id': self.acquirer_company_b.id,
             'tokenization_requested': False,
-            'validation_route': False,
         })
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = self.get_processing_values(**validation_values)

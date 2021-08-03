@@ -151,8 +151,6 @@
                                      enables the token assignation mechanisms: creation of a new
                                      token through a refunded transaction and assignation of an
                                      existing token
-            - 'validation_route' - The route the user is redirected to in order to refund the
-                                   validation transaction
             - 'landing_route' - The route the user is redirected to at then end of the flow
             - 'footer_template_id' - The template id for the submit button. Optional
         -->
@@ -164,7 +162,6 @@
               t-att-data-invoice-id="invoice_id"
               t-att-data-transaction-route="transaction_route"
               t-att-data-assign-token-route="assign_token_route"
-              t-att-data-validation-route="validation_route"
               t-att-data-landing-route="landing_route"
               t-att-data-allow-token-selection="bool(assign_token_route)">
             <t t-set="acquirer_count" t-value="len(acquirers) if acquirers else 0"/>
