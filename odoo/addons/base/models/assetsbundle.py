@@ -22,7 +22,7 @@ except ImportError:
 from odoo import SUPERUSER_ID
 from odoo.http import request
 from odoo.modules.module import get_resource_path
-from odoo.tools import func, misc, transpile_javascript, is_odoo_module, SourceMapGenerator
+from odoo.tools import func, misc, transpile_javascript, is_odoo_module, SourceMapGenerator, profiler
 from odoo.tools.misc import html_escape as escape
 from odoo.tools.pycompat import to_text
 
@@ -1016,6 +1016,7 @@ class ScssStylesheetAsset(PreprocessedCSS):
             return super(ScssStylesheetAsset, self).compile(source)
 
         try:
+            profiler.force_hook()
             return libsass.compile(
                 string=source,
                 include_paths=[

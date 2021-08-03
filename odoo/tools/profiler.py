@@ -59,6 +59,18 @@ def make_session(name=''):
     return f'{datetime.datetime.now():%Y-%m-%d %H:%M:%S} {name}'
 
 
+def force_hook():
+    """
+    Force periodic profiling collectors to generate some stack trace.  This is
+    useful before long calls that do not release the GIL, so that the time
+    spent in those calls is attributed to a specific stack trace, instead of
+    some arbitrary former frame.
+    """
+    thread = threading.current_thread()
+    for func in getattr(thread, 'profile_hooks', ()):
+        func()
+
+
 class Collector:
     """
     Base class for objects that collect profiling data.
@@ -187,11 +199,18 @@ class PeriodicCollector(Collector):
         interval = self.profiler.params.get('traces_async_interval')
         if interval:
             self.frame_interval = min(max(float(interval), 0.001), 1)
+
+        init_thread = self.profiler.init_thread
+        if not hasattr(init_thread, 'profile_hooks'):
+            init_thread.profile_hooks = []
+        init_thread.profile_hooks.append(self.add)
+
         self.thread.start()
 
     def stop(self):
         self.active = False
         self.thread.join()
+        self.profiler.init_thread.profile_hooks.remove(self.add)
 
     def add(self, entry=None, frame=None):
         """ Add an entry (dict) to this collector. """
