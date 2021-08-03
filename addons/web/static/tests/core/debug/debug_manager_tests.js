@@ -22,7 +22,7 @@ const { xml } = tags;
 
 export class DebugMenuParent extends Component {
     setup() {
-        useOwnDebugContext({ categories: ["default"] });
+        useOwnDebugContext({ categories: ["default", "custom"] });
     }
 }
 DebugMenuParent.template = xml`<DebugMenu/>`;
@@ -116,6 +116,52 @@ QUnit.module("DebugMenu", (hooks) => {
             click(item);
         }
         assert.verifySteps(["callback item_2", "callback item_1", "callback item_3"]);
+    });
+
+    QUnit.test("items are sorted by sequence regardless of category", async (assert) => {
+        debugRegistry
+            .category("default")
+            .add("item_1", () => {
+                return {
+                    type: "item",
+                    description: "Item 4",
+                    sequence: 4,
+                };
+            })
+            .add("item_2", () => {
+                return {
+                    type: "item",
+                    description: "Item 1",
+                    sequence: 1,
+                };
+            });
+        debugRegistry
+            .category("custom")
+            .add("item_1", () => {
+                return {
+                    type: "item",
+                    description: "Item 3",
+                    sequence: 3,
+                };
+            })
+            .add("item_2", () => {
+                return {
+                    type: "item",
+                    description: "Item 2",
+                    sequence: 2,
+                };
+            });
+        const env = await makeTestEnv(testConfig);
+        const debugManager = await mount(DebugMenuParent, { env, target });
+        registerCleanup(() => debugManager.destroy());
+        await click(debugManager.el.querySelector("button.o_dropdown_toggler"));
+        const items = [
+            ...debugManager.el.querySelectorAll("ul.o_dropdown_menu li.o_dropdown_item span"),
+        ];
+        assert.deepEqual(
+            items.map((el) => el.textContent),
+            ["Item 1", "Item 2", "Item 3", "Item 4"]
+        );
     });
 
     QUnit.test("Don't display the DebugMenu if debug mode is disabled", async (assert) => {
