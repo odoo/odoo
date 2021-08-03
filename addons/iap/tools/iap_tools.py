@@ -136,13 +136,14 @@ class IapTransaction(object):
         self.credit = None
 
 
-def iap_authorize(env, key, account_token, credit, dbuuid=False, description=None, credit_template=None):
+def iap_authorize(env, key, account_token, credit, dbuuid=False, description=None, credit_template=None, ttl=4320):
     endpoint = iap_get_endpoint(env)
     params = {
         'account_token': account_token,
         'credit': credit,
         'key': key,
         'description': description,
+        'ttl': ttl,
     }
     if dbuuid:
         params.update({'dbuuid': dbuuid})
@@ -179,7 +180,7 @@ def iap_capture(env, transaction_token, key, credit):
 
 
 @contextlib.contextmanager
-def iap_charge(env, key, account_token, credit, dbuuid=False, description=None, credit_template=None):
+def iap_charge(env, key, account_token, credit, dbuuid=False, description=None, credit_template=None, ttl=4320):
     """
     Account charge context manager: takes a hold for ``credit``
     amount before executing the body, then captures it if there
@@ -195,9 +196,12 @@ def iap_charge(env, key, account_token, credit, dbuuid=False, description=None, 
     :param credit_template: a QWeb template to render and show to the
                             user if their account does not have enough
                             credits for the requested operation
+    :param int ttl: transaction time to live in hours.
+                    If the credit are not captured when the transaction
+                    expires, the transaction is canceled
     :type credit_template: str
     """
-    transaction_token = iap_authorize(env, key, account_token, credit, dbuuid, description, credit_template)
+    transaction_token = iap_authorize(env, key, account_token, credit, dbuuid, description, credit_template, ttl)
     try:
         transaction = IapTransaction()
         transaction.credit = credit
