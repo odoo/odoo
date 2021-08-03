@@ -62,6 +62,12 @@ const PopupWidget = publicWidget.Widget.extend({
     /**
      * @private
      */
+    _canShowPopup() {
+        return true;
+    },
+    /**
+     * @private
+     */
     _hidePopup: function () {
         this.$target.find('.modal').modal('hide');
     },
@@ -69,7 +75,7 @@ const PopupWidget = publicWidget.Widget.extend({
      * @private
      */
     _showPopup: function () {
-        if (this._popupAlreadyShown) {
+        if (this._popupAlreadyShown || !this._canShowPopup()) {
             return;
         }
         this.$target.find('.modal').modal('show');

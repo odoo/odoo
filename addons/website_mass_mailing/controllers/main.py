@@ -3,7 +3,6 @@
 
 from odoo import _
 from odoo.http import route, request
-from odoo.osv import expression
 from odoo.addons.mass_mailing.controllers import main
 
 
@@ -46,35 +45,7 @@ class MassMailController(main.MassMailController):
             subscription.opt_out = False
         # add email to session
         request.session['mass_mailing_email'] = email
-        mass_mailing_list = request.env['mailing.list'].sudo().browse(list_id)
         return {
             'toast_type': 'success',
-            'toast_content': mass_mailing_list.toast_content
+            'toast_content': _("Thanks for subscribing!"),
         }
-
-    @route(['/website_mass_mailing/get_content'], type='json', website=True, auth="public")
-    def get_mass_mailing_content(self, newsletter_id, **post):
-        PopupModel = request.env['website.mass_mailing.popup'].sudo()
-        data = self.is_subscriber(newsletter_id, **post)
-        domain = expression.AND([request.website.website_domain(), [('mailing_list_id', '=', newsletter_id)]])
-        mass_mailing_popup = PopupModel.search(domain, limit=1)
-        if mass_mailing_popup:
-            data['popup_content'] = mass_mailing_popup.popup_content
-        else:
-            data.update(PopupModel.default_get(['popup_content']))
-        return data
-
-    @route(['/website_mass_mailing/set_content'], type='json', website=True, auth="user")
-    def set_mass_mailing_content(self, newsletter_id, content, **post):
-        PopupModel = request.env['website.mass_mailing.popup']
-        domain = expression.AND([request.website.website_domain(), [('mailing_list_id', '=', newsletter_id)]])
-        mass_mailing_popup = PopupModel.search(domain, limit=1)
-        if mass_mailing_popup:
-            mass_mailing_popup.write({'popup_content': content})
-        else:
-            PopupModel.create({
-                'mailing_list_id': newsletter_id,
-                'popup_content': content,
-                'website_id': request.website.id,
-            })
-        return True
