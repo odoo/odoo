@@ -2198,6 +2198,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                     timer: zoomDelay,
                     attach: '.o_content',
                     attachToTarget: true,
+                    disabledOnMobile: false,
                     onShow: function () {
                         var zoomHeight = Math.ceil(this.$zoom.height());
                         var zoomWidth = Math.ceil(this.$zoom.width());
