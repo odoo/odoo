@@ -51,26 +51,34 @@
 </template>
 
 <template id="s_newsletter_subscribe_popup" name="Newsletter Popup">
-    <div class="o_newsletter_popup o_snippet_invisible" data-list-id="0"/>
-</template>
-
-<template id="s_newsletter_subscribe_popup_content" name="Newsletter Popup Content">
-    <section class="s_text_block oe_img_bg o_bg_img_center pt88 pb64" data-snippet="s_text_block"
-             style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 0 100%;">
-        <div class="container s_allow_columns">
-            <h1 style="text-align: center;">Always <b>First</b>.</h1>
-            <p style="text-align: center;">Be the first to find out all the latest news,<br/> products, and trends.</p>
-        </div>
-    </section>
-    <section class="s_text_block" data-snippet="s_text_block">
-        <div class="container">
-            <div class="row s_nb_column_fixed no-gutters">
-                <div class="col-lg-8 offset-lg-2 pt32 pb32">
-                    <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form"/>
+    <div class="s_popup o_newsletter_popup o_snippet_invisible" data-name="Newsletter Popup" data-vcss="001" data-invisible="1">
+        <div class="modal fade s_popup_middle o_newsletter_modal"
+             style="background-color: var(--black-50) !important;"
+             data-show-after="5000" data-display="afterDelay" data-consents-duration="7"
+             data-focus="false" data-backdrop="false" tabindex="-1" role="dialog">
+            <div class="modal-dialog d-flex">
+                <div class="modal-content oe_structure">
+                    <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">&#215;</div>
+                    <section class="s_text_block oe_img_bg o_bg_img_center pt88 pb64" data-snippet="s_text_block" data-name="Text"
+                             style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 0 100%;">
+                        <div class="container s_allow_columns">
+                            <h1 style="text-align: center;">Always <b>First</b>.</h1>
+                            <p style="text-align: center;">Be the first to find out all the latest news,<br/> products, and trends.</p>
+                        </div>
+                    </section>
+                    <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+                        <div class="container">
+                            <div class="row s_nb_column_fixed no-gutters">
+                                <div class="col-lg-8 offset-lg-2 pt32 pb32">
+                                    <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form"/>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 </template>
 
 <template id="newsletter_subscribe_options" name="Newsletter Subscribe Options" inherit_id="website.snippet_options">
@@ -78,8 +86,7 @@
     <xpath expr="//div" position="after">
         <t t-set="selector" t-value="'.js_subscribe'"/>
         <div data-js="mailing_list_subscribe"
-            t-att-data-selector="selector"
-            t-attf-data-exclude=".o_newsletter_modal #{selector}">
+            t-att-data-selector="selector">
             <we-button data-select_mailing_list="" data-no-preview="true">Change Newsletter</we-button>
         </div>
         <div data-js="recaptchaSubscribe"
@@ -88,10 +95,6 @@
             <we-checkbox t-if="recaptcha_public_key" string="Show reCaptcha Policy" data-toggle-recaptcha-legal="" data-no-preview="true"/>
         </div>
         <div t-att-data-selector="selector" data-drop-near="p, h1, h2, h3, blockquote, .card"/>
-        <div data-js="newsletter_popup"
-            data-selector=".o_newsletter_popup">
-            <we-button data-select_mailing_list="" data-no-preview="true">Change Newsletter</we-button>
-        </div>
     </xpath>
     <xpath expr="//div[@data-js='anchor']" position="attributes">
         <attribute name="data-exclude" add=".o_newsletter_popup" separator=","/>
