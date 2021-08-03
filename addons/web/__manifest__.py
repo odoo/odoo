@@ -276,7 +276,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/widgets/week_days.js',
             'web/static/src/legacy/js/widgets/signature.js',
             'web/static/src/legacy/js/widgets/attach_document.js',
-            'web/static/src/legacy/js/apps.js',
             'web/static/src/legacy/js/env.js',
             'web/static/src/legacy/js/model.js',
             'web/static/src/legacy/js/owl_compatibility.js',
