@@ -61,8 +61,12 @@ class DebugContext {
 }
 
 const debugContextSymbol = Symbol("debugContext");
+export function createDebugContext(env, { categories = [] } = {}) {
+    return { [debugContextSymbol]: new DebugContext(env, categories) };
+}
+
 export function useOwnDebugContext({ categories = [] } = {}) {
-    useSubEnv({ [debugContextSymbol]: new DebugContext(useEnv(), categories) });
+    useSubEnv(createDebugContext(useEnv(), { categories }));
 }
 
 export function useCurrentDebugContext() {
