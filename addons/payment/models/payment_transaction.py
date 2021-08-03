@@ -83,9 +83,6 @@ class PaymentTransaction(models.Model):
     tokenize = fields.Boolean(
         string="Create Token",
         help="Whether a payment token should be created when post-processing the transaction")
-    validation_route = fields.Char(
-        string="Validation Route",
-        help="The route the user is redirected to in order to refund a validation transaction")
     landing_route = fields.Char(
         string="Landing Route",
         help="The route the user is redirected to after the transaction")
@@ -425,15 +422,15 @@ class PaymentTransaction(models.Model):
 
         # Render the html form for the redirect flow if available
         if self.operation in ('online_redirect', 'validation'):
-            rendering_values = self._get_specific_rendering_values(processing_values)
-            _logger.info(
-                "acquirer-specific rendering values for transaction with id %s:\n%s",
-                self.id, pprint.pformat(rendering_values)
-            )
             redirect_form_view = self.acquirer_id._get_redirect_form_view(
                 is_validation=self.operation == 'validation'
             )
             if redirect_form_view:  # Some acquirer don't need a redirect form
+                rendering_values = self._get_specific_rendering_values(processing_values)
+                _logger.info(
+                    "acquirer-specific rendering values for transaction with id %s:\n%s",
+                    self.id, pprint.pformat(rendering_values)
+                )
                 redirect_form_html = redirect_form_view._render(rendering_values, engine='ir.qweb')
                 processing_values.update(redirect_form_html=redirect_form_html)
 
@@ -677,8 +674,8 @@ class PaymentTransaction(models.Model):
     def _send_refund_request(self):
         """ Request the provider of the acquirer handling the transaction to refund it.
 
-        For an acquirer to support tokenization, it must override this method and request a refund
-        to its provider *if the validation amount is not null*.
+        For an acquirer to support refunds, it must override this method and request a refund
+        to its provider.
 
         Note: self.ensure_one()
 
@@ -744,9 +741,7 @@ class PaymentTransaction(models.Model):
             'currency_code': self.currency_id.name,
             'state': self.state,
             'state_message': self.state_message,
-            'is_validation': self.operation == 'validation',
             'is_post_processed': self.is_post_processed,
-            'validation_route': self.validation_route,
             'landing_route': self.landing_route,
         }
         _logger.debug(
