@@ -45,7 +45,7 @@ class MrpUnbuild(models.Model):
         states={'done': [('readonly', True)]}, check_company=True)
     mo_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',
-        domain="[('state', '=', 'done'), ('company_id', '=', company_id), ('product_id', '=?', product_id)]",
+        domain="[('state', '=', 'done'), ('company_id', '=', company_id), ('product_id', '=?', product_id), ('bom_id', '=?', bom_id)]",
         states={'done': [('readonly', True)]}, check_company=True)
     mo_bom_id = fields.Many2one('mrp.bom', 'Bill of Material used on the Production Order', related='mo_id.bom_id')
     lot_id = fields.Many2one(
