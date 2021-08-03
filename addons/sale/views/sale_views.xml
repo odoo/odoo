@@ -307,6 +307,16 @@
                                                     'readonly': [('product_updatable', '=', False)],
                                                     'required': [('display_type', '=', False)],
                                                 }"
+                                                groups="product.group_product_variant"
+                                                force_save="1"
+                                               />
+                                            <field name="product_template_id"
+                                                context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                                                attrs="{
+                                                    'readonly': [('product_updatable', '=', False)],
+                                                    'required': [('display_type', '=', False)],
+                                                }"
+                                                groups="!product.group_product_variant"
                                                 force_save="1"
                                                />
                                             <field name="invoice_status" invisible="1"/>
