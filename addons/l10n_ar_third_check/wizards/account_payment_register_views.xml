@@ -13,7 +13,7 @@
                 <attribute name="attrs">{'readonly': [('payment_method_code', 'in', ['in_third_checks', 'out_third_checks'])]}</attribute>
                 <attribute name="force_save">1</attribute>
             </xpath>
-            <field name="payment_method_id" position="after">
+            <field name="payment_method_line_id" position="after">
 
                 <!-- <div class="o_row" attrs="{'invisible': ['|', ('check_type', '=', False), '|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}"> -->
                     <field
