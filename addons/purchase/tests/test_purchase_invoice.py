@@ -275,3 +275,27 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         self.assertEqual(len(amls), 2)
         self.assertEqual(amls[0].amount_currency, 1000)
         self.assertEqual(amls[1].amount_currency, 500)
+
+    def test_product_price_decimal_accuracy(self):
+        self.env['ir.model.data'].xmlid_to_object('product.decimal_price').digits = 3
+        self.env.company.currency_id.rounding = 0.01
+
+        po = self.env['purchase.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_qty': 12,
+                'product_uom': self.product_a.uom_id.id,
+                'price_unit': 0.001,
+                'taxes_id': False,
+            })]
+        })
+        po.button_confirm()
+        po.order_line.qty_received = 12
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
+        move = move_form.save()
+
+        self.assertEqual(move.amount_total, 0.01)
