@@ -9,6 +9,7 @@
                 <div class="pos-branding" t-if= "!env.isMobile">
                     <img class="pos-logo" t-on-click="trigger('toggle-debug-widget')"
                          src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
+                    <CashMoveButton t-if="showCashMoveButton()" />
                     <TicketButton isTicketScreenShown="isTicketScreenShown" />
                 </div>
                 <div class="pos-rightheader">
