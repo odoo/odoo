@@ -56,13 +56,15 @@ export class ProjectSharingWebClient extends Component {
     }
 
     async _showView() {
-        const { action_name, project_id } = session;
+        const { action_name, project_id, can_edit } = session;
         await this.actionService.doAction(
             action_name,
             {
                 clearBreadcrumbs: true,
                 additionalContext: {
                     active_id: project_id,
+                    create: can_edit,
+                    edit: can_edit,
                 }
             }
         );
