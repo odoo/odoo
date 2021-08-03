@@ -37,22 +37,26 @@ export class FieldX2Many extends Component {
 
     setup() {
         const viewMode = this.props.viewMode || ["list"];
-        const { arch, fields } = this.props.archs[viewMode[0]];
-        this.fields = fields;
-        const parentRecord = this.props.record;
-        const fieldName = this.props.name;
-        const field = parentRecord.fields[fieldName];
-        const modelName = field.relation;
+        // To remove when we can discriminate between in list view or in formView
+        // Also, make a loadViews if archs is passed but not set
+        if ("archs" in this.props) {
+            const { arch, fields } = this.props.archs[viewMode[0]] || {};
+            if (!arch) {
+                return;
+            }
+            this.fields = fields;
+            this.record = this.props.record.data[this.props.name];
+            this.record.viewType = viewMode[0];
 
-        this.archInfo = new ListArchParser().parse(arch, fields);
-        this.model = useModel(RelationalModel, {
-            resModel: modelName,
-            fields: fields,
-            resIds: parentRecord.data[fieldName],
-            activeFields: this.archInfo.columns.map((col) => col.name),
-            parentRecord,
-        });
-        this.Renderer = ListRenderer;
+            this.archInfo = new ListArchParser().parse(arch, fields);
+            this.Renderer = ListRenderer;
+        }
+    }
+
+    willStart() {
+        if (this.record) {
+            return this.record.load();
+        }
     }
 }
 

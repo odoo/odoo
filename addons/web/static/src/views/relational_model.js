@@ -112,12 +112,21 @@ class DataPoint {
     /**
      * @param {RelationalModel} model
      */
-    constructor(model) {
+    constructor(parent, model) {
+        this.parent = parent;
         this.id = DataRecord.nextId++;
         this.model = model;
-        this.fields = model.fields;
         this.requestBatcher = model.requestBatcher;
         model.db[this.id] = this;
+        this.data = null;
+    }
+
+    get hasData() {
+        return !!this.data;
+    }
+
+    get fields() {
+        return this.parent ? this.parent.fields : this.model.fields;
     }
 }
 
@@ -129,11 +138,10 @@ class DataRecord extends DataPoint {
      * @param {string} resModel
      * @param {number} resId
      */
-    constructor(model, resModel, resId) {
-        super(model);
+    constructor(parent, model, resModel, resId) {
+        super(parent, model);
         this.resModel = resModel;
         this.resId = resId;
-        this.data = {};
     }
 
     /**
@@ -145,8 +153,11 @@ class DataRecord extends DataPoint {
     async load(params = {}) {
         // Record data
         const { relations } = this.model;
-        const fields = params.fields || this.model.activeFields;
+        const fields = params.fields || Object.keys(this.fields);
         let { rawRecord } = params;
+        if (!fields.length) {
+            return;
+        }
         if (!rawRecord) {
             const rawRecords = await this.requestBatcher.read(this.resModel, [this.resId], fields);
             rawRecord = rawRecords[0];
@@ -156,10 +167,7 @@ class DataRecord extends DataPoint {
         // Relational data
         const getRelatedFields = (field) => Object.keys(relations[field.relation] || {});
         const promises = Object.entries(this.fields)
-            .filter(
-                ([fieldName, field]) =>
-                    fieldName in this.data && isRelational(field) && getRelatedFields(field).length
-            )
+            .filter(([fieldName, field]) => fieldName in this.data && isRelational(field))
             .map(([fieldName, field]) =>
                 this.loadRelationalField(field.relation, fieldName, getRelatedFields(field))
             );
@@ -169,7 +177,8 @@ class DataRecord extends DataPoint {
 
     async loadRelationalField(resModel, fieldName, fields) {
         const resIds = this.data[fieldName];
-        this.data[fieldName] = this.model.createList(resModel);
+        const views = this.fields[fieldName].views;
+        this.data[fieldName] = this.model.createList(this, resModel, views);
         await this.data[fieldName].load({ resIds, fields });
     }
 }
@@ -179,12 +188,32 @@ class DataList extends DataPoint {
      * @param {RelationalModel} model
      * @param {string} resModel
      */
-    constructor(model, resModel) {
-        super(model);
+    constructor(parent, model, resModel, views) {
+        super(parent, model);
         this.resModel = resModel;
-        this.data = [];
+        this.data = null;
+        this.views = views;
+        this._viewType = null;
     }
 
+    get hasData() {
+        return super.hasData && this.data.length;
+    }
+
+    get fields() {
+        if (this.viewType) {
+            return this.views[this.viewType].fields;
+        }
+        return super.fields;
+    }
+
+    get viewType() {
+        return this._viewType;
+    }
+
+    set viewType(viewType) {
+        this._viewType = viewType === "list" ? "tree" : viewType;
+    }
     /**
      * @param {any} [params={}]
      * @param {any[]} [params.domain]
@@ -192,20 +221,29 @@ class DataList extends DataPoint {
      * @returns {Promise<DataList>}
      */
     async load(params = {}) {
-        this.domain = params.domain;
-        const fields = params.fields || this.model.activeFields;
-        const rawRecords = params.resIds
-            ? params.resIds.map((id) => ({ id }))
-            : await this.requestBatcher.searchRead(this.resModel, this.domain, fields, {
-                  limit: 40,
-              });
-        this.data = await Promise.all(
-            rawRecords.map(async (rawRecord) => {
-                const record = this.model.createRecord(this.resModel, rawRecord.id);
-                await record.load(params.resIds ? { fields } : { rawRecord });
-                return record;
-            })
-        );
+        if (this.hasData && this.data[0].hasData) {
+            //records have been loaded
+            return;
+        }
+        const fields = params.fields || Object.keys(this.fields);
+
+        if (!this.hasData) {
+            this.domain = params.domain;
+            const rawRecords = params.resIds
+                ? params.resIds.map((id) => ({ id }))
+                : await this.requestBatcher.searchRead(this.resModel, this.domain, fields, {
+                      limit: 40,
+                  });
+            this.data = await Promise.all(
+                rawRecords.map(async (rawRecord) => {
+                    const record = this.model.createRecord(this, this.resModel, rawRecord.id);
+                    await record.load(params.resIds ? { fields: fields } : { rawRecord });
+                    return record;
+                })
+            );
+        } else {
+            await Promise.all(this.data.map((dp) => dp.load({ fields })));
+        }
     }
 }
 
@@ -232,9 +270,9 @@ export class RelationalModel extends Model {
             this.resId = params.resId;
         }
         if (this.resId) {
-            this.root = this.createRecord(this.resModel, this.resId);
+            this.root = this.createRecord(null, this.resModel, this.resId);
         } else if (this.type === "list") {
-            this.root = this.createList(this.resModel);
+            this.root = this.createList(null, this.resModel);
         }
         await this.keepLast.add(this.root.load(params));
         this.notify();
@@ -255,12 +293,12 @@ export class RelationalModel extends Model {
         });
     }
 
-    createRecord(resModel, resId) {
-        return this.get({ resModel, resId }) || new DataRecord(this, resModel, resId);
+    createRecord(parent, resModel, resId) {
+        return this.get({ resModel, resId }) || new DataRecord(parent, this, resModel, resId);
     }
 
-    createList(resModel) {
-        return new DataList(this, resModel);
+    createList(parent, resModel, views) {
+        return new DataList(parent, this, resModel, views);
     }
 }
 

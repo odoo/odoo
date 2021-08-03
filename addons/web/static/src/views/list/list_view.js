@@ -20,10 +20,12 @@ export class ListArchParser extends XMLParser {
                 ) {
                     fieldParser.addField(node, (fieldName) => {
                         const string = node.getAttribute("string") || fields[fieldName].string;
+                        const widget = node.getAttribute("widget") || null;
                         return {
                             type: "field",
                             name: fieldName,
                             string,
+                            widget,
                         };
                     });
                 }
