@@ -40,9 +40,10 @@
                 <div t-if="record.livechat_operator_id.raw_value">
                     Speaking With
                     <div name="livechat_operator_id"
-                         class="o_field_many2one_avatar o_field_widget font-weight-bold float-right d-inline-block">
-                        <img t-attf-src="/web/image/res.partner/#{record.livechat_operator_id.raw_value}/avatar_128"
-                             alt="Operator Avatar" class="o_m2o_avatar"/>
+                        class="font-weight-bold float-right d-inline-block">
+                        <img class="oe_avatar rounded-circle" width="19" height="19"
+                            t-attf-src="/web/image/res.partner/#{record.livechat_operator_id.raw_value}/avatar_128"
+                            alt="Operator Avatar"/>
                         <field name="livechat_operator_name"/>
                     </div>
                 </div>
@@ -58,10 +59,11 @@
                     <div>Chats</div>
                 </div>
                 <div class="col mx-2">
-                    <div t-if="record.livechat_operator_id.raw_value"
-                         class="o_field_many2one_avatar o_field_widget font-weight-bold" name="livechat_operator_id">
-                        <img t-attf-src="/web/image/res.partner/#{record.livechat_operator_id.raw_value}/avatar_128"
-                             alt="Operator Avatar" class="o_m2o_avatar"/>
+                    <div t-if="record.livechat_operator_id.raw_value" class="font-weight-bold">
+                        <img name="livechat_operator_id"
+                            class="oe_avatar rounded-circle" width="19" height="19"
+                            t-attf-src="/web/image/res.partner/#{record.livechat_operator_id.raw_value}/avatar_128"
+                            alt="Operator Avatar"/>
                         <field name="livechat_operator_name"/>
                     </div>
                     <div t-if="record.livechat_operator_id.raw_value">Speaking With</div>
