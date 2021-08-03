@@ -157,10 +157,10 @@ function factory(dependencies) {
                 return;
             }
             const otherChatWindow = chatWindows[index + 1];
-            const _newOrdered = [...this._ordered];
-            _newOrdered[index] = otherChatWindow.localId;
-            _newOrdered[index + 1] = chatWindow.localId;
-            this.update({ _ordered: _newOrdered });
+            const _newOrdered = [...this.allOrdered];
+            _newOrdered[index] = otherChatWindow;
+            _newOrdered[index + 1] = chatWindow;
+            this.update({ allOrdered: replace(_newOrdered) });
             chatWindow.focus();
         }
 
@@ -178,10 +178,10 @@ function factory(dependencies) {
                 return;
             }
             const otherChatWindow = chatWindows[index - 1];
-            const _newOrdered = [...this._ordered];
-            _newOrdered[index] = otherChatWindow.localId;
-            _newOrdered[index - 1] = chatWindow.localId;
-            this.update({ _ordered: _newOrdered });
+            const _newOrdered = [...this.allOrdered];
+            _newOrdered[index] = otherChatWindow;
+            _newOrdered[index - 1] = chatWindow;
+            this.update({ allOrdered: replace(_newOrdered) });
             chatWindow.focus();
         }
 
@@ -196,10 +196,10 @@ function factory(dependencies) {
             if (index1 === -1 || index2 === -1) {
                 return;
             }
-            const _newOrdered = [...this._ordered];
-            _newOrdered[index1] = chatWindow2.localId;
-            _newOrdered[index2] = chatWindow1.localId;
-            this.update({ _ordered: _newOrdered });
+            const _newOrdered = [...this.allOrdered];
+            _newOrdered[index1] = chatWindow2;
+            _newOrdered[index2] = chatWindow1;
+            this.update({ allOrdered: replace(_newOrdered) });
         }
 
         //----------------------------------------------------------------------
@@ -208,32 +208,10 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {string[]}
-         */
-        _compute_ordered() {
-            // remove unlinked chatWindows
-            const _ordered = this._ordered.filter(chatWindowLocalId =>
-                this.chatWindows.includes(this.env.models['mail.chat_window'].get(chatWindowLocalId))
-            );
-            // add linked chatWindows
-            for (const chatWindow of this.chatWindows) {
-                if (!_ordered.includes(chatWindow.localId)) {
-                    _ordered.push(chatWindow.localId);
-                }
-            }
-            return _ordered;
-        }
-
-        /**
-         * // FIXME: dependent on implementation that uses arbitrary order in relations!!
-         *
-         * @private
-         * @returns {mail.chat_window}
+         * @returns {mail.chat_window[]}
          */
         _computeAllOrdered() {
-            return replace(this._ordered.map(chatWindowLocalId =>
-                this.env.models['mail.chat_window'].get(chatWindowLocalId)
-            ));
+            return link(this.chatWindows);
         }
 
         /**
@@ -319,11 +297,11 @@ function factory(dependencies) {
          */
         _computeVisual() {
             let visual = JSON.parse(JSON.stringify(BASE_VISUAL));
-            if (!this.env.messaging) {
+            if (!this.messaging) {
                 return visual;
             }
-            const device = this.env.messaging.device;
-            const discuss = this.env.messaging.discuss;
+            const device = this.messaging.device;
+            const discuss = this.messaging.discuss;
             const BETWEEN_GAP_WIDTH = 5;
             const CHAT_WINDOW_WIDTH = 325;
             const END_GAP_WIDTH = device.isMobile ? 0 : 10;
@@ -386,96 +364,45 @@ function factory(dependencies) {
 
     ChatWindowManager.fields = {
         /**
-         * List of ordered chat windows (list of local ids)
+         * List of ordered chat windows.
          */
-        _ordered: attr({
-            compute: '_compute_ordered',
-            default: [],
-            dependencies: [
-                'chatWindows',
-            ],
-        }),
-        // FIXME: dependent on implementation that uses arbitrary order in relations!!
         allOrdered: one2many('mail.chat_window', {
             compute: '_computeAllOrdered',
-            dependencies: [
-                '_ordered',
-            ],
-        }),
-        allOrderedThread: one2many('mail.thread', {
-            related: 'allOrdered.thread',
         }),
         allOrderedHidden: one2many('mail.chat_window', {
             compute: '_computeAllOrderedHidden',
-            dependencies: ['visual'],
-        }),
-        allOrderedHiddenThread: one2many('mail.thread', {
-            related: 'allOrderedHidden.thread',
-        }),
-        allOrderedHiddenThreadMessageUnreadCounter: attr({
-            related: 'allOrderedHiddenThread.localMessageUnreadCounter',
         }),
         allOrderedVisible: one2many('mail.chat_window', {
             compute: '_computeAllOrderedVisible',
-            dependencies: ['visual'],
         }),
         chatWindows: one2many('mail.chat_window', {
             inverse: 'manager',
             isCausal: true,
         }),
-        device: one2one('mail.device', {
-            related: 'messaging.device',
-        }),
-        deviceGlobalWindowInnerWidth: attr({
-            related: 'device.globalWindowInnerWidth',
-        }),
-        deviceIsMobile: attr({
-            related: 'device.isMobile',
-        }),
-        discuss: one2one('mail.discuss', {
-            related: 'messaging.discuss',
-        }),
-        discussIsOpen: attr({
-            related: 'discuss.isOpen',
-        }),
         hasHiddenChatWindows: attr({
             compute: '_computeHasHiddenChatWindows',
-            dependencies: ['allOrderedHidden'],
         }),
         hasVisibleChatWindows: attr({
             compute: '_computeHasVisibleChatWindows',
-            dependencies: ['allOrderedVisible'],
         }),
         isHiddenMenuOpen: attr({
             default: false,
         }),
         lastVisible: many2one('mail.chat_window', {
             compute: '_computeLastVisible',
-            dependencies: ['allOrderedVisible'],
         }),
         messaging: one2one('mail.messaging', {
             inverse: 'chatWindowManager',
         }),
         newMessageChatWindow: one2one('mail.chat_window', {
             compute: '_computeNewMessageChatWindow',
-            dependencies: [
-                'allOrdered',
-                'allOrderedThread',
-            ],
         }),
         unreadHiddenConversationAmount: attr({
             compute: '_computeUnreadHiddenConversationAmount',
-            dependencies: ['allOrderedHiddenThreadMessageUnreadCounter'],
         }),
         visual: attr({
             compute: '_computeVisual',
             default: BASE_VISUAL,
-            dependencies: [
-                'allOrdered',
-                'deviceGlobalWindowInnerWidth',
-                'deviceIsMobile',
-                'discussIsOpen',
-            ],
         }),
     };
 

@@ -99,20 +99,12 @@ function factory(dependencies) {
          */
         avatarUrl: attr({
             compute: '_computeAvatarUrl',
-            dependencies: [
-                'partner',
-                'partnerAvatarUrl',
-            ],
         }),
         /**
          * Country of the visitor.
          */
         country: many2one('mail.country', {
             compute: '_computeCountry',
-            dependencies: [
-                'country',
-                'partnerCountry',
-            ],
         }),
         /**
          * Display name of the visitor.
@@ -132,22 +124,11 @@ function factory(dependencies) {
         lang_name: attr(),
         nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
-            dependencies: [
-                'display_name',
-                'partnerNameOrDisplayName',
-            ],
         }),
         /**
          * Partner linked to this visitor, if any.
          */
         partner: many2one('mail.partner'),
-        partnerAvatarUrl: attr({
-            related: 'partner.avatarUrl',
-        }),
-        partnerCountry: many2one('mail.country',{
-            related: 'partner.country',
-        }),
-        partnerNameOrDisplayName: attr({related: 'partner.nameOrDisplayName'}),
         /**
          * Threads with this visitor as member
          */

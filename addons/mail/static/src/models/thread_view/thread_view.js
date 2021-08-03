@@ -4,6 +4,7 @@ import { registerNewModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
 import { clear, create, link, unlink, update } from '@mail/model/model_field_command';
+import { OnChange } from '@mail/model/model_onchange';
 
 function factory(dependencies) {
 
@@ -83,14 +84,6 @@ function factory(dependencies) {
                 selectablePartners: clear(),
                 selectedPartners: clear(),
             });
-        }
-
-        /**
-         * @private
-         * @returns {mail.messaging}
-         */
-        _computeMessaging() {
-            return link(this.env.messaging);
         }
 
         /**
@@ -234,7 +227,6 @@ function factory(dependencies) {
          */
         channelInvitationForm: one2one('mail.channel_invitation_form', {
             compute: '_computeChannelInvitationForm',
-            dependencies: ['thread', 'threadHasInviteFeature'],
             inverse: 'threadView',
             isCausal: true,
             readonly: true,
@@ -262,18 +254,6 @@ function factory(dependencies) {
         }),
         composer: many2one('mail.composer', {
             related: 'thread.composer',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        device: one2one('mail.device', {
-            related: 'messaging.device',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        deviceIsMobile: attr({
-            related: 'device.isMobile',
         }),
         hasComposerFocus: attr({
             related: 'composer.hasFocus',
@@ -324,12 +304,6 @@ function factory(dependencies) {
             related: 'thread.lastMessage',
         }),
         /**
-         * Serves as compute dependency.
-         */
-        lastNonTransientMessage: many2one('mail.message', {
-            related: 'thread.lastNonTransientMessage',
-        }),
-        /**
          * Most recent message in this ThreadView that has been shown to the
          * current partner in the currently displayed thread cache.
          */
@@ -337,39 +311,8 @@ function factory(dependencies) {
         messages: many2many('mail.message', {
             related: 'threadCache.messages',
         }),
-        /**
-         * Serves as compute dependency.
-         */
-        messaging: many2one('mail.messaging', {
-            compute: '_computeMessaging',
-        }),
         nonEmptyMessages: many2many('mail.message', {
             related: 'threadCache.nonEmptyMessages',
-        }),
-        /**
-         * Not a real field, used to trigger `_onThreadCacheChanged` when one of
-         * the dependencies changes.
-         */
-        onThreadCacheChanged: attr({
-            compute: '_onThreadCacheChanged',
-            dependencies: [
-                'threadCache'
-            ],
-            isOnChange: true,
-        }),
-        /**
-         * Not a real field, used to trigger `_onThreadCacheIsLoadingChanged`
-         * when one of the dependencies changes.
-         *
-         * @see `this.isLoading`
-         */
-        onThreadCacheIsLoadingChanged: attr({
-            compute: '_onThreadCacheIsLoadingChanged',
-            dependencies: [
-                'threadCache',
-                'threadCacheIsLoading',
-            ],
-            isOnChange: true,
         }),
         /**
          * Determines the keyboard shortcuts that are available to send a message
@@ -377,12 +320,6 @@ function factory(dependencies) {
          */
         textInputSendShortcuts: attr({
             compute: '_computeTextInputSendShortcuts',
-            dependencies: [
-                'device',
-                'deviceIsMobile',
-                'thread',
-                'threadModel',
-            ],
         }),
         /**
          * Determines the `mail.thread` currently displayed by `this`.
@@ -402,23 +339,9 @@ function factory(dependencies) {
         }),
         threadCacheInitialScrollHeight: attr({
             compute: '_computeThreadCacheInitialScrollHeight',
-            dependencies: [
-                'threadCache',
-                'threadCacheInitialScrollHeights',
-            ],
         }),
         threadCacheInitialScrollPosition: attr({
             compute: '_computeThreadCacheInitialScrollPosition',
-            dependencies: [
-                'threadCache',
-                'threadCacheInitialScrollPositions',
-            ],
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        threadCacheIsLoading: attr({
-            related: 'threadCache.isLoading',
         }),
         /**
          * List of saved initial scroll heights of thread caches.
@@ -435,33 +358,6 @@ function factory(dependencies) {
             related: 'threadViewer.threadCacheInitialScrollPositions',
         }),
         /**
-         * Serves as compute dependency.
-         */
-        threadHasInviteFeature: attr({
-            related: 'thread.hasInviteFeature',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        threadModel: attr({
-            related: 'thread.model',
-        }),
-        /**
-         * Not a real field, used to trigger `thread.markAsSeen` when one of
-         * the dependencies changes.
-         */
-        threadShouldBeSetAsSeen: attr({
-            compute: '_computeThreadShouldBeSetAsSeen',
-            dependencies: [
-                'hasComposerFocus',
-                'lastMessage',
-                'lastNonTransientMessage',
-                'lastVisibleMessage',
-                'threadCache',
-            ],
-            isOnChange: true,
-        }),
-        /**
          * Determines the `mail.thread_viewer` currently managing `this`.
          */
         threadViewer: one2one('mail.thread_viewer', {
@@ -473,13 +369,25 @@ function factory(dependencies) {
          */
         topbar: one2one('mail.thread_view_topbar', {
             compute: '_computeTopBar',
-            dependencies: ['hasTopbar'],
             inverse: 'threadView',
             isCausal: true,
             readonly: true,
         }),
     };
-
+    ThreadView.onChanges = [
+        new OnChange({
+            dependencies: ['threadCache'],
+            methodName: '_onThreadCacheChanged',
+        }),
+        new OnChange({
+            dependencies: ['threadCache.isLoading'],
+            methodName: '_onThreadCacheIsLoadingChanged',
+        }),
+        new OnChange({
+            dependencies: ['hasComposerFocus', 'lastMessage', 'lastNonTransientMessage', 'lastVisibleMessage', 'threadCache'],
+            methodName: '_computeThreadShouldBeSetAsSeen',
+        }),
+    ];
     ThreadView.modelName = 'mail.thread_view';
 
     return ThreadView;

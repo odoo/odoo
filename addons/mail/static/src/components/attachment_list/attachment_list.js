@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { Attachment } from '@mail/components/attachment/attachment';
 
 const { Component } = owl;
@@ -20,20 +20,7 @@ export class AttachmentList extends Component {
                 attachmentLocalIds: 1,
             },
         });
-        useStore(props => {
-            const attachments = this.env.models['mail.attachment'].all().filter(attachment =>
-                props.attachmentLocalIds.includes(attachment.localId)
-            );
-            return {
-                attachments: attachments
-                    ? attachments.map(attachment => attachment.__state)
-                    : undefined,
-            };
-        }, {
-            compareDepth: {
-                attachments: 1,
-            },
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

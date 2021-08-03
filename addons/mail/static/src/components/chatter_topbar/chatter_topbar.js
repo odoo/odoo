@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { FollowButton } from '@mail/components/follow_button/follow_button';
 import { FollowerListMenu } from '@mail/components/follower_list_menu/follower_list_menu';
 
@@ -17,17 +17,7 @@ export class ChatterTopbar extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const chatter = this.env.models['mail.chatter'].get(props.chatterLocalId);
-            const thread = chatter ? chatter.thread : undefined;
-            const threadAttachments = thread ? thread.allAttachments : [];
-            return {
-                areThreadAttachmentsLoaded: thread && thread.areAttachmentsLoaded,
-                chatter: chatter ? chatter.__state : undefined,
-                composerIsLog: chatter && chatter.composer && chatter.composer.isLog,
-                threadAttachmentsAmount: threadAttachments.length,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

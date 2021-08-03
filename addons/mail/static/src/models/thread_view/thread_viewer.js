@@ -127,9 +127,6 @@ function factory(dependencies) {
          */
         threadView: one2one('mail.thread_view', {
             compute: '_computeThreadView',
-            dependencies: [
-                'hasThreadView',
-            ],
             inverse: 'threadViewer',
             isCausal: true,
         }),

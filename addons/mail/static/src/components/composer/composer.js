@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { AttachmentList } from '@mail/components/attachment_list/attachment_list';
 import { ComposerSuggestedRecipientList } from '@mail/components/composer_suggested_recipient_list/composer_suggested_recipient_list';
@@ -43,27 +43,7 @@ export class Composer extends Component {
                 textInputSendShortcuts: 1,
             },
         });
-        useStore(props => {
-            const composer = this.env.models['mail.composer'].get(props.composerLocalId);
-            const thread = composer && composer.thread;
-            return {
-                composer,
-                composerAttachments: composer ? composer.attachments : [],
-                composerCanPostMessage: composer && composer.canPostMessage,
-                composerHasFocus: composer && composer.hasFocus,
-                composerIsLog: composer && composer.isLog,
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                thread,
-                threadChannelType: thread && thread.channel_type, // for livechat override
-                threadDisplayName: thread && thread.displayName,
-                threadModel: thread && thread.model,
-                threadDisplayName: thread && thread.displayName,
-            };
-        }, {
-            compareDepth: {
-                composerAttachments: 1,
-            },
-        });
+        useModels();
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the emoji popover. Useful to include emoji popover as

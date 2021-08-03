@@ -761,7 +761,7 @@ QUnit.test("Mobile: chat window shouldn't open automatically after receiving a n
     });
 
     // simulate receiving a message
-    await afterNextRender(() => this.env.services.rpc({
+    this.env.services.rpc({
         route: '/mail/chat_post',
         params: {
             context: {
@@ -770,7 +770,8 @@ QUnit.test("Mobile: chat window shouldn't open automatically after receiving a n
             message_content: "hu",
             uuid: 'channel-10-uuid',
         },
-    }));
+    });
+    await nextAnimationFrame();
     assert.containsNone(
         document.body,
         '.o_ChatWindow',

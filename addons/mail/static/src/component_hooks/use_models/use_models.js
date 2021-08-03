@@ -2,30 +2,27 @@
 
 import { Listener } from '@mail/model/model_listener';
 
-const { onMounted, onPatched, useComponent } = owl.hooks;
+const { useComponent } = owl.hooks;
 
 /**
- * This hook provides support for executing code after update (render or patch).
- *
- * @param {Object} param0
- * @param {function} param0.func the function to execute after the update.
+ * This hook provides support for automatically re-rendering when used records
+ * or fields changed.
  */
-export function useUpdate({ func }) {
+export function useModels() {
     const component = useComponent();
     const listener = new Listener({
         onChange: () => component.render(),
     });
-    function onUpdate() {
+    const __render = component.__render;
+    component.__render = fiber => {
         if (component.env.modelManager) {
             component.env.modelManager.startListening(listener);
         }
-        func();
+        __render.call(component, fiber);
         if (component.env.modelManager) {
             component.env.modelManager.stopListening(listener);
         }
-    }
-    onMounted(onUpdate);
-    onPatched(onUpdate);
+    };
     const __destroy = component.__destroy;
     component.__destroy = parent => {
         if (component.env.modelManager) {
@@ -33,4 +30,7 @@ export function useUpdate({ func }) {
         }
         __destroy.call(component, parent);
     };
+    if (!component.env.messaging) {
+        component.env.messagingCreatedPromise.then(() => component.render());
+    }
 }

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 
 const { Component } = owl;
 
@@ -12,14 +12,8 @@ export class NotificationAlert extends Component {
      */
     constructor(...args) {
         super(...args);
+        useModels();
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const isMessagingInitialized = this.env.isMessagingInitialized();
-            return {
-                isMessagingInitialized,
-                isNotificationBlocked: this.isNotificationBlocked,
-            };
-        });
     }
 
     //--------------------------------------------------------------------------

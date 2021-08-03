@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { Dialog } from '@mail/components/dialog/dialog';
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { Dialog } from '@mail/components/dialog/dialog';
 
 const { Component } = owl;
 
@@ -15,13 +15,8 @@ export class DialogManager extends Component {
      */
     constructor(...args) {
         super(...args);
+        useModels();
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const dialogManager = this.env.messaging && this.env.messaging.dialogManager;
-            return {
-                dialogManager: dialogManager ? dialogManager.__state : undefined,
-            };
-        });
     }
 
     mounted() {

@@ -132,35 +132,12 @@ function factory(dependencies) {
          */
         date: attr({
             compute: '_computeDate',
-            dependencies: [
-                'notifications',
-                'notificationsMessage',
-                'notificationsMessageDate',
-            ],
         }),
         id: attr({
             required: true,
         }),
         notification_type: attr(),
         notifications: one2many('mail.notification'),
-        /**
-         * Serves as compute dependency.
-         */
-        notificationsMessage: one2many('mail.message', {
-            related: 'notifications.message',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        notificationsMessageDate: attr({
-            related: 'notificationsMessage.date',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        notificationsMessageOriginThread: one2many('mail.thread', {
-            related: 'notificationsMessage.originThread',
-        }),
         res_model: attr(),
         res_model_name: attr(),
         /**
@@ -169,22 +146,12 @@ function factory(dependencies) {
         sequence: attr({
             compute: '_computeSequence',
             default: 0,
-            dependencies: [
-                'notifications',
-                'notificationsMessage',
-            ],
         }),
         /**
          * Related thread when the notification group concerns a single thread.
          */
         thread: many2one('mail.thread', {
             compute: '_computeThread',
-            dependencies: [
-                'res_model',
-                'notifications',
-                'notificationsMessage',
-                'notificationsMessageOriginThread',
-            ],
         })
     };
 

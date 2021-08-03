@@ -501,8 +501,7 @@ QUnit.test('chatter updating', async function (assert) {
             },
         }
     });
-
-    await this.afterEvent({
+    await afterNextRender(() => this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: () => document.querySelector('.o_pager_next').click(),
         message: "should wait until partner 12 thread loaded messages after clicking on next",
@@ -513,7 +512,7 @@ QUnit.test('chatter updating', async function (assert) {
                 threadViewer.thread.id === 12
             );
         },
-    });
+    }));
     assert.containsOnce(
         document.body,
         '.o_Message',

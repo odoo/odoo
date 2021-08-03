@@ -340,43 +340,25 @@ function factory(dependencies) {
         }),
         defaultSource: attr({
             compute: '_computeDefaultSource',
-            dependencies: [
-                'checkSum',
-                'fileType',
-                'id',
-                'url',
-            ],
         }),
         displayName: attr({
             compute: '_computeDisplayName',
-            dependencies: [
-                'filename',
-                'name',
-            ],
         }),
         extension: attr({
             compute: '_computeExtension',
-            dependencies: ['filename'],
         }),
         filename: attr(),
         fileType: attr({
             compute: '_computeFileType',
-            dependencies: [
-                'mimetype',
-                'type',
-                'url',
-            ],
         }),
         id: attr({
             required: true,
         }),
         isLinkedToComposer: attr({
             compute: '_computeIsLinkedToComposer',
-            dependencies: ['composers'],
         }),
         isTextFile: attr({
             compute: '_computeIsTextFile',
-            dependencies: ['fileType'],
         }),
         /**
          * True if an unlink RPC is pending, used to prevent multiple unlink attempts.
@@ -389,16 +371,12 @@ function factory(dependencies) {
         }),
         isViewable: attr({
             compute: '_computeIsViewable',
-            dependencies: [
-                'mimetype',
-            ],
         }),
         /**
          * @deprecated
          */
         mediaType: attr({
             compute: '_computeMediaType',
-            dependencies: ['mimetype'],
         }),
         messages: many2many('mail.message', {
             inverse: 'attachments',
@@ -421,10 +399,6 @@ function factory(dependencies) {
          */
         uploadingAbortController: attr({
             compute: '_computeUploadingAbortController',
-            dependencies: [
-                'isUploading',
-                'uploadingAbortController',
-            ],
         }),
         url: attr(),
     };

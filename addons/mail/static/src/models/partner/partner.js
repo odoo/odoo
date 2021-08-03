@@ -427,14 +427,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {mail.messaging}
-         */
-        _computeMessaging() {
-            return link(this.env.messaging);
-        }
-
-        /**
-         * @private
          * @returns {string|undefined}
          */
         _computeNameOrDisplayName() {
@@ -449,10 +441,6 @@ function factory(dependencies) {
         }),
         avatarUrl: attr({
             compute: '_computeAvatarUrl',
-            dependencies: [
-                'id',
-                'messagingPartnerRoot',
-            ],
         }),
         correspondentThreads: one2many('mail.thread', {
             inverse: 'correspondent',
@@ -462,10 +450,6 @@ function factory(dependencies) {
         display_name: attr({
             compute: '_computeDisplayName',
             default: "",
-            dependencies: [
-                'display_name',
-                'userDisplayName',
-            ],
         }),
         email: attr(),
         failureNotifications: one2many('mail.notification', {
@@ -488,34 +472,15 @@ function factory(dependencies) {
         messagesAsAuthor: one2many('mail.message', {
             inverse: 'author',
         }),
-        /**
-         * Serves as compute dependency.
-         */
-        messaging: many2one('mail.messaging', {
-            compute: '_computeMessaging',
-        }),
-        messagingPartnerRoot: many2one('mail.partner', {
-            related: 'messaging.partnerRoot',
-        }),
         model: attr({
             default: 'res.partner',
         }),
         name: attr(),
         nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
-            dependencies: [
-                'display_name',
-                'name',
-            ],
         }),
         user: one2one('mail.user', {
             inverse: 'partner',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        userDisplayName: attr({
-            related: 'user.display_name',
         }),
     };
 

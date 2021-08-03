@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { AutocompleteInput } from '@mail/components/autocomplete_input/autocomplete_input';
 import { Composer } from '@mail/components/composer/composer';
 import { DiscussMobileMailboxSelection } from '@mail/components/discuss_mobile_mailbox_selection/discuss_mobile_mailbox_selection';
@@ -30,8 +30,8 @@ export class Discuss extends Component {
      */
     constructor(...args) {
         super(...args);
+        useModels();
         useShouldUpdateBasedOnProps();
-        useStore((...args) => this._useStoreSelector(...args));
         this._updateLocalStoreProps();
         /**
          * Reference of the composer. Useful to focus it.
@@ -149,39 +149,6 @@ export class Discuss extends Component {
             this.discuss.thread &&
             this.discuss.thread.counter
         );
-    }
-
-    /**
-     * Returns data selected from the store.
-     *
-     * @private
-     * @param {Object} props
-     * @returns {Object}
-     */
-    _useStoreSelector(props) {
-        const discuss = this.env.messaging && this.env.messaging.discuss;
-        const thread = discuss && discuss.thread;
-        const threadView = discuss && discuss.threadView;
-        const replyingToMessage = discuss && discuss.replyingToMessage;
-        const replyingToMessageOriginThread = replyingToMessage && replyingToMessage.originThread;
-        return {
-            discuss,
-            discussActiveId: discuss && discuss.activeId, // for widget
-            discussActiveMobileNavbarTabId: discuss && discuss.activeMobileNavbarTabId,
-            discussIsAddingChannel: discuss && discuss.isAddingChannel,
-            discussIsAddingChat: discuss && discuss.isAddingChat,
-            discussIsDoFocus: discuss && discuss.isDoFocus,
-            discussReplyingToMessageOriginThreadComposer: replyingToMessageOriginThread && replyingToMessageOriginThread.composer,
-            inbox: this.env.messaging.inbox,
-            isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
-            isMessagingInitialized: this.env.isMessagingInitialized(),
-            replyingToMessage,
-            thread,
-            threadCache: threadView && threadView.threadCache,
-            threadCounter: thread && thread.counter,
-            threadModel: thread && thread.model,
-            threadView,
-        };
     }
 
     //--------------------------------------------------------------------------

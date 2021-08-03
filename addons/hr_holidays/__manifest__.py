@@ -61,7 +61,6 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'web.assets_backend': [
             'hr_holidays/static/src/js/time_off_calendar.js',
             'hr_holidays/static/src/js/leave_stats_widget.js',
-            'hr_holidays/static/src/components/thread_view/thread_view.js',
             'hr_holidays/static/src/models/partner/partner.js',
             'hr_holidays/static/src/scss/time_off.scss',
             'hr_holidays/static/src/components/thread_view/thread_view.scss',

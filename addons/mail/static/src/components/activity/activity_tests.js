@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { Activity } from '@mail/components/activity/activity';
 import { insert } from '@mail/model/model_field_command';
 import {
@@ -972,12 +972,7 @@ QUnit.test('activity click on cancel', async function (assert) {
     class ParentComponent extends Component {
         constructor(...args) {
             super(... args);
-            useStore(props => {
-                const activity = this.env.models['mail.activity'].get(props.activityLocalId);
-                return {
-                    activity: activity ? activity.__state : undefined,
-                };
-            });
+            useModels();
         }
 
         /**
