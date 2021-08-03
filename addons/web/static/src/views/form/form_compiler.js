@@ -536,6 +536,16 @@ export class FormCompiler {
         field.setAttribute("record", `record`);
         field.setAttribute("mode", `props.mode`);
 
+        if ("mode" in node.attributes) {
+            const viewModes = node.getAttribute("mode").split(",");
+            field.setAttribute("viewMode", `${JSON.stringify(viewModes)}`);
+        }
+
+        field.setAttribute(
+            "archs",
+            `"views" in props.fields.${fieldName} and props.fields.${fieldName}.views`
+        );
+
         let widgetName;
         if (node.hasAttribute("widget")) {
             widgetName = node.getAttribute("widget");
