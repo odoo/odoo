@@ -4,7 +4,7 @@ from odoo import Command
 import odoo.tests
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@odoo.tests.tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_account_tour(self):
