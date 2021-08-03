@@ -1159,6 +1159,15 @@ class PosSession(models.Model):
         # self should be single record as this method is only called in the subfunctions of self._validate_session
         return self.currency_id._convert(amount, self.company_id.currency_id, self.company_id, date, round=round)
 
+    def show_cash_register(self):
+        return {
+            'name': _('Cash register for %s') % (self.cash_register_id.name, ),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.bank.statement',
+            'view_mode': 'form',
+            'res_id': self.cash_register_id.id,
+        }
+
     def show_journal_items(self):
         self.ensure_one()
         all_related_moves = self._get_related_account_moves()
@@ -1289,6 +1298,14 @@ class PosSession(models.Model):
                 ) % ', '.join(draft_orders.mapped('name'))
             )
         return True
+
+    def try_cash_in_out(self, _type, amount, reason, extras):
+        sign = 1 if _type == 'in' else -1
+        self.env['cash.box.out']\
+            .with_context({'active_model': 'pos.session', 'active_ids': self.ids})\
+            .create({'amount': sign * amount, 'name': reason})\
+            .run()
+        self.message_post(body='<br/>\n'.join([f"Cash {extras['translatedType']}", f'- Amount: {extras["formattedAmount"]}', f'- Reason: {reason}']))
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
