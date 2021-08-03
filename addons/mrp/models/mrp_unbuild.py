@@ -74,14 +74,16 @@ class MrpUnbuild(models.Model):
         ('done', 'Done')], string='Status', default='draft', index=True)
     allowed_mo_ids = fields.One2many('mrp.production', compute='_compute_allowed_mo_ids')
 
-    @api.depends('company_id', 'product_id')
+    @api.depends('company_id', 'product_id', 'bom_id')
     def _compute_allowed_mo_ids(self):
         for unbuild in self:
             domain = [
                     ('state', '=', 'done'),
                     ('company_id', '=', unbuild.company_id.id)
                 ]
-            if unbuild.product_id:
+            if unbuild.bom_id:
+                domain = expression.AND([domain, [('bom_id', '=', unbuild.bom_id.id)]])
+            elif unbuild.product_id:
                 domain = expression.AND([domain, [('product_id', '=', unbuild.product_id.id)]])
             allowed_mos = self.env['mrp.production'].search_read(domain, ['id'])
             if allowed_mos:
