@@ -266,6 +266,7 @@ export class View extends Component {
             arch,
             fields,
             relatedModels,
+            fieldsView: viewDescription[type],
             resModel,
             useSampleModel: false,
             className: `${this.props.className} o_view_controller o_${this.env.config.viewType}_view`,

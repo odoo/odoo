@@ -13,6 +13,8 @@ export class Field extends Component {
     </div>`;
 
     static getTangibleField(record, type, fieldName) {
+        console.log(arguments);
+        console.trace();
         if (!fieldRegistry.contains(type)) {
             let fields = record.fields;
             type = fields[fieldName].type;

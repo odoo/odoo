@@ -9,7 +9,7 @@ import { FieldParser } from "../helpers/view_utils";
 import { RelationalModel } from "../relational_model";
 import { ListRenderer } from "./list_renderer";
 
-class ListArchParser extends XMLParser {
+export class ListArchParser extends XMLParser {
     parse(arch, fields) {
         const fieldParser = new FieldParser(fields);
         this.visitXML(arch, (node) => {
