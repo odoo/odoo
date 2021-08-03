@@ -178,19 +178,3 @@ class PaymentHttpCommon(PaymentTestUtils, HttpCase):
 
         resp_content = json.loads(response.content)
         return resp_content['result']
-
-    # payment/validation #
-    ######################
-    def portal_validate_transaction(self, tx):
-        """/payment/validation feedback, for a given tx (and its validation_route)
-
-        NOTE: the validation route is restricted to logged users
-
-        If you are not logged in, the route won't be called
-        but it won't raise/log, the response will be a redirection to the login page.
-        """
-        uri = tx.validation_route
-        url = self._build_url(uri)
-        # No params since all GET arguments are already specified in the validation route.
-        # no returned value, validation response = redirect
-        return self._make_http_get_request(url, {})

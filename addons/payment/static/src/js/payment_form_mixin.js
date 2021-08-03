@@ -301,9 +301,8 @@ odoo.define('payment.payment_form_mixin', require => {
                     ? parseInt(this.txContext.invoiceId) : null,
                 'flow': flow,
                 'tokenization_requested': this.txContext.tokenizationRequested,
-                'validation_route': this.txContext.validationRoute
-                    ? this.txContext.validationRoute : null,
                 'landing_route': this.txContext.landingRoute,
+                'is_validation': this.txContext.isValidation,
                 'access_token': this.txContext.accessToken
                     ? this.txContext.accessToken : undefined,
                 'csrf_token': core.csrf_token,

@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import patch
-
 from freezegun import freeze_time
 
 from odoo.tests import tagged
@@ -46,7 +44,6 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
             'flow': flow,
             'payment_option_id': self.acquirer.id,
             'tokenization_requested': False,
-            'validation_route': False,
         })
 
         if flow == 'token':
@@ -140,8 +137,7 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
     # VALIDATION #
     ##############
 
-    # NOTE: not tested as public user because the validation route & flow
-    #   is only available for logged in users.
+    # NOTE: not tested as public user because the validation flow is only available when logged in
 
     # freeze time for consistent singularize_prefix behavior during the test
     @freeze_time("2011-11-02 12:00:21")
@@ -169,10 +165,10 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
             'access_token': tx_context['access_token'],
             'flow': flow,
             'payment_option_id': self.acquirer.id,
-            'tokenization_requested': False,
-            'validation_route': tx_context['validation_route'],
+            'tokenization_requested': True,
             'reference_prefix': tx_context['reference_prefix'],
             'landing_route': tx_context['landing_route'],
+            'is_validation': True,
         }
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = self.get_processing_values(**transaction_values)
@@ -190,23 +186,6 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         self.assertEqual(processing_values['currency_id'], validation_currency.id)
         self.assertEqual(processing_values['partner_id'], self.partner.id)
         self.assertEqual(processing_values['reference'], expected_reference)
-
-        _send_refund_request = type(self.env['payment.transaction'])._send_refund_request
-
-        def do_sthg_on_refund(self):
-            self.state_message = "refund"
-            return _send_refund_request(self)
-        with patch.object(
-            type(self.env['payment.transaction']),
-            '_send_refund_request',
-            do_sthg_on_refund,
-        ):
-            self.portal_validate_transaction(tx_sudo)
-
-        # Request was in another thread (for the request)
-        # We need to invalidate current cache to fetch latest value from db.
-        tx_sudo.invalidate_cache(['state_message'])
-        self.assertEqual(tx_sudo.state_message, 'refund')
 
     def test_51_validation_direct_portal(self):
         self.authenticate(self.portal_user.login, self.portal_user.login)
@@ -327,7 +306,6 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
             'flow': 'direct',
             'payment_option_id': self.acquirer.id,
             'tokenization_requested': False,
-            'validation_route': False,
         })
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = self.get_processing_values(**route_values)
@@ -344,7 +322,6 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
             'flow': 'this flow does not exist',
             'payment_option_id': self.acquirer.id,
             'tokenization_requested': False,
-            'validation_route': 'whatever',
             'reference_prefix': 'whatever',
             'landing_route': 'whatever',
         })

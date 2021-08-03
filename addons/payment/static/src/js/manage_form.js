@@ -208,6 +208,7 @@ odoo.define('payment.manage_form', require => {
             this._disableButton(true); // Disable until it is needed again
             if (flow !== 'token') { // Creation of a new token
                 this.txContext.tokenizationRequested = true;
+                this.txContext.isValidation = true;
                 this._processPayment(provider, paymentOptionId, flow);
             } else if (this.txContext.allowTokenSelection) { // Assignation of a token to a record
                 this._assignToken(paymentOptionId);
