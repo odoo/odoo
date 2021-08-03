@@ -290,8 +290,8 @@ function factory(dependencies) {
         _computeIsCurrentPartnerAuthor() {
             return !!(
                 this.author &&
-                this.messagingCurrentPartner &&
-                this.messagingCurrentPartner === this.author
+                this.env.messaging.currentPartner &&
+                this.env.messaging.currentPartner === this.author
             );
         }
 
@@ -387,14 +387,6 @@ function factory(dependencies) {
         }
 
         /**
-         * @private
-         * @returns {mail.messaging}
-         */
-        _computeMessaging() {
-            return link(this.env.messaging);
-        }
-
-        /**
          * This value is meant to be based on field body which is
          * returned by the server (and has been sanitized before stored into db).
          * Do not use this value in a 't-raw' if the message has been created
@@ -477,14 +469,10 @@ function factory(dependencies) {
          */
         dateFromNow: attr({
             compute: '_computeDateFromNow',
-            dependencies: [
-                'date',
-            ],
         }),
         email_from: attr(),
         failureNotifications: one2many('mail.notification', {
             compute: '_computeFailureNotifications',
-            dependencies: ['notificationsStatus'],
         }),
         id: attr({
             required: true,
@@ -492,10 +480,6 @@ function factory(dependencies) {
         isCurrentPartnerAuthor: attr({
             compute: '_computeIsCurrentPartnerAuthor',
             default: false,
-            dependencies: [
-                'author',
-                'messagingCurrentPartner',
-            ],
         }),
         /**
          * States whether `body` and `subtype_description` contain similar
@@ -520,10 +504,6 @@ function factory(dependencies) {
         isBodyEqualSubtypeDescription: attr({
             compute: '_computeIsBodyEqualSubtypeDescription',
             default: false,
-            dependencies: [
-                'body',
-                'subtype_description',
-            ],
         }),
         /**
          * Determine whether the message has to be considered empty or not.
@@ -532,12 +512,6 @@ function factory(dependencies) {
          */
         isEmpty: attr({
             compute: '_computeIsEmpty',
-            dependencies: [
-                'attachments',
-                'body',
-                'subtype_description',
-                'tracking_value_ids',
-            ],
         }),
         /**
          * States whether `originThread.name` and `subject` contain similar
@@ -549,11 +523,6 @@ function factory(dependencies) {
          */
         isSubjectSimilarToOriginThreadName: attr({
             compute: '_computeIsSubjectSimilarToOriginThreadName',
-            dependencies: [
-                'originThread',
-                'originThreadName',
-                'subject',
-            ],
         }),
         isTemporary: attr({
             default: false,
@@ -595,11 +564,6 @@ function factory(dependencies) {
          */
         isHighlighted: attr({
             compute: '_computeIsHighlighted',
-            dependencies: [
-                'isCurrentPartnerMentioned',
-                'originThread',
-                'originThreadModel',
-            ],
         }),
         /**
          * Determine whether the message is starred. Useful to make it present
@@ -609,46 +573,15 @@ function factory(dependencies) {
             default: false,
         }),
         message_type: attr(),
-        messaging: many2one('mail.messaging', {
-            compute: '_computeMessaging',
-        }),
-        messagingCurrentPartner: many2one('mail.partner', {
-            related: 'messaging.currentPartner',
-        }),
-        messagingHistory: many2one('mail.thread', {
-            related: 'messaging.history',
-        }),
-        messagingInbox: many2one('mail.thread', {
-            related: 'messaging.inbox',
-        }),
-        messagingStarred: many2one('mail.thread', {
-            related: 'messaging.starred',
-        }),
         notifications: one2many('mail.notification', {
             inverse: 'message',
             isCausal: true,
-        }),
-        notificationsStatus: attr({
-            default: [],
-            related: 'notifications.notification_status',
         }),
         /**
          * Origin thread of this message (if any).
          */
         originThread: many2one('mail.thread', {
             inverse: 'messagesAsOriginThread',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        originThreadModel: attr({
-            related: 'originThread.model',
-        }),
-        /**
-         * Serves as compute dependency for isSubjectSimilarToOriginThreadName
-         */
-        originThreadName: attr({
-            related: 'originThread.name',
         }),
         /**
          * This value is meant to be based on field body which is
@@ -658,7 +591,6 @@ function factory(dependencies) {
          */
         prettyBody: attr({
             compute: '_computePrettyBody',
-            dependencies: ['body'],
         }),
         subject: attr(),
         subtype_description: attr(),
@@ -668,15 +600,6 @@ function factory(dependencies) {
          */
         threads: many2many('mail.thread', {
             compute: '_computeThreads',
-            dependencies: [
-                'isHistory',
-                'isNeedaction',
-                'isStarred',
-                'messagingHistory',
-                'messagingInbox',
-                'messagingStarred',
-                'originThread',
-            ],
             inverse: 'messages',
         }),
         tracking_value_ids: attr({

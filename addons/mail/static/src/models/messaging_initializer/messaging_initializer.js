@@ -193,8 +193,8 @@ function factory(dependencies) {
                 );
                 // implicit: failures are sent by the server at initialization
                 // only if the current partner is author of the message
-                if (!message.author && this.messaging.currentPartner) {
-                    message.update({ author: link(this.messaging.currentPartner) });
+                if (!message.author && this.env.messaging.currentPartner) {
+                    message.update({ author: link(this.env.messaging.currentPartner) });
                 }
             }));
             this.messaging.notificationGroupManager.computeGroups();

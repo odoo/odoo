@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 
 import { FormViewDialog } from 'web.view_dialogs';
@@ -29,14 +29,7 @@ export class ComposerSuggestedRecipient extends Component {
         super(...args);
         this.id = _.uniqueId('o_ComposerSuggestedRecipient_');
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const suggestedRecipientInfo = this.env.models['mail.suggested_recipient_info'].get(props.suggestedRecipientLocalId);
-            const partner = suggestedRecipientInfo && suggestedRecipientInfo.partner;
-            return {
-                partner: partner && partner.__state,
-                suggestedRecipientInfo: suggestedRecipientInfo && suggestedRecipientInfo.__state,
-            };
-        });
+        useModels();
         useUpdate({ func: () => this._update() });
         /**
          * Form view dialog class. Useful to reference it in the template.

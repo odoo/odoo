@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { ActivityBox } from '@mail/components/activity_box/activity_box';
 import { AttachmentBox } from '@mail/components/attachment_box/attachment_box';
@@ -28,25 +28,7 @@ export class Chatter extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const chatter = this.env.models['mail.chatter'].get(props.chatterLocalId);
-            const thread = chatter ? chatter.thread : undefined;
-            let attachments = [];
-            if (thread) {
-                attachments = thread.allAttachments;
-            }
-            return {
-                attachments: attachments.map(attachment => attachment.__state),
-                chatter: chatter ? chatter.__state : undefined,
-                composer: thread && thread.composer,
-                thread,
-                threadActivitiesLength: thread && thread.activities.length,
-            };
-        }, {
-            compareDepth: {
-                attachments: 1,
-            },
-        });
+        useModels();
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the composer. Useful to focus it.

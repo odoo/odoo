@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -14,12 +14,7 @@ export class ActivityMarkDonePopover extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const activity = this.env.models['mail.activity'].get(props.activityLocalId);
-            return {
-                activity: activity ? activity.__state : undefined,
-            };
-        });
+        useModels();
         this._feedbackTextareaRef = useRef('feedbackTextarea');
     }
 

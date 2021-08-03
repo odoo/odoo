@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import {
     isEventHandled,
     markEventHandled,
@@ -20,20 +20,7 @@ export class ChatWindowHeader extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const chatWindow = this.env.models['mail.chat_window'].get(props.chatWindowLocalId);
-            const thread = chatWindow && chatWindow.thread;
-            return {
-                chatWindow,
-                chatWindowHasShiftNext: chatWindow && chatWindow.hasShiftNext,
-                chatWindowHasShiftPrev: chatWindow && chatWindow.hasShiftPrev,
-                chatWindowName: chatWindow && chatWindow.name,
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                thread,
-                threadLocalMessageUnreadCounter: thread && thread.localMessageUnreadCounter,
-                threadModel: thread && thread.model,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

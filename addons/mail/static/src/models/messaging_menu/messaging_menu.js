@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, one2many, one2one } from '@mail/model/model_field';
+import { attr, one2one } from '@mail/model/model_field';
 
 function factory(dependencies) {
 
@@ -31,7 +31,11 @@ function factory(dependencies) {
          */
         toggleOpen() {
             this.update({ isOpen: !this.isOpen });
-            this.env.messaging.refreshIsNotificationPermissionDefault();
+            this.messaging.refreshIsNotificationPermissionDefault();
+            if (this.isOpen) {
+                // populate some needaction messages on threads.
+                this.messaging.inbox.cache.update({ isCacheRefreshRequested: true });
+            }
         }
 
         //----------------------------------------------------------------------
@@ -40,31 +44,18 @@ function factory(dependencies) {
 
         /**
          * @private
-         */
-        _computeInboxMessagesAutoloader() {
-            if (!this.isOpen) {
-                return;
-            }
-            const inbox = this.env.messaging.inbox;
-            if (!inbox || !inbox.cache) {
-                return;
-            }
-            // populate some needaction messages on threads.
-            inbox.cache.update({ isCacheRefreshRequested: true });
-        }
-
-        /**
-         * @private
          * @returns {integer}
          */
         _computeCounter() {
-            if (!this.env.messaging) {
+            if (!this.messaging) {
                 return 0;
             }
-            const inboxCounter = this.env.messaging.inbox ? this.env.messaging.inbox.counter : 0;
-            const unreadChannelsCounter = this.env.messaging.allPinnedChannels.filter(
-                channel => channel.localMessageUnreadCounter > 0
-            ).length;
+            const inboxCounter = this.messaging.inbox ? this.messaging.inbox.counter : 0;
+            const unreadChannelsCounter = this.env.models['mail.thread'].all(channel => (
+                channel.model === 'mail.channel',
+                channel.isPinned,
+                channel.localMessageUnreadCounter > 0
+            )).length;
             const notificationGroupsCounter = this.messaging.notificationGroupManager
                 ? this.messaging.notificationGroupManager.groups.reduce(
                     (total, group) => total + group.notifications.length,
@@ -79,18 +70,6 @@ function factory(dependencies) {
 
     MessagingMenu.fields = {
         /**
-         * Serves as compute dependency.
-         */
-        allPinnedChannels: one2many('mail.thread', {
-            related: 'messaging.allPinnedChannels',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        allPinnedChannelsLocalMessageUnreadCounter: attr({
-            related: 'allPinnedChannels.localMessageUnreadCounter',
-        }),
-        /**
          * Tab selected in the messaging menu.
          * Either 'all', 'chat' or 'channel'.
          */
@@ -104,33 +83,6 @@ function factory(dependencies) {
          */
         counter: attr({
             compute: '_computeCounter',
-            dependencies: [
-                'allPinnedChannels',
-                'allPinnedChannelsLocalMessageUnreadCounter',
-                'messaging',
-                'messagingInbox',
-                'messagingInboxCounter',
-                'messagingIsNotificationPermissionDefault',
-                'messagingNotificationGroupManager',
-                'messagingNotificationGroupManagerGroups',
-                'messagingNotificationGroupManagerGroupsNotifications',
-            ],
-        }),
-        /**
-         * Dummy field to automatically load messages of inbox when messaging
-         * menu is open.
-         *
-         * Useful because needaction notifications require fetching inbox
-         * messages to work.
-         */
-        inboxMessagesAutoloader: attr({
-            compute: '_computeInboxMessagesAutoloader',
-            dependencies: [
-                'isOpen',
-                'messagingInbox',
-                'messagingInboxCache',
-            ],
-            isOnChange: true,
         }),
         /**
          * Determine whether the mobile new message input is visible or not.
@@ -144,56 +96,10 @@ function factory(dependencies) {
         isOpen: attr({
             default: false,
         }),
-        /**
-         * Serves as compute dependency.
-         */
         messaging: one2one('mail.messaging', {
             inverse: 'messagingMenu',
         }),
-        /**
-         * Serves as compute dependency.
-         */
-        messagingInbox: one2one('mail.thread', {
-            related: 'messaging.inbox',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        messagingInboxCounter: attr({
-            related: 'messagingInbox.counter',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        messagingIsNotificationPermissionDefault: attr({
-            related: 'messaging.isNotificationPermissionDefault',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        messagingInboxCache: one2one('mail.thread_cache', {
-            related: 'messagingInbox.cache',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        messagingNotificationGroupManager: one2one('mail.notification_group_manager', {
-            related: 'messaging.notificationGroupManager',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        messagingNotificationGroupManagerGroups: one2many('mail.notification_group', {
-            related: 'messagingNotificationGroupManager.groups'
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        messagingNotificationGroupManagerGroupsNotifications: one2many('mail.notification', {
-            related: 'messagingNotificationGroupManagerGroups.notifications'
-        }),
     };
-
     MessagingMenu.modelName = 'mail.messaging_menu';
 
     return MessagingMenu;

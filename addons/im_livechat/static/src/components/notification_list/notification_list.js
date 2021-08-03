@@ -18,7 +18,7 @@ patch(components.NotificationList.prototype, 'im_livechat/static/src/components/
      *
      * @override
      */
-    _useStoreSelectorThreads(props) {
+    _getThreads(props) {
         if (props.filter === 'livechat') {
             return this.env.models['mail.thread'].all(thread =>
                 thread.channel_type === 'livechat' &&

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { Composer } from '@mail/components/composer/composer';
 import { MessageList } from '@mail/components/message_list/message_list';
 import { ThreadViewTopbar } from '@mail/components/thread_view_topbar/thread_view_topbar';
@@ -14,16 +14,12 @@ const components = { Composer, MessageList, ThreadViewTopbar };
 export class ThreadView extends Component {
 
     /**
-     * @param {...any} args
+     * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
+        useModels();
         useShouldUpdateBasedOnProps();
-        useStore((...args) => this._useStoreSelector(...args), {
-            compareDepth: {
-                threadTextInputSendShortcuts: 1,
-            },
-        });
         /**
          * Reference of the composer. Useful to set focus on composer when
          * thread has the focus.
@@ -99,38 +95,6 @@ export class ThreadView extends Component {
      */
     get threadView() {
         return this.env.models['mail.thread_view'].get(this.props.threadViewLocalId);
-    }
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Returns data selected from the store.
-     *
-     * @private
-     * @param {Object} props
-     * @returns {Object}
-     */
-    _useStoreSelector(props) {
-        const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
-        const thread = threadView ? threadView.thread : undefined;
-        const threadCache = threadView ? threadView.threadCache : undefined;
-        const correspondent = thread && thread.correspondent;
-        return {
-            composer: thread && thread.composer,
-            correspondentId: correspondent && correspondent.id,
-            isDeviceMobile: this.env.messaging.device.isMobile,
-            thread,
-            threadCacheIsLoaded: threadCache && threadCache.isLoaded,
-            threadCacheHasLoadingFailed: threadCache && threadCache.hasLoadingFailed,
-            threadIsTemporary: thread && thread.isTemporary,
-            threadModel: thread && thread.model,
-            threadTextInputSendShortcuts: thread && thread.textInputSendShortcuts || [],
-            threadView,
-            threadViewTopbar: threadView && threadView.topbar,
-            threadViewIsLoading: threadView && threadView.isLoading,
-        };
     }
 
     //--------------------------------------------------------------------------

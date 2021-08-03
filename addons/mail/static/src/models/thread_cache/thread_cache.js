@@ -3,6 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { OnChange } from '@mail/model/model_onchange';
 
 function factory(dependencies) {
 
@@ -307,7 +308,6 @@ function factory(dependencies) {
         _onChangeMarkAllAsRead() {
             if (
                 !this.isMarkAllAsReadRequested ||
-                !this.thread ||
                 !this.isLoaded ||
                 this.isLoading
             ) {
@@ -335,40 +335,13 @@ function factory(dependencies) {
          *
          * @private
          */
-        _onHasToLoadMessagesChanged() {
+        async _onHasToLoadMessagesChanged() {
             if (!this.hasToLoadMessages) {
                 return;
             }
-            this._onHasToLoadMessagesChangedAsync();
-        }
-
-        /**
-         * Async version of `_onHasToLoadMessagesChanged` split here because
-         * an "on change" compute should not return a Promise.
-         *
-         * @private
-         */
-        async _onHasToLoadMessagesChangedAsync() {
             const fetchedMessages = await this.async(() => this._loadMessages());
             for (const threadView of this.threadViews) {
                 threadView.addComponentHint('messages-loaded', { fetchedMessages });
-            }
-        }
-
-        /**
-         * Handles change of messages on this thread cache. This is useful to
-         * refresh non-main caches that are currently displayed when the main
-         * cache receives updates. This is necessary because only the main cache
-         * is aware of changes in real time.
-         */
-        _onMessagesChanged() {
-            if (!this.thread) {
-                return;
-            }
-            for (const threadView of this.thread.threadViews) {
-                if (threadView.threadCache) {
-                    threadView.threadCache.update({ isCacheRefreshRequested: true });
-                }
             }
         }
 
@@ -392,9 +365,7 @@ function factory(dependencies) {
          * new messages on main cache of thread in real-time.
          */
         fetchedMessages: many2many('mail.message', {
-            // adjust with messages unlinked from thread
             compute: '_computeFetchedMessages',
-            dependencies: ['threadMessages'],
         }),
         /**
          * Determines whether the last message fetch failed.
@@ -448,95 +419,21 @@ function factory(dependencies) {
          */
         lastFetchedMessage: many2one('mail.message', {
             compute: '_computeLastFetchedMessage',
-            dependencies: ['orderedFetchedMessages'],
         }),
         lastMessage: many2one('mail.message', {
             compute: '_computeLastMessage',
-            dependencies: ['orderedMessages'],
         }),
         /**
          * List of messages linked to this cache.
          */
         messages: many2many('mail.message', {
             compute: '_computeMessages',
-            dependencies: [
-                'fetchedMessages',
-                'threadMessages',
-            ],
-        }),
-        /**
-         * IsEmpty trait of all messages.
-         * Serves as compute dependency.
-         */
-        messagesAreEmpty: attr({
-            related: 'messages.isEmpty'
         }),
         /**
          * List of non empty messages linked to this cache.
          */
         nonEmptyMessages: many2many('mail.message', {
             compute: '_computeNonEmptyMessages',
-            dependencies: [
-                'messages',
-                'messagesAreEmpty',
-            ],
-        }),
-        /**
-         * @see hasToLoadMessages
-         */
-        onChangeForHasToLoadMessages: attr({
-            compute: '_onChangeForHasToLoadMessages',
-            dependencies: [
-                'hasLoadingFailed',
-                'isCacheRefreshRequested',
-                'isLoaded',
-                'isLoading',
-                'thread',
-                'threadIsTemporary',
-                'threadViews',
-            ],
-            isOnChange: true,
-        }),
-        /**
-         * Not a real field, used to trigger its compute method when one of the
-         * dependencies changes.
-         */
-        onChangeMarkAllAsRead: attr({
-            compute: '_onChangeMarkAllAsRead',
-            dependencies: [
-                'isLoaded',
-                'isLoading',
-                'isMarkAllAsReadRequested',
-                'thread',
-                'threadIsTemporary',
-                'threadModel',
-                'threadViews',
-            ],
-            isOnChange: true,
-        }),
-        /**
-         * Loads initial messages from `this`.
-         * This is not a "real" field, its compute function is used to trigger
-         * the load of messages at the right time.
-         */
-        onHasToLoadMessagesChanged: attr({
-            compute: '_onHasToLoadMessagesChanged',
-            dependencies: [
-                'hasToLoadMessages',
-            ],
-            isOnChange: true,
-        }),
-        /**
-         * Not a real field, used to trigger `_onMessagesChanged` when one of
-         * the dependencies changes.
-         */
-        onMessagesChanged: attr({
-            compute: '_onMessagesChanged',
-            dependencies: [
-                'messages',
-                'thread',
-            ],
-            isOnChange: true,
         }),
         /**
          * Ordered list of messages that have been fetched by this cache.
@@ -547,32 +444,15 @@ function factory(dependencies) {
          */
         orderedFetchedMessages: many2many('mail.message', {
             compute: '_computeOrderedFetchedMessages',
-            dependencies: ['fetchedMessages'],
         }),
         /**
          * Ordered list of messages linked to this cache.
          */
         orderedMessages: many2many('mail.message', {
             compute: '_computeOrderedMessages',
-            dependencies: ['messages'],
         }),
         thread: one2one('mail.thread', {
             inverse: 'cache',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        threadIsTemporary: attr({
-            related: 'thread.isTemporary',
-        }),
-        threadMessages: many2many('mail.message', {
-            related: 'thread.messages',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        threadModel: attr({
-            related: 'thread.model',
         }),
         /**
          * States the 'mail.thread_view' that are currently displaying `this`.
@@ -581,7 +461,20 @@ function factory(dependencies) {
             inverse: 'threadCache',
         }),
     };
-
+    ThreadCache.onChanges = [
+        new OnChange({
+            dependencies: ['hasLoadingFailed', 'isCacheRefreshRequested', 'isLoaded', 'isLoading', 'thread.isTemporary', 'threadViews'],
+            methodName: '_onChangeForHasToLoadMessages',
+        }),
+        new OnChange({
+            dependencies: ['isLoaded', 'isLoading', 'isMarkAllAsReadRequested', 'thread.isTemporary', 'thread.model', 'threadViews'],
+            methodName: '_onChangeMarkAllAsRead',
+        }),
+        new OnChange({
+            dependencies: ['hasToLoadMessages'],
+            methodName: '_onHasToLoadMessagesChanged',
+        }),
+    ];
     ThreadCache.modelName = 'mail.thread_cache';
 
     return ThreadCache;

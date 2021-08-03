@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { ActivityMarkDonePopover } from '@mail/components/activity_mark_done_popover/activity_mark_done_popover';
 import { FileUploader } from '@mail/components/file_uploader/file_uploader';
 import { MailTemplate } from '@mail/components/mail_template/mail_template';
@@ -32,17 +32,7 @@ export class Activity extends Component {
         this.state = useState({
             areDetailsVisible: false,
         });
-        useStore(props => {
-            const activity = this.env.models['mail.activity'].get(props.activityLocalId);
-            return {
-                activity: activity ? activity.__state : undefined,
-                assigneeNameOrDisplayName: (
-                    activity &&
-                    activity.assignee &&
-                    activity.assignee.nameOrDisplayName
-                ),
-            };
-        });
+        useModels();
         /**
          * Reference of the file uploader.
          * Useful to programmatically prompts the browser file uploader.

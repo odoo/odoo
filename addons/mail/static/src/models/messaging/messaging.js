@@ -2,7 +2,8 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
-import { create, replace } from '@mail/model/model_field_command';
+import { create } from '@mail/model/model_field_command';
+import { makeDeferred } from '@mail/utils/deferred/deferred';
 
 function factory(dependencies) {
 
@@ -27,6 +28,7 @@ function factory(dependencies) {
             await this.async(() => this.initializer.start());
             this.notificationHandler.start();
             this.update({ isInitialized: true });
+            this.initializedPromise.resolve();
         }
 
         //----------------------------------------------------------------------
@@ -149,16 +151,10 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {Promise}
          */
-        _computeAllChannels() {
-            return replace(this.allThreads.filter(thread => thread.model === 'mail.channel'));
-        }
-
-        /**
-         * @private
-         */
-        _computeAllPinnedChannels() {
-            return replace(this.allChannels.filter(channel => channel.isPinned));
+        _computeInitializedPromise() {
+            return makeDeferred();
         }
 
         /**
@@ -183,47 +179,6 @@ function factory(dependencies) {
     }
 
     Messaging.fields = {
-        /**
-         * States all known channels.
-         */
-        allChannels: one2many('mail.thread', {
-            compute: '_computeAllChannels',
-            dependencies: [
-                'allThreads',
-                'allThreadsModel',
-            ],
-            readonly: true,
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        allChannelsIsPinned: attr({
-            related: 'allChannels.isPinned',
-        }),
-        /**
-         * States all known pinned channels.
-         */
-        allPinnedChannels: one2many('mail.thread', {
-            compute: '_computeAllPinnedChannels',
-            dependencies: [
-                'allChannels',
-                'allChannelsIsPinned',
-            ],
-            readonly: true,
-        }),
-        /**
-         * States all known threads.
-         */
-        allThreads: one2many('mail.thread', {
-            inverse: 'messaging',
-            readonly: true,
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        allThreadsModel: attr({
-            related: 'allThreads.model',
-        }),
         cannedResponses: one2many('mail.canned_response'),
         chatWindowManager: one2one('mail.chat_window_manager', {
             default: create(),
@@ -258,6 +213,14 @@ function factory(dependencies) {
          * Mailbox Inbox.
          */
         inbox: one2one('mail.thread'),
+        /**
+         * Promise that will be resolved when messaging is initialized.
+         */
+        initializedPromise: attr({
+            compute: '_computeInitializedPromise',
+            required: true,
+            readonly: true,
+        }),
         initializer: one2one('mail.messaging_initializer', {
             default: create(),
             inverse: 'messaging',

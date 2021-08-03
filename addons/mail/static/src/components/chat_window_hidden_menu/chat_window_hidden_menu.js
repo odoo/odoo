@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useStore } from '@mail/component_hooks/use_store/use_store';
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { ChatWindowHeader } from '@mail/components/chat_window_header/chat_window_header';
 
 const { Component } = owl;
@@ -15,16 +15,7 @@ export class ChatWindowHiddenMenu extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore(props => {
-            const chatWindowManager = this.env.messaging.chatWindowManager;
-            const device = this.env.messaging.device;
-            const locale = this.env.messaging.locale;
-            return {
-                chatWindowManager: chatWindowManager ? chatWindowManager.__state : undefined,
-                device: device ? device.__state : undefined,
-                localeTextDirection: locale ? locale.textDirection : undefined,
-            };
-        });
+        useModels();
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
         /**
          * Reference of the dropup list. Useful to auto-set max height based on

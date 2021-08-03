@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { AutocompleteInput } from '@mail/components/autocomplete_input/autocomplete_input';
 import { ChatWindowHeader } from '@mail/components/chat_window_header/chat_window_header';
@@ -21,24 +21,7 @@ export class ChatWindow extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const chatWindow = this.env.models['mail.chat_window'].get(props.chatWindowLocalId);
-            const thread = chatWindow ? chatWindow.thread : undefined;
-            return {
-                chatWindow,
-                chatWindowHasNewMessageForm: chatWindow && chatWindow.hasNewMessageForm,
-                chatWindowIsDoFocus: chatWindow && chatWindow.isDoFocus,
-                chatWindowIsFocused: chatWindow && chatWindow.isFocused,
-                chatWindowIsFolded: chatWindow && chatWindow.isFolded,
-                chatWindowThreadView: chatWindow && chatWindow.threadView,
-                chatWindowVisibleIndex: chatWindow && chatWindow.visibleIndex,
-                chatWindowVisibleOffset: chatWindow && chatWindow.visibleOffset,
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                localeTextDirection: this.env.messaging.locale.textDirection,
-                thread,
-                threadModel: thread && thread.model,
-            };
-        });
+        useModels();
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the header of the chat window.

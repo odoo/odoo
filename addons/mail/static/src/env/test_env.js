@@ -3,7 +3,6 @@
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 import { nextTick } from '@mail/utils/utils';
 
-const { Store } = owl;
 const { EventBus } = owl.core;
 
 /**
@@ -12,16 +11,6 @@ const { EventBus } = owl.core;
  */
 function addMessagingToEnv(providedEnv = {}) {
     const env = Object.assign(providedEnv);
-
-    /**
-     * Messaging store
-     */
-    const store = new Store({
-        env,
-        state: {
-            messagingRevNumber: 0,
-        },
-    });
 
     /**
      * Registry of models.
@@ -68,7 +57,6 @@ function addMessagingToEnv(providedEnv = {}) {
         messagingInitializedDeferred: makeDeferred(),
         messagingBus: new EventBus(),
         modelManager: undefined,
-        store,
     });
 
     return env;

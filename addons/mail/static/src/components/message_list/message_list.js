@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useRefs } from '@mail/component_hooks/use_refs/use_refs';
 import { useRenderedValues } from '@mail/component_hooks/use_rendered_values/use_rendered_values';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { Message } from '@mail/components/message/message';
 
@@ -17,34 +17,9 @@ export class MessageList extends Component {
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
-            const thread = threadView ? threadView.thread : undefined;
-            const threadCache = threadView ? threadView.threadCache : undefined;
-            return {
-                isDeviceMobile: this.env.messaging.device.isMobile,
-                thread,
-                threadCache,
-                threadCacheHasLoadingFailed: threadCache && threadCache.hasLoadingFailed,
-                threadCacheIsAllHistoryLoaded: threadCache && threadCache.isAllHistoryLoaded,
-                threadCacheIsLoaded: threadCache && threadCache.isLoaded,
-                threadCacheIsLoadingMore: threadCache && threadCache.isLoadingMore,
-                threadCacheLastMessage: threadCache && threadCache.lastMessage,
-                threadCacheOrderedMessages: threadCache ? threadCache.orderedMessages : [],
-                threadIsTemporary: thread && thread.isTemporary,
-                threadMessageAfterNewMessageSeparator: thread && thread.messageAfterNewMessageSeparator,
-                threadViewComponentHintList: threadView ? threadView.componentHintList : [],
-                threadViewNonEmptyMessagesLength: threadView && threadView.nonEmptyMessages.length,
-            };
-        }, {
-            compareDepth: {
-                threadCacheOrderedMessages: 1,
-                threadViewComponentHintList: 1,
-            },
-        });
         this._getRefs = useRefs();
         /**
          * States whether there was at least one programmatic scroll since the
@@ -86,8 +61,13 @@ export class MessageList extends Component {
                 threadViewer: threadView && threadView.threadViewer,
             };
         });
-        // useUpdate must be defined after useRenderedValues to guarantee proper
-        // call order
+        // useModels must be defined after useRenderedValues, indeed records and
+        // fields accessed during useRenderedValues should be observed by
+        // useModels as if they were part of the OWL rendering itself.
+        useModels();
+        // useUpdate must be defined after useRenderedValues, indeed they both
+        // use onMounted/onPatched, and the calls from useRenderedValues must
+        // happen first to save the values before useUpdate accesses them.
         useUpdate({ func: () => this._update() });
     }
 

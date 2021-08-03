@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { useModels } from '@mail/component_hooks/use_models/use_models';
 import { useShouldUpdateBasedOnProps } from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
-import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { EditableText } from '@mail/components/editable_text/editable_text';
 import { ThreadIcon } from '@mail/components/thread_icon/thread_icon';
 import { isEventHandled } from '@mail/utils/utils';
@@ -20,25 +20,7 @@ export class DiscussSidebarItem extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore(props => {
-            const discuss = this.env.messaging.discuss;
-            const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            const correspondent = thread ? thread.correspondent : undefined;
-            return {
-                correspondentName: correspondent && correspondent.name,
-                discussIsRenamingThread: discuss && discuss.renamingThreads.includes(thread),
-                isDiscussThread: discuss && discuss.thread === thread,
-                starred: this.env.messaging.starred,
-                thread,
-                threadChannelType: thread && thread.channel_type,
-                threadCounter: thread && thread.counter,
-                threadDisplayName: thread && thread.displayName,
-                threadGroupBasedSubscription: thread && thread.group_based_subscription,
-                threadLocalMessageUnreadCounter: thread && thread.localMessageUnreadCounter,
-                threadMessageNeedactionCounter: thread && thread.message_needaction_counter,
-                threadModel: thread && thread.model,
-            };
-        });
+        useModels();
     }
 
     //--------------------------------------------------------------------------

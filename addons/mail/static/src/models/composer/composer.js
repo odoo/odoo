@@ -3,6 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
 import { clear, insert, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { OnChange } from '@mail/model/model_onchange';
 import emojis from '@mail/js/emojis';
 import {
     addLink,
@@ -518,52 +519,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {integer}
-         */
-        _computeSuggestionDelimiterPosition() {
-            if (this.textInputCursorStart !== this.textInputCursorEnd) {
-                // avoid interfering with multi-char selection
-                return clear();
-            }
-            const candidatePositions = [];
-            // keep the current delimiter if it is still valid
-            if (
-                this.suggestionDelimiterPosition !== undefined &&
-                this.suggestionDelimiterPosition < this.textInputCursorStart
-            ) {
-                candidatePositions.push(this.suggestionDelimiterPosition);
-            }
-            // consider the char before the current cursor position if the
-            // current delimiter is no longer valid (or if there is none)
-            if (this.textInputCursorStart > 0) {
-                candidatePositions.push(this.textInputCursorStart - 1);
-            }
-            const suggestionDelimiters = ['@', ':', '#', '/'];
-            for (const candidatePosition of candidatePositions) {
-                if (
-                    candidatePosition < 0 ||
-                    candidatePosition >= this.textInputContent.length
-                ) {
-                    continue;
-                }
-                const candidateChar = this.textInputContent[candidatePosition];
-                if (candidateChar === '/' && candidatePosition !== 0) {
-                    continue;
-                }
-                if (!suggestionDelimiters.includes(candidateChar)) {
-                    continue;
-                }
-                const charBeforeCandidate = this.textInputContent[candidatePosition - 1];
-                if (charBeforeCandidate && !/\s/.test(charBeforeCandidate)) {
-                    continue;
-                }
-                return candidatePosition;
-            }
-            return clear();
-        }
-
-        /**
-         * @private
          * @returns {string}
          */
         _computeSuggestionModelName() {
@@ -714,6 +669,52 @@ function factory(dependencies) {
         }
 
         /**
+         * @private
+         */
+        _onChangeDetectSuggestionDelimiterPosition() {
+            if (this.textInputCursorStart !== this.textInputCursorEnd) {
+                // avoid interfering with multi-char selection
+                return this.update({ suggestionDelimiterPosition: clear() });
+            }
+            const candidatePositions = [];
+            // keep the current delimiter if it is still valid
+            if (
+                this.suggestionDelimiterPosition !== undefined &&
+                this.suggestionDelimiterPosition < this.textInputCursorStart
+            ) {
+                candidatePositions.push(this.suggestionDelimiterPosition);
+            }
+            // consider the char before the current cursor position if the
+            // current delimiter is no longer valid (or if there is none)
+            if (this.textInputCursorStart > 0) {
+                candidatePositions.push(this.textInputCursorStart - 1);
+            }
+            const suggestionDelimiters = ['@', ':', '#', '/'];
+            for (const candidatePosition of candidatePositions) {
+                if (
+                    candidatePosition < 0 ||
+                    candidatePosition >= this.textInputContent.length
+                ) {
+                    continue;
+                }
+                const candidateChar = this.textInputContent[candidatePosition];
+                if (candidateChar === '/' && candidatePosition !== 0) {
+                    continue;
+                }
+                if (!suggestionDelimiters.includes(candidateChar)) {
+                    continue;
+                }
+                const charBeforeCandidate = this.textInputContent[candidatePosition - 1];
+                if (charBeforeCandidate && !/\s/.test(charBeforeCandidate)) {
+                    continue;
+                }
+                this.update({ suggestionDelimiterPosition: candidatePosition });
+                return;
+            }
+            return this.update({ suggestionDelimiterPosition: clear() });
+        }
+
+        /**
          * Updates the suggestion state based on the currently saved composer
          * state (in particular content and cursor position).
          *
@@ -800,6 +801,7 @@ function factory(dependencies) {
                 mainSuggestedRecords: replace(mainSuggestedRecords),
             });
         }
+
     }
 
     Composer.fields = {
@@ -810,32 +812,12 @@ function factory(dependencies) {
          */
         activeSuggestedRecord: many2one('mail.model', {
             compute: '_computeActiveSuggestedRecord',
-            dependencies: [
-                'activeSuggestedRecord',
-                'extraSuggestedRecords',
-                'mainSuggestedRecords',
-            ],
         }),
         attachments: many2many('mail.attachment', {
             inverse: 'composers',
         }),
-        /**
-         * This field watches the uploading status of attachments linked to this composer.
-         *
-         * Useful to determine whether there are some attachments that are being
-         * uploaded.
-         */
-        attachmentsAreUploading: attr({
-            related: 'attachments.isUploading',
-        }),
         canPostMessage: attr({
             compute: '_computeCanPostMessage',
-            dependencies: [
-                'attachments',
-                'hasUploadingAttachment',
-                'isPostingMessage',
-                'textInputContent',
-            ],
             default: false,
         }),
         /**
@@ -854,11 +836,6 @@ function factory(dependencies) {
          */
         extraSuggestedRecords: many2many('mail.model', {
             compute: '_computeExtraSuggestedRecords',
-            dependencies: [
-                'extraSuggestedRecords',
-                'mainSuggestedRecords',
-                'suggestionDelimiterPosition',
-            ],
         }),
         /**
          * This field determines whether some attachments linked to this
@@ -866,10 +843,6 @@ function factory(dependencies) {
          */
         hasUploadingAttachment: attr({
             compute: '_computeHasUploadingAttachment',
-            dependencies: [
-                'attachments',
-                'attachmentsAreUploading',
-            ],
         }),
         hasFocus: attr({
             default: false,
@@ -880,10 +853,6 @@ function factory(dependencies) {
          */
         hasSuggestions: attr({
             compute: '_computeHasSuggestions',
-            dependencies: [
-                'extraSuggestedRecords',
-                'mainSuggestedRecords',
-            ],
             default: false,
         }),
         /**
@@ -921,42 +890,12 @@ function factory(dependencies) {
          */
         mainSuggestedRecords: many2many('mail.model', {
             compute: '_computeMainSuggestedRecords',
-            dependencies: [
-                'mainSuggestedRecords',
-                'suggestionDelimiterPosition',
-            ],
         }),
         mentionedChannels: many2many('mail.thread', {
             compute: '_computeMentionedChannels',
-            dependencies: ['textInputContent'],
         }),
         mentionedPartners: many2many('mail.partner', {
             compute: '_computeMentionedPartners',
-            dependencies: [
-                'mentionedPartners',
-                'mentionedPartnersName',
-                'textInputContent',
-            ],
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        mentionedPartnersName: attr({
-            related: 'mentionedPartners.name',
-        }),
-        /**
-         * Not a real field, used to trigger `_onChangeUpdateSuggestionList`
-         * when one of the dependencies changes.
-         */
-        onChangeUpdateSuggestionList: attr({
-            compute: '_onChangeUpdateSuggestionList',
-            dependencies: [
-                'suggestionDelimiterPosition',
-                'suggestionModelName',
-                'suggestionSearchTerm',
-                'thread',
-            ],
-            isOnChange: true,
         }),
         /**
          * Determines the extra `mail.partner` (on top of existing followers)
@@ -965,26 +904,6 @@ function factory(dependencies) {
          */
         recipients: many2many('mail.partner', {
             compute: '_computeRecipients',
-            dependencies: [
-                'isLog',
-                'mentionedPartners',
-                'threadSuggestedRecipientInfoListIsSelected',
-                // FIXME thread.suggestedRecipientInfoList.partner should be a
-                // dependency, but it is currently impossible to have a related
-                // m2o through a m2m. task-2261221
-            ]
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        threadSuggestedRecipientInfoList: many2many('mail.suggested_recipient_info', {
-            related: 'thread.suggestedRecipientInfoList',
-        }),
-        /**
-         * Serves as compute dependency.
-         */
-        threadSuggestedRecipientInfoListIsSelected: attr({
-            related: 'threadSuggestedRecipientInfoList.isSelected',
         }),
         /**
          * States which type of suggestion is currently in progress, if any.
@@ -994,10 +913,6 @@ function factory(dependencies) {
          */
         suggestionDelimiter: attr({
             compute: '_computeSuggestionDelimiter',
-            dependencies: [
-                'suggestionDelimiterPosition',
-                'textInputContent',
-            ],
         }),
         /**
          * States the position inside textInputContent of the suggestion
@@ -1006,34 +921,19 @@ function factory(dependencies) {
          * Note: the position is 0 based so it's important to compare to
          * `undefined` when checking for the absence of a value.
          */
-        suggestionDelimiterPosition: attr({
-            compute: '_computeSuggestionDelimiterPosition',
-            dependencies: [
-                'textInputContent',
-                'textInputCursorEnd',
-                'textInputCursorStart',
-            ],
-        }),
+        suggestionDelimiterPosition: attr(),
         /**
          * States the target model name of the suggestion currently in progress,
          * if any.
          */
         suggestionModelName: attr({
             compute: '_computeSuggestionModelName',
-            dependencies: [
-                'suggestionDelimiter',
-            ],
         }),
         /**
          * States the search term to use for suggestions (if any).
          */
         suggestionSearchTerm: attr({
             compute: '_computeSuggestionSearchTerm',
-            dependencies: [
-                'suggestionDelimiterPosition',
-                'textInputContent',
-                'textInputCursorStart',
-            ],
         }),
         textInputContent: attr({
             default: "",
@@ -1052,7 +952,16 @@ function factory(dependencies) {
             required: true,
         }),
     };
-
+    Composer.onChanges = [
+        new OnChange({
+            dependencies: ['textInputContent', 'textInputCursorEnd', 'textInputCursorStart'],
+            methodName: '_onChangeDetectSuggestionDelimiterPosition',
+        }),
+        new OnChange({
+            dependencies: ['suggestionDelimiterPosition', 'suggestionModelName', 'suggestionSearchTerm', 'thread'],
+            methodName: '_onChangeUpdateSuggestionList',
+        }),
+    ];
     Composer.modelName = 'mail.composer';
 
     return Composer;

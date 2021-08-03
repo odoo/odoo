@@ -229,18 +229,10 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsCurrentPartnerAssignee() {
-            if (!this.assigneePartner || !this.messagingCurrentPartner) {
+            if (!this.assignee || !this.assignee.partner || !this.env.messaging.currentPartner) {
                 return false;
             }
-            return this.assigneePartner === this.messagingCurrentPartner;
-        }
-
-        /**
-         * @private
-         * @returns {mail.messaging}
-         */
-        _computeMessaging() {
-            return link(this.env.messaging);
+            return this.assignee.partner === this.env.messaging.currentPartner;
         }
 
         /**
@@ -261,9 +253,6 @@ function factory(dependencies) {
 
     Activity.fields = {
         assignee: many2one('mail.user'),
-        assigneePartner: many2one('mail.partner', {
-            related: 'assignee.partner',
-        }),
         attachments: many2many('mail.attachment', {
             inverse: 'activities',
         }),
@@ -290,19 +279,9 @@ function factory(dependencies) {
         isCurrentPartnerAssignee: attr({
             compute: '_computeIsCurrentPartnerAssignee',
             default: false,
-            dependencies: [
-                'assigneePartner',
-                'messagingCurrentPartner',
-            ],
         }),
         mailTemplates: many2many('mail.mail_template', {
             inverse: 'activities',
-        }),
-        messaging: many2one('mail.messaging', {
-            compute: '_computeMessaging',
-        }),
-        messagingCurrentPartner: many2one('mail.partner', {
-            related: 'messaging.currentPartner',
         }),
         /**
          * This value is meant to be returned by the server
@@ -312,9 +291,6 @@ function factory(dependencies) {
          */
         note: attr({
             compute: '_computeNote',
-            dependencies: [
-                'note',
-            ],
         }),
         /**
          * Determines that an activity is linked to a requesting partner or not.

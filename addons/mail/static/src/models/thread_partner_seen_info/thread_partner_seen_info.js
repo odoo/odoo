@@ -72,7 +72,6 @@ function factory(dependencies) {
          */
         partner: many2one('mail.partner', {
             compute: '_computePartner',
-            dependencies: ['partnerId'],
         }),
         /**
          * The id of partner this seen info is related to.
@@ -100,7 +99,6 @@ function factory(dependencies) {
          */
         thread: many2one('mail.thread', {
             compute: '_computeThread',
-            dependencies: ['channelId'],
             inverse: 'partnerSeenInfos',
         }),
     };
