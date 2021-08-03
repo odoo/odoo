@@ -33,4 +33,22 @@ export default FormRenderer.extend({
     _mountChatterContainerComponent() {
         this._chatterContainerComponent.appendTo(this._chatterContainerTarget);
     },
+    _renderNode(node) {
+        if (node.tag === 'div' && node.attrs.class === 'oe_project_sharing_chatter') {
+            let isVisible = true;
+            if (node.attrs.modifiers && node.attrs.modifiers.invisible) {
+                const record = this._getRecord(this.state.id);
+                if (record) {
+                    isVisible = !record.evalModifiers(node.attrs.modifiers).invisible;
+                }
+            }
+            if (isVisible) {
+                if (this._isFromFormViewDialog) {
+                    return $('<div/>');
+                }
+                return this._makeChatterContainerTarget();
+            }
+        }
+        return this._super(...arguments);
+    },
 });
