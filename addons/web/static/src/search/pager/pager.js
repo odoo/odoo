@@ -25,7 +25,7 @@ export class Pager extends Component {
         }
         if (next !== this.props.current) {
             this.trigger("page-update", {
-                current: next
+                current: next,
             });
         }
     }
@@ -46,7 +46,7 @@ export function usePager(model, initialResId, resIds) {
     const size = resIds ? resIds.length : 1;
     const page = {
         current: null,
-        size
+        size,
     };
 
     updatePager(); // initial computation
@@ -80,7 +80,7 @@ export function usePager(model, initialResId, resIds) {
         pagerComp.disable();
         let pager = ev.detail;
         let nextId = resIds[pager.current - 1];
-        await model.loadRecord({ resId: nextId });
+        await model.load({ resId: nextId });
         pagerComp.enable();
     }
 
