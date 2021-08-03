@@ -391,11 +391,14 @@ class AccountMove(models.Model):
         """
         tax_lock_date = self.company_id.tax_lock_date
         today = fields.Date.today()
-        if invoice_date and tax_lock_date and has_tax and invoice_date <= tax_lock_date:
+        lock_violated = invoice_date and tax_lock_date and has_tax and invoice_date <= tax_lock_date
+        if lock_violated:
             invoice_date = tax_lock_date + timedelta(days=1)
 
         if self.is_sale_document(include_receipts=True):
-            return max(invoice_date, today)
+            if lock_violated:
+                return max(invoice_date, today)
+            return invoice_date
         elif self.is_purchase_document(include_receipts=True):
             highest_name = self.highest_name or self._get_last_sequence(relaxed=True)
             number_reset = self._deduce_sequence_number_reset(highest_name)
