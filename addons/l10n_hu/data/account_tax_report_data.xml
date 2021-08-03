@@ -6,184 +6,1070 @@
         <field name="country_id" ref="base.hu"/>
     </record>
 
-    <record id="tax_report_alap" model="account.tax.report.line">
+    <!-- FIZETENDŐ ÁLTALÁNOS FORGALMI ADÓ  -->
+
+    <record id="tax_report_fizetendo_afa" model="account.tax.report.line">
+        <field name="name">Fizetendő általános forgalmi adó</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_fizetendo_alap" model="account.tax.report.line">
         <field name="name">ÁFA alap</field>
-        <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="1"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_afa"/>
     </record>
 
-    <record id="tax_report_alap_fiz_export" model="account.tax.report.line">
-        <field name="name">Adóalap - Fizetendő ÁFA Export</field>
-        <field name="tag_name">Adóalap - Fizetendő ÁFA Export</field>
-        <field name="report_id" ref="tax_report"/>
+    <record id="tax_report_fizetendo_alap_01" model="account.tax.report.line">
+        <field name="name">01. Adóalap - Közösség területén kívülre történő termékértékesítés, azzal egy tekintet alá eső szolgáltatásnyújtás, valamint nemzetközi közlekedéshez kapcsolódó termékértékesítés és szolgáltatásnyújtás</field>
+        <field name="tag_name">01. Adóalap - Közösség területén kívülre történő termékértékesítés, azzal egy tekintet alá eső szolgáltatásnyújtás, valamint nemzetközi közlekedéshez kapcsolódó termékértékesítés és szolgáltatásnyújtás</field>
         <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="tax_report_alap"/>
-    </record>
-
-    <record id="tax_report_alap_fiz_eu" model="account.tax.report.line">
-        <field name="name">Adóalap - Fizetendő ÁFA EU</field>
-        <field name="tag_name">Adóalap - Fizetendő ÁFA EU</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_02" model="account.tax.report.line">
+        <field name="name">02. Adóalap - Közösségen belülre történő, adólevonási joggal járó adómentes termékértékesítés (kivéve az új közlekedési eszköz értékesítését)</field>
+        <field name="tag_name">02. Adóalap - Közösségen belülre történő, adólevonási joggal járó adómentes termékértékesítés (kivéve az új közlekedési eszköz értékesítését)</field>
         <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="tax_report_alap"/>
-    </record>
-
-    <record id="tax_report_alap_fiz_targyi" model="account.tax.report.line">
-        <field name="name">Adóalap - Fizetendő ÁFA tárgyi adómentes</field>
-        <field name="tag_name">Adóalap - Fizetendő ÁFA tárgyi adómentes</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_03" model="account.tax.report.line">
+        <field name="name">03. Adóalap - Új közlekedési eszköz Közösségen belülre történő értékesítésének összege</field>
+        <field name="tag_name">03. Adóalap - Új közlekedési eszköz Közösségen belülre történő értékesítésének összege</field>
         <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="tax_report_alap"/>
-    </record>
-
-    <record id="tax_report_alap_fiz_alanyi" model="account.tax.report.line">
-        <field name="name">Adóalap - Fizetendő ÁFA alanyi adómentes</field>
-        <field name="tag_name">Adóalap - Fizetendő ÁFA alanyi adómentes</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_04" model="account.tax.report.line">
+        <field name="name">04. Adóalap - Az Áfa tv. 142. §-a szerinti termékértékesítés, szolgáltatásnyújtás és az adólevonással járó adómentes belföldi értékesítés ellenértéke</field>
+        <field name="tag_name">04. Adóalap - Az Áfa tv. 142. §-a szerinti termékértékesítés, szolgáltatásnyújtás és az adólevonással járó adómentes belföldi értékesítés ellenértéke</field>
         <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="tax_report_alap"/>
-    </record>
-
-    <record id="tax_report_alap_fiz_afa_5" model="account.tax.report.line">
-        <field name="name">Adóalap - Fizetendő ÁFA 5%</field>
-        <field name="tag_name">Adóalap - Fizetendő ÁFA 5%</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_05" model="account.tax.report.line">
+        <field name="name">05. Adóalap - 5 %-os kulcs alá tartozó értékesítés</field>
+        <field name="tag_name">05. Adóalap - 5 %-os kulcs alá tartozó értékesítés</field>
         <field name="sequence" eval="5"/>
-        <field name="parent_id" ref="tax_report_alap"/>
-    </record>
-
-    <record id="tax_report_alap_fiz_afa_18" model="account.tax.report.line">
-        <field name="name">Adóalap - Fizetendő ÁFA 18%</field>
-        <field name="tag_name">Adóalap - Fizetendő ÁFA 18%</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_06" model="account.tax.report.line">
+        <field name="name">06. Adóalap - 18 %-os kulcs alá tartozó értékesítés</field>
+        <field name="tag_name">06. Adóalap - 18 %-os kulcs alá tartozó értékesítés</field>
         <field name="sequence" eval="6"/>
-        <field name="parent_id" ref="tax_report_alap"/>
-    </record>
-
-    <record id="tax_report_alap_fiz_afa_27" model="account.tax.report.line">
-        <field name="name">Adóalap - Fizetendő ÁFA 27%</field>
-        <field name="tag_name">Adóalap - Fizetendő ÁFA 27%</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_07" model="account.tax.report.line">
+        <field name="name">07. Adóalap - 27 %-os kulcs alá tartozó értékesítés</field>
+        <field name="tag_name">07. Adóalap - 27 %-os kulcs alá tartozó értékesítés</field>
         <field name="sequence" eval="7"/>
-        <field name="parent_id" ref="tax_report_alap"/>
-    </record>
-
-    <record id="tax_report_alap_viss" model="account.tax.report.line">
-        <field name="name">Adóalap - Visszaigényelhető ÁFA EU</field>
-        <field name="tag_name">Adóalap - Visszaigényelhető ÁFA EU</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_08" model="account.tax.report.line">
+        <field name="name">08. Adóalap - Közérdekű vagy egyéb speciális jellegére tekintettel adómentes értékesítés</field>
+        <field name="tag_name">08. Adóalap - Közérdekű vagy egyéb speciális jellegére tekintettel adómentes értékesítés</field>
         <field name="sequence" eval="8"/>
-        <field name="parent_id" ref="tax_report_alap"/>
-    </record>
-
-    <record id="tax_report_alap_import" model="account.tax.report.line">
-        <field name="name">Adóalap – Import ÁFA</field>
-        <field name="tag_name">Adóalap – Import ÁFA</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_09" model="account.tax.report.line">
+        <field name="name">09. Adóalap - Különleges eljárással megállapított adó</field>
+        <field name="tag_name">09. Adóalap - Különleges eljárással megállapított adó</field>
         <field name="sequence" eval="9"/>
-        <field name="parent_id" ref="tax_report_alap"/>
-    </record>
-
-    <record id="tax_report_alap_forditott" model="account.tax.report.line">
-        <field name="name">Adóalap – Fordított ÁFA</field>
-        <field name="tag_name">Adóalap – Fordított ÁFA</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_10" model="account.tax.report.line">
+        <field name="name">10. Adóalap - Saját vállalkozáson belül végzett beruházás után fizetendő adó</field>
+        <field name="tag_name">10. Adóalap - Saját vállalkozáson belül végzett beruházás után fizetendő adó</field>
         <field name="sequence" eval="10"/>
-        <field name="parent_id" ref="tax_report_alap"/>
-    </record>
-
-    <record id="tax_report_alap_viss_alanyi" model="account.tax.report.line">
-        <field name="name">Adóalap - Visszaigényelhető ÁFA alanyi adómentes</field>
-        <field name="tag_name">Adóalap - Visszaigényelhető ÁFA alanyi adómentes</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_11" model="account.tax.report.line">
+        <field name="name">11. Adóalap - Közösségen belülről történő adómentes termékbeszerzés</field>
+        <field name="tag_name">11. Adóalap - Közösségen belülről történő adómentes termékbeszerzés</field>
         <field name="sequence" eval="11"/>
-        <field name="parent_id" ref="tax_report_alap"/>
-    </record>
-
-    <record id="tax_report_alap_viss_targyi" model="account.tax.report.line">
-        <field name="name">Adóalap - Visszaigényelhető ÁFA tárgyi adómentes</field>
-        <field name="tag_name">Adóalap - Visszaigényelhető ÁFA tárgyi adómentes</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_12" model="account.tax.report.line">
+        <field name="name">12. Adóalap - Közösségen belülről történő  5 %-os kulcs alá tartozó termékbeszerzés</field>
+        <field name="tag_name">12. Adóalap - Közösségen belülről történő  5 %-os kulcs alá tartozó termékbeszerzés</field>
         <field name="sequence" eval="12"/>
-        <field name="parent_id" ref="tax_report_alap"/>
-    </record>
-
-    <record id="tax_report_alap_viss_5" model="account.tax.report.line">
-        <field name="name">Adóalap - Visszaigényelhető ÁFA 5%</field>
-        <field name="tag_name">Adóalap - Visszaigényelhető ÁFA 5%</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_13" model="account.tax.report.line">
+        <field name="name">13. Adóalap - Közösségen belülről történő 18 %-os kulcs alá tartozó termékbeszerzés</field>
+        <field name="tag_name">13. Adóalap - Közösségen belülről történő 18 %-os kulcs alá tartozó termékbeszerzés</field>
         <field name="sequence" eval="13"/>
-        <field name="parent_id" ref="tax_report_alap"/>
-    </record>
-
-    <record id="tax_report_alap_viss_18" model="account.tax.report.line">
-        <field name="name">Adóalap - Visszaigényelhető ÁFA 18%</field>
-        <field name="tag_name">Adóalap - Visszaigényelhető ÁFA 18%</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_14" model="account.tax.report.line">
+        <field name="name">14. Adóalap - Közösségen belülről történő 27 %-os kulcs alá tartozó termékbeszerzés</field>
+        <field name="tag_name">14. Adóalap - Közösségen belülről történő 27 %-os kulcs alá tartozó termékbeszerzés</field>
         <field name="sequence" eval="14"/>
-        <field name="parent_id" ref="tax_report_alap"/>
-    </record>
-
-    <record id="tax_report_alap_viss_27" model="account.tax.report.line">
-        <field name="name">Adóalap - Visszaigényelhető ÁFA 27%</field>
-        <field name="tag_name">Adóalap - Visszaigényelhető ÁFA 27%</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_15" model="account.tax.report.line">
+        <field name="name">15. Adóalap - Közösségen belülről történő új közlekedési eszköz beszerzés (27 %-os adómérték)</field>
+        <field name="tag_name">15. Adóalap - Közösségen belülről történő új közlekedési eszköz beszerzés (27 %-os adómérték)</field>
         <field name="sequence" eval="15"/>
-        <field name="parent_id" ref="tax_report_alap"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_16" model="account.tax.report.line">
+        <field name="name">16. Adóalap - Közösségen belülről történő jövedéki termékbeszerzés (27 %-os adómérték)</field>
+        <field name="tag_name">16. Adóalap - Közösségen belülről történő jövedéki termékbeszerzés (27 %-os adómérték)</field>
+        <field name="sequence" eval="16"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_17" model="account.tax.report.line">
+        <field name="name">17. Adóalap - Adómentes szolgáltatás igénybevétel (közösségi adóalanytól és harmadik országbeli adóalanytól)</field>
+        <field name="tag_name">17. Adóalap - Adómentes szolgáltatás igénybevétel (közösségi adóalanytól és harmadik országbeli adóalanytól)</field>
+        <field name="sequence" eval="17"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_18" model="account.tax.report.line">
+        <field name="name">18. Adóalap - Közösségi adóalanytól igénybe vett szolgáltatás utáni adófizetési kötelezettség az Áfa tv. 37. § (1) bekezdése alapján (27 %-os adómérték)</field>
+        <field name="tag_name">18. Adóalap - Közösségi adóalanytól igénybe vett szolgáltatás utáni adófizetési kötelezettség az Áfa tv. 37. § (1) bekezdése alapján (27 %-os adómérték)</field>
+        <field name="sequence" eval="18"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_19" model="account.tax.report.line">
+        <field name="name">19. Adóalap - Közösségi adóalanytól igénybe vett szolgáltatás utáni egyéb adófizetési kötelezettség</field>
+        <field name="tag_name">19. Adóalap - Közösségi adóalanytól igénybe vett szolgáltatás utáni egyéb adófizetési kötelezettség</field>
+        <field name="sequence" eval="19"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_20" model="account.tax.report.line">
+        <field name="name">20. Adóalap - Közösségen belül az Áfa tv. 91. § (2) bek. szerinti ügylet esetén a beszerző termékértékesítés címén fizetendő 5%-os mértékű adója </field>
+        <field name="tag_name">20. Adóalap - Közösségen belül az Áfa tv. 91. § (2) bek. szerinti ügylet esetén a beszerző termékértékesítés címén fizetendő 5%-os mértékű adója </field>
+        <field name="sequence" eval="20"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_21" model="account.tax.report.line">
+        <field name="name">21. Adóalap - Közösségen  belül az Áfa tv. 91. § (2) bek. szerinti ügylet esetén a beszerző termékértékesítés címén fizetendő 18 %-os mértékű adója </field>
+        <field name="tag_name">21. Adóalap - Közösségen  belül az Áfa tv. 91. § (2) bek. szerinti ügylet esetén a beszerző termékértékesítés címén fizetendő 18 %-os mértékű adója </field>
+        <field name="sequence" eval="21"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_22" model="account.tax.report.line">
+        <field name="name">22. Adóalap - Közösségen belül az Áfa tv. 91. § (2) bek. szerinti ügylet esetén a beszerző termékértékesítés címén fizetendő 27 %-os mértékű adója </field>
+        <field name="tag_name">22. Adóalap - Közösségen belül az Áfa tv. 91. § (2) bek. szerinti ügylet esetén a beszerző termékértékesítés címén fizetendő 27 %-os mértékű adója </field>
+        <field name="sequence" eval="22"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_23" model="account.tax.report.line">
+        <field name="name">23. Adóalap - Adómentes termékimport </field>
+        <field name="tag_name">23. Adóalap - Adómentes termékimport </field>
+        <field name="sequence" eval="23"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_24" model="account.tax.report.line">
+        <field name="name">24. Adóalap - Termékimport címén fizetendő 5 %-os mértékű adó </field>
+        <field name="tag_name">24. Adóalap - Termékimport címén fizetendő 5 %-os mértékű adó </field>
+        <field name="sequence" eval="24"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_25" model="account.tax.report.line">
+        <field name="name">25. Adóalap - Termékimport címén fizetendő 18 %-os mértékű adó </field>
+        <field name="tag_name">25. Adóalap - Termékimport címén fizetendő 18 %-os mértékű adó </field>
+        <field name="sequence" eval="25"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_26" model="account.tax.report.line">
+        <field name="name">26. Adóalap - Termékimport címén fizetendő 27 %-os mértékű adó </field>
+        <field name="tag_name">26. Adóalap - Termékimport címén fizetendő 27 %-os mértékű adó </field>
+        <field name="sequence" eval="26"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_27" model="account.tax.report.line">
+        <field name="name">27. Adóalap - Harmadik országbeli adóalanytól igénybevett szolgáltatás utáni adófizetési kötelezettség </field>
+        <field name="tag_name">27. Adóalap - Harmadik országbeli adóalanytól igénybevett szolgáltatás utáni adófizetési kötelezettség </field>
+        <field name="sequence" eval="27"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_28" model="account.tax.report.line">
+        <field name="name">28. Adóalap - Az Áfa tv. 32. §, 34. § szerinti termékbeszerzés (27 %-os adómérték) </field>
+        <field name="tag_name">28. Adóalap - Az Áfa tv. 32. §, 34. § szerinti termékbeszerzés (27 %-os adómérték) </field>
+        <field name="sequence" eval="28"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_29" model="account.tax.report.line">
+        <field name="name">29. Adóalap - Az Áfa tv. 142. §-a alapján a fordított adózás szabályai szerint fizetendő adó </field>
+        <field name="tag_name">29. Adóalap - Az Áfa tv. 142. §-a alapján a fordított adózás szabályai szerint fizetendő adó </field>
+        <field name="sequence" eval="29"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_30" model="account.tax.report.line">
+        <field name="name">30. Adóalap - Az Áfa tv. 99. § (9) bekezdés alapján fizetendő adót csökkentő tétel </field>
+        <field name="tag_name">30. Adóalap - Az Áfa tv. 99. § (9) bekezdés alapján fizetendő adót csökkentő tétel </field>
+        <field name="sequence" eval="30"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_31" model="account.tax.report.line">
+        <field name="name">31. Adóalap - Az Áfa tv. 153/C. § alapján fizetendő adót növelő tétel összesen </field>
+        <field name="tag_name">31. Adóalap - Az Áfa tv. 153/C. § alapján fizetendő adót növelő tétel összesen </field>
+        <field name="sequence" eval="31"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_35" model="account.tax.report.line">
+        <field name="name">35. Adóalap - Egyéb </field>
+        <field name="tag_name">35. Adóalap - Egyéb </field>
+        <field name="sequence" eval="35"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
     </record>
 
-    <record id="tax_report_fizetndo" model="account.tax.report.line">
-        <field name="name">ÁFA fizetndő / visszaigényelhető</field>
+    <record id="tax_report_fizetendo_alap_37" model="account.tax.report.line">
+        <field name="name">37. Adóalap - Az Áfa tv. 98. §-a szerinti termékexport ellenértéke a 01. sorból</field>
+        <field name="tag_name">37. Adóalap - Az Áfa tv. 98. §-a szerinti termékexport ellenértéke a 01. sorból</field>
+        <field name="sequence" eval="37"/>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_38" model="account.tax.report.line">
+        <field name="name">38. Adóalap - Adóraktárba beraktározott és ott továbbértékesített vagy onnan kiraktározott áruk ellenértéke </field>
+        <field name="tag_name">38. Adóalap - Adóraktárba beraktározott és ott továbbértékesített vagy onnan kiraktározott áruk ellenértéke </field>
+        <field name="sequence" eval="38"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_39" model="account.tax.report.line">
+        <field name="name">39. Adóalap - Közösségi beszerzésből származó, adóraktárba adómentesen beraktározott áru ellenértéke a 11. sor összegéből </field>
+        <field name="tag_name">39. Adóalap - Közösségi beszerzésből származó, adóraktárba adómentesen beraktározott áru ellenértéke a 11. sor összegéből </field>
+        <field name="sequence" eval="39"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_40" model="account.tax.report.line">
+        <field name="name">40. Adóalap - Közösségi megbízás alapján belföldön történő fel- vagy összeszerelés tárgyát képező termékértékesítések összege a 05-07. sorokból </field>
+        <field name="tag_name">40. Adóalap - Közösségi megbízás alapján belföldön történő fel- vagy összeszerelés tárgyát képező termékértékesítések összege a 05-07. sorokból </field>
+        <field name="sequence" eval="40"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_41" model="account.tax.report.line">
+        <field name="name">41. Adóalap - Távolsági értékesítés összege a 05-07. sorokból </field>
+        <field name="tag_name">41. Adóalap - Távolsági értékesítés összege a 05-07. sorokból </field>
+        <field name="sequence" eval="41"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_42" model="account.tax.report.line">
+        <field name="name">42. Adóalap - Közösségi megbízás alapján belföldön történő fel- vagy összeszerelés tárgyát képező termékbeszerzés összege a 28. sorból </field>
+        <field name="tag_name">42. Adóalap - Közösségi megbízás alapján belföldön történő fel- vagy összeszerelés tárgyát képező termékbeszerzés összege a 28. sorból </field>
+        <field name="sequence" eval="42"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_43" model="account.tax.report.line">
+        <field name="name">43. Adóalap - Tárgyieszköz-értékesítés a 36. sor összegéből (apport nélkül) </field>
+        <field name="tag_name">43. Adóalap - Tárgyieszköz-értékesítés a 36. sor összegéből (apport nélkül) </field>
+        <field name="sequence" eval="43"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_44" model="account.tax.report.line">
+        <field name="name">44. Adóalap - Apportértékesítés a 36. sor összegéből</field>
+        <field name="tag_name">44. Adóalap - Apportértékesítés a 36. sor összegéből</field>
+        <field name="sequence" eval="44"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_45" model="account.tax.report.line">
+        <field name="name">45. Adóalap - Előleg címén kapott összeg a 05-07. sorok összegéből</field>
+        <field name="tag_name">45. Adóalap - Előleg címén kapott összeg a 05-07. sorok összegéből</field>
+        <field name="sequence" eval="45"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_46" model="account.tax.report.line">
+        <field name="name">46. Adóalap - Előleg címén kapott összeg a 01. és 04. sorok összegéből</field>
+        <field name="tag_name">46. Adóalap - Előleg címén kapott összeg a 01. és 04. sorok összegéből</field>
+        <field name="sequence" eval="46"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_47" model="account.tax.report.line">
+        <field name="name">47. Adóalap - Közösségen belülre, nem adóalany részére történő új közlekedési eszköz értékesítése a 03. sorból </field>
+        <field name="tag_name">47. Adóalap - Közösségen belülre, nem adóalany részére történő új közlekedési eszköz értékesítése a 03. sorból </field>
+        <field name="sequence" eval="47"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_48" model="account.tax.report.line">
+        <field name="name">48. Adóalap - Jövedékiadó-tartalom a 11., 16. sorok adóalapjában</field>
+        <field name="tag_name">48. Adóalap - Jövedékiadó-tartalom a 11., 16. sorok adóalapjában</field>
+        <field name="sequence" eval="48"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_49" model="account.tax.report.line">
+        <field name="name">49. Adóalap - Az utazásszervezési szolgáltatásnyújtás után fizetendő adó a 09. sor összegéből</field>
+        <field name="tag_name">49. Adóalap - Az utazásszervezési szolgáltatásnyújtás után fizetendő adó a 09. sor összegéből</field>
+        <field name="sequence" eval="49"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_50" model="account.tax.report.line">
+        <field name="name">50. Adóalap - Az Áfa tv. XVI. fejezete alá tartozó értékesítés adója a 09. sor összegéből</field>
+        <field name="tag_name">50. Adóalap - Az Áfa tv. XVI. fejezete alá tartozó értékesítés adója a 09. sor összegéből</field>
+        <field name="sequence" eval="50"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_51" model="account.tax.report.line">
+        <field name="name">51. Adóalap - A fordított adózás szabályai szerint ingatlan után fizetendő adó a 29. sor összegéből</field>
+        <field name="tag_name">51. Adóalap - A fordított adózás szabályai szerint ingatlan után fizetendő adó a 29. sor összegéből</field>
+        <field name="sequence" eval="51"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_52" model="account.tax.report.line">
+        <field name="name">52. Adóalap - A fordított adózás szabályai szerint hulladék után fizetendő adó a 29. sor összegéből</field>
+        <field name="tag_name">52. Adóalap - A fordított adózás szabályai szerint hulladék után fizetendő adó a 29. sor összegéből</field>
+        <field name="sequence" eval="52"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_53" model="account.tax.report.line">
+        <field name="name">53. Adóalap - A fordított adózás szabályai szerint az üvegházhatású gáz kibocsátására jogosító vagyoni értékű jog átruházása esetén fizetendő adó a 29. sor összegéből </field>
+        <field name="tag_name">53. Adóalap - A fordított adózás szabályai szerint az üvegházhatású gáz kibocsátására jogosító vagyoni értékű jog átruházása esetén fizetendő adó a 29. sor összegéből </field>
+        <field name="sequence" eval="53"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_54" model="account.tax.report.line">
+        <field name="name">54. Adóalap - Az Áfa tv. 142. §-ban meghatározott fordított adózás szabályai szerinti szolgáltatás igénybevétele esetén fizetendő adó a 29. sor összegéből </field>
+        <field name="tag_name">54. Adóalap - Az Áfa tv. 142. §-ban meghatározott fordított adózás szabályai szerinti szolgáltatás igénybevétele esetén fizetendő adó a 29. sor összegéből </field>
+        <field name="sequence" eval="54"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_55" model="account.tax.report.line">
+        <field name="name">55. Adóalap - Közösségen  belülre, illetve belföldre történő értékesítésből az adóraktározási eljárás kapcsán adóbiztosítékkal érintett értékesítés adója a 36. sor összegéből </field>
+        <field name="tag_name">55. Adóalap - Közösségen  belülre, illetve belföldre történő értékesítésből az adóraktározási eljárás kapcsán adóbiztosítékkal érintett értékesítés adója a 36. sor összegéből </field>
+        <field name="sequence" eval="55"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_56" model="account.tax.report.line">
+        <field name="name">56. Adóalap - Az importáló által teljesített, Közösségen belülre történő értékesítésből az adómentes termékimport kapcsán adóbiztosítékkal érintett értékesítés a 02. sor összegéből </field>
+        <field name="tag_name">56. Adóalap - Az importáló által teljesített, Közösségen belülre történő értékesítésből az adómentes termékimport kapcsán adóbiztosítékkal érintett értékesítés a 02. sor összegéből </field>
+        <field name="sequence" eval="56"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_57" model="account.tax.report.line">
+        <field name="name">57. Adóalap - Az importáló/az adófizetésre kötelezett által teljesített, de a közvetett vámjogi képviselő/az adóraktár üzemeltetője által bevallott, Közösségen belülre történő adómentes értékesítés összege a 02. sorból </field>
+        <field name="tag_name">57. Adóalap - Az importáló/az adófizetésre kötelezett által teljesített, de a közvetett vámjogi képviselő/az adóraktár üzemeltetője által bevallott, Közösségen belülre történő adómentes értékesítés összege a 02. sorból </field>
+        <field name="sequence" eval="57"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_58" model="account.tax.report.line">
+        <field name="name">58. Adóalap - Az 57. sor szerinti adózók által teljesített/bevallott, Közösségen belülre történő új közlekedési eszköz adómentes értékesítésének összege a 03. sorból </field>
+        <field name="tag_name">58. Adóalap - Az 57. sor szerinti adózók által teljesített/bevallott, Közösségen belülre történő új közlekedési eszköz adómentes értékesítésének összege a 03. sorból </field>
+        <field name="sequence" eval="58"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_59" model="account.tax.report.line">
+        <field name="name">59. Adóalap - Az importáló által teljesített, de a közvetett vámjogi képviselő által önadózás keretében bevallott adómentes termékimport összege a 23. sorból </field>
+        <field name="tag_name">59. Adóalap - Az importáló által teljesített, de a közvetett vámjogi képviselő által önadózás keretében bevallott adómentes termékimport összege a 23. sorból </field>
+        <field name="sequence" eval="59"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_60" model="account.tax.report.line">
+        <field name="name">60. Adóalap - Az importáló által teljesített, de a közvetett vámjogi képviselő által önadózás keretében bevallott 5 %-os adókulcsú termékimport összege a 24. sorból </field>
+        <field name="tag_name">60. Adóalap - Az importáló által teljesített, de a közvetett vámjogi képviselő által önadózás keretében bevallott 5 %-os adókulcsú termékimport összege a 24. sorból </field>
+        <field name="sequence" eval="60"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_61" model="account.tax.report.line">
+        <field name="name">61. Adóalap - Az importáló által teljesített, de a közvetett vámjogi képviselő által önadózás keretében bevallott 18 %-os adókulcsú termékimport összege a 25. sorból </field>
+        <field name="tag_name">61. Adóalap - Az importáló által teljesített, de a közvetett vámjogi képviselő által önadózás keretében bevallott 18 %-os adókulcsú termékimport összege a 25. sorból </field>
+        <field name="sequence" eval="61"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+    <record id="tax_report_fizetendo_alap_62" model="account.tax.report.line">
+        <field name="name">62. Adóalap - Az importáló által teljesített, de a közvetett vámjogi képviselő által önadózás keretében bevallott 27 %-os adókulcsú termékimport összege a 26. sorból </field>
+        <field name="tag_name">62. Adóalap - Az importáló által teljesített, de a közvetett vámjogi képviselő által önadózás keretében bevallott 27 %-os adókulcsú termékimport összege a 26. sorból </field>
+        <field name="sequence" eval="62"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_alap"/>
+    </record>
+
+
+    <record id="tax_report_fizetendo" model="account.tax.report.line">
+        <field name="name">ÁFA mérték</field>
         <field name="sequence" eval="2"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo_afa"/>
     </record>
 
-    <record id="tax_report_fizetndo_5" model="account.tax.report.line">
-        <field name="name">Fizetendő ÁFA 5%</field>
-        <field name="tag_name">Fizetendő ÁFA 5%</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="tax_report_fizetndo"/>
-    </record>
-
-    <record id="tax_report_fizetndo_18" model="account.tax.report.line">
-        <field name="name">Fizetendő ÁFA 18%</field>
-        <field name="tag_name">Fizetendő ÁFA 18%</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="2"/>
-        <field name="parent_id" ref="tax_report_fizetndo"/>
-    </record>
-
-    <record id="tax_report_fizetndo_27" model="account.tax.report.line">
-        <field name="name">Fizetendő ÁFA 27%</field>
-        <field name="tag_name">Fizetendő ÁFA 27%</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="3"/>
-        <field name="parent_id" ref="tax_report_fizetndo"/>
-    </record>
-
-    <record id="tax_report_fizetndo_viss_5" model="account.tax.report.line">
-        <field name="name">Visszaigényelhető ÁFA 5%</field>
-        <field name="tag_name">Visszaigényelhető ÁFA 5%</field>
-        <field name="report_id" ref="tax_report"/>
-        <field name="sequence" eval="4"/>
-        <field name="parent_id" ref="tax_report_fizetndo"/>
-    </record>
-
-    <record id="tax_report_fizetndo_viss_18" model="account.tax.report.line">
-        <field name="name">Visszaigényelhető ÁFA 18%</field>
-        <field name="tag_name">Visszaigényelhető ÁFA 18%</field>
-        <field name="report_id" ref="tax_report"/>
+    <record id="tax_report_fizetendo_05" model="account.tax.report.line">
+        <field name="name">05. 5 %-os kulcs alá tartozó értékesítés</field>
+        <field name="tag_name">05. 5 %-os kulcs alá tartozó értékesítés</field>
         <field name="sequence" eval="5"/>
-        <field name="parent_id" ref="tax_report_fizetndo"/>
-    </record>
-
-    <record id="tax_report_fizetndo_viss_27" model="account.tax.report.line">
-        <field name="name">Visszaigényelhető ÁFA 27%</field>
-        <field name="tag_name">Visszaigényelhető ÁFA 27%</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_06" model="account.tax.report.line">
+        <field name="name">06. 18 %-os kulcs alá tartozó értékesítés</field>
+        <field name="tag_name">06. 18 %-os kulcs alá tartozó értékesítés</field>
         <field name="sequence" eval="6"/>
-        <field name="parent_id" ref="tax_report_fizetndo"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_07" model="account.tax.report.line">
+        <field name="name">07. 27 %-os kulcs alá tartozó értékesítés</field>
+        <field name="tag_name">07. 27 %-os kulcs alá tartozó értékesítés</field>
+        <field name="sequence" eval="7"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
     </record>
 
+    <record id="tax_report_fizetendo_09" model="account.tax.report.line">
+        <field name="name">09. Különleges eljárással megállapított adó</field>
+        <field name="tag_name">09. Különleges eljárással megállapított adó</field>
+        <field name="sequence" eval="9"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_10" model="account.tax.report.line">
+        <field name="name">10. Saját vállalkozáson belül végzett beruházás után fizetendő adó</field>
+        <field name="tag_name">10. Saját vállalkozáson belül végzett beruházás után fizetendő adó</field>
+        <field name="sequence" eval="10"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+
+    <record id="tax_report_fizetendo_12" model="account.tax.report.line">
+        <field name="name">12. Közösségen belülről történő  5 %-os kulcs alá tartozó termékbeszerzés</field>
+        <field name="tag_name">12. Közösségen belülről történő  5 %-os kulcs alá tartozó termékbeszerzés</field>
+        <field name="sequence" eval="12"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_13" model="account.tax.report.line">
+        <field name="name">13. Közösségen belülről történő 18 %-os kulcs alá tartozó termékbeszerzés</field>
+        <field name="tag_name">13. Közösségen belülről történő 18 %-os kulcs alá tartozó termékbeszerzés</field>
+        <field name="sequence" eval="13"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_14" model="account.tax.report.line">
+        <field name="name">14. Közösségen belülről történő 27 %-os kulcs alá tartozó termékbeszerzés</field>
+        <field name="tag_name">14. Közösségen belülről történő 27 %-os kulcs alá tartozó termékbeszerzés</field>
+        <field name="sequence" eval="14"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_15" model="account.tax.report.line">
+        <field name="name">15. Közösségen belülről történő új közlekedési eszköz beszerzés (27 %-os adómérték)</field>
+        <field name="tag_name">15. Közösségen belülről történő új közlekedési eszköz beszerzés (27 %-os adómérték)</field>
+        <field name="sequence" eval="15"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_16" model="account.tax.report.line">
+        <field name="name">16. Közösségen belülről történő jövedéki termékbeszerzés (27 %-os adómérték)</field>
+        <field name="tag_name">16. Közösségen belülről történő jövedéki termékbeszerzés (27 %-os adómérték)</field>
+        <field name="sequence" eval="16"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+
+    <record id="tax_report_fizetendo_18" model="account.tax.report.line">
+        <field name="name">18. Közösségi adóalanytól igénybe vett szolgáltatás utáni adófizetési kötelezettség az Áfa tv. 37. § (1) bekezdése alapján (27 %-os adómérték)</field>
+        <field name="tag_name">18. Közösségi adóalanytól igénybe vett szolgáltatás utáni adófizetési kötelezettség az Áfa tv. 37. § (1) bekezdése alapján (27 %-os adómérték)</field>
+        <field name="sequence" eval="18"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_19" model="account.tax.report.line">
+        <field name="name">19. Közösségi adóalanytól igénybe vett szolgáltatás utáni egyéb adófizetési kötelezettség</field>
+        <field name="tag_name">19. Közösségi adóalanytól igénybe vett szolgáltatás utáni egyéb adófizetési kötelezettség</field>
+        <field name="sequence" eval="19"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_20" model="account.tax.report.line">
+        <field name="name">20. Közösségen belül az Áfa tv. 91. § (2) bek. szerinti ügylet esetén a beszerző termékértékesítés címén fizetendő 5%-os mértékű adója </field>
+        <field name="tag_name">20. Közösségen belül az Áfa tv. 91. § (2) bek. szerinti ügylet esetén a beszerző termékértékesítés címén fizetendő 5%-os mértékű adója </field>
+        <field name="sequence" eval="20"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_21" model="account.tax.report.line">
+        <field name="name">21. Közösségen  belül az Áfa tv. 91. § (2) bek. szerinti ügylet esetén a beszerző termékértékesítés címén fizetendő 18 %-os mértékű adója </field>
+        <field name="tag_name">21. Közösségen  belül az Áfa tv. 91. § (2) bek. szerinti ügylet esetén a beszerző termékértékesítés címén fizetendő 18 %-os mértékű adója </field>
+        <field name="sequence" eval="21"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_22" model="account.tax.report.line">
+        <field name="name">22. Közösségen belül az Áfa tv. 91. § (2) bek. szerinti ügylet esetén a beszerző termékértékesítés címén fizetendő 27 %-os mértékű adója </field>
+        <field name="tag_name">22. Közösségen belül az Áfa tv. 91. § (2) bek. szerinti ügylet esetén a beszerző termékértékesítés címén fizetendő 27 %-os mértékű adója </field>
+        <field name="sequence" eval="22"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+
+    <record id="tax_report_fizetendo_24" model="account.tax.report.line">
+        <field name="name">24. Termékimport címén fizetendő 5 %-os mértékű adó </field>
+        <field name="tag_name">24. Termékimport címén fizetendő 5 %-os mértékű adó </field>
+        <field name="sequence" eval="24"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_25" model="account.tax.report.line">
+        <field name="name">25. Termékimport címén fizetendő 18 %-os mértékű adó </field>
+        <field name="tag_name">25. Termékimport címén fizetendő 18 %-os mértékű adó </field>
+        <field name="sequence" eval="25"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_26" model="account.tax.report.line">
+        <field name="name">26. Termékimport címén fizetendő 27 %-os mértékű adó </field>
+        <field name="tag_name">26. Termékimport címén fizetendő 27 %-os mértékű adó </field>
+        <field name="sequence" eval="26"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_27" model="account.tax.report.line">
+        <field name="name">27. Harmadik országbeli adóalanytól igénybevett szolgáltatás utáni adófizetési kötelezettség </field>
+        <field name="tag_name">27. Harmadik országbeli adóalanytól igénybevett szolgáltatás utáni adófizetési kötelezettség </field>
+        <field name="sequence" eval="27"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_28" model="account.tax.report.line">
+        <field name="name">28. Az Áfa tv. 32. §, 34. § szerinti termékbeszerzés (27 %-os adómérték) </field>
+        <field name="tag_name">28. Az Áfa tv. 32. §, 34. § szerinti termékbeszerzés (27 %-os adómérték) </field>
+        <field name="sequence" eval="28"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_29" model="account.tax.report.line">
+        <field name="name">29. Az Áfa tv. 142. §-a alapján a fordított adózás szabályai szerint fizetendő adó </field>
+        <field name="tag_name">29. Az Áfa tv. 142. §-a alapján a fordított adózás szabályai szerint fizetendő adó </field>
+        <field name="sequence" eval="29"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_30" model="account.tax.report.line">
+        <field name="name">30. Az Áfa tv. 99. § (9) bekezdés alapján fizetendő adót csökkentő tétel </field>
+        <field name="tag_name">30. Az Áfa tv. 99. § (9) bekezdés alapján fizetendő adót csökkentő tétel </field>
+        <field name="sequence" eval="30"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_31" model="account.tax.report.line">
+        <field name="name">31. Az Áfa tv. 153/C. § alapján fizetendő adót növelő tétel összesen </field>
+        <field name="tag_name">31. Az Áfa tv. 153/C. § alapján fizetendő adót növelő tétel összesen </field>
+        <field name="sequence" eval="31"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_35" model="account.tax.report.line">
+        <field name="name">35. Egyéb </field>
+        <field name="tag_name">35. Egyéb </field>
+        <field name="sequence" eval="35"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+
+    <record id="tax_report_fizetendo_38" model="account.tax.report.line">
+        <field name="name">38. Adóraktárba beraktározott és ott továbbértékesített vagy onnan kiraktározott áruk ellenértéke </field>
+        <field name="tag_name">38. Adóraktárba beraktározott és ott továbbértékesített vagy onnan kiraktározott áruk ellenértéke </field>
+        <field name="sequence" eval="38"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+
+    <record id="tax_report_fizetendo_40" model="account.tax.report.line">
+        <field name="name">40. Közösségi megbízás alapján belföldön történő fel- vagy összeszerelés tárgyát képező termékértékesítések összege a 05-07. sorokból </field>
+        <field name="tag_name">40. Közösségi megbízás alapján belföldön történő fel- vagy összeszerelés tárgyát képező termékértékesítések összege a 05-07. sorokból </field>
+        <field name="sequence" eval="40"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_41" model="account.tax.report.line">
+        <field name="name">41. Távolsági értékesítés összege a 05-07. sorokból </field>
+        <field name="tag_name">41. Távolsági értékesítés összege a 05-07. sorokból </field>
+        <field name="sequence" eval="41"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_42" model="account.tax.report.line">
+        <field name="name">42. Közösségi megbízás alapján belföldön történő fel- vagy összeszerelés tárgyát képező termékbeszerzés összege a 28. sorból </field>
+        <field name="tag_name">42. Közösségi megbízás alapján belföldön történő fel- vagy összeszerelés tárgyát képező termékbeszerzés összege a 28. sorból </field>
+        <field name="sequence" eval="42"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_43" model="account.tax.report.line">
+        <field name="name">43. Tárgyieszköz-értékesítés a 36. sor összegéből (apport nélkül) </field>
+        <field name="tag_name">43. Tárgyieszköz-értékesítés a 36. sor összegéből (apport nélkül) </field>
+        <field name="sequence" eval="43"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_44" model="account.tax.report.line">
+        <field name="name">44. Apportértékesítés a 36. sor összegéből</field>
+        <field name="tag_name">44. Apportértékesítés a 36. sor összegéből</field>
+        <field name="sequence" eval="44"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_45" model="account.tax.report.line">
+        <field name="name">45. Előleg címén kapott összeg a 05-07. sorok összegéből</field>
+        <field name="tag_name">45. Előleg címén kapott összeg a 05-07. sorok összegéből</field>
+        <field name="sequence" eval="45"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+
+    <record id="tax_report_fizetendo_49" model="account.tax.report.line">
+        <field name="name">49. Az utazásszervezési szolgáltatásnyújtás után fizetendő adó a 09. sor összegéből</field>
+        <field name="tag_name">49. Az utazásszervezési szolgáltatásnyújtás után fizetendő adó a 09. sor összegéből</field>
+        <field name="sequence" eval="49"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_50" model="account.tax.report.line">
+        <field name="name">50. Az Áfa tv. XVI. fejezete alá tartozó értékesítés adója a 09. sor összegéből</field>
+        <field name="tag_name">50. Az Áfa tv. XVI. fejezete alá tartozó értékesítés adója a 09. sor összegéből</field>
+        <field name="sequence" eval="50"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_51" model="account.tax.report.line">
+        <field name="name">51. A fordított adózás szabályai szerint ingatlan után fizetendő adó a 29. sor összegéből</field>
+        <field name="tag_name">51. A fordított adózás szabályai szerint ingatlan után fizetendő adó a 29. sor összegéből</field>
+        <field name="sequence" eval="51"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_52" model="account.tax.report.line">
+        <field name="name">52. A fordított adózás szabályai szerint hulladék után fizetendő adó a 29. sor összegéből</field>
+        <field name="tag_name">52. A fordított adózás szabályai szerint hulladék után fizetendő adó a 29. sor összegéből</field>
+        <field name="sequence" eval="52"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_53" model="account.tax.report.line">
+        <field name="name">53. A fordított adózás szabályai szerint az üvegházhatású gáz kibocsátására jogosító vagyoni értékű jog átruházása esetén fizetendő adó a 29. sor összegéből </field>
+        <field name="tag_name">53. A fordított adózás szabályai szerint az üvegházhatású gáz kibocsátására jogosító vagyoni értékű jog átruházása esetén fizetendő adó a 29. sor összegéből </field>
+        <field name="sequence" eval="53"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_54" model="account.tax.report.line">
+        <field name="name">54. Az Áfa tv. 142. §-ban meghatározott fordított adózás szabályai szerinti szolgáltatás igénybevétele esetén fizetendő adó a 29. sor összegéből </field>
+        <field name="tag_name">54. Az Áfa tv. 142. §-ban meghatározott fordított adózás szabályai szerinti szolgáltatás igénybevétele esetén fizetendő adó a 29. sor összegéből </field>
+        <field name="sequence" eval="54"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_55" model="account.tax.report.line">
+        <field name="name">55. Közösségen  belülre, illetve belföldre történő értékesítésből az adóraktározási eljárás kapcsán adóbiztosítékkal érintett értékesítés adója a 36. sor összegéből </field>
+        <field name="tag_name">55. Közösségen  belülre, illetve belföldre történő értékesítésből az adóraktározási eljárás kapcsán adóbiztosítékkal érintett értékesítés adója a 36. sor összegéből </field>
+        <field name="sequence" eval="55"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+
+    <record id="tax_report_fizetendo_60" model="account.tax.report.line">
+        <field name="name">60. Az importáló által teljesített, de a közvetett vámjogi képviselő által önadózás keretében bevallott 5 %-os adókulcsú termékimport összege a 24. sorból </field>
+        <field name="tag_name">60. Az importáló által teljesített, de a közvetett vámjogi képviselő által önadózás keretében bevallott 5 %-os adókulcsú termékimport összege a 24. sorból </field>
+        <field name="sequence" eval="60"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_61" model="account.tax.report.line">
+        <field name="name">61. Az importáló által teljesített, de a közvetett vámjogi képviselő által önadózás keretében bevallott 18 %-os adókulcsú termékimport összege a 25. sorból </field>
+        <field name="tag_name">61. Az importáló által teljesített, de a közvetett vámjogi képviselő által önadózás keretében bevallott 18 %-os adókulcsú termékimport összege a 25. sorból </field>
+        <field name="sequence" eval="61"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+    <record id="tax_report_fizetendo_62" model="account.tax.report.line">
+        <field name="name">62. Az importáló által teljesített, de a közvetett vámjogi képviselő által önadózás keretében bevallott 27 %-os adókulcsú termékimport összege a 26. sorból </field>
+        <field name="tag_name">62. Az importáló által teljesített, de a közvetett vámjogi képviselő által önadózás keretében bevallott 27 %-os adókulcsú termékimport összege a 26. sorból </field>
+        <field name="sequence" eval="62"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_fizetendo"/>
+    </record>
+
+
+    <!-- LEVONHATÓ ÁLTALÁNOS FORGALMI ADÓ  -->
+
+    <record id="tax_report_levonhato_afa" model="account.tax.report.line">
+        <field name="name">Beszerzést terhelő, előzetesen felszámított, levonható általános forgalmi adó</field>
+        <field name="sequence" eval="2"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_levonhato_alap" model="account.tax.report.line">
+        <field name="name">ÁFA alap</field>
+        <field name="sequence" eval="1"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_afa"/>
+    </record>
+
+    <record id="tax_report_levonhato_alap_63" model="account.tax.report.line">
+        <field name="name">63. Adóalap - Adómentes belföldi termékbeszerzés adóalapja </field>
+        <field name="tag_name">63. Adóalap - Adómentes belföldi termékbeszerzés adóalapja </field>
+        <field name="sequence" eval="63"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+    <record id="tax_report_levonhato_alap_64" model="account.tax.report.line">
+        <field name="name">64. Adóalap - 5 %-os kulcs alá tartozó belföldi termékbeszerzés, szolgáltatás után </field>
+        <field name="tag_name">64. Adóalap - 5 %-os kulcs alá tartozó belföldi termékbeszerzés, szolgáltatás után </field>
+        <field name="sequence" eval="64"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+    <record id="tax_report_levonhato_alap_65" model="account.tax.report.line">
+        <field name="name">65. Adóalap - 18 %-os kulcs alá tartozó belföldi termékbeszerzés, szolgáltatás után </field>
+        <field name="tag_name">65. Adóalap - 18 %-os kulcs alá tartozó belföldi termékbeszerzés, szolgáltatás után </field>
+        <field name="sequence" eval="65"/><field name="report_id" ref="tax_report"/>
+
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+    <record id="tax_report_levonhato_alap_66" model="account.tax.report.line">
+        <field name="name">66. Adóalap - 27 %-os kulcs alá tartozó belföldi termékbeszerzés, szolgáltatás után </field>
+        <field name="tag_name">66. Adóalap - 27 %-os kulcs alá tartozó belföldi termékbeszerzés, szolgáltatás után </field>
+        <field name="sequence" eval="66"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+    <record id="tax_report_levonhato_alap_67" model="account.tax.report.line">
+        <field name="name">67. Adóalap - Harmadik országbeli és közösségi adóalanytól igénybe vett szolgáltatás után, illetve terméket saját nevében beszerzőként fizetett adóból levonható összeg </field>
+        <field name="tag_name">67. Adóalap - Harmadik országbeli és közösségi adóalanytól igénybe vett szolgáltatás után, illetve terméket saját nevében beszerzőként fizetett adóból levonható összeg </field>
+        <field name="sequence" eval="67"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+    <record id="tax_report_levonhato_alap_68" model="account.tax.report.line">
+        <field name="name">68. Adóalap - Arányosítás alkalmazásával levonható adórész (Eredeti adóalap, arányosított adó)</field>
+        <field name="tag_name">68. Adóalap - Arányosítás alkalmazásával levonható adórész (Eredeti adóalap, arányosított adó)</field>
+        <field name="sequence" eval="68"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+    <record id="tax_report_levonhato_alap_69" model="account.tax.report.line">
+        <field name="name">69. Adóalap - Közösségen belüli termékbeszerzés után levonható adó összege</field>
+        <field name="tag_name">69. Adóalap - Közösségen belüli termékbeszerzés után levonható adó összege</field>
+        <field name="sequence" eval="69"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+    <record id="tax_report_levonhato_alap_70" model="account.tax.report.line">
+        <field name="name">70. Adóalap - Importált termék után (kivetéssel) megfizetett adó levonható része</field>
+        <field name="tag_name">70. Adóalap - Importált termék után (kivetéssel) megfizetett adó levonható része</field>
+        <field name="sequence" eval="70"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+    <record id="tax_report_levonhato_alap_71" model="account.tax.report.line">
+        <field name="name">71. Adóalap - Importált termék után (önadózással) megfizetett adó levonható része</field>
+        <field name="tag_name">71. Adóalap - Importált termék után (önadózással) megfizetett adó levonható része</field>
+        <field name="sequence" eval="71"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+    <record id="tax_report_levonhato_alap_72" model="account.tax.report.line">
+        <field name="name">72. Adóalap - 7 %-os mértékű mezőgazdasági kompenzációs felár</field>
+        <field name="tag_name">72. Adóalap - 7 %-os mértékű mezőgazdasági kompenzációs felár</field>
+        <field name="sequence" eval="72"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+    <record id="tax_report_levonhato_alap_73" model="account.tax.report.line">
+        <field name="name">73. Adóalap - 12 %-os mértékű mezőgazdasági kompenzációs felár</field>
+        <field name="tag_name">73. Adóalap - 12 %-os mértékű mezőgazdasági kompenzációs felár</field>
+        <field name="sequence" eval="73"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+    <record id="tax_report_levonhato_alap_74" model="account.tax.report.line">
+        <field name="name">74. Adóalap - Saját vállalkozáson belül végzett beruházás után fizetendő adó</field>
+        <field name="tag_name">74. Adóalap - Saját vállalkozáson belül végzett beruházás után fizetendő adó</field>
+        <field name="sequence" eval="74"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+    <record id="tax_report_levonhato_alap_75" model="account.tax.report.line">
+        <field name="name">75. Adóalap - Egyéb </field>
+        <field name="tag_name">75. Adóalap - Egyéb </field>
+        <field name="sequence" eval="75"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+    <record id="tax_report_levonhato_alap_77" model="account.tax.report.line">
+        <field name="name">77. Adóalap - Tárgyi eszköz beszerzése után levonható adó összege a 76. sor összegéből (apport nélkül) </field>
+        <field name="tag_name">77. Adóalap - Tárgyi eszköz beszerzése után levonható adó összege a 76. sor összegéből (apport nélkül) </field>
+        <field name="sequence" eval="77"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+    <record id="tax_report_levonhato_alap_78" model="account.tax.report.line">
+        <field name="name">78. Adóalap - Apport-beszerzés után levonható adó összege a 76. sor összegéből </field>
+        <field name="tag_name">78. Adóalap - Apport-beszerzés után levonható adó összege a 76. sor összegéből </field>
+        <field name="sequence" eval="78"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+    <record id="tax_report_levonhato_alap_79" model="account.tax.report.line">
+        <field name="name">79. Adóalap - Saját vállalkozásban megvalósuló, még nem aktivált beruházás összege a 76. sor összegéből </field>
+        <field name="tag_name">79. Adóalap - Saját vállalkozásban megvalósuló, még nem aktivált beruházás összege a 76. sor összegéből </field>
+        <field name="sequence" eval="79"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_alap"/>
+    </record>
+
+
+    <record id="tax_report_levonhato" model="account.tax.report.line">
+        <field name="name">ÁFA mérték</field>
+        <field name="sequence" eval="2"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato_afa"/>
+    </record>
+
+
+    <record id="tax_report_levonhato_64" model="account.tax.report.line">
+        <field name="name">64. 5 %-os kulcs alá tartozó belföldi termékbeszerzés, szolgáltatás után </field>
+        <field name="tag_name">64. 5 %-os kulcs alá tartozó belföldi termékbeszerzés, szolgáltatás után </field>
+        <field name="sequence" eval="64"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato"/>
+    </record>
+    <record id="tax_report_levonhato_65" model="account.tax.report.line">
+        <field name="name">65. 18 %-os kulcs alá tartozó belföldi termékbeszerzés, szolgáltatás után </field>
+        <field name="tag_name">65. 18 %-os kulcs alá tartozó belföldi termékbeszerzés, szolgáltatás után </field>
+        <field name="sequence" eval="65"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato"/>
+    </record>
+    <record id="tax_report_levonhato_66" model="account.tax.report.line">
+        <field name="name">66. 27 %-os kulcs alá tartozó belföldi termékbeszerzés, szolgáltatás után </field>
+        <field name="tag_name">66. 27 %-os kulcs alá tartozó belföldi termékbeszerzés, szolgáltatás után </field>
+        <field name="sequence" eval="66"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato"/>
+    </record>
+    <record id="tax_report_levonhato_67" model="account.tax.report.line">
+        <field name="name">67. Harmadik országbeli és közösségi adóalanytól igénybe vett szolgáltatás után, illetve terméket saját nevében beszerzőként fizetett adóból levonható összeg </field>
+        <field name="tag_name">67. Harmadik országbeli és közösségi adóalanytól igénybe vett szolgáltatás után, illetve terméket saját nevében beszerzőként fizetett adóból levonható összeg </field>
+        <field name="sequence" eval="67"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato"/>
+    </record>
+    <record id="tax_report_levonhato_68" model="account.tax.report.line">
+        <field name="name">68. Arányosítás alkalmazásával levonható adórész (Eredeti adóalap, arányosított adó)</field>
+        <field name="tag_name">68. Arányosítás alkalmazásával levonható adórész (Eredeti adóalap, arányosított adó)</field>
+        <field name="sequence" eval="68"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato"/>
+    </record>
+    <record id="tax_report_levonhato_69" model="account.tax.report.line">
+        <field name="name">69. Közösségen belüli termékbeszerzés után levonható adó összege</field>
+        <field name="tag_name">69. Közösségen belüli termékbeszerzés után levonható adó összege</field>
+        <field name="sequence" eval="69"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato"/>
+    </record>
+    <record id="tax_report_levonhato_70" model="account.tax.report.line">
+        <field name="name">70. Importált termék után (kivetéssel) megfizetett adó levonható része</field>
+        <field name="tag_name">70. Importált termék után (kivetéssel) megfizetett adó levonható része</field>
+        <field name="sequence" eval="70"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato"/>
+    </record>
+    <record id="tax_report_levonhato_71" model="account.tax.report.line">
+        <field name="name">71. Importált termék után (önadózással) megfizetett adó levonható része</field>
+        <field name="tag_name">71. Importált termék után (önadózással) megfizetett adó levonható része</field>
+        <field name="sequence" eval="71"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato"/>
+    </record>
+    <record id="tax_report_levonhato_72" model="account.tax.report.line">
+        <field name="name">72. 7 %-os mértékű mezőgazdasági kompenzációs felár</field>
+        <field name="tag_name">72. 7 %-os mértékű mezőgazdasági kompenzációs felár</field>
+        <field name="sequence" eval="72"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato"/>
+    </record>
+    <record id="tax_report_levonhato_73" model="account.tax.report.line">
+        <field name="name">73. 12 %-os mértékű mezőgazdasági kompenzációs felár</field>
+        <field name="tag_name">73. 12 %-os mértékű mezőgazdasági kompenzációs felár</field>
+        <field name="sequence" eval="73"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato"/>
+    </record>
+    <record id="tax_report_levonhato_74" model="account.tax.report.line">
+        <field name="name">74. Saját vállalkozáson belül végzett beruházás után fizetendő adó</field>
+        <field name="tag_name">74. Saját vállalkozáson belül végzett beruházás után fizetendő adó</field>
+        <field name="sequence" eval="74"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato"/>
+    </record>
+    <record id="tax_report_levonhato_75" model="account.tax.report.line">
+        <field name="name">75. Egyéb </field>
+        <field name="tag_name">75. Egyéb </field>
+        <field name="sequence" eval="75"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato"/>
+    </record>
+    <record id="tax_report_levonhato_77" model="account.tax.report.line">
+        <field name="name">77. Tárgyi eszköz beszerzése után levonható adó összege a 76. sor összegéből (apport nélkül) </field>
+        <field name="tag_name">77. Tárgyi eszköz beszerzése után levonható adó összege a 76. sor összegéből (apport nélkül) </field>
+        <field name="sequence" eval="77"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato"/>
+    </record>
+    <record id="tax_report_levonhato_78" model="account.tax.report.line">
+        <field name="name">78. Apport-beszerzés után levonható adó összege a 76. sor összegéből </field>
+        <field name="tag_name">78. Apport-beszerzés után levonható adó összege a 76. sor összegéből </field>
+        <field name="sequence" eval="78"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato"/>
+    </record>
+    <record id="tax_report_levonhato_79" model="account.tax.report.line">
+        <field name="name">79. Saját vállalkozásban megvalósuló, még nem aktivált beruházás összege a 76. sor összegéből </field>
+        <field name="tag_name">79. Saját vállalkozásban megvalósuló, még nem aktivált beruházás összege a 76. sor összegéből </field>
+        <field name="sequence" eval="79"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_levonhato"/>
+    </record>
+
+
+    <!-- A BEVALLÁS RÉSZLETEZŐ ADATAI -->
+
+    <record id="tax_report_reszletezo_adatok" model="account.tax.report.line">
+        <field name="name">A bevallás részletező adatai</field>
+        <field name="sequence" eval="3"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+    <record id="tax_report_reszletezo_88" model="account.tax.report.line">
+        <field name="name">88. Közösségen  belüli ún. "háromszögügyletben" közbenső vevőként továbbértékesítési célból beszerzett termékek adó nélkül számított értéke</field>
+        <field name="tag_name">88. Közösségen  belüli ún. "háromszögügyletben" közbenső vevőként továbbértékesítési célból beszerzett termékek adó nélkül számított értéke</field>
+        <field name="sequence" eval="88"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_reszletezo_adatok"/>
+    </record>
+
+    <record id="tax_report_reszletezo_89" model="account.tax.report.line">
+        <field name="name">89. Közösségen belüli ún. "háromszögügyletben" közbenső vevőként továbbértékesített termékek adó nélkül számított értéke</field>
+        <field name="tag_name">89. Közösségen belüli ún. "háromszögügyletben" közbenső vevőként továbbértékesített termékek adó nélkül számított értéke</field>
+        <field name="sequence" eval="89"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_reszletezo_adatok"/>
+    </record>
+
+    <record id="tax_report_reszletezo_90" model="account.tax.report.line">
+        <field name="name">90. Az Áfa tv. területi hatályán kívül teljesített termékértékesítések adó nélkül számított ellenértéke</field>
+        <field name="tag_name">90. Az Áfa tv. területi hatályán kívül teljesített termékértékesítések adó nélkül számított ellenértéke</field>
+        <field name="sequence" eval="90"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_reszletezo_adatok"/>
+    </record>
+
+    <record id="tax_report_reszletezo_91" model="account.tax.report.line">
+        <field name="name">91. Az Áfa tv. területi hatályán kívül teljesített szolgáltatásnyújtások adó nélkül számított ellenértéke</field>
+        <field name="tag_name">91. Az Áfa tv. területi hatályán kívül teljesített szolgáltatásnyújtások adó nélkül számított ellenértéke</field>
+        <field name="sequence" eval="91"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_reszletezo_adatok"/>
+    </record>
+
+    <record id="tax_report_reszletezo_92" model="account.tax.report.line">
+        <field name="name">92. Az Áfa tv. területi hatályán kívül, közösségi adóalany felé teljesített, az áfa tv. 37. § (1) bekezdése alá tartozó szolgáltatásnyújtás adó nélkül számított ellenértéke a 91. sor összegéből</field>
+        <field name="tag_name">92. Az Áfa tv. területi hatályán kívül, közösségi adóalany felé teljesített, az áfa tv. 37. § (1) bekezdése alá tartozó szolgáltatásnyújtás adó nélkül számított ellenértéke a 91. sor összegéből</field>
+        <field name="sequence" eval="92"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_reszletezo_adatok"/>
+    </record>
+
+    <record id="tax_report_reszletezo_93" model="account.tax.report.line">
+        <field name="name">93. Az  Áfa tv. területi hatályán kívül, közösségi adóalany felé teljesített, az áfa tv. 37. § (1) bekezdésen kívüli egyéb szolgáltatásnyújtás adó nélkül számított ellenértéke a 91. sor összegéből</field>
+        <field name="tag_name">93. Az  Áfa tv. területi hatályán kívül, közösségi adóalany felé teljesített, az áfa tv. 37. § (1) bekezdésen kívüli egyéb szolgáltatásnyújtás adó nélkül számított ellenértéke a 91. sor összegéből</field>
+        <field name="sequence" eval="93"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_reszletezo_adatok"/>
+    </record>
+
+    <record id="tax_report_reszletezo_94" model="account.tax.report.line">
+        <field name="name">94. Közösség más tagországában teljesítettnek minősülő fel- vagy összeszerelés tárgyát képező termék adó nélkül számított ellenértéke a 90. sorból</field>
+        <field name="tag_name">94. Közösség más tagországában teljesítettnek minősülő fel- vagy összeszerelés tárgyát képező termék adó nélkül számított ellenértéke a 90. sorból</field>
+        <field name="sequence" eval="94"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_reszletezo_adatok"/>
+    </record>
+
+    <record id="tax_report_reszletezo_95" model="account.tax.report.line">
+        <field name="name">95. Közösség más tagországában teljesítettnek minősülő távolsági értékesítés adó nélkül számított ellenértéke a 90. sorból</field>
+        <field name="tag_name">95. Közösség más tagországában teljesítettnek minősülő távolsági értékesítés adó nélkül számított ellenértéke a 90. sorból</field>
+        <field name="sequence" eval="95"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_reszletezo_adatok"/>
+    </record>
+
+
+    <!-- EGYÉNI VÁLLALKOZÓ INGATLANÉRTÉKESÍTÉSÉNEK ADATAI -->
+
+    <record id="tax_report_egyeni_vall_ingatlanertekesites" model="account.tax.report.line">
+        <field name="name">Egyéni vállalkozó ingatlanértékesítésének adatai</field>
+        <field name="sequence" eval="4"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_egyeni_vall_ingatlanertekesites_97" model="account.tax.report.line">
+        <field name="name">97. Ingatlan sorozatjellegű értékesítésére jutó adófizetési kötelezettség</field>
+        <field name="tag_name">97. Ingatlan sorozatjellegű értékesítésére jutó adófizetési kötelezettség</field>
+        <field name="sequence" eval="97"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_egyeni_vall_ingatlanertekesites"/>
+    </record>
+    <record id="tax_report_egyeni_vall_ingatlanertekesites_98" model="account.tax.report.line">
+        <field name="name">98. Ingatlan sorozatjellegű értékesítésével összefüggő levont adó</field>
+        <field name="tag_name">98. Ingatlan sorozatjellegű értékesítésével összefüggő levont adó</field>
+        <field name="sequence" eval="98"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="parent_id" ref="tax_report_egyeni_vall_ingatlanertekesites"/>
+    </record>
 </odoo>
