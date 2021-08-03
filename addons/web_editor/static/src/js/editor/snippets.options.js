@@ -20,6 +20,7 @@ const {
     loadImageInfo,
     applyModifications,
     removeOnImageChangeAttrs,
+    isImageSupportedForProcessing,
 } = require('web_editor.image_processing');
 
 var qweb = core.qweb;
@@ -4367,7 +4368,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     async _renderCustomXML(uiFragment) {
         const img = this._getImg();
-        if (!this.originalSrc || !['image/png', 'image/jpeg'].includes(this._getImageMimetype(img))) {
+        if (!this.originalSrc || !this._isImageSupportedForProcessing(img)) {
             [...uiFragment.childNodes].forEach(node => node.remove());
             return;
         }
@@ -4418,7 +4419,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         if (!update && !(img && img.complete)) {
             return;
         }
-        if (!['image/jpeg', 'image/png'].includes(this._getImageMimetype(img))) {
+        if (!this._isImageSupportedForProcessing(img)) {
             this.originalId = null;
             return;
         }
@@ -4498,7 +4499,15 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     async _initializeImage() {
         return this._loadImageInfo();
-    }
+    },
+     /**
+     * @private
+     * @param {HTMLImageElement} img
+     * @returns {Boolean}
+     */
+    _isImageSupportedForProcessing(img) {
+        return isImageSupportedForProcessing(this._getImageMimetype(img));
+    },
 });
 
 /**
@@ -4815,13 +4824,30 @@ registry.ImageOptimize = ImageHandlerOption.extend({
         const img = this._getImg();
         const match = img.src.match(/\/web_editor\/image_shape\/(\w+\.\w+)/);
         if (img.dataset.shape && match) {
-            await this._loadImageInfo(`/web/image/${match[1]}`);
+            return this._loadImageInfo(`/web/image/${match[1]}`);
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     * @private
+     */
+    async _loadImageInfo() {
+        await this._super(...arguments);
+        const img = this._getImg();
+        if (img.dataset.shape && img.dataset.mimetype !== 'image/svg+xml') {
+            img.dataset.originalMimetype = img.dataset.mimetype;
+            if (!this._isImageSupportedForProcessing(img)) {
+                delete img.dataset.shape;
+                delete img.dataset.shapeColors;
+                delete img.dataset.fileName;
+                delete img.dataset.originalMimetype;
+                return;
+            }
             // Image data-mimetype should be changed to SVG since loadImageInfo()
             // will set the original attachment mimetype on it.
             img.dataset.mimetype = 'image/svg+xml';
-            return;
         }
-        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -4836,12 +4862,7 @@ registry.ImageOptimize = ImageHandlerOption.extend({
      */
     async _onImageChanged(ev) {
         this.trigger_up('snippet_edition_request', {exec: async () => {
-            const img = this._getImg();
             await this._autoOptimizeImage();
-            if (img.dataset.shape) {
-                img.dataset.originalMimetype = img.dataset.mimetype;
-                img.dataset.mimetype = 'image/svg+xml';
-            }
             this.trigger_up('cover_update');
         }});
     },
