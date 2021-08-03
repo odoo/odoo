@@ -132,7 +132,8 @@
         <field name="arch" type="xml">
             <form string="Project Sharing: Task" class="o_form_project_tasks">
                 <header>
-                    <field name="stage_id" widget="statusbar" options="{'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}" />
+                    <field name="project_sharing_access_mode" invisible="1"/>
+                    <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)], 'readonly': [('project_sharing_access_mode', '!=', 'edit')]}" />
                 </header>
                 <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
@@ -143,7 +144,7 @@
                         <h1 class="d-flex flex-row justify-content-between">
                             <field name="priority" widget="priority" class="mr-3"/>
                             <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
-                            <field name="kanban_state" widget="state_selection" class="ml-auto" readonly="1"/>
+                            <field name="kanban_state" widget="state_selection" class="ml-auto" attrs="{'readonly': [('project_sharing_access_mode', '!=', 'edit')]}"/>
                         </h1>
                     </div>
                     <group>
@@ -194,7 +195,7 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter"/>
+                <div class="oe_project_sharing_chatter" attrs="{'invisible': [('project_sharing_access_mode', 'not in', ['comment', 'edit'])]}"/>
             </form>
         </field>
     </record>

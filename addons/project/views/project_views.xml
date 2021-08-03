@@ -264,7 +264,7 @@
             <field name="arch" type="xml">
                 <form string="Project" delete="0">
                     <header>
-                        <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight" groups="project.group_project_manager"
+                        <button name="%(project.project_share_action)d" string="Share" type="action" class="oe_highlight" groups="project.group_project_manager"
                         attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" groups="project.group_project_stages"/>
                     </header>
@@ -640,7 +640,7 @@
                                                 <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
                                             </div>
                                             <div role="menuitem" class="col-4">
-                                                <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="%(portal.portal_share_action)d" type="action">Share</a>
+                                                <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="%(project.project_share_action)d" type="action">Share</a>
                                                 <a class="dropdown-item" role="menuitem" type="edit">Edit</a>
                                             </div>
                                         </div>
