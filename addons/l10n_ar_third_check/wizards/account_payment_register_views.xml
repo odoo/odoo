@@ -19,7 +19,7 @@
                     <field
                         name="check_id"
                         attrs="{'invisible': [('payment_method_code', 'not in', ['in_third_checks', 'out_third_checks'])], 'required': [('payment_method_code', 'in', ['in_third_checks', 'out_third_checks'])]}"
-                        domain="[('payment_method_code', '=', 'new_third_checks'), ('state', '=', third_check_from_state)] + [('third_check_last_journal_id', '=', journal_id)] if payment_method_code != 'in_third_checks' else []"
+                        domain="[('payment_method_code', '=', 'new_third_checks'), ('third_check_state', '=', third_check_from_state)] if payment_method_code == 'in_third_checks' else [('payment_method_code', '=', 'new_third_checks'), ('third_check_state', '=', third_check_from_state), ('third_check_last_journal_id', '=', journal_id)]"
                         options="{'no_create': True}"
                     />
                     <field name="check_number" readonly="0" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
