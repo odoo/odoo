@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_share_wizard" model="ir.ui.view">
+        <field name="name">project.share.wizard</field>
+        <field name="model">project.share.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Share Document">
+                <p class="alert alert-warning" attrs="{'invisible': [('access_warning', '=', '')]}" role="alert"><field name="access_warning"/></p>
+                <group name="share_link">
+                    <field name="res_model" invisible="1"/>
+                    <field name="res_id" invisible="1"/>
+                    <field name="share_link" widget="CopyClipboardChar" options="{'string': 'Copy Link'}"/>
+                </group>
+                <group>
+                    <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to share the document..."/>
+                </group>
+                <group>
+                    <field name="note" placeholder="Add a note"/>
+                </group>
+                <group>
+                    <field name="line_ids" nolabel="1">
+                        <tree create="1" edit="1" delete="1" editable="bottom">
+                            <field name="user_id" />
+                            <field name="access_mode" />
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button string="Confirm Access" name="action_confirm_access" attrs="{'invisible': ['|', ('access_warning', '!=', ''), ('line_ids', '=', [])]}" type="object" class="btn-primary" data-hotkey="v"/>
+                    <button string="Send" name="action_send_mail" attrs="{'invisible': ['|', ('access_warning', '!=', ''), ('line_ids', '!=', [])]}" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Send &amp; Confirm" name="action_send_mail_and_confirm_access" attrs="{'invisible': ['|', ('access_warning', '!=', ''), ('line_ids', '=', [])]}" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-default" special="cancel" data-hotkey="z" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_share_action" model="ir.actions.act_window">
+        <field name="name">Share Project</field>
+        <field name="res_model">project.share.wizard</field>
+        <field name="binding_model_id" ref="model_project_share_wizard"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

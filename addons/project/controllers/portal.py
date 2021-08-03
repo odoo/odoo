@@ -104,8 +104,7 @@ class ProjectCustomerPortal(CustomerPortal):
     @http.route("/embed/project/<int:project_id>", type="http", auth="user", methods=['GET'])
     def render_project_backend_view(self, project_id):
         project = request.env['project.project'].sudo().browse(project_id)
-
-        if not project.exists():
+        if not project.exists() or not project.with_user(request.env.user)._check_project_sharing_access():
             return request.not_found()
 
         session_info = request.env['ir.http'].session_info()
@@ -124,6 +123,7 @@ class ProjectCustomerPortal(CustomerPortal):
             cache_hashes=cache_hashes,
             action_name='project.project_sharing_project_task_action',
             project_id=project.id,
+            can_edit=project.user_can_edit,
             user_companies={
                 'current_company': project_company.id,
                 'allowed_companies': {
