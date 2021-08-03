@@ -14,9 +14,10 @@
 # Martin Trigaux, 2019
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
-# Walther Barnett <wba@miracle.dk>, 2020
+# walther_b <wba@miracle.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3146,6 +3147,26 @@ msgid "You cannot send an invitation for a survey that has no questions."
 msgstr ""
 "Du kan ikke sende en invitation til en undersøgelse, der ikke har nogen "
 "spørgsmål."
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"You cannot send an invitation for a \"One page per section\" survey if the "
+"survey has no sections."
+msgstr ""
+"Du kan ikke sende en invitation til en \"En side per sektion\" undersøgelse,"
+" hvis undersøgelsen ikke har nogle sektioner."
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"You cannot send an invitation for a \"One page per section\" survey if the "
+"survey only contains empty sections."
+msgstr ""
+"Du kan ikke sende en invitation til en \"En side per sektion\" undersøgelse,"
+" hvis undersøgelsen kun indeholder tomme sektioner."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0

@@ -23,6 +23,7 @@
 # Iacopo Simonelli <lsi@odoo.com>, 2020
 # David Minneci <david@numeko.it>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
+# BigBlu <paolo.moroni@air-srl.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
+"Last-Translator: BigBlu <paolo.moroni@air-srl.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -767,7 +768,7 @@ msgstr "Ubicazioni consentite"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__start_empty
 msgid "Allows to start with an empty inventory."
-msgstr ""
+msgstr "Consente di iniziare con un inventario vuoto."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__prefill_counted_quantity
@@ -2028,7 +2029,7 @@ msgstr "Abbandona"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_assign_serial
 msgid "Display Assign Serial"
-msgstr ""
+msgstr "Visualizza serie assegnata"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__display_complete
@@ -2176,7 +2177,7 @@ msgstr "E-mail inviata al cliente dopo che l'ordine è stato completato."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__start_empty
 msgid "Empty Inventory"
-msgstr ""
+msgstr "Inventario vuoto"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -2349,7 +2350,7 @@ msgstr "Consegne previste"
 #: model:ir.actions.act_window,name:stock.report_stock_quantity_action_product
 #: model:ir.ui.menu,name:stock.menu_forecast_inventory
 msgid "Forecasted Inventory"
-msgstr ""
+msgstr "Previsioni di inventario"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -5762,6 +5763,7 @@ msgstr "Collo di origine :"
 #: model:ir.model.fields,help:stock.field_stock_inventory__product_ids
 msgid "Specify Products to focus your inventory on particular Products."
 msgstr ""
+"Specificare prodotti per concentrare l'inventario su particolari prodotti."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -6515,6 +6517,10 @@ msgid ""
 "better solution could be to archive the product and create a new one "
 "instead."
 msgstr ""
+"Questo prodotto è stato usato in uno o più movimenti di magazzino. È "
+"sconsigliato cambiare il tipo di prodotto, poichè ciò può portare ad "
+"incoerenze. Archiviare il prodotto e crearne uno nuovo rappresenta invece "
+"una soluzione migliore."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -6886,6 +6892,14 @@ msgid "Unreserve"
 msgstr "Non riservare"
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr ""
+"Ricerca su %s non supportata al di fuori di una rettifica di inventario"
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "UoM"
@@ -7234,6 +7248,9 @@ msgid ""
 "for this field, Odoo generates a procurement to bring the forecasted "
 "quantity to the Max Quantity."
 msgstr ""
+"Quando le giacenze virtuali sono pari o scendono al di sotto della quantità "
+"minima, Odoo genera un approvvigionamento per portare la quantità prevista "
+"alla massima."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -7260,12 +7277,16 @@ msgstr ""
 msgid ""
 "When validating the transfer, the products will be assigned to this owner."
 msgstr ""
+"Durante la convalida del trasferimento, i prodotti vengono assegnati a "
+"questo proprietario."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
 msgid ""
 "When validating the transfer, the products will be taken from this owner."
 msgstr ""
+"Durante la convalida del trasferimento, i prodotti vengono prelevati da "
+"questo proprietario."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional
