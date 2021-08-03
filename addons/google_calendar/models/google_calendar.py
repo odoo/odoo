@@ -297,6 +297,7 @@ class GoogleCalendar(models.AbstractModel):
             if e.response.status_code != 403:
                 raise e
             _logger.info("Could not delete Google event %s" % event_id)
+            return False
         return response
 
     def get_calendar_primary_id(self):
