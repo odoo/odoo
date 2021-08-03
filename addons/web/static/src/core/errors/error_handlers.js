@@ -18,6 +18,7 @@ import { UncaughtClientError, UncaughtCorsError, UncaughtPromiseError } from "./
 
 const errorHandlerRegistry = registry.category("error_handlers");
 const errorDialogRegistry = registry.category("error_dialogs");
+const errorNotificationRegistry = registry.category("error_notifications");
 
 // -----------------------------------------------------------------------------
 // CORS errors
@@ -71,7 +72,7 @@ errorHandlerRegistry.add("clientErrorHandler", clientErrorHandler, { sequence: 9
  * @param {Error} originalError
  * @returns {boolean}
  */
-function rpcErrorHandler(env, error, originalError) {
+export function rpcErrorHandler(env, error, originalError) {
     if (!(error instanceof UncaughtPromiseError)) {
         return false;
     }
@@ -85,9 +86,16 @@ function rpcErrorHandler(env, error, originalError) {
         // error is here a RPCError
         error.unhandledRejectionEvent.preventDefault();
         const exceptionName = originalError.exceptionName;
-        let ErrorComponent = null;
-        if (exceptionName && errorDialogRegistry.contains(exceptionName)) {
-            ErrorComponent = errorDialogRegistry.get(exceptionName);
+        let ErrorComponent = originalError.Component;
+        if (!ErrorComponent && exceptionName) {
+            if (errorNotificationRegistry.contains(exceptionName)) {
+                const notif = errorNotificationRegistry.get(exceptionName);
+                env.services.notification.add(notif.message || originalError.data.message, notif);
+                return true;
+            }
+            if (errorDialogRegistry.contains(exceptionName)) {
+                ErrorComponent = errorDialogRegistry.get(exceptionName);
+            }
         }
 
         env.services.dialog.add(ErrorComponent || RPCErrorDialog, {

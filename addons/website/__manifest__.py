@@ -205,7 +205,7 @@
             'website/static/src/js/form_editor_registry.js',
             'website/static/src/js/menu/content.js',
             'website/static/src/js/menu/customize.js',
-            'website/static/src/js/menu/debug_manager.js',
+            'website/static/src/js/menu/debug_menu.js',
             'website/static/src/js/menu/edit.js',
             'website/static/src/js/menu/mobile_view.js',
             'website/static/src/js/menu/new_content.js',
