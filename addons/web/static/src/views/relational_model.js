@@ -227,14 +227,23 @@ class DataList extends DataPoint {
         }
         const fields = params.fields || Object.keys(this.fields);
 
-        if (!this.hasData && params.domain) {
-            // LPE FIXME
-            this.domain = params.domain;
-            const rawRecords = params.resIds
-                ? params.resIds.map((id) => ({ id }))
-                : await this.requestBatcher.searchRead(this.resModel, this.domain, fields, {
-                      limit: 40,
-                  });
+        if (!this.hasData) {
+            let rawRecords;
+            if (params.resIds) {
+                rawRecords = params.resIds.map((id) => ({ id }));
+            } else if (params.domain) {
+                this.domain = params.domain;
+                rawRecords = await this.requestBatcher.searchRead(
+                    this.resModel,
+                    this.domain,
+                    fields,
+                    {
+                        limit: 40,
+                    }
+                );
+            } else {
+                rawRecords = [];
+            }
             this.data = await Promise.all(
                 rawRecords.map(async (rawRecord) => {
                     const record = this.model.createRecord(this, this.resModel, rawRecord.id);
@@ -242,10 +251,8 @@ class DataList extends DataPoint {
                     return record;
                 })
             );
-        } else if (this.hasData) {
-            await Promise.all(this.data.map((dp) => dp.load({ fields })));
         } else {
-            this.data = [];
+            await Promise.all(this.data.map((dp) => dp.load({ fields })));
         }
     }
 }
