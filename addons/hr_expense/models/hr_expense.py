@@ -693,10 +693,15 @@ class HrExpenseSheet(models.Model):
         return self.env.user.employee_id
 
     @api.model
+    def _get_journal_domain(self):
+        return [('type', '=', 'purchase'), ('company_id', '=', self.default_get(['company_id'])['company_id'])]
+
+    @api.model
     def _default_journal_id(self):
-        """ The journal is determining the company of the accounting entries generated from expense. We need to force journal company and expense sheet company to be the same. """
-        default_company_id = self.default_get(['company_id'])['company_id']
-        journal = self.env['account.journal'].search([('type', '=', 'purchase'), ('company_id', '=', default_company_id)], limit=1)
+        """ The journal is determining the company of the accounting entries generated from expense. We need to
+        force journal company and expense sheet company to be the same. """
+        journal_domain = self._get_journal_domain()
+        journal = self.env['account.journal'].search(journal_domain, limit=1)
         return journal.id
 
     @api.model
@@ -722,8 +727,9 @@ class HrExpenseSheet(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='Number of Attachments')
-    journal_id = fields.Many2one('account.journal', string='Expense Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, check_company=True, domain="[('type', '=', 'purchase'), ('company_id', '=', company_id)]",
-        default=_default_journal_id, help="The journal used when the expense is done.")
+    journal_id = fields.Many2one('account.journal', string='Expense Journal',
+        states={'done': [('readonly', True)], 'post': [('readonly', True)]}, check_company=True,
+        domain=_get_journal_domain, default=_default_journal_id, help="The journal used when the expense is done.")
     bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, check_company=True, domain="[('type', 'in', ['cash', 'bank']), ('company_id', '=', company_id)]",
         default=_default_bank_journal_id, help="The payment method used when the expense is paid by the company.")
     accounting_date = fields.Date("Date")
