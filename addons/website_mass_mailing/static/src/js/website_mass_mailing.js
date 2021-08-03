@@ -183,8 +183,10 @@ popup.include({
      * @override
      */
     _showPopup: function () {
-        if (this.$target.data('is_subscriber')) return;
-        this._super(this, ...arguments);
+        if (this.$target.data('is_subscriber')) {
+            return;
+        }
+        this._super(...arguments);
     },
 });
 });

@@ -12,27 +12,27 @@ var _t = core._t;
 
 const mailingListSubscribe = {
 
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
-     * show warning popup, if mailing list is not exists in the database
-     * @public
+     * Shows a warning popup, if mailing list is not exists in the database.
+     *
+     * @private
      */
-    showWarning() {
-        const text =  _t('No mailing list exists in the database, Do you want to create a new mailing list!');
+     _showWarning() {
+        const text = _t("No mailing list exists in the database, Do you want to create a new mailing list!");
         Dialog.confirm(this, text, {
             title: _t("Warning!"),
             confirm_callback: () => {
                 window.location.href = '/web#action=mass_mailing.action_view_mass_mailing_lists';
             },
             cancel_callback: () => {
-                this.getParent()._onRemoveClick($.Event( "click" ));
+                this.getParent()._onRemoveClick($.Event("click"));
             },
         });
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * @private
      */
@@ -55,7 +55,7 @@ const mailingListSubscribe = {
             }
         }
     },
-}
+};
 
 options.registry.mailing_list_subscribe = options.Class.extend(mailingListSubscribe, {
 
@@ -80,7 +80,7 @@ options.registry.mailing_list_subscribe = options.Class.extend(mailingListSubscr
         if (mailingListID) {
             this.$target.attr("data-list-id", mailingListID);
         } else {
-            this.showWarning();
+            this._showWarning();
         }
     },
 
@@ -89,14 +89,12 @@ options.registry.mailing_list_subscribe = options.Class.extend(mailingListSubscr
     //--------------------------------------------------------------------------
 
     /**
-     * @private
      * @override
      */
     async _renderCustomXML(uiFragment) {
         await this._renderMailingListButtons(uiFragment);
     },
     /**
-     * @private
      * @override
      */
     _computeWidgetState(methodName, params) {
@@ -203,7 +201,7 @@ options.registry.newsletterPopup = options.registry.SnippetPopup.extend(mailingL
         if (mailingListID) {
             this.$target.attr("data-list-id", mailingListID);
         } else {
-            this.showWarning();
+            this._showWarning();
         }
     },
 
@@ -212,14 +210,12 @@ options.registry.newsletterPopup = options.registry.SnippetPopup.extend(mailingL
     //--------------------------------------------------------------------------
 
     /**
-     * @private
      * @override
      */
     async _renderCustomXML(uiFragment) {
         await this._renderMailingListButtons(uiFragment);
     },
     /**
-     * @private
      * @override
      */
     _computeWidgetState(methodName, params) {
