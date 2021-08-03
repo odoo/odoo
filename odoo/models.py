@@ -756,9 +756,9 @@ class BaseModel(metaclass=MetaModel):
         def is_constraint(func):
             return callable(func) and hasattr(func, '_constrains')
 
-        def wrap(func, names):
+        def wrap(func, names, precommit):
             # wrap func into a proxy function with explicit '_constrains'
-            @api.constrains(*names)
+            @api.constrains(*names, precommit=precommit)
             def wrapper(self):
                 return func(self)
             return wrapper
@@ -766,15 +766,19 @@ class BaseModel(metaclass=MetaModel):
         cls = type(self)
         methods = []
         for attr, func in getmembers(cls, is_constraint):
-            if callable(func._constrains):
-                func = wrap(func, func._constrains(self))
-            for name in func._constrains:
+            if not list(func._constrains):
+                # Special case for test environment
+                continue
+            args, precommit = func._constrains
+            if callable(args):
+                func = wrap(func, args(self), precommit)
+            for name in func._constrains[0]:
                 field = cls._fields.get(name)
                 if not field:
                     _logger.warning("method %s.%s: @constrains parameter %r is not a field name", cls._name, attr, name)
                 elif not (field.store or field.inverse or field.inherited):
                     _logger.warning("method %s.%s: @constrains parameter %r is not writeable", cls._name, attr, name)
-            methods.append(func)
+            methods.append((func, precommit,))
 
         # optimization: memoize result on cls, it will not be recomputed
         cls._constraint_methods = methods
@@ -1352,10 +1356,29 @@ class BaseModel(metaclass=MetaModel):
         """
         field_names = set(field_names)
         excluded_names = set(excluded_names)
-        for check in self._constraint_methods:
-            if (not field_names.isdisjoint(check._constrains)
-                    and excluded_names.isdisjoint(check._constrains)):
-                check(self)
+        for check, precommit in self._constraint_methods:
+            if (not field_names.isdisjoint(check._constrains[0])
+                    and excluded_names.isdisjoint(check._constrains[0])):
+                if precommit:
+                    precommit_key = '%s:%s' % (self._name, check.__name__)
+                    if precommit_key in self.env.cr.precommit.data:
+                        record_ids = self.env.cr.precommit.data[precommit_key]
+                    else:
+                        record_ids = set()
+                        self.env.cr.precommit.data[precommit_key] = record_ids
+
+                        #pylint: disable=unused-variable
+                        @self.env.cr.precommit.add
+                        def check_precommit(check=check):
+                            record_ids = self.env.cr.precommit.data.pop(precommit_key, [])
+                            # Some records may not exist if updates are
+                            # rollbacked or unlinked in the same transaction
+                            records = self.browse(record_ids).exists()
+                            check(records)
+
+                    record_ids |= set(self.ids)
+                else:
+                    check(self)
 
     @api.model
     def default_get(self, fields_list):

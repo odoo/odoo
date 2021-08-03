@@ -278,7 +278,7 @@ class TestSequenceMixin(AccountTestInvoicingCommon):
         self.assertEqual(copies[5].name, 'XMISC/2019/00004')
 
         # Can't have twice the same name
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ValidationError, flush=True):
             copies[0].name = 'XMISC/2019/00001'
 
         # Lets remove the order by date

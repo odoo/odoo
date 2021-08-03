@@ -1705,7 +1705,7 @@ class AccountMove(models.Model):
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
 
-    @api.constrains('name', 'journal_id', 'state')
+    @api.constrains('name', 'journal_id', 'state', precommit=True)
     def _check_unique_sequence_number(self):
         moves = self.filtered(lambda move: move.state == 'posted')
         if not moves:

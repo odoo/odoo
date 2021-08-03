@@ -409,7 +409,7 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
             self.env = self.env(user=self.uid)
 
     @contextmanager
-    def _assertRaises(self, exception, *, msg=None):
+    def _assertRaises(self, exception, *, msg=None, flush=None):
         """ Context manager that clears the environment upon failure. """
         with super(BaseCase, self).assertRaises(exception, msg=msg) as cm:
             if hasattr(self, 'env'):
@@ -417,6 +417,10 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
                     yield cm
             else:
                 yield cm
+
+            if flush:
+                self.env.user.flush()
+                self.env.cr.precommit.run()
 
     def assertRaises(self, exception, func=None, *args, **kwargs):
         if func:

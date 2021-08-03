@@ -98,7 +98,7 @@ def propagate(method1, method2):
     return method2
 
 
-def constrains(*args):
+def constrains(*args, precommit=False):
     """Decorate a constraint checker.
 
     Each argument must be a field name used in the check::
@@ -110,6 +110,8 @@ def constrains(*args):
                     raise ValidationError("Fields name and description must be different")
 
     Invoked on the records on which one of the named fields has been modified.
+
+    If precommit is True, the check will be postponed until the end of transaction.
 
     Should raise :exc:`~odoo.exceptions.ValidationError` if the
     validation failed.
@@ -133,7 +135,7 @@ def constrains(*args):
     """
     if args and callable(args[0]):
         args = args[0]
-    return attrsetter('_constrains', args)
+    return attrsetter('_constrains', (args, precommit))
 
 
 def ondelete(*, at_uninstall):
