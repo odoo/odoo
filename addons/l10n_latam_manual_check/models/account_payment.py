@@ -27,9 +27,9 @@ class AccountPayment(models.Model):
         readonly=False,
     )
 
-    @api.depends('payment_method_id.code', 'journal_id.use_checkbooks')
+    @api.depends('payment_method_line_id.code', 'journal_id.use_checkbooks')
     def _compute_checkbook(self):
-        with_checkbooks = self.filtered(lambda x: x.payment_method_id.code == 'check_printing' and x.journal_id.use_checkbooks)
+        with_checkbooks = self.filtered(lambda x: x.payment_method_line_id.code == 'check_printing' and x.journal_id.use_checkbooks)
         (self - with_checkbooks).checkbook_id = False
         for rec in with_checkbooks:
             checkbooks = rec.journal_id.with_context(active_test=True).checkbook_ids
@@ -61,7 +61,7 @@ class AccountPayment(models.Model):
 
     @api.constrains('journal_id', 'check_number', 'checkbook_id')
     def _check_unique(self):
-        for rec in self.filtered(lambda x: x.payment_method_id.code == 'check_printing' and x.check_number):
+        for rec in self.filtered(lambda x: x.payment_method_line_id.code == 'check_printing' and x.check_number):
             same_checks = self.search([
                 ('checkbook_id', '=', rec.checkbook_id.id),
                 ('journal_id', '=', rec.journal_id.id),
@@ -76,6 +76,6 @@ class AccountPayment(models.Model):
     def _prepare_move_line_default_vals(self, write_off_line_vals=None):
         """ Add check maturity date """
         res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
-        if self.payment_method_id.code == 'check_printing' and self.check_payment_date:
+        if self.payment_method_line_id.code == 'check_printing' and self.check_payment_date:
             res[0].update({'date_maturity': self.check_payment_date})
         return res

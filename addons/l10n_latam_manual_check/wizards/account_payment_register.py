@@ -19,7 +19,7 @@ class AccountPaymentRegister(models.TransientModel):
              "or if the current numbering is wrong, you can change it in the journal configuration page.",
     )
     payment_method_code = fields.Char(
-        related='payment_method_id.code',
+        related='payment_method_line_id.code',
         help="Technical field used to adapt the interface to the payment type selected.")
     use_checkbooks = fields.Boolean(related='journal_id.use_checkbooks')
     # payment_method_id = fields.Many2one(index=True)
@@ -28,9 +28,9 @@ class AccountPaymentRegister(models.TransientModel):
     check_payment_date = fields.Date()
     check_printing_type = fields.Selection(related='checkbook_id.check_printing_type')
 
-    @api.depends('payment_method_id.code', 'journal_id.use_checkbooks')
+    @api.depends('payment_method_line_id.code', 'journal_id.use_checkbooks')
     def _compute_checkbook(self):
-        with_checkbooks = self.filtered(lambda x: x.payment_method_id.code == 'check_printing' and x.journal_id.use_checkbooks)
+        with_checkbooks = self.filtered(lambda x: x.payment_method_line_id.code == 'check_printing' and x.journal_id.use_checkbooks)
         (self - with_checkbooks).checkbook_id = False
         for rec in with_checkbooks:
             checkbook = rec.journal_id.with_context(active_test=True).checkbook_ids

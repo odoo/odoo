@@ -14,7 +14,7 @@
             <field name="check_number" position="attributes">
                 <attribute name="attrs">{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_number', '=', False), ('check_printing_type', '!=', 'no_print')], 'readonly': ['|', ('state', '!=', 'draft'), ('check_printing_type', '!=', 'no_print')], 'required': [('check_printing_type', '=', 'no_print')]}</attribute>
             </field>
-            <xpath expr="//field[@name='payment_method_id']" position="after">
+            <xpath expr="//field[@name='payment_method_line_id']" position="after">
                 <field name="use_checkbooks" invisible="1"/>
                 <field name="checkbook_type" invisible="1"/>
                 <field name="checkbook_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('use_checkbooks', '=', False)], 'required': [('payment_method_code', '=', 'check_printing'), ('use_checkbooks', '=', True)]}" domain="[('journal_id', '=', journal_id)]"/>
@@ -58,7 +58,7 @@
         <field name="mode">primary</field>
         <field name="inherit_id" ref="account.view_account_payment_tree"/>
         <field name="arch" type="xml">
-            <field name="payment_method_id" position="replace"/>
+            <field name="payment_method_line_id" position="replace"/>
             <field name="name" position="replace">
                 <field name="check_number"/>
             </field>
