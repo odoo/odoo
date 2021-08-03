@@ -6,8 +6,7 @@ import Chrome from "point_of_sale.Chrome";
 import Registries from "point_of_sale.Registries";
 import { configureGui } from "point_of_sale.Gui";
 import { useBus } from "@web/core/utils/hooks";
-import PosComponent from "point_of_sale.PosComponent";
-import PopupControllerMixin from "point_of_sale.PopupControllerMixin";
+const { Component } = owl;
 import { registry } from "@web/core/registry";
 
 function setupResponsivePlugin(env) {
@@ -22,7 +21,7 @@ function setupResponsivePlugin(env) {
     window.addEventListener("resize", updateEnv);
 }
 
-export class ChromeAdapter extends PopupControllerMixin(PosComponent) {
+export class ChromeAdapter extends Component {
     setup() {
         this.PosChrome = Registries.Component.get(Chrome);
         this.legacyActionManager = useService("legacy_action_manager");
