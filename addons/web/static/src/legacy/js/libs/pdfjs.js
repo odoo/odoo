@@ -16,12 +16,12 @@ import config from 'web.config';
 export function hidePDFJSButtons(rootElement) {
     const cssStyle = document.createElement("style");
     cssStyle.rel = "stylesheet";
-    cssStyle.innerHTML = `button#secondaryDownload.secondaryToolbarButton, button#download.toolbarButton,
-button#secondaryOpenFile.secondaryToolbarButton, button#openFile.toolbarButton {
+    cssStyle.innerHTML = `button#secondaryOpenFile.secondaryToolbarButton, button#openFile.toolbarButton {
 display: none !important;
 }`;
     if (config.device.isMobileDevice) {
         cssStyle.innerHTML = `${cssStyle.innerHTML}
+button#secondaryDownload.secondaryToolbarButton, button#download.toolbarButton,
 button#secondaryPrint.secondaryToolbarButton, button#print.toolbarButton{
 display: none !important;
 }`;
