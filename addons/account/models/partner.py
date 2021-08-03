@@ -186,7 +186,7 @@ class AccountFiscalPosition(models.Model):
         delivery = PartnerObj.browse(delivery_id)
 
         # If partner and delivery have the same vat prefix, use invoicing
-        if not delivery.vat or (partner.vat and delivery.vat[:2] == partner.vat[:2]):
+        if not delivery or (delivery.vat and partner.vat and delivery.vat[:2] == partner.vat[:2]):
             delivery = partner
 
         # partner manually set fiscal position always win
