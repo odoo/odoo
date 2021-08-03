@@ -14,7 +14,7 @@ import { makeTestEnv, prepareRegistriesWithCleanup } from "../../helpers/mock_en
 import { makeFakeDialogService, makeFakeLocalizationService } from "../../helpers/mock_services";
 import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
-import { openViewItem } from "@web/core/debug/debug_menu_items";
+import { openViewItem } from "@web/webclient/debug_items";
 import { editView, editSearchView } from "@web/legacy/debug_manager";
 
 const { Component, mount, tags } = owl;

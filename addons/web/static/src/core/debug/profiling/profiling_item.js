@@ -8,7 +8,6 @@ const { Component } = owl;
 export class ProfilingItem extends Component {
     setup() {
         this.profiling = useService("profiling");
-        this.actionService = useService("action");
         useBus(this.props.bus, "UPDATE", this.render);
     }
 
@@ -16,7 +15,13 @@ export class ProfilingItem extends Component {
         this.profiling.setParam(param, ev.target.value);
     }
     openProfiles() {
-        this.actionService.doAction("base.action_menu_ir_profile");
+        if (this.env.services.action) {
+            // using doAction in the backend to preserve breadcrumbs and stuff
+            this.env.services.action.doAction("base.action_menu_ir_profile");
+        } else {
+            // No action service means we are in the frontend.
+            window.location = "/web/#action=base.action_menu_ir_profile";
+        }
     }
 }
 ProfilingItem.components = { DropdownItem };
