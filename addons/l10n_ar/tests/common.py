@@ -53,8 +53,6 @@ class TestAr(AccountTestInvoicingCommon, SingleTransactionCase):
             'company_id': cls.company_ri.id,
         })
 
-        # Set context to do not make cr.commit() for unit tests
-        cls.env = cls.env(context={'l10n_ar_invoice_skip_commit': True})
 
         # ==== Partners / Customers ====
         cls.res_partner_adhoc = cls.env['res.partner'].create({
