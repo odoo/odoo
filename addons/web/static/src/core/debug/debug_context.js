@@ -44,18 +44,19 @@ class DebugContext {
 
     async getItems(env) {
         const accessRights = await getAccessRights(this.orm);
-        return [...this.categories.entries()].flatMap(([category, contexts]) => {
-            return debugRegistry
-                .category(category)
-                .getAll()
-                .map((factory) => factory(Object.assign({ env, accessRights }, ...contexts)))
-                .filter(Boolean)
-                .sort((x, y) => {
-                    const xSeq = x.sequence || 1000;
-                    const ySeq = y.sequence || 1000;
-                    return xSeq - ySeq;
-                });
-        });
+        return [...this.categories.entries()]
+            .flatMap(([category, contexts]) => {
+                return debugRegistry
+                    .category(category)
+                    .getAll()
+                    .map((factory) => factory(Object.assign({ env, accessRights }, ...contexts)));
+            })
+            .filter(Boolean)
+            .sort((x, y) => {
+                const xSeq = x.sequence || 1000;
+                const ySeq = y.sequence || 1000;
+                return xSeq - ySeq;
+            });
     }
 }
 
