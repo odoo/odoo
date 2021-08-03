@@ -8,6 +8,7 @@ import { useDebugMenu } from "../../core/debug/debug_menu";
 import { FieldParser } from "../helpers/view_utils";
 import { RelationalModel } from "../relational_model";
 import { ListRenderer } from "./list_renderer";
+import { useService } from "@web/core/service_hook";
 
 export class ListArchParser extends XMLParser {
     parse(arch, fields) {
@@ -42,7 +43,7 @@ export class ListArchParser extends XMLParser {
 
 class ListView extends owl.Component {
     setup() {
-        console.log(this.props);
+        this.actionService = useService("action");
         useDebugMenu("view", { component: this });
         this.archInfo = new ListArchParser().parse(this.props.arch, this.props.fields);
         this.model = useModel(RelationalModel, {
@@ -51,6 +52,13 @@ class ListView extends owl.Component {
             relations: this.archInfo.relations,
             activeFields: this.archInfo.columns.map((col) => col.name),
         });
+
+        this.openRecord = this.openRecord.bind(this);
+    }
+
+    openRecord(record) {
+        const resIds = this.model.root.data.map((datapoint) => datapoint.resId);
+        this.actionService.switchView("form", { resId: record.resId, resIds });
     }
 }
 
