@@ -66,7 +66,8 @@ class SaleOrderLine(models.Model):
                 results.append(item)
 
             elif sale_line.display_type == 'line_note':
-                results[-1]['customer_note'] = sale_line.name
+                if results:
+                    results[-1]['customer_note'] = sale_line.name
 
         return results
 
