@@ -15,7 +15,7 @@
         </table>
     </t>
 
-    <span t-name="project.statusWithColor" t-att-class="'o_status_bubble o_color_bubble_' + color"></span>
+    <span t-name="project.statusWithColor" t-att-class="'o_status_bubble mr-2 o_color_bubble_' + color"></span>
 
     <div t-name="project.ControlPanel" t-inherit="web.Legacy.ControlPanel" t-inherit-mode="extension" owl="1">
         <xpath expr="//ol[hasclass('breadcrumb')]" position="inside">
